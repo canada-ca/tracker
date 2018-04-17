@@ -202,8 +202,8 @@ def scan_parents(options):
   scanners = "--scan=%s" % (str.join(",", SCANNERS))
   analytics = "--analytics=%s" % ANALYTICS_URL
   output = "--output=%s" % PARENTS_DATA
-  a11y_redirects = "--a11y_redirects=%s" % A11Y_REDIRECTS
-  a11y_config = "--a11y_config=%s" % A11Y_CONFIG
+  a11y_redirects = "--a11y-redirects=%s" % A11Y_REDIRECTS
+  a11y_config = "--a11y-config=%s" % A11Y_CONFIG
 
   full_command =[
     SCAN_COMMAND, DOMAINS,
@@ -217,7 +217,14 @@ def scan_parents(options):
 
   # Allow some options passed to python -m data.update to go
   # through to domain-scan.
-  for flag in ["cache", "serial", "lambda", "lambda-profile"]:
+  # Boolean flags.
+  for flag in ["cache", "serial", "lambda"]:
+    value = options.get(flag)
+    if value:
+      full_command += ["--%s" % flag]
+
+  # Flags with values.
+  for flag in ["lambda-profile"]:
     value = options.get(flag)
     if value:
       full_command += ["--%s=%s" % (flag, str(value))]
@@ -243,6 +250,7 @@ def gather_subdomains(options):
   full_command += [
     "--output=%s" % SUBDOMAIN_DATA_GATHERED,
     "--suffix=%s" % GATHER_SUFFIXES,
+    "--parents=%s" % DOMAINS,
     "--ignore-www",
     "--sort",
     "--debug" # always capture full output
@@ -275,10 +283,18 @@ def scan_subdomains(options):
 
   # Allow some options passed to python -m data.update to go
   # through to domain-scan.
-  for flag in ["cache", "serial", "lambda", "lambda-profile"]:
+  # Boolean flags.
+  for flag in ["cache", "serial", "lambda"]:
+    value = options.get(flag)
+    if value:
+      full_command += ["--%s" % flag]
+
+  # Flags with values.
+  for flag in ["lambda-profile"]:
     value = options.get(flag)
     if value:
       full_command += ["--%s=%s" % (flag, str(value))]
+
 
   # If Lambda mode is on, use way more workers.
   if options.get("lambda") and (options.get("serial", None) is None):
