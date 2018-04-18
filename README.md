@@ -1,5 +1,5 @@
 [![Code Climate](https://codeclimate.com/github/18F/pulse/badges/gpa.svg)](https://codeclimate.com/github/18F/pulse) [![Dependency Status](https://gemnasium.com/badges/github.com/18F/pulse.svg)](https://gemnasium.com/github.com/18F/pulse)
-
+[![CircleCI](https://circleci.com/gh/cds-snc/pulse.svg?style=svg)](https://circleci.com/gh/cds-snc/pulse)
 
 ## The pulse of the federal .gov webspace
 
