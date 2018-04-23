@@ -53,15 +53,42 @@ LOGGER = logger.get_logger(__name__)
 #     skip: skip gathering, assume CSVs are locally cached
 #     here: run the default full gather
 
+
 def run(options):
-  # If this is just being used to download production data, do that.
-  if options.get("just-download", False):
-    download_s3()
-    return
+    # If this is just being used to download production data, do that.
+    if options.get("just-download", False):
+        download_s3()
+        return
 
-  # Definitive scan date for the run.
-  today = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
+    update(options)
+    # Sanity check to make sure we have what we need.
+    if not os.path.exists(os.path.join(PARENTS_RESULTS, "meta.json")):
+        LOGGER.info("No scan metadata downloaded, aborting.")
+        exit()
 
+    # Date can be overridden if need be, but defaults to meta.json.
+    if options.get("date", None) is not None:
+        the_date = options.get("date")
+    else:
+        # depends on YYYY-MM-DD coming first in meta.json time format
+        scan_meta = ujson.load(open("data/output/parents/results/meta.json"))
+        the_date = scan_meta['start_time'][0:10]
+
+    # 2. Process and load data into Pulse's database.
+    LOGGER.info("[%s] Loading data into Pulse." % the_date)
+    data.processing.run(the_date, options)
+    LOGGER.info("[%s] Data now loaded into Pulse." % the_date)
+
+    # 3. Upload data to S3 (if requested).
+    if options.get("upload", False):
+        LOGGER.info("[%s] Syncing scan data and database to S3." % the_date)
+        upload_s3(the_date)
+        LOGGER.info("[%s] Scan data and database now in S3." % the_date)
+
+    LOGGER.info("[%s] All done." % the_date)
+
+
+def update(options):
   # 1. Download scan data, do a new scan, or skip altogether.
   scan_mode = options.get("scan", "skip")
 
@@ -90,33 +117,6 @@ def run(options):
     LOGGER.info("Downloading latest production scan data from S3.")
     download_s3()
     LOGGER.info("Download complete.")
-
-  # Sanity check to make sure we have what we need.
-  if not os.path.exists(os.path.join(PARENTS_RESULTS, "meta.json")):
-    LOGGER.info("No scan metadata downloaded, aborting.")
-    exit()
-
-  # Date can be overridden if need be, but defaults to meta.json.
-  if options.get("date", None) is not None:
-    the_date = options.get("date")
-  else:
-    # depends on YYYY-MM-DD coming first in meta.json time format
-    scan_meta = ujson.load(open("data/output/parents/results/meta.json"))
-    the_date = scan_meta['start_time'][0:10]
-
-
-  # 2. Process and load data into Pulse's database.
-  LOGGER.info("[%s] Loading data into Pulse." % the_date)
-  data.processing.run(the_date, options)
-  LOGGER.info("[%s] Data now loaded into Pulse." % the_date)
-
-  # 3. Upload data to S3 (if requested).
-  if options.get("upload", False):
-    LOGGER.info("[%s] Syncing scan data and database to S3." % the_date)
-    upload_s3(the_date)
-    LOGGER.info("[%s] Scan data and database now in S3." % the_date)
-
-  LOGGER.info("[%s] All done." % the_date)
 
 
 # Upload the scan + processed data to /live/ and /archive/ locations by date.
