@@ -97,9 +97,7 @@ from app.data import LABELS
 #
 # This method blows away the database and rebuilds it from the given data.
 
-# options (for debugging)
-
-def run(date, options):
+def run(date):
   if date is None:
     date = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
 
@@ -1073,9 +1071,3 @@ def branch_for(agency):
 
   else:
     return "executive"
-
-### Run when executed.
-
-
-if __name__ == '__main__':
-    run(None, options())
