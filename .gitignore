@@ -28,4 +28,7 @@ pip-delete-this-directory.txt
 pip-selfcheck.json
 .coverage
 
+/csv/
+*.csv
+
 todo.txt

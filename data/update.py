@@ -185,6 +185,7 @@ def scan_parents(options):
 
 # Use domain-scan to gather .gov domains from public sources.
 def gather_subdomains(options):
+
   LOGGER.info("[gather] Gathering subdomains.")
 
   full_command = [GATHER_COMMAND]
