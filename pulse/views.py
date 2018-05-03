@@ -1,7 +1,7 @@
 
 from flask import render_template, Response
-from app import models
-from app.data import FIELD_MAPPING
+from pulse import models
+from pulse.data import FIELD_MAPPING
 import os
 import ujson
 

@@ -7,8 +7,10 @@ setuptools.setup(
     author='GSA 18F, CDS-SNC',
     author_email='pulse@cio.gov, cds-snc@tbs-sct.gc.ca',
     url='https://github.com/cds-snc/pulse',
+    include_package_data=True,
     packages=[
         'data',
+        'pulse',
     ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -41,5 +43,4 @@ setuptools.setup(
         [console_scripts]
         pulse=data.cli:main
     '''
-
 )

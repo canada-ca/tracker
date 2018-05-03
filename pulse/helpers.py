@@ -1,7 +1,7 @@
 import yaml
 import datetime
-from app import models
-from app.data import FIELD_MAPPING
+from pulse import models
+from pulse.data import FIELD_MAPPING
 
 # For use in templates.
 def register(app):

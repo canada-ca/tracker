@@ -1,0 +1,2 @@
++recursive-include pulse/templates *
++recursive-include pulse/static * 

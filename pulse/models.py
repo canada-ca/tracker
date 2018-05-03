@@ -3,7 +3,7 @@ import os
 import io
 import datetime
 import csv
-from app.data import CSV_FIELDS, FIELD_MAPPING, LABELS
+from pulse.data import CSV_FIELDS, FIELD_MAPPING, LABELS
 
 this_dir = os.path.dirname(__file__)
 

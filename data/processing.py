@@ -88,9 +88,9 @@ CUSTOMER_SATISFACTION_URLS = {
 ###
 # Main task flow.
 
-from app import models
-from app.models import Report, Domain, Agency
-from app.data import LABELS
+from pulse import models
+from pulse.models import Report, Domain, Agency
+from pulse.data import LABELS
 
 
 # Read in data from domains.csv, and scan data from domain-scan.
