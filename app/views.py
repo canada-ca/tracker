@@ -7,17 +7,21 @@ import ujson
 
 def register(app):
 
-    @app.route("/data/")
-    def data():
-        return render_template("data.html")
-
     @app.route("/")
     def index():
         return render_template("index.html")
 
+    @app.route("/domains/")
+    def https_domains():
+        return render_template("domains.html")
+
     @app.route("/about/")
     def about():
         return render_template("about.html")
+
+    @app.route("/feedback/")
+    def feedback():
+        return render_template("feedback.html")
 
     ##
     # Data endpoints.
@@ -84,84 +88,10 @@ def register(app):
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    @app.route("/https/domains/")
-    def https_domains():
-        return render_template("https/domains.html")
-
-    @app.route("/https/agencies/")
-    def https_agencies():
-        return render_template("https/agencies.html")
-
-    @app.route("/https/guidance/")
-    def https_guide():
-        return render_template("https/guide.html")
-
-    @app.route("/analytics/domains/")
-    def analytics_domains():
-        return render_template("analytics/domains.html")
-
-    @app.route("/analytics/agencies/")
-    def analytics_agencies():
-        return render_template("analytics/agencies.html")
-
-    @app.route("/analytics/guidance/")
-    def analytics_guide():
-        return render_template("analytics/guide.html")
-
-    hide_cust_sat = (os.getenv("HIDE_CUSTOMER_SATISFACTION", "false").lower() == "true")
-
-    if not hide_cust_sat:
-        @app.route("/customer-satisfaction/domains/")
-        def customersatisfaction_domains():
-            return render_template("customer-satisfaction/domains.html")
-
-        @app.route("/customer-satisfaction/agencies/")
-        def customersatisfaction_agencies():
-            return render_template("customer-satisfaction/agencies.html")
-
-        @app.route("/customer-satisfaction/guidance/")
-        def customersatisfaction_guide():
-            return render_template("customer-satisfaction/guide.html")
-
-    @app.route("/agency/<slug>")
-    def agency(slug=None):
-        agency = models.Agency.find(slug)
-        if agency is None:
-            pass # TODO: 404
-
-        return render_template("agency.html", agency=agency)
-
-    @app.route("/domain/<hostname>")
-    def domain(hostname=None):
-        domain = models.Domain.find(hostname)
-        if domain is None:
-            pass # TODO: 404
-
-        return render_template("domain.html", domain=domain)
-
     # Sanity-check RSS feed, shows the latest report.
     @app.route("/data/reports/feed/")
     def report_feed():
         return render_template("feed.xml")
-
-    hide_accessibility = (os.getenv("HIDE_ACCESSIBILITY", "false").lower() == "true")
-
-    if not hide_accessibility:
-        @app.route("/a11y/domain/<hostname>")
-        def a11ydomain(hostname=None):
-          return render_template("a11y.html", domain=hostname)
-
-        @app.route("/a11y/domains/")
-        def accessibility_domains():
-          return render_template("accessibility/domains.html")
-
-        @app.route("/a11y/agencies/")
-        def accessibility_agencies():
-          return render_template("accessibility/agencies.html")
-
-        @app.route("/a11y/guidance/")
-        def accessibility_guide():
-          return render_template("accessibility/guide.html")
 
     @app.errorhandler(404)
     def page_not_found(e):
