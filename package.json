@@ -1,0 +1,18 @@
+{
+  "name": "cds-webkit-example",
+  "author": "Canadian Digital Service",
+  "contributors": [
+    "Dave Samojlenko <dave.samojlenko@cds-snc.ca"
+  ],
+  "scripts": {
+    "build": "gulp build",
+    "dev": "gulp build && gulp watch:sass"
+  },
+  "dependencies": {
+    "cds-webkit": "^0.0.3",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-watch": "^5.0.0"
+  }
+}
