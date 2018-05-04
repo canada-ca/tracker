@@ -9,9 +9,13 @@
 
 <body>
 
-  <section id="content" role="main">
-    {%block content %}{% endblock %}
-  </section>
+	{% include 'includes/header.html' %}
+
+	<section id="content" role="main">
+		{%block content %}{% endblock %}
+	</section>
+
+	{% include 'includes/footer.html' %}
 
 </body>
 </html>
