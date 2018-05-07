@@ -298,9 +298,9 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-cds-webkit@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/cds-webkit/-/cds-webkit-0.0.3.tgz#33142523ed36ece8cd272b5fd476e22cd4db41fc"
+cds-webkit@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/cds-webkit/-/cds-webkit-0.0.5.tgz#14e1f72f9e6dee56a16bd5b3e62e9a629388ce10"
 
 chalk@^1.0.0:
   version "1.1.3"

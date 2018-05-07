@@ -9,7 +9,7 @@
     "dev": "gulp build && gulp watch:sass"
   },
   "dependencies": {
-    "cds-webkit": "^0.0.3",
+    "cds-webkit": "^0.0.5",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-notify": "^3.2.0",
