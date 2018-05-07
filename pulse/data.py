@@ -25,7 +25,6 @@ LABELS = {
         "sslv2": "SSLv2",
         "sslv3": "SSLv3",
     },
-    "analytics": {"participating": "Participates in DAP?"},
 }
 
 
@@ -69,5 +68,4 @@ CSV_FIELDS = {
         "sslv3",
         "preloaded",
     ],
-    "analytics": ["participating"],
 }

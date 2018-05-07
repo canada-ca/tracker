@@ -23,8 +23,6 @@ class Report:
     # https.enforces (number)
     # https.hsts (number)
     # https.bod (number)
-    # analytics.eligible (number)
-    # analytics.participates (number)
 
     # Initialize a report with a given date.
     @staticmethod
@@ -64,7 +62,6 @@ class Domain:
     # }
     #
     # https: { ... }
-    # analytics: { ... }
     #
 
     @staticmethod
@@ -193,10 +190,6 @@ class Agency:
     #   hsts (number)
     #   modern (number)
     #   preloaded (number)
-    # }
-    # analytics {
-    #   eligible (number)
-    #   participating (number)
     # }
     #
 

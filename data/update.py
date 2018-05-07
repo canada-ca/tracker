@@ -163,18 +163,12 @@ def download_s3():
 # Drop the output into data/output/parents/results.
 def scan_parents(options):
     scanners = "--scan=%s" % (str.join(",", SCANNERS))
-    analytics = "--analytics=%s" % ANALYTICS_URL
     output = "--output=%s" % PARENTS_DATA
-    a11y_redirects = "--a11y-redirects=%s" % A11Y_REDIRECTS
-    a11y_config = "--a11y-config=%s" % A11Y_CONFIG
 
     full_command = [
         SCAN_COMMAND,
         DOMAINS,
         scanners,
-        analytics,
-        a11y_config,
-        a11y_redirects,
         output,
         # "--debug", # always capture full output
         "--sort",
@@ -194,11 +188,6 @@ def scan_parents(options):
         value = options.get(flag)
         if value:
             full_command += ["--%s=%s" % (flag, str(value))]
-
-    # Until third_parties and a11y are moved to Lambda, can't
-    # do Lambda-sized worker count. Stick with default (10).
-    # if options.get("lambda"):
-    #   full_command += ["--workers=%i" % LAMBDA_WORKERS]
 
     shell_out(full_command)
 

@@ -1,5 +1,4 @@
 recursive-include pulse/templates *
 recursive-include pulse/static *
-recursive-include data/ineligible *
 include pulse/pulse_meta.yml
 include data/data_meta.yml

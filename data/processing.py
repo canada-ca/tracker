@@ -4,9 +4,6 @@
 #
 # * pshtt.csv - domain-scan, based on pshtt
 # * sslyze.csv - domain-scan, based on sslyze.
-# * analytics.csv - domain-scan, based on analytics.usa.gov data
-# * a11y.csv (optional) - pa11y scan data
-# * third_parties.csv (optional) - third party scan data
 #
 # And, in the data/output/subdomains directory:
 #
@@ -48,43 +45,6 @@ PARENT_DOMAINS_CSV = os.path.join(PARENT_CACHE, "domains.csv")
 SUBDOMAIN_DATA_AGENCIES = os.path.join(SUBDOMAIN_DATA, "./agencies")
 SUBDOMAIN_DOMAINS_CSV = os.path.join(SUBDOMAIN_DATA_GATHERED, "results", "gathered.csv")
 
-A11Y_ERRORS = {
-    "1_1": "Missing Image Descriptions",
-    "1_3": "Form - Initial Findings",
-    "1_4": "Color Contrast - Initial Findings",
-    "4_1": "HTML Attribute - Initial Findings",
-    None: "Other Errors",
-}
-
-CUSTOMER_SATISFACTION_TOOLS = {
-    "iperceptions01.azureedge.net": "iPerceptions",
-    "ips-invite.iperceptions.com": "iPerceptions",
-    "universal.iperceptions.com": "iPerceptions",
-    "api.iperceptions.com": "iPerceptions",
-    "health.foresee.com": "Foresee",
-    "events.foreseeresults.com": "Foresee",
-    "script.hotjar.com": "Hotjar",
-    "static.hotjar.com": "Hotjar",
-    "vars.hotjar.com": "Hotjar",
-    "js.hs-analytics.net": "HHS Voice of Customer Tool",
-    "api.mixpanel.com": "Mixpanel",
-    "siteintercept.qualtrics.com": "Qualtrics",
-    "assets01.surveymonkey.com": "SurveyMonkey",
-    "secure.surveymonkey.com": "SurveyMonkey",
-    "by2.uservoice.com": "UserVoice",
-}
-
-CUSTOMER_SATISFACTION_URLS = {
-    "iPerceptions": "https://www.iperceptions.com",
-    "Foresee": "https://www.foresee.com",
-    "Hotjar": "https://www.hotjar.com",
-    "HHS Voice of Customer Tool": "https://www.hhs.gov",
-    "Mixpanel": "https://mixpanel.com",
-    "Qualtrics": "https://www.qualtrics.com",
-    "SurveyMonkey": "https://www.surveymonkey.com",
-    "UserVoice": "https://www.uservoice.com",
-}
-
 ###
 # Main task flow.
 
@@ -116,23 +76,8 @@ def run(date: str, environment: str):
         domains, parent_scan_data, gathered_subdomains
     )
 
-    # Load in some manual exclusion data.
-    analytics_ineligible = yaml.safe_load(
-        open(os.path.join(this_dir, "ineligible/analytics.yml"))
-    )
-    analytics_ineligible_map = {}
-    for domain in analytics_ineligible:
-        analytics_ineligible_map[domain] = True
-
     # Capture manual exclusions and pull out some high-level data from pshtt.
     for domain_name in parent_scan_data.keys():
-
-        # mark manual ineligiblity for analytics if present
-        analytics = parent_scan_data[domain_name].get("analytics", None)
-        if analytics:
-            ineligible = analytics_ineligible_map.get(domain_name, False)
-            domains[domain_name]["exclude"]["analytics"] = ineligible
-
         # Pull out a few pshtt.csv fields as general domain-level metadata.
         pshtt = parent_scan_data[domain_name].get("pshtt", None)
         if pshtt is None:
@@ -333,31 +278,6 @@ def load_parent_scan_data(domains):
 
             parent_scan_data[domain]["sslyze"] = dict_row
 
-    # Now, analytics measurement.
-    if os.path.isfile(os.path.join(PARENT_RESULTS, "analytics.csv")):
-        headers = []
-        with open(os.path.join(PARENT_RESULTS, "analytics.csv"), newline="") as csvfile:
-            for row in csv.reader(csvfile):
-                if row[0].lower() == "domain":
-                    headers = row
-                    continue
-
-                domain = row[0].lower()
-                if not domains.get(domain):
-                    # LOGGER.info("[analytics] Skipping %s, not a federal domain from domains.csv." % domain)
-                    continue
-
-                # If it didn't appear in the pshtt data, skip it, we need this.
-                # if not domains[domain].get('pshtt'):
-                #   LOGGER.info("[analytics] Skipping %s, did not appear in pshtt.csv." % domain)
-                #   continue
-
-                dict_row = {}
-                for i, cell in enumerate(row):
-                    dict_row[headers[i]] = cell
-
-                parent_scan_data[domain]["analytics"] = dict_row
-
     return parent_scan_data
 
 
@@ -543,14 +463,6 @@ def process_domains(
 
         domains[domain_name]["totals"] = totals
 
-        ### Everything else
-        #
-        # For other reports, we still focus only on parent domains.
-        if eligible_for_analytics(domains[domain_name]):
-            domains[domain_name]["analytics"] = analytics_report_for(
-                domain_name, domains[domain_name], parent_scan_data
-            )
-
 
 # Given a list of domains or subdomains, quick filter to which
 # are eligible for this report, optionally for an agency.
@@ -608,15 +520,6 @@ def update_agency_totals(agencies, domains, subdomains):
         ]
         agency["preloading"] = total_preloading_report(eligible)
 
-        # Analytics. Parent domains.
-        # LOGGER.info("[%s][%s] Totalling report." % (agency['slug'], 'analytics'))
-        eligible = eligible_for("analytics", domains, agency)
-        totals = {"eligible": len(eligible), "participating": 0}
-        for report in eligible:
-            if report["participating"] == True:
-                totals["participating"] += 1
-        agency["analytics"] = totals
-
 
 # Create a Report about each tracked stat.
 def full_report(domains, subdomains):
@@ -647,117 +550,11 @@ def full_report(domains, subdomains):
     eligible = [host["https"] for hostname, host in domains.items()]
     full["preloading"] = total_preloading_report(eligible)
 
-    # Analytics. Parent domains only.
-    LOGGER.info("[analytics] Totalling full report.")
-    eligible = eligible_for("analytics", domains)
-    participating = 0
-    for report in eligible:
-        if report["participating"] == True:
-            participating += 1
-    full["analytics"] = {"eligible": len(eligible), "participating": participating}
-
     return full
 
 
 def eligible_for_https(domain):
     return ((domain["live"] == True) and (domain["branch"] == "executive"))
-
-
-def eligible_for_analytics(domain):
-    return (
-        (domain["live"] == True)
-        and (domain["redirect"] == False)
-        and (domain["branch"] == "executive")
-        and
-        # managed in data/ineligible/analytics.yml
-        (
-            (domain.get("exclude") is None)
-            or (domain["exclude"].get("analytics") is None)
-            or (domain["exclude"]["analytics"] == False)
-        )
-    )
-
-
-def eligible_for_a11y(domain):
-    return (
-        (domain["live"] == True)
-        and (domain["redirect"] == False)
-        and (domain["branch"] == "executive")
-    )
-
-
-def eligible_for_cust_sat(domain):
-    return (
-        (domain["live"] == True)
-        and (domain["redirect"] == False)
-        and (domain["branch"] == "executive")
-    )
-
-
-# Analytics conclusions for a domain based on analytics domain-scan data.
-def analytics_report_for(domain_name, domain, parent_scan_data):
-    if parent_scan_data[domain_name].get("analytics") is None:
-        return None
-
-    analytics = parent_scan_data[domain_name]["analytics"]
-    pshtt = parent_scan_data[domain_name]["pshtt"]
-
-    return {
-        "eligible": True,
-        "participating": boolean_for(analytics["Participates in Analytics"]),
-    }
-
-
-def a11y_report_for(domain_name, domain, parent_scan_data):
-    if parent_scan_data[domain_name].get("a11y") is None:
-        return None
-
-    a11y_report = {
-        "eligible": True,
-        "errors": 0,
-        "errorlist": {e: 0 for e in A11Y_ERRORS.values()},
-        "error_details": {e: [] for e in A11Y_ERRORS.values()},
-    }
-    if parent_scan_data[domain_name].get("a11y"):
-        a11y = parent_scan_data[domain_name]["a11y"]
-        for error in a11y:
-            if not error["code"]:
-                continue
-            a11y_report["errors"] += 1
-            category = get_a11y_error_category(error["code"])
-            a11y_report["errorlist"][category] += 1
-            details = {
-                k: error[k]
-                for k in ["code", "typeCode", "message", "context", "selector"]
-            }
-            a11y_report["error_details"][category].append(details)
-    return a11y_report
-
-
-def get_a11y_error_category(code):
-    error_id = code.split(".")[2].split("Guideline")[1]
-    return A11Y_ERRORS.get(error_id, "Other Errors")
-
-
-def cust_sat_report_for(domain_name, domain, parent_scan_data):
-    if parent_scan_data[domain_name].get("cust_sat") is None:
-        return None
-
-    cust_sat_report = {"eligible": True, "service_list": {}, "participating": False}
-    if parent_scan_data[domain_name].get("cust_sat"):
-        cust_sat = parent_scan_data[domain_name]["cust_sat"]
-        externals = [d.strip() for d in cust_sat["All External Domains"].split(",")]
-        cust_sat_tools = [
-            CUSTOMER_SATISFACTION_TOOLS[x]
-            for x in externals
-            if x in CUSTOMER_SATISFACTION_TOOLS
-        ]
-        cust_sat_report["service_list"] = {
-            s: CUSTOMER_SATISFACTION_URLS[s] for s in cust_sat_tools
-        }
-        cust_sat_report["participating"] = len(cust_sat_tools) > 0
-
-    return cust_sat_report
 
 
 # Given a pshtt report and (optional) sslyze report,
@@ -1020,8 +817,7 @@ def total_preloading_report(eligible):
 def print_report(report):
 
     for report_type in report.keys():
-        # The a11y report has a very different use than the others
-        if report_type == "report_date" or report_type == "a11y":
+        if report_type == "report_date":
             continue
 
         LOGGER.info("[%s]" % report_type)
@@ -1041,8 +837,6 @@ def print_report(report):
 
 
 ### utilities
-
-
 def shell_out(command, env=None):
     try:
         LOGGER.info("[cmd] %s" % str.join(" ", command))

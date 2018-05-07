@@ -29,16 +29,9 @@ DB_DATA = os.path.join(DATA_DIR, "./db.json")
 BUCKET_NAME = META["bucket"]
 AWS_REGION = META["aws_region"]
 
-# DAP source data
-ANALYTICS_URL = META["data"]["analytics_url"]
-
-# a11y source data
-A11Y_CONFIG = META["a11y"]["config"]
-A11Y_REDIRECTS = META["a11y"]["redirects"]
-
 ### Parent domain scanning information
 #
-scanner_string = os.environ.get("SCANNERS", "pshtt,sslyze,analytics")
+scanner_string = os.environ.get("SCANNERS", "pshtt,sslyze")
 SCANNERS = scanner_string.split(",")
 
 GATHER_SUFFIXES = os.environ.get("GATHER_SUFFIXES", ".ca,.gov.ca")
