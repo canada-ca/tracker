@@ -1,11 +1,4 @@
-# Site metadata.
-
-# Canonical URL
-url: https://pulse.cio.gov
-
-name: Pulse
-title: "The pulse of the federal .gov space"
-description: "How federal government domains are meeting best practices on the web."
+# Data metadata.
 
 # Data sources. These URLs should have their content updated in-place.
 data:

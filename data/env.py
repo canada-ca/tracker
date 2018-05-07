@@ -1,11 +1,16 @@
 import os
+import pkg_resources
 import sys
 import yaml
 
 DATA_DIR = os.path.dirname(__file__)
 
 # App-level metadata.
-META = yaml.safe_load(open(os.path.join(DATA_DIR, "../meta.yml")))
+_resource_package = __name__
+_resource_path = 'data_meta.yml'
+_meta_content = pkg_resources.resource_stream(_resource_package, _resource_path)
+META = yaml.safe_load(_meta_content)
+
 DOMAINS = os.environ.get("DOMAINS", META["data"]["domains_url"])
 
 # domain-scan paths (MUST be set in env)

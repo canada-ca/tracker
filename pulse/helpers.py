@@ -1,3 +1,5 @@
+import os
+import pkg_resources
 import yaml
 import datetime
 from pulse import models
@@ -17,7 +19,10 @@ def register(app):
             return datetime.datetime.now()
 
     # Make site metadata available everywhere.
-    meta = yaml.safe_load(open("meta.yml"))
+    resource_package = __name__
+    resource_path = 'pulse_meta.yml'
+    meta_content = pkg_resources.resource_stream(resource_package, resource_path)
+    meta = yaml.safe_load(meta_content)
 
     @app.context_processor
     def inject_meta():

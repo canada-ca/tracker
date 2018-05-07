@@ -19,17 +19,15 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
     ],
     install_requires=[
-        'cfenv==0.5.2',
         'flask==0.12',
         'gunicorn==19.6.0',
-        'newrelic==2.86.2.68',
         'pyyaml==3.12',
         'python-slugify==1.2.1',
         'Flask-PyMongo==0.5.1',
         'ujson==1.35',
-        'waitress==1.0.1',
         'flask-compress==1.4.0',
         'click==6.7',
+        'gevent==1.2.2',
     ],
     extras_require={
         'development': [

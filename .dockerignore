@@ -1,0 +1,7 @@
+csv
+deploy
+docs
+tests
+compliance
+.env
+*.egg-info
