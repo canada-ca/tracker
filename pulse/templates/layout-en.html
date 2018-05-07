@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<title>{% block title %}{% endblock title %}</title>
+	
+	{% include 'includes/head.html' %}
+</head>
+
+<body>
+
+	{% include 'includes/header.html' %}
+
+	<section id="content" role="main">
+		{%block content %}{% endblock %}
+	</section>
+
+	{% include 'includes/footer.html' %}
+
+</body>
+</html>

@@ -32,3 +32,5 @@ pip-selfcheck.json
 *.csv
 
 todo.txt
+
+node_modules

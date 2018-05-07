@@ -1,55 +1,56 @@
-<header class="site-header" role="banner">
-  <div class="disclaimer">
-    <span class="us-official">
-    An official website of the United States Government.
-    <img
-    alt=""
-    src="/static/images/us_flag_small.png">
-    </span>
-  </div>
-  <nav role="nav">
-    <div id="main-nav">
-        <h1 id="branding">
-            <a href="/">{{ site.name }}</a>
-        </h1>
-        <ul id="right-nav">
-            <li>
-                <a href="/https/domains/">HTTPS</a>
-            </li>
-            <li>
-                <a href="/analytics/domains/">Analytics</a>
-            </li>
-            <li>
-                <a href="/about/">About</a>
-            </li>
-            <li>
-                <a href="https://github.com/18f/pulse/issues">Feedback</a>
-            </li>
-        </ul>
-        <a href="#" id="menu-btn">MENU</a>
-    </div>
-  </nav>
+<header role="banner">
+    <div id="skiptocontent"><a href="#main-content">skip to main content</a></div>
 
-  <nav id="menu-content" role="nav">
-    <ul>
-      <li>
-        <a tabindex="-1" href="/">Home</a>
-      </li>
-      <li>
-          <a tabindex="-1" href="/https/domains/">HTTPS</a>
-      </li>
-      <li>
-          <a tabindex="-1" href="/analytics/domains/">Analytics</a>
-      </li>
-      <li>
-          <a tabindex="-1" href="/about/">About</a>
-      </li>
-      <li>
-          <a tabindex="-1" href="https://github.com/18f/pulse/issues">Feedback</a>
-      </li>
-    </ul>
-  </nav>
+    <!-- Alpha bar -->
 
-  <div class="overlay"></div>
+    <section class="bg-grey-darkest py-4 text-sm sm:block md:block lg:block xl:block">
+        <div class="container mx-auto text-white flex items-center">
+            <span class="flex-initial">
+                <span class="bg-blue-dark py-2 px-4 rounded uppercase mr-4">Alpha</span>
+            </span>
+            <span class="flex-1">This is an internal service</a>.</span>
+        </div>
+    </section>
+
+    <!-- GOC Identity Bar -->
+
+    <section id="goc-fip-bar">
+        <div class="container mx-auto flex">
+            <div class="flex-1 pt-2 pb-2">
+                <a href="https://www.canada.ca/en.html" aria-label="Government of Canada">
+                    <object type="image/svg+xml" tabindex="-1" role="img" data="/static/images/goc--header-logo.svg"
+                            aria-label="Symbol of the Government of Canada" class="h-6"></object>
+                </a>
+            </div>
+
+            <div class="flex-1 text-right pt-2 pb-2">
+                <h2 class="sr-only">Language selection</h2>
+                <a href="" class="text-white" lang="fr">Français</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+
+    <nav class="bg-grey-light">
+    	<div class="container mx-auto flex">
+    		<div class="flex-1">
+    			<h2 class="py-6 text-xl">HTTPS Everywhere</h2>
+    		</div>
+	        <div role="navigation" class="flex-1">
+	            <ul class="list-reset flex justify-end text-xl font-bold">
+	                <li class="mr-8 py-6 px-2">
+	                    <a class="text-blue hover:text-blue-darker" href="#">Home</a>
+	                </li>
+	                <li class="mr-8 py-6 px-2">
+	                    <a class="text-blue hover:text-blue-darker" href="#">About</a>
+	                </li>
+	                <li class="py-6">
+	                    <a class="text-blue hover:text-blue-darker" href="#">Feedback</a>
+	                </li>
+	            </ul>
+	        </div>
+	    </div>
+    </nav>
+
 </header>
-

@@ -1,39 +1,13 @@
-{% extends "layout.html" %}
+{% extends "layout-en.html" %}
 
-{% block page_id %}https{% endblock %}
-{% block title %}HTTPS (M-15-13 and BOD 18-01) - Pulse{% endblock %}
-{% block description %}How federal government domains are doing at deploying HTTPS and HSTS.{% endblock %}
+{% block title %}Test{% endblock %}
 
 {% block content %}
 
-{% include 'includes/https/header.html' %}
+<main class="container mx-auto mt-8">
+    <section id="main-content">
+        CONTENT
+    </section>
+</main>
 
-<section id="main-content" class="white-bkg">
-
-  <nav class="tab-menu" role="tablist">
-    <a href="/https/domains/" class="tab" role="tab" aria-controls="tab-panel" aria-selected="false">By Domain</a>
-    <span class="tab" role="tab" aria-controls="tab-panel" aria-selected="true">By Agency</span>
-    <a href="/https/guidance/" class="tab" role="tab" aria-controls="tab-panel" aria-selected="false">Guidance</a>
-  </nav>
-
-  <div id="tab-panel" class="wrapper" role="tabpanel" aria-hidden="false">
-    <table class="agency responsive https">
-      <caption>HTTPS by agency. Table is sortable via first row table headers. Each row contains an agency and related attributes.</caption>
-      <thead>
-        <tr>
-          <th class="all" scope="col">Agency</th>
-          <th class="all" scope="col">Services</th>
-          <th class="min-tablet" scope="col">Compliant with M-15-13 and BOD 18-01</th>
-          <th class="min-tablet" scope="col">Enforces HTTPS</th>
-          <th class="desktop" scope="col">HSTS</th>
-          <th class="desktop" scope="col">Free of RC4/3DES and SSLv2/SSLv3</th>
-          <th class="desktop" scope="col">Preloaded Domains</th>
-        </tr>
-      </thead>
-    </table>
-  </div>
-
-</section>
-
-<script src="/static/js/https/agencies.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
 {% endblock %}
