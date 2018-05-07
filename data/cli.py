@@ -15,7 +15,7 @@ LOGGER = logger.get_logger(__name__)
 class DateType(click.ParamType):
     name = 'date'
 
-    def convert(self, value, param, ctx) -> str:
+    def convert(self, value, param, ctx) -> typing.Optional[str]:
         try:
             datetime.datetime.strptime(value, '%Y-%m-%d')
             return value
@@ -32,8 +32,8 @@ def get_cached_date(directory: str) -> str:
 
 
 def get_date(
-        ctx: click.core.Context, # pylint: disable=unused-argument
-        param: click.core.Option, # pylint: disable=unused-argument
+        ctx: typing.Optional[click.core.Context], # pylint: disable=unused-argument
+        param: typing.Optional[click.core.Option], # pylint: disable=unused-argument
         value: typing.Optional[str]
     ) -> str:
 
@@ -44,7 +44,7 @@ def get_date(
 
 
 # Convert ['--option', 'value', ... ] to {'option': 'value', ...}
-def transform_args(args: typing.List[str]) -> typing.Dict[str, str]:
+def transform_args(args: typing.List[str]) -> typing.Dict[str, typing.Union[str, bool]]:
     transformed = {}
     for option, value in zip(args, args[1:]):
         if option.startswith('--'):
@@ -68,18 +68,20 @@ def main() -> None:
 @click.option('--scan', type=click.Choice(['skip', 'download', 'here']), default='skip')
 @click.option('--gather', type=click.Choice(['skip', 'here']), default='here')
 @click.option('--upload-results', is_flag=True, default=False)
+@click.option('--environment', type=str, default='development', envvar='PULSE_ENV')
 @click.argument('scan_args', nargs=-1, type=click.UNPROCESSED)
 def run(
         date: typing.Optional[str],
         scan: str,
         gather: str,
         upload_results: bool,
+        environment: str,
         scan_args: typing.List[str]
     ) -> None:
 
     update.callback(scan, gather, scan_args)
     the_date = get_date(None, 'date', date)
-    process.callback(the_date)
+    process.callback(the_date, environment)
     if upload_results:
         upload.callback(the_date)
 
@@ -126,7 +128,8 @@ def upload(date: str) -> None:
 
 @main.command(help='Process scan data')
 @click.option('--date', type=DATE, callback=get_date)
-def process(date: str) -> None:
+@click.option('--environment', type=str, default='development', envvar='PULSE_ENV')
+def process(date: str, environment: str) -> None:
 
     # Sanity check to make sure we have what we need.
     if not os.path.exists(os.path.join(PARENTS_RESULTS, "meta.json")):
@@ -134,5 +137,5 @@ def process(date: str) -> None:
         return
 
     LOGGER.info(f"[{date}] Loading data into Pulse.")
-    processing.run(date)
+    processing.run(date, environment)
     LOGGER.info(f"[{date}] Data now loaded into Pulse.")

@@ -10,7 +10,11 @@ def register(app):
   # Context processors and filters.
 
   def scan_date():
-    return models.Report.report_time(models.Report.latest()['report_date'])
+    latest = models.Report.latest()
+    if latest:
+      return models.Report.report_time(latest['report_date'])
+    else:
+      return datetime.datetime.now()
 
   # Make site metadata available everywhere.
   meta = yaml.safe_load(open("meta.yml"))

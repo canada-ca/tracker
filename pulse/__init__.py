@@ -24,4 +24,7 @@ def create_app(environment='development'):
     from pulse import helpers
     helpers.register(app)
 
+    from pulse.models import db
+    db.init_app(app)
+
     return app

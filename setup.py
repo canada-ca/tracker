@@ -25,7 +25,7 @@ setuptools.setup(
         'newrelic==2.86.2.68',
         'pyyaml==3.12',
         'python-slugify==1.2.1',
-        'tinydb==3.2.1',
+        'Flask-PyMongo==0.5.1',
         'ujson==1.35',
         'waitress==1.0.1',
         'flask-compress==1.4.0',
@@ -43,4 +43,5 @@ setuptools.setup(
         [console_scripts]
         pulse=data.cli:main
     '''
+
 )

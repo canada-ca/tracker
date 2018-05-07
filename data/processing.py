@@ -88,6 +88,7 @@ CUSTOMER_SATISFACTION_URLS = {
 ###
 # Main task flow.
 
+from pulse import create_app
 from pulse import models
 from pulse.models import Report, Domain, Agency
 from pulse.data import LABELS
@@ -98,7 +99,7 @@ from pulse.data import LABELS
 #
 # This method blows away the database and rebuilds it from the given data.
 
-def run(date):
+def run(date: str, environment: str):
   if date is None:
     date = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
 
@@ -163,27 +164,30 @@ def run(date):
   # Overwrites `domains` and `subdomains` in-place.
   process_domains(domains, agencies, subdomains, parent_scan_data, subdomain_scan_data)
 
+  _app = create_app(environment)
+
   # Reset the database.
   LOGGER.info("Clearing the database.")
-  models.clear_database()
+  with _app.app_context() as ctx:
+    models.clear_database()
 
-  # Calculate agency-level summaries. Updates `agencies` in-place.
-  update_agency_totals(agencies, domains, subdomains)
+    # Calculate agency-level summaries. Updates `agencies` in-place.
+    update_agency_totals(agencies, domains, subdomains)
 
-  # Calculate government-wide summaries.
-  report = full_report(domains, subdomains)
-  report['report_date'] = date
+    # Calculate government-wide summaries.
+    report = full_report(domains, subdomains)
+    report['report_date'] = date
 
-  LOGGER.info("Creating all domains.")
-  Domain.create_all(domains[domain_name] for domain_name in sorted_domains)
-  LOGGER.info("Creating all subdomains.")
-  Domain.create_all(subdomains[subdomain_name] for subdomain_name in sorted_subdomains)
-  LOGGER.info("Creating all agencies.")
-  Agency.create_all(agencies[agency_name] for agency_name in sorted_agencies)
+    LOGGER.info("Creating all domains.")
+    Domain.create_all(domains[domain_name] for domain_name in sorted_domains)
+    LOGGER.info("Creating all subdomains.")
+    Domain.create_all(subdomains[subdomain_name] for subdomain_name in sorted_subdomains)
+    LOGGER.info("Creating all agencies.")
+    Agency.create_all(agencies[agency_name] for agency_name in sorted_agencies)
 
-  # Create top-level summaries.
-  LOGGER.info("Creating government-wide totals.")
-  Report.create(report)
+    # Create top-level summaries.
+    LOGGER.info("Creating government-wide totals.")
+    Report.create(report)
 
   # Print and exit
   print_report(report)

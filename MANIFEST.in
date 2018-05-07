@@ -1,2 +1,2 @@
-+recursive-include pulse/templates *
-+recursive-include pulse/static * 
+recursive-include pulse/templates *
+recursive-include pulse/static *

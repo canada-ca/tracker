@@ -23,7 +23,7 @@ cg_staging:
 	make data_init && cf target -o gsa-ogp-pulse -s pulse && cf push pulse-staging
 
 debug:
-	DEBUG=true python pulse.py
+	PULSE_ENV=development DEBUG=true python pulse.py
 
 styles:
 	sass $(scss):$(css)
