@@ -8,7 +8,7 @@ DATA_DIR = os.path.dirname(__file__)
 # App-level metadata.
 _resource_package = __name__
 _resource_path = 'data_meta.yml'
-_meta_content = pkg_resources.resource_stream(_resource_package, _resource_path)
+_meta_content = pkg_resources.resource_string(_resource_package, _resource_path).decode('utf-8')
 META = yaml.safe_load(_meta_content)
 
 DOMAINS = os.environ.get("DOMAINS", META["data"]["domains_url"])
@@ -30,9 +30,8 @@ BUCKET_NAME = META["bucket"]
 AWS_REGION = META["aws_region"]
 
 ### Parent domain scanning information
-#
-scanner_string = os.environ.get("SCANNERS", "pshtt,sslyze")
-SCANNERS = scanner_string.split(",")
+# Run these scanners over *all* (which is a lot) discovered subdomains.
+SCANNERS = ["pshtt", "sslyze"]
 
 GATHER_SUFFIXES = os.environ.get("GATHER_SUFFIXES", ".ca,.gov.ca")
 
@@ -43,8 +42,6 @@ GATHERER_OPTIONS = [
     "--other=%s" % META["data"]["other_subdomains_url"], "--canada-gov=%s" % DOMAINS
 ]
 
-# Run these scanners over *all* (which is a lot) discovered subdomains.
-SUBDOMAIN_SCANNERS = ["pshtt", "sslyze"]
 
 # Used if --lambda is enabled during the scan.
 LAMBDA_WORKERS = 900

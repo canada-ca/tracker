@@ -10,6 +10,7 @@ import datetime
 import os
 import ujson
 import logging
+import typing
 
 # Import all the constants from data/env.py.
 from data.env import *
@@ -63,14 +64,23 @@ def update(scan_mode, gather_mode, options):
         elif gather_mode == "skip":
             LOGGER.info("Skipping subdomain gathering.")
 
+        # One day, these variables pulled globally from env.py will be gone
+        # And on that day, I will rejoice.
+        domain_scanners = SCANNERS
+        scan_command = SCAN_COMMAND
+        subdomains = os.path.join(SUBDOMAIN_DATA_GATHERED, "results", "gathered.csv")
+        subdomain_output = SUBDOMAIN_DATA_SCANNED
+        parent_domains = DOMAINS
+        parent_output = PARENTS_DATA
+
         # 1b. Scan subdomains for some types of things.
         LOGGER.info("Scanning subdomains.")
-        scan_subdomains(options)
+        scan_domains(options, scan_command, domain_scanners, subdomains, subdomain_output)
         LOGGER.info("Subdomain scanning complete")
 
         # 1c. Scan parent domains for all types of things.
         LOGGER.info("Scanning parent domains.")
-        scan_parents(options)
+        scan_domains(options, scan_command, domain_scanners, parent_domains, parent_output)
         LOGGER.info("Scan of parent domains complete.")
     elif scan_mode == "download":
         LOGGER.info("Downloading latest production scan data from S3.")
@@ -133,7 +143,7 @@ def download_s3():
     download("live/parents/results/meta.json", "output/parents/results/meta.json")
 
     # Results of subdomain scanning.
-    for scanner in SUBDOMAIN_SCANNERS:
+    for scanner in SCANNERS:
         download(
             "live/subdomains/scan/results/%s.csv" % scanner,
             "output/subdomains/scan/results/%s.csv" % scanner,
@@ -157,39 +167,6 @@ def download_s3():
     # This will be overwritten immediately if this is being used in
     # the context of a full data load/processing.
     download("live/db/db.json", "db.json")
-
-
-# Use domain-scan to scan .gov domains from the set domain URL.
-# Drop the output into data/output/parents/results.
-def scan_parents(options):
-    scanners = "--scan=%s" % (str.join(",", SCANNERS))
-    output = "--output=%s" % PARENTS_DATA
-
-    full_command = [
-        SCAN_COMMAND,
-        DOMAINS,
-        scanners,
-        output,
-        # "--debug", # always capture full output
-        "--sort",
-        "--meta",
-    ]
-
-    # Allow some options passed to python -m data.update to go
-    # through to domain-scan.
-    # Boolean flags.
-    for flag in ["cache", "serial", "lambda"]:
-        value = options.get(flag)
-        if value:
-            full_command += ["--%s" % flag]
-
-    # Flags with values.
-    for flag in ["lambda-profile"]:
-        value = options.get(flag)
-        if value:
-            full_command += ["--%s=%s" % (flag, str(value))]
-
-    shell_out(full_command)
 
 
 # Use domain-scan to gather .gov domains from public sources.
@@ -221,17 +198,19 @@ def gather_subdomains(options):
     shell_out(full_command)
 
 
-# Run pshtt on each gathered set of subdomains.
-def scan_subdomains(options):
-    LOGGER.info("[scan] Scanning subdomains.")
-
-    subdomains = os.path.join(SUBDOMAIN_DATA_GATHERED, "results", "gathered.csv")
+# Run pshtt on each gathered set of domains.
+def scan_domains(
+        options: typing.Dict[str, typing.Union[str, bool]],
+        command: str,
+        scanners: typing.List[str],
+        domains: str,
+        output: str) -> None:
 
     full_command = [
-        SCAN_COMMAND,
-        subdomains,
-        "--scan=%s" % str.join(",", SUBDOMAIN_SCANNERS),
-        "--output=%s" % SUBDOMAIN_DATA_SCANNED,
+        command,
+        domains,
+        "--scan=%s" % ','.join(scanners),
+        "--output=%s" % output,
         # "--debug", # always capture full output
         "--sort",
         "--meta",
@@ -259,8 +238,6 @@ def scan_subdomains(options):
 
 
 ## Utils function for shelling out.
-
-
 def shell_out(command, env=None):
     try:
         LOGGER.info("[cmd] %s", str.join(" ", command))

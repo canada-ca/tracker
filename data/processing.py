@@ -155,7 +155,6 @@ def load_domain_data():
     gathered_subdomain_map = {}
 
     # if domains.csv wasn't cached, download it anew
-
     if not os.path.exists(PARENT_DOMAINS_CSV):
         LOGGER.info("Downloading domains.csv...")
         mkdir_p(PARENT_CACHE)
@@ -243,7 +242,7 @@ def load_parent_scan_data(domains):
 
             domain = row[0].lower()
             if not domains.get(domain):
-                # LOGGER.info("[pshtt] Skipping %s, not a federal domain from domains.csv." % domain)
+                LOGGER.info("[pshtt] Skipping %s, not a federal domain from domains.csv.", domain)
                 continue
 
             dict_row = {}
@@ -260,7 +259,7 @@ def load_parent_scan_data(domains):
 
             domain = row[0].lower()
             if not domains.get(domain):
-                # LOGGER.info("[sslyze] Skipping %s, not a federal domain from domains.csv." % domain)
+                LOGGER.info("[sslyze] Skipping %s, not a in domains.csv.", domain)
                 continue
 
             dict_row = {}
@@ -270,7 +269,7 @@ def load_parent_scan_data(domains):
             # If the scan was invalid, most fields will be empty strings.
             # It'd be nice to make this more semantic on the domain-scan side.
             if dict_row["SSLv2"] == "":
-                # LOGGER.info("[%s] Skipping, scan data was invalid." % subdomain)
+                LOGGER.info("[%s] Skipping, scan data was invalid.", domain)
                 continue
 
             parent_scan_data[domain]["sslyze"] = dict_row
@@ -301,11 +300,11 @@ def load_subdomain_scan_data(domains, parent_scan_data, gathered_subdomains):
             parent_domain = row[1].lower()
 
             if subdomain not in gathered_subdomains:
-                # LOGGER.info("[%s] Skipping, not a gathered subdomain." % subdomain)
+                LOGGER.info("[%s] Skipping, not a gathered subdomain.", subdomain)
                 continue
 
             if not domains.get(parent_domain):
-                # LOGGER.info("[%s] Skipping, not a subdomain of a tracked domain." % (subdomain))
+                LOGGER.info("[%s] Skipping, not a subdomain of a tracked domain, parent %s.", subdomain, parent_domain)
                 continue
 
             dict_row = {}
@@ -350,7 +349,7 @@ def load_subdomain_scan_data(domains, parent_scan_data, gathered_subdomains):
             subdomain = row[0].lower()
 
             if not subdomain_scan_data.get(subdomain):
-                # LOGGER.info("[%s] Skipping, we didn't save pshtt data for this." % (subdomain))
+                LOGGER.info("[%s] Skipping, we didn't save pshtt data for this.", subdomain)
                 continue
 
             dict_row = {}
@@ -360,7 +359,7 @@ def load_subdomain_scan_data(domains, parent_scan_data, gathered_subdomains):
             # If the scan was invalid, most fields will be empty strings.
             # It'd be nice to make this more semantic on the domain-scan side.
             if dict_row["SSLv2"] == "":
-                # LOGGER.info("[%s] Skipping, scan data was invalid." % subdomain)
+                LOGGER.info("[%s] Skipping, scan data was invalid.", subdomain)
                 continue
 
             # if there are dupes for some reason, they'll be overwritten
