@@ -21,7 +21,7 @@ def register(app):
     # Make site metadata available everywhere.
     resource_package = __name__
     resource_path = 'pulse_meta.yml'
-    meta_content = pkg_resources.resource_stream(resource_package, resource_path)
+    meta_content = pkg_resources.resource_string(resource_package, resource_path).decode('utf-8')
     meta = yaml.safe_load(meta_content)
 
     @app.context_processor
