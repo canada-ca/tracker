@@ -5,7 +5,6 @@ LABELS = {
     "common": {
         "domain": "Domain",
         "canonical": "URL",
-        "branch": "Branch",
         "agency_name": "Agency",
         "base_domain": "Base Domain",
         "sources": "Sources",

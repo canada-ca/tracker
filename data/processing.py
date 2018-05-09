@@ -177,7 +177,6 @@ def load_domain_data():
             domain_type = row[1].strip()
             agency_name = row[2].strip()
             agency_slug = slugify.slugify(agency_name)
-            branch = branch_for(agency_name)
 
             if domain_name not in domain_map:
                 # By assuming the domain name is the base domain if it appears
@@ -193,7 +192,6 @@ def load_domain_data():
                     "agency_name": agency_name,
                     "agency_slug": agency_slug,
                     "sources": ["canada-gov"],
-                    "branch": branch,
                     "is_parent": True,
                     "exclude": {},
                 }
@@ -202,7 +200,6 @@ def load_domain_data():
                 agency_map[agency_slug] = {
                     "name": agency_name,
                     "slug": agency_slug,
-                    "branch": branch,
                     "total_domains": 1,
                 }
 
@@ -311,10 +308,6 @@ def load_subdomain_scan_data(domains, parent_scan_data, gathered_subdomains):
                 # LOGGER.info("[%s] Skipping, not a subdomain of a tracked domain." % (subdomain))
                 continue
 
-            if domains[parent_domain]["branch"] != "executive":
-                # LOGGER.info("[%s] Skipping, not displaying data on subdomains of legislative or judicial domains." % (subdomain))
-                continue
-
             dict_row = {}
             for i, cell in enumerate(row):
                 dict_row[headers[i]] = cell
@@ -336,7 +329,6 @@ def load_subdomain_scan_data(domains, parent_scan_data, gathered_subdomains):
                     "base_domain": parent_domain,
                     "agency_slug": domains[parent_domain]["agency_slug"],
                     "agency_name": domains[parent_domain]["agency_name"],
-                    "branch": domains[parent_domain]["branch"],
                     "is_parent": False,
                     "sources": gathered_subdomains[subdomain],
                 }
@@ -554,7 +546,7 @@ def full_report(domains, subdomains):
 
 
 def eligible_for_https(domain):
-    return ((domain["live"] == True) and (domain["branch"] == "executive"))
+    return domain["live"] == True
 
 
 # Given a pshtt report and (optional) sslyze report,
@@ -884,26 +876,3 @@ def boolean_for(string):
         return False
     else:
         return True
-
-
-def branch_for(agency):
-    if agency in [
-        "Library of Congress",
-        "The Legislative Branch (Congress)",
-        "Government Printing Office",
-        "Government Publishing Office",
-        "Congressional Office of Compliance",
-        "Stennis Center for Public Service",
-        "U.S. Capitol Police",
-        "Architect of the Capitol",
-    ]:
-        return "legislative"
-
-    if agency in ["The Judicial Branch (Courts)", "The Supreme Court", "U.S Courts"]:
-        return "judicial"
-
-    if agency in ["Non-Federal Agency"]:
-        return "non-federal"
-
-    else:
-        return "executive"

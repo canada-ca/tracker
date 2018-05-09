@@ -47,7 +47,6 @@ class Domain:
     # is_parent (boolean)
     #
     # agency_name (string)
-    # branch (string, legislative/judicial/executive)
     #
     # parent_domain (string)
     # sources (array of strings)
@@ -180,7 +179,6 @@ class Domain:
 class Agency:
     # agency_slug (string)
     # agency_name (string)
-    # branch (string)
     # total_domains (number)
     #
     # https {
