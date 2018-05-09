@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+	
 	<title>{% block title %}{% endblock title %}</title>
 	
 	{% include 'includes/head.html' %}
@@ -13,7 +14,13 @@
 
 	<main>
 
-		{%block content %}{% endblock %}
+		<header class="bg-grey-lighter py-6">
+
+			{% block page_header %}{% endblock %}
+
+		</header>
+
+		{% block content %}{% endblock %}
 
 	</main>
 
