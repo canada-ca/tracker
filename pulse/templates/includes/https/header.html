@@ -5,19 +5,19 @@
 		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vestibulum.</p>
 		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu dolor eget eros consequat congue. Nunc congue arcu imperdiet metus.</p>
 
-		<div class="flex justify-center sm:flex-col md:flex-row lg:flex-row xl:flex-row">
+		<div class="flex justify-center sm:flex-col md:flex-row lg:flex-row xl:flex-row mt-6">
 			<div class="flex-1 items-center text-center">
-				<div class="https_chart" data-width="287"></div>
 				<p class="font-bold text-2xl">HTTPS Enforced</p>
+				<div class="https_chart" data-width="287"></div>
 			</div>
 			<div class="flex-1 items-center text-center">
-				<div class="hsts_chart" data-width="287"></div>
 				<p class="font-bold text-2xl">HSTS</p>
+				<div class="hsts_chart" data-width="287"></div>
 			</div>
 			{% include 'includes/https/donut.html' %}
 		</div>
 	</div>
 	<div class="text-center mt-8 font-bold">
-		<p><a href="#" class="mr-8 uppercase text-blue hover:text-blue-darker">by organization</a> <a href="#" class="uppercase text-blue hover:text-blue-darker">by domain</a></p>
+		<p class="uppercase"><a href="#" class="mr-8 text-blue hover:text-blue-darker">by organization</a> by domain</p>
 	</div>
 </header>

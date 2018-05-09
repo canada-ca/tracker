@@ -59,26 +59,10 @@ function generate_chart(chart_class) {
         g.append("text")
             .attr("text-anchor", "middle")
             .attr("class", "text-5xl font-bold")
-            .attr("dy", "-0.1em")
+            .attr("dy", "0.4em")
             .attr("fill", "black")
             .text(function(d){
                 return "" + pie_data[0].value + "%";
-        });
-        g.append("text")
-            .attr("text-anchor", "middle")
-            .attr("class", "text-lg")
-            .attr("dy", "2.0em")
-            .attr("fill", "black")
-            .text(function(d) {
-                return "Lorem ipsum sit";
-        });
-        g.append("text")
-            .attr("text-anchor", "middle")
-            .attr("class", "text-lg")
-            .attr("dy", "3.5em")
-            .attr("fill", "black")
-            .text(function(d) {
-                return "amet";
         });
     });
 };
