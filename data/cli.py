@@ -4,6 +4,7 @@ import datetime
 import click
 import ujson
 from data.env import PARENTS_RESULTS
+from data.env import DATA_DIR
 from data import update as data_update
 from data import processing
 from data import logger
@@ -38,11 +39,7 @@ def get_date(
         param: typing.Optional[click.core.Option],  # pylint: disable=unused-argument
         value: typing.Optional[str],
     ) -> str:
-
-    # Date can be overridden if need be, but defaults to meta.json.
-    directory, _ = os.path.split(__file__)
-
-    return value if value is not None else get_cached_date(directory)
+    return value if value is not None else get_cached_date(DATA_DIR)
 
 
 # Convert ["--option", "value", ... ] to {"option": "value", ...}

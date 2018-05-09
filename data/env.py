@@ -3,7 +3,7 @@ import pkg_resources
 import sys
 import yaml
 
-DATA_DIR = os.path.dirname(__file__)
+DATA_DIR = os.path.join(os.getcwd(), 'data')
 
 # App-level metadata.
 _resource_package = __name__
