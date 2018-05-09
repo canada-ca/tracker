@@ -119,6 +119,11 @@ table caption {
 
     a {
       text-decoration: underline;
+      color: #3490dc !important;
+    }
+
+    a:hover {
+      color: #22292F !important;
     }
 
     a.loading {
@@ -192,10 +197,10 @@ table caption {
             td { border-bottom: none !important; }
           }
           &:hover {
-            background-color: #EEE;
+            background-color: $light-gray;
             cursor: pointer;
             +.child {
-              background-color: #EEE;
+              background-color: $light-gray;
             }
           }
         }
@@ -231,13 +236,13 @@ table caption {
 
     &.agency, &.domain {
       .progress-bar-indication {
-        background-color: #CCC;
+        background-color: $medium-gray;
         border-radius: 20px;
         width: 70%;
 
         > .meter {
           @include box-sizing(border-box);
-          background-color: $light-blue;
+          background-color: $dark-gray;
           background-repeat: repeat-x;
           background-size: 40px 40px;
           border-radius: 20px 0 0 20px;
@@ -271,14 +276,14 @@ table caption {
       font-size: 0.875em;
       border: none !important;
       &.current {
-        background: $medium-blue !important;
+        background: $dark-gray !important;
         color: white !important;
         &:hover {
           color: white !important;
         }
       }
       &:hover, &:focus {
-        background: $medium-blue !important;
+        background: $dark-gray !important;
         color: white !important;
       }
       &.disabled {

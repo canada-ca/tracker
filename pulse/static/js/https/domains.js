@@ -38,12 +38,6 @@ $(function () {
         },
         {data: "agency_name"}, // here for filtering/sorting
         {
-          data: "totals.https.compliant",
-          render: Tables.percentTotals("https", "compliant"),
-          width: "100px",
-          className: "compliant"
-        },
-        {
           data: "totals.https.enforces",
           render: Tables.percentTotals("https", "enforces")
         },
@@ -107,10 +101,6 @@ $(function () {
       2: "<strong>Yes</strong>"  // Yes
     },
 
-    compliant: {
-      false: "No",
-      true: "Yes"
-    }
   };
 
   var display = function(set) {
@@ -146,7 +136,7 @@ $(function () {
       var discoveryLink = l("/https/guidance/#subdomains", "publicly discoverable services");
       var link = "Showing data for " + number + " " + discoveryLink + " within " + base_domain + ".&nbsp;&nbsp;";
       link += l(csv, "Download all " + base_domain + " data as a CSV") + ".";
-      link += " Email " + l("mailto:pulse@cio.gov", "pulse@cio.gov") + " with questions.";
+      link += " Email " + l("mailto:", "mail placeholder") + " with questions.";
       var download = $("<tr></tr>").addClass("subdomain").html("<td class=\"link\" colspan=6>" + link + "</td>");
       all.push(download);
     }
@@ -158,11 +148,8 @@ $(function () {
       var link = "<a href=\"" + host.canonical + "\" target=\"blank\">" + Utils.truncate(host.domain, 35) + "</a>";
       details.append($("<td/>").addClass("link").html(link));
 
-      var compliant = names.compliant[host.https.compliant];
-      details.append($("<td class=\"compliant\"/>").html(compliant));
-
       var https = names.enforces[host.https.enforces];
-      details.append($("<td/>").html(https));
+      details.append($("<td class=\"compliant\"/>").html(https));
 
       var hsts = names.hsts[host.https.hsts];
       details.append($("<td/>").html(hsts));
@@ -189,7 +176,7 @@ $(function () {
     // determines whether remote fetching has to happen
     var fetch = !(loneDomain(row));
 
-    return n(row.domain) + " (" + l("#", showHideText(true, row), "onclick=\"return false\" data-fetch=\"" + fetch + "\" data-domain=\"" + row.domain + "\"") + ")";
+    return n(row.domain) + "<div class=\"mt-2\">" + l("#", showHideText(true, row), "onclick=\"return false\" data-fetch=\"" + fetch + "\" data-domain=\"" + row.domain + "\"") + "</div>";
   };
 
   var showHideText = function(show, row) {

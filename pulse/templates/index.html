@@ -8,6 +8,26 @@
     	
 	{% include 'includes/https/header.html' %}
 
+	<div id="tab-panel" class="container mx-auto" role="tabpanel" aria-hidden="false">
+	    <table class="domain responsive https">
+	      <caption class="sr-only">Secure HTTP(S) By Domain. Table is sortable via first row table headers. Each row contains a domain and related attributes.</caption>
+	      <thead>
+	        <tr>
+	          <th class="never"></th>
+	          <th class="all">Domain</th>
+	          <th class="never">Agency</th>
+	          <th class="min-tablet">Enforces HTTPS</th>
+	          <th class="min-tablet">HSTS</th>
+	          <th class="min-tablet-l">Free of RC4/3DES and SSLv2/SSLv3</th>
+	          <th class="min-tablet-l">Preloaded</th>
+	          <th class="none" scope="col"></th>
+	        </tr>
+	      </thead>
+	    </table>
+  	</div>
+
 </section>
+
+<script src="/static/js/https/domains.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script> 
 
 {% endblock %}

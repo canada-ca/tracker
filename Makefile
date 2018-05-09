@@ -1,5 +1,5 @@
-scss ?= static/scss/main.scss
-css ?= static/css/main.css
+scss ?= pulse/static/scss/main.scss
+css ?= pulse/static/css/main.css
 
 all: styles
 

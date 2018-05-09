@@ -29,7 +29,7 @@ $.fn.dataTable.Download = function ( inst ) {
     if (drawnOnce) return;
 
     var elem = "" +
-      "<a href=\"" + csv + "\" download>" +
+      "<a class=\"text-blue hover:text-blue-darker font-bold\" href=\"" + csv + "\" download>" +
         "Download as CSV" +
       "</a>";
 
