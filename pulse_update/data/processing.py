@@ -28,6 +28,7 @@ from shutil import copyfile
 # Import all the constants from data/env.py.
 from data.env import *
 from data import logger
+from data import models
 
 from statistics import mean
 
@@ -52,9 +53,7 @@ SUBDOMAIN_DOMAINS_CSV = os.path.join(SUBDOMAIN_DATA_GATHERED, "results", "gather
 # All database operations are made in the run() method.
 #
 # This method blows away the database and rebuilds it from the given data.
-
-
-def run(date: str, environment: str):
+def run(date: str, connection_string: str):
     if date is None:
         date = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
 
@@ -110,12 +109,10 @@ def run(date: str, environment: str):
         domains, agencies, subdomains, parent_scan_data, subdomain_scan_data
     )
 
-    _app = create_app(environment)
-
     # Reset the database.
     LOGGER.info("Clearing the database.")
-    with _app.app_context() as ctx:
-        models.clear_database()
+    with models.Connection(connection_string) as connection:
+        connection.clear_database()
 
         # Calculate agency-level summaries. Updates `agencies` in-place.
         update_agency_totals(agencies, domains, subdomains)
@@ -125,17 +122,17 @@ def run(date: str, environment: str):
         report["report_date"] = date
 
         LOGGER.info("Creating all domains.")
-        Domain.create_all(domains[domain_name] for domain_name in sorted_domains)
+        connection.domains.create_all(domains[domain_name] for domain_name in sorted_domains)
         LOGGER.info("Creating all subdomains.")
-        Domain.create_all(
+        connection.domains.create_all(
             subdomains[subdomain_name] for subdomain_name in sorted_subdomains
         )
         LOGGER.info("Creating all agencies.")
-        Agency.create_all(agencies[agency_name] for agency_name in sorted_agencies)
+        connection.agencies.create_all(agencies[agency_name] for agency_name in sorted_agencies)
 
         # Create top-level summaries.
         LOGGER.info("Creating government-wide totals.")
-        Report.create(report)
+        connection.reports.create(report)
 
     # Print and exit
     print_report(report)

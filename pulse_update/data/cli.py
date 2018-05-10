@@ -22,8 +22,6 @@ class DateType(click.ParamType):
             return value
         except ValueError:
             self.fail(f"{value} is not a valid date")
-
-
 DATE = DateType()
 
 
@@ -65,20 +63,20 @@ def main() -> None:
 @click.option("--scan", type=click.Choice(["skip", "download", "here"]), default="skip")
 @click.option("--gather", type=click.Choice(["skip", "here"]), default="here")
 @click.option("--upload-results", is_flag=True, default=False)
-@click.option("--environment", type=str, default="development", envvar="PULSE_ENV")
+@click.option("--connection", type=str, default="mongodb://localhost:21017", envvar="PULSE_MONGO_URI")
 @click.argument("scan_args", nargs=-1, type=click.UNPROCESSED)
 def run(
         date: typing.Optional[str],
         scan: str,
         gather: str,
         upload_results: bool,
-        environment: str,
+        connection: str,
         scan_args: typing.List[str],
     ) -> None:
 
     update.callback(scan, gather, scan_args)
     the_date = get_date(None, "date", date)
-    process.callback(the_date, environment)
+    process.callback(the_date, connection)
     if upload_results:
         upload.callback(the_date)
 
@@ -118,8 +116,8 @@ def upload(date: str) -> None:
 
 @main.command(help="Process scan data")
 @click.option("--date", type=DATE, callback=get_date)
-@click.option("--environment", type=str, default="development", envvar="PULSE_ENV")
-def process(date: str, environment: str) -> None:
+@click.option("--connection", type=str, default="mongodb://localhost:21017", envvar="PULSE_MONGO_URI")
+def process(date: str, connection: str) -> None:
 
     # Sanity check to make sure we have what we need.
     if not os.path.exists(os.path.join(PARENTS_RESULTS, "meta.json")):
@@ -127,5 +125,5 @@ def process(date: str, environment: str) -> None:
         return
 
     LOGGER.info(f"[{date}] Loading data into Pulse.")
-    processing.run(date, environment)
+    processing.run(date, connection)
     LOGGER.info(f"[{date}] Data now loaded into Pulse.")
