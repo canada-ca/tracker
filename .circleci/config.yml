@@ -24,11 +24,41 @@ jobs:
               . .env/bin/activate
               # pylint src tests -- Major overhaul needed to not fail linting, not including linting in tests for now
               # mypy src tests
+              pytest --cov=pulse tests
+          name: "Running tests"
+    working_directory: ~/repo/pulse
+  data:
+    docker:
+      - image: "circleci/python:3.6.1"
+      - image: "mongo:3.6.2"
+    steps:
+      - checkout:
+          path: ~/repo
+      - restore_cache:
+          key: "deps1-{{ .Branch }}-{{ checksum \"requirements.txt\" }}"
+      - run:
+          command: |
+              python3 -m venv .env
+              . .env/bin/activate
+              pip install -r requirements.txt
+              pip install -e .[development]
+          name: "Installing dependencies"
+      - save_cache:
+          key: "deps1-{{ .Branch }}-{{ checksum \"requirements.txt\" }}"
+          paths:
+            - .env
+      - run:
+          command: |
+              . .env/bin/activate
+              # pylint src tests -- Major overhaul needed to not fail linting, not including linting in tests for now
+              # mypy src tests
               pytest --cov=data tests
           name: "Running tests"
-    working_directory: ~/repo
+    working_directory: ~/repo/pulse_update
+
 workflows:
   version: 2
   pulse:
     jobs:
       - pulse 
+      - data

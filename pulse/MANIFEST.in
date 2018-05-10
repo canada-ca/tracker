@@ -1,4 +1,3 @@
 recursive-include pulse/templates *
 recursive-include pulse/static *
 include pulse/pulse_meta.yml
-include data/data_meta.yml

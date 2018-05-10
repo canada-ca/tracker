@@ -1,7 +1,7 @@
-/data/output
-/data/backup
-/data/*.json
-/data/*.env
+/pulse_update/data/output
+/pulse_update/data/backup
+/pulse_update/data/*.json
+/pulse_update/data/*.env
 db.json
 .env
 
@@ -16,6 +16,10 @@ bin
 include
 lib
 
+# Linting
+.mypy_cache/
+.pytest_cache
+
 /deploy/node_modules
 
 # Mac specific
@@ -28,9 +32,9 @@ pip-delete-this-directory.txt
 pip-selfcheck.json
 .coverage
 
-/csv/
+pulse_update/csv/
 *.csv
 
 todo.txt
 node_modules
-/instance
+pulse/instance

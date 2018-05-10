@@ -4,7 +4,6 @@ LABEL Description="HTTPS Everywhere Flask Application" Vendor="Canadian Digital 
 
 COPY setup.py deploy/setup.py 
 COPY pulse deploy/pulse
-COPY data deploy/data
 COPY MANIFEST.in deploy/MANIFEST.in
 RUN python -m venv .env && . .env/bin/activate
 RUN pip install deploy/.

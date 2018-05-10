@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name='pulse',
+    name='pulse_update',
     version='0.0.1',
     long_description='',
     author='GSA 18F, CDS-SNC',
@@ -10,7 +10,6 @@ setuptools.setup(
     include_package_data=True,
     packages=[
         'data',
-        'pulse',
     ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -19,15 +18,11 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
     ],
     install_requires=[
-        'flask==0.12',
-        'gunicorn==19.6.0',
         'pyyaml==3.12',
-        'python-slugify==1.2.1',
-        'Flask-PyMongo==0.5.1',
+        'pymongo==3.6.1',
         'ujson==1.35',
-        'flask-compress==1.4.0',
         'click==6.7',
-        'gevent==1.2.2',
+        'python-slugify==1.2.1',
     ],
     extras_require={
         'development': [

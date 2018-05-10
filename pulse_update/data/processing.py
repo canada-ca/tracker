@@ -48,12 +48,6 @@ SUBDOMAIN_DOMAINS_CSV = os.path.join(SUBDOMAIN_DATA_GATHERED, "results", "gather
 ###
 # Main task flow.
 
-from pulse import create_app
-from pulse import models
-from pulse.models import Report, Domain, Agency
-from pulse.data import LABELS
-
-
 # Read in data from domains.csv, and scan data from domain-scan.
 # All database operations are made in the run() method.
 #
