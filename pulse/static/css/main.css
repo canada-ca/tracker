@@ -170,7 +170,9 @@ table caption {
     .dataTables_wrapper table.dataTable.agency .progress-bar-indication, .dataTables_wrapper table.dataTable.domain .progress-bar-indication {
       background-color: #B8C2CC;
       border-radius: 20px;
-      width: 70%; }
+      width: 70%;
+      position: relative;
+      left: 35px; }
       .dataTables_wrapper table.dataTable.agency .progress-bar-indication > .meter, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -192,10 +194,10 @@ table caption {
         .dataTables_wrapper table.dataTable.agency .progress-bar-indication > .meter.width3, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter.width3 {
           background-color: transparent; }
       .dataTables_wrapper table.dataTable.agency .progress-bar-indication p, .dataTables_wrapper table.dataTable.domain .progress-bar-indication p {
-        font-weight: 900;
         font-size: 0.875em;
         position: relative;
-        top: -18px; }
+        top: 5px;
+        left: -45px; }
   .dataTables_wrapper .dataTables_info {
     padding-top: 0 !important; }
   .dataTables_wrapper .dataTables_paginate a.paginate_button {
