@@ -18,10 +18,23 @@
 
 	<div id="tab-panel" class="container mx-auto" role="tabpanel" aria-hidden="false">
 	    
-	    <p> table goes here</p>
+	    <table class="agency responsive https">
+	      <caption>HTTPS by agency. Table is sortable via first row table headers. Each row contains an agency and related attributes.</caption>
+	      <thead>
+	        <tr>
+	          <th class="never"></th>
+	          <th class="all" scope="col">Organization</th>
+	          <th class="min-tablet" scope="col">Enforces HTTPS</th>
+	          <th class="desktop" scope="col">HSTS</th>
+	          <th class="desktop" scope="col">Free of RC4/3DES and SSLv2/SSLv3</th>
+	          <th class="desktop" scope="col">Preloaded Domains</th>
+	        </tr>
+	      </thead>
+    	</table>
 
   	</div>
 
 </section>
 
+<script src="/static/js/https/agencies.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
 {% endblock %}
