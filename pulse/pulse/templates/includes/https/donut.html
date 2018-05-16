@@ -4,7 +4,7 @@ function generate_chart(chart_class) {
     var elem = chart[0][0];
     var width = chart.attr("data-width");
     if (width == null)
-        width = getComputedStyle(elem.parentElement).width;
+        width = calculate_width();
     width = parseInt(width);
     var height = width * 1.2;
     var radius = Math.min(width, height) / 2;
@@ -66,6 +66,15 @@ function generate_chart(chart_class) {
         });
     });
 };
+
+function calculate_width() {
+    window_width = $(window).width();
+
+    if(window_width < 769)
+        return 250;
+    else
+        return 287;
+}
 
 generate_chart(".https_chart")
 

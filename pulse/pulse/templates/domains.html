@@ -2,7 +2,8 @@
 
 {% block title %}HTTPS Everywhere{% endblock %}
 
-{% block page_header %}
+{% block content %}
+<header class="bg-grey-lighter py-6">
 
 	{% include 'includes/https/header.html' %}
 
@@ -10,9 +11,7 @@
 		<p class="uppercase"><a href="/" class="mr-8 text-blue hover:text-blue-darker">by organization</a> by domain</a></p>
 	</div>
 
-{% endblock %}
-
-{% block content %}
+</header>
 
 <section id="main-content">
 
@@ -37,5 +36,4 @@
 </section>
 
 <script src="/static/js/https/domains.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script> 
-
 {% endblock %}

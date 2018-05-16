@@ -1,17 +1,17 @@
-<div class="container mx-auto items-center sm:w-4/5 lg:w-3/5">
-	<h1>HTTPS</h1>
-	<h2 class="mb-6">Last updated April 16, 2018</h2>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vestibulum.</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu dolor eget eros consequat congue. Nunc congue arcu imperdiet metus.</p>
+<div class="container mx-auto items-center sm:w-4/5 xl:w-3/5">
+	<h1 class="text-4xl sm:text-5xl">HTTPS</h1>
+	<h2 class="mb-4 sm:mb-6 text-xl sm:text-2xl">Last updated April 16, 2018</h2>
+	<p class="text-base sm:text-lg">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vestibulum.</p>
+	<p class="text-base sm:text-lg">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu dolor eget eros consequat congue. Nunc congue arcu imperdiet metus.</p>
 
-	<div class="flex justify-center sm:flex-col md:flex-row lg:flex-row xl:flex-row mt-6">
-		<div class="flex-1 items-center text-center">
-			<h3 class="font-bold text-2xl">HTTPS Enforced</h3>
-			<div class="https_chart" data-width="287"></div>
+	<div class="flex flex-col justify-center md:flex-row lg:flex-row xl:flex-row mt-6 mx-auto xl:w-5/6">
+		<div class="flex-1 items-center text-center md:mr-8">
+			<h3 class="font-bold text-xl sm:text-2xl">HTTPS Enforced</h3>
+			<div class="https_chart"></div>
 		</div>
-		<div class="flex-1 items-center text-center">
-			<h3 class="font-bold text-2xl">HSTS</h3>
-			<div class="hsts_chart" data-width="287"></div>
+		<div class="flex-1 items-center text-center md:ml-8">
+			<h3 class="font-bold text-xl sm:text-2xl">HSTS</h3>
+			<div class="hsts_chart"></div>
 		</div>
 			{% include 'includes/https/donut.html' %}
 	</div>

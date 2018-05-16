@@ -3,7 +3,7 @@
 
     <!-- Alpha bar -->
 
-    <section class="bg-grey-darkest py-4 text-sm sm:block md:block lg:block xl:block">
+    <section class="bg-grey-darkest py-4 text-xs sm:text-sm sm:block md:block lg:block xl:block">
         <div class="container mx-auto text-white flex items-center">
             <span class="flex-initial">
                 <span class="bg-blue-dark py-2 px-4 rounded uppercase mr-4">Alpha</span>
@@ -23,7 +23,7 @@
                 </a>
             </div>
 
-            <div class="flex-1 text-right pt-2 pb-2">
+            <div class="flex-1 text-right pt-2 pb-2 hidden sm:inline">
                 <h2 class="sr-only">Language selection</h2>
                 <a href="" class="text-white" lang="fr">Français</a>
             </div>
@@ -35,14 +35,17 @@
     <nav class="bg-grey-light">
     	<div class="container mx-auto flex">
     		<div class="flex-1">
-    			<h2 class="py-6 text-xl"><a class="underline text-black" href="/">HTTPS Everywhere</a></h2>
+    			<h2 class="py-6 text-lg sm:text-xl"><a class="underline text-black" href="/">HTTPS Everywhere</a></h2>
     		</div>
 	        <div role="navigation" class="flex-1">
-	            <ul class="list-reset flex justify-end text-xl font-bold">
-	                <li class="mr-8 py-6 px-2">
+	            <ul class="list-reset flex justify-end text-lg sm:text-xl font-bold">
+                    <li class="py-6 inline sm:hidden">
+                        <a class="text-blue hover:text-blue-darker" href="#">Menu</a>
+                    </li>
+	                <li class="mr-8 py-6 px-2 hidden sm:inline">
 	                    <a class="text-blue hover:text-blue-darker" href="#">About</a>
 	                </li>
-	                <li class="py-6">
+	                <li class="py-6 hidden sm:inline">
 	                    <a class="text-blue hover:text-blue-darker" href="#">Feedback</a>
 	                </li>
 	            </ul>

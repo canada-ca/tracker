@@ -2,7 +2,8 @@
 
 {% block title %}HTTPS Everywhere{% endblock %}
 
-{% block page_header %}
+{% block content %}
+<header class="bg-grey-lighter py-6">
 
 	{% include 'includes/https/header.html' %}
 
@@ -10,9 +11,7 @@
 		<p class="uppercase">by organization <a href="/domains/" class="ml-8 text-blue hover:text-blue-darker">by domain</a></p>
 	</div>
 
-{% endblock %}
-
-{% block content %}
+</header>
 
 <section id="main-content">
 
