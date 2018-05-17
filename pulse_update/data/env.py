@@ -1,6 +1,6 @@
 import os
-import pkg_resources
 import sys
+import pkg_resources
 import yaml
 
 DATA_DIR = os.path.join(os.getcwd(), 'data')

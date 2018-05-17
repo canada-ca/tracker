@@ -1,30 +1,22 @@
 #!/bin/bash
 
-# Set the path to domain-scan.
-export DOMAIN_SCAN_PATH=/opt/scan/domain-scan/scan
-export DOMAIN_GATHER_PATH=/opt/scan/domain-scan/gather
+aws lambda get-function --function-name task_sslyze > /dev/null
+SSLYZE=$?
+aws lambda get-function --function-name task_pshtt > /dev/null
+PSHTT=$?
 
-# Baseline where Pulse is checked out to, what env we're using.
-export PULSE_ENV=production
-export PULSE_HOME=/opt/scan/pulse
+LAMBDA=0
+if [[ $SSLYZE -eq 0 && $PSHTT -eq 0 ]]
+then
+    LAMBDA=1
+fi 
 
-# Go to pulse environment home
 cd $PULSE_HOME
-
-# Load local non-versioned secrets, and low-level system env
-source $HOME/.bashrc
-
-# Update one's own code (TODO: devops)
-git pull
-
-# run the relevant env-specific data update path
-make update_$PULSE_ENV
-
-# scan data was turned into db.json,
-# and all data has been uploaded to S3.
-
-# Update one's own code again before deploy (TODO: devops)
-git pull
-
-# Finally, deploy the production website.
-make cg_production_autodeploy
+pulse preprocess
+if [[ $LAMBDA -eq 1 ]]
+then
+    pulse run --scan here --lambda --lambda-profile lambda
+else
+    pulse run --scan here
+fi
+rm -rf data/output
