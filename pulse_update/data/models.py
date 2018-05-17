@@ -12,7 +12,11 @@ def _insert_all(client: pymongo.MongoClient, collection: str, documents: typing.
 
 
 def _insert(client: pymongo.MongoClient, collection: str, document: typing.Dict) -> None:
-    client.get_database().get_collection(collection).insert_onc(document)
+    client.get_database().get_collection(collection).insert_one(document)
+
+
+def _find(client: pymongo.MongoClient, collection: str, query: typing.Dict) -> typing.Iterable[typing.Dict]:
+    return client.get_database().get_collection(collection).find(query, {'_id': False})
 
 
 class _Collection():
@@ -26,6 +30,9 @@ class _Collection():
 
     def create(self, document: typing.Dict) -> None:
         _insert(self._client, self._name, document)
+
+    def all(self) -> typing.Iterable[typing.Dict]:
+        return _find(self._client, self._name, {})
 
 
 class Connection():
@@ -50,6 +57,14 @@ class Connection():
     @property
     def agencies(self) -> _Collection:
         return _Collection(self._client, 'agencies')
+
+    @property
+    def parents(self) -> _Collection:
+        return _Collection(self._client, 'parents')
+
+    @property
+    def subdomains(self) -> _Collection:
+        return _Collection(self._client, 'subdomains')
 
     def close(self) -> None:
         self._client.close()

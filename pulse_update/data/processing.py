@@ -164,7 +164,6 @@ def load_domain_data():
                 continue
 
             domain_name = row[0].lower().strip()
-            domain_type = row[1].strip()
             agency_name = row[2].strip()
             agency_slug = slugify.slugify(agency_name)
 
@@ -202,7 +201,6 @@ def load_domain_data():
                 continue
 
             subdomain_name = row[0].lower().strip()
-            base_domain = row[1].lower().strip()
 
             if subdomain_name not in gathered_subdomain_map:
                 # check each source

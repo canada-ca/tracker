@@ -53,7 +53,6 @@ LOGGER = logger.get_logger(__name__)
 # options
 #     options to pass along to scan and gather operations
 
-
 def update(scan_mode, gather_mode, options):
     if scan_mode == "here":
         # 1a. Gather .gov federal subdomains.

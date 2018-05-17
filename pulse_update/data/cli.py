@@ -1,3 +1,4 @@
+import csv
 import os
 import typing
 import datetime
@@ -8,6 +9,8 @@ from data.env import DATA_DIR
 from data import update as data_update
 from data import processing
 from data import logger
+from data import models
+from data.preprocess import pull_data
 
 
 LOGGER = logger.get_logger(__name__)
@@ -51,8 +54,12 @@ def transform_args(args: typing.List[str]) -> typing.Dict[str, typing.Union[str,
 
 
 @click.group()
-def main() -> None:
-    pass
+@click.option("--connection", type=str, default="mongodb://localhost:21017/pulse", envvar="PULSE_MONGO_URI")
+@click.pass_context
+def main(ctx: click.core.Context, connection: str) -> None:
+    ctx.obj = {
+        'connection_string': connection
+    }
 
 
 @main.command(
@@ -63,22 +70,31 @@ def main() -> None:
 @click.option("--scan", type=click.Choice(["skip", "download", "here"]), default="skip")
 @click.option("--gather", type=click.Choice(["skip", "here"]), default="here")
 @click.option("--upload-results", is_flag=True, default=False)
-@click.option("--connection", type=str, default="mongodb://localhost:21017", envvar="PULSE_MONGO_URI")
 @click.argument("scan_args", nargs=-1, type=click.UNPROCESSED)
+@click.pass_context
 def run(
+        ctx: click.core.Context,
         date: typing.Optional[str],
         scan: str,
         gather: str,
         upload_results: bool,
-        connection: str,
         scan_args: typing.List[str],
     ) -> None:
 
     update.callback(scan, gather, scan_args)
     the_date = get_date(None, "date", date)
-    process.callback(the_date, connection)
+    process.callback(the_date)
     if upload_results:
         upload.callback(the_date)
+
+
+@main.command()
+@click.option("--output", type=click.Path())
+@click.pass_context
+def preprocess(ctx: click.core.Context, output: typing.Optional[str]) -> None:
+    if not output:
+        output = os.path.join(os.getcwd(), 'csv')
+    pull_data(output, ctx.obj.get('connection_string'))
 
 
 @main.command(
@@ -88,7 +104,6 @@ def run(
 @click.option("--gather", type=click.Choice(["skip", "here"]), default="here")
 @click.argument("scan_args", nargs=-1, type=click.UNPROCESSED)
 def update(scan: str, gather: str, scan_args: typing.List[str]) -> None:
-
     LOGGER.info("Starting update")
     data_update.update(scan, gather, transform_args(scan_args))
     LOGGER.info("Finished update")
@@ -116,14 +131,37 @@ def upload(date: str) -> None:
 
 @main.command(help="Process scan data")
 @click.option("--date", type=DATE, callback=get_date)
-@click.option("--connection", type=str, default="mongodb://localhost:21017", envvar="PULSE_MONGO_URI")
-def process(date: str, connection: str) -> None:
-
+@click.pass_context
+def process(ctx: click.core.Context, date: str) -> None:
     # Sanity check to make sure we have what we need.
     if not os.path.exists(os.path.join(PARENTS_RESULTS, "meta.json")):
         LOGGER.info("No scan metadata downloaded, aborting.")
         return
 
     LOGGER.info(f"[{date}] Loading data into Pulse.")
-    processing.run(date, connection)
+    processing.run(date, ctx.obj.get('connection_string'))
     LOGGER.info(f"[{date}] Data now loaded into Pulse.")
+
+
+@main.command(help="Populate DB with domains")
+@click.option('--parents', type=click.File('r'))
+@click.option('--subdomains', type=click.File('r'))
+@click.pass_context
+def insert(ctx: click.core.Context, parents: typing.IO[str], subdomains: typing.IO[str]) -> None:
+    parents_reader = csv.DictReader(parents)
+    subdomain_reader = csv.DictReader(subdomains)
+
+    def relevant_parent(document: typing.Dict) -> typing.Dict:
+        return {
+            'domain': document.get('domain'),
+            'organization': document.get('organization')
+        }
+
+    def relevant_subdomain(document: typing.Dict) -> typing.Dict:
+        return {
+            'domain': document.get('domain'),
+        }
+
+    with models.Connection(ctx.obj.get('connection_string')) as connection:
+        connection.parents.create_all(relevant_parent(document) for document in parents_reader)
+        connection.subdomains.create_all(relevant_subdomain(document) for document in subdomain_reader)
