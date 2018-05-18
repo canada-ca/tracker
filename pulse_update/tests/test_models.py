@@ -2,28 +2,25 @@ import random
 import typing
 import pymongo
 import pytest
-import _pytest
 from data import models
 
 
-def connection_string() -> str:
+@pytest.fixture
+def connection_string() -> typing.Iterator[str]:
     database = f'pulse_{random.randint(0, 1000)}'
     connection = f'mongodb://localhost:27017/{database}'
 
-    return connection
+    yield connection
+
+    with pymongo.MongoClient('mongodb://localhost:27017') as client:
+        client.drop_database(database)
 
 
-@pytest.fixture(params=['mongodb://localhost:27017', connection_string()])
-def connection(request: _pytest.fixtures.SubRequest) -> typing.Iterator[models.Connection]:
-    connection_string = request.param
+@pytest.fixture
+def connection(connection_string: str) -> typing.Iterator[models.Connection]:
     with models.Connection(connection_string) as connection:
         yield connection
 
-    with pymongo.MongoClient(connection_string) as client:
-        try:
-            client.drop_database(client.get_database())
-        except pymongo.errors.ConfigurationError:
-            client.drop_database('pulse')
 
 class TestDomains:
 
