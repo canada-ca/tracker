@@ -112,7 +112,9 @@ def run(date: str, connection_string: str):
     # Reset the database.
     LOGGER.info("Clearing the database.")
     with models.Connection(connection_string) as connection:
-        connection.clear_database()
+        connection.domains.clear()
+        connection.reports.clear()
+        connection.agencies.clear()
 
         # Calculate agency-level summaries. Updates `agencies` in-place.
         update_agency_totals(agencies, domains, subdomains)

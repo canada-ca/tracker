@@ -3,8 +3,8 @@ import pymongo
 
 
 # Data loads should clear the entire database first.
-def _clear_database(client: pymongo.MongoClient):
-    client.drop_database(client.get_database())
+def _clear_collection(client: pymongo.MongoClient, name: str):
+    client.get_database().drop_collection(name)
 
 
 def _insert_all(client: pymongo.MongoClient, collection: str, documents: typing.Iterable[typing.Dict]) -> None:
@@ -33,6 +33,9 @@ class _Collection():
 
     def all(self) -> typing.Iterable[typing.Dict]:
         return _find(self._client, self._name, {})
+
+    def clear(self) -> None:
+        _clear_collection(self._client, self._name)
 
 
 class Connection():
@@ -68,6 +71,3 @@ class Connection():
 
     def close(self) -> None:
         self._client.close()
-
-    def clear_database(self) -> None:
-        _clear_database(self._client)
