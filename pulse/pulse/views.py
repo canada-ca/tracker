@@ -15,9 +15,9 @@ def register(app):
     def https_domains():
         return render_template("domains.html")
 
-    @app.route("/about/")
-    def about():
-        return render_template("about.html")
+    @app.route("/guidance/")
+    def guidance():
+        return render_template("guidance.html")
 
     @app.route("/feedback/")
     def feedback():
