@@ -3,20 +3,32 @@ import pymongo
 
 
 # Data loads should clear the entire database first.
-def _clear_collection(client: pymongo.MongoClient, name: str):
-    client.get_database().drop_collection(name)
+def _clear_collection(client: pymongo.MongoClient, name: str, database: typing.Optional[str] = None):
+    client.get_database(database).drop_collection(name)
 
 
-def _insert_all(client: pymongo.MongoClient, collection: str, documents: typing.Iterable[typing.Dict]) -> None:
-    client.get_database().get_collection(collection).insert_many(documents)
+def _insert_all(
+        client: pymongo.MongoClient,
+        collection: str,
+        documents: typing.Iterable[typing.Dict],
+        database: typing.Optional[str] = None) -> None:
+    client.get_database(database).get_collection(collection).insert_many(documents)
 
 
-def _insert(client: pymongo.MongoClient, collection: str, document: typing.Dict) -> None:
-    client.get_database().get_collection(collection).insert_one(document)
+def _insert(
+        client: pymongo.MongoClient,
+        collection: str,
+        document: typing.Dict,
+        database: typing.Optional[str] = None) -> None:
+    client.get_database(database).get_collection(collection).insert_one(document)
 
 
-def _find(client: pymongo.MongoClient, collection: str, query: typing.Dict) -> typing.Iterable[typing.Dict]:
-    return client.get_database().get_collection(collection).find(query, {'_id': False})
+def _find(
+        client: pymongo.MongoClient,
+        collection: str,
+        query: typing.Dict,
+        database: typing.Optional[str] = None) -> typing.Iterable[typing.Dict]:
+    return client.get_database(database).get_collection(collection).find(query, {'_id': False})
 
 
 class _Collection():
@@ -24,18 +36,22 @@ class _Collection():
     def __init__(self, client: pymongo.MongoClient, name: str) -> None:
         self._name = name
         self._client = client
+        try:
+            self._db = client.get_database().name
+        except pymongo.errors.ConfigurationError:
+            self._db = 'pulse'
 
     def create_all(self, documents: typing.Iterable[typing.Dict]) -> None:
-        _insert_all(self._client, self._name, documents)
+        _insert_all(self._client, self._name, documents, self._db)
 
     def create(self, document: typing.Dict) -> None:
-        _insert(self._client, self._name, document)
+        _insert(self._client, self._name, document, self._db)
 
     def all(self) -> typing.Iterable[typing.Dict]:
-        return _find(self._client, self._name, {})
+        return _find(self._client, self._name, {}, self._db)
 
     def clear(self) -> None:
-        _clear_collection(self._client, self._name)
+        _clear_collection(self._client, self._name, self._db)
 
 
 class Connection():
