@@ -215,4 +215,47 @@ table caption {
     .dataTables_wrapper .dataTables_paginate a.paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate a.paginate_button.disabled:focus {
       background: transparent !important; }
 
+#menu-content {
+  background: #F8FAFC;
+  overflow-y: auto;
+  z-index: 999999;
+  -webkit-overflow-scrolling: touch;
+  position: fixed;
+  top: 0;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 220px;
+  -webkit-transform: translateX(-230px);
+  -moz-transform: translateX(-230px);
+  -ms-transform: translateX(-230px);
+  -o-transform: translateX(-230px);
+  transform: translateX(-230px);
+  -webkit-transition: all 0.25s linear;
+  -moz-transition: all 0.25s linear;
+  transition: all 0.25s linear; }
+  #menu-content.is-visible {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    -o-transform: translateX(0);
+    transform: translateX(0); }
+
+.overlay {
+  background: #000;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  -webkit-transition: all 0.15s ease-out 0s;
+  -moz-transition: all 0.15s ease-out 0s;
+  transition: all 0.15s ease-out 0s; }
+  .overlay.is-visible {
+    visibility: visible; }
+
 /*# sourceMappingURL=main.css.map */

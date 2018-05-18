@@ -40,7 +40,7 @@
 	        <div role="navigation" class="flex-1">
 	            <ul class="list-reset flex justify-end text-lg sm:text-xl font-bold">
                     <li class="py-6 inline sm:hidden">
-                        <a class="text-blue hover:text-blue-darker" href="#">Menu</a>
+                        <a id="menu-btn" class="text-blue hover:text-blue-darker" href="#">Menu</a>
                     </li>
 	                <li class="mr-8 py-6 px-2 hidden sm:inline">
 	                    <a class="text-blue hover:text-blue-darker" href="#">About</a>
@@ -51,6 +51,13 @@
 	            </ul>
 	        </div>
 	    </div>
+    </nav>
+
+    <nav id="menu-content" class="shadow-md">
+        <ul class="list-reset ml-4 mt-4">
+            <li class="mb-4"><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="#">About</a></li>
+            <li><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="#">Feedback</a></li>
+        </ul>
     </nav>
 
 </header>
