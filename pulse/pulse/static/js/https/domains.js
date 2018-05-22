@@ -133,10 +133,10 @@ $(function () {
 
     if (number > 1) {
       var csv = "/data/hosts/" + base_domain + "/https.csv";
-      var discoveryLink = l("/https/guidance/#subdomains", "publicly discoverable services");
-      var link = "Showing data for " + number + " " + discoveryLink + " within " + base_domain + ".&nbsp;&nbsp;";
+      //var discoveryLink = l("/https/guidance/#subdomains", "publicly discoverable services");
+      var link = "Showing data for " + number + " publicly discoverable services within " + base_domain + ".&nbsp;&nbsp;";
       link += l(csv, "Download all " + base_domain + " data as a CSV") + ".";
-      link += " Email " + l("mailto:", "mail placeholder") + " with questions.";
+      link += " Email " + l("mailto:zzTBSCybers@tbs-sct.gc.ca", "zzTBSCybers@tbs-sct.gc.ca") + " with questions.";
       var download = $("<tr></tr>").addClass("subdomain").html("<td class=\"link\" colspan=6>" + link + "</td>");
       all.push(download);
     }
