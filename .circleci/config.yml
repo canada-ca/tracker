@@ -55,6 +55,21 @@ jobs:
               pytest --cov=data tests
           name: "Running tests"
     working_directory: ~/repo/pulse_update
+  deploy_site:
+    docker:
+      - image: docker:17.12.1-ce-git
+    steps:
+      - checkout:
+          path: ~/repo
+      - setup_remote_docker
+      - run:
+          command: |
+              docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+              docker build  -t "${DOCKER_REGISTRY}/${NAMESPACE}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}" -t "${DOCKER_REGISTRY}/${NAMESPACE}/${CIRCLE_PROJECT_REPONAME}:latest" .
+              docker push "${DOCKER_REGISTRY}/${NAMESPACE}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+              docker push "${DOCKER_REGISTRY}/${NAMESPACE}/${CIRCLE_PROJECT_REPONAME}:latest"
+          name: "Build and Deploy Website Docker Image"
+    working_directory: ~/repo/pulse
 
 workflows:
   version: 2
@@ -62,3 +77,11 @@ workflows:
     jobs:
       - pulse 
       - data
+      - deploy_site:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - pulse
+            - data
