@@ -534,7 +534,6 @@ def full_report(domains, subdomains):
 
     return full
 
-
 def eligible_for_https(domain):
     return domain["live"] == True
 
@@ -653,6 +652,7 @@ def https_behavior_for(name, pshtt, sslyze, parent_preloaded=None):
 
     # values: unknown or N/A (-1), No (0), Yes (1)
     bod_crypto = None
+
 
     # N/A if no HTTPS
     if report["uses"] <= 0:
@@ -799,7 +799,7 @@ def total_preloading_report(eligible):
 def print_report(report):
 
     for report_type in report.keys():
-        if report_type == "report_date":
+        if report_type == "report_date" or report_type == "_id":
             continue
 
         LOGGER.info("[%s]" % report_type)
