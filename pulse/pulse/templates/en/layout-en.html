@@ -5,13 +5,13 @@
 	
 	<title>{% block title %}{% endblock title %}</title>
 	
-	{% include 'includes/head.html' %}
+	{% include 'includes/en/head.html' %}
 	
 </head>
 
 <body class="flex flex-col h-screen ">
 
-	{% include 'includes/header.html' %}
+	{% include 'includes/en/header.html' %}
 
 	<main class="flex-1">
 
@@ -19,7 +19,7 @@
 
 	</main>
 
-	{% include 'includes/footer.html' %}
+	{% include 'includes/en/footer.html' %}
 
 <script src="/static/js/main.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
 <script src="/static/js/tables.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>

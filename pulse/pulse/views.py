@@ -7,21 +7,27 @@ import ujson
 
 def register(app):
 
+    # Default route will be English index for now
     @app.route("/")
     def index():
-        return render_template("index.html")
+        return render_template("en/index.html")
 
-    @app.route("/domains/")
+    # English routes
+    @app.route("/en/organizations/")
+    def index_en():
+        return render_template("en/index.html")
+
+    @app.route("/en/domains/")
     def https_domains():
-        return render_template("domains.html")
+        return render_template("en/domains.html")
 
-    @app.route("/guidance/")
+    @app.route("/en/guidance/")
     def guidance():
-        return render_template("guidance.html")
+        return render_template("en/guidance.html")
 
-    @app.route("/feedback/")
+    @app.route("/en/feedback/")
     def feedback():
-        return render_template("feedback.html")
+        return render_template("en/feedback.html")
 
     ##
     # Data endpoints.
@@ -95,4 +101,4 @@ def register(app):
 
     @app.errorhandler(404)
     def page_not_found(e):
-      return render_template('404.html'), 404
+      return render_template('/en/404.html'), 404
