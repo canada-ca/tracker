@@ -11,7 +11,7 @@ table caption {
 }
 
 .dataTables_wrapper {
-  padding: 80px 0 40px;
+  padding: 60px 0 40px;
 
   .dataTables_length {
     font-size: 1.1em;
@@ -52,7 +52,7 @@ table caption {
   .dataTables_csv {
     font-size: 1.1em;
     font-weight: 200;
-    margin-top: 10px;
+    margin-top: 13px;
     margin-left: 20px;
     float: left;
 
@@ -82,7 +82,7 @@ table caption {
       font-weight: 200;
     }
 
-    @include media($small) {
+    @include media($medium) {
       label {
         float: none;
       }
@@ -270,11 +270,11 @@ table caption {
     }
   }
   .dataTables_info {
-    padding-top: 0 !important;
+    padding-top: 8px !important;
   }
   .dataTables_paginate {
     a.paginate_button {
-      padding: 0 8px !important;
+      padding: 8px 8px !important;
       font-size: 0.875em;
       border: none !important;
       &.current {

@@ -12,7 +12,7 @@
 /////////////////////////////////////////
 
 $small:       new-breakpoint(max-width 480px, 12);
-$medium:      new-breakpoint(max-width 767px, 12);
+$medium:      new-breakpoint(max-width 768px, 12);
 $large:       new-breakpoint(max-width 1024px, 12);
 $xlarge:      new-breakpoint(max-width 1200px, 12);
 
