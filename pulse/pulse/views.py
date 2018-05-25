@@ -92,9 +92,9 @@ def register(app):
             response.headers['Content-Type'] = 'text/csv'
         return response
 
-    @app.route("/data/agencies/<report_name>.json")
-    def agency_report(report_name):
-        domains = models.Agency.eligible(report_name)
+    @app.route("/data/organizations/<report_name>.json")
+    def organization_report(report_name):
+        domains = models.Organization.eligible(report_name)
         response = Response(ujson.dumps({'data': domains}))
         response.headers['Content-Type'] = 'application/json'
         return response

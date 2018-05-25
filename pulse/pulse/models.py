@@ -43,10 +43,11 @@ class Report:
 
 class Domain:
     # domain (string)
-    # agency_slug (string)
+    # organization_slug (string)
     # is_parent (boolean)
     #
-    # agency_name (string)
+    # organization_name_en (string)
+    # organization_name_fr (string)
     #
     # parent_domain (string)
     # sources (array of strings)
@@ -176,9 +177,9 @@ class Domain:
         return output.getvalue()
 
 
-class Agency:
-    # agency_slug (string)
-    # agency_name (string)
+class Organization:
+    # organization_slug (string)
+    # organization_name (string)
     # total_domains (number)
     #
     # https {
@@ -191,36 +192,36 @@ class Agency:
     # }
     #
 
-    # An agency which had at least 1 eligible domain.
+    # An organization which had at least 1 eligible domain.
     @staticmethod
     def eligible(report_name: str) -> typing.Iterable[typing.Dict]:
-        return db.db.agencies.find({f'{report_name}.eligible': {'$gt': 0}}, {'_id': False})
+        return db.db.organizations.find({f'{report_name}.eligible': {'$gt': 0}}, {'_id': False})
 
     # Create a new Agency record with a given name, slug, and total domain count.
     @staticmethod
     def create(data: typing.Dict, copy: bool = True) -> None:
         if copy:
-            return db.db.agencies.insert_one(data.copy()) # Copy dictionary to prevent mutation side effect
-        return db.db.agencies.insert_one(data)
+            return db.db.organizations.insert_one(data.copy()) # Copy dictionary to prevent mutation side effect
+        return db.db.organizations.insert_one(data)
 
     @staticmethod
     def create_all(iterable: typing.Iterable[typing.Dict], copy: bool = False) -> None:
         if copy:
-            return db.db.agencies.insert_many(iterable)
-        return db.db.agencies.insert_many(document.copy() for document in iterable)
+            return db.db.organizations.insert_many(iterable)
+        return db.db.organizations.insert_many(document.copy() for document in iterable)
 
-    # For a given agency, add a report.
+    # For a given organization, add a report.
     @staticmethod
     def add_report(slug: str, report_name: str, report: typing.Dict) -> None:
-        return db.db.agencies.update_one(
+        return db.db.organizations.update_one(
             {'slug': slug},
             {'$set': {report_name: report}}
         )
 
     @staticmethod
     def find(slug: str) -> typing.Dict:
-        return db.db.agencies.find_one({'slug': slug}, {'_id': False})
+        return db.db.organizations.find_one({'slug': slug}, {'_id': False})
 
     @staticmethod
     def all() -> typing.Iterable[typing.Dict]:
-        return db.db.agencies.find({}, {'_id': False})
+        return db.db.organizations.find({}, {'_id': False})

@@ -43,7 +43,7 @@ PARENT_CACHE = os.path.join(PARENTS_DATA, "./cache")
 PARENT_DOMAINS_CSV = os.path.join(PARENT_CACHE, "domains.csv")
 
 # Base directory for scanned subdomain data.
-SUBDOMAIN_DATA_AGENCIES = os.path.join(SUBDOMAIN_DATA, "./agencies")
+SUBDOMAIN_DATA_AGENCIES = os.path.join(SUBDOMAIN_DATA, "./organizations")
 SUBDOMAIN_DOMAINS_CSV = os.path.join(SUBDOMAIN_DATA_GATHERED, "results", "gathered.csv")
 
 ###
@@ -57,11 +57,11 @@ def run(date: str, connection_string: str):
     if date is None:
         date = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
 
-    # Read in domains and agencies from domains.csv.
+    # Read in domains and organizations from domains.csv.
     # Returns dicts of values ready for saving as Domain and Agency objects.
     #
     # Also returns gathered subdomains, which need more filtering to be useful.
-    domains, agencies, gathered_subdomains = load_domain_data()
+    domains, organizations, gathered_subdomains = load_domain_data()
 
     # Read in domain-scan CSV data.
     parent_scan_data = load_parent_scan_data(domains)
@@ -100,13 +100,13 @@ def run(date: str, connection_string: str):
     sorted_domains.sort()
     sorted_subdomains = list(subdomains.keys())
     sorted_subdomains.sort()
-    sorted_agencies = list(agencies.keys())
-    sorted_agencies.sort()
+    sorted_organizations = list(organizations.keys())
+    sorted_organizations.sort()
 
     # Calculate high-level per-domain conclusions for each report.
     # Overwrites `domains` and `subdomains` in-place.
     process_domains(
-        domains, agencies, subdomains, parent_scan_data, subdomain_scan_data
+        domains, organizations, subdomains, parent_scan_data, subdomain_scan_data
     )
 
     # Reset the database.
@@ -114,10 +114,10 @@ def run(date: str, connection_string: str):
     with models.Connection(connection_string) as connection:
         connection.domains.clear()
         connection.reports.clear()
-        connection.agencies.clear()
+        connection.organizations.clear()
 
-        # Calculate agency-level summaries. Updates `agencies` in-place.
-        update_agency_totals(agencies, domains, subdomains)
+        # Calculate organization-level summaries. Updates `organizations` in-place.
+        update_organization_totals(organizations, domains, subdomains)
 
         # Calculate government-wide summaries.
         report = full_report(domains, subdomains)
@@ -129,8 +129,8 @@ def run(date: str, connection_string: str):
         connection.domains.create_all(
             subdomains[subdomain_name] for subdomain_name in sorted_subdomains
         )
-        LOGGER.info("Creating all agencies.")
-        connection.agencies.create_all(agencies[agency_name] for agency_name in sorted_agencies)
+        LOGGER.info("Creating all organizations.")
+        connection.organizations.create_all(organizations[organization_name] for organization_name in sorted_organizations)
 
         # Create top-level summaries.
         LOGGER.info("Creating government-wide totals.")
@@ -144,7 +144,7 @@ def run(date: str, connection_string: str):
 def load_domain_data():
 
     domain_map = {}
-    agency_map = {}
+    organization_map = {}
     gathered_subdomain_map = {}
 
     # if domains.csv wasn't cached, download it anew
@@ -166,8 +166,9 @@ def load_domain_data():
                 continue
 
             domain_name = row[0].lower().strip()
-            agency_name = row[2].strip()
-            agency_slug = slugify.slugify(agency_name)
+            organization_name_en = row[2].strip()
+            organization_name_fr = row[3].strip()
+            organization_slug = slugify.slugify(organization_name_en)
 
             if domain_name not in domain_map:
                 # By assuming the domain name is the base domain if it appears
@@ -180,22 +181,24 @@ def load_domain_data():
                 domain_map[domain_name] = {
                     "domain": domain_name,
                     "base_domain": domain_name,
-                    "agency_name": agency_name,
-                    "agency_slug": agency_slug,
+                    "organization_name_en": organization_name_en,
+                    "organization_name_fr": organization_name_fr,
+                    "organization_slug": organization_slug,
                     "sources": ["canada-gov"],
                     "is_parent": True,
                     "exclude": {},
                 }
 
-            if agency_slug not in agency_map:
-                agency_map[agency_slug] = {
-                    "name": agency_name,
-                    "slug": agency_slug,
+            if organization_slug not in organization_map:
+                organization_map[organization_slug] = {
+                    "name_en": organization_name_en,
+                    "name_fr": organization_name_fr,
+                    "slug": organization_slug,
                     "total_domains": 1,
                 }
 
             else:
-                agency_map[agency_slug]["total_domains"] += 1
+                organization_map[organization_slug]["total_domains"] += 1
 
     with open(SUBDOMAIN_DOMAINS_CSV, newline="") as csvfile:
         for row in csv.reader(csvfile):
@@ -213,7 +216,7 @@ def load_domain_data():
 
                 gathered_subdomain_map[subdomain_name] = sources
 
-    return domain_map, agency_map, gathered_subdomain_map
+    return domain_map, organization_map, gathered_subdomain_map
 
 
 # Load in data from the CSVs produced by domain-scan.
@@ -317,8 +320,9 @@ def load_subdomain_scan_data(domains, parent_scan_data, gathered_subdomains):
                 subdomains[subdomain] = {
                     "domain": subdomain,
                     "base_domain": parent_domain,
-                    "agency_slug": domains[parent_domain]["agency_slug"],
-                    "agency_name": domains[parent_domain]["agency_name"],
+                    "organization_slug": domains[parent_domain]["organization_slug"],
+                    "organization_name_en": domains[parent_domain]["organization_name_en"],
+                    "organization_name_fr": domains[parent_domain]["organization_name_fr"],
                     "is_parent": False,
                     "sources": gathered_subdomains[subdomain],
                 }
@@ -362,7 +366,7 @@ def load_subdomain_scan_data(domains, parent_scan_data, gathered_subdomains):
 # Given the domain data loaded in from CSVs, draw conclusions,
 # and filter/transform data into form needed for display.
 def process_domains(
-    domains, agencies, subdomains, parent_scan_data, subdomain_scan_data
+    domains, organizations, subdomains, parent_scan_data, subdomain_scan_data
 ):
 
     # For each domain, determine eligibility and, if eligible,
@@ -447,60 +451,60 @@ def process_domains(
 
 
 # Given a list of domains or subdomains, quick filter to which
-# are eligible for this report, optionally for an agency.
-def eligible_for(report, hosts, agency=None):
+# are eligible for this report, optionally for an organization.
+def eligible_for(report, hosts, organization=None):
     return [
         host[report]
         for hostname, host in hosts.items()
         if (
             host.get(report)
             and host[report]["eligible"]
-            and ((agency is None) or (host["agency_slug"] == agency["slug"]))
+            and ((organization is None) or (host["organization_slug"] == organization["slug"]))
         )
     ]
 
 
-# Go through each report type and add agency totals for each type.
-def update_agency_totals(agencies, domains, subdomains):
+# Go through each report type and add organization totals for each type.
+def update_organization_totals(organizations, domains, subdomains):
 
-    # For each agency, update their report counts for every domain they have.
-    for agency_slug in agencies.keys():
-        agency = agencies[agency_slug]
+    # For each organization, update their report counts for every domain they have.
+    for organization_slug in organizations.keys():
+        organization = organizations[organization_slug]
 
         # HTTPS. Parent and subdomains.
-        # LOGGER.info("[%s][%s] Totalling report." % (agency['slug'], 'https'))
-        eligible = eligible_for("https", domains, agency) + eligible_for(
-            "https", subdomains, agency
+        # LOGGER.info("[%s][%s] Totalling report." % (organization['slug'], 'https'))
+        eligible = eligible_for("https", domains, organization) + eligible_for(
+            "https", subdomains, organization
         )
-        agency["https"] = total_https_report(eligible)
+        organization["https"] = total_https_report(eligible)
 
         # Separate report for crypto, for sslyze-scanned domains.
-        # LOGGER.info("[%s][%s] Totalling report." % (agency['slug'], 'crypto'))
+        # LOGGER.info("[%s][%s] Totalling report." % (organization['slug'], 'crypto'))
         eligible = [
             domain["https"]
             for name, domain in domains.items()
-            if (domain["agency_slug"] == agency["slug"])
+            if (domain["organization_slug"] == organization["slug"])
             and domain.get("https")
             and (domain["https"].get("rc4") is not None)
         ]
         eligible = eligible + [
             subdomain["https"]
             for name, subdomain in subdomains.items()
-            if (subdomain["agency_slug"] == agency["slug"])
+            if (subdomain["organization_slug"] == organization["slug"])
             and subdomain.get("https")
             and (subdomain["https"].get("rc4") is not None)
         ]
-        agency["crypto"] = total_crypto_report(eligible)
+        organization["crypto"] = total_crypto_report(eligible)
 
         # Special separate report for preloaded parent domains.
         # All parent domains, whether they use HTTP or not, are eligible.
-        # LOGGER.info("[%s][%s] Totalling report." % (agency['slug'], 'preloading'))
+        # LOGGER.info("[%s][%s] Totalling report." % (organization['slug'], 'preloading'))
         eligible = [
             host["https"]
             for hostname, host in domains.items()
-            if host["agency_slug"] == agency_slug
+            if host["organization_slug"] == organization_slug
         ]
-        agency["preloading"] = total_preloading_report(eligible)
+        organization["preloading"] = total_preloading_report(eligible)
 
 
 # Create a Report about each tracked stat.

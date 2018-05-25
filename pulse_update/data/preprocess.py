@@ -11,7 +11,10 @@ def pull_data(output: str, connection_string: str) -> None:
     with open(domain_path, 'w', newline='', encoding='utf-8') as domain_file, \
          open(subdomain_path, 'w', newline='', encoding='utf-8') as subdomain_file:
 
-        domain_writer = csv.DictWriter(domain_file, fieldnames=['domain', 'filler', 'organization'])
+        domain_writer = csv.DictWriter(
+            domain_file,
+            fieldnames=['domain', 'filler', 'organization_en', 'organization_fr']
+        )
         subdomain_writer = csv.DictWriter(subdomain_file, fieldnames=['domain'])
         domain_writer.writeheader()
         subdomain_writer.writeheader()

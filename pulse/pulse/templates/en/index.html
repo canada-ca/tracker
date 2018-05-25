@@ -17,8 +17,8 @@
 
 	<div id="tab-panel" class="container mx-auto" role="tabpanel" aria-hidden="false">
 	    
-	    <table class="agency responsive https">
-	      <caption>HTTPS by agency. Table is sortable via first row table headers. Each row contains an agency and related attributes.</caption>
+	    <table class="organization responsive https">
+	      <caption>HTTPS by organization. Table is sortable via first row table headers. Each row contains an organization and related attributes.</caption>
 	      <thead>
 	        <tr>
 	          <th class="never"></th>
@@ -35,5 +35,5 @@
 
 </section>
 
-<script src="/static/js/https/agencies.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
+<script src="/static/js/https/organizations.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
 {% endblock %}

@@ -154,7 +154,8 @@ def insert(ctx: click.core.Context, parents: typing.IO[str], subdomains: typing.
     def relevant_parent(document: typing.Dict) -> typing.Dict:
         return {
             'domain': document.get('domain'),
-            'organization': document.get('organization')
+            'organization_en': document.get('organization_en'),
+            'organization_fr': document.get('organization_fr'),
         }
 
     def relevant_subdomain(document: typing.Dict) -> typing.Dict:

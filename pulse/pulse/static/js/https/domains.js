@@ -36,7 +36,7 @@ $(function () {
             td.scope = "row";
           }
         },
-        {data: "agency_name"}, // here for filtering/sorting
+        {data: "organization_name_en"}, // here for filtering/sorting
         {
           data: "totals.https.enforces",
           render: Tables.percentTotals("https", "enforces")

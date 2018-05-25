@@ -219,7 +219,7 @@ table caption {
       }
     }
 
-    &.agency {
+    &.organization {
 
       td {
         padding: 15px 0 15px 40px !important;
@@ -234,7 +234,7 @@ table caption {
       }
     }
 
-    &.agency, &.domain {
+    &.organization, &.domain {
       .progress-bar-indication {
         background-color: $medium-gray;
         border-radius: 20px;

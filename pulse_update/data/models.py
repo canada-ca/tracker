@@ -74,8 +74,8 @@ class Connection():
         return _Collection(self._client, 'reports')
 
     @property
-    def agencies(self) -> _Collection:
-        return _Collection(self._client, 'agencies')
+    def organizations(self) -> _Collection:
+        return _Collection(self._client, 'organizations')
 
     @property
     def parents(self) -> _Collection:

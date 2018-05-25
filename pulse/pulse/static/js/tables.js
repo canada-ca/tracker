@@ -40,9 +40,9 @@ var Tables = {
     return table;
   },
 
-  // sets some agency-table-specific options
+  // sets some organization-table-specific options
   initAgency: function(data, options) {
-    // Don't paginate agency tables by default.
+    // Don't paginate organization tables by default.
     if (!options.pageLength) options.pageLength = 150;
     if (!options.dom) options.dom = 'Cftri';
 
@@ -103,8 +103,8 @@ var Tables = {
     return Tables.percent(report, field, true);
   },
 
-  // common rendering function for agency service/domain counts
-  agencyServices: function(category) {
+  // common rendering function for organization service/domain counts
+  organizationServices: function(category) {
     return function(data, type, row) {
       if (type == "sort") return data;
       else return "" +

@@ -157,23 +157,23 @@ table caption {
       text-decoration: underline; }
     .dataTables_wrapper table.dataTable.https.domain tbody tr.host td.link {
       padding-left: 60px; }
-    .dataTables_wrapper table.dataTable.agency td {
+    .dataTables_wrapper table.dataTable.organization td {
       padding: 15px 0 15px 40px !important; }
       @media screen and (max-width: 1024px) {
-        .dataTables_wrapper table.dataTable.agency td {
+        .dataTables_wrapper table.dataTable.organization td {
           padding-left: 32px !important; }
-          .dataTables_wrapper table.dataTable.agency td:first-child:before {
+          .dataTables_wrapper table.dataTable.organization td:first-child:before {
             top: 30px !important; } }
       @media screen and (max-width: 768px) {
-        .dataTables_wrapper table.dataTable.agency td:first-child:before {
+        .dataTables_wrapper table.dataTable.organization td:first-child:before {
           top: 15px !important; } }
-    .dataTables_wrapper table.dataTable.agency .progress-bar-indication, .dataTables_wrapper table.dataTable.domain .progress-bar-indication {
+    .dataTables_wrapper table.dataTable.organization .progress-bar-indication, .dataTables_wrapper table.dataTable.domain .progress-bar-indication {
       background-color: #B8C2CC;
       border-radius: 20px;
       width: 70%;
       position: relative;
       left: 35px; }
-      .dataTables_wrapper table.dataTable.agency .progress-bar-indication > .meter, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter {
+      .dataTables_wrapper table.dataTable.organization .progress-bar-indication > .meter, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
@@ -185,15 +185,15 @@ table caption {
         display: block;
         height: 100%;
         width: 60%; }
-        .dataTables_wrapper table.dataTable.agency .progress-bar-indication > .meter.width100, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter.width100 {
+        .dataTables_wrapper table.dataTable.organization .progress-bar-indication > .meter.width100, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter.width100 {
           border-radius: 20px; }
-        .dataTables_wrapper table.dataTable.agency .progress-bar-indication > .meter.width1, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter.width1 {
+        .dataTables_wrapper table.dataTable.organization .progress-bar-indication > .meter.width1, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter.width1 {
           background-color: transparent; }
-        .dataTables_wrapper table.dataTable.agency .progress-bar-indication > .meter.width2, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter.width2 {
+        .dataTables_wrapper table.dataTable.organization .progress-bar-indication > .meter.width2, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter.width2 {
           background-color: transparent; }
-        .dataTables_wrapper table.dataTable.agency .progress-bar-indication > .meter.width3, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter.width3 {
+        .dataTables_wrapper table.dataTable.organization .progress-bar-indication > .meter.width3, .dataTables_wrapper table.dataTable.domain .progress-bar-indication > .meter.width3 {
           background-color: transparent; }
-      .dataTables_wrapper table.dataTable.agency .progress-bar-indication p, .dataTables_wrapper table.dataTable.domain .progress-bar-indication p {
+      .dataTables_wrapper table.dataTable.organization .progress-bar-indication p, .dataTables_wrapper table.dataTable.domain .progress-bar-indication p {
         font-size: 0.875em;
         position: relative;
         top: 5px;

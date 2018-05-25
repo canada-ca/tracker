@@ -1,11 +1,12 @@
 
-# Mapping report/domain/agency field names to display names.
+# Mapping report/domain/organization field names to display names.
 LABELS = {
     # used in export CSVs
     "common": {
         "domain": "Domain",
         "canonical": "URL",
-        "agency_name": "Agency",
+        "organization_name_en": "English Organization",
+        "organization_name_fr": "French Organization",
         "base_domain": "Base Domain",
         "sources": "Sources",
         "total_domains": "Number of Domains",
@@ -17,7 +18,7 @@ LABELS = {
         "preloaded": "Preloaded",
         "bod_crypto": "Free of RC4/3DES and SSLv2/SSLv3",
         "hsts_age": "HSTS max-age",
-        "bod_agencies": "Free of RC4/3DES and SSLv2/SSLv3",
+        "bod_organizations": "Free of RC4/3DES and SSLv2/SSLv3",
         "3des": "3DES",
         "rc4": "RC4",
         "sslv2": "SSLv2",
@@ -54,7 +55,7 @@ FIELD_MAPPING = {
 }
 
 CSV_FIELDS = {
-    "common": ["domain", "base_domain", "canonical", "agency_name", "sources"],
+    "common": ["domain", "base_domain", "canonical", "organization_name_en", "organization_name_fr", "sources"],
     "https": [
         "enforces",
         "hsts",

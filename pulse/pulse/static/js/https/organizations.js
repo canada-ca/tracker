@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-  $.get("/data/agencies/https.json", function(data) {
+  $.get("/data/organizations/https.json", function(data) {
     Tables.initAgency(data.data, {
 
       csv: "/data/hosts/https.csv",
@@ -14,7 +14,7 @@ $(document).ready(function () {
           visible: false
         },
         {
-          data: "name",
+          data: "name_en",
           cellType: "td",
           render: eligibleHttps,
           createdCell: function (td) {td.scope = "row";}
@@ -43,7 +43,7 @@ $(document).ready(function () {
   var eligibleHttps = function(data, type, row) {
     var services = row.https.eligible;
     var domains = row.total_domains;
-    var name = row.name;
+    var name = row.name_en;
     var services_text = "service";
     if (type == "sort") return name;
 
@@ -53,7 +53,7 @@ $(document).ready(function () {
     var link = function(text) {
       return "" +
         "<a href=\"/en/domains/#" +
-          QueryString.stringify({q: row["name"]}) + "\">" +
+          QueryString.stringify({q: row["name_en"]}) + "\">" +
            text +
         "</a>";
     }
