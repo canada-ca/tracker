@@ -61,11 +61,6 @@ class TestReport():
             "report_date" : report_date
         }
 
-    def test_create_data(self, clean_model, report): # pylint: disable=no-self-use
-        clean_model.Report.create(report)
-        assert clean_model.db.db.reports.count() == 1
-        assert clean_model.db.db.reports.find_one()['https']['eligible'] == 29036
-
     def test_create_data_is_latest(self, clean_model, report): # pylint: disable=no-self-use
         clean_model.Report.create(report)
         assert clean_model.Report.latest() == report
@@ -129,12 +124,12 @@ class TestDomain():
 
     def test_create(self, clean_model, domain) -> None: # pylint: disable=no-self-use
         clean_model.Domain.create(domain)
-        assert clean_model.db.db.domains.count() == 1
+        assert len([document for document in clean_model.Domain.all()]) == 1
         assert clean_model.Domain.find('test.gc.ca')['organization_name_en'] == 'Department of Test'
 
     def test_create_all(self, clean_model, domain) -> None: # pylint: disable=no-self-use
         clean_model.Domain.create_all([domain.copy(), domain.copy(), domain.copy()])
-        assert clean_model.db.db.domains.count() == 3
+        assert len([document for document in clean_model.Domain.all()]) == 3
 
     def test_update(self, clean_model, domain) -> None: # pylint: disable=no-self-use
         clean_model.Domain.create(domain)
@@ -262,13 +257,13 @@ class TestOrganizations():
 
     def test_create(self, clean_model, organization) -> None: # pylint: disable=no-self-use
         clean_model.Organization.create(organization)
-        assert clean_model.db.db.organizations.count() == 1
-        assert clean_model.db.db.organizations.find_one()['name_en'] == 'Test Organization'
+        assert len([document for document in clean_model.Organization.all()]) == 1
+        assert clean_model.Organization.find('test-organization')['name_en'] == 'Test Organization'
 
 
     def test_create_all(self, clean_model, organization) -> None: # pylint: disable=no-self-use
         clean_model.Organization.create_all([organization.copy(), organization.copy(), organization.copy()])
-        assert clean_model.db.db.organizations.count() == 3
+        assert len([document for document in clean_model.Organization.all()]) == 3
 
 
     def test_eligible(self, clean_model, organization) -> None: # pylint: disable=no-self-use

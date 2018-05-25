@@ -4,7 +4,7 @@ import pymongo
 
 # Data loads should clear the entire database first.
 def _clear_collection(client: pymongo.MongoClient, name: str, database: typing.Optional[str] = None):
-    client.get_database(database).drop_collection(name)
+    client.get_database(database).get_collection('meta').delete_many({'_collection': name})
 
 
 def _insert_all(
@@ -12,7 +12,9 @@ def _insert_all(
         collection: str,
         documents: typing.Iterable[typing.Dict],
         database: typing.Optional[str] = None) -> None:
-    client.get_database(database).get_collection(collection).insert_many(documents)
+    client.get_database(database)\
+          .get_collection('meta')\
+          .insert_many({'_collection': collection, **document} for document in documents)
 
 
 def _insert(
@@ -20,7 +22,7 @@ def _insert(
         collection: str,
         document: typing.Dict,
         database: typing.Optional[str] = None) -> None:
-    client.get_database(database).get_collection(collection).insert_one(document)
+    client.get_database(database).get_collection('meta').insert_one({'_collection': collection, **document})
 
 
 def _find(
@@ -28,7 +30,9 @@ def _find(
         collection: str,
         query: typing.Dict,
         database: typing.Optional[str] = None) -> typing.Iterable[typing.Dict]:
-    return client.get_database(database).get_collection(collection).find(query, {'_id': False})
+    return client.get_database(database)\
+                 .get_collection('meta')\
+                 .find({'_collection': collection, **query}, {'_id': False, '_collection': False})
 
 
 class _Collection():

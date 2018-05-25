@@ -26,10 +26,8 @@ class Report:
 
     # Initialize a report with a given date.
     @staticmethod
-    def create(data: typing.Dict, copy: bool = True) -> None:
-        if copy:
-            return db.db.reports.insert_one(data.copy())
-        return db.db.reports.insert_one(data)
+    def create(data: typing.Dict) -> None:
+        return db.db.meta.insert_one({'_collection': 'reports', **data})
 
     @staticmethod
     def report_time(report_date: str) -> datetime.datetime:
@@ -38,7 +36,7 @@ class Report:
     @staticmethod
     # There's only ever one.
     def latest() -> typing.Dict:
-        return db.db.reports.find_one({}, {'_id': False})
+        return db.db.meta.find_one({'_collection': 'reports'}, {'_id': False, '_collection': False})
 
 
 class Domain:
@@ -65,64 +63,59 @@ class Domain:
     #
 
     @staticmethod
-    def create(data: typing.Dict, copy: bool = True) -> None:
-        if copy:
-            return db.db.domains.insert_one(data.copy())
-        return db.db.domains.insert_one(data)
+    def create(data: typing.Dict) -> None:
+        return db.db.meta.insert_one({'_collection': 'domains', **data})
 
-    # Warning - This will add an _id element to all the documents inserted via this method
     @staticmethod
-    def create_all(iterable: typing.Iterable[typing.Dict], copy: bool = False) -> None:
-        if copy:
-            return db.db.domains.insert_many(document.copy() for document in iterable)
-        return db.db.domains.insert_many(iterable)
+    def create_all(iterable: typing.Iterable[typing.Dict]) -> None:
+        return db.db.meta.insert_many({'_collection': 'domains', **document} for document in iterable)
 
     @staticmethod
     def update(domain_name: str, data: typing.Dict) -> None:
-        return db.db.domains.update_one(
-            {'domain': domain_name},
+        return db.db.meta.update_one(
+            {'_collection': 'domains', 'domain': domain_name},
             {'$set': data},
         )
 
     @staticmethod
     def add_report(domain_name: str, report_name: str, report: typing.Dict) -> None:
-        return db.db.domains.update_one(
-            {'domain': domain_name},
+        return db.db.meta.update_one(
+            {'_collection': 'domains', 'domain': domain_name},
             {'$set': {report_name: report}}
         )
 
     @staticmethod
     def find(domain_name: str) -> typing.Dict:
-        return db.db.domains.find_one({'domain': domain_name}, {'_id': False})
+        return db.db.meta.find_one({'_collection': 'domains', 'domain': domain_name}, {'_id': False, '_collection': False})
 
     # Useful when you want to pull in all domain entries as peers,
     # such as reports which only look at parent domains, or
     # a flat CSV of all hostnames that match a report.
     @staticmethod
     def eligible(report_name: str) -> typing.Iterable[typing.Dict]:
-        return db.db.domains.find(
-            {f'{report_name}.eligible': True}, {'_id': False}
+        return db.db.meta.find(
+                {'_collection': 'domains', f'{report_name}.eligible': True}, {'_id': False, '_collection': False}
         )
 
     # Useful when you have mixed parent/subdomain reporting,
     # used for HTTPS but not yet others.
     @staticmethod
     def eligible_parents(report_name: str) -> typing.Iterable[typing.Dict]:
-        return db.db.domains.find(
-            {f'{report_name}.eligible_zone': True, 'is_parent': True}, {'_id': False}
+        return db.db.meta.find(
+            {'_collection': 'domains', f'{report_name}.eligible_zone': True, 'is_parent': True}, {'_id': False, '_collection': False }
         )
 
     # Useful when you want to pull down subdomains of a particular
     # parent domain. Used for HTTPS expanded reports.
     @staticmethod
     def eligible_for_domain(domain: str, report_name: str) -> typing.Iterable[typing.Dict]:
-        return db.db.domains.find(
-            {f'{report_name}.eligible': True, 'base_domain': domain}, {'_id': False}
+        return db.db.meta.find(
+            {'_collection': 'domains', f'{report_name}.eligible': True, 'base_domain': domain}, {'_id': False, '_collection': False}
         )
 
     @staticmethod
     def all() -> typing.Iterable[typing.Dict]:
-        return db.db.domains.find({}, {'_id': False})
+        return db.db.meta.find({'_collection': 'domains'}, {'_id': False, '_collection': False})
 
     @staticmethod
     def to_csv(domains: typing.Iterable[typing.Dict], report_type: str) -> str:
@@ -195,33 +188,29 @@ class Organization:
     # An organization which had at least 1 eligible domain.
     @staticmethod
     def eligible(report_name: str) -> typing.Iterable[typing.Dict]:
-        return db.db.organizations.find({f'{report_name}.eligible': {'$gt': 0}}, {'_id': False})
+        return db.db.meta.find({'_collection': 'organizations', f'{report_name}.eligible': {'$gt': 0}}, {'_id': False, '_collection': False})
 
-    # Create a new Agency record with a given name, slug, and total domain count.
+    # Create a new Organization record with a given name, slug, and total domain count.
     @staticmethod
-    def create(data: typing.Dict, copy: bool = True) -> None:
-        if copy:
-            return db.db.organizations.insert_one(data.copy()) # Copy dictionary to prevent mutation side effect
-        return db.db.organizations.insert_one(data)
+    def create(data: typing.Dict) -> None:
+        return db.db.meta.insert_one({'_collection': 'organizations', **data})
 
     @staticmethod
-    def create_all(iterable: typing.Iterable[typing.Dict], copy: bool = False) -> None:
-        if copy:
-            return db.db.organizations.insert_many(iterable)
-        return db.db.organizations.insert_many(document.copy() for document in iterable)
+    def create_all(iterable: typing.Iterable[typing.Dict]) -> None:
+        return db.db.meta.insert_many({'_collection': 'organizations', **document} for document in iterable)
 
     # For a given organization, add a report.
     @staticmethod
     def add_report(slug: str, report_name: str, report: typing.Dict) -> None:
-        return db.db.organizations.update_one(
-            {'slug': slug},
+        return db.db.meta.update_one(
+            {'_collection': 'organizations', 'slug': slug},
             {'$set': {report_name: report}}
         )
 
     @staticmethod
     def find(slug: str) -> typing.Dict:
-        return db.db.organizations.find_one({'slug': slug}, {'_id': False})
+        return db.db.meta.find_one({'_collection': 'organizations', 'slug': slug}, {'_id': False, '_collection': False})
 
     @staticmethod
     def all() -> typing.Iterable[typing.Dict]:
-        return db.db.organizations.find({}, {'_id': False})
+        return db.db.meta.find({'_collection': 'organizations'}, {'_id': False, '_collection': False})
