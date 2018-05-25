@@ -1,5 +1,5 @@
 
-from flask import render_template, Response
+from flask import render_template, Response, abort
 from pulse import models
 from pulse.data import FIELD_MAPPING
 import os
@@ -12,22 +12,27 @@ def register(app):
     def index():
         return render_template("en/index.html")
 
-    # English routes
-    @app.route("/en/organizations/")
-    def index_en():
-        return render_template("en/index.html")
+    @app.route("/<prefix>/organizations/")
+    def organizations(prefix):
+        return render_template(generate_path(prefix, "index"))
 
-    @app.route("/en/domains/")
-    def https_domains():
-        return render_template("en/domains.html")
+    @app.route("/<prefix>/domains/")
+    def https_domains(prefix):
+        return render_template(generate_path(prefix, "domains"))
 
-    @app.route("/en/guidance/")
-    def guidance():
-        return render_template("en/guidance.html")
+    @app.route("/<prefix>/guidance/")
+    def guidance(prefix):
+        return render_template(generate_path(prefix, "guidance"))
 
-    @app.route("/en/feedback/")
-    def feedback():
-        return render_template("en/feedback.html")
+    @app.route("/<prefix>/feedback/")
+    def feedback(prefix):
+        return render_template(generate_path(prefix, "feedback"))
+
+    def generate_path(prefix, page_id):
+        if(prefix == 'en' or prefix == 'fr'):
+            return os.path.join(prefix, f'{page_id}.html')
+        else:
+            abort(404)
 
     ##
     # Data endpoints.
