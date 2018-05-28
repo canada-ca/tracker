@@ -1,9 +1,9 @@
 [![Code Climate](https://codeclimate.com/github/18F/pulse/badges/gpa.svg)](https://codeclimate.com/github/18F/pulse) [![Dependency Status](https://gemnasium.com/badges/github.com/18F/pulse.svg)](https://gemnasium.com/github.com/18F/pulse)
 [![CircleCI](https://circleci.com/gh/cds-snc/pulse.svg?style=svg)](https://circleci.com/gh/cds-snc/pulse)
 
-## The pulse of the federal .gov webspace
+## Check whether a Government of Canada domain is adhering to good security practices
 
-How the .gov domain space is doing at best practices and federal requirements.
+How the GC domain space is doing at best practices and federal requirements.
 
 | Documentation  |  Other Links |
 |---|---|
@@ -15,7 +15,7 @@ How the .gov domain space is doing at best practices and federal requirements.
 
 ## Setup
 
-Pulse is a [Flask](http://flask.pocoo.org/) app written for **Python 3.5 and up**. We recommend [pyenv](https://github.com/yyuu/pyenv) for easy Python version management.
+This dashboard is a [Flask](http://flask.pocoo.org/) app written for **Python 3.5 and up**. We recommend [pyenv](https://github.com/yyuu/pyenv) for easy Python version management.
 
 * Install dependencies:
 
@@ -23,7 +23,7 @@ Pulse is a [Flask](http://flask.pocoo.org/) app written for **Python 3.5 and up*
 pip install -r requirements.txt
 ```
 
-* If developing Pulse, you will also need the development requirements
+* If developing this dashboard app, you will also need the development requirements
 ```bash
 pip install .[development]
 ```
@@ -86,7 +86,7 @@ And link it to AWS credentials that allow authorized write access to the `pulse.
 
 ### Then run it
 
-From the Pulse root directory:
+From the root directory:
 
 ```
 pulse run
@@ -94,7 +94,7 @@ pulse run
 
 This will kick off the `domain-scan` scanning process for HTTP/HTTPS and DAP participation, using the `.gov` domain list as specified in `meta.yml` for the base set of domains to scan.
 
-Then it will run the scan data through post-processing to produce some JSON and CSV files the Pulse front-end uses to render data.
+Then it will run the scan data through post-processing to produce some JSON and CSV files the app front-end uses to render data.
 
 Finally, this data will be uploaded to the production S3 bucket.
 
@@ -106,3 +106,7 @@ This project is in the worldwide [public domain](LICENSE.md). As stated in [CONT
 > This project is in the public domain within the United States, and copyright and related rights in the work worldwide are waived through the [CC0 1.0 Universal public domain dedication](https://creativecommons.org/publicdomain/zero/1.0/).
 >
 > All contributions to this project will be released under the CC0 dedication. By submitting a pull request, you are agreeing to comply with this waiver of copyright interest.
+
+### Origin 
+
+This project was originally forked from [18F](https://github.com/18f/pulse) and has been modified to fit the Canadian context.
