@@ -46,24 +46,33 @@ $(document).ready(function () {
   //get table language
   var language = $( "#data-table" ).attr("language");
 
+  var text = {
+    show: {
+      en: "Show",
+      fr: "Montrer"
+    },
+
+    domains: {
+      en: "domains",
+      fr: "domaines"
+    },
+
+    domain_singular: {
+      en: "domain",
+      fr: "domaine"
+    }
+  };
+
   var eligibleHttps = function(data, type, row) {
     var services = row.https.eligible;
     var domains = row.total_domains;
 
-    if(language == 'en') {
+    if(language == 'en')
       var name = row.name_en;
-      var link_text = "Show";
-    }
-    else {
+    else
       var name = row.name_fr;
-      var link_text = "Montrer";
-    }
 
-    var services_text = "service";
     if (type == "sort") return name;
-
-    if(services > 1) 
-      services_text = "services"
 
     var link = function(text) {
       return "" +
@@ -73,9 +82,10 @@ $(document).ready(function () {
         "</a>";
     }
 
-
-    return "<div class=\"mb-2\">" + name + "</div>" + link(link_text + " " + services + " " + services_text);
-
+    if(services > 1)
+      return "<div class=\"mb-2\">" + name + "</div>" + link(text.show[language] + " " + services + " " + text.domains[language]);
+    else
+      return "<div class=\"mb-2\">" + name + "</div>" + link(text.show[language] + " " + services + " " + text.domain_singular[language]);
   };
 
 

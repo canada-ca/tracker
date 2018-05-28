@@ -133,6 +133,11 @@ $(function () {
     error: {
       en: "Error loading data for ",
       fr: "Erreur dans le téléchargement des données de "
+    },
+
+    subdomains: {
+      en: " subdomains",
+      fr: " sous-domaines"
     }
 
   };
@@ -280,7 +285,7 @@ $(function () {
     if (loneDomain(row))
       return (show ? "<img src=\"/static/images/arrow.png\" class=\"rotated pb-1 mr-1 h-2\">" + text.show[language] : "<img src=\"/static/images/arrow.png\" class=\"mr-2 h-2\">" + text.hide[language]) + " " + text.details[language];
     else
-      return (show ? "<img src=\"/static/images/arrow.png\" class=\"rotated pb-1 mr-1 h-2\">" + text.show[language] : "<img src=\"/static/images/arrow.png\" class=\"mr-2 h-2\">" + text.hide[language]) + " " + row.totals.https.eligible + " services";
+      return (show ? "<img src=\"/static/images/arrow.png\" class=\"rotated pb-1 mr-1 h-2\">" + text.show[language] : "<img src=\"/static/images/arrow.png\" class=\"mr-2 h-2\">" + text.hide[language]) + " " + row.totals.https.eligible + text.subdomains[language];
   };
 
   var initExpansions = function() {
