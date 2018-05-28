@@ -278,9 +278,9 @@ $(function () {
 
   var showHideText = function(show, row) {
     if (loneDomain(row))
-      return (show ? text.show[language] : text.hide[language]) + " " + text.details[language];
+      return (show ? "<img src=\"/static/images/arrow.png\" class=\"rotated pb-1 mr-1 h-2\">" + text.show[language] : "<img src=\"/static/images/arrow.png\" class=\"mr-2 h-2\">" + text.hide[language]) + " " + text.details[language];
     else
-      return (show ? text.show[language] : text.hide[language]) + " " + row.totals.https.eligible + " services";
+      return (show ? "<img src=\"/static/images/arrow.png\" class=\"rotated pb-1 mr-1 h-2\">" + text.show[language] : "<img src=\"/static/images/arrow.png\" class=\"mr-2 h-2\">" + text.hide[language]) + " " + row.totals.https.eligible + " services";
   };
 
   var initExpansions = function() {
@@ -305,7 +305,7 @@ $(function () {
 
         if (fetch) {
           console.log(text.fetch[language] + base_domain + "...");
-          link.addClass("loading").html(text.loading[language] + base_domain + " services...");
+          link.addClass("loading").html("<img src=\"/static/images/arrow.png\" class=\"mr-2 h-2\">" + text.loading[language] + base_domain + " services...");
 
           $.ajax({
             url: "/data/hosts/" + base_domain + "/https.json" + Utils.cacheBust(),
