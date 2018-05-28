@@ -69,8 +69,8 @@ var Tables = {
   // sets some organization-table-specific options
   initAgency: function(data, options) {
     // Don't paginate organization tables by default.
-    if (!options.pageLength) options.pageLength = 150;
-    if (!options.dom) options.dom = 'Cftri';
+    if (!options.pageLength) options.pageLength = 100;
+    if (!options.dom) options.dom = 'pCftrip';
 
     return Tables.init(data, options);
   },
