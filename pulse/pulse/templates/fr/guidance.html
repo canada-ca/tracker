@@ -1,78 +1,78 @@
 {% extends "fr/layout-fr.html" %}
 
-{% block title %}Le Guidance{% endblock %}
+{% block title %}Directives{% endblock %}
 
 {% block content %}
 <section id="main-content">
 	<div class="container mx-auto items-center sm:w-4/5 xl:w-3/5 mt-6 mb-6">
-		<h1>Le Guidance</h1>
+		<h1>Directives</h1>
 		<ul class="leading-normal mb-4">
-			<li><a href="#domains" class="text-blue hover:text-blue-darker font-bold">Domains measured</a></li>
-			<li><a href="#https" class="text-blue hover:text-blue-darker font-bold">Measuring HTTPS</a></li>
-			<li><a href="#origins" class="text-blue hover:text-blue-darker font-bold">[Our name] origins</a></li>
-			<li><a href="#dashboard" class="text-blue hover:text-blue-darker font-bold">Reading the dashboard</a></li>
-			<li><a href="#guidance" class="text-blue hover:text-blue-darker font-bold">Guidance for implementing HTTPS</a></li>
+			<li><a href="#domains" class="text-blue hover:text-blue-darker font-bold">Domaines évalués</a></li>
+			<li><a href="#https" class="text-blue hover:text-blue-darker font-bold">Évaluation du protocole HTTPS</a></li>
+			<li><a href="#origins" class="text-blue hover:text-blue-darker font-bold">Origine de [nom]</a></li>
+			<li><a href="#dashboard" class="text-blue hover:text-blue-darker font-bold">Lire le tableau de bord</a></li>
+			<li><a href="#guidance" class="text-blue hover:text-blue-darker font-bold">Directives pour la mise en œuvre du protocole HTTPS</a></li>
 		</ul>
-		<p>[Our name] measures how Government of Canada publicly accessible web services are following best practices on the web. All data is collected from publicly available data sources and is considered public.</p>
+		<p>[Nom] évalue la mesure dans laquelle les services Web accessibles au public du gouvernement du Canada suivent les pratiques exemplaires sur le Web. Toutes les données sont recueillies à partir de sources de données accessibles au public et sont considérées comme publiques.</p>
 
-		<h2 class="mt-6 mb-4"><a id="domains"></a>Domains measured</h2>
-		<p>[Our name] measures the deployment of HTTPS and HSTS for public and privately accessible domains from the Government of Canada. There are around 800 domains at this time.</p>
+		<h2 class="mt-6 mb-4"><a id="domains"></a>Domaines évalués</h2>
+		<p>[Nom] évalue le déploiement des protocoles HTTPS et HSTS pour les domaines publics et privés du gouvernement du Canada. Il y a environ 800 domaines en ce moment.</p>
 
-		<h2 class="mt-6 mb-4"><a id="https"></a>Measuring HTTPS</h2>
-		<p>[Our name] analyzes the behaviour of four "endpoints" of every domain and subdomain: <span class="font-mono">http://</span>, <span class="font-mono">http://www</span>, <span class="font-mono">https://</span>, and <span class="font-mono">https://www</span>. Data from these endpoints is used to characterize the overall behavior of a domain or subdomain. These measurements are performed using open source tools:</p>
+		<h2 class="mt-6 mb-4"><a id="https"></a>Évaluation du protocole HTTPS</h2>
+		<p>[Nom] analyse le comportement de quatre «&nbsp;suffixes&nbsp;» de domaine et de sous-domaine&nbsp;: <span class="font-mono">http://</span>, <span class="font-mono">http://www</span>, <span class="font-mono">https://</span>, et <span class="font-mono">https://www</span>. Les données associées à ces suffixes servent à caractériser le comportement global d’un domaine ou d’un sous-domaine. Ces évaluations sont effectuées à l’aide d’outils libres&nbsp;:</p>
 
 		<div class="mt-6 mb-6 ml-8">
 			<ul class="text-lg list-reset leading-normal">
-				<li class="mb-4"><a href="https://github.com/dhs-ncats/pshtt" class="text-blue hover:text-blue-darker font-bold">pshtt</a>, a Python-based HTTPS and HSTS scanning tool maintained by the U.S. Department of Homeland Security.</li>
-				<li class="mb-4"><a href="https://github.com/18F/domain-scan" class="text-blue hover:text-blue-darker font-bold">domain-scan</a>, a Python-based tool used for hostname discovery and scanner orchestration. The domain-scan tool is used to discover public subdomains from various sources, and to efficiently coordinate and parallelize pshtt, sslyze, and other tools for large batch scans. The domain-scan tool is maintained by the U.S. General Services Administration.</li>
-				<li><a href="https://github.com/nabla-c0d3/sslyze" class="text-blue hover:text-blue-darker font-bold">SSLyze</a>, a Python-based tool used for analyzing the TLS/SSL configuration of a given hostname. SSLyze is maintained by an <a href="https://github.com/nabla-c0d3" class="text-blue hover:text-blue-darker font-bold">independent author</a>.</li>
+				<li class="mb-4"><a href="https://github.com/dhs-ncats/pshtt" class="text-blue hover:text-blue-darker font-bold">pshtt</a>, un outil de balayage de protocoles HTTPS et HSTS basé sur Python, géré par le département de la Sécurité intérieure des États-Unis.</li>
+				<li class="mb-4"><a href="https://github.com/18F/domain-scan" class="text-blue hover:text-blue-darker font-bold">domain-scan</a>, un outil basé sur Python utilisé pour la découverte de noms d’hôte et l’orchestration des balayages. Cet outil sert à découvrir des sous-domaines publics de diverses sources et à coordonner et paralléliser efficacement les outils pshtt, sslyze et les autres outils de balayage pour des balayages par grands lots. Il est tenu par la General Services Administration des États-Unis.</li>
+				<li><a href="https://github.com/nabla-c0d3/sslyze" class="text-blue hover:text-blue-darker font-bold">SSLyze</a>, un outil basé sur Python servant à analyser la configuration TLS/SSL d’un nom d’hôte. Cet outil est tenu par un <a href="https://github.com/nabla-c0d3" class="text-blue hover:text-blue-darker font-bold">auteur indépendant</a>.</li>
 			</ul>
 		</div>
 
-		<p>While [Our name] uses these tools to scan publicly accessible services, organizations can easily make use of these tools themselves in order to scan their internal services.</p>
+		<p>Même si [nom] utilise ces outils pour analyser les services accessibles au public, les organisations peuvent facilement s’en servir elles-mêmes pour analyser leurs services internes.</p>
 
-		<h2 class="mt-6 mb-4"><a id="origins"></a>[Our name] origins</h2>
-		<p>[Our name] is based on the U.S. General Services Administration's project, <a href="https://pulse.cio.gov" class="text-blue hover:text-blue-darker font-bold">Pulse</a>, and is built <a href="https://github.com/cds-snc/pulse" class="text-blue hover:text-blue-darker font-bold">in the open</a>.</p>
+		<h2 class="mt-6 mb-4"><a id="origins"></a>Origine de [nom]</h2>
+		<p>[Nom] est basé sur le projet <a href="https://pulse.cio.gov" class="text-blue hover:text-blue-darker font-bold">Pulse</a> de la General Services Administration des États-Unis et est construit dans <a href="https://github.com/cds-snc/pulse" class="text-blue hover:text-blue-darker font-bold">l’espace ouvert</a>.</p>
 	</div>
 
 	<div class="bg-grey-light">
 		<div class="container mx-auto items-center sm:w-4/5 xl:w-3/5 pt-6 pb-2">
-			<h2 class="mb-6"><a id="dashboard"></a>Reading the dashboard</h2>
-			<h3>Enforces HTTPS</h3>
+			<h2 class="mb-6"><a id="dashboard"></a>Lire le tableau de bord</h2>
+			<h3>Applique le protocole HTTPS</h3>
 			<div class="mt-4 mb-6 ml-8">
-				<p class="mb-4"><strong>Values:</strong> No, Yes</p>
-				<p class="mb-4">Whether a service uses and enforces HTTPS by default. This can be done by redirecting a service's HTTP endpoints to HTTPS, or by only being available over HTTPS.</p>
+				<p class="mb-4"><strong>Valeurs&nbsp;:</strong> Non, Oui</p>
+				<p class="mb-4">Si un service utilise et applique le protocole HTTPS par défaut. Cela peut se faire en redirigeant le suffixe HTTP d’un service vers HTTPS ou en rendant l’accès disponible seulement sur HTTPS.</p>
 			</div>
 
 			<h3>HSTS</h3>
 			<div class="mt-4 mb-6 ml-8">
-				<p class="mb-4"><strong>Values:</strong> No, Yes, Preloaded</p>
-				<p class="mb-4">Whether a domain has implemented <a href="http://www.gcpedia.gc.ca/wiki/HTTPS-IG#HTTP_Strict_Transport_Security_.28HSTS.29" class="text-blue hover:text-blue-darker font-bold">HTTP Strict Transport Security</a>, which ensures that modern web browsers will only ever communicate with a domain over HTTPS (even if the user clicks or types in a plain HTTP link).</p>
-				<p class="mb-4">"Preloaded" means that the subdomain is <a href="https://https.cio.gov/guide/#options-for-hsts-compliance" class="text-blue hover:text-blue-darker font-bold">considered to be HSTS-compliant</a> due to its parent domain having been preloaded in modern browsers.</p>
-				<p class="mb-4">"Yes" means that a valid <span class="font-mono">Strict-Transport-Security</span> header with a <span class="font-mono">max-age</span> value (in seconds) of at least <strong>1 year</strong> (31536000) is present on the domain's default endpoint.</p>
-				<p class="mb-4">"No" means that the HSTS header is either missing, or using a max-age of less than 1 year.</p>
+				<p class="mb-4"><strong>Valeurs&nbsp;:</strong> Non, Oui, Préchargé</p>
+				<p class="mb-4">Si un domaine a mis en œuvre le protocole <a href="http://www.gcpedia.gc.ca/wiki/HTTPS-IG#HTTP_Strict_Transport_Security_.28HSTS.29" class="text-blue hover:text-blue-darker font-bold">HTTP Strict Transport Security</a>, ce qui garantit que les navigateurs Web modernes communiqueront avec un domaine uniquement au moyen de HTTPS (même si l’utilisateur clique ou tape un lien HTTP ordinaire).</p>
+				<p class="mb-4">Le terme « préchargé » signifie que le sous-domaine est <a href="https://https.cio.gov/guide/#options-for-hsts-compliance" class="text-blue hover:text-blue-darker font-bold">jugé compatible avec HSTS</a> parce que son domaine parent a été préchargé dans des navigateurs modernes.</p>
+				<p class="mb-4">« Oui » signifie qu’un en-tête <span class="font-mono">Strict-Transport-Security</span> valide assorti d’une valeur <span class="font-mono">max-age</span> (en secondes) d’au moins <strong>un an</strong> (31536000) est présent dans le suffixe par défaut du domaine.</p>
+				<p class="mb-4">« Non » signifie que l’en-tête HSTS est manquant ou qu’il utilise une valeur d’âge maximum inférieure à un an.</p>
 			</div>
 
-			<h3>Free of RC4/3DES and SSLv2/SSLv3</h3>
+			<h3>RC4/3DES et SSLv2/SSLv3 non utilisés</h3>
 			<div class="mt-4 mb-6 ml-8">
-				<p class="mb-4"><strong>Values:</strong> "Yes", "No, uses [...]"</p>
-				<p class="mb-4">"Yes" means that the service's primary endpoint does not use the RC4 or 3DES ciphers, and has disabled the SSLv2 and SSLv3 protocols. Disabling these ciphers and protocols is a requirement of TBS’ <a href="http://www.gcpedia.gc.ca/wiki/SPIN_2018-01" class="text-blue hover:text-blue-darker font-bold">Security Policy Implementation Notice</a>.</p>
-				<p class="mb-4">"No, uses [...]" will show what known-weak ciphers and protocols are still in use. Examples include "No, uses SSLv2", or "No, uses 3DES, RC4", etc.</p>
+				<p class="mb-4"><strong>Valeurs :</strong> « Oui », « Non, utilise [...] »</p>
+				<p class="mb-4">« Oui » signifie que le suffixe principal du service n’utilise pas les chiffrements RC4 ou 3DES et que les protocoles SSLv2 et SSLv3 ont été désactivés. La désactivation de ces chiffrements et protocoles est une exigence de l’Avis de mise en œuvre de la <a href="http://www.gcpedia.gc.ca/wiki/SPIN_2018-01" class="text-blue hover:text-blue-darker font-bold">Politique sur la sécurité du SCT</a>.</p>
+				<p class="mb-4">« Non, utilise [...] » indiquera les chiffrements et les protocoles faibles qui sont encore utilisés. Exemples : « Non, utilise SSLv2 » ou « Non, utilise 3DES, RC4 », etc.</p>
 			</div>
 
-			<h3>Preloaded</h3>
+			<h3>Préchargé</h3>
 			<div class="mt-4 mb-6 ml-8">
-				<p class="mb-4"><strong>Values:</strong> No, Ready, Yes</p>
-				<p class="mb-4">"Yes" means that the domain is actually in the publicly versioned <a href="https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json" class="text-blue hover:text-blue-darker font-bold">Chrome preload list</a>, and has the <span class="font-mono">include_subdomains</span> flag enabled in that list. Reaching this step effectively means that a domain's namespace is permanently and fully committed to HTTPS.</p>
-				<p class="mb-4">"Ready" means that the domain has implemented a strong HSTS policy on its <strong>bare domain</strong> whose policy covers all subdomains, and has indicated consent to <a href="https://hstspreload.org/" class="text-blue hover:text-blue-darker font-bold">preloading by all major browsers</a> as HTTPS-only. If the domain can be safely preloaded, the domain owner should <a href="https://hstspreload.org/" class="text-blue hover:text-blue-darker font-bold">visit the preloading form and submit their domain</a>.</p>
+				<p class="mb-4"><strong>Valeurs :</strong> Non, Prêt, Oui</p>
+				<p class="mb-4">« Oui » signifie que le domaine se trouve dans la version publique de la <a href="https://chromium.googlesource.com/chromium/src/+/master/net/http/transport_security_state_static.json" class="text-blue hover:text-blue-darker font-bold">liste de préchargement de Chrome</a>, et que l’indicateur <span class="font-mono">include_subdomains</span> est activé dans cette liste. L’atteinte de cette étape signifie que l’espace de nom d’un domaine est engagé de façon permanente et complète dans HTTPS.</p>
+				<p class="mb-4">« Prêt » signifie que le domaine a mis en œuvre, pour son <strong>domaine nu</strong>, une politique HSTS rigoureuse couvrant tous les sous-domaines et qu’il a indiqué son consentement à être <a href="https://hstspreload.org/" class="text-blue hover:text-blue-darker font-bold">préchargé par tous les grands navigateurs</a> sous HTTPS seulement. Si le domaine peut être préchargé en toute sécurité, le propriétaire du domaine doit consulter le <a href="https://hstspreload.org/" class="text-blue hover:text-blue-darker font-bold">formulaire de préchargement et soumettre son domaine</a>.</p>
 			</div>		
 
 		</div>
 	</div>
 	<div class="container mx-auto items-center sm:w-4/5 xl:w-3/5 mt-8">
-		<h2 class="mb-4"><a id="guidance"></a>Guidance for implementing HTTPS</h2>
-		<p>The process of enabling and enforcing strong HTTPS for a web service can vary widely based on the technology, size, and age of the service.</p>
-		<p>Government organizations working on deploying HTTPS are encouraged to consult the HTTPS Initiative on GCpedia for detailed best practices and technical guidance.</p>
+		<h2 class="mb-4"><a id="guidance"></a>Directives pour la mise en œuvre du protocole HTTPS</h2>
+		<p>Le processus d’autorisation et d’application du protocole HTTPS pour un service Web peut varier considérablement en fonction de la technologie, de la taille et de l’âge du service.</p>
+		<p>Les organisations gouvernementales qui travaillent au déploiement du protocole HTTPS sont invitées à consulter la section de GCpédia consacrée à l’Initiative HTTPS pour obtenir des conseils techniques et des renseignements détaillés sur les pratiques exemplaires.</p>
 	</div>
 
 </section>
