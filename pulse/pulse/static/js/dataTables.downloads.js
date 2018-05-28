@@ -20,6 +20,13 @@ $.fn.dataTable.Download = function ( inst ) {
   var container = $('<div></div>').addClass( 'dataTables_csv' );
   var drawnOnce = false;
 
+  var language = $( "#data-table" ).attr("language");
+
+  if(language == 'en')
+    var text = "Download as CSV"
+  else
+    var text = "Télécharger en tant que fichier CSV"
+
   // API so the feature wrapper can return the node to insert
   this.container = function () {
     return container[0];
@@ -30,7 +37,7 @@ $.fn.dataTable.Download = function ( inst ) {
 
     var elem = "" +
       "<a class=\"text-blue hover:text-blue-darker font-bold\" href=\"" + csv + "\" download>" +
-        "Download as CSV" +
+        text +
       "</a>";
 
     container.html(elem);

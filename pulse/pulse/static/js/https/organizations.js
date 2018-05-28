@@ -1,9 +1,12 @@
 $(document).ready(function () {
 
   $.get("/data/organizations/https.json", function(data) {
+
     Tables.initAgency(data.data, {
 
       csv: "/data/hosts/https.csv",
+
+      prefix: language,
 
       columns: [
         {
@@ -14,7 +17,7 @@ $(document).ready(function () {
           visible: false
         },
         {
-          data: "name_en",
+          data: "name_" + language,
           cellType: "td",
           render: eligibleHttps,
           createdCell: function (td) {td.scope = "row";}
@@ -40,10 +43,22 @@ $(document).ready(function () {
     });
   });
 
+  //get table language
+  var language = $( "#data-table" ).attr("language");
+
   var eligibleHttps = function(data, type, row) {
     var services = row.https.eligible;
     var domains = row.total_domains;
-    var name = row.name_en;
+
+    if(language == 'en') {
+      var name = row.name_en;
+      var link_text = "Show";
+    }
+    else {
+      var name = row.name_fr;
+      var link_text = "Montrer";
+    }
+
     var services_text = "service";
     if (type == "sort") return name;
 
@@ -52,13 +67,14 @@ $(document).ready(function () {
 
     var link = function(text) {
       return "" +
-        "<a href=\"/en/domains/#" +
-          QueryString.stringify({q: row["name_en"]}) + "\">" +
+        "<a href=\"/" + language + "/domains/#" +
+          QueryString.stringify({q: row["name_" + language]}) + "\">" +
            text +
         "</a>";
     }
 
-    return "<div class=\"mb-2\">" + name + "</div>" + link("Show " + services + " " + services_text);
+
+    return "<div class=\"mb-2\">" + name + "</div>" + link(link_text + " " + services + " " + services_text);
 
   };
 

@@ -16,13 +16,39 @@ var Tables = {
       customInit(this);
     }
 
-    if (!options.oLanguage) {
+    // If the table prefix is french, load french translations
+    if (options.prefix == 'fr') {
+      options.oLanguage = {
+          "sProcessing":     "Traitement en cours...",
+          "sSearch":         "Rechercher&nbsp;:",
+          "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
+          "sInfo":           "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+          "sInfoEmpty":      "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
+          "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+          "sInfoPostFix":    "",
+          "sLoadingRecords": "Chargement en cours...",
+          "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+          "sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
+          "oPaginate": {
+            "sPrevious": "<<",
+            "sNext": ">>"
+          },
+          "oAria": {
+              "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
+              "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
+          }
+      }
+    }
+
+    // otherwise just load in better pagination
+    // can also be used to load in custom options
+    if(!options.oLanguage) {
       options.oLanguage = {
         "oPaginate": {
-          "sPrevious": "<<",
-          "sNext": ">>"
-        }
-      };
+            "sPrevious": "<<",
+            "sNext": ">>"
+          }
+      }
     }
 
     // Paginate to 100 per-page by default.
