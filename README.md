@@ -1,21 +1,26 @@
-[![Code Climate](https://codeclimate.com/github/18F/pulse/badges/gpa.svg)](https://codeclimate.com/github/18F/pulse) [![Dependency Status](https://gemnasium.com/badges/github.com/18F/pulse.svg)](https://gemnasium.com/github.com/18F/pulse)
-[![CircleCI](https://circleci.com/gh/cds-snc/pulse.svg?style=svg)](https://circleci.com/gh/cds-snc/pulse)
+CircleCI Status: [![CircleCI](https://circleci.com/gh/cds-snc/pulse.svg?style=svg)](https://circleci.com/gh/cds-snc/pulse)
 
-## Check whether a Government of Canada domain is adhering to good security practices
+## Track Government of Canada domains's adherance to digital security practices
 
 How the GC domain space is doing at best practices and federal requirements.
 
-| Documentation  |  Other Links |
-|---|---|
-| [Setup and Deploy Instructions](#setup) |  [System Security Plan](https://github.com/18F/pulse/blob/master/system-security-plan.yml) |
-| [a11y scan process](https://github.com/18F/pulse/blob/master/docs/a11y-instructions.md)  | [Ideas for new sections to add to the site](https://github.com/18F/pulse/blob/master/docs/other-sections.md) |
-| [Ongoing Work](https://github.com/18F/pulse/blob/master/docs/project-outline.md) | [Backlog of feature requests and ideas](https://github.com/18F/pulse/issues?utf8=%E2%9C%93&q=is%3Aissue%20label%3Abacklog)  |
-|  [ATO artifacts](https://github.com/18F/pulse/blob/master/docs/ato.md)  | [Open Source Reuse of the site](https://github.com/18F/pulse/blob/master/docs/reuse.md) |
-| [Project Information](https://github.com/18F/pulse/blob/master/.about.yml)  |  |
+| Documentation                                           |
+| ------------------------------------------------------- |
+| [Development Setup Instructions](#development-setup)    |
+| [Local Deploy Step-by-step](docs/local-instructions.md) |
+| [Deployment Docs](docs/deploy.md)                       |
 
-## Setup
+## Development Setup
+
+For development purposes it is recommended that you install [mongodb](https://www.mongodb.com/) and run the database locally.
 
 This dashboard is a [Flask](http://flask.pocoo.org/) app written for **Python 3.5 and up**. We recommend [pyenv](https://github.com/yyuu/pyenv) for easy Python version management.
+
+To setup local python dependencies you can run `make setup` from the root of the repository. We recommend that this is done from within a virtual environment
+
+### Web app
+
+From the `pulse` subdirectory
 
 * Install dependencies:
 
@@ -48,58 +53,64 @@ make debug
 
 This will run the app with `DEBUG` mode on, showing full error messages in-browser when they occur.
 
-### Initializing dataset
+When running in development mode it is expected that you have a database running locally, accessable via `localhost:27017`.
 
-To initialize the dataset with the last production scan data and database, there's a convenience function:
+To produce some data for the flask app to display, follow the instructions in the following section.
 
+### Domain scanner
+
+from the `pulse_update` subdirectory
+
+* Install dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
-make data_init
+
+* If developing Pulse, you will also need the development requirements
+```bash
+pip install .[development]
 ```
 
-This will download (using `curl`) the current live production database and scan data to the local `data/` directory.
+#### Install domain-scan and dependencies
 
-
-### Install domain-scan and dependencies
-
-Download and set up `domain-scan` [from GitHub](https://github.com/18F/domain-scan).
+Download and set up `domain-scan` [from GitHub](https://github.com/cds-snc/domain-scan) as per it's setup instructions.
 
 `domain-scan` in turn requires [`pshtt`](https://github.com/dhs-ncats/pshtt) and [`sslyze`](https://github.com/nabla-c0d3/sslyze). These can be installed directly via `pip`.
 
 Pulse requires you to set one environment variable:
 
 * `DOMAIN_SCAN_PATH`: A path to `domain-scan`'s `scan` binary.
+* `DOMAIN_GATHER_PATH`: A path to `domain-scan`'s `gather` binary.
 
 However, if you don't have `pshtt` and `sslyze` on your PATH, then `domain-scan` may need you to set a couple others:
 
 * `PSHTT_PATH`: Path to the `pshtt` binary.
 * `SSLYZE_PATH`: Path to the `sslyze` binary.
 
-### Configure the AWS CLI
+#### Then run it
 
-To publish the resulting data to the production S3 bucket, install the official AWS CLI:
-
-```
-pip install awscli
-```
-
-And link it to AWS credentials that allow authorized write access to the `pulse.cio.gov` S3 bucket.
-
-### Then run it
-
-From the root directory:
+From the `pulse_update` subdirectory:
 
 ```
-pulse run
+pulse run --scan here
 ```
 
-This will kick off the `domain-scan` scanning process for HTTP/HTTPS and DAP participation, using the `.gov` domain list as specified in `meta.yml` for the base set of domains to scan.
+This will kick off the `domain-scan` scanning process for HTTP/HTTPS and DAP participation, using the domain lists as specified in `pulse_update/data/data_meta.yml` for the base set of domains to scan.
 
-Then it will run the scan data through post-processing to produce some JSON and CSV files the app front-end uses to render data.
-
-Finally, this data will be uploaded to the production S3 bucket.
+Then it will run the scan data through post-processing producing some JSON and CSV files as scan artifacts and finally uploading the results into the database that the frontend uses to render the information (by default if not further specified `localhost:21017/pulse`).
 
 
-### Public domain
+#### Scanner CLI
+
+The scanner portion has a CLI that can be used to perform individual parts of the scanning in isolation of the other steps.
+By following the steps to setup the Scanning portion, this CLI should be readily accessable to you (if you have activated the environment you installed it into).
+As you may have guesed from the command in the previous section, the CLI command is `pulse`.
+
+Help on how to use the CLI can be output via the command `pulse --help`
+
+
+## Public domain
 
 This project is in the worldwide [public domain](LICENSE.md). As stated in [CONTRIBUTING](CONTRIBUTING.md):
 
