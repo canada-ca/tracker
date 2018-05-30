@@ -226,7 +226,7 @@ $(function () {
     if (row.https.sslv2) problems.push("SSLv2");
     if (row.https.sslv3) problems.push("SSLv3");
 
-    return text.preloaded[language] + problems.join(", ");
+    return text.preloaded[language] + " " + problems.join(", ");
   };
 
   var loadHostData = function(tr, base_domain, hosts) {
