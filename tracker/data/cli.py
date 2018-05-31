@@ -54,7 +54,7 @@ def transform_args(args: typing.List[str]) -> typing.Dict[str, typing.Union[str,
 
 
 @click.group()
-@click.option("--connection", type=str, default="mongodb://localhost:21017/track", envvar="TRACKER_MONGO_URI")
+@click.option("--connection", type=str, default="mongodb://localhost:27017/track", envvar="TRACKER_MONGO_URI")
 @click.pass_context
 def main(ctx: click.core.Context, connection: str) -> None:
     ctx.obj = {
