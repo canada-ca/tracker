@@ -43,7 +43,7 @@ class _Collection():
         try:
             self._db = client.get_database().name
         except pymongo.errors.ConfigurationError:
-            self._db = 'tracker'
+            self._db = 'track'
 
     def create_all(self, documents: typing.Iterable[typing.Dict]) -> None:
         _insert_all(self._client, self._name, documents, self._db)
