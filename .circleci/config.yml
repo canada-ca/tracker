@@ -1,5 +1,5 @@
 jobs:
-  pulse:
+  track_digital:
     docker:
       - image: "circleci/python:3.6.1"
       - image: "mongo:3.6.2"
@@ -24,9 +24,9 @@ jobs:
               . .env/bin/activate
               # pylint src tests -- Major overhaul needed to not fail linting, not including linting in tests for now
               # mypy src tests
-              pytest --cov=pulse tests
+              pytest --cov=track tests
           name: "Running tests"
-    working_directory: ~/repo/pulse
+    working_directory: ~/repo/track_digital
   data:
     docker:
       - image: "circleci/python:3.6.1"
@@ -54,7 +54,7 @@ jobs:
               # mypy src tests
               pytest --cov=data tests
           name: "Running tests"
-    working_directory: ~/repo/pulse_update
+    working_directory: ~/repo/tracker
   deploy_site:
     docker:
       - image: docker:17.12.1-ce-git
@@ -69,13 +69,13 @@ jobs:
               docker push "${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
               docker push "${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${CIRCLE_PROJECT_REPONAME}:latest"
           name: "Build and Deploy Website Docker Image"
-    working_directory: ~/repo/pulse
+    working_directory: ~/repo/track_digital
 
 workflows:
   version: 2
-  pulse:
+  tracker:
     jobs:
-      - pulse 
+      - track_digital 
       - data
       - deploy_site:
           filters:
@@ -83,5 +83,5 @@ workflows:
               only:
                 - master
           requires:
-            - pulse
+            - track_digital
             - data

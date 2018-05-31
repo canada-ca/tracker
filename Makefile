@@ -1,3 +1,3 @@
 setup:
-	pip install -e ./pulse/.[development]
-	pip install -e ./pulse_update/.[development]
+	pip install -e ./tracker/.[development]
+	pip install -e ./track_digital/.[development]

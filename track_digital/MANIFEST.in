@@ -1,0 +1,3 @@
+recursive-include track/templates *
+recursive-include track/static *
+include track/track_meta.yml

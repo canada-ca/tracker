@@ -1,7 +1,7 @@
-/pulse_update/data/output
-/pulse_update/data/backup
-/pulse_update/data/*.json
-/pulse_update/data/*.env
+/tracker/data/output
+/tracker/data/backup
+/tracker/data/*.json
+/tracker/data/*.env
 db.json
 .env
 
@@ -32,9 +32,9 @@ pip-delete-this-directory.txt
 pip-selfcheck.json
 .coverage
 
-pulse_update/csv/
+tracker/csv/
 *.csv
 
 todo.txt
 node_modules
-pulse/instance
+track_digital/instance

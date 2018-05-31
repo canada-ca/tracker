@@ -6,7 +6,7 @@ var watch = require('gulp-watch');
 
 gulp.task('stylesheets', function() {
     return gulp.src('./node_modules/cds-webkit/dist/assets/css/*.css')
-        .pipe(gulp.dest('./pulse/static/css/'));
+        .pipe(gulp.dest('./track_digital/static/css/'));
 });
 
 gulp.task('clean', function () {
@@ -17,7 +17,7 @@ gulp.task('clean', function () {
 
 gulp.task('images', function () {
     return gulp.src('./node_modules/cds-webkit/src/images/*')
-        .pipe(gulp.dest('./pulse/static/images/'));
+        .pipe(gulp.dest('./track_digital/static/images/'));
 });
 
 gulp.task('build', gulp.series('clean', 'stylesheets', 'images'));

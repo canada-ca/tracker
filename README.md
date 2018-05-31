@@ -20,7 +20,7 @@ To setup local python dependencies you can run `make setup` from the root of the
 
 ### Web app
 
-From the `pulse` subdirectory
+From the `track_digital` subdirectory
 
 * Install dependencies:
 
@@ -59,7 +59,7 @@ To produce some data for the flask app to display, follow the instructions in th
 
 ### Domain scanner
 
-from the `pulse_update` subdirectory
+from the `tracker` subdirectory
 
 * Install dependencies:
 
@@ -67,7 +67,7 @@ from the `pulse_update` subdirectory
 pip install -r requirements.txt
 ```
 
-* If developing Pulse, you will also need the development requirements
+* If developing tracker, you will also need the development requirements
 ```bash
 pip install .[development]
 ```
@@ -78,7 +78,7 @@ Download and set up `domain-scan` [from GitHub](https://github.com/cds-snc/domai
 
 `domain-scan` in turn requires [`pshtt`](https://github.com/dhs-ncats/pshtt) and [`sslyze`](https://github.com/nabla-c0d3/sslyze). These can be installed directly via `pip`.
 
-Pulse requires you to set one environment variable:
+The app requires you to set one environment variable:
 
 * `DOMAIN_SCAN_PATH`: A path to `domain-scan`'s `scan` binary.
 * `DOMAIN_GATHER_PATH`: A path to `domain-scan`'s `gather` binary.
@@ -90,24 +90,23 @@ However, if you don't have `pshtt` and `sslyze` on your PATH, then `domain-scan`
 
 #### Then run it
 
-From the `pulse_update` subdirectory:
+From the `tracker` subdirectory:
 
 ```
-pulse run --scan here
+tracker run --scan here
 ```
 
-This will kick off the `domain-scan` scanning process for HTTP/HTTPS and DAP participation, using the domain lists as specified in `pulse_update/data/data_meta.yml` for the base set of domains to scan.
+This will kick off the `domain-scan` scanning process for HTTP/HTTPS and DAP participation, using the domain lists as specified in `tracker/data/data_meta.yml` for the base set of domains to scan.
 
-Then it will run the scan data through post-processing producing some JSON and CSV files as scan artifacts and finally uploading the results into the database that the frontend uses to render the information (by default if not further specified `localhost:21017/pulse`).
-
+Then it will run the scan data through post-processing producing some JSON and CSV files as scan artifacts and finally uploading the results into the database that the frontend uses to render the information (by default if not further specified `localhost:21017/tracker`).
 
 #### Scanner CLI
 
 The scanner portion has a CLI that can be used to perform individual parts of the scanning in isolation of the other steps.
 By following the steps to setup the Scanning portion, this CLI should be readily accessable to you (if you have activated the environment you installed it into).
-As you may have guesed from the command in the previous section, the CLI command is `pulse`.
+As you may have guesed from the command in the previous section, the CLI command is `tracker`.
 
-Help on how to use the CLI can be output via the command `pulse --help`
+Help on how to use the CLI can be output via the command `tracker --help`
 
 
 ## Public domain
