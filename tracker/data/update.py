@@ -43,7 +43,7 @@ LOGGER = logger.get_logger(__name__)
 
 
 # Options:
-# scan_mode=[skip,download,here]
+# scan_mode=[skip,here]
 #     skip: skip all scanning, assume CSVs are locally cached
 #     download: download scan data from S3
 #     here: run the default full scan
@@ -81,91 +81,6 @@ def update(scan_mode, gather_mode, options):
         LOGGER.info("Scanning parent domains.")
         scan_domains(options, scan_command, domain_scanners, parent_domains, parent_output)
         LOGGER.info("Scan of parent domains complete.")
-    elif scan_mode == "download":
-        LOGGER.info("Downloading latest production scan data from S3.")
-        download_s3()
-        LOGGER.info("Download complete.")
-
-
-# Upload the scan + processed data to /live/ and /archive/ locations by date.
-def upload_s3(date):
-    # Used for all operations.
-    acl = "--acl=public-read"
-
-    # Used when uploading to the live/ dir.
-    delete = "--delete"
-
-    live_parents = "s3://%s/live/parents/" % BUCKET_NAME
-    live_subdomains = "s3://%s/live/subdomains/" % BUCKET_NAME
-    live_db = "s3://%s/live/db/" % BUCKET_NAME
-
-    shell_out(["aws", "s3", "sync", PARENTS_DATA, live_parents, acl, delete])
-    shell_out(["aws", "s3", "sync", SUBDOMAIN_DATA, live_subdomains, acl, delete])
-    shell_out(["aws", "s3", "cp", DB_DATA, live_db, acl])
-
-    # Then copy the entire live directory to a dated archive.
-    # Ask S3 to do the copying, to save on time and bandwidth.
-    live = "s3://%s/live/" % (BUCKET_NAME)
-    archive = "s3://%s/archive/%s/" % (BUCKET_NAME, date)
-    shell_out(["aws", "s3", "sync", live, archive, acl])
-
-
-# Makes use of the public URLs so that this can be run in a dev
-# environment that doesn't have write credentials to the bucket.
-def download_s3():
-
-    def download(src, dest):
-        # remote sources relative to bucket
-        url = "https://s3-%s.amazonaws.com/%s/%s" % (AWS_REGION, BUCKET_NAME, src)
-
-        # local destinations are relative to data/
-        path = os.path.join(DATA_DIR, dest)
-
-        shell_out(["curl", url, "--output", path])
-
-    # Ensure the destination directories are present.
-    os.makedirs(os.path.join(PARENTS_DATA, "results"), exist_ok=True)
-    os.makedirs(os.path.join(SUBDOMAIN_DATA_GATHERED, "results"), exist_ok=True)
-    os.makedirs(os.path.join(SUBDOMAIN_DATA_SCANNED, "results"), exist_ok=True)
-
-    # Use cURL to download files.
-    # Don't rely on aws being configured, and surface any permission issues.
-    #
-    # Just grab results, not all the cached data.
-
-    # Results of parent domain scanning.
-    for scanner in SCANNERS:
-        download(
-            "live/parents/results/%s.csv" % scanner,
-            "output/parents/results/%s.csv" % scanner,
-        )
-    download("live/parents/results/meta.json", "output/parents/results/meta.json")
-
-    # Results of subdomain scanning.
-    for scanner in SCANNERS:
-        download(
-            "live/subdomains/scan/results/%s.csv" % scanner,
-            "output/subdomains/scan/results/%s.csv" % scanner,
-        )
-    download(
-        "live/subdomains/scan/results/meta.json",
-        "output/subdomains/scan/results/meta.json",
-    )
-
-    # Results of subdomain gathering.
-    download(
-        "live/subdomains/gather/results/gathered.csv",
-        "output/subdomains/gather/results/gathered.csv",
-    )
-    download(
-        "live/subdomains/gather/results/meta.json",
-        "output/subdomains/gather/results/meta.json",
-    )
-
-    # Also download the latest compiled DB.
-    # This will be overwritten immediately if this is being used in
-    # the context of a full data load/processing.
-    download("live/db/db.json", "db.json")
 
 
 # Use domain-scan to gather .gov domains from public sources.

@@ -25,10 +25,6 @@ SUBDOMAIN_DATA = os.path.join(DATA_DIR, "./output/subdomains")
 SUBDOMAIN_DATA_GATHERED = os.path.join(DATA_DIR, "./output/subdomains/gather")
 SUBDOMAIN_DATA_SCANNED = os.path.join(DATA_DIR, "./output/subdomains/scan")
 
-DB_DATA = os.path.join(DATA_DIR, "./db.json")
-BUCKET_NAME = META["bucket"]
-AWS_REGION = META["aws_region"]
-
 ### Parent domain scanning information
 # Run these scanners over *all* (which is a lot) discovered subdomains.
 SCANNERS = ["pshtt", "sslyze"]
@@ -45,26 +41,3 @@ GATHERER_OPTIONS = [
 
 # Used if --lambda is enabled during the scan.
 LAMBDA_WORKERS = 900
-
-# Quick and dirty CLI options parser.
-def options():
-    options = {}
-    for arg in sys.argv[1:]:
-        if arg.startswith("--"):
-
-            if "=" in arg:
-                key, value = arg.split("=")
-            else:
-                key, value = arg, "true"
-
-            key = key.split("--")[1]
-            key = key.lower()
-            value = value.lower()
-
-            if value == "true":
-                value = True
-            elif value == "false":
-                value = False
-            options[key] = value
-
-    return options

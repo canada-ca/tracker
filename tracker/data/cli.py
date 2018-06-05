@@ -67,9 +67,8 @@ def main(ctx: click.core.Context, connection: str) -> None:
     help="Coposition of `update`, `process`, and `upload` commands",
 )
 @click.option("--date", type=DATE)
-@click.option("--scan", type=click.Choice(["skip", "download", "here"]), default="skip")
+@click.option("--scan", type=click.Choice(["skip", "here"]), default="skip")
 @click.option("--gather", type=click.Choice(["skip", "here"]), default="here")
-@click.option("--upload-results", is_flag=True, default=False)
 @click.argument("scan_args", nargs=-1, type=click.UNPROCESSED)
 @click.pass_context
 def run(
@@ -77,15 +76,12 @@ def run(
         date: typing.Optional[str],
         scan: str,
         gather: str,
-        upload_results: bool,
         scan_args: typing.List[str],
     ) -> None:
 
     update.callback(scan, gather, scan_args)
     the_date = get_date(None, "date", date)
     process.callback(the_date)
-    if upload_results:
-        upload.callback(the_date)
 
 
 @main.command()
@@ -109,26 +105,6 @@ def update(scan: str, gather: str, scan_args: typing.List[str]) -> None:
     LOGGER.info("Starting update")
     data_update.update(scan, gather, transform_args(scan_args))
     LOGGER.info("Finished update")
-
-
-@main.command(help="Download scan results from s3")
-def download() -> None:
-    LOGGER.info("Downloading production data")
-    data_update.download_s3()
-    LOGGER.info("Finished downloading production data")
-
-
-@main.command(help="Upload scan results to s3")
-@click.option("--date", type=DATE, callback=get_date)
-def upload(date: str) -> None:
-    # Sanity check to make sure we have what we need.
-    if not os.path.exists(os.path.join(PARENTS_RESULTS, "meta.json")):
-        LOGGER.info("No scan metadata downloaded, aborting.")
-        return
-
-    LOGGER.info(f"[{date}] Syncing scan data and database to S3.")
-    data_update.upload_s3(date)
-    LOGGER.info(f"[{date}] Scan data and database now in S3.")
 
 
 @main.command(help="Process scan data")
