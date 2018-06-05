@@ -11,7 +11,35 @@
 
 <body class="flex flex-col h-screen ">
 
-	{% include 'includes/fr/header.html' %}
+	<header role="banner">
+
+		<!-- Alpha bar -->
+
+		{% include 'includes/fr/alpha-bar.html' %}
+
+		<!-- GOC Identity Bar -->
+
+	    <section id="goc-fip-bar">
+	        <div class="container mx-auto flex">
+	            <div class="flex-1 pt-2 pb-2">
+	                <a href="https://www.canada.ca/fr.html" aria-label="Government of Canada">
+	                    <object type="image/svg+xml" tabindex="-1" role="img" data="/static/images/fip-dark-en.svg"
+	                            aria-label="Symbol of the Government of Canada" class="h-6"></object>
+	                </a>
+	            </div>
+
+	            <div class="flex-1 text-right pt-2 pb-2 hidden sm:inline">
+	                <h2 class="sr-only">Sélection de la langue</h2>
+	                <a href="/en/{% block pageid %}{% endblock %}" class="text-white" lang="en">English</a>
+	            </div>
+	        </div>
+	    </section>
+
+	    <!-- Navigation -->
+
+	    {% include 'includes/fr/navigation.html' %}
+
+	</header>
 
 	<main class="flex-1">
 
