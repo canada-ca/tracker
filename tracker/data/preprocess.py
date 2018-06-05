@@ -2,7 +2,8 @@ import os
 import csv
 from data import models
 
-def pull_data(output: str, connection_string: str) -> None:
+
+def pull_data(output: str, connection: models.Connection) -> None:
     os.makedirs(output, exist_ok=True)
 
     domain_path = os.path.join(output, 'domains.csv')
@@ -18,8 +19,8 @@ def pull_data(output: str, connection_string: str) -> None:
         subdomain_writer = csv.DictWriter(subdomain_file, fieldnames=['domain'])
         domain_writer.writeheader()
         subdomain_writer.writeheader()
-        with models.Connection(connection_string) as connection:
-            for document in connection.parents.all():
-                domain_writer.writerow(document)
-            for document in connection.subdomains.all():
-                subdomain_writer.writerow(document)
+
+        for document in connection.parents.all():
+            domain_writer.writerow(document)
+        for document in connection.subdomains.all():
+            subdomain_writer.writerow(document)

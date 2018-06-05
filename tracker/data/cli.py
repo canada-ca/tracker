@@ -94,7 +94,9 @@ def run(
 def preprocess(ctx: click.core.Context, output: typing.Optional[str]) -> None:
     if not output:
         output = os.path.join(os.getcwd(), 'csv')
-    pull_data(output, ctx.obj.get('connection_string'))
+
+    with models.Connection(ctx.obj.get('connection_string')) as connection:
+        pull_data(output, connection)
 
 
 @main.command(
