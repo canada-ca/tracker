@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" class="flex">
 
 <head>
 	
@@ -9,7 +9,7 @@
 	
 </head>
 
-<body class="flex flex-col h-screen ">
+<body class="flex flex-1 flex-col min-h-screen">
 
 	<header role="banner">
 
@@ -50,7 +50,7 @@
 
 	</header>
 
-	<main class="flex-1">
+	<main class="flex flex-auto">
 
 		{% block content %}{% endblock %}
 

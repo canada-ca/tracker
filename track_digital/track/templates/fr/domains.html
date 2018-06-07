@@ -4,17 +4,18 @@
 {% block pageid %}domains{% endblock %}
 
 {% block content %}
-<header class="bg-grey-lighter py-6">
 
-	{% include 'includes/https/fr/header.html' %}
+<section id="main-content" class="flex-1">
 
-	<div class="text-center mt-8 font-bold">
-		<p class="uppercase"><a href="/fr/organizations/" class="mr-8 text-blue hover:text-blue-darker">par organisation</a> par domaine</a></p>
-	</div>
+	<header class="bg-grey-lighter py-6">
 
-</header>
+		{% include 'includes/https/fr/header.html' %}
 
-<section id="main-content">
+		<div class="text-center mt-8 font-bold">
+			<p class="uppercase"><a href="/fr/organizations/" class="mr-8 text-blue hover:text-blue-darker">par organisation</a> par domaine</a></p>
+		</div>
+
+	</header>
 
 	<div id="tab-panel" class="container mx-auto" role="tabpanel" aria-hidden="false">
 	    <table id="data-table" language="fr" class="domain responsive https">
