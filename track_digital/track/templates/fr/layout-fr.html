@@ -39,6 +39,15 @@
 
 	    {% include 'includes/fr/navigation.html' %}
 
+	    <nav id="menu-content" class="shadow-md">
+		    <ul class="list-reset ml-4 mr-2 mt-4">
+		    	<li class="mb-4"><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="/fr/organizations/">Consulter la conformité liée à la sécurité numérique</a></li>
+		        <li class="mb-4"><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="/fr/guidance/">Directives</a></li>
+		        <li class="mb-4"><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="/fr/feedback/">Rétroaction</a></li>
+		        <li class="mb-4"><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="/en/{{ self.pageid() }}" lang="en">English</a></li>
+		    </ul>
+		</nav>
+
 	</header>
 
 	<main class="flex-1">

@@ -39,6 +39,15 @@
 
 	     {% include 'includes/en/navigation.html' %}
 
+	     <nav id="menu-content" class="shadow-md">
+		    <ul class="list-reset ml-4 mr-2 mt-4">
+		        <li class="mb-4"><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="/en/organizations/">Track digital security compliance</a></li>
+		        <li class="mb-4"><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="/en/guidance">Guidance</a></li>
+		        <li class="mb-4"><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="/en/feedback/">Feedback</a></li>
+		        <li class="mb-4"><a tabindex="-1" class="text-xl text-blue hover:text-blue-darker font-bold" href="/fr/{{ self.pageid() }}" lang="fr">Français</a></li>
+		    </ul>
+		</nav>
+
 	</header>
 
 	<main class="flex-1">
