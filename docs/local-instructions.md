@@ -81,12 +81,15 @@ To initalize mongodb with some data for the dashboard to display, we must run a 
 ```bash
 cd pulse/tracker
 mkdir csv
-cat > ./csv/domains.csv  << EOF
+cat > ./csv/owners.csv  << EOF
 domain,filler,organization_en,organization_fr
 canada.ca,,Government of Canada,Gouvernement du Canada
+digital.canada.ca,,Treasury Board of Canada Secretariat,Secrétariat du Conseil du Trésor du Canada
+numerique.canada.ca,,Treasury Board of Canada Secretariat,Secrétariat du Conseil du Trésor du Canada
 EOF
-cat > ./csv/subdomains.csv  << EOF
+cat > ./csv/domains.csv  << EOF
 domain
+canada.ca
 digital.canada.ca
 numerique.canada.ca
 open.canada.ca
@@ -97,10 +100,10 @@ EOF
 Once those lists are in place, we can run a scan.
 ```bash
 . .env/bin/activate
-tracker run --scan here
+tracker run
 deactivate
 ```
-This will run a scan on the contents of the `domains.csv` and `subdomains.csv` files in the `csv` directory, dumping some scan artifacts to the `data/output` directory, then load the results into the database.
+This will run a scan on the contents of the `domains.csv` files in the `csv` directory, dumping some scan artifacts to the `data/output` directory, then load the results into the database.
 
 ### Running the app
 

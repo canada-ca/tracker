@@ -93,12 +93,12 @@ However, if you don't have `pshtt` and `sslyze` on your PATH, then `domain-scan`
 From the `tracker` subdirectory:
 
 ```
-tracker run --scan here
+tracker run
 ```
 
 This will kick off the `domain-scan` scanning process for HTTP/HTTPS and DAP participation, using the domain lists as specified in `tracker/data/data_meta.yml` for the base set of domains to scan.
 
-Then it will run the scan data through post-processing producing some JSON and CSV files as scan artifacts and finally uploading the results into the database that the frontend uses to render the information (by default if not further specified `localhost:21017/tracker`).
+Then it will run the scan data through post-processing producing some JSON and CSV files as scan artifacts and finally uploading the results into the database that the frontend uses to render the information (by default if not further specified `localhost:21017/track`).
 
 For a more detailed step by step procedue of getting a local development deployment going, checkout out the [Local Deploy Step-by-step](docs/local-instructions.md) document!
 
