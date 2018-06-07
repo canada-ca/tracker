@@ -27,7 +27,7 @@ jobs:
               pytest --cov=track tests
           name: "Running tests"
     working_directory: ~/repo/track_digital
-  tracker:
+  data:
     docker:
       - image: "circleci/python:3.6.1"
       - image: "mongo:3.6.2"
@@ -55,106 +55,6 @@ jobs:
               pytest --cov=data tests
           name: "Running tests"
     working_directory: ~/repo/tracker
-  tracker_integration:
-    docker:
-      - image: "circleci/python:3.6.1"
-      - image: "mongo:3.6.2"
-    steps:
-      - checkout:
-          path: ~/repo
-      - restore_cache:
-          key: "deps1-{{ .Branch }}-{{ checksum \"requirements.txt\" }}"
-      - run:
-          command: |
-              python3 -m venv .env
-              . .env/bin/activate
-              pip install -r requirements.txt
-              mkdir -p domain-scan && wget -q -O - https://api.github.com/repos/cds-snc/domain-scan/tarball | tar xz --strip-components=1 -C domain-scan
-              pip install -r domain-scan/requirements.txt
-              pip install -r domain-scan/requirements-scanners.txt
-          name: "Installing dependencies"
-      - save_cache:
-          key: "deps1-{{ .Branch }}-{{ checksum \"requirements.txt\" }}"
-          paths:
-            - .env
-      - run:
-          command: |
-              sudo apt-get install -y apt-transport-https
-              sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-              echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.6 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
-              sudo apt-get update
-              sudo apt-get install -y mongodb-org-tools=3.6.2
-          name: "Installing dependencies"
-      - run:
-          command: |
-              mkdir csv
-              cat > ./csv/domains.csv  << EOF
-              domain,filler,organization_en,organization_fr
-              canada.ca,,Government of Canada,Gouvernement du Canada
-              EOF
-              cat > ./csv/subdomains.csv  << EOF
-              domain
-              digital.canada.ca
-              numerique.canada.ca
-              open.canada.ca
-              ouvert.canada.ca
-              EOF
-              . .env/bin/activate
-              tracker insert --parents ./csv/domains.csv --subdomains ./csv/subdomains.csv
-          name: "Populating domains"
-      - run:
-          command: |
-              . .env/bin/activate
-              tracker preprocess
-              export DOMAIN_SCAN_PATH=$(pwd)/domain-scan/scan
-              export DOMAIN_GATHER_PATH=$(pwd)/domain-scan/gather
-              tracker run --scan here
-          name: "Creating scan results"
-      - run: "mkdir -p workspace"
-      - run:
-          command: "mongoexport --db track --collection meta --out workspace/mongo_dump"
-          name: "Exporting database"
-      - persist_to_workspace:
-          paths:
-            - mongo_dump
-          root: workspace
-    working_directory: ~/repo/tracker
-  track_digital_integration:
-    docker:
-      - image: "circleci/python:3.6.1"
-      - image: "mongo:3.6.2"
-    steps:
-      - checkout:
-          path: ~/repo
-      - restore_cache:
-          key: "deps1-{{ .Branch }}-{{ checksum \"requirements.txt\" }}"
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          command: |
-              python3 -m venv .env
-              . .env/bin/activate
-              pip install -r requirements.txt
-          name: "Installing dependencies"
-      - run:
-          command: |
-              sudo apt-get install apt-transport-https
-              sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-              echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.6 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
-              sudo apt-get update
-              sudo apt-get install -y mongodb-org-tools=3.6.2
-          name: "Installing packages"
-      - run:
-          command: "mongoimport --db track --collection meta --file /tmp/workspace/mongo_dump"
-          name: "Importing database"
-      - run:
-          command: |
-              echo "Run integration tests"
-      - save_cache:
-          key: "deps1-{{ .Branch }}-{{ checksum \"requirements.txt\" }}"
-          paths:
-            - .env
-    working_directory: ~/repo/track_digital
   deploy_site:
     docker:
       - image: docker:17.12.1-ce-git
@@ -170,19 +70,13 @@ jobs:
               docker push "${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${CIRCLE_PROJECT_REPONAME}:latest"
           name: "Build and Deploy Website Docker Image"
     working_directory: ~/repo/track_digital
+
 workflows:
   version: 2
   tracker:
     jobs:
       - track_digital 
-      - tracker
-      - tracker_integration:
-          requires:
-            - tracker
-      - track_digital_integration:
-          requires:
-            - track_digital
-            - tracker_integration
+      - data
       - deploy_site:
           filters:
             branches:
@@ -190,6 +84,4 @@ workflows:
                 - master
           requires:
             - track_digital
-            - tracker
-            - tracker_integration
-            - track_digital_integration
+            - data
