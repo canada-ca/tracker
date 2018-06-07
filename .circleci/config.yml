@@ -50,7 +50,7 @@ jobs:
       - run:
           command: |
               . .env/bin/activate
-              # pylint src tests -- Major overhaul needed to not fail linting, not including linting in tests for now
+              pylint data tests 
               # mypy src tests
               pytest --cov=data tests
           name: "Running tests"

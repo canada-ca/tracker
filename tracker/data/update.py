@@ -6,18 +6,11 @@
 #   python -m data.update
 
 import subprocess
-import datetime
-import os
-import ujson
-import logging
 import typing
 
 # Import all the constants from data/env.py.
 from data import env
-from data.env import *
 
-# Import processing just for the function call.
-import data.processing
 from data import logger
 
 LOGGER = logger.get_logger(__name__)
@@ -93,7 +86,7 @@ def scan_domains(
 
     # If Lambda mode is on, use way more workers.
     if options.get("lambda") and (options.get("serial", None) is None):
-        full_command += ["--workers=%i" % LAMBDA_WORKERS]
+        full_command += ["--workers=%i" % env.LAMBDA_WORKERS]
 
     shell_out(full_command)
 

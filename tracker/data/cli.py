@@ -73,7 +73,7 @@ def main(ctx: click.core.Context, connection: str) -> None:
 @click.argument("scan_args", nargs=-1, type=click.UNPROCESSED)
 @click.pass_context
 def run(
-        ctx: click.core.Context,
+        ctx: click.core.Context, # pylint: disable=unused-argument
         date: typing.Optional[str],
         scanner: typing.List[str],
         domains: str,

@@ -24,7 +24,6 @@ from shutil import copyfile
 import slugify
 
 # Import all the constants from data/env.py.
-from data.env import *
 from data import env
 from data import logger
 from data import models
@@ -117,7 +116,9 @@ def run(date: typing.Optional[str], connection_string: str):
         LOGGER.info("Creating all domains.")
         connection.domains.create_all(domain_map[domain_name] for domain_name in sorted_domains)
         LOGGER.info("Creating all organizations.")
-        connection.organizations.create_all(organizations[organization_name] for organization_name in sorted_organizations)
+        connection.organizations.create_all(
+            organizations[organization_name] for organization_name in sorted_organizations
+        )
 
         # Create top-level summaries.
         LOGGER.info("Creating government-wide totals.")
@@ -137,10 +138,10 @@ def load_domain_data() -> typing.Tuple[typing.Set, typing.Dict]:
     if not os.path.exists(SCAN_DOMAINS_CSV):
         LOGGER.info("Downloading domains.csv...")
         mkdir_p(SCAN_CACHE)
-        if DOMAINS.startswith("http:") or DOMAINS.startswith("https:"):
-            shell_out(["wget", DOMAINS, "-O", SCAN_DOMAINS_CSV])
+        if env.DOMAINS.startswith("http:") or env.DOMAINS.startswith("https:"):
+            shell_out(["wget", env.DOMAINS, "-O", SCAN_DOMAINS_CSV])
         else:
-            copyfile(DOMAINS, SCAN_DOMAINS_CSV)
+            copyfile(env.DOMAINS, SCAN_DOMAINS_CSV)
 
     if not os.path.exists(SCAN_DOMAINS_CSV):
         LOGGER.critical("Couldn't download domains.csv")
@@ -271,10 +272,7 @@ def map_subdomains(scan_data, domain_map):
 
 # Given the domain data loaded in from CSVs, draw conclusions,
 # and filter/transform data into form needed for display.
-def process_domains(
-    domains,  scan_data
-):
-
+def process_domains(domains, scan_data):
     # For each domain, determine eligibility and, if eligible,
     # use the scan data to draw conclusions.
     for domain_name in domains.keys():
@@ -288,7 +286,6 @@ def process_domains(
             "eligible_zone": False,  # zone eligible (itself or any live subdomains?)
         }
         eligible_children = []
-        eligible_zone = False
 
         # No matter what, put the preloaded state onto the parent,
         # since even an unused domain can always be preloaded.
@@ -303,7 +300,6 @@ def process_domains(
             if eligible_for_https(domains[subdomain_name]):
                 eligible_children.append(subdomain_name)
                 domains[subdomain_name]["https"] = https_behavior_for(
-                    subdomain_name,
                     scan_data[subdomain_name]["pshtt"],
                     scan_data[subdomain_name].get("sslyze", None),
                     parent_preloaded=https_parent["preloaded"],
@@ -431,23 +427,23 @@ def full_report(domains):
     return full
 
 def eligible_for_https(domain):
-    return domain["live"] == True
+    return domain["live"] is True
 
 
 # Given a pshtt report and (optional) sslyze report,
 # fill in a dict with the conclusions.
-def https_behavior_for(name, pshtt, sslyze, parent_preloaded=None):
+def https_behavior_for(pshtt, sslyze, parent_preloaded=None):
     report = {"eligible": True}
 
     # assumes that HTTPS would be technically present, with or without issues
-    if pshtt["Downgrades HTTPS"] == "True":
+    if boolean_for(pshtt["Downgrades HTTPS"]):
         https = 0  # No
     else:
-        if pshtt["Valid HTTPS"] == "True":
+        if boolean_for(pshtt["Valid HTTPS"]):
             https = 2  # Yes
         elif (
-            (pshtt["HTTPS Bad Chain"] == "True")
-            and (pshtt["HTTPS Bad Hostname"] == "False")
+                boolean_for(pshtt["HTTPS Bad Chain"])
+                and not boolean_for(pshtt["HTTPS Bad Hostname"])
         ):
             https = 1  # Yes
         else:
@@ -470,17 +466,17 @@ def https_behavior_for(name, pshtt, sslyze, parent_preloaded=None):
         # for itself, we'll say it "Enforces HTTPS" if it immediately
         # redirects to an HTTPS URL.
         if (
-            (pshtt["Strictly Forces HTTPS"] == "True")
-            and (
-                (pshtt["Defaults to HTTPS"] == "True") or (pshtt["Redirect"] == "True")
-            )
+                boolean_for(pshtt["Strictly Forces HTTPS"])
+                and (
+                    boolean_for(pshtt["Defaults to HTTPS"]) or boolean_for(pshtt["Redirect"])
+                )
         ):
             behavior = 3  # Yes (Strict)
 
         # "Yes" means HTTP eventually redirects to HTTPS.
         elif (
-            (pshtt["Strictly Forces HTTPS"] == "False")
-            and (pshtt["Defaults to HTTPS"] == "True")
+                not boolean_for(pshtt["Strictly Forces HTTPS"])
+                and boolean_for(pshtt["Defaults to HTTPS"])
         ):
             behavior = 2  # Yes
 
@@ -506,13 +502,13 @@ def https_behavior_for(name, pshtt, sslyze, parent_preloaded=None):
         hsts = 3  # Yes, via preloading
 
     # Otherwise, without HTTPS there can be no HSTS for the domain directly.
-    elif (https <= 0):
+    elif https <= 0:
         hsts = -1  # N/A (considered 'No')
 
     else:
 
         # HSTS is present for the canonical endpoint.
-        if (pshtt["HSTS"] == "True") and hsts_age:
+        if boolean_for(pshtt["HSTS"]) and hsts_age:
 
             # Say No for too-short max-age's, and note in the extended details.
             if hsts_age >= 31536000:
@@ -527,9 +523,9 @@ def https_behavior_for(name, pshtt, sslyze, parent_preloaded=None):
     #
     # * Domains can be preloaded through manual overrides.
     # * Confusing to mix an endpoint-level decision with a domain-level decision.
-    if pshtt["HSTS Preloaded"] == "True":
+    if boolean_for(pshtt["HSTS Preloaded"]):
         preloaded = 2  # Yes
-    elif (pshtt["HSTS Preload Ready"] == "True"):
+    elif boolean_for(pshtt["HSTS Preload Ready"]):
         preloaded = 1  # Ready for submission
     else:
         preloaded = 0  # No
@@ -611,10 +607,9 @@ def https_behavior_for(name, pshtt, sslyze, parent_preloaded=None):
 # Just returns a 0 or 2 for inactive (not live) zones, where
 # we still may care about preloaded state.
 def preloaded_or_not(pshtt):
-    if pshtt["HSTS Preloaded"] == "True":
+    if boolean_for(pshtt["HSTS Preloaded"]):
         return 2  # Yes
-    else:
-        return 0  # No
+    return 0  # No
 
 
 # 'eligible' should be a list of dicts with https report data.
@@ -714,32 +709,30 @@ def print_report(report):
         if report_type == "report_date" or report_type == "_id":
             continue
 
-        LOGGER.info("[%s]" % report_type)
+        LOGGER.info("[%s]", report_type)
         eligible = report[report_type]["eligible"]
         for key in report[report_type].keys():
             if key == "eligible":
-                LOGGER.info("%s: %i" % (key, report[report_type][key]))
+                LOGGER.info("%s: %i", key, report[report_type][key])
             else:
                 LOGGER.info(
-                    "%s: %i%% (%i)"
-                    % (
-                        key,
-                        percent(report[report_type][key], eligible),
-                        report[report_type][key],
-                    )
+                    "%s: %i%% (%i)",
+                    key,
+                    percent(report[report_type][key], eligible),
+                    report[report_type][key],
                 )
 
 
 ### utilities
 def shell_out(command, env=None):
     try:
-        LOGGER.info("[cmd] %s" % str.join(" ", command))
+        LOGGER.info("[cmd] %s", " ".join(command))
         response = subprocess.check_output(command, shell=False, env=env)
         output = str(response, encoding="UTF-8")
         LOGGER.info(output)
         return output
     except subprocess.CalledProcessError:
-        logging.critical("Error running %s." % (str(command)))
+        logging.critical("Error running %s.", " ".join(command))
         exit(1)
         return None
 
@@ -766,15 +759,14 @@ def write(content, destination, binary=False):
     mkdir_p(os.path.dirname(destination))
 
     if binary:
-        f = open(destination, "bw")
+        file = open(destination, "bw")
     else:
-        f = open(destination, "w", encoding="utf-8")
-    f.write(content)
-    f.close()
+        file = open(destination, "w", encoding="utf-8")
+    file.write(content)
+    file.close()
 
 
 def boolean_for(string):
     if string == "False":
         return False
-    else:
-        return True
+    return True
