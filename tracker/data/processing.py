@@ -545,6 +545,8 @@ def https_behavior_for(name, pshtt, sslyze, parent_preloaded=None):
     sslv3 = None
     any_rc4 = None
     any_3des = None
+    tlsv10 = None
+    tlsv11 = None
 
     # values: unknown or N/A (-1), No (0), Yes (1)
     bod_crypto = None
@@ -573,11 +575,19 @@ def https_behavior_for(name, pshtt, sslyze, parent_preloaded=None):
         else:
             bod_crypto = 1
 
+        ###
+        # ITPIN cares about usage of TLS 1.0 and TLS 1.1
+        tlsv10 = boolean_for(sslyze["TLSv1.0"])
+        tlsv11 = boolean_for(sslyze["TLSv1.1"])
+
     report["bod_crypto"] = bod_crypto
     report["rc4"] = any_rc4
     report["3des"] = any_3des
     report["sslv2"] = sslv2
     report["sslv3"] = sslv3
+    report["tlsv10"] = tlsv10
+    report["tlsv11"] = tlsv11
+
 
     # Final calculation: is the service compliant with all of M-15-13
     # (HTTPS+HSTS) and BOD 18-01 (that + RC4/3DES/SSLv2/SSLv3)?
@@ -650,6 +660,8 @@ def total_crypto_report(eligible):
         "3des": 0,
         "sslv2": 0,
         "sslv3": 0,
+        "tlsv10": 0,
+        "tlsv11": 0,
     }
 
     for report in eligible:
@@ -669,6 +681,10 @@ def total_crypto_report(eligible):
             total_report["sslv2"] += 1
         if report["sslv3"]:
             total_report["sslv3"] += 1
+        if report["tlsv10"]:
+            total_report["tlsv10"] += 1
+        if report["tlsv11"]:
+            total_report["tlsv11"] += 1
 
     return total_report
 
