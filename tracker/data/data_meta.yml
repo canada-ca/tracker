@@ -6,5 +6,5 @@ data:
   domains_url: "./csv/domains.csv"
 
   # Some other websites
-  other_subdomains_url: "./csv/subdomains.csv"
+  ownership_url: "./csv/owners.csv"
 

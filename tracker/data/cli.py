@@ -4,7 +4,7 @@ import typing
 import datetime
 import click
 import ujson
-from data.env import PARENTS_RESULTS
+from data import env
 from data.env import DATA_DIR
 from data import update as data_update
 from data import processing
@@ -29,7 +29,7 @@ DATE = DateType()
 
 
 def get_cached_date(directory: str) -> str:
-    meta = os.path.join(directory, "output/parents/results/meta.json")
+    meta = os.path.join(directory, "output/domains/results/meta.json")
     with open(meta) as meta_file:
         scan_meta = ujson.load(meta_file)
     return scan_meta["start_time"][0:10]
@@ -67,19 +67,21 @@ def main(ctx: click.core.Context, connection: str) -> None:
     help="Coposition of `update`, `process`, and `upload` commands",
 )
 @click.option("--date", type=DATE)
-@click.option("--scan", type=click.Choice(["skip", "here"]), default="skip")
-@click.option("--gather", type=click.Choice(["skip", "here"]), default="here")
+@click.option('--scanner', type=str, multiple=True, default=['pshtt', 'sslyze'], envvar='SCANNERS')
+@click.option('--domains', type=click.Path(), default=env.DOMAINS, envvar='DOMAINS')
+@click.option('--output', type=click.Path(), default=env.SCAN_DATA, envvar='SCAN_DATA')
 @click.argument("scan_args", nargs=-1, type=click.UNPROCESSED)
 @click.pass_context
 def run(
         ctx: click.core.Context,
         date: typing.Optional[str],
-        scan: str,
-        gather: str,
+        scanner: typing.List[str],
+        domains: str,
+        output: str,
         scan_args: typing.List[str],
     ) -> None:
 
-    update.callback(scan, gather, scan_args)
+    update.callback(scanner, domains, output, scan_args)
     the_date = get_date(None, "date", date)
     process.callback(the_date)
 
@@ -98,12 +100,13 @@ def preprocess(ctx: click.core.Context, output: typing.Optional[str]) -> None:
 @main.command(
     context_settings=dict(ignore_unknown_options=True), help="Gather and scan domains"
 )
-@click.option("--scan", type=click.Choice(["skip", "download", "here"]), default="skip")
-@click.option("--gather", type=click.Choice(["skip", "here"]), default="here")
+@click.option('--scanner', type=str, multiple=True, default=['pshtt', 'sslyze'], envvar='SCANNERS')
+@click.option('--domains', type=click.Path(), default=env.DOMAINS, envvar='DOMAINS')
+@click.option('--output', type=click.Path(), default=env.SCAN_DATA, envvar='SCAN_DATA')
 @click.argument("scan_args", nargs=-1, type=click.UNPROCESSED)
-def update(scan: str, gather: str, scan_args: typing.List[str]) -> None:
+def update(scanner: typing.List[str], domains: str, output: str, scan_args: typing.List[str]) -> None:
     LOGGER.info("Starting update")
-    data_update.update(scan, gather, transform_args(scan_args))
+    data_update.update(scanner, domains, output, transform_args(scan_args))
     LOGGER.info("Finished update")
 
 
@@ -112,7 +115,7 @@ def update(scan: str, gather: str, scan_args: typing.List[str]) -> None:
 @click.pass_context
 def process(ctx: click.core.Context, date: str) -> None:
     # Sanity check to make sure we have what we need.
-    if not os.path.exists(os.path.join(PARENTS_RESULTS, "meta.json")):
+    if not os.path.exists(os.path.join(env.SCAN_RESULTS, "meta.json")):
         LOGGER.info("No scan metadata downloaded, aborting.")
         return
 
@@ -122,25 +125,13 @@ def process(ctx: click.core.Context, date: str) -> None:
 
 
 @main.command(help="Populate DB with domains")
-@click.option('--parents', type=click.File('r'))
-@click.option('--subdomains', type=click.File('r'))
+@click.argument('owners', type=click.File('r', encoding='utf-8-sig'))
+@click.argument('domains', type=click.File('r', encoding='utf-8-sig'))
 @click.pass_context
-def insert(ctx: click.core.Context, parents: typing.IO[str], subdomains: typing.IO[str]) -> None:
-    parents_reader = csv.DictReader(parents)
-    subdomain_reader = csv.DictReader(subdomains)
-
-    def relevant_parent(document: typing.Dict) -> typing.Dict:
-        return {
-            'domain': document.get('domain'),
-            'organization_en': document.get('organization_en'),
-            'organization_fr': document.get('organization_fr'),
-        }
-
-    def relevant_subdomain(document: typing.Dict) -> typing.Dict:
-        return {
-            'domain': document.get('domain'),
-        }
+def insert(ctx: click.core.Context, owners: typing.IO[str], domains: typing.IO[str]) -> None:
+    owners_reader = csv.DictReader(owners)
+    domains_reader = csv.DictReader(domains)
 
     with models.Connection(ctx.obj.get('connection_string')) as connection:
-        connection.parents.create_all(relevant_parent(document) for document in parents_reader)
-        connection.subdomains.create_all(relevant_subdomain(document) for document in subdomain_reader)
+        connection.owners.create_all(document for document in owners_reader)
+        connection.input_domains.create_all(document for document in domains_reader)

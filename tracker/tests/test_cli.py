@@ -29,8 +29,10 @@ def test_run_all_args(
     result = runner.invoke(cli.main, args=[
         'run',
         '--date', date,
-        '--scan', 'here',
-        '--gather', 'here',
+        '--scanner', 'pshtt',
+        '--scanner', 'sslyze',
+        '--domains', 'not.a.real.file',
+        '--output', '.'
     ])
     assert result.exit_code == exit_code
 
@@ -41,8 +43,10 @@ def test_update(monkeypatch: _pytest.monkeypatch.MonkeyPatch) -> None:
     runner = CliRunner()
     result = runner.invoke(cli.main, args=[
         'update',
-        '--scan', 'here',
-        '--gather', 'here',
+        '--scanner', 'pshtt',
+        '--scanner', 'sslyze',
+        '--domains', 'not.a.real.file',
+        '--output', '.'
     ])
     assert result.exit_code == 0
 

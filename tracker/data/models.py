@@ -25,6 +25,7 @@ def _insert(
     client.get_database(database).get_collection('meta').insert_one({'_collection': collection, **document})
 
 
+
 def _find(
         client: pymongo.MongoClient,
         collection: str,
@@ -82,12 +83,14 @@ class Connection():
         return _Collection(self._client, 'organizations')
 
     @property
-    def parents(self) -> _Collection:
-        return _Collection(self._client, 'parents')
+    def owners(self) -> _Collection:
+        return _Collection(self._client, 'owners')
 
     @property
-    def subdomains(self) -> _Collection:
-        return _Collection(self._client, 'subdomains')
+    def input_domains(self) -> _Collection:
+        return _Collection(self._client, 'input_domains')
 
     def close(self) -> None:
         self._client.close()
+
+

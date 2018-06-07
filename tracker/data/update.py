@@ -13,6 +13,7 @@ import logging
 import typing
 
 # Import all the constants from data/env.py.
+from data import env
 from data.env import *
 
 # Import processing just for the function call.
@@ -37,79 +38,25 @@ LOGGER = logger.get_logger(__name__)
 #
 # 2. Run processing.py to generate front-end-ready data as data/db.json.
 #
-# 3. Upload data to S3.
-#    - Depends on the AWS CLI and access credentials already being configured.
-#    - TODO: Consider moving from aws CLI to Python library.
 
 
 # Options:
-# scan_mode=[skip,here]
-#     skip: skip all scanning, assume CSVs are locally cached
-#     download: download scan data from S3
-#     here: run the default full scan
-# gather_mode=[skip,here]
-#     skip: skip gathering, assume CSVs are locally cached
-#     here: run the default full gather
+# scanners
+#     list of scanners to use
+# domains
+#     location of domain list to scan
+# output
+#     location to store scan output
 # options
 #     options to pass along to scan and gather operations
 
-def update(scan_mode, gather_mode, options):
-    if scan_mode == "here":
-        # 1a. Gather .gov federal subdomains.
-        if gather_mode == "here":
-            LOGGER.info("Gathering subdomains.")
-            gather_subdomains(options)
-            LOGGER.info("Subdomain gathering complete.")
-        elif gather_mode == "skip":
-            LOGGER.info("Skipping subdomain gathering.")
+def update(scanners: typing.List[str], domains: str, output: str, options):
+    scan_command = env.SCAN_COMMAND
 
-        # One day, these variables pulled globally from env.py will be gone
-        # And on that day, I will rejoice.
-        domain_scanners = SCANNERS
-        scan_command = SCAN_COMMAND
-        subdomains = os.path.join(SUBDOMAIN_DATA_GATHERED, "results", "gathered.csv")
-        subdomain_output = SUBDOMAIN_DATA_SCANNED
-        parent_domains = DOMAINS
-        parent_output = PARENTS_DATA
-
-        # 1b. Scan subdomains for some types of things.
-        LOGGER.info("Scanning subdomains.")
-        scan_domains(options, scan_command, domain_scanners, subdomains, subdomain_output)
-        LOGGER.info("Subdomain scanning complete")
-
-        # 1c. Scan parent domains for all types of things.
-        LOGGER.info("Scanning parent domains.")
-        scan_domains(options, scan_command, domain_scanners, parent_domains, parent_output)
-        LOGGER.info("Scan of parent domains complete.")
-
-
-# Use domain-scan to gather .gov domains from public sources.
-def gather_subdomains(options):
-    LOGGER.info("[gather] Gathering subdomains.")
-
-    full_command = [GATHER_COMMAND]
-
-    full_command += [",".join(GATHERER_NAMES)]
-    full_command += GATHERER_OPTIONS
-
-    # Common to all gatherers.
-    # --parents gets auto-included as its own gatherer source.
-    full_command += [
-        "--output=%s" % SUBDOMAIN_DATA_GATHERED,
-        "--suffix=%s" % GATHER_SUFFIXES,
-        "--parents=%s" % DOMAINS,
-        "--ignore-www",
-        "--sort",
-        "--debug",  # always capture full output
-    ]
-
-    # Allow some options passed to python -m data.update to go
-    # through to domain-scan.
-    for flag in ["cache"]:
-        if options.get(flag):
-            full_command += ["--%s" % flag]
-
-    shell_out(full_command)
+    # 1c. Scan domains for all types of things.
+    LOGGER.info("Scanning domains.")
+    scan_domains(options, scan_command, scanners, domains, output)
+    LOGGER.info("Scan of domains complete.")
 
 
 # Run pshtt on each gathered set of domains.
