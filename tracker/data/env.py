@@ -12,6 +12,7 @@ META = yaml.safe_load(_meta_content)
 
 DOMAINS = os.environ.get("DOMAINS", META["data"]["domains_url"])
 OWNERSHIP = os.environ.get("OWNERSHIP", META["data"]["ownership_url"])
+CIPHER = os.environ.get("CIPHERS", META["data"]["ciphers_url"])
 
 # domain-scan paths (MUST be set in env)
 SCAN_COMMAND = os.environ.get("DOMAIN_SCAN_PATH", './domain-scan/scan')

@@ -90,5 +90,9 @@ class Connection():
     def input_domains(self) -> _Collection:
         return _Collection(self._client, 'input_domains')
 
+    @property
+    def ciphers(self) -> _Collection:
+        return _Collection(self._client, 'ciphers')
+
     def close(self) -> None:
         self._client.close()

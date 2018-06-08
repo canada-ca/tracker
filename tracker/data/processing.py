@@ -17,6 +17,7 @@ import errno
 import csv
 import datetime
 import logging
+import pathlib
 import os
 import subprocess
 import typing
@@ -51,6 +52,7 @@ def run(date: typing.Optional[str], connection_string: str):
     #
     # Also returns gathered subdomains, which need more filtering to be useful.
     domains, domain_map = load_domain_data()
+    acceptable_ciphers = load_cipher_data()
 
     # Read in domain-scan CSV data.
     scan_data = load_scan_data(domains)
@@ -96,7 +98,7 @@ def run(date: typing.Optional[str], connection_string: str):
     # Calculate high-level per-domain conclusions for each report.
     # Overwrites `domains` and `subdomains` in-place.
     process_domains(
-        domain_map, scan_data
+        domain_map, scan_data, acceptable_ciphers
     )
 
     # Reset the database.
@@ -128,6 +130,44 @@ def run(date: typing.Optional[str], connection_string: str):
     print_report(report)
 
 
+def cache_file(uri: str) -> pathlib.Path:
+    LOGGER.info("caching %s", uri)
+    mkdir_p(SCAN_CACHE)
+    path = pathlib.Path(uri)
+    cache_location = pathlib.Path(SCAN_CACHE) / path.name
+    if cache_location.is_file():
+        return cache_location
+
+    if uri.startswith("http:") or uri.startswith("https:"):
+        shell_out(["wget", uri, "-O", os.path.join(SCAN_CACHE, path.name)])
+    else:
+        copyfile(uri, str(cache_location))
+    return cache_location
+
+
+def in_cache(path: str) -> bool:
+    cache_path = pathlib.Path(SCAN_CACHE) / pathlib.Path(path).name
+    return cache_path.exists()
+
+
+def load_cipher_data() -> typing.Set[str]:
+    path = cache_file(env.CIPHER)
+
+    if not path.exists():
+        LOGGER.critical("Couldn't download cipher csv")
+        exit(1)
+
+    ciphers = set()
+    with path.open('r', encoding='utf-8-sig', newline='') as cipherfile:
+        reader = csv.DictReader(cipherfile)
+        for row in reader:
+            cipher = row.get('cipher')
+            if cipher:
+                ciphers.add(cipher)
+
+    return ciphers
+
+
 # Reads in input CSVs (domain list).
 def load_domain_data() -> typing.Tuple[typing.Set, typing.Dict]:
 
@@ -136,18 +176,15 @@ def load_domain_data() -> typing.Tuple[typing.Set, typing.Dict]:
 
     # if domains.csv wasn't cached, download it anew
     if not os.path.exists(SCAN_DOMAINS_CSV):
-        LOGGER.info("Downloading domains.csv...")
-        mkdir_p(SCAN_CACHE)
-        if env.DOMAINS.startswith("http:") or env.DOMAINS.startswith("https:"):
-            shell_out(["wget", env.DOMAINS, "-O", SCAN_DOMAINS_CSV])
-        else:
-            copyfile(env.DOMAINS, SCAN_DOMAINS_CSV)
+        cache_file(env.DOMAINS)
+
+    owner_path = cache_file(env.OWNERSHIP)
 
     if not os.path.exists(SCAN_DOMAINS_CSV):
         LOGGER.critical("Couldn't download domains.csv")
         exit(1)
 
-    with open(env.OWNERSHIP, newline="") as csvfile:
+    with owner_path.open('r', encoding='utf-8-sig', newline='') as csvfile:
         for row in csv.reader(csvfile):
             if row[0].lower().startswith("domain"):
                 continue
@@ -272,7 +309,7 @@ def map_subdomains(scan_data, domain_map):
 
 # Given the domain data loaded in from CSVs, draw conclusions,
 # and filter/transform data into form needed for display.
-def process_domains(domains, scan_data):
+def process_domains(domains, scan_data, acceptable_ciphers):
     # For each domain, determine eligibility and, if eligible,
     # use the scan data to draw conclusions.
     for domain_name in domains.keys():
@@ -302,6 +339,7 @@ def process_domains(domains, scan_data):
                 domains[subdomain_name]["https"] = https_behavior_for(
                     scan_data[subdomain_name]["pshtt"],
                     scan_data[subdomain_name].get("sslyze", None),
+                    acceptable_ciphers,
                     parent_preloaded=https_parent["preloaded"],
                 )
 
@@ -313,6 +351,7 @@ def process_domains(domains, scan_data):
                     domain_name,
                     scan_data[domain_name]["pshtt"],
                     scan_data[domain_name].get("sslyze", None),
+                    acceptable_ciphers,
                 ),
             }
             https_parent["eligible_zone"] = True
@@ -432,7 +471,7 @@ def eligible_for_https(domain):
 
 # Given a pshtt report and (optional) sslyze report,
 # fill in a dict with the conclusions.
-def https_behavior_for(pshtt, sslyze, parent_preloaded=None):
+def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
     report = {"eligible": True}
 
     # assumes that HTTPS would be technically present, with or without issues
@@ -541,12 +580,12 @@ def https_behavior_for(pshtt, sslyze, parent_preloaded=None):
     sslv3 = None
     any_rc4 = None
     any_3des = None
+    bad_ciphers = []
     tlsv10 = None
     tlsv11 = None
 
     # values: unknown or N/A (-1), No (0), Yes (1)
     bod_crypto = None
-
 
     # N/A if no HTTPS
     if report["uses"] <= 0:
@@ -575,15 +614,19 @@ def https_behavior_for(pshtt, sslyze, parent_preloaded=None):
         # ITPIN cares about usage of TLS 1.0 and TLS 1.1
         tlsv10 = boolean_for(sslyze["TLSv1.0"])
         tlsv11 = boolean_for(sslyze["TLSv1.1"])
+        used_ciphers = {cipher for cipher in sslyze.get("Accepted Ciphers").split(', ')}
+        bad_ciphers = list(used_ciphers - accepted_ciphers)
+
 
     report["bod_crypto"] = bod_crypto
     report["rc4"] = any_rc4
     report["3des"] = any_3des
     report["sslv2"] = sslv2
     report["sslv3"] = sslv3
+    report["accepted_ciphers"] = not bad_ciphers
+    report["bad_ciphers"] = bad_ciphers
     report["tlsv10"] = tlsv10
     report["tlsv11"] = tlsv11
-
 
     # Final calculation: is the service compliant with all of M-15-13
     # (HTTPS+HSTS) and BOD 18-01 (that + RC4/3DES/SSLv2/SSLv3)?
@@ -655,6 +698,7 @@ def total_crypto_report(eligible):
         "3des": 0,
         "sslv2": 0,
         "sslv3": 0,
+        "accepted_ciphers": 0,
         "tlsv10": 0,
         "tlsv11": 0,
     }
@@ -676,6 +720,8 @@ def total_crypto_report(eligible):
             total_report["sslv2"] += 1
         if report["sslv3"]:
             total_report["sslv3"] += 1
+        if report["accepted_ciphers"]:
+            total_report["accepted_ciphers"] += 1
         if report["tlsv10"]:
             total_report["tlsv10"] += 1
         if report["tlsv11"]:

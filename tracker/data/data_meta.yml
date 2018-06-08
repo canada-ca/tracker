@@ -8,3 +8,6 @@ data:
   # Some other websites
   ownership_url: "./csv/owners.csv"
 
+  # Supported Ciphers
+  ciphers_url: "./csv/ciphers.csv"
+
