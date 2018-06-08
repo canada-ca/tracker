@@ -348,7 +348,6 @@ def process_domains(domains, scan_data, acceptable_ciphers):
             https_parent = {
                 **https_parent,
                 **https_behavior_for(
-                    domain_name,
                     scan_data[domain_name]["pshtt"],
                     scan_data[domain_name].get("sslyze", None),
                     acceptable_ciphers,
