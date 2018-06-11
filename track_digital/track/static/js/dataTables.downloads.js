@@ -20,7 +20,7 @@ $.fn.dataTable.Download = function ( inst ) {
   var container = $('<div></div>').addClass( 'dataTables_csv' );
   var drawnOnce = false;
 
-  var language = $( "#data-table" ).attr("language");
+  var language = $( "table" ).attr("language");
 
   if(language == 'en')
     var text = "Download as CSV"

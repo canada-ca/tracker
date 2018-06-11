@@ -64,7 +64,7 @@ $(function () {
   });
 
   //get table language
-  var language = $( "#data-table" ).attr("language");
+  var language = $( "table" ).attr("language");
 
   /**
   * I don't like this at all, but to keep the presentation synced
