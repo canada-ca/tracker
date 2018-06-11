@@ -163,6 +163,6 @@ $(function() {
     $('.dataTables_filter label').attr('for', 'datatables-search');
     $('.dataTables_filter label').attr('class', 'block');
     $('#DataTables_Table_0_filter').find('input[type="search"]').attr('id', 'datatables-search');
-    $('#DataTables_Table_0_filter').find('input[type="search"]').attr('class', 'inline-block border border-solid border-grey-darker');
+    //$('#DataTables_Table_0_filter').find('input[type="search"]').attr('class', 'inline-block border border-solid border-grey-darker');
   });
 });

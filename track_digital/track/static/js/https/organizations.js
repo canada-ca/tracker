@@ -44,7 +44,7 @@ $(document).ready(function () {
   });
 
   //get table language
-  var language = $( "#data-table" ).attr("language");
+  var language = $( "table" ).attr("language");
 
   var text = {
     show: {
