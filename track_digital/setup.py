@@ -27,6 +27,7 @@ setuptools.setup(
         'flask-compress==1.4.0',
         'click==6.7',
         'gevent==1.2.2',
+        'Babel==2.6.0',
     ],
     extras_require={
         'development': [

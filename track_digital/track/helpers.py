@@ -4,6 +4,7 @@ import yaml
 import datetime
 from track import models
 from track.data import FIELD_MAPPING
+from babel.dates import format_date
 
 # For use in templates.
 def register(app):
@@ -31,6 +32,10 @@ def register(app):
     @app.template_filter("date")
     def datetimeformat(value, format="%H:%M / %d-%m-%Y"):
         return value.strftime(format)
+
+    @app.template_filter("display_date")
+    def displaydateformat(value, lang):
+        return format_date(value, format='long', locale=lang)
 
     @app.template_filter("field_map")
     def field_map(value, category=None, field=None):
