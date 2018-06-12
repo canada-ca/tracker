@@ -3,7 +3,7 @@ import datetime
 import csv
 import typing
 from flask_pymongo import PyMongo
-from track.data import CSV_FIELDS, FIELD_MAPPING, LABELS
+import track.data
 
 # These functions are meant to be the only ones that access the g.db.db
 # directly. If we ever decide to migrate from tinyg.db.db, that can all be
@@ -86,7 +86,15 @@ class Domain:
 
     @staticmethod
     def find(domain_name: str) -> typing.Dict:
-        return db.db.meta.find_one({'_collection': 'domains', 'domain': domain_name}, {'_id': False, '_collection': False})
+        return db.db.meta.find_one(
+            {
+                '_collection': 'domains',
+                'domain': domain_name
+            }, {
+                '_id': False,
+                '_collection': False
+            }
+        )
 
     # Useful when you want to pull in all domain entries as peers,
     # such as reports which only look at parent domains, or
@@ -94,7 +102,13 @@ class Domain:
     @staticmethod
     def eligible(report_name: str) -> typing.Iterable[typing.Dict]:
         return db.db.meta.find(
-                {'_collection': 'domains', f'{report_name}.eligible': True}, {'_id': False, '_collection': False}
+            {
+                '_collection': 'domains',
+                '{}.eligible'.format(report_name): True
+            }, {
+                '_id': False,
+                '_collection': False
+            }
         )
 
     # Useful when you have mixed parent/subdomain reporting,
@@ -102,7 +116,14 @@ class Domain:
     @staticmethod
     def eligible_parents(report_name: str) -> typing.Iterable[typing.Dict]:
         return db.db.meta.find(
-            {'_collection': 'domains', f'{report_name}.eligible_zone': True, 'is_parent': True}, {'_id': False, '_collection': False }
+            {
+                '_collection': 'domains',
+                '{}.eligible_zone'.format(report_name): True,
+                'is_parent': True
+            }, {
+                '_id': False,
+                '_collection': False
+            }
         )
 
     # Useful when you want to pull down subdomains of a particular
@@ -110,7 +131,14 @@ class Domain:
     @staticmethod
     def eligible_for_domain(domain: str, report_name: str) -> typing.Iterable[typing.Dict]:
         return db.db.meta.find(
-            {'_collection': 'domains', f'{report_name}.eligible': True, 'base_domain': domain}, {'_id': False, '_collection': False}
+            {
+                '_collection': 'domains',
+                '{}.eligible'.format(report_name): True,
+                'base_domain': domain
+            }, {
+                '_id': False,
+                '_collection': False
+            }
         )
 
     @staticmethod
@@ -136,8 +164,8 @@ class Domain:
 
         # Common fields, and report-specific fields
         for category in ['common', report_type]:
-            for field in CSV_FIELDS[category]:
-                header.append(LABELS[category][field])
+            for field in track.data.CSV_FIELDS[category]:
+                header.append(track.data.LABELS[category][field])
         writer.writerow(header)
 
         for domain in domains:
@@ -147,7 +175,7 @@ class Domain:
             for category in ['common', report_type]:
 
                 # Currently, all report-specific fields use a mapping
-                for field in CSV_FIELDS[category]:
+                for field in track.data.CSV_FIELDS[category]:
 
                     # common fields are top-level on Domain objects
                     if category == 'common':
@@ -157,11 +185,11 @@ class Domain:
 
                     # If a mapping exists e.g. 1 -> "Yes", etc.
                     if (
-                            FIELD_MAPPING.get(category) and
-                            FIELD_MAPPING[category].get(field) and
-                            (FIELD_MAPPING[category][field].get(value) is not None)
+                            track.data.FIELD_MAPPING.get(category) and
+                            track.data.FIELD_MAPPING[category].get(field) and
+                            (track.data.FIELD_MAPPING[category][field].get(value) is not None)
                         ):
-                        value = FIELD_MAPPING[category][field][value]
+                        value = track.data.FIELD_MAPPING[category][field][value]
 
                     row.append(value_for(value))
 
@@ -188,7 +216,13 @@ class Organization:
     # An organization which had at least 1 eligible domain.
     @staticmethod
     def eligible(report_name: str) -> typing.Iterable[typing.Dict]:
-        return db.db.meta.find({'_collection': 'organizations', f'{report_name}.eligible': {'$gt': 0}}, {'_id': False, '_collection': False})
+        return db.db.meta.find({
+            '_collection': 'organizations',
+            '{}.eligible'.format(report_name): {'$gt': 0}
+        }, {
+            '_id': False,
+            '_collection': False
+        })
 
     # Create a new Organization record with a given name, slug, and total domain count.
     @staticmethod

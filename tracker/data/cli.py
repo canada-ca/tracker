@@ -25,7 +25,7 @@ class DateType(click.ParamType):
             datetime.datetime.strptime(value, "%Y-%m-%d")
             return value
         except ValueError:
-            self.fail(f"{value} is not a valid date")
+            self.fail("{value} is not a valid date".format(value=value))
 DATE = DateType()
 
 
@@ -120,9 +120,9 @@ def process(ctx: click.core.Context, date: str) -> None:
         LOGGER.info("No scan metadata downloaded, aborting.")
         return
 
-    LOGGER.info(f"[{date}] Loading data into track-digital.")
+    LOGGER.info("[%s] Loading data into track-digital.", date)
     processing.run(date, ctx.obj.get('connection_string'))
-    LOGGER.info(f"[{date}] Data now loaded into track-digital.")
+    LOGGER.info("[%s] Data now loaded into track-digital.", date)
 
 
 @main.command(help="Populate DB with domains")
