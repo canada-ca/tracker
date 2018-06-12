@@ -16,6 +16,14 @@ def noop(*args) -> None: # pylint: disable=unused-argument
     pass
 
 
+def test_transform_args() -> None:
+    args = ['--lambda', '--lambda-profile', 'profile']
+    assert cli.transform_args(args) == {
+        'lambda': True,
+        'lambda-profile': 'profile'
+    }
+
+
 def test_run_all_args(
         date_result: typing.Tuple[str, int],
         monkeypatch: _pytest.monkeypatch.MonkeyPatch,

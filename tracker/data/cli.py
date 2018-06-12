@@ -1,4 +1,5 @@
 import csv
+from itertools import zip_longest
 import os
 import typing
 import datetime
@@ -46,10 +47,10 @@ def get_date(
 # Convert ["--option", "value", ... ] to {"option": "value", ...}
 def transform_args(args: typing.List[str]) -> typing.Dict[str, typing.Union[str, bool]]:
     transformed = {}
-    for option, value in zip(args, args[1:]):
+    for option, value in zip_longest(args, args[1:], fillvalue=''):
         if option.startswith("--"):
             name = option.strip("--")
-            transformed[name] = value if not value.startswith("--") else True
+            transformed[name] = value if value and not value.startswith("--") else True
     return transformed
 
 
