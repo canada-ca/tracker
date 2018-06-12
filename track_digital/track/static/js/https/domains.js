@@ -225,6 +225,8 @@ $(function () {
     if (row.https['3des']) problems.push("3DES");
     if (row.https.sslv2) problems.push("SSLv2");
     if (row.https.sslv3) problems.push("SSLv3");
+    if (row.https.tlsv10) problems.push("TLSv1.0");
+    if (row.https.tlsv11) problems.push("TLSV1.1");
 
     return text.preloaded[language] + " " + problems.join(", ");
   };

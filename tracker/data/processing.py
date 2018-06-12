@@ -639,21 +639,13 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
     report["tlsv10"] = tlsv10
     report["tlsv11"] = tlsv11
 
-    # Final calculation: is the service compliant with all of M-15-13
-    # (HTTPS+HSTS) and BOD 18-01 (that + RC4/3DES/SSLv2/SSLv3)?
-
-    # For M-15-13 compliance, the service has to enforce HTTPS,
-    # and has to have strong HSTS in place (can be via preloading).
-    m1513 = (behavior >= 2) and (hsts >= 2)
-
-    # For BOD compliance, only ding if we have scan data:
-    # * If our scanner dropped, give benefit of the doubt.
-    # * If they have no HTTPS, this will fix itself once HTTPS comes on.
-    bod1801 = m1513 and (bod_crypto != 0)
-
-    # Phew!
-    report["m1513"] = m1513
-    report["compliant"] = bod1801  # equivalent, since BOD is a superset
+    https_compliant = (behavior >= 2) and (hsts >= 2)
+    # Very specific and intentional checks on bod_crypto and good_cert
+    #   - bod_crypto != 0 means it could be -1, which is an indication that we did not get results
+    #     and so are giving them the benifit of the doubt
+    #   - good_cert is not False means it can be None, which has the same meaning as above
+    itpin_compliant = https_compliant and bod_crypto != 0 and good_cert is not False
+    report["compliant"] = itpin_compliant
 
     return report
 
@@ -674,7 +666,6 @@ def total_https_report(eligible):
         "enforces": 0,
         "hsts": 0,
         # compliance roll-ups
-        "m1513": 0,
         "compliant": 0,
     }
 
@@ -694,9 +685,8 @@ def total_https_report(eligible):
             total_report["hsts"] += 1
 
         # Factors in crypto score, but treats ineligible services as passing.
-        for field in ["m1513", "compliant"]:
-            if report[field]:
-                total_report[field] += 1
+        if report["compliant"]:
+            total_report["compliant"] += 1
 
     return total_report
 
