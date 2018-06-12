@@ -26,6 +26,7 @@ LABELS = {
         "accepted_ciphers": "Ciphers",
         "tlsv10": "TLSv1.0",
         "tlsv11": "TLSv1.1",
+        "good_cert": "Approved Certificate",
     },
 }
 
@@ -70,6 +71,7 @@ CSV_FIELDS = {
         "accepted_ciphers",
         "tlsv10",
         "tlsv11",
+        "good_cert",
         "preloaded",
     ],
 }

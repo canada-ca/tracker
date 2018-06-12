@@ -19,6 +19,7 @@ import datetime
 import logging
 import pathlib
 import os
+import re
 import subprocess
 import typing
 from shutil import copyfile
@@ -52,7 +53,7 @@ def run(date: typing.Optional[str], connection_string: str):
     #
     # Also returns gathered subdomains, which need more filtering to be useful.
     domains, domain_map = load_domain_data()
-    acceptable_ciphers = load_cipher_data()
+    acceptable_ciphers = load_compliance_data()
 
     # Read in domain-scan CSV data.
     scan_data = load_scan_data(domains)
@@ -84,7 +85,6 @@ def run(date: typing.Optional[str], connection_string: str):
                 "canonical": pshtt["Canonical URL"],
                 "exclude": {},
             }
-
 
     map_subdomains(scan_data, domain_map)
     organizations = extract_orgs(domain_map)
@@ -150,22 +150,22 @@ def in_cache(path: str) -> bool:
     return cache_path.exists()
 
 
-def load_cipher_data() -> typing.Set[str]:
-    path = cache_file(env.CIPHER)
-
-    if not path.exists():
-        LOGGER.critical("Couldn't download cipher csv")
-        exit(1)
-
-    ciphers = set()
+def _load_data(path: pathlib.Path) -> typing.Set[str]:
+    data = set()
     with path.open('r', encoding='utf-8-sig', newline='') as cipherfile:
-        reader = csv.DictReader(cipherfile)
+        reader = csv.reader(cipherfile)
+        next(reader) # assume csv has header column
         for row in reader:
-            cipher = row.get('cipher')
-            if cipher:
-                ciphers.add(cipher)
+            try:
+                data.add(row[0])
+            except IndexError:
+                # csv had an empty row, not really a big deal
+                continue
+    return data
 
-    return ciphers
+
+def load_compliance_data() -> typing.Set[str]:
+    return _load_data(cache_file(env.CIPHER))
 
 
 # Reads in input CSVs (domain list).
@@ -553,7 +553,6 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
                 hsts = 2  # Yes, directly
             else:
                 hsts = 1  # No
-
         else:
             hsts = 0  # No
 
@@ -580,6 +579,9 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
     any_rc4 = None
     any_3des = None
     bad_ciphers = []
+    acceptable_ciphers = None
+    signature_algorithm = None
+    good_cert = None
     tlsv10 = None
     tlsv11 = None
 
@@ -604,26 +606,36 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
         sslv2 = boolean_for(sslyze["SSLv2"])
         sslv3 = boolean_for(sslyze["SSLv3"])
 
-        if any_rc4 or any_3des or sslv2 or sslv3:
-            bod_crypto = 0
-        else:
-            bod_crypto = 1
-
         ###
         # ITPIN cares about usage of TLS 1.0 and TLS 1.1
         tlsv10 = boolean_for(sslyze["TLSv1.0"])
         tlsv11 = boolean_for(sslyze["TLSv1.1"])
+
         used_ciphers = {cipher for cipher in sslyze.get("Accepted Ciphers").split(', ')}
         bad_ciphers = list(used_ciphers - accepted_ciphers)
+        signature_algorithm = sslyze.get("Signature Algorithm", "sha1")
 
+        match = re.match(r"sha(?:3-)?(\d+)(?:-\d+)?$", signature_algorithm)
+        if match:
+            good_cert = int(match.group(1)) >= 256
+        else:
+            LOGGER.error("Could not decipher %s algorithm", signature_algorithm)
+        acceptable_ciphers = not bad_ciphers
+
+        if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11]):
+            bod_crypto = 0
+        else:
+            bod_crypto = 1
 
     report["bod_crypto"] = bod_crypto
     report["rc4"] = any_rc4
     report["3des"] = any_3des
     report["sslv2"] = sslv2
     report["sslv3"] = sslv3
-    report["accepted_ciphers"] = not bad_ciphers
+    report["accepted_ciphers"] = acceptable_ciphers
     report["bad_ciphers"] = bad_ciphers
+    report["good_cert"] = good_cert
+    report["signature_algorithm"] = signature_algorithm
     report["tlsv10"] = tlsv10
     report["tlsv11"] = tlsv11
 
@@ -700,6 +712,7 @@ def total_crypto_report(eligible):
         "accepted_ciphers": 0,
         "tlsv10": 0,
         "tlsv11": 0,
+        "good_cert": 0,
     }
 
     for report in eligible:
@@ -725,6 +738,8 @@ def total_crypto_report(eligible):
             total_report["tlsv10"] += 1
         if report["tlsv11"]:
             total_report["tlsv11"] += 1
+        if report["good_cert"]:
+            total_report["good_cert"] += 1
 
     return total_report
 

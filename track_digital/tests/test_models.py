@@ -49,6 +49,7 @@ class TestReport():
                 "sslv2" : 45,
                 "sslv3" : 576,
                 "accepted_ciphers": 351,
+                "good_cert": 351,
             },
             "preloading" : {
                 "eligible" : 1277,
@@ -102,6 +103,7 @@ class TestDomain():
                 'bad_ciphers': [],
                 'tlsv10': False,
                 'tlsv11': False,
+                'good_cert': True,
                 'uses': 2
             },
             'is_parent': True,
@@ -209,6 +211,7 @@ class TestDomain():
                 'Ciphers',
                 'TLSv1.0',
                 'TLSv1.1',
+                'Approved Certificate',
                 'Preloaded'
             ]
             assert next(reader) == {
@@ -228,6 +231,7 @@ class TestDomain():
                 'Ciphers': 'Yes',
                 'TLSv1.0': 'No',
                 'TLSv1.1': 'No',
+                'Approved Certificate': 'Yes',
                 'Preloaded': 'No'
             }
 
@@ -259,7 +263,8 @@ class TestOrganizations():
                 "sslv3" : 0,
                 "accepted_ciphers": 1,
                 "tlsv10": 0,
-                "tlsv11": 0
+                "tlsv11": 0,
+                'good_cert': 2,
             },
             "preloading" : {
                 "eligible" : 3,

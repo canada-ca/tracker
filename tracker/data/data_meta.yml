@@ -10,4 +10,3 @@ data:
 
   # Supported Ciphers
   ciphers_url: "./csv/ciphers.csv"
-
