@@ -1,3 +1,12 @@
 @import "variables";
 @import "tables";
 
+#modal {
+	background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.7); 
+}
+
+#modal-content {
+	height: 80%;
+}
+

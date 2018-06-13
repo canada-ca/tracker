@@ -28,6 +28,13 @@ td,
 th {
   vertical-align: middle; }
 
+#modal {
+  background-color: black;
+  background-color: rgba(0, 0, 0, 0.7); }
+
+#modal-content {
+  height: 80%; }
+
 table caption {
   left: -10000px;
   height: 1px;

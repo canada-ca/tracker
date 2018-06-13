@@ -6,7 +6,6 @@
 @import "lib/bourbon/bourbon";
 @import "base/grid-settings";
 @import "lib/neat/neat";
-@import "base/base";
 
 // Breakpoints
 /////////////////////////////////////////
@@ -25,6 +24,7 @@ $light-blue:      #0066CC;
 $green:          #2da52d;
 $red:      #ca1b1b;
 
+@import "base/base";
 @import "includes/datatables.scss";
 @import "includes/header.scss"
 
