@@ -207,13 +207,6 @@ workflows:
     jobs:
       - track_digital 
       - tracker
-      - tracker_integration:
-          requires:
-            - tracker
-      - track_digital_integration:
-          requires:
-            - track_digital
-            - tracker_integration
       - deploy_site:
           filters:
             branches:
@@ -222,5 +215,3 @@ workflows:
           requires:
             - track_digital
             - tracker
-            - tracker_integration
-            - track_digital_integration
