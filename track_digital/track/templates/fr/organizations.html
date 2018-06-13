@@ -1,7 +1,9 @@
 {% extends "fr/layout-fr.html" %}
 
 {% block title %}Consulter la conformité liée à la sécurité numérique{% endblock %}
-{% block pageid %}organizations{% endblock %}
+
+{% block pageid_en %}organizations{% endblock %}
+{% block pageid_fr %}organizations{% endblock %}
 
 {% block content %}
 
@@ -14,7 +16,7 @@
 		{% include 'includes/https/fr/header.html' %}
 
 		<div class="text-center mt-8 font-bold">
-			<p class="uppercase">par organization <a href="/fr/domains/" class="ml-8 text-blue hover:text-blue-darker">par domaine</a></p>
+			<p class="uppercase">par organization <a href="/fr/domaines/" class="ml-8 text-blue hover:text-blue-darker">par domaine</a></p>
 		</div>
 
 	</header>

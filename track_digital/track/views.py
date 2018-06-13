@@ -1,5 +1,5 @@
 
-from flask import render_template, Response, abort
+from flask import render_template, Response, abort, request
 from track import models
 from track.data import FIELD_MAPPING
 import os
@@ -12,26 +12,37 @@ def register(app):
     def index():
         return render_template("en/index.html")
 
-    @app.route("/<prefix>/")
-    @app.route("/<prefix>/index/")
-    def splash_page(prefix):
+    @app.route("/en/")
+    @app.route("/fr/")
+    @app.route("/en/index/")
+    @app.route("/fr/index/")
+    def splash_page():
+        prefix = request.path[1:3]
         return render_template(generate_path(prefix, "index"))
 
-    @app.route("/<prefix>/organizations/")
-    def organizations(prefix):
+    @app.route("/en/organizations/")
+    @app.route("/fr/organizations/")
+    def organizations():
+        prefix = request.path[1:3]
         return render_template(generate_path(prefix, "organizations"))
 
-    @app.route("/<prefix>/domains/")
-    def https_domains(prefix):
+    @app.route("/en/domains/")
+    @app.route("/fr/domaines/")
+    def https_domains():
+        prefix = request.path[1:3]
         return render_template(generate_path(prefix, "domains"))
 
-    @app.route("/<prefix>/guidance/")
-    def guidance(prefix):
+    @app.route("/en/implementation-guidance/")
+    @app.route("/fr/mettre-en-oeuvre/")
+    def guidance():
+        prefix = request.path[1:3]
         return render_template(generate_path(prefix, "guidance"))
 
-    @app.route("/<prefix>/feedback/")
-    def feedback(prefix):
-        return render_template(generate_path(prefix, "feedback"))
+    @app.route("/en/help/")
+    @app.route("/fr/aide/")
+    def help():
+        prefix = request.path[1:3]
+        return render_template(generate_path(prefix, "help"))
 
     def generate_path(prefix, page_id):
         if(prefix == 'en' or prefix == 'fr'):
