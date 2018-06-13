@@ -614,15 +614,16 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
         used_ciphers = {cipher for cipher in sslyze.get("Accepted Ciphers").split(', ')}
         bad_ciphers = list(used_ciphers - accepted_ciphers)
         signature_algorithm = sslyze.get("Signature Algorithm", "sha1")
+        acceptable_ciphers = not bad_ciphers
 
         match = re.match(r"sha(?:3-)?(\d+)(?:-\d+)?$", signature_algorithm)
         if match:
             good_cert = int(match.group(1)) >= 256
         else:
             LOGGER.error("Could not decipher %s algorithm", signature_algorithm)
-        acceptable_ciphers = not bad_ciphers
 
-        if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11]):
+
+        if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11, not acceptable_ciphers]):
             bod_crypto = 0
         else:
             bod_crypto = 1
