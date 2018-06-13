@@ -52,7 +52,7 @@ var Tables = {
     }
 
     // Paginate to 100 per-page by default.
-    if (!options.dom) options.dom = 'pCftrip';
+    if (!options.dom) options.dom = 'fCtrip';
     if (!options.pageLength) options.pageLength = 100;
 
     var table = $("table").DataTable(options);
@@ -70,7 +70,7 @@ var Tables = {
   initAgency: function(data, options) {
     // Don't paginate organization tables by default.
     if (!options.pageLength) options.pageLength = 100;
-    if (!options.dom) options.dom = 'pCftrip';
+    if (!options.dom) options.dom = 'fCtrip';
 
     return Tables.init(data, options);
   },
@@ -161,8 +161,12 @@ $(function() {
 
     // add label for attribute for search
     $('.dataTables_filter label').attr('for', 'datatables-search');
-    $('.dataTables_filter label').attr('class', 'block');
     $('#DataTables_Table_0_filter').find('input[type="search"]').attr('id', 'datatables-search');
-    //$('#DataTables_Table_0_filter').find('input[type="search"]').attr('class', 'inline-block border border-solid border-grey-darker');
+
+    // add custom tailwind classes
+    $('#DataTables_Table_0_filter').attr('class', 'flex block justify-start md:justify-center');
+    $('#DataTables_Table_0_filter label').attr('class', 'w-full md:w-2/3');
+    $('#datatables-search').attr('class', 'border border-solid border-grey-darker bg-grey-lightest block md:inline-block h-8 md:ml-6 mb-4 md:mb-8 w-full md:w-2/3');
+    $('.dataTables_csv').attr('class', 'text-lg md:ml-4 mt-4 md:mt-6');
   });
 });
