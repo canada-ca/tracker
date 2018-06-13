@@ -12,6 +12,7 @@ LABELS = {
         "total_domains": "Number of Domains",
     },
     "https": {
+        "compliant": "ITPIN Compliant",
         "uses": "Uses HTTPS",
         "enforces": "Enforces HTTPS",
         "hsts": "Strict Transport Security (HSTS)",
@@ -23,10 +24,12 @@ LABELS = {
         "rc4": "RC4",
         "sslv2": "SSLv2",
         "sslv3": "SSLv3",
-        "accepted_ciphers": "Ciphers",
+        "accepted_ciphers": "Only Uses Supported Ciphers",
         "tlsv10": "TLSv1.0",
         "tlsv11": "TLSv1.1",
         "good_cert": "Approved Certificate",
+        "signature_algorithm": "Digital Signature Algorithm",
+        "bad_ciphers": "Unsupported TLS Cipher Suites",
     },
 }
 
@@ -61,6 +64,7 @@ FIELD_MAPPING: typing.Dict[str, typing.Dict] = {
 CSV_FIELDS = {
     "common": ["domain", "base_domain", "canonical", "organization_name_en", "organization_name_fr", "sources"],
     "https": [
+        "compliant",
         "enforces",
         "hsts",
         "bod_crypto",
@@ -72,6 +76,8 @@ CSV_FIELDS = {
         "tlsv10",
         "tlsv11",
         "good_cert",
+        "signature_algorithm",
+        "bad_ciphers",
         "preloaded",
     ],
 }

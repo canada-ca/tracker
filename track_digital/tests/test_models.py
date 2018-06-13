@@ -97,12 +97,13 @@ class TestDomain():
                 'rc4': False,
                 'sslv2': False,
                 'sslv3': False,
-                'accepted_ciphers': True,
-                'bad_ciphers': [],
+                'accepted_ciphers': False,
+                'bad_ciphers': ['TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA'],
                 'tlsv10': False,
                 'tlsv11': False,
                 'good_cert': True,
-                'uses': 2
+                'signature_algorithm': 'sha256',
+                'uses': 2,
             },
             'is_parent': True,
             'live': True,
@@ -191,25 +192,28 @@ class TestDomain():
             sio.write(csv_string)
             sio.seek(0)
             reader = csv.DictReader(sio)
-            assert reader.fieldnames == [
-                'Domain',
-                'Base Domain',
-                'URL',
-                'English Organization',
-                'French Organization',
-                'Sources',
-                'Enforces HTTPS',
-                'Strict Transport Security (HSTS)',
-                'Free of known weak protocols and ciphers',
+            assert sorted(reader.fieldnames) == [
                 '3DES',
+                'Approved Certificate',
+                'Base Domain',
+                'Digital Signature Algorithm',
+                'Domain',
+                'Enforces HTTPS',
+                'English Organization',
+                'Free of known weak protocols and ciphers',
+                'French Organization',
+                'ITPIN Compliant',
+                'Only Uses Supported Ciphers',
+                'Preloaded',
                 'RC4',
                 'SSLv2',
                 'SSLv3',
-                'Ciphers',
+                'Sources',
+                'Strict Transport Security (HSTS)',
                 'TLSv1.0',
                 'TLSv1.1',
-                'Approved Certificate',
-                'Preloaded'
+                'URL',
+                'Unsupported TLS Cipher Suites',
             ]
             assert next(reader) == {
                 'Domain': 'test.gc.ca',
@@ -218,6 +222,9 @@ class TestDomain():
                 'English Organization': 'Department of Test',
                 'French Organization': 'Department of French Test',
                 'Sources': 'canada-gov',
+                'ITPIN Compliant': 'No',
+                'Only Uses Supported Ciphers': 'No',
+                'Digital Signature Algorithm': 'sha256',
                 'Enforces HTTPS': 'No',
                 'Strict Transport Security (HSTS)': 'No',
                 'Free of known weak protocols and ciphers': 'Yes',
@@ -225,11 +232,11 @@ class TestDomain():
                 'RC4': 'No',
                 'SSLv2': 'No',
                 'SSLv3': 'No',
-                'Ciphers': 'Yes',
                 'TLSv1.0': 'No',
                 'TLSv1.1': 'No',
                 'Approved Certificate': 'Yes',
-                'Preloaded': 'No'
+                'Preloaded': 'No',
+                'Unsupported TLS Cipher Suites': 'TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA',
             }
 
 
