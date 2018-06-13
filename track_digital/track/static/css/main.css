@@ -28,6 +28,9 @@ td,
 th {
   vertical-align: middle; }
 
+#goc-footer {
+  margin-top: 0rem !important; }
+
 #modal {
   background-color: black;
   background-color: rgba(0, 0, 0, 0.7); }

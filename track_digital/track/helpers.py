@@ -37,6 +37,15 @@ def register(app):
     def displaydateformat(value, lang):
         return format_date(value, format='long', locale=lang)
 
+    @app.template_filter("site_title")
+    def displaysitetitle(value, mobile):
+        if value == 'index':
+            return "hidden"
+        elif not mobile:
+            return "flex-1"
+        else:
+            return "mb-4"
+
     @app.template_filter("field_map")
     def field_map(value, category=None, field=None):
         return FIELD_MAPPING[category][field][value]

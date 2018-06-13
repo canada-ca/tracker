@@ -1,6 +1,6 @@
 <script type="text/javascript">
-function generate_chart(chart_class) {
-    var chart = d3.select(chart_class);
+function generate_chart() {
+    var chart = d3.select('.compliant');
     var elem = chart[0][0];
     var width = chart.attr("data-width");
     if (width == null)
@@ -26,10 +26,7 @@ function generate_chart(chart_class) {
         .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")");
     d3.json("/data/reports/https.json" + Utils.cacheBust(), function (error, data) {
         // calculate % client-side
-        if(chart_class == ".https_chart")
-            var compliant = Math.round((data.enforces / data.eligible) * 100);
-        else if(chart_class == ".hsts_chart")
-            var compliant = Math.round((data.hsts / data.eligible) * 100);
+        var compliant = Math.round((data.compliant / data.eligible) * 100);
         // just abort and leave it blank if something's wrong
         // (instead of showing "NaN%" visually)
         if (isNaN(compliant))
@@ -76,8 +73,7 @@ function calculate_width() {
         return 287;
 }
 
-generate_chart(".https_chart")
+generate_chart();
 
-generate_chart(".hsts_chart")
 
 </script>

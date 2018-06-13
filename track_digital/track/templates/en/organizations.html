@@ -1,0 +1,43 @@
+{% extends "en/layout-en.html" %}
+
+{% block title %}Track digital security compliance{% endblock %}
+{% block pageid %}organizations{% endblock %}
+
+{% block content %}
+
+{% include 'includes/en/modal.html' %}
+
+<section id="main-content" class="flex-1">
+
+	<header class="bg-grey-lighter py-6">
+
+		{% include 'includes/https/en/header.html' %}
+
+		<div class="text-center mt-8 font-bold">
+			<p class="uppercase">by organization <a href="/en/domains/" class="ml-8 text-blue hover:text-blue-darker">by domain</a></p>
+		</div>
+
+	</header>
+
+	<div id="tab-panel" class="container mx-auto" role="tabpanel" aria-hidden="false">
+	    
+	    <table language="en" class="organization responsive https">
+	      <caption>HTTPS by organization. Table is sortable via first row table headers. Each row contains an organization and related attributes.</caption>
+	      <thead>
+	        <tr>
+	          <th class="never"></th>
+	          <th class="all" scope="col">Organization</th>
+	          <th class="min-tablet" scope="col">Enforces HTTPS</th>
+	          <th class="desktop" scope="col">HSTS</th>
+	          <th class="desktop" scope="col">Free of RC4/3DES and SSLv2/SSLv3</th>
+	          <th class="desktop" scope="col">Preloaded Domains</th>
+	        </tr>
+	      </thead>
+    	</table>
+
+  	</div>
+
+</section>
+
+<script src="/static/js/https/organizations.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
+{% endblock %}

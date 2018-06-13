@@ -12,9 +12,14 @@ def register(app):
     def index():
         return render_template("en/index.html")
 
+    @app.route("/<prefix>/")
+    @app.route("/<prefix>/index/")
+    def splash_page(prefix):
+        return render_template(generate_path(prefix, "index"))
+
     @app.route("/<prefix>/organizations/")
     def organizations(prefix):
-        return render_template(generate_path(prefix, "index"))
+        return render_template(generate_path(prefix, "organizations"))
 
     @app.route("/<prefix>/domains/")
     def https_domains(prefix):
