@@ -23,6 +23,10 @@ $(document).ready(function () {
           createdCell: function (td) {td.scope = "row";}
         },
         {
+          data: "https.compliant",
+          render: Tables.percent("https", "compliant")
+        },
+        {
           data: "https.enforces",
           render: Tables.percent("https", "enforces")
         },
@@ -35,8 +39,8 @@ $(document).ready(function () {
           render: Tables.percent("crypto", "bod_crypto")
         },
         {
-          data: "preloading.preloaded",
-          render: Tables.percent("preloading", "preloaded")
+          data: "crypto.good_cert",
+          render: Tables.percent("crypto", "good_cert")
         },
       ]
 
