@@ -87,7 +87,7 @@ class TestDomain():
             'https': {
                 '3des': False,
                 'bod_crypto': 1,
-                'compliant': False,
+                'compliant': 0,
                 'eligible': True,
                 'eligible_zone': True,
                 'enforces': 1,
@@ -101,7 +101,7 @@ class TestDomain():
                 'bad_ciphers': ['TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA'],
                 'tlsv10': False,
                 'tlsv11': False,
-                'good_cert': True,
+                'good_cert': 1,
                 'signature_algorithm': 'sha256',
                 'uses': 2,
             },

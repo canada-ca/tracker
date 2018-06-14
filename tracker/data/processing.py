@@ -581,7 +581,7 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
     bad_ciphers = []
     acceptable_ciphers = None
     signature_algorithm = None
-    good_cert = None
+    good_cert = -1
     tlsv10 = None
     tlsv11 = None
 
@@ -618,7 +618,7 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
 
         match = re.match(r"sha(?:3-)?(\d+)(?:-\d+)?$", signature_algorithm)
         if match:
-            good_cert = int(match.group(1)) >= 256
+            good_cert = int(int(match.group(1)) >= 256)
         else:
             LOGGER.error("Could not decipher %s algorithm", signature_algorithm)
 
@@ -646,7 +646,7 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
     #     and so are giving them the benifit of the doubt
     #   - good_cert is not False means it can be None, which has the same meaning as above
     itpin_compliant = https_compliant and bod_crypto != 0 and good_cert is not False
-    report["compliant"] = itpin_compliant
+    report["compliant"] = int(itpin_compliant) # Cast to int to help presentation layer
 
     return report
 
@@ -686,7 +686,7 @@ def total_https_report(eligible):
             total_report["hsts"] += 1
 
         # Factors in crypto score, but treats ineligible services as passing.
-        if report["compliant"]:
+        if report["compliant"] > 0:
             total_report["compliant"] += 1
 
     return total_report
@@ -729,7 +729,7 @@ def total_crypto_report(eligible):
             total_report["tlsv10"] += 1
         if report["tlsv11"]:
             total_report["tlsv11"] += 1
-        if report["good_cert"]:
+        if report["good_cert"] > 0:
             total_report["good_cert"] += 1
 
     return total_report

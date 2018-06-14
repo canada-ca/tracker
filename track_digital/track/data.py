@@ -37,6 +37,10 @@ LABELS = {
 FIELD_MAPPING: typing.Dict[str, typing.Dict] = {
     "common": {},
     "https": {
+        "compliant": {
+            0: "No",
+            1: "Yes",
+        },
         "uses": {
             -1: "No",
             0: "No",  # Downgrades HTTPS -> HTTP
@@ -55,6 +59,11 @@ FIELD_MAPPING: typing.Dict[str, typing.Dict] = {
             1: "No",  # No, HSTS with short max-age (for canonical endpoint)
             2: "Yes",  # Yes, HSTS for >= 1 year (for canonical endpoint)
             3: "Preloaded",  # Yes, via preloading (subdomains only)
+        },
+        "good_cert": {
+            -1: "No",
+            0: "No",
+            1: "Yes",
         },
         "preloaded": {0: "No", 1: "Ready", 2: "Yes"},  # No  # Preload-ready  # Yes
         "bod_crypto": {-1: "", 0: "No", 1: "Yes"},
