@@ -74,11 +74,11 @@ $(document).ready(function () {
 
     if (type == "sort") return name;
 
-    var link = function(text) {
+    var link = function(link_text) {
       return "" +
-        "<a href=\"/" + language + "/domains/#" +
+        "<a href=\"/" + language + "/" + text.domains[language] + "/#" +
           QueryString.stringify({q: row["name_" + language]}) + "\">" +
-           text +
+           link_text +
         "</a>";
     }
 
