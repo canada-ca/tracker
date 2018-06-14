@@ -1,1 +1,6 @@
+pyyaml==3.12
+pymongo==3.6.1
+ujson==1.35
+click==6.7
+python-slugify==1.2.1
 -e .

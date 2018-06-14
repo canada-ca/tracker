@@ -10,6 +10,13 @@ How the GC domain space is doing at best practices and federal requirements.
 | [Local Deploy Step-by-step](docs/local-instructions.md) |
 | [Deployment Docs](docs/deploy.md)                       |
 
+## Developer Notes
+
+This repository is using [snyk](https://snyk.io/org/cds-snc) to scan our dependencies for vulnerabilities.  
+Unfortunatly Synk lacks the ability to detect the dependencies listed in the `setup.py` files in the `track_digital` and `tracker` directories.
+To get around this we are have the dependencies synced between the `setup.py` and `requirements.txt` (which snyk can scan) files.  
+If you are developing this and add an aditional dependency, make sure to add it to both locations
+
 ## Development Setup
 
 For development purposes it is recommended that you install [mongodb](https://www.mongodb.com/) and run the database locally.
