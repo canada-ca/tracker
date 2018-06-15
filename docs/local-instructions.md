@@ -7,7 +7,7 @@ This document is meant to show in unambiguious manner how to deploy a instance o
 #### Required Software
 
 For development purposes it is recommended that you install [mongodb](https://www.mongodb.com/) and run the database locally.  
-This dashboard is a [Flask](http://flask.pocoo.org/) app written for **Python 3.5 and up**. We recommend [pyenv](https://github.com/pyenv/pyenv) for easy Python version management. Regardless of the manner you choose to do so, you will need an instalation of Python 3.5+ to continue.  
+This utility is written for **Python 3.5 and up**. We recommend [pyenv](https://github.com/pyenv/pyenv) for easy Python version management. Regardless of the manner you choose to do so, you will need an instalation of Python 3.5+ to continue.  
 The project uses [mongodb](https://www.mongodb.com/) as it's datastore. Depending on your platform installation will be different, please follow the installation instructions found on their site for installing the MongoDB Community Server.
 
 Once MongoDB has been installed, we will have to run an instance of the database locally.  
@@ -21,9 +21,9 @@ If you get an error related to the directory `/data/db`, usually that means you 
 
 #### Acquiring the source
 
-As you are reading this, you likely already have a copy of the source code. However if this is not the case, it can be found on [github](https://github.com/cds-snc/pulse). You will need to clone this repository to a local directory.
+As you are reading this, you likely already have a copy of the source code. However if this is not the case, it can be found on [github](https://github.com/cds-snc/tracker). You will need to clone this repository to a local directory.
 ```bash
-git clone https://github.com/cds-snc/pulse.git
+git clone https://github.com/cds-snc/tracker.git
 ```
 
 You will also need to download the contents of the [domain-scan](https://github.com/cds-snc/domain-scan) repository, also on github. This code is used to do produce the results that the dashboard displays.
@@ -39,24 +39,17 @@ First, verify that you have the correct version of python.
 ```bash
 python3 --version
 ```
-It should print out something like `Python 3.6.3`. You will need a version 3.5+.
+It should print out something like `Python 3.5.5`. You will need a version 3.5+.
 
 We recommend that the python packages that comprise this project be installed into virtual environments. To do so execute the following commands.
 ```bash
-cd pulse
-python3 -m venv tracker/.env
-python3 -m venv track_digital/.env
 cd tracker
+python3 -m venv .env
 . .env/bin/activate
 pip3 install -e .
 pip3 install -r ../../domain-scan/requirements.txt
 pip3 install -r ../../domain-scan/requirements-scanners.txt
 deactivate
-cd ../track_digital
-. .env/bin/activate
-pip3 install -e .
-deactivate
-cd ../..
 ```
 
 The components of this project make use of a number of environment variables, but there are four that are the most common. They are as follows...  
@@ -72,14 +65,13 @@ The components of this project make use of a number of environment variables, bu
 export DOMAIN_SCAN_PATH=$(pwd)/domain-scan/scan
 export DOMAIN_GATHER_PATH=$(pwd)/domain-scan/gather
 export TRACKER_ENV=development
-export TRACKER_MONGO_URI=mongodb://localhost:27017/tracker
+export TRACKER_MONGO_URI=mongodb://localhost:27017/track
 ```
 
 ### Data Initialization
 
 To initalize mongodb with some data for the dashboard to display, we must run a scan on some domains. This will require two lists, one of parent domains (second level domains) and one of subdomains. Run the following commands to generate a very small example set.
 ```bash
-cd pulse/tracker
 mkdir csv
 cat > ./csv/owners.csv << EOF
 domain,filler,organization_en,organization_fr
@@ -146,14 +138,4 @@ This will run a scan on the contents of the `domains.csv` files in the `csv` dir
 
 ### Running the app
 
-Nearing the finish line now, all that is left is to spin up the site.
-```bash
-cd ../track_digital
-. .env/bin/activate
-python3 track/wsgi.py
- * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
- * Restarting with stat
- * Debugger is active!
- * Debugger PIN: 258-029-594
-```
-And that should be it! Visit `http://127.0.0.1:5000/` in your browser to see the locally deployed site.
+Now that you have a set of scan data ready, head over to the [track-web](https://github.com/cds-snc/track-web) repository to complete the setup for the dashboard!

@@ -1,13 +1,7 @@
-/tracker/data/output
-/tracker/data/backup
-/tracker/data/*.json
-/tracker/data/*.env
-db.json
-.env
+data/output
 
 logs
 *.log
-/.sass-cache
 
 # virtualenv
 .Python
@@ -20,11 +14,6 @@ lib
 .mypy_cache/
 .pytest_cache
 
-/deploy/node_modules
-
-# Mac specific
-.DS_Store
-
 __pycache__/
 *.py[cod]
 pip-log.txt
@@ -32,9 +21,5 @@ pip-delete-this-directory.txt
 pip-selfcheck.json
 .coverage
 
-tracker/csv/
+csv/
 *.csv
-
-todo.txt
-node_modules
-track_digital/instance
