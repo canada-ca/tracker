@@ -41,27 +41,27 @@ def test_map_subdomains() -> None:
     scan_data = {
         'canada.ca': {
             'pshtt': {
-                'Live': True
+                'Live': "True"
             }
         }, 'digital.canada.ca': {
             'pshtt': {
-                'Live': True
+                'Live': "True"
             },
         }, 'numerique.canada.ca':{
             'pshtt': {
-                'Live': True
+                'Live': "True"
             },
         }, 'open.canada.ca': {
             'pshtt': {
-                'Live': True
+                'Live': "True"
             },
         }, 'ouvert.canada.ca': {
             'pshtt': {
-                'Live': True
+                'Live': "True"
             },
         }, 'somethingdifferent.ca': {
             'pshtt': {
-                'Live': True
+                'Live': "True"
             }
         },
     }
