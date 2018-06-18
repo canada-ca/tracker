@@ -1,7 +1,7 @@
 jobs:
   tracker:
     docker:
-      - image: "circleci/python:3.6.1"
+      - image: "circleci/python:3.5.5"
       - image: "mongo:3.6.2"
     steps:
       - checkout:

@@ -23,8 +23,8 @@ def local_mongo_is_running() -> bool:
 
 
 def connection_string() -> str:
-    database = f'track_{random.randint(0, 1000)}'
-    connection = f'mongodb://localhost:27017/{database}'
+    database = 'track_{}'.format(random.randint(0, 1000))
+    connection = 'mongodb://localhost:27017/{}'.format(database)
 
     return connection
 

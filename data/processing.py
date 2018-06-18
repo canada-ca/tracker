@@ -171,8 +171,8 @@ def load_compliance_data() -> typing.Set[str]:
 # Reads in input CSVs (domain list).
 def load_domain_data() -> typing.Tuple[typing.Set, typing.Dict]:
 
-    domain_map: typing.Dict = {}
-    domains: typing.Set[str] = set()
+    domain_map = {}
+    domains = set()
 
     # if domains.csv wasn't cached, download it anew
     if not os.path.exists(SCAN_DOMAINS_CSV):
@@ -227,7 +227,7 @@ def load_domain_data() -> typing.Tuple[typing.Set, typing.Dict]:
 
 
 def extract_orgs(domain_map: typing.Dict) -> typing.Dict:
-    organization_map: typing.Dict = {}
+    organization_map = {}
     for doc in domain_map.values():
         slug = doc['organization_slug']
         if slug in organization_map:
@@ -244,7 +244,7 @@ def extract_orgs(domain_map: typing.Dict) -> typing.Dict:
 # Load in data from the CSVs produced by domain-scan.
 # The 'domains' map is used to ignore any untracked domains.
 def load_scan_data(domains: typing.Set[str]) -> typing.Dict:
-    parent_scan_data: typing.Dict = {}
+    parent_scan_data = {}
     for domain_name in domains:
         parent_scan_data[domain_name] = {}
 
