@@ -1,5 +1,7 @@
-import os
 import csv
+import functools
+import os
+import typing
 from data import models
 
 
@@ -30,3 +32,29 @@ def pull_data(output: str, connection: models.Connection) -> None:
             domain_writer.writerow(document)
         for document in connection.ciphers.all():
             cipher_writer.writerow(document)
+
+
+def insert_data(
+        owners: typing.Optional[typing.IO[str]],
+        domains: typing.Optional[typing.IO[str]],
+        ciphers: typing.Optional[typing.IO[str]],
+        upsert: bool,
+        connection: models.Connection
+    ) -> None:
+
+    insertions = []
+
+    if owners:
+        insertions.append(('owners', 'domain', csv.DictReader(owners)))
+    if domains:
+        insertions.append(('input_domains', 'domain', csv.DictReader(domains)))
+    if ciphers:
+        insertions.append(('ciphers', 'cipher', csv.DictReader(ciphers)))
+
+    for collection_name, key, reader in insertions:
+        collection = getattr(connection, collection_name)
+        if upsert:
+            method = functools.partial(collection.upsert_all, key_column=key)
+        else:
+            method = collection.create_all
+        method(document for document in reader)

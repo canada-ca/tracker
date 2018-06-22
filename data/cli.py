@@ -1,4 +1,3 @@
-import csv
 from itertools import zip_longest
 import os
 import typing
@@ -11,7 +10,7 @@ from data import update as data_update
 from data import processing
 from data import logger
 from data import models
-from data.preprocess import pull_data
+from data.preprocess import pull_data, insert_data
 
 
 LOGGER = logger.get_logger(__name__)
@@ -126,22 +125,18 @@ def process(ctx: click.core.Context, date: str) -> None:
 
 
 @main.command(help="Populate DB with domains")
-@click.argument('owners', type=click.File('r', encoding='utf-8-sig'))
-@click.argument('domains', type=click.File('r', encoding='utf-8-sig'))
-@click.argument('ciphers', type=click.File('r', encoding='utf-8-sig'))
+@click.option('--owners', type=click.File('r', encoding='utf-8-sig'))
+@click.option('--domains', type=click.File('r', encoding='utf-8-sig'))
+@click.option('--ciphers', type=click.File('r', encoding='utf-8-sig'))
+@click.option('--upsert/--no-upsert', default=False)
 @click.pass_context
 def insert(
         ctx: click.core.Context,
         owners: typing.IO[str],
         domains: typing.IO[str],
         ciphers: typing.IO[str],
+        upsert: bool,
     ) -> None:
 
-    owners_reader = csv.DictReader(owners)
-    domains_reader = csv.DictReader(domains)
-    ciphers_reader = csv.DictReader(ciphers)
-
     with models.Connection(ctx.obj.get('connection_string')) as connection:
-        connection.owners.create_all(document for document in owners_reader)
-        connection.input_domains.create_all(document for document in domains_reader)
-        connection.ciphers.create_all(document for document in ciphers_reader)
+        insert_data(owners, domains, ciphers, upsert, connection)

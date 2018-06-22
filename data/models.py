@@ -1,5 +1,6 @@
 import typing
 import pymongo
+from pymongo import UpdateOne
 
 
 # Data loads should clear the entire database first.
@@ -24,6 +25,25 @@ def _insert(
         database: typing.Optional[str] = None) -> None:
     client.get_database(database).get_collection('meta').insert_one({'_collection': collection, **document})
 
+
+def _upsert_all(
+        client: pymongo.MongoClient,
+        collection: str,
+        documents: typing.Iterable[typing.Dict],
+        key_col: str = '_id',
+        database: typing.Optional[str] = None) -> None:
+
+    writes = [
+        UpdateOne(
+            {'_collection': collection, key_col: document.get(key_col)},
+            {'$set': {'_collection': collection, **document}},
+            upsert=True,
+        ) for document in documents
+    ]
+
+    client.get_database(database)\
+          .get_collection('meta')\
+          .bulk_write(writes)
 
 
 def _find(
@@ -51,6 +71,9 @@ class _Collection():
 
     def create(self, document: typing.Dict) -> None:
         _insert(self._client, self._name, document, self._db)
+
+    def upsert_all(self, documents: typing.Iterable[typing.Dict], key_column: str) -> None:
+        _upsert_all(self._client, self._name, documents, key_column, self._db)
 
     def all(self) -> typing.Iterable[typing.Dict]:
         return _find(self._client, self._name, {}, self._db)
