@@ -1,6 +1,5 @@
-CircleCI Status: [![CircleCI](https://circleci.com/gh/cds-snc/tracker.svg?style=svg)](https://circleci.com/gh/cds-snc/tracker)
+[![CircleCI](https://circleci.com/gh/cds-snc/tracker.svg?style=svg)](https://circleci.com/gh/cds-snc/tracker)
 [![Known Vulnerabilities](https://snyk.io/test/github/cds-snc/tracker/badge.svg)](https://snyk.io/test/github/cds-snc/tracker)
-
 
 ## Track Government of Canada domains's adherance to digital security practices
 
