@@ -36,6 +36,7 @@ LOGGER = logger.get_logger(__name__)
 # domains.csv is downloaded and live-cached during the scan
 SCAN_CACHE = os.path.join(env.SCAN_DATA, "cache")
 SCAN_DOMAINS_CSV = os.path.join(SCAN_CACHE, "domains.csv")
+MIN_HSTS_AGE = 10886400 # 18 weeks
 
 ###
 # Main task flow.
@@ -549,7 +550,7 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
         if boolean_for(pshtt["HSTS"]) and hsts_age:
 
             # Say No for too-short max-age's, and note in the extended details.
-            if hsts_age >= 31536000:
+            if hsts_age >= MIN_HSTS_AGE:
                 hsts = 2  # Yes, directly
             else:
                 hsts = 1  # No
@@ -680,7 +681,7 @@ def total_https_report(eligible):
         if report["enforces"] >= 2:
             total_report["enforces"] += 1
 
-        # Needs to be present with >= 1 year max-age for canonical endpoint,
+        # Needs to be present with >= 18 weeks max-age for canonical endpoint,
         # or preloaded via its parent zone.
         if report["hsts"] >= 2:
             total_report["hsts"] += 1
