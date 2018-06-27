@@ -24,6 +24,7 @@ If you get an error related to the directory `/data/db`, usually that means you 
 As you are reading this, you likely already have a copy of the source code. However if this is not the case, it can be found on [github](https://github.com/cds-snc/tracker). You will need to clone this repository to a local directory.
 ```bash
 git clone https://github.com/cds-snc/tracker.git
+cd tracker
 ```
 
 You will also need to download the contents of the [domain-scan](https://github.com/cds-snc/domain-scan) repository, also on github. This code is used to do produce the results that the dashboard displays.
@@ -47,9 +48,8 @@ cd tracker
 python3 -m venv .env
 . .env/bin/activate
 pip3 install -e .
-pip3 install -r ../../domain-scan/requirements.txt
-pip3 install -r ../../domain-scan/requirements-scanners.txt
-deactivate
+pip3 install -r domain-scan/requirements.txt
+pip3 install -r domain-scan/requirements-scanners.txt
 ```
 
 The components of this project make use of a number of environment variables, but there are four that are the most common. They are as follows...  
@@ -132,7 +132,6 @@ Once those lists are in place, we can run a scan.
 ```bash
 . .env/bin/activate
 tracker run
-deactivate
 ```
 This will run a scan on the contents of the `domains.csv` files in the `csv` directory, dumping some scan artifacts to the `data/output` directory, then load the results into the database.
 
