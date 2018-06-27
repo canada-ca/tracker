@@ -38,70 +38,49 @@ def test_extract_orgs() -> None:
 
 
 def test_map_subdomains() -> None:
-    scan_data = {
+    owners = {
         'canada.ca': {
-            'pshtt': {
-                'Live': "True"
-            }
-        }, 'digital.canada.ca': {
-            'pshtt': {
-                'Live': "True"
-            },
-        }, 'numerique.canada.ca':{
-            'pshtt': {
-                'Live': "True"
-            },
-        }, 'open.canada.ca': {
-            'pshtt': {
-                'Live': "True"
-            },
-        }, 'ouvert.canada.ca': {
-            'pshtt': {
-                'Live': "True"
-            },
-        }, 'somethingdifferent.ca': {
-            'pshtt': {
-                'Live': "True"
-            }
-        },
-    }
-    domain_map = {
-        'canada.ca': {
-            'base_domain': 'canada.ca',
-            'is_parent': True,
-            'is_owner': True,
             'organization_slug': 'shared-services-canada',
             'organization_name_en': 'Shared Services Canada',
             'organization_name_fr': 'Services partagés Canada',
+        }, 'digital.canada.ca': {
+            'organization_slug': 'treasury-board-of-canada-secretariat',
+            'organization_name_en': 'Treasury Board of Canada Secretariat',
+            'organization_name_fr': 'Secrétariat du Conseil du Trésor du Canada',
+        }, 'numerique.canada.ca':{
+            'organization_slug': 'treasury-board-of-canada-secretariat',
+            'organization_name_en': 'Treasury Board of Canada Secretariat',
+            'organization_name_fr': 'Secrétariat du Conseil du Trésor du Canada',
+        },
+    }
+    results = {
+        'canada.ca': {
+            'is_parent': True,
+            'is_owner': True,
         },
         'digital.canada.ca': {
-            'base_domain': 'digital.canada.ca',
             'is_parent': True,
             'is_owner': True,
-            'organization_slug': 'treasury-board-of-canada-secretariat',
-            'organization_name_en': 'Treasury Board of Canada Secretariat',
-            'organization_name_fr': 'Secrétariat du Conseil du Trésor du Canada',
         },
         'numerique.canada.ca': {
-            'base_domain': 'numerique.canada.ca',
             'is_parent': True,
             'is_owner': True,
-            'organization_slug': 'treasury-board-of-canada-secretariat',
-            'organization_name_en': 'Treasury Board of Canada Secretariat',
-            'organization_name_fr': 'Secrétariat du Conseil du Trésor du Canada',
         },
         'open.canada.ca': {
+            'is_parent': False,
             'is_owner': False,
         },
         'ouvert.canada.ca': {
+            'is_parent': False,
             'is_owner': False,
         },
         'somethingdifferent.ca': {
+            'is_parent': False,
             'is_owner': False,
         }
     }
-    processing.map_subdomains(scan_data, domain_map)
-    assert domain_map == {
+    processing.map_subdomains(results, owners)
+    assert results == {
         'canada.ca': {
             'base_domain': 'canada.ca',
             'is_parent': True,
