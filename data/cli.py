@@ -25,6 +25,8 @@ class DateType(click.ParamType):
             return value
         except ValueError:
             self.fail("{value} is not a valid date".format(value=value))
+
+
 DATE = DateType()
 
 
@@ -39,14 +41,14 @@ def get_date(
         ctx: typing.Optional[click.core.Context],  # pylint: disable=unused-argument
         param: typing.Optional[click.core.Option],  # pylint: disable=unused-argument
         value: typing.Optional[str],
-    ) -> str:
+) -> str:
     return value if value is not None else get_cached_date(DATA_DIR)
 
 
 # Convert ["--option", "value", ... ] to {"option": "value", ...}
 def transform_args(args: typing.List[str]) -> typing.Dict[str, typing.Union[str, bool]]:
     transformed = {}
-    for option, value in zip_longest(args, args[1:], fillvalue=''):
+    for option, value in zip_longest(args, args[1:], fillvalue=""):
         if option.startswith("--"):
             name = option.strip("--")
             transformed[name] = value if value and not value.startswith("--") else True
@@ -54,64 +56,116 @@ def transform_args(args: typing.List[str]) -> typing.Dict[str, typing.Union[str,
 
 
 @click.group()
-@click.option("--connection", type=str, default="mongodb://localhost:27017/track", envvar="TRACKER_MONGO_URI")
+@click.option(
+    "--connection",
+    type=str,
+    default="mongodb://localhost:27017/track",
+    envvar="TRACKER_MONGO_URI",
+    help="Interact with the tracker scanning utility",
+)
 @click.pass_context
 def main(ctx: click.core.Context, connection: str) -> None:
-    ctx.obj = {
-        'connection_string': connection
-    }
+    ctx.obj = {"connection_string": connection}
 
 
 @main.command(
     context_settings=dict(ignore_unknown_options=True),
     help="Coposition of `update`, `process`, and `upload` commands",
 )
-@click.option("--date", type=DATE)
-@click.option('--scanner', type=str, multiple=True, default=['pshtt', 'sslyze'], envvar='SCANNERS')
-@click.option('--domains', type=click.Path(), default=env.DOMAINS, envvar='DOMAINS')
-@click.option('--output', type=click.Path(), default=env.SCAN_DATA, envvar='SCAN_DATA')
-@click.argument("scan_args", nargs=-1, type=click.UNPROCESSED)
+@click.option("--date", type=DATE, help="To specify the last scan date manually")
+@click.option(
+    "--scanner",
+    type=str,
+    multiple=True,
+    default=["pshtt", "sslyze"],
+    envvar="SCANNERS",
+    help="A comma separated list of scanners to use",
+)
+@click.option(
+    "--domains",
+    type=click.Path(),
+    default=env.DOMAINS,
+    envvar="DOMAINS",
+    help="Path to the domains list",
+)
+@click.option(
+    "--output",
+    type=click.Path(),
+    default=env.SCAN_DATA,
+    envvar="SCAN_DATA",
+    help="Path to where to store scan results",
+)
+@click.argument("domain-scan-args", nargs=-1, type=click.UNPROCESSED)
 @click.pass_context
 def run(
-        ctx: click.core.Context, # pylint: disable=unused-argument
+        ctx: click.core.Context,  # pylint: disable=unused-argument
         date: typing.Optional[str],
         scanner: typing.List[str],
         domains: str,
         output: str,
-        scan_args: typing.List[str],
-    ) -> None:
+        domain_scan_args: typing.List[str],
+) -> None:
 
-    update.callback(scanner, domains, output, scan_args)
+    update.callback(scanner, domains, output, domain_scan_args)
     the_date = get_date(None, "date", date)
     process.callback(the_date)
 
 
-@main.command()
-@click.option("--output", type=click.Path())
+@main.command(help="Download the input data from the database for use in scanning")
+@click.option("--output", type=click.Path(), help="Where to store the data csvs")
 @click.pass_context
 def preprocess(ctx: click.core.Context, output: typing.Optional[str]) -> None:
     if not output:
-        output = os.path.join(os.getcwd(), 'csv')
+        output = os.path.join(os.getcwd(), "csv")
 
-    with models.Connection(ctx.obj.get('connection_string')) as connection:
+    with models.Connection(ctx.obj.get("connection_string")) as connection:
         pull_data(output, connection)
 
 
 @main.command(
-    context_settings=dict(ignore_unknown_options=True), help="Gather and scan domains"
+    context_settings=dict(ignore_unknown_options=True), help="Scan domains list"
 )
-@click.option('--scanner', type=str, multiple=True, default=['pshtt', 'sslyze'], envvar='SCANNERS')
-@click.option('--domains', type=click.Path(), default=env.DOMAINS, envvar='DOMAINS')
-@click.option('--output', type=click.Path(), default=env.SCAN_DATA, envvar='SCAN_DATA')
-@click.argument("scan_args", nargs=-1, type=click.UNPROCESSED)
-def update(scanner: typing.List[str], domains: str, output: str, scan_args: typing.List[str]) -> None:
+@click.option(
+    "--scanner",
+    type=str,
+    multiple=True,
+    default=["pshtt", "sslyze"],
+    envvar="SCANNERS",
+    help="A comma separated list of scanners to use",
+)
+@click.option(
+    "--domains",
+    type=click.Path(),
+    default=env.DOMAINS,
+    envvar="DOMAINS",
+    help="Path to the csv of domains to scan",
+)
+@click.option(
+    "--output",
+    type=click.Path(),
+    default=env.SCAN_DATA,
+    envvar="SCAN_DATA",
+    help="Where to store the scan results",
+)
+@click.argument("domain-scan-args", nargs=-1, type=click.UNPROCESSED)
+def update(
+        scanner: typing.List[str],
+        domains: str,
+        output: str,
+        domain_scan_args: typing.List[str],
+) -> None:
     LOGGER.info("Starting update")
-    data_update.update(scanner, domains, output, transform_args(scan_args))
+    data_update.update(scanner, domains, output, transform_args(domain_scan_args))
     LOGGER.info("Finished update")
 
 
 @main.command(help="Process scan data")
-@click.option("--date", type=DATE, callback=get_date)
+@click.option(
+    "--date",
+    type=DATE,
+    callback=get_date,
+    help="To specify the last scan date manually",
+)
 @click.pass_context
 def process(ctx: click.core.Context, date: str) -> None:
     # Sanity check to make sure we have what we need.
@@ -120,15 +174,31 @@ def process(ctx: click.core.Context, date: str) -> None:
         return
 
     LOGGER.info("[%s] Loading data into track-digital.", date)
-    processing.run(date, ctx.obj.get('connection_string'))
+    processing.run(date, ctx.obj.get("connection_string"))
     LOGGER.info("[%s] Data now loaded into track-digital.", date)
 
 
 @main.command(help="Populate DB with domains")
-@click.option('--owners', type=click.File('r', encoding='utf-8-sig'))
-@click.option('--domains', type=click.File('r', encoding='utf-8-sig'))
-@click.option('--ciphers', type=click.File('r', encoding='utf-8-sig'))
-@click.option('--upsert/--no-upsert', default=False)
+@click.option(
+    "--owners",
+    type=click.File("r", encoding="utf-8-sig"),
+    help="Path to csv of domain owners",
+)
+@click.option(
+    "--domains",
+    type=click.File("r", encoding="utf-8-sig"),
+    help="Path to csv of domains",
+)
+@click.option(
+    "--ciphers",
+    type=click.File("r", encoding="utf-8-sig"),
+    help="Path to csv of accepted ciphers",
+)
+@click.option(
+    "--upsert/--no-upsert",
+    default=False,
+    help="Flag to upsert lists based on the domain name for owners and domains, and the cipher name for ciphers",
+)
 @click.pass_context
 def insert(
         ctx: click.core.Context,
@@ -136,7 +206,7 @@ def insert(
         domains: typing.IO[str],
         ciphers: typing.IO[str],
         upsert: bool,
-    ) -> None:
+) -> None:
 
-    with models.Connection(ctx.obj.get('connection_string')) as connection:
+    with models.Connection(ctx.obj.get("connection_string")) as connection:
         insert_data(owners, domains, ciphers, upsert, connection)
