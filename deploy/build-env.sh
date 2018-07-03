@@ -5,7 +5,7 @@ python3 -m venv .venv
 mkdir -p domain-scan && wget -q -O - https://api.github.com/repos/18F/domain-scan/tarball | tar xz --strip-components=1 -C domain-scan
 
 . .venv/bin/activate
-pip install wheel
+pip install --upgrade pip
 pip install -r requirements.txt
 pip install -r domain-scan/requirements.txt
 pip install -r domain-scan/requirements-scanners.txt
