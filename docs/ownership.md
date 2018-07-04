@@ -27,10 +27,10 @@ Take the following dataset
 
 `owners.csv`
 
-| domain            | organization_name_en                 | organization_name_fr                       |
-| ----------------- | ------------------------------------ | ------------------------------------------ | 
-| canada.ca         | Shared Services Canada               | Services partagés Canada                   |
-| digital.canada.ca | Treasury Board of Canada Secretariat | Secrétariat du Conseil du Trésor du Canada |
+| domain            | organization_name_en                     | organization_name_fr                       |
+| ----------------- | ---------------------------------------- | ------------------------------------------ | 
+| canada.ca         | Employment and Social Development Canada | Famille, Enfants et Développement social   |
+| digital.canada.ca | Treasury Board of Canada Secretariat     | Secrétariat du Conseil du Trésor du Canada |
 
 To link up the domains to their owners, the following steps are taken:  
 for each domain in the domain list:  
@@ -42,12 +42,12 @@ for each domain in the domain list:
 
 For the above dataset that will result in the following:  
 
-| domain            | organization_name_en                 | organization_name_fr                       |
-| ----------------- | ------------------------------------ | ------------------------------------------ | 
-| canada.ca         | Shared Services Canada               | Services partagés Canada                   | 
-| open.canada.ca    | Shared Services Canada               | Services partagés Canada                   | 
-| digital.canada.ca | Treasury Board of Canada Secretariat | Secrétariat du Conseil du Trésor du Canada |
-| 2006census.gc.ca  | Government of Canada                 | Gouvernement du Canada                     |
+| domain            | organization_name_en                     | organization_name_fr                       |
+| ----------------- | ---------------------------------------- | ------------------------------------------ | 
+| canada.ca         | Employment and Social Development Canada | Famille, Enfants et Développement social   |
+| open.canada.ca    | Treasury Board of Canada Secretariat     | Secrétariat du Conseil du Trésor du Canada |
+| digital.canada.ca | Treasury Board of Canada Secretariat     | Secrétariat du Conseil du Trésor du Canada |
+| 2006census.gc.ca  | Government of Canada                     | Gouvernement du Canada                     |
 
 * `canada.ca` - was in the owners list, so immediatly picked up the organization info from it's entry
 * `open.canada.ca`
