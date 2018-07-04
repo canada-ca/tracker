@@ -1,0 +1,8 @@
+version: '3'
+services:
+    build-env:
+        build:
+            context: .
+            dockerfile: Dockerfile.build
+        volumes:
+         - .:/home/DEV.T1.TBS-SCT.GC.CA/dsamojle-ps/
