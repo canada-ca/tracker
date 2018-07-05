@@ -36,7 +36,7 @@ LOGGER = logger.get_logger(__name__)
 # domains.csv is downloaded and live-cached during the scan
 SCAN_CACHE = os.path.join(env.SCAN_DATA, "cache")
 SCAN_DOMAINS_CSV = os.path.join(SCAN_CACHE, "domains.csv")
-MIN_HSTS_AGE = 10886400 # 18 weeks
+MIN_HSTS_AGE = 31536000 # one year
 
 ###
 # Main task flow.
@@ -667,7 +667,7 @@ def total_https_report(eligible):
         if report["enforces"] >= 2:
             total_report["enforces"] += 1
 
-        # Needs to be present with >= 18 weeks max-age for canonical endpoint,
+        # Needs to be present with >= one year max-age for canonical endpoint,
         # or preloaded via its parent zone.
         if report["hsts"] >= 2:
             total_report["hsts"] += 1
