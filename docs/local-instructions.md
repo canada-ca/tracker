@@ -75,16 +75,17 @@ To initalize mongodb with some data for the dashboard to display, we must run a 
 mkdir csv
 cat > ./csv/owners.csv << EOF
 domain,filler,organization_en,organization_fr
-clegc-gckey.gc.ca,,Public Services and Procurement Canada,Services publics et Approvisionnement Canada 
+canada.ca,,Employment and Social Development Canada,Famille,Enfants et Développement social
 digital.canada.ca,,Treasury Board of Canada Secretariat,Secrétariat du Conseil du Trésor du Canada
 numerique.canada.ca,,Treasury Board of Canada Secretariat,Secrétariat du Conseil du Trésor du Canada
 EOF
 cat > ./csv/domains.csv << EOF
 domain
-clegc-gckey.gc.ca
-te.clegc-gckey.gc.ca
+canada.ca
+consultations-edsc.canada.ca
 digital.canada.ca
 numerique.canada.ca
+2006census.gc.ca
 EOF
 cat > ./csv/ciphers.csv << EOF
 cipher

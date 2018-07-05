@@ -18,18 +18,18 @@ Take the following dataset
 
 `domains.csv`
 
-| domain               |
-| -------------------- |
-| clegc-gckey.gc.ca    |
-| te.clegc-gckey.gc.ca |
-| digital.canada.ca    |
-| 2006census.gc.ca     | 
+| domain                       |
+| ---------------------------- |
+| canada.ca                    |
+| consultations-edsc.canada.ca |
+| digital.canada.ca            |
+| 2006census.gc.ca             | 
 
 `owners.csv`
 
 | domain            | organization_name_en                     | organization_name_fr                         |
 | ----------------- | ---------------------------------------- | -------------------------------------------- | 
-| clegc-gckey.gc.ca | Public Services and Procurement Canada   | Services publics et Approvisionnement Canada |
+| canada.ca         | Employment and Social Development Canada | Famille, Enfants et Développement social     |
 | digital.canada.ca | Treasury Board of Canada Secretariat     | Secrétariat du Conseil du Trésor du Canada   |
 
 To link up the domains to their owners, the following steps are taken:  
@@ -42,17 +42,17 @@ for each domain in the domain list:
 
 For the above dataset that will result in the following:  
 
-| domain               | organization_name_en                     | organization_name_fr                         |
-| -------------------- | ---------------------------------------- | -------------------------------------------- | 
-| clegc-gckey.gc.ca    | Public Services and Procurement Canada   | Services publics et Approvisionnement Canada |
-| te.clegc-gckey.gc.ca | Public Services and Procurement Canada   | Services publics et Approvisionnement Canada |
-| digital.canada.ca    | Treasury Board of Canada Secretariat     | Secrétariat du Conseil du Trésor du Canada   |
-| 2006census.gc.ca     | Government of Canada                     | Gouvernement du Canada                       |
+| domain                       | organization_name_en                     | organization_name_fr                         |
+| ---------------------------- | ---------------------------------------- | -------------------------------------------- | 
+| canada.ca                    | Employment and Social Development Canada | Famille, Enfants et Développement social     |
+| consultations-edsc.canada.ca | Employment and Social Development Canada | Famille, Enfants et Développement social     |
+| digital.canada.ca            | Treasury Board of Canada Secretariat     | Secrétariat du Conseil du Trésor du Canada   |
+| 2006census.gc.ca             | Government of Canada                     | Gouvernement du Canada                       |
 
-* `clegc-gckey.gc.ca` - was in the owners list, so immediatly picked up the organization info from it's entry
-* `te.clegc-gckey.gc.ca`
-    1. `te.clegc-gckey.gc.ca` was not present
-    2. `clegc-gckey.gc.ca` was present, so take it's organization info
+* `canada.ca` - was in the owners list, so immediatly picked up the organization info from it's entry
+* `consultations-edsc.canada.ca`
+    1. `consultations-edsc.canada.ca` was not present
+    2. `canada.ca` was present, so take it's organization info
 * `digital.canada.ca` - was in owners list, so immediatly picked up the organizationinfo from it's enry
 * `2006census.gc.ca`
     1. `2006census.gc.ca` was not present
