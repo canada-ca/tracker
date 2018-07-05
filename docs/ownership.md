@@ -18,19 +18,19 @@ Take the following dataset
 
 `domains.csv`
 
-| domain            |
-| ----------------- |
-| canada.ca         |
-| open.canada.ca    |
-| digital.canada.ca |
-| 2006census.gc.ca  | 
+| domain                       |
+| ---------------------------- |
+| canada.ca                    |
+| consultations-edsc.canada.ca |
+| digital.canada.ca            |
+| 2006census.gc.ca             | 
 
 `owners.csv`
 
-| domain            | organization_name_en                 | organization_name_fr                       |
-| ----------------- | ------------------------------------ | ------------------------------------------ | 
-| canada.ca         | Shared Services Canada               | Services partagés Canada                   |
-| digital.canada.ca | Treasury Board of Canada Secretariat | Secrétariat du Conseil du Trésor du Canada |
+| domain            | organization_name_en                     | organization_name_fr                         |
+| ----------------- | ---------------------------------------- | -------------------------------------------- | 
+| canada.ca         | Employment and Social Development Canada | Famille, Enfants et Développement social     |
+| digital.canada.ca | Treasury Board of Canada Secretariat     | Secrétariat du Conseil du Trésor du Canada   |
 
 To link up the domains to their owners, the following steps are taken:  
 for each domain in the domain list:  
@@ -42,16 +42,16 @@ for each domain in the domain list:
 
 For the above dataset that will result in the following:  
 
-| domain            | organization_name_en                 | organization_name_fr                       |
-| ----------------- | ------------------------------------ | ------------------------------------------ | 
-| canada.ca         | Shared Services Canada               | Services partagés Canada                   | 
-| open.canada.ca    | Shared Services Canada               | Services partagés Canada                   | 
-| digital.canada.ca | Treasury Board of Canada Secretariat | Secrétariat du Conseil du Trésor du Canada |
-| 2006census.gc.ca  | Government of Canada                 | Gouvernement du Canada                     |
+| domain                       | organization_name_en                     | organization_name_fr                         |
+| ---------------------------- | ---------------------------------------- | -------------------------------------------- | 
+| canada.ca                    | Employment and Social Development Canada | Famille, Enfants et Développement social     |
+| consultations-edsc.canada.ca | Employment and Social Development Canada | Famille, Enfants et Développement social     |
+| digital.canada.ca            | Treasury Board of Canada Secretariat     | Secrétariat du Conseil du Trésor du Canada   |
+| 2006census.gc.ca             | Government of Canada                     | Gouvernement du Canada                       |
 
 * `canada.ca` - was in the owners list, so immediatly picked up the organization info from it's entry
-* `open.canada.ca`
-    1. `open.canada.ca` was not present
+* `consultations-edsc.canada.ca`
+    1. `consultations-edsc.canada.ca` was not present
     2. `canada.ca` was present, so take it's organization info
 * `digital.canada.ca` - was in owners list, so immediatly picked up the organizationinfo from it's enry
 * `2006census.gc.ca`
