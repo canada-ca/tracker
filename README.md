@@ -22,7 +22,7 @@ If you are developing this and add an aditional dependency, make sure to add it 
 
 For development purposes it is recommended that you install [mongodb](https://www.mongodb.com/) and run the database locally.
 
-This utility is written for **Python 3.5 and up**. We recommend [pyenv](https://github.com/yyuu/pyenv) for easy Python version management.
+This utility is written for **Python 3.6 and up**. We recommend [pyenv](https://github.com/yyuu/pyenv) for easy Python version management.
 
 To setup local python dependencies you can run `make setup` from the root of the repository. We recommend that this is done from within a virtual environment
 
