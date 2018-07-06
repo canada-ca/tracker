@@ -29,15 +29,15 @@ jobs:
     working_directory: ~/repo
   build_package:
     docker:
-      - image: cdssnc/tracker-build:0.1.0
-    working_directory: /home/DEV.T1.TBS-SCT.GC.CA/dsamojle-ps
+      - image: cdssnc/tracker-build:0.2.0
+    working_directory: /opt/apps/tracker/
     steps:
       - checkout
       - run:
           command: sh deploy/build-env.sh
           name: "Building the package"
       - store_artifacts:
-          path: /home/DEV.T1.TBS-SCT.GC.CA/dsamojle-ps/tracker.tar.gz
+          path: /opt/apps/tracker/tracker.tar.gz
           destination: tracker.tar.gz
 workflows:
   version: 2

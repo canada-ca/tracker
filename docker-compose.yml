@@ -5,4 +5,4 @@ services:
             context: .
             dockerfile: Dockerfile.build
         volumes:
-         - .:/home/DEV.T1.TBS-SCT.GC.CA/dsamojle-ps/
+         - .:/opt/apps/tracker
