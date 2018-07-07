@@ -13,8 +13,8 @@ There are two data sources involved in the determining of ownership, `domains.cs
 
 ## The Algorithm
 
-During the scan results processing stage the domains are linked up with their owners. This is done via the following process.  
-Take the following dataset
+During the scan results processing stage, the domains are linked up with their owners. This is done via the following process.  
+Take the following dataset:
 
 `domains.csv`
 
@@ -34,7 +34,7 @@ Take the following dataset
 
 To link up the domains to their owners, the following steps are taken:  
 for each domain in the domain list:  
-1. Check for it's existance in the owner list, if it is present take the organization information and stop further processing for this domain.
+1. Check for its existence in the owner list, if it is present take the organization information and stop further processing for this domain.
 2. Split the domain up into pieces based on the `.` character.
 3. Remove the first piece and join the remaining pieces back together with `.` characters.
 4. Return to step `1`.
@@ -49,11 +49,11 @@ For the above dataset that will result in the following:
 | digital.canada.ca            | Treasury Board of Canada Secretariat     | Secrétariat du Conseil du Trésor du Canada   |
 | 2006census.gc.ca             | Government of Canada                     | Gouvernement du Canada                       |
 
-* `canada.ca` - was in the owners list, so immediatly picked up the organization info from it's entry
+* `canada.ca` - was in the owners list, so immediately picked up the organization info from its entry
 * `consultations-edsc.canada.ca`
     1. `consultations-edsc.canada.ca` was not present
-    2. `canada.ca` was present, so take it's organization info
-* `digital.canada.ca` - was in owners list, so immediatly picked up the organizationinfo from it's enry
+    2. `canada.ca` was present, so take its organization info
+* `digital.canada.ca` - was in owners list, so immediately picked up the organization info from its entry
 * `2006census.gc.ca`
     1. `2006census.gc.ca` was not present
     2. `gc.ca` was not present

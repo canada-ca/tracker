@@ -7,8 +7,8 @@ This document is meant to show in unambiguious manner how to deploy a instance o
 #### Required Software
 
 For development purposes it is recommended that you install [mongodb](https://www.mongodb.com/) and run the database locally.  
-This utility is written for **Python 3.5 and up**. We recommend [pyenv](https://github.com/pyenv/pyenv) for easy Python version management. Regardless of the manner you choose to do so, you will need an instalation of Python 3.5+ to continue.  
-The project uses [mongodb](https://www.mongodb.com/) as it's datastore. Depending on your platform installation will be different, please follow the installation instructions found on their site for installing the MongoDB Community Server.
+This utility is written for **Python 3.6 and up**. We recommend [pyenv](https://github.com/pyenv/pyenv) for easy Python version management. Regardless of the manner you choose to do so, you will need an installation of Python 3.6+ to continue.  
+The project uses [MongoDB](https://www.mongodb.com/) as it's datastore. Depending on your platform installation will be different; please follow the installation instructions found on their site for installing the MongoDB Community Server.
 
 Once MongoDB has been installed, we will have to run an instance of the database locally.  
 To do so open a terminal window and run the following command:
@@ -16,18 +16,18 @@ To do so open a terminal window and run the following command:
 mongod &
 ```
 
-If you get an error related to the directory `/data/db`, usually that means you have to create that directory. If you already have created the directory and are still recieving an error, it is likely due to the fact that the user that runs the `mongod` command must be the owner of that directory.
+If you get an error related to the directory `/data/db`, usually that means you have to create that directory. If you already have created the directory and are still receiving an error, it is likely due to the fact that the user that runs the `mongod` command must be the owner of that directory.
 
 
 #### Acquiring the source
 
-As you are reading this, you likely already have a copy of the source code. However if this is not the case, it can be found on [github](https://github.com/cds-snc/tracker). You will need to clone this repository to a local directory.
+The source code can be found on [GitHub](https://github.com/cds-snc/tracker). You will need to clone this repository to a local directory.
 ```bash
 git clone https://github.com/cds-snc/tracker.git
 cd tracker
 ```
 
-You will also need to download the contents of the [domain-scan](https://github.com/cds-snc/domain-scan) repository, also on github. This code is used to do produce the results that the dashboard displays.
+You will also need to download the contents of the [domain-scan](https://github.com/cds-snc/domain-scan) repository, also on GitHub. This code is used to do produce the results that the dashboard displays.
 ```bash
 git clone https://github.com/cds-snc/domain-scan.git
 ```
@@ -36,13 +36,13 @@ Keep the terminal you ran these commands in around for the following steps.
 
 #### Environment
 
-First, verify that you have the correct version of python.
+First, verify that you have the correct version of Python.
 ```bash
 python3 --version
 ```
-It should print out something like `Python 3.5.5`. You will need a version 3.5+.
+It should print out something like `Python 3.5.5`. You will need a version 3.6+.
 
-We recommend that the python packages that comprise this project be installed into virtual environments. To do so execute the following commands.
+We recommend that the Python packages that comprise this project be installed into virtual environments. To do so execute the following commands.
 ```bash
 cd tracker
 python3 -m venv .env
@@ -52,13 +52,13 @@ pip3 install -r domain-scan/requirements.txt
 pip3 install -r domain-scan/requirements-scanners.txt
 ```
 
-The components of this project make use of a number of environment variables, but there are four that are the most common. They are as follows...  
+The components of this project make use of a number of environment variables, but there are four that are the most common:
 * **DOMAIN_SCAN_PATH** (required for scanning) - This is the path to the location the `scan` file in the directory created when you [downloaded domain-scan](#Acquiring the source)
 * **DOMAIN_GATHER_PATH** (required for scanning) - This is the path to the location the `gather` file in the directory created when you [downloaded domain-scan](#Acquiring the source)
 * **TRACKER_ENV** - This is an indicator of what mode the site should run in (which affects how it is configured). It has three possible values
   * **testing** - Attempts to connect to a local DB running on the default port with a randomized database name. This is intended to only be used when testing the application (and is used automatically)
   * **development** (default) - Attempts to connect to a local DB running on the default port
-  * **production** - Attempts to connect to a DB specififed by the environment variable TRACKER_MONGO_URI
+  * **production** - Attempts to connect to a DB specified by the environment variable TRACKER_MONGO_URI
 * **TRACKER_MONGO_URI** - The connection string used to connect to the database when the site is running in production, and what the scanner will connect to if not manually set.
 
 ```bash
@@ -70,7 +70,7 @@ export TRACKER_MONGO_URI=mongodb://localhost:27017/track
 
 ### Data Initialization
 
-To initalize mongodb with some data for the dashboard to display, we must run a scan on some domains. This will require two lists, one of parent domains (second level domains) and one of subdomains. Run the following commands to generate a very small example set.
+To initialize MongoDB with some data for the dashboard to display, we must run a scan on some domains. This will require two lists, one of parent domains (second level domains) and one of subdomains. Run the following commands to generate a very small example set.
 ```bash
 mkdir csv
 cat > ./csv/owners.csv << EOF
