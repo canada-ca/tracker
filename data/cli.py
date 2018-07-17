@@ -173,9 +173,9 @@ def process(ctx: click.core.Context, date: str) -> None:
         LOGGER.info("No scan metadata downloaded, aborting.")
         return
 
-    LOGGER.info("[%s] Loading data into track-digital.", date)
+    LOGGER.info("[%s] Loading data into track-web.", date)
     processing.run(date, ctx.obj.get("connection_string"))
-    LOGGER.info("[%s] Data now loaded into track-digital.", date)
+    LOGGER.info("[%s] Data now loaded into track-web.", date)
 
 
 @main.command(help="Populate DB with domains")

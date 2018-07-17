@@ -22,6 +22,7 @@ import os
 import re
 import subprocess
 import typing
+from urllib.parse import urlparse
 from shutil import copyfile
 import slugify
 
@@ -71,6 +72,11 @@ def run(date: typing.Optional[str], connection_string: str):
             # invalid domains can hit this.
             LOGGER.warning("[%s] No pshtt data for domain!", domain_name)
         elif boolean_for(pshtt['Live']):
+            if boolean_for(pshtt['Redirect']):
+                redirection = urlparse(pshtt["Redirect To"]).netloc
+                if redirection not in domains:
+                    LOGGER.warning("%s redirected to %s which is not in the domains list", domain_name, redirection)
+
             results[domain_name] = {
                 "domain": domain_name,
                 "is_owner": domain_name in owners,
