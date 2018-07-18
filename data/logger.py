@@ -1,6 +1,5 @@
 import logging
 from logging.handlers import SysLogHandler
-import threading
 import os
 
 # Configure the root logger with handlers
@@ -21,40 +20,6 @@ _syslog_handler.setFormatter(_syslog_formatter)
 _stream_handler.setFormatter(_stream_formatter)
 logging.getLogger().addHandler(_syslog_handler)
 logging.getLogger().addHandler(_stream_handler)
-
-# https://codereview.stackexchange.com/questions/6567/redirecting-subprocesses-output-stdout-and-stderr-to-the-logging-module
-# To redirect stderr & stdout from subprocess calls into a logger
-class LogPipe(threading.Thread):
-
-    def __init__(self, logger, level):
-        """Setup the object with a logger and a loglevel
-        and start the thread
-        """
-        super(LogPipe, self).__init__()
-        self.daemon = False
-        self.logger = logger
-        self.level = level
-        self.fd_read, self.fd_write = os.pipe()
-        self.pipe_reader = os.fdopen(self.fd_read, encoding='utf-8', errors='ignore')
-        self.start()
-
-    def fileno(self):
-        """Return the write file descriptor of the pipe
-        """
-        return self.fd_write
-
-    def run(self):
-        """Run the thread, logging everything.
-        """
-        for line in iter(self.pipe_reader.readline, ''):
-            self.logger.log(self.level, line.strip('\n'))
-
-        self.pipe_reader.close()
-
-    def close(self):
-        """Close the write end of the pipe.
-        """
-        os.close(self.fd_write)
 
 
 def unwrap_exception_message(exc: BaseException, join: str = " - ") -> str:

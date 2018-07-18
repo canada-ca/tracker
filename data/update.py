@@ -5,7 +5,6 @@
 # Run with:
 #   python -m data.update
 
-import logging
 import subprocess
 import typing
 
@@ -94,10 +93,9 @@ def scan_domains(
 
 ## Utils function for shelling out.
 def shell_out(command, env=None):
-    logpipe = logger.LogPipe(LOGGER, logging.INFO)
     try:
         LOGGER.info("[cmd] %s", str.join(" ", command))
-        response = subprocess.check_output(command, shell=False, stderr=logpipe, env=env)
+        response = subprocess.check_output(command, shell=False, env=env)
         output = str(response, encoding="UTF-8")
         LOGGER.info(output)
         return output
