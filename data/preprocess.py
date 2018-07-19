@@ -39,7 +39,8 @@ def insert_data(
         domains: typing.Optional[typing.IO[str]],
         ciphers: typing.Optional[typing.IO[str]],
         upsert: bool,
-        connection: models.Connection
+        connection: models.Connection,
+        batch_size: typing.Optional[int] = None,
     ) -> None:
 
     insertions = []
@@ -54,7 +55,7 @@ def insert_data(
     for collection_name, key, reader in insertions:
         collection = getattr(connection, collection_name)
         if upsert:
-            method = functools.partial(collection.upsert_all, key_column=key)
+            method = functools.partial(collection.upsert_all, key_column=key, batch_size=batch_size)
         else:
-            method = collection.create_all
+            method = functools.partial(collection.create_all, batch_size=batch_size)
         method(document for document in reader)

@@ -63,9 +63,16 @@ def transform_args(args: typing.List[str]) -> typing.Dict[str, typing.Union[str,
     envvar="TRACKER_MONGO_URI",
     help="Interact with the tracker scanning utility",
 )
+@click.option(
+    "--batch-size",
+    type=int,
+    default=100,
+    envvar="TRACKER_BATCH_SIZE",
+    help="Manually batch uploads into groups of batch-size, enter 0 for no batching",
+)
 @click.pass_context
-def main(ctx: click.core.Context, connection: str) -> None:
-    ctx.obj = {"connection_string": connection}
+def main(ctx: click.core.Context, connection: str, batch_size: typing.Optional[str]) -> None:
+    ctx.obj = {"connection_string": connection, "batch_size": batch_size}
 
 
 @main.command(
@@ -174,7 +181,7 @@ def process(ctx: click.core.Context, date: str) -> None:
         return
 
     LOGGER.info("[%s] Loading data into track-web.", date)
-    processing.run(date, ctx.obj.get("connection_string"))
+    processing.run(date, ctx.obj.get("connection_string"), ctx.obj.get("batch_size"))
     LOGGER.info("[%s] Data now loaded into track-web.", date)
 
 
@@ -209,4 +216,4 @@ def insert(
 ) -> None:
 
     with models.Connection(ctx.obj.get("connection_string")) as connection:
-        insert_data(owners, domains, ciphers, upsert, connection)
+        insert_data(owners, domains, ciphers, upsert, connection, ctx.obj.get("batch_size"))
