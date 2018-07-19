@@ -109,30 +109,32 @@ def run(date: typing.Optional[str], connection_string: str):
         results, owners,
     )
 
+    # Calculate organization-level summaries. Updates `organizations` in-place.
+    update_organization_totals(organizations, results)
+
+    # Calculate government-wide summaries.
+    report = full_report(results)
+    report["report_date"] = date
+
     # Reset the database.
-    LOGGER.info("Clearing the database.")
     with models.Connection(connection_string) as connection:
+        LOGGER.info("Clearing the domains.")
         connection.domains.clear()
-        connection.reports.clear()
-        connection.organizations.clear()
-
-        # Calculate organization-level summaries. Updates `organizations` in-place.
-        update_organization_totals(organizations, results)
-
-        # Calculate government-wide summaries.
-        report = full_report(results)
-        report["report_date"] = date
-
         LOGGER.info("Creating all domains.")
         connection.domains.create_all(results[domain_name] for domain_name in sorted_domains)
+
+        LOGGER.info("Clearing organizations.")
+        connection.organizations.clear()
         LOGGER.info("Creating all organizations.")
         connection.organizations.create_all(
             organizations[organization_name] for organization_name in sorted_organizations
         )
 
-        # Create top-level summaries.
-        LOGGER.info("Creating government-wide totals.")
-        connection.reports.create(report)
+        LOGGER.info("Replacing government-wide totals.")
+        connection.reports.replace({}, report)
+
+        LOGGER.info("Signal track-web to drop cache")
+        connection.flags.replace({}, {"cache": False})
 
     # Print and exit
     print_report(report)
