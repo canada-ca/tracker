@@ -39,3 +39,9 @@ class TestDomains:
 
         assert len(results) == 1
         assert results[0] == {'test': 'other_value'}
+
+    def test_replace_new(self, connection: models.Connection) -> None: # pylint: disable=no-self-use
+        connection.domains.replace({}, {'test': 'value'})
+        results = [d for d in connection.domains.all()]
+        assert len(results) == 1
+        assert results[0] == {'test': 'value'}
