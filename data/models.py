@@ -5,6 +5,7 @@ import typing
 import pymongo
 from pymongo import UpdateOne
 
+LOGGER = logging.getLogger(__name__)
 
 class TrackerModelError(Exception):
     pass
@@ -13,9 +14,6 @@ class InsertionError(TrackerModelError):
     def __init__(self, *args, errors, **kwargs):
         super().__init__(*args, **kwargs)
         self.errors = errors
-
-class DeleteError(TrackerModelError):
-    pass
 
 
 def grouper(group_size, iterable):
@@ -27,58 +25,15 @@ def grouper(group_size, iterable):
         yield chunk
 
 
-LOGGER = logging.getLogger(__name__)
 MAX_TRIES = 5
 
 REQUEST_RATE_ERROR = 16500
 DUPLICATE_KEY_ERROR = 11000
-DELETE_REFUSED = 2
 
-def _retry_delete_in(
-        objects: typing.Sequence,
-        method: typing.Callable[[dict], None],
-        times: int,
-    ) -> None:
-
-    query = {
-        "_id": {
-            "$in": objects
-        }
-    }
-
-    for count in range(1, times+1):
-        try:
-            method(query)
-            break
-        except pymongo.errors.OperationFailure as exc:
-            if exc.code == DELETE_REFUSED:
-                # Request was too big, it's not going to do it.
-                length = len(objects)
-                if length == 1:
-                    # We tried cutting up the data until it was a single write request, and that still failed
-                    # time to pack it in
-                    raise
-
-                LOGGER.warning('Request refused, trying with half the previous request')
-
-                iter_data = iter(objects)
-                first_half = list(itertools.islice(iter_data, length//2))
-                second_half = list(iter_data)
-                _retry_delete_in(first_half, method, times)
-                _retry_delete_in(second_half, method, times)
-            else:
-                raise
-        except Exception as exc:
-            LOGGER.exception('Unknown error in delete retry loop')
-            raise
-    else:
-        # Loop exited normally, not via a break. This means that it failed each time
-        raise DeleteError("Unable to execute request, failed %d times" % count)
-
-
+DATA = typing.TypeVar('DATA')
 def _retry_write(
-        data: typing.Sequence[dict],
-        write_method: typing.Callable[[typing.Iterable[dict]], None],
+        data: DATA,
+        write_method: typing.Callable[[DATA], typing.Any],
         times: int
     ) -> None:
     '''Attempt `write_method`(`data`) `times` times'''
@@ -127,11 +82,13 @@ def _clear_collection(
         # for the documents we want to delete
         cursor = collection.find({'_collection': name}, {"_id": True})
         chunks = (
-            [doc["_id"] for doc in chunk]
+            {"id": {
+                "$in": [doc["_id"] for doc in chunk]
+            }}
             for chunk in grouper(batch_size, cursor)
         )
-        for object_ids in chunks:
-            _retry_delete_in(object_ids, collection.delete_many, MAX_TRIES)
+        for query in chunks:
+            _retry_write(query, collection.delete_many, MAX_TRIES)
 
 
 def _insert_all(
