@@ -82,7 +82,7 @@ def _clear_collection(
         # for the documents we want to delete
         cursor = collection.find({'_collection': name}, {"_id": True})
         chunks = (
-            {"id": {
+            {"_id": {
                 "$in": [doc["_id"] for doc in chunk]
             }}
             for chunk in grouper(batch_size, cursor)
