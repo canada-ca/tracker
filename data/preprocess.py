@@ -18,7 +18,7 @@ def pull_data(output: str, connection: models.Connection) -> None:
 
         owner_writer = csv.DictWriter(
             owner_file,
-            fieldnames=['domain', 'filler', 'organization_en', 'organization_fr']
+            fieldnames=['domain', 'organization_en', 'organization_fr']
         )
         domain_writer = csv.DictWriter(domain_file, fieldnames=['domain'])
         cipher_writer = csv.DictWriter(cipher_file, fieldnames=['cipher'])

@@ -200,8 +200,8 @@ def load_domain_data() -> typing.Tuple[typing.Set, typing.Dict]:
                 continue
 
             domain_name = row[0].lower().strip()
-            organization_name_en = row[2].strip()
-            organization_name_fr = row[3].strip()
+            organization_name_en = row[1].strip()
+            organization_name_fr = row[2].strip()
             organization_slug = slugify.slugify(organization_name_en)
 
             if domain_name not in domain_map:
