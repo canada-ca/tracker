@@ -8,12 +8,12 @@ Here you will find the following documents to help gain an understanding around 
 | document | description |
 | -------- | ----------- |
 | [additions.md](en/additions.md) | This document outlines the location of key functionality to facilitate making additions or changes to the system. |
-| [data.md](den/ata.md) | This documents outlines the input and output data schema with descriptions of fields and their possible values. |
+| [data.md](en/data.md) | This documents outlines the input and output data schema with descriptions of fields and their possible values. |
 | [lambda-deploy.md](en/lambda-deploy.md) | This document outlines the process of deploying and using AWS lambda scanners. |
 | [local-instructions.md](en/local-instructions.md) | This document contains step-by-step instructions on how to setup a development verison of the project locally. |
 | [ownership.md](en/ownership.md) | This document outlines the algorithm used to determine what organization owns what domain. |
 
-#---------------------------------------------------------------------
+## ---------------------------------------------------------------------
 
 # Documents sur Tracker
 
