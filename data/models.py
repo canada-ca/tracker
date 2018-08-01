@@ -1,3 +1,4 @@
+import functools
 import itertools
 import logging
 from time import sleep
@@ -48,16 +49,20 @@ def _retry_write(
             break
         except pymongo.errors.BulkWriteError as exc:
             details = exc.details.get('writeErrors', [])
-            # Check if all errors were duplicate key errors, if so this is OK
-            if not all(error['code'] == DUPLICATE_KEY_ERROR for error in details):
+            if any(error['code'] == REQUEST_RATE_ERROR for error in details):
+                LOGGER.warning('Exceeded RU limit, pausing for %d seconds...', 2*count)
+                sleep(2*count)
+                continue
+            # Check if all errors were duplicate key errors, if so should be OK
+            elif not all(error['code'] == DUPLICATE_KEY_ERROR for error in details):
                 raise
             break
         except pymongo.errors.OperationFailure as exc:
             # Check if we blew the request rate, if so take a break and try again
             errors.append(exc)
             if exc.code == REQUEST_RATE_ERROR:
-                LOGGER.warning('Exceeded RU limit, pausing for %d seconds...', count)
-                sleep(count)
+                LOGGER.warning('Exceeded RU limit, pausing for %d seconds...', 2*count)
+                sleep(2*count)
             else:
                 raise
         except Exception as exc:
@@ -104,9 +109,10 @@ def _insert_all(
     else:
         document_stream = grouper(batch_size, documents)
         collect = client.get_database(database).get_collection('meta')
+        method = functools.partial(collect.insert_many, ordered=False)
         for chunk in document_stream:
             documents = [{'_collection': collection, **document} for document in chunk]
-            _retry_write(documents, collect.insert_many, MAX_TRIES)
+            _retry_write(documents, method, MAX_TRIES)
 
 
 def _insert(
@@ -140,9 +146,10 @@ def _upsert_all(
     else:
         document_stream = grouper(batch_size, writes)
         collect = client.get_database(database).get_collection('meta')
+        method = functools.partial(collect.bulk_write, ordered=False)
         for chunk in document_stream:
             to_write = [write for write in chunk]
-            _retry_write(to_write, collect.bulk_write, MAX_TRIES)
+            _retry_write(to_write, method, MAX_TRIES)
 
 def _replace(
         client: pymongo.MongoClient,
