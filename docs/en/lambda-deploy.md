@@ -38,7 +38,7 @@ python -m venv .env
 . .env/bin/activate
 pip install awscli
 ```
-2. Configure the client with API credentials for an AWS user with permission to modify Lambda. 
+2. Configure the client with API credentials for an AWS user with permission to modify Lambda.
 ```bash
 $ aws configure --profile lambda
 AWS Access Key ID [None]: **ACCESS-ID-HERE**
@@ -46,7 +46,7 @@ AWS Secret Access Key [None]: **SECRET-ACCESS-KEY**
 Default region name [None]: ca-central-1
 Default output format [None]: json
 ```
-3. Set the environment variable `AWS_LAMBDA_ROLE` environment variable to the ARN of the role we created with the `AWSLambdaFullAccess` polcy.
+3. Set the environment variable `AWS_LAMBDA_ROLE` environment variable to the ARN of the role we created with the `AWSLambdaFullAccess` policy.
 ```bash
 export AWS_LAMBDA_ROLE=**ARN**
 ```
