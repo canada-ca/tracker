@@ -1,4 +1,4 @@
-## Using lambda scanners
+## Utilisation des scanneurs lambda
 
 Le module [domain-scan](https://github.com/cds-snc/domain-scan) est capable d’effectuer une importante analyse en parallèle à l’aide de Lambda AWS. Le répertoire domain-scan a [ses propres documents](https://github.com/cds-snc/domain-scan/blob/master/docs/lambda.md) sur le sujet que nous vous encourageons à lire, mais voici quelques notions de base pour vous permettre de commencer. .
 
