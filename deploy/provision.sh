@@ -7,8 +7,8 @@ libssl-dev \
 locales \
 python3-dev \
 wget \
-zlib1g-dev 
-                                                                   
+zlib1g-dev \
+
 # Generate UTF-8 localte for publicsuffixlist install
 locale-gen en_US.UTF-8
 
@@ -17,4 +17,4 @@ cd /opt
 wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz
 tar -xvf Python-3.6.6.tgz
 cd Python-3.6.6
-./configure --enable-optimizations && make && make install
+./configure && make && make install

@@ -16,5 +16,11 @@ pip install -r requirements.txt
 pip install -r domain-scan/requirements.txt
 pip install -r domain-scan/requirements-scanners.txt
 pip install .
-tar -czvf tracker.tar.gz .venv domain-scan
-rm -rf .venv domain-scan
+deactivate
+
+python3.6 -m venv .azure_venv
+pip install --upgrade pip
+pip install azure-cli
+
+tar -czvf tracker.tar.gz .venv .azure_venv domain-scan
+rm -rf .venv .azure_venv domain-scan
