@@ -18,11 +18,5 @@ pip install -r domain-scan/requirements-scanners.txt
 pip install .
 deactivate
 
-python3.6 -m venv .azure_venv
-. .azure_venv/bin/activate
-pip install --upgrade pip
-pip install azure-cli
-deactivate
-
-tar -czvf tracker.tar.gz .venv .azure_venv domain-scan
-rm -rf .venv .azure_venv domain-scan
+tar -czvf tracker.tar.gz .venv domain-scan
+rm -rf .venv domain-scan
