@@ -1,6 +1,7 @@
 import functools
 import itertools
 import logging
+import os
 from time import sleep
 import typing
 import pymongo
@@ -26,7 +27,7 @@ def grouper(group_size, iterable):
         yield chunk
 
 
-MAX_TRIES = 5
+MAX_TRIES = int(os.environ.get("TRACKER_MAX_RETRIES", 0))
 
 REQUEST_RATE_ERROR = 16500
 DUPLICATE_KEY_ERROR = 11000
@@ -39,8 +40,13 @@ def _retry_write(
     ) -> None:
     '''Attempt `write_method`(`data`) `times` times'''
 
+    if not times:
+        attempts = itertools.count(1) # unlimited attempts as long as work is being done
+    else:
+        attempts = iter(range(1, times+1))
+
     errors = []
-    for count in range(1, times+1): # Only do {times} attempts to insert
+    for count in attempts:
         try:
             write_method(data)
             break
@@ -48,10 +54,17 @@ def _retry_write(
             # After retrying the insertion, some of the documents were duplicates, this is OK
             break
         except pymongo.errors.BulkWriteError as exc:
+            if sum(
+                    exc.details.get(field, 0)
+                    for field in ['nInserted', 'nUpserted', 'nMatched', 'nModified', 'nRemoved']
+            ) == 0 and not times:
+                # If no work is being done, and we're not doing a fixed number of attempts, halt
+                raise
+
             details = exc.details.get('writeErrors', [])
             if any(error['code'] == REQUEST_RATE_ERROR for error in details):
-                LOGGER.warning('Exceeded RU limit, pausing for %d seconds...', 2*count)
-                sleep(2*count)
+                LOGGER.warning('%d: Exceeded RU limit, pausing...', count)
+                sleep(1)
                 continue
             # Check if all errors were duplicate key errors, if so should be OK
             elif not all(error['code'] == DUPLICATE_KEY_ERROR for error in details):
@@ -61,8 +74,8 @@ def _retry_write(
             # Check if we blew the request rate, if so take a break and try again
             errors.append(exc)
             if exc.code == REQUEST_RATE_ERROR:
-                LOGGER.warning('Exceeded RU limit, pausing for %d seconds...', 2*count)
-                sleep(2*count)
+                LOGGER.warning('%d: Exceeded RU limit, pausing...', count)
+                sleep(1)
             else:
                 raise
         except Exception as exc:
@@ -79,7 +92,7 @@ def _clear_collection(
         database: typing.Optional[str] = None,
         batch_size: typing.Optional[int] = None) -> None:
     if not batch_size:
-        client.get_database(database).get_collection('meta').delete_many({'_collection': name})
+        _retry_write({'_collection': name}, client.get_database(database).get_collection('meta').delete_many, MAX_TRIES)
     else:
         collection = client.get_database(database).get_collection('meta')
 
@@ -103,9 +116,11 @@ def _insert_all(
         database: typing.Optional[str] = None,
         batch_size: typing.Optional[int] = None) -> None:
     if not batch_size:
-        client.get_database(database)\
-              .get_collection('meta')\
-              .insert_many([{'_collection': collection, **document} for document in documents])
+        _retry_write(
+            [{'_collection': collection, **document} for document in documents],
+            client.get_database(database).get_collection('meta').insert_many,
+            MAX_TRIES
+        )
     else:
         document_stream = grouper(batch_size, documents)
         collect = client.get_database(database).get_collection('meta')
@@ -140,9 +155,7 @@ def _upsert_all(
     )
 
     if not batch_size:
-        client.get_database(database)\
-              .get_collection('meta')\
-              .bulk_write(list(writes))
+        _retry_write(list(writes), client.get_database(database).get_collection('meta').bulk_write, MAX_TRIES)
     else:
         document_stream = grouper(batch_size, writes)
         collect = client.get_database(database).get_collection('meta')
