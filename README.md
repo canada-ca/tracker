@@ -11,7 +11,6 @@ How the GC domain space is doing at best practices and federal requirements.
 | ------------------------------------------------------- |
 | [Development Setup Instructions](#development-setup)    |
 | [Local Deploy Step-by-step](docs/local-instructions.md) |
-| [Deployment Docs](docs/deploy.md)                       |
 
 ## Developer Notes
 
@@ -96,7 +95,7 @@ La mesure dans laquelle l’espace des noms de domaine du gouvernement du Canada
 
 | Documentation                                           |
 | ------------------------------------------------------- |
-| [Instructions de configuration du développement](#configuration-du-developpement)    |
+| [Instructions de configuration du développement](#configuration-du-développement)    |
 | [Déploiement local étape par étape](docs/fr/directives-locales.md) |
 
 ## Developer Notes
