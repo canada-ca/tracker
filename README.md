@@ -128,7 +128,7 @@ pip install .[development]
 
 Téléchargez et configurez  `domain-scan` [de GitHub](https://github.com/cds-snc/domain-scan) aconformément aux instructions de configuration.
 
-`domain-scan` à son tour exige [`pshtt`](https://github.com/dhs-ncats/pshtt) et [`sslyze`](https://github.com/nabla-c0d3/sslyze). . Ceux-ci peuvent être installés directement au moyen de `pip`.
+`domain-scan` à son tour exige [`pshtt`](https://github.com/dhs-ncats/pshtt) et [`sslyze`](https://github.com/nabla-c0d3/sslyze). Ceux-ci peuvent être installés directement au moyen de `pip`.
 
 L’application vous oblige à établir une variable d’environnement :
 
@@ -161,7 +161,7 @@ Vous pouvez obtenir de l’aide sur la façon d’utiliser l’interface de lign
 
 ## Domaine public
 
-Ce projet fait partie du [domaine public](LICENSE.md) mondial. Comme l’indique le fil [CONTRIBUTING](CONTRIBUTING.md) :
+Ce projet fait partie du [domaine public](LICENSE.md#---------------------------------------------------------------------) mondial. Comme l’indique le fil [CONTRIBUTING](CONTRIBUTING.md#---------------------------------------------------------------------) :
 
 > Le projet fait partie du domaine public; l’auteur renonce dans le mode entier au droit d’auteur et aux droits connexes sur l’œuvre par voie de la licence [CC0 1.0 Universel – Transfert dans le domaine public](https://creativecommons.org/publicdomain/zero/1.0/deed.fr).
 >
