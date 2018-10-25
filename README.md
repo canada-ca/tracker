@@ -3,7 +3,7 @@
 
 [La version française suit.](#---------------------------------------------------------------------)
 
-## Track Government of Canada domains's adherance to digital security practices
+## Track Government of Canada domains's adherence to digital security practices
 
 How the GC domain space is doing at best practices and federal requirements.
 
@@ -25,7 +25,7 @@ For development purposes it is recommended that you install [MongoDB](https://ww
 
 This utility is written for **Python 3.6 and up**. We recommend [pyenv](https://github.com/yyuu/pyenv) for easy Python version management.
 
-To setup local Python dependencies you can run `make setup` from the root of the repository. We recommend that this is done from within a virtual environment
+To setup local Python dependencies you can run `make setup` from the root of the repository. We recommend that this is done from within a virtual environment.
 
 * Install dependencies:
 
@@ -33,14 +33,15 @@ To setup local Python dependencies you can run `make setup` from the root of the
 pip install -r requirements.txt
 ```
 
-* If developing tracker, you will also need the development requirements
+* If developing tracker, you will also need the development requirements:
+
 ```bash
 pip install .[development]
 ```
 
 #### Install domain-scan and dependencies
 
-Download and set up `domain-scan` [from GitHub](https://github.com/cds-snc/domain-scan) as per it's setup instructions.
+Download and set up `domain-scan` [from GitHub](https://github.com/cds-snc/domain-scan) as per its setup instructions.
 
 `domain-scan` in turn requires [`pshtt`](https://github.com/dhs-ncats/pshtt) and [`sslyze`](https://github.com/nabla-c0d3/sslyze). These can be installed directly via `pip`.
 
