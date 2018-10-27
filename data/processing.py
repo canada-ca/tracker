@@ -133,8 +133,8 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
         LOGGER.info("Replacing government-wide totals.")
         connection.reports.replace({}, report)
 
-        LOGGER.info("Signal track-web to drop cache")
-        connection.flags.replace({}, {"cache": False})
+        LOGGER.info("Update cache validity with current time for track-web")
+        connection.flags.replace({}, {"cache": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d %H:%M")})
 
     # Print and exit
     print_report(report)
