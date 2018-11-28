@@ -1,9 +1,15 @@
 from itertools import zip_longest
+
 import os
 import typing
 import datetime
 import click
+
+from azure.keyvault import KeyVaultClient
+from msrestazure.azure_active_directory import MSIAuthentication
+
 import ujson
+
 from data import env
 from data.env import DATA_DIR
 from data import update as data_update
@@ -13,8 +19,19 @@ from data import models
 from data.preprocess import pull_data, insert_data
 
 
+
 LOGGER = logger.get_logger(__name__)
 
+# init Azure MSI & KeyVault creds
+
+if os.environ.get("TRACKER_KEYVAULT_URI", None) is not None and os.environ.get("SECRET_NAME_RW", None) is not None:
+    KV_URI = os.environ.get("TRACKER_KEYVAULT_URI")
+    SECRET_NAME = os.environ.get("SECRET_NAME_RW")
+    CREDS = MSIAuthentication(resource='https://vault.azure.net')
+    KV_CLIENT = KeyVaultClient(CREDS)
+    MONGO_URI = KV_CLIENT.get_secret(KV_URI, SECRET_NAME, "").value
+else:
+    MONGO_URI = os.environ.get("TRACKER_MONGO_URI", "mongodb://localhost:27017/track")
 
 class DateType(click.ParamType):
     name = "date"
@@ -59,8 +76,7 @@ def transform_args(args: typing.List[str]) -> typing.Dict[str, typing.Union[str,
 @click.option(
     "--connection",
     type=str,
-    default="mongodb://localhost:27017/track",
-    envvar="TRACKER_MONGO_URI",
+    default=MONGO_URI,
     help="Interact with the tracker scanning utility",
 )
 @click.option(

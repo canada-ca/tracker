@@ -6,7 +6,7 @@ setuptools.setup(
     long_description='',
     author='GSA 18F, CDS-SNC',
     author_email='pulse@cio.gov, cds-snc@tbs-sct.gc.ca',
-    url='https://github.com/cds-snc/pulse',
+    url='https://github.com/cds-snc/tracker',
     include_package_data=True,
     packages=[
         'data',
@@ -23,6 +23,8 @@ setuptools.setup(
         'ujson==1.35',
         'click==6.7',
         'python-slugify==1.2.1',
+        'azure-keyvault==1.1.0',
+        'msrestazure==0.5.1'
     ],
     extras_require={
         'development': [
