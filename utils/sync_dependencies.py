@@ -7,7 +7,6 @@ import typing
 import sys
 from unittest import mock
 
-import distutils
 import setuptools
 
 @contextlib.contextmanager
