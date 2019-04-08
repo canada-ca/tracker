@@ -1,0 +1,12 @@
+{
+    "name": "@cdssnc/tracker",
+    "version": "0.0.1",
+    "description": "Scripts to deploy clusters",
+    "scripts": {
+      "minikube": "kustomize build overlays/minikube | kubectl apply -f -",
+      "delete-minikube": "kustomize build overlays/minikube | kubectl delete -f -",
+      "gke": "kustomize build overlays/gke | kubectl apply -f -",
+      "delete-gke": "kustomize build overlays/gke | kubectl delete -f -"
+    }
+  }
+  
