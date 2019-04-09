@@ -4,7 +4,7 @@ import os
 
 # Configure the root logger with handlers
 _syslog_handler = SysLogHandler(address=os.environ.get("TRACKER_SYSLOG", "/dev/log"))
-_syslog_handler.setLevel(logging.ERROR)
+_syslog_handler.setLevel(logging.INFO)
 
 _stream_handler = logging.StreamHandler()
 _stream_handler.setLevel(logging.INFO)

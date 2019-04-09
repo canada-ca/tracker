@@ -16,7 +16,7 @@ L’analyse des domaines est répartie en deux parties : l’analyse même et le
 
 #### Le processus d’analyse
 
-L’analyse est effectuée par [domain-scan](https://github.com/cds-snc/domain-scan), au moyen d’un sous-ensemble de ses capacités, à savoir les scanneurs [pshtt](https://github.com/dhs-ncats/pshtt) et [sslyze](https://github.com/nabla-c0d3/sslyze).  
+L’analyse est effectuée par [domain-scan](https://github.com/18F/domain-scan), au moyen d’un sous-ensemble de ses capacités, à savoir les scanneurs [pshtt](https://github.com/dhs-ncats/pshtt) et [sslyze](https://github.com/nabla-c0d3/sslyze).  
 Le module `update.py` lance l’analyse. Malheureusement, puisque `domain-scan` a été rédigé comme une application réservée et pas une bibliothèque aux fins de réutilisation, le module `update` recoure à l’élaboration de commandes de ligne de commande et à leur exécution avec le module `subprocess`.
 
 #### Analyse des résultats

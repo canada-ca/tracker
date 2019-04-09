@@ -16,8 +16,7 @@ from data import update as data_update
 from data import processing
 from data import logger
 from data import models
-from data.preprocess import pull_data, insert_data
-
+from data.preprocess import pull_data, update_data
 
 
 LOGGER = logger.get_logger(__name__)
@@ -129,7 +128,7 @@ def run(
         domain_scan_args: typing.List[str],
 ) -> None:
 
-    update.callback(scanner, domains, output, domain_scan_args)
+    scan.callback(scanner, domains, output, domain_scan_args)
     the_date = get_date(None, "date", date)
     process.callback(the_date)
 
@@ -171,15 +170,15 @@ def preprocess(ctx: click.core.Context, output: typing.Optional[str]) -> None:
     help="Where to store the scan results",
 )
 @click.argument("domain-scan-args", nargs=-1, type=click.UNPROCESSED)
-def update(
+def scan(
         scanner: typing.List[str],
         domains: str,
         output: str,
         domain_scan_args: typing.List[str],
 ) -> None:
-    LOGGER.info("Starting update")
+    LOGGER.info("Starting scan")
     data_update.update(scanner, domains, output, transform_args(domain_scan_args))
-    LOGGER.info("Finished update")
+    LOGGER.info("Finished scan")
 
 
 @main.command(help="Process scan data")
@@ -201,7 +200,7 @@ def process(ctx: click.core.Context, date: str) -> None:
     LOGGER.info("[%s] Data now loaded into track-web.", date)
 
 
-@main.command(help="Populate DB with domains")
+@main.command(help="Update DB with modifications to domains and owners list")
 @click.option(
     "--owners",
     type=click.File("r", encoding="utf-8-sig"),
@@ -215,21 +214,16 @@ def process(ctx: click.core.Context, date: str) -> None:
 @click.option(
     "--ciphers",
     type=click.File("r", encoding="utf-8-sig"),
-    help="Path to csv of accepted ciphers",
-)
-@click.option(
-    "--upsert/--no-upsert",
-    default=False,
-    help="Flag to upsert lists based on the domain name for owners and domains, and the cipher name for ciphers",
+    help="Path to csv of ciphers",
 )
 @click.pass_context
-def insert(
+def update(
         ctx: click.core.Context,
         owners: typing.IO[str],
         domains: typing.IO[str],
-        ciphers: typing.IO[str],
-        upsert: bool,
+        ciphers: typing.IO[str]
 ) -> None:
 
     with models.Connection(ctx.obj.get("connection_string")) as connection:
-        insert_data(owners, domains, ciphers, upsert, connection, ctx.obj.get("batch_size"))
+        update_data(owners, domains, ciphers, connection)
+        LOGGER.info("'tracker update' completed.")

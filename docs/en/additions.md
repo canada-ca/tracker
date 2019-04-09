@@ -16,7 +16,7 @@ Domain scanning is broken into two parts: the scanning itself and processing the
 
 #### The scanning process
 
-The scanning is done by [domain-scan](https://github.com/cds-snc/domain-scan), using a subset of its capabilities, namely the [pshtt](https://github.com/dhs-ncats/pshtt) and [sslyze](https://github.com/nabla-c0d3/sslyze) scanners.  
+The scanning is done by [domain-scan](https://github.com/18F/domain-scan), using a subset of its capabilities, namely the [pshtt](https://github.com/dhs-ncats/pshtt) and [sslyze](https://github.com/nabla-c0d3/sslyze) scanners.  
 The scan is kicked off by the `update.py` module. Unfortunately since `domain-scan` was written as a dedicated application itself and not a library for re-use, the `update` module resorts to building command-line commands and running them with the `subprocess` module.
 
 #### Results analysis

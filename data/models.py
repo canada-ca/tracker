@@ -1,13 +1,14 @@
 import functools
 import itertools
-import logging
 import os
 from time import sleep
 import typing
 import pymongo
 from pymongo import UpdateOne
 
-LOGGER = logging.getLogger(__name__)
+from data import logger
+
+LOGGER = logger.get_logger(__name__)
 
 class TrackerModelError(Exception):
     pass
@@ -146,16 +147,16 @@ def _upsert_all(
         database: typing.Optional[str] = None,
         batch_size: typing.Optional[int] = None) -> None:
 
-    writes = (
+    writes = [
         UpdateOne(
             {'_collection': collection, key_col: document.get(key_col)},
             {'$set': {'_collection': collection, **document}},
             upsert=True,
         ) for document in documents
-    )
+    ]
 
     if not batch_size:
-        _retry_write(list(writes), client.get_database(database).get_collection('meta').bulk_write, MAX_TRIES)
+        _retry_write(writes, client.get_database(database).get_collection('meta').bulk_write, MAX_TRIES)
     else:
         document_stream = grouper(batch_size, writes)
         collect = client.get_database(database).get_collection('meta')
@@ -183,6 +184,24 @@ def _find(
     return client.get_database(database)\
                  .get_collection('meta')\
                  .find({'_collection': collection, **query}, {'_id': False, '_collection': False})
+
+def _find_with_id(
+        client: pymongo.MongoClient,
+        collection: str,
+        query: typing.Dict,
+        database: typing.Optional[str] = None) -> typing.Iterable[typing.Dict]:
+    return client.get_database(database)\
+                 .get_collection('meta')\
+                 .find({'_collection': collection, **query}, {'_collection': False})
+
+def _delete_one(
+        client: pymongo.MongoClient,
+        collection: str,
+        query: typing.Dict,
+        database: typing.Optional[str] = None) -> typing.Iterable[typing.Dict]:
+    return client.get_database(database)\
+                 .get_collection('meta')\
+                 .delete_one({'_collection': collection, **query})
 
 
 class _Collection():
@@ -217,6 +236,15 @@ class _Collection():
 
     def clear(self, batch_size: typing.Optional[int] = None) -> None:
         _clear_collection(self._client, self._name, self._db, batch_size)
+
+    def find(self, query) -> typing.Iterable[typing.Dict]:
+        return _find(self._client, self._name, query, self._db)
+
+    def find_with_id(self, query) -> typing.Iterable[typing.Dict]:
+        return _find_with_id(self._client, self._name, query, self._db)
+
+    def delete_one(self, query) -> typing.Iterable[typing.Dict]:
+        return _delete_one(self._client, self._name, query, self._db)
 
 
 class Connection():
@@ -257,6 +285,11 @@ class Connection():
     @property
     def flags(self) -> _Collection:
         return _Collection(self._client, 'flags')
+
+    @property
+    def historical(self) -> _Collection:
+        return _Collection(self._client, 'historical')
+
 
     def close(self) -> None:
         self._client.close()

@@ -133,6 +133,12 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
         LOGGER.info("Replacing government-wide totals.")
         connection.reports.replace({}, report)
 
+        LOGGER.info("Saving report to historical collection")
+        report2 = report.copy()
+        # to be able to query reports by date
+        report2['report_timestamp'] = datetime.datetime.today()
+        connection.historical.create(report2)
+
         LOGGER.info("Update cache validity with current time for track-web")
         connection.flags.replace({}, {"cache": datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d %H:%M")})
 
@@ -196,6 +202,9 @@ def load_domain_data() -> typing.Tuple[typing.Set, typing.Dict]:
 
     with owner_path.open('r', encoding='utf-8-sig', newline='') as csvfile:
         for row in csv.reader(csvfile):
+            if row == []: # deal with trailing newlines..
+                LOGGER.warning("Trailing newline detected in %s.", owner_path)
+                continue
             if row[0].lower().startswith("domain"):
                 continue
 

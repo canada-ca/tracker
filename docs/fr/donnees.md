@@ -71,7 +71,7 @@ Le présent document expose les données d’entrée et de sortie de la partie d
 
 Ces données doivent être extraites dans des fichiers locaux CSV au moyen de la commande `tracker preprocess` qui sera utilisée avec l’analyse. Ces données d’entrée sont stockées dans la base de données afin de faciliter la mise à jour de la liste des domaines ou la mise à jour des propriétaires de domaine sans devoir redéployer l’application.
 
-Le scanneur installé pour extraire les données au début de l’analyse signifie que pour mettre à jour ce qui est analysé, mettez simplement à jour les données dans la base de données (manuellement ou à l’aide de la commande `tracker insert`).
+Le scanneur installé pour extraire les données au début de l’analyse signifie que pour mettre à jour ce qui est analysé, mettez simplement à jour les données dans la base de données (manuellement ou à l’aide de la commande `tracker update`).
 
 
 ### `owner collection` - Liste des propriétaires de domaine pour le groupe de sous-domaines

@@ -28,7 +28,7 @@ git clone https://github.com/cds-snc/tracker.git
 cd tracker
 ```
 
-Vous devrez aussi télécharger le contenu du référentiel [domain-scan](https://github.com/cds-snc/domain-scan) également dans GitHub. Ce code est utilisé pour produire les résultats que le tableau de bord affiche.
+Vous devrez aussi télécharger le contenu du référentiel [domain-scan](https://github.com/18F/domain-scan) également dans GitHub. Ce code est utilisé pour produire les résultats que le tableau de bord affiche.
 ```bash
 git clone https://github.com/cds-snc/domain-scan.git
 ```

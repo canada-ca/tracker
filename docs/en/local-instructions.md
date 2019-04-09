@@ -27,9 +27,9 @@ git clone https://github.com/cds-snc/tracker.git
 cd tracker
 ```
 
-You will also need to download the contents of the [domain-scan](https://github.com/cds-snc/domain-scan) repository, also on GitHub. This code is used to do produce the results that the dashboard displays.
+You will also need to download the contents of the [domain-scan](https://github.com/18F/domain-scan) repository, also on GitHub. This code is used to do produce the results that the dashboard displays.
 ```bash
-git clone https://github.com/cds-snc/domain-scan.git
+git clone https://github.com/18F/domain-scan.git
 ```
 
 Keep the terminal you ran these commands in around for the following steps.

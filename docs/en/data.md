@@ -70,7 +70,7 @@ This document outlines the input and output data of the scanning portion of the 
 
 This data is meant to be pulled down into local CSVs via the `tracker preprocess` command to be used with the scanning. This input data is stored in the database to facilitate updating the list of domains to scan or updating the domain owners without needing to redeploy the application.
 
-The scanner being setup to pull the data at the start of the scan means that to update what gets scanned, simply update the data in the database (manually or via the `tracker insert` command)
+The scanner being setup to pull the data at the start of the scan means that to update what gets scanned, simply update the data in the database (manually or via the `tracker update` command)
 
 ### owner collection - List of domain owners for subdomain grouping
 
