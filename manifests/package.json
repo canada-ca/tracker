@@ -5,8 +5,8 @@
     "scripts": {
       "minikube": "kustomize build overlays/minikube | kubectl apply -f -",
       "delete-minikube": "kustomize build overlays/minikube | kubectl delete -f -",
-      "gke": "kustomize build overlays/gke | kubectl apply -f -",
-      "delete-gke": "kustomize build overlays/gke | kubectl delete -f -"
+      "azure": "kustomize build overlays/azure | kubectl apply -f -",
+      "delete-azure": "kustomize build overlays/azure | kubectl delete -f -"
     }
   }
   

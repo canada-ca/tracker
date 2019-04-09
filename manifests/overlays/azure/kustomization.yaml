@@ -1,8 +1,7 @@
 resources:
+  - certs-claim.yaml
   - csv-claim.yaml
-  - mongo-claim.yaml
-  - mongo-deployment.yaml
-  - mongo-service.yaml
+  - tracker-secrets.yaml
   - tracker-cronjob.yaml
   - track-web-deployment.yaml
   - track-web-service.yaml
