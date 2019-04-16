@@ -26,6 +26,12 @@ spec:
           securityContext:
             privileged: true
           name: track-web
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
           env:
             - name: TRACKER_MONGO_URI
               valueFrom:
