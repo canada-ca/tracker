@@ -23,7 +23,7 @@ import re
 import subprocess
 import typing
 from urllib.parse import urlparse
-from shutil import copyfile
+from shutil import copyfile, copy
 import slugify
 
 # Import all the constants from data/env.py.
@@ -119,6 +119,7 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
 
     # Reset the database.
     with models.Connection(connection_string) as connection:
+<<<<<<< HEAD
         LOGGER.info("Updating or creating all domains.")
 
         # get remote list of domains
@@ -166,9 +167,35 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
                 LOGGER.error("Failed deletion of organization from 'organizations' collection: %s", record)
             else:
                 LOGGER.warning("Organization deleted from 'organizations' collection: %s", record)
+=======
+        LOGGER.info("Clearing the domains.")
+        connection.domains.clear(batch_size=batch_size)
+        try:
+            LOGGER.info("Creating all domains.")
+            connection.domains.create_all((results[domain_name] for domain_name in sorted_domains), batch_size=batch_size)
+        except Exception:
+            LOGGER.info("An error was encountered while inserting domains into the database.")
+            backup_scan_results(pathlib.Path(os.path.join(env.SCAN_DATA, "results")))
 
-        LOGGER.info("Replacing government-wide totals.")
-        connection.reports.replace({}, report)
+        LOGGER.info("Clearing organizations.")
+        connection.organizations.clear(batch_size=batch_size)
+>>>>>>> Implemented error handling. Backs up all cached scan result files by copying to a new directory prior to implementation of Azure storage.
+
+        try:
+            LOGGER.info("Creating all organizations.")
+            connection.organizations.create_all(
+                (organizations[organization_name] for organization_name in sorted_organizations), batch_size=batch_size
+            )
+        except Exception:
+            LOGGER.info("An error was encountered while inserting organizations into the database.")
+            backup_scan_results(pathlib.Path(os.path.join(env.SCAN_DATA, "results")))
+
+        try:
+            LOGGER.info("Replacing government-wide totals.")
+            connection.reports.replace({}, report)
+        except Exception:
+            LOGGER.info("An error was encountered while replacing government-wide totals within the database.")
+            backup_scan_results(pathlib.Path(os.path.join(env.SCAN_DATA, "results")))
 
         LOGGER.info("Saving report to historical collection")
         report2 = report.copy()
@@ -182,6 +209,12 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
     # Print and exit
     print_report(report)
 
+def backup_scan_results(path: pathlib.Path):
+    # Iterate through each cached .csv results file stored within cache
+    path_data = path.glob('**/*.csv')
+    for file in path_data:
+        # Copy the file to a directory to be backed up to azure cloud storage
+        copy(str(file), '/tracker/data/backupScanResults/')
 
 def cache_file(uri: str) -> pathlib.Path:
     LOGGER.info("caching %s", uri)
