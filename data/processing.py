@@ -84,6 +84,7 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
                 "sources": ["canada-gov"],
                 "live": True,
                 "redirect": boolean_for(pshtt["Redirect"]),
+                "redirect_url": urlparse(pshtt["Redirect To"]).geturl(),
                 "canonical": pshtt["Canonical URL"],
                 "exclude": {},
             }
@@ -118,17 +119,53 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
 
     # Reset the database.
     with models.Connection(connection_string) as connection:
-        LOGGER.info("Clearing the domains.")
-        connection.domains.clear(batch_size=batch_size)
-        LOGGER.info("Creating all domains.")
-        connection.domains.create_all((results[domain_name] for domain_name in sorted_domains), batch_size=batch_size)
+        LOGGER.info("Updating or creating all domains.")
 
-        LOGGER.info("Clearing organizations.")
-        connection.organizations.clear(batch_size=batch_size)
-        LOGGER.info("Creating all organizations.")
-        connection.organizations.create_all(
-            (organizations[organization_name] for organization_name in sorted_organizations), batch_size=batch_size
-        )
+        # get remote list of domains
+        remote_in_domains = [document['domain'] for document in connection.domains.all()]
+
+        # use set logic to find the set of domains that need to be removed
+        id_removals = set(remote_in_domains) - set(sorted_domains)
+
+        # add scan date in all domain records
+        scan_date(results, date)
+
+        connection.domains.upsert_all((results[domain_name] for domain_name in sorted_domains),
+                                      'domain', batch_size=batch_size)
+
+        LOGGER.info("Domain removals: %s", id_removals)
+        # Delete domain results from 'domains' table
+        for record in id_removals:
+            resp = connection.domains.delete_one({"domain": record})
+            if resp.deleted_count != 1:
+                LOGGER.error("Failed deletion of domain from 'domains' collection: %s", record)
+            else:
+                LOGGER.warning("Domain deleted from 'domains' collection: %s", record)
+
+        LOGGER.info("Updating or creating organizations.")
+
+        # add scan date in all org records
+        scan_date(organizations, date)
+
+        # get remote list of org
+        remote_in_org = [document['slug'] for document in connection.organizations.all()]
+
+        connection.organizations.upsert_all(
+            (organizations[organization_name] for organization_name in sorted_organizations),
+            'slug', batch_size=batch_size)
+
+        # use set logic to find the set of input_domains that need to be removed
+        id_removals = set(remote_in_org) - set(sorted_organizations)
+
+        LOGGER.info("Organization removals: %s", id_removals)
+
+        # Delete org results from 'organizations' table
+        for record in id_removals:
+            resp = connection.organizations.delete_one({"slug": record})
+            if resp.deleted_count != 1:
+                LOGGER.error("Failed deletion of organization from 'organizations' collection: %s", record)
+            else:
+                LOGGER.warning("Organization deleted from 'organizations' collection: %s", record)
 
         LOGGER.info("Replacing government-wide totals.")
         connection.reports.replace({}, report)
@@ -646,10 +683,10 @@ def https_behavior_for(pshtt, sslyze, accepted_ciphers, parent_preloaded=None):
 
     https_compliant = (behavior >= 2) and (hsts >= 2)
     # Very specific and intentional checks on bod_crypto and good_cert
-    #   - bod_crypto != 0 means it could be -1, which is an indication that we did not get results
-    #     and so are giving them the benifit of the doubt
-    #   - good_cert is not False means it can be None, which has the same meaning as above
-    itpin_compliant = https_compliant and bod_crypto != 0 and good_cert is not False
+    #   - bod_crypto if -1, which is an indication that we did not get results
+    #     and therefore it can't be ITPIN compliant
+    #   - good_cert has to be true in order to be compliant as well i.e. can't be None
+    itpin_compliant = https_compliant and bod_crypto > 0 and good_cert
     report["compliant"] = int(itpin_compliant) # Cast to int to help presentation layer
 
     return report
@@ -827,3 +864,9 @@ def boolean_for(string):
     elif string == "True":
         return True
     return None
+
+
+# set scan date for all records
+def scan_date(documents: typing.Iterable[typing.Dict], date: str):
+    for value in documents.values():
+        value.update({"scan_date": date})
