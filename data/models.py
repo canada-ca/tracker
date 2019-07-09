@@ -4,14 +4,14 @@ import os
 from time import sleep
 import typing
 import pymongo
-from pymongo import UpdateOne
-
 from data import logger
 
 LOGGER = logger.get_logger(__name__)
 
+
 class TrackerModelError(Exception):
     pass
+
 
 class InsertionError(TrackerModelError):
     def __init__(self, *args, errors, **kwargs):
@@ -148,7 +148,7 @@ def _upsert_all(
         batch_size: typing.Optional[int] = None) -> None:
 
     writes = [
-        UpdateOne(
+        pymongo.UpdateOne(
             {'_collection': collection, key_col: document.get(key_col)},
             {'$set': {'_collection': collection, **document}},
             upsert=True,
