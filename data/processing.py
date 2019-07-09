@@ -122,7 +122,6 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
 
     # Reset the database.
     with models.Connection(connection_string) as connection:
-<<<<<<< HEAD
         LOGGER.info("Updating or creating all domains.")
 
         # get remote list of domains
@@ -170,7 +169,7 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
                 LOGGER.error("Failed deletion of organization from 'organizations' collection: %s", record)
             else:
                 LOGGER.warning("Organization deleted from 'organizations' collection: %s", record)
-=======
+
         LOGGER.info("Clearing the domains.")
         connection.domains.clear(batch_size=batch_size)
         try:
@@ -181,10 +180,6 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
 
         LOGGER.info("Clearing organizations.")
         connection.organizations.clear(batch_size=batch_size)
-<<<<<<< HEAD
->>>>>>> Implemented error handling. Backs up all cached scan result files by copying to a new directory prior to implementation of Azure storage.
-=======
->>>>>>> dd131f2bbbc3a116670f1f046557945ac88b8656
 
         try:
             LOGGER.info("Creating all organizations.")
