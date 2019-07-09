@@ -181,7 +181,10 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
 
         LOGGER.info("Clearing organizations.")
         connection.organizations.clear(batch_size=batch_size)
+<<<<<<< HEAD
 >>>>>>> Implemented error handling. Backs up all cached scan result files by copying to a new directory prior to implementation of Azure storage.
+=======
+>>>>>>> dd131f2bbbc3a116670f1f046557945ac88b8656
 
         try:
             LOGGER.info("Creating all organizations.")
