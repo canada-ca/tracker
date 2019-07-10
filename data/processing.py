@@ -177,7 +177,7 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
             connection.domains.create_all((results[domain_name] for domain_name in sorted_domains),
                                           batch_size=batch_size)
         except Exception:
-            LOGGER.info("An error was encountered while inserting domains into the database.")
+            LOGGER.exception("An error was encountered while inserting domains into the database.")
 
         LOGGER.info("Clearing organizations.")
         connection.organizations.clear(batch_size=batch_size)
@@ -188,13 +188,13 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
                 (organizations[organization_name] for organization_name in sorted_organizations), batch_size=batch_size
             )
         except Exception:
-            LOGGER.info("An error was encountered while inserting organizations into the database.")
+            LOGGER.exception("An error was encountered while inserting organizations into the database.")
 
         try:
             LOGGER.info("Replacing government-wide totals.")
             connection.reports.replace({}, report)
         except Exception:
-            LOGGER.info("An error was encountered while replacing government-wide totals within the database.")
+            LOGGER.exception("An error was encountered while replacing government-wide totals within the database.")
 
         LOGGER.info("Saving report to historical collection")
         report2 = report.copy()
