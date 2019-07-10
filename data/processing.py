@@ -174,7 +174,8 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
         connection.domains.clear(batch_size=batch_size)
         try:
             LOGGER.info("Creating all domains.")
-            connection.domains.create_all((results[domain_name] for domain_name in sorted_domains), batch_size=batch_size)
+            connection.domains.create_all((results[domain_name] for domain_name in sorted_domains),
+                batch_size=batch_size)
         except Exception:
             LOGGER.info("An error was encountered while inserting domains into the database.")
 
