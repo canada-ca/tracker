@@ -23,3 +23,6 @@ pip-selfcheck.json
 
 csv/
 *.csv
+
+# IDE Files
+.idea/
