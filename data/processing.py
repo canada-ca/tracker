@@ -219,14 +219,14 @@ def backup_scan_results(path: pathlib.Path):
     # Attempt to copy result directory
     try:
         copytree(str(os.path.join(str(path), 'results')), str(os.path.join(result_path, str(datetime.datetime.now()))))
-    except Error as e:
-        LOGGER.exception("Error occurred while backing up scan result files: " + str(e))
+    except Error as err:
+        LOGGER.exception("Error occurred while backing up scan result files: %s", str(err))
 
     # Attempt to copy cache directory
     try:
         copytree(str(os.path.join(str(path), 'cache')), str(os.path.join(cache_path, str(datetime.datetime.now()))))
-    except Error as e:
-        LOGGER.exception("Error occurred while backing up scan cache files: " + str(e))
+    except Error as err:
+        LOGGER.exception("Error occurred while backing up scan cache files: %s", str(err))
 def cache_file(uri: str) -> pathlib.Path:
     LOGGER.info("caching %s", uri)
     mkdir_p(SCAN_CACHE)
