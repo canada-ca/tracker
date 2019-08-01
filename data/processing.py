@@ -179,22 +179,15 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
                                           batch_size=batch_size)
         except pymongo.errors.DocumentTooLarge as exc:
             LOGGER.exception("An error was encountered while inserting domains into the database. "
-                             "Document exceeds PyMongo maximum document size: %s", str(exc))
+                             "Document exceeds PyMongo maximum document size.")
         except pymongo.errors.WriteConcernError as exc:
-            LOGGER.exception("An error was encountered while inserting domains into the database. "
-                             "Exception details (Write Concern Error): %s", str(exc))
+            LOGGER.exception("An error was encountered while inserting domains into the database (Write Concern Error).")
         except pymongo.errors.WriteError as exc:
-            LOGGER.exception("An error was encountered while inserting domains into the database. "
-                             "Exception details (Write Error): %s", str(exc))
+            LOGGER.exception("An error was encountered while inserting domains into the database (Write Error).")
         except pymongo.errors.OperationFailure as exc:
-            LOGGER.exception("An error was encountered while inserting domains into the database. "
-                             "Exception details (Operation Failure): %s", str(exc))
-        except pymongo.errors.PyMongoError as exc:
-            LOGGER.exception("An error was encountered while inserting domains into the database. "
-                             "Exception details (PyMongoError): %s", str(exc))
-        except Exception as exc:
-            LOGGER.exception("An unknown error was encountered while inserting domains into the database. "
-                             "Exception details: %s", str(exc))
+            LOGGER.exception("An error was encountered while inserting domains into the database (Operation Failure).")
+        except (pymongo.errors.PyMongoError, Exception) as exc:
+            LOGGER.exception("An unknown error was encountered while inserting domains into the database.")
 
         LOGGER.info("Clearing organizations.")
         connection.organizations.clear(batch_size=batch_size)
@@ -206,44 +199,36 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
             )
         except pymongo.errors.DocumentTooLarge as exc:
             LOGGER.exception("An error was encountered while inserting organizations into the database. "
-                             "Document exceeds PyMongo maximum document size: %s", str(exc))
+                             "Document exceeds PyMongo maximum document size.")
         except pymongo.errors.WriteConcernError as exc:
-            LOGGER.exception("An error was encountered while inserting organizations into the database. "
-                             "Exception details (Write Concern Error): %s", str(exc))
+            LOGGER.exception(
+                "An error was encountered while inserting organizations into the database (Write Concern Error).")
         except pymongo.errors.WriteError as exc:
-            LOGGER.exception("An error was encountered while inserting organizations into the database. "
-                             "Exception details (Write Error): %s", str(exc))
+            LOGGER.exception("An error was encountered while inserting organizations into the database (Write Error).")
         except pymongo.errors.OperationFailure as exc:
-            LOGGER.exception("An error was encountered while inserting organizations into the database. "
-                             "Exception details (Operation Failure): %s", str(exc))
-        except pymongo.errors.PyMongoError as exc:
-            LOGGER.exception("An error was encountered while inserting organizations into the database. "
-                             "Exception details (PyMongoError): %s", str(exc))
-        except Exception as exc:
-            LOGGER.exception("An unknown error was encountered while inserting organizations into the database. "
-                             "Exception details: %s", str(exc))
+            LOGGER.exception("An error was encountered while inserting organizations into the database "
+                             "(Operation Failure).")
+        except (pymongo.errors.PyMongoError, Exception) as exc:
+            LOGGER.exception("An unknown error was encountered while inserting organizations into the database.")
 
         try:
             LOGGER.info("Replacing government-wide totals.")
             connection.reports.replace({}, report)
         except pymongo.errors.DocumentTooLarge as exc:
             LOGGER.exception("An error was encountered while replacing government-wide totals within the database. "
-                             "Document exceeds PyMongo maximum document size: %s", str(exc))
+                             "Document exceeds PyMongo maximum document size.")
         except pymongo.errors.WriteConcernError as exc:
-            LOGGER.exception("An error was encountered while replacing government-wide totals within the database. "
-                             "Exception details (Write Concern Error): %s", str(exc))
+            LOGGER.exception("An error was encountered while replacing government-wide totals within the database"
+                             " (Write Concern Error).")
         except pymongo.errors.WriteError as exc:
-            LOGGER.exception("An error was encountered while replacing government-wide totals within the database. "
-                             "Exception details (Write Error): %s", str(exc))
+            LOGGER.exception("An error was encountered while replacing government-wide totals within the database"
+                             " (Write Error).")
         except pymongo.errors.OperationFailure as exc:
-            LOGGER.exception("An error was encountered while replacing government-wide totals within the database. "
-                             "Exception details (Operation Failure): %s", str(exc))
-        except pymongo.errors.PyMongoError as exc:
-            LOGGER.exception("An error was encountered while replacing government-wide totals within the database. "
-                             "Exception details (PyMongoError): %s", str(exc))
-        except Exception as exc:
-            LOGGER.exception("An unknown error was encountered while replacing government-wide totals within the "
-                             "database. Exception details: %s", str(exc))
+            LOGGER.exception("An error was encountered while replacing government-wide totals within the database"
+                             " (Operation Failure).")
+        except (pymongo.errors.PyMongoError, Exception) as exc:
+            LOGGER.exception("An unknown error was encountered while replacing government-wide totals within the"
+                             " database.")
 
         LOGGER.info("Saving report to historical collection")
         report2 = report.copy()
