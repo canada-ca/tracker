@@ -1,0 +1,3 @@
+[submodule "domain-scan"]
+	path = domain-scan
+	url = https://github.com/18F/domain-scan.git

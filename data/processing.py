@@ -23,7 +23,9 @@ import re
 import subprocess
 import typing
 from urllib.parse import urlparse
+
 from shutil import copyfile, copytree, Error
+
 import slugify
 import pymongo.errors
 
@@ -118,8 +120,10 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
     report = full_report(results)
     report["report_date"] = date
 
+
     # Backup cached results to the specified directory ahead of database insertions
     backup_scan_results(pathlib.Path(env.SCAN_DATA))
+
 
     # Reset the database.
     with models.Connection(connection_string) as connection:
@@ -170,6 +174,7 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
                 LOGGER.error("Failed deletion of organization from 'organizations' collection: %s", record)
             else:
                 LOGGER.warning("Organization deleted from 'organizations' collection: %s", record)
+
 
         LOGGER.info("Clearing the domains.")
         connection.domains.clear(batch_size=batch_size)
@@ -245,6 +250,7 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
             LOGGER.exception("An unknown error was encountered while replacing government-wide totals within the"
                              " database. Exception details: %s", str(exc))
 
+
         LOGGER.info("Saving report to historical collection")
         report2 = report.copy()
         # to be able to query reports by date
@@ -257,10 +263,12 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
     # Print and exit
     print_report(report)
 
+
 def backup_scan_results(path: pathlib.Path):
     # If the backup results directory has NOT been created, create it along with subdirectories
     if not os.path.isdir(str(os.path.join(os.getcwd(), 'data/backupScanResults'))):
         os.mkdir(str(os.path.join(os.getcwd(), 'data/backupScanResults')))
+
 
     result_path = os.path.join(os.getcwd(), 'data/backupScanResults/results')
     cache_path = os.path.join(os.getcwd(), 'data/backupScanResults/cache')

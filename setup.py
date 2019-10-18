@@ -18,7 +18,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
     ],
     install_requires=[
-        'pyyaml==3.12',
+        'pyyaml==5.1',
         'pymongo==3.6.1',
         'ujson==1.35',
         'click==6.7',
