@@ -22,12 +22,12 @@ import os
 import re
 import subprocess
 import typing
-import click
 from urllib.parse import urlparse
 
 from shutil import copyfile, copytree, Error
 
 import slugify
+import click
 import pymongo.errors
 
 # Import all the constants from data/env.py.
