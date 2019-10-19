@@ -49,7 +49,8 @@ MIN_HSTS_AGE = 31536000 # one year
 # All database operations are made in the run() method.
 #
 # This method blows away the database and rebuilds it from the given data.
-def run(date: typing.Optional[str], connection_string: str, batch_size: typing.Optional[int] = None):
+def run(date: typing.Optional[str], connection_string: str,
+        batch_size: typing.Optional[int] = None):
     if date is None:
         date = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
 
