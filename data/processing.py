@@ -22,6 +22,7 @@ import os
 import re
 import subprocess
 import typing
+import click
 from urllib.parse import urlparse
 
 from shutil import copyfile, copytree, Error
@@ -49,9 +50,16 @@ MIN_HSTS_AGE = 31536000 # one year
 # All database operations are made in the run() method.
 #
 # This method blows away the database and rebuilds it from the given data.
-def run(date: typing.Optional[str], connection_string: str, batch_size: typing.Optional[int] = None):
+def run(date: typing.Optional[str], _ctx: click.core.Context):
     if date is None:
         date = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
+
+    connection_string = _ctx.obj.get("connection_string")
+
+    if _ctx.obj.get("batch_size") is None:
+        batch_size = None
+    else:
+        batch_size = _ctx.obj.get("batch_size")
 
     # Read in domains and organizations from domains.csv.
     # Returns dicts of values ready for saving as Domain and Agency objects.
