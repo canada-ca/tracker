@@ -196,7 +196,7 @@ def process(ctx: click.core.Context, date: str) -> None:
         return
 
     LOGGER.info("[%s] Loading data into track-web.", date)
-    processing.run(date, ctx)
+    processing.run(date, ctx.obj.get("connection_string"), ctx.obj.get("batch_size"))
     LOGGER.info("[%s] Data now loaded into track-web.", date)
 
 
