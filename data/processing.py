@@ -178,78 +178,16 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
 
         LOGGER.info("Clearing the domains.")
         connection.domains.clear(batch_size=batch_size)
-        try:
-            LOGGER.info("Creating all domains.")
-            connection.domains.create_all((results[domain_name] for domain_name in sorted_domains),
-                                          batch_size=batch_size)
-        except pymongo.errors.DocumentTooLarge:
-            LOGGER.exception("An error was encountered while inserting domains into the database. "
-                             "Document exceeds PyMongo maximum document size.")
-        except pymongo.errors.WriteConcernError as exc:
-            LOGGER.exception("An error was encountered while inserting domains into the database"
-                             " (Write Concern Error). Exception details: %s", str(exc.details))
-        except pymongo.errors.WriteError as exc:
-            LOGGER.exception("An error was encountered while inserting domains into the database"
-                             " (Write Error). Exception details: %s", str(exc.details))
-        except pymongo.errors.OperationFailure as exc:
-            LOGGER.exception("An error was encountered while inserting domains into the database"
-                             " (Operation Failure). Exception details: %s", str(exc.details))
-        except pymongo.errors.PyMongoError:
-            LOGGER.exception("An error was encountered while inserting domains into the database"
-                             " (PyMongoError).")
-        except Exception as exc:
-            LOGGER.exception("An unknown error was encountered while inserting domains into the database."
-                             " Exception details: %s", str(exc))
+
+        _create_domains(connection, results, sorted_domains, batch_size)
+
 
         LOGGER.info("Clearing organizations.")
         connection.organizations.clear(batch_size=batch_size)
 
-        try:
-            LOGGER.info("Creating all organizations.")
-            connection.organizations.create_all(
-                (organizations[organization_name] for organization_name in sorted_organizations), batch_size=batch_size
-            )
-        except pymongo.errors.DocumentTooLarge:
-            LOGGER.exception("An error was encountered while inserting organizations into the database. "
-                             "Document exceeds PyMongo maximum document size.")
-        except pymongo.errors.WriteConcernError as exc:
-            LOGGER.exception("An error was encountered while inserting organizations into the database"
-                             " (Write Concern Error). Exception details: %s", str(exc.details))
-        except pymongo.errors.WriteError as exc:
-            LOGGER.exception("An error was encountered while inserting organizations into the database"
-                             " (Write Error). Exception details: %s", str(exc.details))
-        except pymongo.errors.OperationFailure as exc:
-            LOGGER.exception("An error was encountered while inserting organizations into the database"
-                             " (Operation Failure). Exception details: %s", str(exc.details))
-        except pymongo.errors.PyMongoError:
-            LOGGER.exception("An error was encountered while inserting organizations into the database"
-                             " (PyMongoError).")
-        except Exception as exc:
-            LOGGER.exception("An unknown error was encountered while inserting organizations into the database."
-                             " Exception details: %s", str(exc))
+        _create_organizations(connection, organizations, sorted_organizations, batch_size)
 
-        try:
-            LOGGER.info("Replacing government-wide totals.")
-            connection.reports.replace({}, report)
-        except pymongo.errors.DocumentTooLarge:
-            LOGGER.exception("An error was encountered while replacing government-wide totals within the database. "
-                             "Document exceeds PyMongo maximum document size.")
-        except pymongo.errors.WriteConcernError as exc:
-            LOGGER.exception("An error was encountered while replacing government-wide totals within the database"
-                             " (Write Concern Error). Exception details: %s", str(exc.details))
-        except pymongo.errors.WriteError as exc:
-            LOGGER.exception("An error was encountered while replacing government-wide totals within the database"
-                             " (Write Error). Exception details: %s", str(exc.details))
-        except pymongo.errors.OperationFailure as exc:
-            LOGGER.exception("An error was encountered while replacing government-wide totals within the database"
-                             " (Operation Failure). Exception details: %s", str(exc.details))
-        except pymongo.errors.PyMongoError:
-            LOGGER.exception("An error was encountered while replacing government-wide totals within the"
-                             " database (PyMongoError).")
-        except Exception as exc:
-            LOGGER.exception("An unknown error was encountered while replacing government-wide totals within the"
-                             " database. Exception details: %s", str(exc))
-
+        _replace_totals(connection, report)
 
         LOGGER.info("Saving report to historical collection")
         report2 = report.copy()
@@ -971,3 +909,66 @@ def boolean_for(string):
 def scan_date(documents: typing.Iterable[typing.Dict], date: str):
     for value in documents.values():
         value.update({"scan_date": date})
+
+def _create_domains(connection: models.Connection, results, sorted_domains, batch_size):
+    try:
+        LOGGER.info("Creating all domains.")
+        connection.domains.create_all((results[domain_name] for domain_name in sorted_domains),
+                                      batch_size=batch_size)
+    except pymongo.errors.DocumentTooLarge:
+        LOGGER.exception("An error was encountered while inserting domains into the database. "
+                         "Document exceeds PyMongo maximum document size.")
+    except pymongo.errors.WriteConcernError as exc:
+        LOGGER.exception("An error was encountered while inserting domains into the database"
+                         " (Write Concern Error). Exception details: %s", str(exc.details))
+    except pymongo.errors.WriteError as exc:
+        LOGGER.exception("An error was encountered while inserting domains into the database"
+                         " (Write Error). Exception details: %s", str(exc.details))
+    except pymongo.errors.OperationFailure as exc:
+        LOGGER.exception("An error was encountered while inserting domains into the database"
+                         " (Operation Failure). Exception details: %s", str(exc.details))
+    except pymongo.errors.PyMongoError:
+        LOGGER.exception("An error was encountered while inserting domains into the database"
+                         " (PyMongoError).")
+
+def _create_organizations(connection: models.Connection, organizations, sorted_organizations, batch_size):
+    try:
+        LOGGER.info("Creating all organizations.")
+        connection.organizations.create_all(
+            (organizations[organization_name] for organization_name in sorted_organizations), batch_size=batch_size
+        )
+    except pymongo.errors.DocumentTooLarge:
+        LOGGER.exception("An error was encountered while inserting organizations into the database. "
+                         "Document exceeds PyMongo maximum document size.")
+    except pymongo.errors.WriteConcernError as exc:
+        LOGGER.exception("An error was encountered while inserting organizations into the database"
+                         " (Write Concern Error). Exception details: %s", str(exc.details))
+    except pymongo.errors.WriteError as exc:
+        LOGGER.exception("An error was encountered while inserting organizations into the database"
+                         " (Write Error). Exception details: %s", str(exc.details))
+    except pymongo.errors.OperationFailure as exc:
+        LOGGER.exception("An error was encountered while inserting organizations into the database"
+                         " (Operation Failure). Exception details: %s", str(exc.details))
+    except pymongo.errors.PyMongoError:
+        LOGGER.exception("An error was encountered while inserting organizations into the database"
+                         " (PyMongoError).")
+
+def _replace_totals(connection: models.Connection, report):
+    try:
+        LOGGER.info("Replacing government-wide totals.")
+        connection.reports.replace({}, report)
+    except pymongo.errors.DocumentTooLarge:
+        LOGGER.exception("An error was encountered while replacing government-wide totals within the database. "
+                         "Document exceeds PyMongo maximum document size.")
+    except pymongo.errors.WriteConcernError as exc:
+        LOGGER.exception("An error was encountered while replacing government-wide totals within the database"
+                         " (Write Concern Error). Exception details: %s", str(exc.details))
+    except pymongo.errors.WriteError as exc:
+        LOGGER.exception("An error was encountered while replacing government-wide totals within the database"
+                         " (Write Error). Exception details: %s", str(exc.details))
+    except pymongo.errors.OperationFailure as exc:
+        LOGGER.exception("An error was encountered while replacing government-wide totals within the database"
+                         " (Operation Failure). Exception details: %s", str(exc.details))
+    except pymongo.errors.PyMongoError:
+        LOGGER.exception("An error was encountered while replacing government-wide totals within the"
+                         " database (PyMongoError).")
