@@ -197,9 +197,6 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
         except pymongo.errors.PyMongoError:
             LOGGER.exception("An error was encountered while inserting domains into the database"
                              " (PyMongoError).")
-        except Exception as exc:
-            LOGGER.exception("An unknown error was encountered while inserting domains into the database."
-                             " Exception details: %s", str(exc))
 
         LOGGER.info("Clearing organizations.")
         connection.organizations.clear(batch_size=batch_size)
@@ -224,9 +221,6 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
         except pymongo.errors.PyMongoError:
             LOGGER.exception("An error was encountered while inserting organizations into the database"
                              " (PyMongoError).")
-        except Exception as exc:
-            LOGGER.exception("An unknown error was encountered while inserting organizations into the database."
-                             " Exception details: %s", str(exc))
 
         try:
             LOGGER.info("Replacing government-wide totals.")
@@ -246,9 +240,6 @@ def run(date: typing.Optional[str], connection_string: str, batch_size: typing.O
         except pymongo.errors.PyMongoError:
             LOGGER.exception("An error was encountered while replacing government-wide totals within the"
                              " database (PyMongoError).")
-        except Exception as exc:
-            LOGGER.exception("An unknown error was encountered while replacing government-wide totals within the"
-                             " database. Exception details: %s", str(exc))
 
 
         LOGGER.info("Saving report to historical collection")
