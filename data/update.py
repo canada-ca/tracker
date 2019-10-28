@@ -88,6 +88,9 @@ def scan_domains(
     if options.get("lambda") and (options.get("serial", None) is None):
         full_command += ["--workers=%i" % env.LAMBDA_WORKERS]
 
+    if options.get("debug"):
+        full_command += ["2>&1 | tee tracker_debug_output.txt"]
+
     shell_out(full_command)
 
 
