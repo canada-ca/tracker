@@ -21,7 +21,6 @@ _stream_handler.setFormatter(_stream_formatter)
 logging.getLogger().addHandler(_syslog_handler)
 logging.getLogger().addHandler(_stream_handler)
 
-
 def unwrap_exception_message(exc: BaseException, join: str = " - ") -> str:
     if exc.__context__:
         if exc.args:
@@ -35,3 +34,9 @@ def get_logger(name: str) -> logging.Logger:
     logger.setLevel(logging.INFO)
 
     return logger
+
+# Log handler for --debug mode
+def debug_logger(file: str):
+    _debug_handler = logging.StreamHandler(file)
+    _debug_handler.setFormatter(_stream_formatter)
+    logging.getLogger().addHandler(_debug_handler)
