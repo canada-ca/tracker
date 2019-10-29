@@ -102,7 +102,6 @@ def shell_out(command, env=None, debug=False):
         LOGGER.info("[cmd] %s", str.join(" ", command))
         if debug:
             shell_cmd = str.join(" ", command)
-            logger.debug_logger("debug_output.txt")
             response = subprocess.check_output(shell_cmd, shell=True, env=env)
         else:
             response = subprocess.check_output(command, shell=False, env=env)

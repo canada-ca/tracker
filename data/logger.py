@@ -34,9 +34,3 @@ def get_logger(name: str) -> logging.Logger:
     logger.setLevel(logging.INFO)
 
     return logger
-
-# Log handler for --debug mode
-def debug_logger(file: str):
-    _debug_handler = logging.StreamHandler(file)
-    _debug_handler.setFormatter(_stream_formatter)
-    logging.getLogger().addHandler(_debug_handler)
