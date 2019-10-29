@@ -89,9 +89,8 @@ def scan_domains(
         full_command += ["--workers=%i" % env.LAMBDA_WORKERS]
 
     if options.get("debug"):
-        debug_output = open("tracker_debug_output", "w")
-        debug_output.write("-- START OF OUTPUT --")
-        debug_output.close()
+        LOGGER.info("Tracker running in debug mode...")
+        full_command += ["2>&1 | tee debug_output.txt"]
         shell_out(full_command, debug=True)
     else:
         shell_out(full_command)
@@ -101,13 +100,13 @@ def scan_domains(
 def shell_out(command, env=None, debug=False):
     try:
         LOGGER.info("[cmd] %s", str.join(" ", command))
-        response = subprocess.check_output(command, shell=False, env=env)
+        if debug:
+            shell_cmd = str.join(" ", command)
+            response = subprocess.check_output(shell_cmd, shell=True, env=env)
+        else:
+            response = subprocess.check_output(command, shell=False, env=env)
         output = str(response, encoding="UTF-8")
         LOGGER.info(output)
-        if(debug):
-            debug_output = open("tracker_debug_output", "a")
-            debug_output.write(output)
-            debug_output.close()
         return output
     except subprocess.CalledProcessError:
         LOGGER.critical("Error running %s.", str(command))
