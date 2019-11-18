@@ -21,7 +21,6 @@ _stream_handler.setFormatter(_stream_formatter)
 logging.getLogger().addHandler(_syslog_handler)
 logging.getLogger().addHandler(_stream_handler)
 
-
 def unwrap_exception_message(exc: BaseException, join: str = " - ") -> str:
     if exc.__context__:
         if exc.args:

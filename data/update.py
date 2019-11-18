@@ -65,7 +65,6 @@ def scan_domains(
         domains,
         "--scan=%s" % ','.join(scanners),
         "--output=%s" % output,
-        # "--debug", # always capture full output
         "--sort",
         "--meta",
     ]
@@ -88,14 +87,23 @@ def scan_domains(
     if options.get("lambda") and (options.get("serial", None) is None):
         full_command += ["--workers=%i" % env.LAMBDA_WORKERS]
 
-    shell_out(full_command)
+    if options.get("debug"):
+        LOGGER.info("Tracker running in debug mode...")
+        full_command += ["2>&1 | tee debug_output.txt"]
+        shell_out(full_command, debug=True)
+    else:
+        shell_out(full_command)
 
 
 ## Utils function for shelling out.
-def shell_out(command, env=None):
+def shell_out(command, env=None, debug=False):
     try:
         LOGGER.info("[cmd] %s", str.join(" ", command))
-        response = subprocess.check_output(command, shell=False, env=env)
+        if debug:
+            shell_cmd = str.join(" ", command)
+            response = subprocess.check_output(shell_cmd, shell=True, env=env)
+        else:
+            response = subprocess.check_output(command, shell=False, env=env)
         output = str(response, encoding="UTF-8")
         LOGGER.info(output)
         return output
