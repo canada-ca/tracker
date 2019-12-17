@@ -920,7 +920,7 @@ def _create_domains(connection: models.Connection, results, sorted_domains, batc
                                       batch_size=batch_size)
     except pymongo.errors.BulkWriteError as exc:
         LOGGER.exception("BulkWrite error encountered while inserting domains into the database. "
-                     "Exception details: %s", str(exc.details))
+                         "Exception details: %s", str(exc.details))
     except pymongo.errors.DocumentTooLarge:
         LOGGER.exception("An error was encountered while inserting domains into the database. "
                          "Document exceeds PyMongo maximum document size.")
@@ -945,7 +945,7 @@ def _create_organizations(connection: models.Connection, organizations, sorted_o
         )
     except pymongo.errors.BulkWriteError as exc:
         LOGGER.exception("BulkWrite error encountered while inserting organizations into the database. "
-                     "Exception details: %s", str(exc.details))
+                         "Exception details: %s", str(exc.details))
     except pymongo.errors.DocumentTooLarge:
         LOGGER.exception("An error was encountered while inserting organizations into the database. "
                          "Document exceeds PyMongo maximum document size.")
@@ -968,7 +968,7 @@ def _replace_totals(connection: models.Connection, report):
         connection.reports.replace({}, report)
     except pymongo.errors.BulkWriteError as exc:
         LOGGER.exception("BulkWrite error encountered while replacing government-wide totals within the database. "
-                     "Exception details: %s", str(exc.details))
+                         "Exception details: %s", str(exc.details))
     except pymongo.errors.DocumentTooLarge:
         LOGGER.exception("An error was encountered while replacing government-wide totals within the database. "
                          "Document exceeds PyMongo maximum document size.")
