@@ -918,6 +918,9 @@ def _create_domains(connection: models.Connection, results, sorted_domains, batc
         LOGGER.info("Creating all domains.")
         connection.domains.create_all((results[domain_name] for domain_name in sorted_domains),
                                       batch_size=batch_size)
+    except pymongo.errors.BulkWriteError as exc:
+        LOGGER.exception("BulkWrite error encountered while inserting domains into the database. "
+                         "Exception details: %s", str(exc.details))
     except pymongo.errors.DocumentTooLarge:
         LOGGER.exception("An error was encountered while inserting domains into the database. "
                          "Document exceeds PyMongo maximum document size.")
@@ -940,6 +943,9 @@ def _create_organizations(connection: models.Connection, organizations, sorted_o
         connection.organizations.create_all(
             (organizations[organization_name] for organization_name in sorted_organizations), batch_size=batch_size
         )
+    except pymongo.errors.BulkWriteError as exc:
+        LOGGER.exception("BulkWrite error encountered while inserting organizations into the database. "
+                         "Exception details: %s", str(exc.details))
     except pymongo.errors.DocumentTooLarge:
         LOGGER.exception("An error was encountered while inserting organizations into the database. "
                          "Document exceeds PyMongo maximum document size.")
@@ -960,6 +966,9 @@ def _replace_totals(connection: models.Connection, report):
     try:
         LOGGER.info("Replacing government-wide totals.")
         connection.reports.replace({}, report)
+    except pymongo.errors.BulkWriteError as exc:
+        LOGGER.exception("BulkWrite error encountered while replacing government-wide totals within the database. "
+                         "Exception details: %s", str(exc.details))
     except pymongo.errors.DocumentTooLarge:
         LOGGER.exception("An error was encountered while replacing government-wide totals within the database. "
                          "Document exceeds PyMongo maximum document size.")
