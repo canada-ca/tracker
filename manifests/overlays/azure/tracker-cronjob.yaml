@@ -1,0 +1,36 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: tracker
+spec:
+  schedule: "0 0 1 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          initContainers:
+            - image: gcr.io/cdssnc/tracker-sample-data
+              imagePullPolicy: Always
+              name: 'tracker-data'
+              command: [ "/bin/sh", "-ce", "cp /sample_data/* /csv" ]
+              volumeMounts:
+                - name: csv-claim
+                  mountPath: /csv
+          containers:
+            - image: gcr.io/cdssnc/tracker
+              imagePullPolicy: Always
+              name: tracker
+              env:
+                - name: TRACKER_MONGO_URI
+                  valueFrom:
+                    secretKeyRef:
+                      name: tracker-secrets
+                      key: tracker-mongo-uri
+              volumeMounts:
+                - name: csv-claim
+                  mountPath: /opt/scan/tracker/csv
+          volumes:
+            - name: csv-claim
+              persistentVolumeClaim:
+                claimName: csv-claim
+          restartPolicy: OnFailure

@@ -1,0 +1,13 @@
+resources:
+  - certs-claim.yaml
+  - csv-claim.yaml
+  - tracker-secrets.yaml
+  - tracker-cronjob.yaml
+  - track-web-deployment.yaml
+  - track-web-service.yaml
+  - traefik-ingress-controller-cluster-role-binding.yaml
+  - traefik-ingress-controller-cluster-role.yaml
+  - traefik-ingress-controller-deployment.yaml
+  - traefik-ingress-controller-service-account.yaml
+  - traefik-ingress-service.yaml
+  - traefik-ingress.yaml

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: track-web
+  name: track-web
+spec:
+  replicas: 4
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: track-web
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: track-web
+    spec:
+      containers:
+        - image: gcr.io/cdssnc/track-web
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          name: track-web
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            - name: TRACKER_MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: tracker-secrets
+                  key: tracker-mongo-uri
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}

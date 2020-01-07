@@ -1,8 +1,0 @@
-version: '3'
-services:
-    build-env:
-        build:
-            context: .
-            dockerfile: Dockerfile.build
-        volumes:
-         - .:/opt/apps/tracker
