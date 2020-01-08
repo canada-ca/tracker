@@ -1,0 +1,63 @@
+{% extends "fr/layout-fr.html" %}
+
+{% block title %}Vérifier la conformité - Par domaine - Canada.ca{% endblock %}
+{% block pageid_en %}domains{% endblock %}
+{% block pageid_fr %}domaines{% endblock %}
+{% block description %}Ce tableau indique dans quelles proportions les sites et services en ligne gouvernementaux respectent les bonnes pratiques en matière de sécurité Web décrites dans l’Avis de mise en œuvre de la Politique sur la technologie de l’information (AMPTI) : Mise en œuvre de HTTPS pour les connexions Web sécurisées.{% endblock description %}
+
+{% block content %}
+
+{% include 'includes/fr/modal.html' %}
+
+<section id="main-content" class="flex-1" aria-label="contenu principal">
+
+	<header class="bg-https-light-gray pt-6">
+
+		{% include 'includes/fr/header.html' %}
+
+		<div class="text-center mt-8 font-bold">
+			<div class="inline-block h-10 mr-4"><a href="/fr/organisations/" class="text-black no-underline hover:text-https-blue font-medium">Par organisation</a></div>
+			<div class="inline-block border-b-4 border-https-blue ml-4">Par domaine</div>
+		</div>
+
+	</header>
+
+	<div id="tab-panel" class="container mx-auto" role="tabpanel" aria-hidden="false">
+	    <table language="fr" class="domain responsive https">
+	      <caption class="sr-only">HTTP(S) sécurisé par domaine. Le tableau peut être trié par en-tête de tableau de première ligne. Chaque ligne contient un domaine et les attributs connexes.</caption>
+	      <thead>
+	        <tr class="leading-tight text-2xl">
+	          <th class="never"></th>
+	          <th class="all"><strong>Domaine</strong></th>
+	          <th class="never"><strong>Organisation</strong></th>
+	          <th class="min-tablet"><strong>Conforme à l’<abbr title="Avis de mise en œuvre de la Politique sur la technologie de l’information">AMPTI</abbr></strong></th>
+	          <th class="min-tablet-l"><strong>Exécute le protocole HTTPS</strong></th>
+	          <th class="min-tablet-l"><strong>HSTS</strong></th>
+	          <th class="min-tablet-l"><strong>Absence de protocoles ou de suites de chiffrement ayant des vulnérabilités connues</strong></th>
+	          <th class="min-tablet-l"><strong>Utilise des certificats approuvés</strong></th>
+	          <th class="none" scope="col"></th>
+	        </tr>
+	      </thead>
+	    </table>
+  	</div>
+
+</section>
+{% endblock %}
+
+{% block languageURL %}/en/domains{% endblock %}
+{% block breadcrumb %}
+					{
+					 title: "Suivre la conformité en matière de sécurité Web",
+                     href: "/fr/index"
+					}
+{% endblock %}
+
+
+{% block pagerelatedscript %}
+
+<script src="/static/js/https/domains.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
+
+{% endblock %}
+
+
+{% block datemodified %}{{ scan_date | date(format="%Y-%m-%d")}}{% endblock %}

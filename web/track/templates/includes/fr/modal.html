@@ -1,0 +1,65 @@
+<!-- The Modal -->
+<div id="modal" class="hidden fixed pin z-50">
+
+	  <!-- Modal content -->
+	  <div id="modal-content" tabindex="-1" role="dialog" aria-label="Critères de conformité" class="relative bg-white w-3/4 m-auto flex-col py-2 overflow-auto flex-initial">
+	  	<div id="close" class="w-full text-right pr-6"><span class="close-symbol"><a id="close-btn" class="no-underline text-black text-3xl lg:text-5xl" href="#">&times;</a></span></div>
+	  	<div class="container lg:w-5/6 mx-auto">
+		    <h2 id="modal-header" tabindex="-1" class="text-5xl font-black mb-4">Critères de conformité</h2>
+		    <p class="text-2xl">Les colonnes du tableau font état de la conformité aux critères énumérés dans les directives de <a class="text-https-blue hover:text-black" href="https://www.canada.ca/fr/secretariat-conseil-tresor/services/technologie-information/avis-mise-oeuvre-politique/mise-oeuvre-https-connexions-web-securisees-ampti.html">la Politique</a>.</p>
+		    <p class="text-2xl mb-8">Chaque colonne indique le pourcentage global de conformité de chaque organisation ou domaine. Cliquez sur «&nbsp;Afficher les détails&nbsp;» ou «&nbsp;Afficher les sous-domaines&nbsp;» pour afficher les valeurs des colonnes pour des domaines spécifiques.</p>
+		    <h3 class="text-2xl font-bold mb-4">Conforme à l’<abbr title="Avis de mise en œuvre de la Politique sur la technologie de l’information">AMPTI</abbr></h3>
+		    <p class="text-2xl">Indique si un domaine est conforme à l’ensemble des directives de l’<abbr title="Avis de mise en œuvre de la Politique sur la technologie de l’information">AMPTI</abbr> 2018-01.</p>
+		    <p class="text-2xl underline">Valeurs</p>
+		    <ul class="list-reset text-2xl">
+		    	<li class="mb-2">Oui&nbsp;: le domaine est conforme à l’<abbr title="Avis de mise en œuvre de la Politique sur la technologie de l’information">AMPTI</abbr> 2018-01.</li>
+		    	<li>Non&nbsp;: le domaine n’est pas conforme à l’<abbr title="Avis de mise en œuvre de la Politique sur la technologie de l’information">AMPTI</abbr> 2018-01.</li>
+		    </ul>
+
+			<hr class="border mt-6 mb-6">
+
+			<h3 class="text-4xl font-bold mb-4">Exécute le protocole HTTPS</h3>
+		    <p class="text-2xl">Indique si un domaine utilise et exécute le protocole HTTPS par défaut. Cela peut se faire en redirigeant les points de contact HTTP vers HTTPS ou en rendant le domaine accessible uniquement par HTTPS.</p>
+		    <p class="text-2xl underline">Valeurs</p>
+		    <ul class="list-reset text-2xl">
+		    	<li class="mb-2">Oui&nbsp;: le domaine exécute le protocole HTTPS par défaut.</li>
+		    	<li>Non&nbsp;: le domaine n’exécute pas le protocole HTTPS par défaut.</li>
+		    </ul>
+
+		    <hr class="border mt-6 mb-6">
+
+		    <h3 class="text-4xl font-bold mb-4">HSTS</h3>
+		    <p class="text-2xl">Indique si le domaine a appliqué le HTTP Strict Transport Security (HSTS), mécanisme permettant à un domaine d’indiquer aux navigateurs Web récents de ne communiquer avec lui que par l’entremise d’une connexion HTTPS (et ce, même si l’utilisateur tente d’accéder à un lien HTTP).</p>
+		    <p class="text-2xl underline">Valeurs</p>
+		    <ul class="list-reset text-2xl">
+		    	<li class="mb-2">Oui&nbsp;: un en-tête <span class="font-mono" lang="en">Strict-Transport-Security</span> valide avec une valeur <span class="font-mono" lang="en">max-age</span> d’au moins un an (indiquée comme 31536000 secondes) est présent au point de contact du domaine.</li>
+		    	<li class="mb-2">Non&nbsp;: l’en-tête <span class="font-mono" lang="en">Strict-Transport-Security</span> est manquant ou a une valeur <span class="font-mono" lang="en">max-age</span> inférieure à un an.</li>
+					<li>Préchargé&nbsp;: un sous-domaine est considéré comme conforme au HSTS parce que son domaine est préchargé dans les navigateurs récents.</li>
+		    </ul>
+
+		    <hr class="border mt-6 mb-6">
+
+		    <h3 class="text-4xl font-bold mb-4">Absence de protocoles ou de suites de chiffrement ayant des vulnérabilités connues</h3>
+		    <p class="text-2xl">Indique si un domaine n’utilise pas de protocoles ou de suites de chiffrement qui ont des vulnérabilités connues, dont les chiffrements RC4 et 3DES ainsi que les protocoles SSLv2, SSLv3, TLSv1.0 et TLSv1.1.</p>
+		    <p class="text-2xl underline">Valeurs</p>
+		    <ul class="list-reset text-2xl">
+		    	<li class="mb-2">Oui&nbsp;: signifie que le principal point de contact du service n’utilise pas les chiffrements RC4 ou 3DES et que les protocoles SSLv1, SSLv2, TLSv1.0 et TLSv1.1 ont été désactivés. </li>
+		    	<li class="mb-2">Non, télécharger le fichier CSV pour plus de détails&nbsp;: les suites de chiffrement ou les protocoles vulnérables sont toujours utilisés. Le fichier CSV contient la liste des suites de chiffrement ou protocoles obsolètes.</li>
+		    	<li>S.&nbsp;O.&nbsp;: le critère sur les protocoles et le chiffrement ne s’applique pas à ce domaine puisqu’il n’offre pas de connexion sécurisée.</li>
+		    </ul>
+
+		    <hr class="border mt-6 mb-6">
+
+		    <h3 class="text-4xl font-bold mb-4">Utilise des certificats approuvés</h3>
+		    <p class="text-2xl">Indique si le domaine utilise des certificats approuvés tel que recommandé dans les <a href="https://www.cse-cst.gc.ca/fr/node/1830/html/26507" class="text-https-blue hover:text-black">Conseils sur la configuration sécurisée des protocoles réseau</a> (ITSP.40.062) du Centre de la sécurité des télécommunications.</p>
+		    <p class="text-2xl underline">Valeurs</p>
+		    <ul class="list-reset text-2xl mb-8">
+		    	<li class="mb-2">Oui&nbsp;: Le domaine utilise un certificat approuvé.</li>
+		    	<li class="mb-2">Non, télécharger le fichier CSV pour plus de détails&nbsp;: des certificats non approuvés sont encore utilisés, le fichier CSV contient la liste des certificats obsolètes.</li>
+		    	<li>S.&nbsp;O.&nbsp;: le critère sur les certificats ne s’applique pas à ce domaine puisqu’il n’offre pas de connexion sécurisée.</li>
+		    </ul>
+		</div>
+
+	</div>
+
+</div>

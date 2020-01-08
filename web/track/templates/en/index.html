@@ -1,0 +1,67 @@
+{% extends "en/layout-en.html" %}
+
+{% block title %}Track web security compliance - Canada.ca{% endblock %}
+
+{% block pageid_en %}index{% endblock %}
+{% block pageid_fr %}index{% endblock %}
+{% block description %}Track how government sites are becoming more secure.{% endblock description %}
+
+{% block content %}
+
+<section id="main-content" class="flex-1  py-6" role="contentinfo" aria-label="Track web security compliance">
+
+		<div class="flex flex-col lg:flex-row mx-auto items-auto  sm:w-4/5 xl:w-5/6">
+
+			<div class="flex-1 mt-6 mr-6">
+				<h1 class="text-5xl font-black mb-6 w-full">Track web security compliance</h1>
+				<h2 class="text-4xl mb-2 font-black">Making government websites more secure</h2>
+				<p class="text-3xl">Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure.</p>
+                <br/>
+
+
+                <div class="flex-1 flex-col">
+                     <div class="flex flex-row my-4">
+                         <div class="w-1/2 text-left"><h3 class="text-3xl"><a href="/en/organizations">Check compliance</a></h3>
+                          <p class="text-3xl">Which organizations or domains meet requirements</p>
+                         </div>
+                         <div class="w-1/2 text-left"><h3 class="text-3xl"><a href="/en/guidance">Read guidance</a></h3>
+                          <p class="text-3xl">Detailed process for government sites to become compliant</p>
+                         </div>
+                     </div>
+                     <div class="flex flex-row">
+                         <div class="w-1/2 text-left"><h3 class="text-3xl"><a href="https://www.canada.ca/en/treasury-board-secretariat/services/information-technology/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html">Policy notice</a></h3>
+                          <p class="text-3xl">Information Technology Policy<br/>Information Notice: Implementing<br/>HTTPS For Secure Web Connection</p>
+                         </div>
+                         <div class="w-1/2 text-left"><h3 class="text-3xl"><a href="/en/help">Contacts</a></h3>
+                           <p class="text-3xl">For government or the public, get in touch for questions or comments</p>
+                         </div>
+                     </div>
+                </div>
+
+			</div>
+
+			<div class="flex-inline flex-col text-center ">
+
+                <div class="sm:h-24"></div>
+				<div class="compliant"></div>
+				<h3 class="font-bold text-3xl sm:text-2xl">Domains that <br> enforce HTTPS</h3>
+			</div>
+		</div>
+
+</section>
+
+
+{% endblock %}
+
+{% block pagerelatedscript %}
+
+<script src="/static/js/https/donuts.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
+<script src="/static/js/https/organizations.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
+
+
+{% endblock %}
+{% block languageURL %}/fr/index{% endblock %}
+
+
+
+{% block datemodified %}{{ scan_date | date(format="%Y-%m-%d")}}{% endblock %}

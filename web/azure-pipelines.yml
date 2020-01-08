@@ -1,0 +1,76 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+- task*
+- hotfix*
+- topic*
+
+jobs:
+
+- job: 'Track_Web'
+  pool:
+    vmImage: 'Ubuntu-16.04'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.5'
+      architecture: 'x64'
+
+  - script: python -m pip install --upgrade pip && pip install -r requirements.txt
+    displayName: 'Install dependencies'
+
+
+- job: 'Package'
+  dependsOn: 'Track_Web'
+  pool:
+    vmImage: 'Ubuntu-16.04'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.5'
+      architecture: 'x64'
+
+  - script: python -m pip install --upgrade pip
+    displayName: 'Upgrade pip'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: |
+        track/**
+        requirements.txt
+      targetFolder: '$(Build.ArtifactStagingDirectory)/Staging'
+      cleanTargetFolder: true
+      overWrite: true
+      flattenFolders: false
+    displayName: 'Copy App files'
+
+  - script: pip download -d $(Build.ArtifactStagingDirectory)/Staging/Dependencies -r requirements.txt pip
+    displayName: 'Download Dependencies for Offline Install'
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/Staging' 
+      includeRootFolder: false
+      archiveType: 'tar'
+      tarCompression: 'gz'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/OfflinePackage/track_web.tar.gz' 
+      replaceExistingArchive: true 
+    displayName: 'Create OfflinePackage (tarball)'
+
+  #- task: PublishPipelineArtifact@0
+  #  inputs:
+  #    artifactName: 'OfflinePackageWebTrack'
+  #    targetPath: '$(Build.ArtifactStagingDirectory)/OfflinePackage'
+  #  displayName: 'Upload OfflinePackage to Artifacts'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      artifactName: 'OfflinePackageWebTrack'
+      targetPath: '$(Build.ArtifactStagingDirectory)/OfflinePackage'
+    displayName: 'Upload OfflinePackage to Artifacts'

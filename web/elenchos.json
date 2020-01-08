@@ -1,0 +1,6 @@
+{
+    "dockerfiles": {
+      "grc.io/cdssnc/track-web": "."
+    },
+    "overlay": "manifests/overlays/elenchos"
+  }

@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: track-web
+Version: 0.0.1
+Summary: UNKNOWN
+Home-page: https://github.com/cds-snc/track-web
+Author: GSA 18F, CDS-SNC
+Author-email: pulse@cio.gov, cds-snc@tbs-sct.gc.ca
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Provides-Extra: development
