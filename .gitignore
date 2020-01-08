@@ -5,10 +5,10 @@ logs
 
 # virtualenv
 .Python
-.python-version
 bin
 include
 lib
+.env
 
 # Linting
 .mypy_cache/
