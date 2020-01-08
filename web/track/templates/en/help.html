@@ -1,0 +1,30 @@
+{% extends "en/layout-en.html" %}
+
+{% block title %}Get help: Track web security compliance - Canada.ca{% endblock %}
+{% block pageid_en %}help{% endblock %}
+{% block pageid_fr %}aide{% endblock %}
+{% block description %}For interpretation of any aspect of Implementing HTTPS for Secure Web Connections: Information Technology Policy Implementation Notice (ITPIN), contact Treasury Board of Canada Secretariat through Public Enquiries.{% endblock description %}
+
+{% block content %}
+<section id="main-content" class="flex-1" aria-label="Get help">
+	<div class="container mx-auto items-center sm:w-4/5 xl:w-5/6 mt-6">
+		<h1 class="text-5xl font-black">Get help</h1>
+		<h2 class="text-4xl mb-4">General public</h2>
+		<p class="text-2xl">For interpretation of any aspect of <a class="text-https-blue hover:text-black" href="https://www.canada.ca/en/treasury-board-secretariat/services/information-technology/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html">Implementing HTTPS for Secure Web Connections: Information Technology Policy Implementation Notice (ITPIN)</a>, contact Treasury Board of Canada Secretariat through Public Enquiries.</p>
+		<h2 class="text-4xl mt-4 mb-4">Government of Canada employees</h2>
+		<p class="text-2xl">Individuals at departments should contact their departmental information technology group for any questions regarding this <abbr title="Information Technology Policy Implementation Notice">ITPIN</abbr>. Individuals can also join the <a href="https://gcconnex.gc.ca/groups/profile/35218846/gc-https-everywhere-2018-https-partout-dans-le-gc-2018?language=en" class="text-https-blue hover:text-black">HTTPS Everywhere group on GCconnex</a>, or the #HTTPSEverywhere channel on <a href="https://message.gccollab.ca/" class="text-https-blue hover:text-black">GCcollab Message</a>.</p>
+		<p class="text-2xl">Individuals from a departmental information technology group may contact the <a href="mailto:zzTBSCybers@tbs-sct.gc.ca" class="text-https-blue hover:text-black">TBS Cyber Security mailbox</a> for interpretations of this <abbr title="Information Technology Policy Implementation Notice">ITPIN</abbr>.</p>
+		<p class="text-2xl mb-8">Individuals with questions about the accuracy of their domain’s compliance data may contact the <a href="mailto:zzTBSCybers@tbs-sct.gc.ca" class="text-https-blue hover:text-black">TBS Cyber Security mailbox</a>. Note that compliance data does not automatically refresh. If you modified your domain recently, there may be a delay before your domain’s information updates.</p>
+	</div>
+
+</section>
+{% endblock %}
+{% block languageURL %}/fr/aide{% endblock %}
+{% block breadcrumb %}
+					{
+					 title: "Track web security compliance",
+                     href: "/en/index"
+					}
+
+{% endblock %}
+{% block datemodified %}{{lastmodified}}{% endblock %}

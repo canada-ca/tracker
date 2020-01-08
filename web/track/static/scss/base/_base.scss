@@ -1,0 +1,26 @@
+@import "variables";
+@import "tables";
+
+#goc-footer {
+	margin-top: 0rem !important;
+	border-color: #999999 !important;
+	border-top-width: 0.05rem !important;
+}
+
+#modal {
+	background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.7); 
+}
+
+#modal-content {
+	height: 80%;
+}
+
+.modal-open {
+	overflow: hidden;
+}
+
+.beta-badge {
+	background-color: #22A7F0;
+}
+

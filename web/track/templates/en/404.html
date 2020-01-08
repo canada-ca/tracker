@@ -1,0 +1,33 @@
+{% extends "en/layout-en.html" %}
+
+{% block title %}Check compliance - By Domain{% endblock %}
+{% block pageid_en %}domains{% endblock %}
+{% block pageid_fr %}domaines{% endblock %}
+{% block description %}This dashboard reports how federal government websites and web services are meeting good web security practices, as outlined in Information Technology Policy Implementation Notice (ITPIN): Implementing HTTPS for Secure Web Connections.{% endblock description %}
+
+{% block content %}
+
+<section id="main-content" class="flex-1">
+	<div class="container mx-auto items-center sm:w-4/5 xl:w-5/6 mt-6 mb-6">
+		<h1 class="border-0">We couldn't find that Web page</h1>
+  		<p class="text-3xl"><strong>Error 404</strong></p>
+		<p class="text-3xl">We're sorry you ended up here. Sometimes a page gets moved or deleted.</p>
+	</div>
+
+
+</section>
+
+{% endblock %}
+{% block languageURL %}/fr/404{% endblock %}
+
+{% block breadcrumb %}
+					{
+					 title: "Track web security compliance",
+                     href: "/en/index"
+					}
+
+
+{% endblock %}
+
+
+{% block datemodified %}{{lastmodified}}{% endblock %}

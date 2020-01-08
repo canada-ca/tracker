@@ -1,0 +1,95 @@
+{% extends "fr/layout-fr.html" %}
+
+{% block title %}Lire les directives: Suivre la conformité en matière de sécurité Web - Canada.ca{% endblock %}
+{% block pageid_en %}guidance{% endblock %}
+{% block pageid_fr %}directives{% endblock %}
+{% block description %}Lires les directives.{% endblock description %}
+
+{% block content %}
+<section id="main-content" class="flex-1">
+	<div class="container mx-auto items-center sm:w-4/5 xl:w-5/6 mt-6 mb-6" aria-labelledby="readguidance">
+		<h1 class="text-5xl border-0 font-black">Lires les directives</h1>
+		<p class="text-2xl">Aidez-nous à rendre les sites web du gouvernement plus sécuritaires. Veuillez compléter les étapes suivantes afin de respecter les normes de sécurité en ligne du gouvernement du Canada. Si vous avez des questions sur ce processus, <a href="/fr/aide">contactez-nous</a>.</p>
+  	<br/>
+		
+        <ol class="text-2xl mb-2 leading-normal">
+
+		   <li class="mb-6"> D&eacute;terminer les principales ressources qui doivent agir comme points de contact centraux avec le Secr&eacute;tariat du Conseil du Trs&eacute;or du Canada (SCT) et la communaut&eacute; de pratique du HTTPS. &Eacute;tablir des liens au moyen des voies de communication des OutilsGC suivantes&nbsp;:&nbsp;
+
+		  		 <ul>
+
+					 <li>GCcollab&nbsp;:&nbsp;<a href="https://gccollab.ca/groups/profile/1358152/engc-https-everywhere-2018frgc-https-partout-2018" class="text-https-blue hover:text-black">HTTPS partout 2018</a></li>
+					 <li>GCmessage&nbsp;:&nbsp;<a href="https://message.gccollab.ca/channel/httpseverywhere-httpspartout" class="text-https-blue hover:text-black">#HTTPSEverywhere-HTTPSpartout</a></li>
+		  		 </ul>
+		   </li>
+
+		   <li class="mb-6">Dresser un répertoire de tous les domaines et les sous-domaines ministériels. Les sources d’information comprennent les suivantes&nbsp;:&nbsp;
+
+			<ul>
+
+				<li><a href="https://https-partout.canada.ca" class="text-https-blue hover:text-black">Tableau de bord HTTPS</a></li>
+				<li>Gestion du portefeuille d’applications (GPA) du SCT</li>
+				<li>Unit&eacute;s op&eacute;rationnelles ministérielles</li>
+		   </ul>
+
+		   </li>
+
+		   <li class="mb-6">Fournir une liste à jour de tous les domaines et les sous-domaines des sites Web et des services Web publiquement accessibles à l'Équipe de la cybersécurité du SCT
+
+		      <ul>
+				  <li>Procéder à la mise à jour , et à l'envoi du document "compliance.csv", qui est accessible à partir du tableau
+				   de bord HTTPS si vous avez un grand nombre de changements.</li>
+				  <li>Utiliser le site Web suivant pour ajouter des domaines: <a href="https://canada-ca.github.io/pages/soumettre-domaines-institutionnels.html" class="text-https-blue hover:text-black">Soumettez vos noms de domaine institutionnels</a></li>
+
+			  </ul>
+
+		   </li>
+           <li class="mb-6">Effectuer une &eacute;valuation des domaines et des sous-domaines afin de d&eacute;terminer l’&eacute;tat de la configuration. Les outils disponibles pour mener cette activit&eacute; à bien comprennent le tableau de bord HTTPS du gouvernement du Canada (GC), SSL Labs, Hardenize et SSLShoppers entre autres.</li>
+           <li class="mb-6"> &Eacute;laborer un calendrier de mise en œuvre prioris&eacute; pour chacun des sites Web et des services Web touch&eacute;s en suivant l’approche de priorisation recommand&eacute;e dans l’Avis de mise en œuvre de la Politique sur la technologie de l’information (AMPTI)&nbsp;:&nbsp;
+
+			<ul>
+
+				<li>6.2.1 Les sites Web et les services Web nouvellement élaborés doivent respecter le pr&eacute;sent AMPTI apr&egrave;s leur lancement.</li>
+				<li>6.2.2 Les sites Web et les services Web qui entra&icirc;nent un &eacute;change de renseignements personnels ou d’autres renseignements de nature d&eacute;licate doivent avoir priorit&eacute; &agrave; la suite d’une approche ax&eacute;e sur les risques et doivent migrer dans les plus brefs d&eacute;lais.</li>
+				<li>6.2.3 Tous les sites Web et les services Web restants doivent &ecirc;tre accessibles gr&acirc;ce &agrave; une connexion s&eacute;curis&eacute;e, comme d&eacute;finie &agrave; l’article 6.1, au plus tard le 31 décembre 2019.</li>
+		   </ul>
+
+		   </li>
+		   <li class="mb-6">Mobiliser les groupes de planification ministérielle de la TI relativement à la mise en œuvre, le cas échéant.
+			<ul>
+
+				<li>Au besoin, modifier les plans de la TI et le budget des dépenses pour l’exercice financier lorsque des travaux sont pr&eacute;vus.</li>
+				<li>Il est recommand&eacute; que les partenaires de Services partag&eacute;s Canada (SPC) communiquent avec leur gestionnaire de la prestation des services de SPC afin de discuter du plan d’action minist&eacute;riel et des d&eacute;marches à suivre pour soumettre une demande de changement.</li>
+		   </ul>
+
+		   </li>
+
+           <li class="mb-6">Selon l’&eacute;valuation, et au moyen des <a href="https://gccollab.ca/groups/profile/1358152/engc-https-everywhere-2018frgc-https-partout-2018" class="text-https-blue hover:text-black">conseils sur GCcollab</a>, les activit&eacute;s suivantes pourraient &ecirc;tre nécessaires&nbsp;:&nbsp;
+			<ul>
+
+				<li>Obtenir les certificats d’une source de certificat approuv&eacute;e par le GC, comme l’indiquent les recommandations concernant les certificats de serveur TLS pour les services Web publics du GC.</li>
+				<li>Obtenir les guides relatifs &agrave; la configuration pour les extr&eacute;mit&eacute;s appropri&eacute;es (p. ex., serveurs Web, r&eacute;seau et appareils de s&eacute;curit&eacute;) et mettre en œuvre les configurations recommand&eacute;es pour prendre en charge le HTTPS.</li>
+		   </ul>
+
+		   </li>
+
+		   <li class="mb-6">Effectuer une autre &eacute;valuation des domaines et des sous-domaines applicables afin de confirmer que la configuration a &eacute;t&eacute; mise &agrave; jour et que le HTTPS est appliqu&eacute; conform&eacute;ment &agrave; l’AMPTI.
+			   Les résultats seront présentés dans le tableau de bord HTTPS les prochaines 24 h.
+
+
+		   </li>
+		</ol>
+        <br/>
+		<p class="text-2xl">Pour toute question ou pr&eacute;occupation concernant le présent AMPTI et les conseils connexes concernant la mise en œuvre, veuillez communiquer avec la section responsable de la Cybers&eacute;curit&eacute; du SCT (<a href="mailto:zzTBSCybers@tbs-sct.gc.ca" class="text-https-blue hover:text-black">zzTBSCybers@tbs-sct.gc.ca)</a>.</p>
+	</div>
+</section>
+{% endblock %}
+{% block languageURL %}/en/guidance{% endblock %}
+{% block breadcrumb %}
+                   {
+					 title: "Suivre la conformité en matière de sécurité Web",
+                     href: "/fr/index"
+					}
+
+{% endblock %}
+{% block datemodified %}{{lastmodified}}{% endblock %}

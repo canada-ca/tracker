@@ -1,27 +1,29 @@
-data/output
+**/.DS_Store
 
-logs
+**/node_modules
+
 *.log
 
 # virtualenv
-.Python
-bin
-include
-lib
-.env
+**/.Python
+**/bin
+**/include
+**/lib
+**/.env
 
 # Linting
-.mypy_cache/
-.pytest_cache
+**/.mypy_cache/
+**/.pytest_cache
 
-__pycache__/
-*.py[cod]
-pip-log.txt
-pip-delete-this-directory.txt
-pip-selfcheck.json
-.coverage
+**/__pycache__/
+**/.py[cod]
+**/pip-log.txt
+**/pip-delete-this-directory.txt
+**/pip-selfcheck.json
+**/.coverage
 
-csv/
+scanner/csv
+scanner/data/backupScanResults
+scanner/data/output
+scanner/logs
 *.csv
-
-.vscode
