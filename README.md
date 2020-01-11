@@ -8,12 +8,16 @@ This project is organized in the monorepo style with the various components sepa
 
 ```sh
 .
+├── ci
+├── platform
 ├── scanner
 ├── web
-├── platform
 └── README.md
 ```
+The [ci](ci/README.md) folder contains an image used in the CI process, but the main event is the next three folders.
 
-The [scanner](scanner/README.md) folder contains everything related to the `scanner` service, the [web](web/README.md) contains everything for the `web` service that shows the results of the scan, and the [platform](platform/README.md) folder contains the Kubernetes configuration needed to deploy the tracker on the cloud provider of your choice.
+The [scanner](scanner/README.md) folder contains everything related to the `scanner` service, and the [web](web/README.md) contains everything for the `web` service that shows the results of the scan.
+
+The Kubernetes configuration needed to deploy the tracker on the cloud provider of your choice lives in the [platform](platform/README.md) folder.
 
 Further details can be found in the readme files contained in their respective folders.
