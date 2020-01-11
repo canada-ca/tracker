@@ -59,10 +59,10 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-    TESTING = True
-    CACHE_NO_NULL_WARNING = True  # silence Flask-Cache warning
-    MONGO_URI = "mongodb://localhost:27017/track_{rand}".format(
-        rand=random.randint(0, 1000)
+    CACHE_TYPE = "simple"
+    MONGO_URI = "{uri}/track_{rand}".format(
+        rand=random.randint(0, 1000),
+        uri=os.environ.get('TRACKER_MONGO_TEST_URI', 'mongodb://localhost:27017')
     )
 
 

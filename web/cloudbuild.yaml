@@ -1,0 +1,31 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: start_mongodb
+    entrypoint: /bin/sh
+    args:
+      [
+        '-c',
+        'docker run -d --network=cloudbuild -p=27017:27017 --name=mongodb mongo',
+      ]
+
+  - name: mikewilliamson/wait-for
+    id: wait
+    args: ['mongodb:27017']
+
+  - name: track-compliance/ci
+    id: install
+    entrypoint: pipenv
+    args: ['install', '-d']
+
+  - name: track-compliance/ci
+    id: test
+    entrypoint: pipenv
+    args: ['run', 'test']
+    env:
+      - TRACKER_MONGO_TEST_URI=mongodb://mongodb:27017
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build
+    args: ['build', '-t','gcr.io/$PROJECT_ID/web:$BRANCH_NAME-$SHORT_SHA', '.']
+
+images: ['gcr.io/$PROJECT_ID/web:$BRANCH_NAME-$SHORT_SHA']
