@@ -1,5 +1,5 @@
 FROM python:3.6-alpine
-LABEL Description="Track Web Security Compliance" Vendor="Canadian Digital Service"
+LABEL maintainer="mike.williamson@tbs-sct.gc.ca"
 
 RUN apk add --no-cache openssl-dev libffi-dev build-base
 RUN addgroup -g 1000 -S trackerapp && \
@@ -12,7 +12,7 @@ COPY track /opt/track-web/track
 
 WORKDIR /opt/track-web
 USER trackerapp
-RUN pipenv install
+RUN pipenv sync --bare
 
 EXPOSE 5000
 CMD pipenv run start
