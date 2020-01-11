@@ -12,12 +12,12 @@ steps:
     id: wait
     args: ['mongodb:27017']
 
-  - name: track-compliance/ci
+  - name: 'gcr.io/track-compliance/ci'
     id: install
     entrypoint: pipenv
     args: ['install', '-d']
 
-  - name: track-compliance/ci
+  - name: 'gcr.io/track-compliance/ci'
     id: test
     entrypoint: pipenv
     args: ['run', 'test']
