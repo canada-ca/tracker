@@ -50,8 +50,6 @@ def scan_https(self, https_domain, scan_id):
     _cmd = f'sudo rm result_dict{str(scan_id)}'
     _rm = subprocess.check_output(_cmd, shell=True)
 
-    #https_final = generate_https_tags(https_res)
-
     return https_dict, "https", scan_id
 
 
@@ -97,8 +95,6 @@ def scan_ssl(self, ssl_domain, scan_id, cipher_list):
         i = i+1
 
     print(f'Finished scanning {domain} for ssl info')
-
-    #https_final = generate_https_tags(https_res)
 
     bad_ciphers = []
     for cipher in used_ciphers:
@@ -152,7 +148,7 @@ def scan_dmarc(self, dmarc_domain, scan_id):
 
     print(f'Finished scanning {domain} for dmarc info')
 
-    dmarc_res_dict = {1: dmarc_dict, 2: spf_dict}
+    dmarc_res_dict = {'dmarc': dmarc_dict, 'spf': spf_dict}
 
     return dmarc_res_dict, "dmarc", scan_id
 
@@ -160,8 +156,6 @@ def scan_dmarc(self, dmarc_domain, scan_id):
 @app.task(bind=True)
 def scan_dkim(self, dkim_domain, scan_id):
 
-    #TODO Finish scanner by passing correct domain name for DKIM scanning
-    #(e.g. selector1._domainkey.cyber.gc.ca)
     dkim_dict = {}
     domain = dkim_domain["domain"]
     domain = domain.encode('UTF-8')
@@ -193,9 +187,17 @@ def scan_dkim(self, dkim_domain, scan_id):
 def handle_results(self, result_dict, scan_type):
 
     self.update_state(state="PROCESSING")
-    print(f'Processing {scan_type} data for {result_dict[0]["Domain"]}...')
+    #print(f'Processing {scan_type} data for {result_dict[0]["Domain"]}...')
 
-    db.https_scans.create(result_dict)
+    if scan_type is "https":
+        db.https_scans.create(result_dict)
+    elif scan_type is "ssl":
+        db.ssl_scans.create(result_dict)
+    elif scan_type is "dmarc":
+        db.dmarc_scans.create(result_dict.get('dmarc', None))
+        db.spf_scans.create(result_dict.get('spf', None))
+    elif scan_type is "dkim":
+        db.dkim_scans.create(result_dict)
 
     self.update_state(state="COMPLETE")
 
