@@ -14,11 +14,13 @@ steps:
 
   - name: 'gcr.io/track-compliance/ci'
     id: install
+    dir: web
     entrypoint: pipenv
     args: ['install', '-d']
 
   - name: 'gcr.io/track-compliance/ci'
     id: test
+    dir: web
     entrypoint: pipenv
     args: ['run', 'test']
     env:
@@ -26,6 +28,7 @@ steps:
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build
+    dir: web
     args: ['build', '-t','gcr.io/$PROJECT_ID/web:$BRANCH_NAME-$SHORT_SHA', '.']
 
 images: ['gcr.io/$PROJECT_ID/web:$BRANCH_NAME-$SHORT_SHA']
