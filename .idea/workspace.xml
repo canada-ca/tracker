@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4254af23-bc70-43e8-924b-951c88580109" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/scanner/data/scheduling/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/scanner/data/scheduling/tasks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,14 +24,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scanner/data/scheduling/tasks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="191" column="28" selection-start-line="191" selection-start-column="28" selection-end-line="191" selection-end-column="28" />
+            <state relative-caret-position="510">
+              <caret line="200" lean-forward="true" selection-start-line="200" selection-end-line="200" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="522">
+              <caret line="29" selection-start-line="29" selection-end-line="29" />
             </state>
           </provider>
         </entry>
@@ -54,6 +63,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/scanner/data/scheduling/tasks.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -84,24 +94,6 @@
               <item name="tracker" type="b2602c69:ProjectViewProjectNode" />
               <item name="tracker" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="tracker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tracker" type="462c0819:PsiDirectoryNode" />
-              <item name="scanner" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tracker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tracker" type="462c0819:PsiDirectoryNode" />
-              <item name="scanner" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tracker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tracker" type="462c0819:PsiDirectoryNode" />
-              <item name="scanner" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="scheduling" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -109,6 +101,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -182,11 +175,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scanner/data/scheduling/tasks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="191" column="28" selection-start-line="191" selection-start-column="28" selection-end-line="191" selection-end-column="28" />
+        <state relative-caret-position="510">
+          <caret line="200" lean-forward="true" selection-start-line="200" selection-end-line="200" />
           <folding>
             <element signature="e#0#17#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
         </state>
       </provider>
     </entry>
