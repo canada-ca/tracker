@@ -259,6 +259,10 @@ def register(app):
         prefix = request.path[1:3]
         return render_template(generate_path(prefix, "register"))
 
+    @app.route("/create-user", methods=['POST'])
+    def create_user():
+        return "create-user<br>" + str(request.form)  # TODO: Implement proper Database entry with hashing.
+
     # Every response back to the browser will include these web response headers
     @app.after_request
     def apply_headers(response):
