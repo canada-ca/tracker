@@ -6,8 +6,8 @@ This is what it looks like with demo data:
 
 |         | 
 |---------|
-|![English landing page: header with title, some text, and a chart showing number of domains that enforce HTTPS](/web/docs/img/en-landing.png)  |  
-|![English dashboard page: text, a search bar, and a table with columns: Organization, ITPIN Compliant, Enforces HTTPS, HSTS, Free of known weak protocols and ciphers, Uses approved certificates](/web/docs/img/en-dashboard.png) | 
+|![English landing page: header with title, some text, and a chart showing number of domains that enforce HTTPS](web/docs/img/en-landing.png)  |  
+|![English dashboard page: text, a search bar, and a table with columns: Organization, ITPIN Compliant, Enforces HTTPS, HSTS, Free of known weak protocols and ciphers, Uses approved certificates](web/docs/img/en-dashboard.png) | 
 
 ## Development Setup
 
