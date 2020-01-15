@@ -11,13 +11,17 @@
 <section id="main-content" class="flex-1  py-6" role="contentinfo" aria-label="Track web security compliance">
    <div class="flex flex-col lg:flex-row mx-auto items-auto  sm:w-4/5 xl:w-5/6">
       <div class="flex-1 mt-6 mr-6">
-         <h1 class="text-5xl font-black mb-6 w-full">Sign in</h1>
+         <h1 class="text-5xl font-black mb-6 w-full">Register</h1>
          <h2 class="text-4xl mb-2 font-black">Making government websites more secure</h2>
 
           <div class="flex-1 flex-col">
-            <form method="POST" action="/sign-in-user">
+            <form method="POST" action="/create-user">
 
                 <div class="field" style="margin-top: 35px;">
+                  <input class="auth-field" type="text" name="name_input" placeholder="Name" required>
+                </div>
+
+                <div class="field">
                   <input class="auth-field" type="email" name="email_input" placeholder="Email" required>
                 </div>
 
@@ -25,11 +29,16 @@
                   <input class="auth-field" type="password" name="password_input" placeholder="Password" required>
                 </div>
 
-                <button class="cds-btn-primary cds-btn" type="submit">Sign in</button>
-                <button class="cds-btn-secondary cds-btn" type="button" onclick="window.location.href='/en/register'">Register</button>
+                <div class="field">
+                  <input class="auth-field" type="password" name="password_confirm_input" placeholder="Confirm Password" required>
+                </div>
 
-                </form>
-          </div>
+                <button class="cds-btn-primary cds-btn" type="submit">Create User</button>
+                <button class="cds-btn-secondary cds-btn" type="button" onclick="window.location.href='/en/sign-in'">Back</button>
+
+
+            </form>
+         </div>
       </div>
 
        <div class="flex-inline flex-col text-center ">

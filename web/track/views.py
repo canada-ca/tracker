@@ -254,6 +254,11 @@ def register(app):
     def sign_in_user():
         return "Email: {} <br>Password: {}".format(request.form.get('email_input'), request.form.get('password_input'))  # Testing only TODO: Remove line
 
+    @app.route("/en/register")
+    def register_page():
+        prefix = request.path[1:3]
+        return render_template(generate_path(prefix, "register"))
+
     # Every response back to the browser will include these web response headers
     @app.after_request
     def apply_headers(response):
