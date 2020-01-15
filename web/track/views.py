@@ -1,16 +1,19 @@
-from http import HTTPStatus
+import json
 import os
+from datetime import datetime
+from http import HTTPStatus
 
 from flask import render_template, Response, abort, request, redirect
-import json
-
-from datetime import datetime
-
+from flask_login import LoginManager, login_required
 from track import models
 from track.cache import cache
 
 
 def register(app):
+
+    # Initialize flask-login
+    login_manager = LoginManager()
+    login_manager.init_app(app)
 
     # Default route checks accept-language header
     # Redirects based on browser language, defaults to english
@@ -238,6 +241,19 @@ def register(app):
         response.headers["Content-Type"] = "application/json"
         return response
 
+    ##
+    # Auth endpoints.
+
+    @app.route("/en/sign-in")
+    # @app.route("/fr/sidentifier")  # French is not my specialty
+    def sign_in_page():
+        prefix = request.path[1:3]
+        return render_template(generate_path(prefix, "sign-in"))
+
+    @app.route("/sign-in-user", methods=['POST'])
+    def sign_in_user():
+        return "Email: {} <br>Password: {}".format(request.form.get('email_input'), request.form.get('password_input'))  # Testing only TODO: Remove line
+
     # Every response back to the browser will include these web response headers
     @app.after_request
     def apply_headers(response):
@@ -250,8 +266,6 @@ def register(app):
             return render_template("/fr/404.html"), HTTPStatus.NOT_FOUND
         else:
             return render_template("/en/404.html"), HTTPStatus.NOT_FOUND
-
-
 
     @app.errorhandler(models.QueryError)
     def handle_invalid_usage(error):
