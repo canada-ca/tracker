@@ -6,14 +6,14 @@ This is what it looks like with demo data:
 
 |         | 
 |---------|
-|![English landing page: header with title, some text, and a chart showing number of domains that enforce HTTPS](web/docs/img/en-landing.png)  |  
-|![English dashboard page: text, a search bar, and a table with columns: Organization, ITPIN Compliant, Enforces HTTPS, HSTS, Free of known weak protocols and ciphers, Uses approved certificates](web/docs/img/en-dashboard.png) | 
+|![English landing page: header with title, some text, and a chart showing number of domains that enforce HTTPS](docs/img/en-landing.png)  |  
+|![English dashboard page: text, a search bar, and a table with columns: Organization, ITPIN Compliant, Enforces HTTPS, HSTS, Free of known weak protocols and ciphers, Uses approved certificates](docs/img/en-dashboard.png) | 
 
 ## Development Setup
 
 For development purposes it is recommended that you install [MongoDB](https://www.mongodb.com/) and run the database locally.
 
-This dashboard is a [Flask](http://flask.pocoo.org/) app written for **Python 3.5 and up**. We recommend [pyenv](https://github.com/yyuu/pyenv) and [pipenv](https://pipenv.kennethreitz.org/en/latest/) for easy Python version and dependency management.
+This application is a [Flask](http://flask.pocoo.org/) app and currently works with Python 3.6. We recommend [pyenv](https://github.com/yyuu/pyenv) and [pipenv](https://pipenv.kennethreitz.org/en/latest/) for easy Python version and dependency management.
 
 ```bash
 # install dependencies and include dev dependencies as well
