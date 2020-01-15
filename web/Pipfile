@@ -25,6 +25,7 @@ Flask-PyMongo = "==2.2.0"
 Flask-Compress = "==1.4.0"
 Babel = "==2.6.0"
 Flask-Caching = "==1.4.0"
+flask-login = "*"
 
 [scripts]
 test = "pytest"
