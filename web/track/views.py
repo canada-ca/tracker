@@ -1,7 +1,10 @@
 import json
 import os
+import smtplib
+
 from datetime import datetime
 from http import HTTPStatus
+from email.message import EmailMessage
 
 from flask import render_template, Response, abort, request, redirect
 from flask_login import LoginManager, login_required
@@ -275,6 +278,18 @@ def register(app):
                                        error=error,
                                        name=name,
                                        email=email)
+
+    @app.route("/en/forgot-password", methods=['GET', 'POST'])
+    @app.route("/fr/forgot-password", methods=['GET', 'POST'])
+    def forgot_password():
+        prefix = request.path[1:3]
+        if request.method == 'GET':
+            return render_template(generate_path(prefix, "forgot-password"))
+        else:
+            # TODO: check if email exists, if it does send email
+            sent_msg = 'If an account is associated with the email address, ' \
+                      'further instructions will arrive in your inbox'
+            return render_template(generate_path(prefix, "forgot-password"), email=sent_msg)
 
     # Every response back to the browser will include these web response headers
     @app.after_request
