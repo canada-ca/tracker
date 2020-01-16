@@ -190,7 +190,6 @@ class Domain:
                         else:
                             value = track.data.FIELD_MAPPING[category][field][value].french
 
-
                     row.append(value_for(value))
 
             writer.writerow(row)
