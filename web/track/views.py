@@ -254,14 +254,27 @@ def register(app):
     def sign_in_user():
         return "Email: {} <br>Password: {}".format(request.form.get('email_input'), request.form.get('password_input'))  # Testing only TODO: Remove line
 
-    @app.route("/en/register")
-    def register_page():
+    @app.route("/en/register", methods=['GET', 'POST'])
+    @app.route("/fr/register", methods=['GET', 'POST'])
+    def register():
         prefix = request.path[1:3]
-        return render_template(generate_path(prefix, "register"))
-
-    @app.route("/create-user", methods=['POST'])
-    def create_user():
-        return "create-user<br>" + str(request.form)  # TODO: Implement proper Database entry with hashing.
+        # User visiting register page, display page
+        if request.method == 'GET':
+            return render_template(generate_path(prefix, "register"))
+        # When user submits register form
+        else:
+            # Check if passwords match
+            if request.form.get('password_input') == request.form.get('password_confirm_input'):
+                return "create-user<br>" + str(request.form)  # TODO: Implement proper Database entry with hashing.
+            # If passwords do not match, redirect back to register page
+            else:
+                error = "Passwords do not match"
+                name = request.form.get('name_input')
+                email = request.form.get('email_input')
+                return render_template(generate_path(prefix, "register"),
+                                       error=error,
+                                       name=name,
+                                       email=email)
 
     # Every response back to the browser will include these web response headers
     @app.after_request
