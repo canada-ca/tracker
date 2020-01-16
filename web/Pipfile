@@ -26,6 +26,7 @@ Flask-Compress = "==1.4.0"
 Babel = "==2.6.0"
 Flask-Caching = "==1.4.0"
 flask-login = "*"
+notifications-python-client = "*"
 
 [scripts]
 test = "pytest"
