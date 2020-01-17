@@ -263,7 +263,7 @@ def register(app):
 	#
 
 	# TODO: Create Config item for DB Connection.
-	connection = Connection(_user="postgres", _password="root", _host="localhost", _port="5432", _db="track_dmarc")
+	connection = Connection(_user="db_user", _password="db_password", _host="db_host", _port="db_port", _db="db_name")
 
 	@app.route("/en/sign-in", methods=['GET', 'POST'])
 	@app.route("/fr/sign-in", methods=['GET', 'POST'])
@@ -413,11 +413,13 @@ def register(app):
 
 	@app.errorhandler(404)
 	def page_not_found(error):
-		path = request.path
-		if "fr" in path:
-			return render_template("/fr/404.html"), HTTPStatus.NOT_FOUND
-		else:
-			return render_template("/en/404.html"), HTTPStatus.NOT_FOUND
+		prefix = request.path[1:3]
+		return render_template(generate_path(prefix, '404')), HTTPStatus.NOT_FOUND
+
+	@app.errorhandler(401)
+	def invalid_credentials(error):
+		prefix = request.path[1:3]
+		return render_template(generate_path(prefix, '401')), HTTPStatus.UNAUTHORIZED
 
 	@app.errorhandler(models.QueryError)
 	def handle_invalid_usage(error):
