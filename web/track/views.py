@@ -9,13 +9,14 @@ from flask_login import LoginManager, login_required
 from track import models
 from track.cache import cache
 
-from track import api_config
 from notifications_python_client.notifications import NotificationsAPIClient
+# from track import api_config
+#
+# notifications_client = NotificationsAPIClient(
+#     api_config.api_key,
+#     api_config.api_url,
+# )
 
-notifications_client = NotificationsAPIClient(
-    api_config.api_key,
-    api_config.api_url,
-)
 
 def register(app):
 
@@ -273,11 +274,11 @@ def register(app):
         else:
             # Check if passwords match
             if request.form.get('password_input') == request.form.get('password_confirm_input'):
-                response = notifications_client.send_email_notification(
-                    email_address='nicholas.deschenes@dal.ca',
-                    template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'
-                )
-                return "create-user<br>" + str(request.form) + "<br><br>" + json.dump(response) # TODO: Implement proper Database entry with hashing.
+                # response = notifications_client.send_email_notification(
+                #     email_address='nicholas.deschenes@dal.ca',
+                #     template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'
+                # )
+                return "create-user<br>" + str(request.form) + "<br><br>" # TODO: Implement proper Database entry with hashing.
             # If passwords do not match, redirect back to register page
             else:
                 error = "Passwords do not match"
