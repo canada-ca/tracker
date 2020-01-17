@@ -291,22 +291,28 @@ def register(app):
 
 			if user_password == user_password_confirm:
 				if is_strong_password(user_password):
-					# Create a user to insert into the database
-					to_add = Users(
-						username=user_name,
-						display_name=user_name,
-						user_email=user_email,
-						user_password=bcrypt.generate_password_hash(user_password),  # Flask-Bcrypt password hash
-						preferred_lang="English"
-					)
-					connection.insert(to_add)
-					connection.commit()
+					if connection.query(Users)[0] is None:
+						# Create a user to insert into the database
+						to_add = Users(
+							username=user_name,
+							display_name=user_name,
+							user_email=user_email,
+							user_password=bcrypt.generate_password_hash(user_password),  # Flask-Bcrypt password hash
+							preferred_lang="English"
+						)
+						connection.insert(to_add)
+						connection.commit()
 
-					return render_template(generate_path(prefix, "email-sent"))
+						return render_template(generate_path(prefix, "email-sent"))
+					else:
+						return render_template(generate_path(prefix, "register"),
+						                       error="A user with that email address already exists!",
+						                       name=user_name,
+						                       email=user_email)
 
 				else:
 					return render_template(generate_path(prefix, "register"),
-					                       error="Password does not meet minimum requirements (Min. 8 chars, Uppercase, Number, Special Char)",
+					                       error="Password does not meet minimum requirements (Needs Min. 8 chars, Uppercase, Number, Special Char)",
 					                       name=user_name,
 					                       email=user_email)
 
@@ -387,11 +393,13 @@ def register(app):
 
 	@app.errorhandler(404)
 	def page_not_found(error):
-		path = request.path
-		if "fr" in path:
-			return render_template("/fr/404.html"), HTTPStatus.NOT_FOUND
-		else:
-			return render_template("/en/404.html"), HTTPStatus.NOT_FOUND
+		prefix = request.path[1:3]
+		return render_template(generate_path(prefix, '404')), HTTPStatus.NOT_FOUND
+
+	@app.errorhandler(401)
+	def invalid_credentials(error):
+		prefix = request.path[1:3]
+		return render_template(generate_path(prefix, '401')), HTTPStatus.UNAUTHORIZED
 
 	@app.errorhandler(models.QueryError)
 	def handle_invalid_usage(error):
