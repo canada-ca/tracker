@@ -10,12 +10,12 @@ from track import models
 from track.cache import cache
 
 from notifications_python_client.notifications import NotificationsAPIClient
-from track import api_config
-
-notifications_client = NotificationsAPIClient(
-    api_config.api_key,
-    api_config.api_url,
-)
+# from track import api_config
+#
+# notifications_client = NotificationsAPIClient(
+#     api_config.api_key,
+#     api_config.api_url,
+# )
 
 
 def register(app):
