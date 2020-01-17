@@ -10,12 +10,12 @@ from track import models
 from track.cache import cache
 
 from notifications_python_client.notifications import NotificationsAPIClient
-# from track import api_config
-#
-# notifications_client = NotificationsAPIClient(
-#     api_config.api_key,
-#     api_config.api_url,
-# )
+from track import api_config
+
+notifications_client = NotificationsAPIClient(
+    api_config.api_key,
+    api_config.api_url,
+)
 
 
 def register(app):
@@ -275,7 +275,7 @@ def register(app):
             # Check if passwords match
             if request.form.get('password_input') == request.form.get('password_confirm_input'):
                 # response = notifications_client.send_email_notification(
-                #     email_address='nicholas.deschenes@dal.ca',
+                #     email_address='email_address',
                 #     template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'
                 # )
                 return "create-user<br>" + str(request.form) + "<br><br>" # TODO: Implement proper Database entry with hashing.
@@ -289,6 +289,7 @@ def register(app):
                                        name=name,
                                        email=email)
 
+
     @app.route("/en/forgot-password", methods=['GET', 'POST'])
     @app.route("/fr/forgot-password", methods=['GET', 'POST'])
     def forgot_password():
@@ -297,9 +298,31 @@ def register(app):
             return render_template(generate_path(prefix, "forgot-password"))
         else:
             # TODO: check if email exists, if it does send email
-            sent_msg = 'If an account is associated with the email address, ' \
+            # response = notifications_client.send_email_notification(
+            #     email_address='email_address',
+            #     template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'
+            # )
+            # General Notification
+            msg = 'If an account is associated with the email address, ' \
                       'further instructions will arrive in your inbox'
-            return render_template(generate_path(prefix, "forgot-password"), email=sent_msg)
+            return render_template(generate_path(prefix, "forgot-password"), msg=msg)
+
+    @app.route("/en/verify-account", methods=['GET', 'POST'])
+    @app.route("/fr/verify-account", methods=['GET', 'POST'])
+    def verify_account():
+        prefix = request.path[1:3]
+        if request.method == 'GET':
+            return render_template(generate_path(prefix, "verify-account"))
+        else:
+            # Create Token and send text  notification
+            # response = notifications_client.send_sms_notification(
+            #     phone_number='+12223334444',
+            #     template_id='Some ID',
+            #     personalisation={
+            #         'token':token
+            #     }
+            # )
+            return redirect(generate_path(prefix, "verify-account"))
 
     # Every response back to the browser will include these web response headers
     @app.after_request
