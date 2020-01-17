@@ -2,7 +2,7 @@
 
 ## Instructions:
 
-Ensure that Python3.6+ is installed, and a PostgreSQL database is configured.
+Ensure that Python3.6+ and pip3 are installed, and a PostgreSQL database is configured.
 
 Alter config.py to reflect your database credentials.
 
