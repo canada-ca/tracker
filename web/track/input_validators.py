@@ -26,7 +26,7 @@ def contains_number(password):
 
 
 def contains_special_char(password):
-	string_check = re.compile('[@_!#$%^&*()<>?/\\|}{~:]')
+	string_check = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
 	return not string_check.search(password) is None
 
 

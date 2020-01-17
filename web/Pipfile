@@ -26,6 +26,9 @@ Flask-Compress = "==1.4.0"
 Babel = "==2.6.0"
 Flask-Caching = "==1.4.0"
 flask-login = "*"
+sqlalchemy = "*"
+psycopg2-binary = "*"
+flask-bcrypt = "*"
 
 [scripts]
 test = "pytest"

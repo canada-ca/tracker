@@ -5,9 +5,11 @@ from http import HTTPStatus
 
 from .config import *
 from .input_validators import *
+from .user_model import *
 
 from flask import render_template, Response, abort, request, redirect
 from flask_login import LoginManager, login_required
+from flask.ext.bcrypt import Bcrypt
 from track import models
 from track.cache import cache
 
@@ -16,6 +18,9 @@ def register(app):
 	# Initialize flask-login
 	login_manager = LoginManager()
 	login_manager.init_app(app)
+
+	# Initialize flask-Bcrypt
+	bcrypt = Bcrypt(app)
 
 	# Default route checks accept-language header
 	# Redirects based on browser language, defaults to english
@@ -247,6 +252,9 @@ def register(app):
 	# Auth endpoints.
 	#
 
+	# TODO: Create Config item for DB Connection.
+	connection = Connection(_user="db_user", _password="db_password", _host="db_host", _port="db_port", _db="db_name")
+
 	@app.route("/en/sign-in", methods=['GET', 'POST'])
 	@app.route("/fr/sign-in", methods=['GET', 'POST'])
 	def sign_in_page():
@@ -273,9 +281,24 @@ def register(app):
 
 			if user_password == user_password_confirm:
 				if is_strong_password(user_password):
-					return "TODO: Implement DB entry"
+					# Create a user to insert into the database
+					to_add = Users(
+						username=user_name,
+						display_name=user_name,
+						user_email=user_email,
+						user_password=bcrypt.generate_password_hash(user_password),  # Flask-Bcrypt password hash
+						preferred_lang="English"
+					)
+					connection.insert(to_add)
+					connection.commit()
+
+					return render_template(generate_path(prefix, "email-sent"))
+
 				else:
-					return "TODO: Display that password does not meet minimum requirements."
+					return render_template(generate_path(prefix, "register"),
+					                       error="Password does not meet minimum requirements (Min. 8 chars, Uppercase, Number, Special Char)",
+					                       name=user_name,
+					                       email=user_email)
 
 			# If passwords do not match, redirect back to register page
 			else:
