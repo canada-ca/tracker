@@ -11,8 +11,8 @@ from .user_model import *
 from flask import render_template, Response, abort, request, redirect, url_for
 
 from flask_login import LoginManager, login_required
-from flask.ext.bcrypt import Bcrypt
-from track import models
+from flask_bcrypt import Bcrypt
+from track import models, error_messages
 from track.cache import cache
 
 from notifications_python_client.notifications import NotificationsAPIClient
@@ -263,7 +263,7 @@ def register(app):
 	#
 
 	# TODO: Create Config item for DB Connection.
-	connection = Connection(_user="db_user", _password="db_password", _host="db_host", _port="db_port", _db="db_name")
+	connection = Connection(_user="postgres", _password="root", _host="localhost", _port="5432", _db="track_dmarc")
 
 	@app.route("/en/sign-in", methods=['GET', 'POST'])
 	@app.route("/fr/sign-in", methods=['GET', 'POST'])
@@ -305,17 +305,13 @@ def register(app):
 					return render_template(generate_path(prefix, "email-sent"))
 
 				else:
-					return render_template(generate_path(prefix, "register"),
-					                       error="Password does not meet minimum requirements (Min. 8 chars, Uppercase, Number, Special Char)",
-					                       name=user_name,
-					                       email=user_email)
+					content = error_messages.password_weak_register(user_name, user_email)
+					return render_template(generate_path(prefix, "register"), **content)
 
 			# If passwords do not match, redirect back to register page
 			else:
-				return render_template(generate_path(prefix, "register"),
-				                       error="Passwords do not match",
-				                       name=user_name,
-				                       email=user_email)
+				content = error_messages.password_not_match_register(user_name, user_email)
+				return render_template(generate_path(prefix, "register"), **content)
 
 	@app.route("/en/logout")
 	@app.route("/fr/logout")
@@ -339,6 +335,36 @@ def register(app):
 			msg = 'If an account is associated with the email address, ' \
 			      'further instructions will arrive in your inbox'
 			return render_template(generate_path(prefix, "forgot-password"), msg=msg)
+
+	@app.route("/en/new-password", methods=['GET', 'POST'])
+	@app.route("/fr/new-password", methods=['GET', 'POST'])
+	def new_password():
+		prefix = request.path[1:3]
+		if request.method == 'GET':
+			return render_template(generate_path(prefix, 'new-password'))
+		else:
+			user_password = cleanse_input(request.form.get('password_input'))
+			user_password_confirm = cleanse_input(request.form.get('password_confirm_input'))
+
+			if user_password == user_password_confirm:
+				if is_strong_password(user_password):
+					# Create a user to insert into the database
+					# to_add = Users(
+					# 	user_password=bcrypt.generate_password_hash(user_password),  # Flask-Bcrypt password hash
+					# 	preferred_lang="English"
+					# )
+					# connection.insert(to_add)
+					# connection.commit()
+					return render_template(generate_path(prefix, "email-sent"))
+				else:
+					content = error_messages.password_weak_forgot()
+					return render_template(generate_path(prefix, "register"), **content)
+
+			# If passwords do not match, redirect back to register page
+			else:
+				content = error_messages.password_no_match_forgot()
+				return render_template(generate_path(prefix, "register"), **content)
+
 
 
 	@app.route("/en/verify-account", methods=['GET', 'POST'])
