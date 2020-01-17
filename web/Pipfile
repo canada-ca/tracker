@@ -29,6 +29,7 @@ flask-login = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
 flask-bcrypt = "*"
+notifications-python-client = "*"
 
 [scripts]
 test = "pytest"
