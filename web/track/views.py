@@ -4,6 +4,7 @@ from datetime import datetime
 from http import HTTPStatus
 
 from .config import *
+from .input_validators import *
 
 from flask import render_template, Response, abort, request, redirect
 from flask_login import LoginManager, login_required
@@ -244,6 +245,7 @@ def register(app):
 
 	##
 	# Auth endpoints.
+	#
 
 	@app.route("/en/sign-in", methods=['GET', 'POST'])
 	@app.route("/fr/sign-in", methods=['GET', 'POST'])
@@ -252,7 +254,7 @@ def register(app):
 		if request.method == 'GET':
 			return render_template(generate_path(prefix, "sign-in"))
 		else:
-			return "Sign in Functionality goes here"  # TODO: Implement flask-login
+			return "TODO: Implement flask-login"  # TODO: Implement flask-login
 
 	@app.route("/en/register", methods=['GET', 'POST'])
 	@app.route("/fr/register", methods=['GET', 'POST'])
@@ -271,9 +273,9 @@ def register(app):
 
 			if user_password == user_password_confirm:
 				if is_strong_password(user_password):
-					return "User Created"  # TODO: Implement DB entry
+					return "TODO: Implement DB entry"
 				else:
-					return "Password does not meet minimum requirements"
+					return "TODO: Display that password does not meet minimum requirements."
 
 			# If passwords do not match, redirect back to register page
 			else:
@@ -281,6 +283,12 @@ def register(app):
 				                       error="Passwords do not match",
 				                       name=user_name,
 				                       email=user_email)
+
+	@app.route("/en/logout")
+	@app.route("/fr/logout")
+	@login_required
+	def logout():
+		return "TODO: Logout the user"
 
 	# Every response back to the browser will include these web response headers
 	@app.after_request
@@ -336,26 +344,3 @@ def to_json(user):
 		'preferred_lang': user.preferred_lang
 	}
 	return json_user
-
-
-def is_strong_password(password):
-	return has_min_chars(password) and contains_special_char(password) and contains_uppercase(password)
-
-
-def has_min_chars(password):
-	return len(password) >= 8
-
-
-def contains_uppercase(password):
-	for char in password:
-		if char == char.isupper():
-			return True
-	return False
-
-
-def contains_special_char(password):
-	return True  # TODO: Define what is considered a valid special char in password
-
-
-def cleanse_input(input_string):
-	return input_string
