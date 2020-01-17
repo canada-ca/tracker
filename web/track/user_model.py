@@ -72,3 +72,22 @@ class Users(base):
     user_password = Column(String)
     preferred_lang = Column(String)
     # user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
+
+    @staticmethod
+    def is_active(self):
+        """True, as all users are active."""
+        return True
+
+    def get_id(self):
+        """Return the ID to satisfy Flask-Login's requirements."""
+        return self.id
+
+    @staticmethod
+    def is_authenticated(self):
+        """Return True if the user is authenticated."""
+        return False  # TODO: add column in DB for authenticated
+
+    @staticmethod
+    def is_anonymous(self):
+        """False, as anonymous users aren't supported."""
+        return False

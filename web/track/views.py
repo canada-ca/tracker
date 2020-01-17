@@ -10,8 +10,8 @@ from .user_model import *
 
 from flask import render_template, Response, abort, request, redirect, url_for
 
-from flask_login import LoginManager, login_required
-from flask.ext.bcrypt import Bcrypt
+from flask_login import LoginManager, login_required, login_user
+from flask_bcrypt import Bcrypt
 from track import models
 from track.cache import cache
 
@@ -272,7 +272,16 @@ def register(app):
 		if request.method == 'GET':
 			return render_template(generate_path(prefix, "sign-in"))
 		else:
-			return "TODO: Implement flask-login"  # TODO: Implement flask-login
+			user_email = cleanse_input(request.form.get('email_input'))
+			user_password = cleanse_input(request.form.get('password_input'))
+
+			users = connection.query(Users)
+			for user in users:
+				if user['user_email'] == user_email:
+					if bcrypt.check_password_hash(user['user_password'], user_password):
+						#   Login the user
+						return 'TODO: Login user with flask-login'
+		return 'tada'
 
 	@app.route("/en/register", methods=['GET', 'POST'])
 	@app.route("/fr/register", methods=['GET', 'POST'])
@@ -291,24 +300,18 @@ def register(app):
 
 			if user_password == user_password_confirm:
 				if is_strong_password(user_password):
-					if connection.query(Users)[0] is None:
-						# Create a user to insert into the database
-						to_add = Users(
-							username=user_name,
-							display_name=user_name,
-							user_email=user_email,
-							user_password=bcrypt.generate_password_hash(user_password),  # Flask-Bcrypt password hash
-							preferred_lang="English"
-						)
-						connection.insert(to_add)
-						connection.commit()
+					# Create a user to insert into the database
+					to_add = Users(
+						username=user_name,
+						display_name=user_name,
+						user_email=user_email,
+						user_password=bcrypt.generate_password_hash(user_password).decode('UTF-8'),  # Flask-Bcrypt password hash
+						preferred_lang="English"
+					)
+					connection.insert(to_add)
+					connection.commit()
 
-						return render_template(generate_path(prefix, "email-sent"))
-					else:
-						return render_template(generate_path(prefix, "register"),
-						                       error="A user with that email address already exists!",
-						                       name=user_name,
-						                       email=user_email)
+					return render_template(generate_path(prefix, "email-sent"))
 
 				else:
 					return render_template(generate_path(prefix, "register"),
@@ -431,14 +434,3 @@ def register(app):
 			else:
 				app.logger.error("TRACK_CACHE: remote cache datetime was None. Danger Will Robinson.")
 
-
-# Converts 'User' object to a JSON object
-def to_json(user):
-	json_user = {
-		'id'            : user.id,
-		'username'      : user.username,
-		'display_name'  : user.display_name,
-		'user_email'    : user.user_email,
-		'preferred_lang': user.preferred_lang
-	}
-	return json_user
