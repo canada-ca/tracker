@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from http import HTTPStatus
 
-from flask import render_template, Response, abort, request, redirect
+from flask import render_template, Response, abort, request, redirect, url_for
 from flask_login import LoginManager, login_required
 from track import models
 from track.cache import cache
@@ -289,7 +289,6 @@ def register(app):
                                        name=name,
                                        email=email)
 
-
     @app.route("/en/forgot-password", methods=['GET', 'POST'])
     @app.route("/fr/forgot-password", methods=['GET', 'POST'])
     def forgot_password():
@@ -314,15 +313,36 @@ def register(app):
         if request.method == 'GET':
             return render_template(generate_path(prefix, "verify-account"))
         else:
+            phone = request.form.get('mobile_input')
             # Create Token and send text  notification
             # response = notifications_client.send_sms_notification(
-            #     phone_number='+12223334444',
+            #     phone_number='+1' + phone,
             #     template_id='Some ID',
             #     personalisation={
             #         'token':token
             #     }
             # )
-            return redirect(generate_path(prefix, "verify-account"))
+
+            # Hide Mobile Number
+            # i = 0
+            # hidden_phone = ''
+            # for char in phone:
+            #     if char == '-':
+            #         hidden_phone += char
+            #     else:
+            #         if i < 6:
+            #             hidden_phone += '*'
+            #         else:
+            #             hidden_phone += char
+            #         i += 1
+            return redirect('/' + prefix + '/verify-account/mobile')
+
+    @app.route("/en/verify-account/mobile", methods=['GET', 'POST'])
+    @app.route("/fr/verify-account/mobile", methods=['GET', 'POST'])
+    def verify_account_mobile():
+        prefix = request.path[1:3]
+        phone = 'placeholder: ***-***-3333'
+        return render_template(generate_path(prefix, "verify-mobile"), phone=phone)
 
     # Every response back to the browser will include these web response headers
     @app.after_request
