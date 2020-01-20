@@ -13,6 +13,13 @@ def password_not_match_register(user_name, user_email):
             }
 
 
+def email_already_taken(user_name, user_email):
+    return {'error': 'Sorry that email has already been taken, please try another email, or try logging in',
+            'name': user_name,
+            'email': user_email
+            }
+
+
 # Sign In Page Error Messages
 def sign_in_incorrect(user_email):
     return {'error': 'Incorrect email or password',
