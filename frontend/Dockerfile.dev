@@ -1,0 +1,12 @@
+FROM node:13-alpine
+LABEL maintainer="mike.williamson@cds-snc.ca"
+
+WORKDIR /app
+COPY . .
+
+RUN npm install
+
+ENV NODE_ENV development
+
+EXPOSE 3000
+CMD ["npm", "run", "dev"]
