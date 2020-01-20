@@ -13,10 +13,15 @@ from flask import render_template, Response, abort, request, redirect, url_for
 from flask_login import LoginManager, login_required, login_user
 from flask_bcrypt import Bcrypt
 from track import models
+from flask_login import LoginManager, login_required
+from flask_bcrypt import Bcrypt
+from track import models, error_messages
 from track.cache import cache
 
 from notifications_python_client.notifications import NotificationsAPIClient
-# from track import api_config
+from track import api_config
+
+
 #
 # notifications_client = NotificationsAPIClient(
 #     api_config.api_key,
@@ -304,7 +309,7 @@ def register(app):
 					to_add = Users(
 						username=user_name,
 						display_name=user_name,
-						user_email=user_email,
+						user_email=user_email.lower(),
 						user_password=bcrypt.generate_password_hash(user_password).decode('UTF-8'),  # Flask-Bcrypt password hash
 						preferred_lang="English"
 					)
@@ -433,4 +438,3 @@ def register(app):
 					cache.set('last-cache-bump', remote_signal)
 			else:
 				app.logger.error("TRACK_CACHE: remote cache datetime was None. Danger Will Robinson.")
-
