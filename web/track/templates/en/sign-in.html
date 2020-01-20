@@ -13,7 +13,11 @@
       <div class="flex-1 mt-6 mr-6">
          <h1 class="text-5xl font-black mb-6 w-full">Sign in</h1>
          <h2 class="text-4xl mb-2 font-black">Making government websites more secure</h2>
-
+            {% if error %}
+              <div class="flex-1 flex-auto">
+                  <h3 class="text-3xl cds-form-group error cds-alert-error">{{ error }}</h3>
+              </div>
+          {% endif %}
           <div class="flex-1 flex-col">
             <form method="POST" action="/en/sign-in">
 
