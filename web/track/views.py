@@ -365,12 +365,11 @@ def register(app):
                 if is_strong_password(user_password):
                     # Create a user to insert into the database
                     # to_add = Users(
-                    # 	user_password=bcrypt.generate_password_hash(user_password),  # Flask-Bcrypt password hash
-                    # 	preferred_lang="English"
+                    #     user_password=bcrypt.generate_password_hash(user_password),  # Flask-Bcrypt password hash
                     # )
                     # connection.insert(to_add)
                     # connection.commit()
-                    return render_template(generate_path(prefix, "email-sent"))
+                    return render_template(generate_path(prefix, "password-changed"))
                 else:
                     content = error_messages.password_weak_forgot()
                     return render_template(generate_path(prefix, "register"), **content)
@@ -379,6 +378,13 @@ def register(app):
             else:
                 content = error_messages.password_no_match_forgot()
                 return render_template(generate_path(prefix, "register"), **content)
+
+    @app.route("/en/password-changed")
+    @app.route("/fr/password-changed")
+    def password_changed():
+        prefix = request.path[1:3]
+        return render_template(generate_path(prefix, 'password-changed'))
+
 
     @app.route("/en/verify-account", methods=['GET', 'POST'])
     @app.route("/fr/verify-account", methods=['GET', 'POST'])
