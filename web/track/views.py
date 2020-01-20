@@ -10,10 +10,9 @@ from .user_model import *
 
 from flask import render_template, Response, abort, request, redirect, url_for
 
-from flask_login import LoginManager, login_required, login_user
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from track import models
-from flask_login import LoginManager, login_required, current_user
 from flask_bcrypt import Bcrypt
 from track import models, error_messages
 from track.cache import cache
@@ -32,8 +31,15 @@ from itsdangerous import URLSafeTimedSerializer
 
 def register(app):
     # Initialize flask-login
+
+    app.secret_key = api_config.super_secret_key
+
     login_manager = LoginManager()
     login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return connection.query_user_by_id(user_id)
 
     # Initialize flask-Bcrypt
     bcrypt = Bcrypt(app)
@@ -277,18 +283,25 @@ def register(app):
     def sign_in_page():
         prefix = request.path[1:3]
         if request.method == 'GET':
-            return render_template(generate_path(prefix, "sign-in"))
+            if current_user.is_authenticated:
+                # If a user is already logged in, redirect to user-profile
+                return redirect('user-profile')
+            else:
+                return render_template(generate_path(prefix, "sign-in"))
         else:
             user_email = cleanse_input(request.form.get('email_input'))
             user_password = cleanse_input(request.form.get('password_input'))
 
-            users = connection.query(Users)
-            for user in users:
-                if user['user_email'] == user_email:
-                    if bcrypt.check_password_hash(user['user_password'], user_password):
-                        #   Login the user
-                        return 'TODO: Login user with flask-login'
-        return 'tada'
+            user = connection.query_user_by_email(user_email)
+
+            if user is not None:  # If the user query is not empty
+                if bcrypt.check_password_hash(user.user_password, user_password):
+                    #   Login the user
+                    login_user(user)
+                    return render_template(generate_path(prefix, 'user-profile'))
+
+            content = error_messages.sign_in_incorrect(user_email)
+            return render_template(generate_path(prefix, "sign-in"), **content)
 
     @app.route("/en/register", methods=['GET', 'POST'])
     @app.route("/fr/register", methods=['GET', 'POST'])
@@ -307,14 +320,11 @@ def register(app):
 
             if user_password == user_password_confirm:
                 if is_strong_password(user_password):
-                    users = connection.query('user_email FROM users ')
-                    user_email_found = False
 
-                    for user_db_email in users:
-                        if user_db_email == user_email:
-                            user_email_found = True
+                    user = connection.query_user_by_email(user_email)
 
-                    if not user_email_found:
+                    if user is not None:
+                        # User already exists using this email
                         content = error_messages.email_already_taken(user_name, user_email)
                         return render_template(generate_path(prefix, "register"), **content)
 
@@ -336,16 +346,25 @@ def register(app):
                     content = error_messages.password_weak_register(user_name, user_email)
                     return render_template(generate_path(prefix, "register"), **content)
 
-            # If passwords do not match, redirect back to register page
+            # If passwords do not match, redirect back to register page with appropriate error message
             else:
                 content = error_messages.password_not_match_register(user_name, user_email)
                 return render_template(generate_path(prefix, "register"), **content)
+
+    @app.route("/en/user-profile")
+    @app.route("/fr/user-profile")
+    @login_required
+    def user_profile():
+        prefix = request.path[1:3]
+        return render_template(generate_path(prefix, 'user-profile'))
 
     @app.route("/en/logout")
     @app.route("/fr/logout")
     @login_required
     def logout():
-        return "TODO: Logout the user"
+        prefix = request.path[1:3]
+        logout_user()
+        return render_template(generate_path(prefix, 'logout'))
 
     @app.route("/en/forgot-password", methods=['GET', 'POST'])
     @app.route("/fr/forgot-password", methods=['GET', 'POST'])
