@@ -30,6 +30,7 @@ sqlalchemy = "*"
 psycopg2-binary = "*"
 flask-bcrypt = "*"
 notifications-python-client = "*"
+itsdangerous = "*"
 
 [scripts]
 test = "pytest"

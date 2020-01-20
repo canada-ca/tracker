@@ -13,7 +13,7 @@ from flask import render_template, Response, abort, request, redirect, url_for
 from flask_login import LoginManager, login_required, login_user
 from flask_bcrypt import Bcrypt
 from track import models
-from flask_login import LoginManager, login_required
+from flask_login import LoginManager, login_required, current_user
 from flask_bcrypt import Bcrypt
 from track import models, error_messages
 from track.cache import cache
@@ -21,6 +21,7 @@ from track.cache import cache
 from notifications_python_client.notifications import NotificationsAPIClient
 from track import api_config
 
+from itsdangerous import URLSafeTimedSerializer
 
 #
 # notifications_client = NotificationsAPIClient(
@@ -271,24 +272,23 @@ def register(app):
     connection = Connection(_user=api_config.db_user, _password=api_config.db_pass, _host=api_config.db_host,
                             _port=api_config.db_port, _db=api_config.db_name)
 
+    @app.route("/en/sign-in", methods=['GET', 'POST'])
+    @app.route("/fr/sign-in", methods=['GET', 'POST'])
+    def sign_in_page():
+        prefix = request.path[1:3]
+        if request.method == 'GET':
+            return render_template(generate_path(prefix, "sign-in"))
+        else:
+            user_email = cleanse_input(request.form.get('email_input'))
+            user_password = cleanse_input(request.form.get('password_input'))
 
-	@app.route("/en/sign-in", methods=['GET', 'POST'])
-	@app.route("/fr/sign-in", methods=['GET', 'POST'])
-	def sign_in_page():
-		prefix = request.path[1:3]
-		if request.method == 'GET':
-			return render_template(generate_path(prefix, "sign-in"))
-		else:
-			user_email = cleanse_input(request.form.get('email_input'))
-			user_password = cleanse_input(request.form.get('password_input'))
-
-			users = connection.query(Users)
-			for user in users:
-				if user['user_email'] == user_email:
-					if bcrypt.check_password_hash(user['user_password'], user_password):
-						#   Login the user
-						return 'TODO: Login user with flask-login'
-		return 'tada'
+            users = connection.query(Users)
+            for user in users:
+                if user['user_email'] == user_email:
+                    if bcrypt.check_password_hash(user['user_password'], user_password):
+                        #   Login the user
+                        return 'TODO: Login user with flask-login'
+        return 'tada'
 
     @app.route("/en/register", methods=['GET', 'POST'])
     @app.route("/fr/register", methods=['GET', 'POST'])
@@ -355,22 +355,35 @@ def register(app):
             return render_template(generate_path(prefix, "forgot-password"))
         else:
             # TODO: check if email exists, if it does send email
-            # response = notifications_client.send_email_notification(
-            #     email_address='email_address',
-            #     template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'
-            # )
-            # General Notification
-            msg = 'If an account is associated with the email address, ' \
-                  'further instructions will arrive in your inbox'
-            return render_template(generate_path(prefix, "forgot-password"), msg=msg)
+            user_email = cleanse_input(request.form.get('email_input'))
 
-    @app.route("/en/new-password", methods=['GET', 'POST'])
-    @app.route("/fr/new-password", methods=['GET', 'POST'])
-    def new_password():
+            password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
+            password_reset_url = url_for(prefix + '_new_password',
+                                             token=password_reset_serial.dumps(user_email, salt='password-reset-salt'),
+                                             _external=True
+                                             )
+            return render_template(generate_path(prefix, "reset-email-temp"), password_reset_url=password_reset_url)
+
+                # response = notifications_client.send_email_notification(
+                #     email_address='email_address',
+                #     template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'
+                # )
+                # General Notification
+
+            # msg = 'If an account is associated with the email address, ' \
+            #       'further instructions will arrive in your inbox'
+            # return render_template(generate_path(prefix, "forgot-password"), msg=msg)
+
+    @app.route("/en/new-password/<token>", endpoint='en_new_password', methods=['GET', 'POST'])
+    @app.route("/fr/new-password/<token>", endpoint='fr_new_password', methods=['GET', 'POST'])
+    def new_password(token):
         prefix = request.path[1:3]
         if request.method == 'GET':
             return render_template(generate_path(prefix, 'new-password'))
         else:
+            password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
+            email = password_reset_serial.loads(token, salt='password-reset-salt', max_age=3600)
+
             user_password = cleanse_input(request.form.get('password_input'))
             user_password_confirm = cleanse_input(request.form.get('password_confirm_input'))
 
@@ -397,7 +410,6 @@ def register(app):
     def password_changed():
         prefix = request.path[1:3]
         return render_template(generate_path(prefix, 'password-changed'))
-
 
     @app.route("/en/verify-account", methods=['GET', 'POST'])
     @app.route("/fr/verify-account", methods=['GET', 'POST'])
