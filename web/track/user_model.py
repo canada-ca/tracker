@@ -58,6 +58,12 @@ class Connection:
     def query(self, _query):
         return self.session.query(_query).all()
 
+    def query_user_by_id(self, _id):
+        return self.session.query(Users).get(_id)
+
+    def query_user_by_email(self, _email):
+        return self.session.query(Users).filter(Users.user_email == _email).first()
+
     def delete(self, _data):
         self.session.delete(_data)
 
