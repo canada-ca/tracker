@@ -34,6 +34,7 @@ def register(app):
     app.secret_key = api_config.super_secret_key
 
     login_manager = LoginManager()
+    login_manager.session_protection = "strong"
     login_manager.init_app(app)
 
     @login_manager.user_loader
@@ -273,7 +274,7 @@ def register(app):
     # Auth endpoints.
     #
 
-    # TODO: Create Config item for DB Connection.
+    # Connection to Postgres database -- TODO: Move to more appropriate (Top level?) location.
     connection = Connection(_user=api_config.db_user, _password=api_config.db_pass, _host=api_config.db_host,
                             _port=api_config.db_port, _db=api_config.db_name)
 
@@ -287,18 +288,32 @@ def register(app):
                 return redirect('user-profile')
             else:
                 return render_template(generate_path(prefix, "sign-in"))
+
         else:
             user_email = cleanse_input(request.form.get('email_input'))
             user_password = cleanse_input(request.form.get('password_input'))
 
             user = connection.query_user_by_email(user_email)
 
-            if user is not None:  # If the user query is not empty
-                if bcrypt.check_password_hash(user.user_password, user_password):
-                    #   Login the user
-                    login_user(user)
-                    return render_template(generate_path(prefix, 'user-profile'))
+            if user is not None:  # If a user with that email address exists
+                if not connection.is_user_account_locked(user_email):  # Check that account is not locked
+                    if bcrypt.check_password_hash(user.user_password, user_password):
+                        login_user(user)
+                        # After a successful login, set failed login attempts to 0
+                        connection.reset_failed_login_attempts(user_email)
+                        connection.commit()
+                        return render_template(generate_path(prefix, 'user-profile'), **generate_user_data(user_email))
 
+                    else:
+                        # If login fails, increment the failed attempts counter.
+                        connection.increment_failed_login_attempts(user_email)
+                        connection.commit()
+                else:
+                    # This account is locked due to too many failed login attempts
+                    return 'TODO: Redirect to password reset -- User Account has too many failed attempts' \
+                           ' -- Implement Nick\'s reset password feature'
+
+            # The sign in credentials were not valid, display appropriate error to the user.
             content = error_messages.sign_in_incorrect(user_email)
             return render_template(generate_path(prefix, "sign-in"), **content)
 
@@ -306,17 +321,22 @@ def register(app):
     @app.route("/fr/register", methods=['GET', 'POST'])
     def register_user():
         prefix = request.path[1:3]
+
         # User visiting register page, display page
         if request.method == 'GET':
-            return render_template(generate_path(prefix, "register"))
-        # When user submits register form
+            if current_user.is_authenticated:
+                # If a user is already logged in, redirect to user-profile
+                return redirect('user-profile', **generate_user_data(current_user.user_email))
+            else:
+                return render_template(generate_path(prefix, "register"))
+
         else:
-            # Check if passwords match
             user_name = cleanse_input(request.form.get('name_input'))
             user_email = cleanse_input(request.form.get('email_input'))
             user_password = cleanse_input(request.form.get('password_input'))
             user_password_confirm = cleanse_input(request.form.get('password_confirm_input'))
 
+            # Check if passwords match
             if user_password == user_password_confirm:
                 if is_strong_password(user_password):
 
@@ -345,8 +365,8 @@ def register(app):
                     content = error_messages.password_weak_register(user_name, user_email)
                     return render_template(generate_path(prefix, "register"), **content)
 
-            # If passwords do not match, redirect back to register page with appropriate error message
             else:
+                # If passwords do not match, redirect back to register page with appropriate error message.
                 content = error_messages.password_not_match_register(user_name, user_email)
                 return render_template(generate_path(prefix, "register"), **content)
 
@@ -355,7 +375,7 @@ def register(app):
     @login_required
     def user_profile():
         prefix = request.path[1:3]
-        return render_template(generate_path(prefix, 'user-profile'))
+        return render_template(generate_path(prefix, 'user-profile'), **generate_user_data(current_user.user_email))
 
     @app.route("/en/logout")
     @app.route("/fr/logout")
@@ -455,6 +475,18 @@ def register(app):
         phone = 'placeholder: ***-***-3333'
         return render_template(generate_path(prefix, "verify-mobile"), phone=phone)
 
+    def generate_user_data(_email):
+        user = connection.query_user_by_email(_email)
+        return {
+                'id': user.id,
+                'username': user.username,
+                'display_name': user.display_name,
+                'user_email': user.user_email,
+                # 'user_password': user.user_password,
+                'preferred_lang': user.preferred_lang
+                # 'failed_login_attempts': user.failed_login_attempts
+            }
+
     # Every response back to the browser will include these web response headers
     @app.after_request
     def apply_headers(response):
@@ -511,3 +543,4 @@ def to_json(user):
         'preferred_lang': user.preferred_lang
     }
     return json_user
+

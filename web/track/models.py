@@ -8,7 +8,7 @@ import track.data
 
 # These functions are meant to be the only ones that access the g.db.db
 # directly. If we ever decide to migrate from tinyg.db.db, that can all be
-# coordinated here.
+# coordinated here.def register_user():
 
 db = PyMongo()
 QueryError = PyMongoError
