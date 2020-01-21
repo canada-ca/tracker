@@ -64,6 +64,10 @@ class Connection:
     def query_user_by_email(self, _email):
         return self.session.query(Users).filter(Users.user_email == _email).first()
 
+    def update_user_password(self, _email, _password):
+        return self.session.query(Users).filter(Users.user_email == _email) \
+            .update({Users.user_password: _password})
+
     def delete(self, _data):
         self.session.delete(_data)
 
@@ -91,7 +95,7 @@ class Users(base):
     @staticmethod
     def is_authenticated(self):
         """Return True if the user is authenticated."""
-        return False  # TODO: add column in DB for authenticated
+        return True  # TODO: add column in DB for authenticated
 
     @staticmethod
     def is_anonymous(self):

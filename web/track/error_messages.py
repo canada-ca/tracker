@@ -27,10 +27,23 @@ def sign_in_incorrect(user_email):
             }
 
 
+def sign_in_change_pass():
+    return {'error': 'The password reset link is invalid or expired, please try again'}
+
+
 # Forgot Password Error Messages
-def password_weak_forgot():
-    return {'error': 'Password does not meet minimum requirements (Min. 8 chars, Uppercase, Number, Special Char)'}
+def password_weak_forgot(token):
+    return {'error': 'Password does not meet minimum requirements (Min. 8 chars, Uppercase, Number, Special Char)',
+            'token': token
+            }
 
 
-def password_no_match_forgot():
-    return {'error': 'Passwords do not match'}
+def password_no_match_forgot(token):
+    return {'error': 'Passwords do not match',
+            'token': token
+            }
+
+def password_db_error(token):
+    return {'error': 'An error has occurred, please try submitting again',
+            'token': token
+            }
