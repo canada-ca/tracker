@@ -64,9 +64,26 @@ class Connection:
     def query_user_by_email(self, _email):
         return self.session.query(Users).filter(Users.user_email == _email).first()
 
+
     def update_user_password(self, _email, _password):
         return self.session.query(Users).filter(Users.user_email == _email) \
             .update({Users.user_password: _password})
+
+    def increment_failed_login_attempts(self, _email):
+        return self.session.query(Users).filter(Users.user_email == _email)\
+            .update({Users.failed_login_attempts: Users.failed_login_attempts + 1})
+
+    def reset_failed_login_attempts(self, _email):
+        return self.session.query(Users).filter(Users.user_email == _email)\
+            .update({Users.failed_login_attempts: 0})
+
+    def is_user_account_locked(self, _email):
+        user = self.session.query(Users).filter(Users.user_email == _email).first()
+        if user.failed_login_attempts > 5:
+            return True
+        else:
+            return False
+
 
     def delete(self, _data):
         self.session.delete(_data)
@@ -81,6 +98,7 @@ class Users(base):
     user_email = Column(String)
     user_password = Column(String)
     preferred_lang = Column(String)
+    failed_login_attempts = Column(Integer)
     # user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
 
     @staticmethod

@@ -16,6 +16,14 @@
           <div class="flex-1 flex-col">
               <br>
               <h2>Successfully Logged in</h2>
+              <br>
+              {% if display_name %}
+                <h4>Name: {{ display_name }}</h4>
+                <h4>Email: {{ user_email }}</h4>
+                <h4>Language: {{ preferred_lang }}</h4>
+
+              {% endif %}
+                <br>
               <a href="/en">Home</a>
               <a href="logout">Logout</a>
           </div>
