@@ -274,6 +274,7 @@ def register(app):
     # Auth endpoints.
     #
 
+    # Connection to Postgres database -- TODO: Move to more appropriate (Top level?) location.
     connection = Connection(_user=api_config.db_user, _password=api_config.db_pass, _host=api_config.db_host,
                             _port=api_config.db_port, _db=api_config.db_name)
 
@@ -301,7 +302,7 @@ def register(app):
                         # After a successful login, set failed login attempts to 0
                         connection.reset_failed_login_attempts(user_email)
                         connection.commit()
-                        return render_template(generate_path(prefix, 'user-profile'))
+                        return render_template(generate_path(prefix, 'user-profile'), **generate_user_data(user_email))
 
                     else:
                         # If login fails, increment the failed attempts counter.
@@ -309,7 +310,8 @@ def register(app):
                         connection.commit()
                 else:
                     # This account is locked due to too many failed login attempts
-                    return 'TODO: Redirect to password reset -- User Account has too many failed attempts'
+                    return 'TODO: Redirect to password reset -- User Account has too many failed attempts' \
+                           ' -- Implement Nick\'s reset password feature'
 
             # The sign in credentials were not valid, display appropriate error to the user.
             content = error_messages.sign_in_incorrect(user_email)
@@ -322,7 +324,11 @@ def register(app):
 
         # User visiting register page, display page
         if request.method == 'GET':
-            return render_template(generate_path(prefix, "register"))
+            if current_user.is_authenticated:
+                # If a user is already logged in, redirect to user-profile
+                return redirect('user-profile', **generate_user_data(current_user.user_email))
+            else:
+                return render_template(generate_path(prefix, "register"))
 
         else:
             user_name = cleanse_input(request.form.get('name_input'))
@@ -369,7 +375,7 @@ def register(app):
     @login_required
     def user_profile():
         prefix = request.path[1:3]
-        return render_template(generate_path(prefix, 'user-profile'))
+        return render_template(generate_path(prefix, 'user-profile'), **generate_user_data(current_user.user_email))
 
     @app.route("/en/logout")
     @app.route("/fr/logout")
@@ -469,6 +475,18 @@ def register(app):
         phone = 'placeholder: ***-***-3333'
         return render_template(generate_path(prefix, "verify-mobile"), phone=phone)
 
+    def generate_user_data(_email):
+        user = connection.query_user_by_email(_email)
+        return {
+                'id': user.id,
+                'username': user.username,
+                'display_name': user.display_name,
+                'user_email': user.user_email,
+                # 'user_password': user.user_password,
+                'preferred_lang': user.preferred_lang
+                # 'failed_login_attempts': user.failed_login_attempts
+            }
+
     # Every response back to the browser will include these web response headers
     @app.after_request
     def apply_headers(response):
@@ -525,3 +543,4 @@ def to_json(user):
         'preferred_lang': user.preferred_lang
     }
     return json_user
+
