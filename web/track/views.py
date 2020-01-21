@@ -13,13 +13,14 @@ from flask import render_template, Response, abort, request, redirect, url_for
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from track import models
-from flask_login import LoginManager, login_required
 from flask_bcrypt import Bcrypt
 from track import models, error_messages
 from track.cache import cache
 
 from notifications_python_client.notifications import NotificationsAPIClient
 from track import api_config
+
+from itsdangerous import URLSafeTimedSerializer
 
 #
 # notifications_client = NotificationsAPIClient(
@@ -278,8 +279,8 @@ def register(app):
     connection = Connection(_user=api_config.db_user, _password=api_config.db_pass, _host=api_config.db_host,
                             _port=api_config.db_port, _db=api_config.db_name)
 
-    @app.route("/en/sign-in", methods=['GET', 'POST'])
-    @app.route("/fr/sign-in", methods=['GET', 'POST'])
+    @app.route("/en/sign-in", endpoint='en_sign_in', methods=['GET', 'POST'])
+    @app.route("/fr/sign-in", endpoint='fr_sign_in', methods=['GET', 'POST'])
     def sign_in_page():
         prefix = request.path[1:3]
         if request.method == 'GET':
@@ -353,7 +354,7 @@ def register(app):
                             username=user_name,
                             display_name=user_name,
                             user_email=user_email.lower(),
-                            user_password=bcrypt.generate_password_hash(user_password),  # Flask-Bcrypt password hash
+                            user_password=bcrypt.generate_password_hash(user_password).decode('UTF-8'),  # Flask-Bcrypt password hash
                             preferred_lang="English"
                         )
                         connection.insert(to_add)
@@ -392,50 +393,61 @@ def register(app):
         if request.method == 'GET':
             return render_template(generate_path(prefix, "forgot-password"))
         else:
-            # TODO: check if email exists, if it does send email
-            # response = notifications_client.send_email_notification(
-            #     email_address='email_address',
-            #     template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'
-            # )
-            # General Notification
-            msg = 'If an account is associated with the email address, ' \
-                  'further instructions will arrive in your inbox'
-            return render_template(generate_path(prefix, "forgot-password"), msg=msg)
 
-    @app.route("/en/new-password", methods=['GET', 'POST'])
-    @app.route("/fr/new-password", methods=['GET', 'POST'])
-    def new_password():
+            user_email = cleanse_input(request.form.get('email_input'))
+            user = connection.query_user_by_email(user_email)
+            return send_pass_reset(user_email, user, prefix)
+
+            # msg = 'If an account is associated with the email address, ' \
+            #     'further instructions will arrive in your inbox'
+            # return render_template(generate_path(prefix, "forgot-password"), msg=msg)
+
+    @app.route("/en/new-password/<token>", endpoint='en_new_password', methods=['GET', 'POST'])
+    @app.route("/fr/new-password/<token>", endpoint='fr_new_password', methods=['GET', 'POST'])
+    def new_password(token):
         prefix = request.path[1:3]
         if request.method == 'GET':
-            return render_template(generate_path(prefix, 'new-password'))
+            return render_template(generate_path(prefix, 'new-password'), token=token)
         else:
+            # Try to see if email matches email set in token
+            try:
+                password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
+                email = password_reset_serial.loads(token, salt=api_config.super_secret_salt, max_age=3600)
+            except:
+                content = error_messages.sign_in_change_pass()
+                return redirect(url_for(prefix + '_sign_in', **content))
+
+            user = connection.query_user_by_email(email)
+
             user_password = cleanse_input(request.form.get('password_input'))
             user_password_confirm = cleanse_input(request.form.get('password_confirm_input'))
 
             if user_password == user_password_confirm:
                 if is_strong_password(user_password):
                     # Create a user to insert into the database
-                    # to_add = Users(
-                    #     user_password=bcrypt.generate_password_hash(user_password),  # Flask-Bcrypt password hash
-                    # )
-                    # connection.insert(to_add)
-                    # connection.commit()
-                    return render_template(generate_path(prefix, "password-changed"))
+                    user_password = bcrypt.generate_password_hash(user_password).decode('UTF-8')  # Flask-Bcrypt password hash
+
+                    result = connection.update_user_password(email, user_password)
+
+                    if result:
+                        return render_template(generate_path(prefix, "password-changed"))
+                    else:
+                        content = error_messages.password_db_error(token)
+                        return render_template(generate_path(prefix, "password-changed"))
                 else:
-                    content = error_messages.password_weak_forgot()
-                    return render_template(generate_path(prefix, "register"), **content)
+                    content = error_messages.password_weak_forgot(token)
+                    return render_template(generate_path(prefix, "new-password"), **content)
 
             # If passwords do not match, redirect back to register page
             else:
-                content = error_messages.password_no_match_forgot()
-                return render_template(generate_path(prefix, "register"), **content)
+                content = error_messages.password_no_match_forgot(token)
+                return render_template(generate_path(prefix, "new-password"), **content)
 
     @app.route("/en/password-changed")
     @app.route("/fr/password-changed")
     def password_changed():
         prefix = request.path[1:3]
         return render_template(generate_path(prefix, 'password-changed'))
-
 
     @app.route("/en/verify-account", methods=['GET', 'POST'])
     @app.route("/fr/verify-account", methods=['GET', 'POST'])
@@ -475,6 +487,21 @@ def register(app):
         phone = 'placeholder: ***-***-3333'
         return render_template(generate_path(prefix, "verify-mobile"), phone=phone)
 
+
+    def send_pass_reset(user_email, user, prefix):
+        if user is not None and user.is_authenticated:
+            password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
+            password_reset_url = url_for(prefix + '_new_password',
+                                         token=password_reset_serial.dumps(user_email, salt=api_config.super_secret_salt),
+                                         _external=True
+                                         )
+            return render_template(generate_path(prefix, "reset-email-temp"), password_reset_url=password_reset_url)
+            # response = notifications_client.send_email_notification(
+            #     email_address='email_address',
+            #     template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'we
+            # )
+            # General Notification
+
     def generate_user_data(_email):
         user = connection.query_user_by_email(_email)
         return {
@@ -486,6 +513,7 @@ def register(app):
                 'preferred_lang': user.preferred_lang
                 # 'failed_login_attempts': user.failed_login_attempts
             }
+      
 
     # Every response back to the browser will include these web response headers
     @app.after_request
