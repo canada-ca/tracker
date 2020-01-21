@@ -249,3 +249,16 @@ tr.subdomain, tr.host {
     transform: translateX(0); }
 
 /*# sourceMappingURL=main.css.map */
+
+/* -- Auth Styles -- */
+
+.auth-field{
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 10px 0px;
+
+  width: 100%;
+  padding: 12px 20px;
+  display: inline-block;
+  box-sizing: border-box;
+}

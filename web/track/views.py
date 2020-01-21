@@ -1,16 +1,49 @@
-from http import HTTPStatus
+import json
 import os
 
-from flask import render_template, Response, abort, request, redirect
-import json
-
 from datetime import datetime
+from http import HTTPStatus
 
+from .config import *
+from .input_validators import *
+from .user_model import *
+
+from flask import render_template, Response, abort, request, redirect, url_for
+
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from flask_bcrypt import Bcrypt
 from track import models
+from flask_bcrypt import Bcrypt
+from track import models, error_messages
 from track.cache import cache
+
+from notifications_python_client.notifications import NotificationsAPIClient
+from track import api_config
+
+from itsdangerous import URLSafeTimedSerializer
+
+#
+# notifications_client = NotificationsAPIClient(
+#     api_config.api_key,
+#     api_config.api_url,
+# )
 
 
 def register(app):
+    # Initialize flask-login
+
+    app.secret_key = api_config.super_secret_key
+
+    login_manager = LoginManager()
+    login_manager.session_protection = "strong"
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return connection.query_user_by_id(user_id)
+
+    # Initialize flask-Bcrypt
+    bcrypt = Bcrypt(app)
 
     # Default route checks accept-language header
     # Redirects based on browser language, defaults to english
@@ -238,6 +271,250 @@ def register(app):
         response.headers["Content-Type"] = "application/json"
         return response
 
+    ##
+    # Auth endpoints.
+    #
+
+    # Connection to Postgres database -- TODO: Move to more appropriate (Top level?) location.
+    connection = Connection(_user=api_config.db_user, _password=api_config.db_pass, _host=api_config.db_host,
+                            _port=api_config.db_port, _db=api_config.db_name)
+
+    @app.route("/en/sign-in", endpoint='en_sign_in', methods=['GET', 'POST'])
+    @app.route("/fr/sign-in", endpoint='fr_sign_in', methods=['GET', 'POST'])
+    def sign_in_page():
+        prefix = request.path[1:3]
+        if request.method == 'GET':
+            if current_user.is_authenticated:
+                # If a user is already logged in, redirect to user-profile
+                return redirect('user-profile')
+            else:
+                return render_template(generate_path(prefix, "sign-in"))
+
+        else:
+            user_email = cleanse_input(request.form.get('email_input'))
+            user_password = cleanse_input(request.form.get('password_input'))
+
+            user = connection.query_user_by_email(user_email)
+
+            if user is not None:  # If a user with that email address exists
+                if not connection.is_user_account_locked(user_email):  # Check that account is not locked
+                    if bcrypt.check_password_hash(user.user_password, user_password):
+                        login_user(user)
+                        # After a successful login, set failed login attempts to 0
+                        connection.reset_failed_login_attempts(user_email)
+                        connection.commit()
+                        return render_template(generate_path(prefix, 'user-profile'), **generate_user_data(user_email))
+
+                    else:
+                        # If login fails, increment the failed attempts counter.
+                        connection.increment_failed_login_attempts(user_email)
+                        connection.commit()
+                else:
+                    # This account is locked due to too many failed login attempts
+                    return 'TODO: Redirect to password reset -- User Account has too many failed attempts' \
+                           ' -- Implement Nick\'s reset password feature'
+
+            # The sign in credentials were not valid, display appropriate error to the user.
+            content = error_messages.sign_in_incorrect(user_email)
+            return render_template(generate_path(prefix, "sign-in"), **content)
+
+    @app.route("/en/register", methods=['GET', 'POST'])
+    @app.route("/fr/register", methods=['GET', 'POST'])
+    def register_user():
+        prefix = request.path[1:3]
+
+        # User visiting register page, display page
+        if request.method == 'GET':
+            if current_user.is_authenticated:
+                # If a user is already logged in, redirect to user-profile
+                return redirect('user-profile', **generate_user_data(current_user.user_email))
+            else:
+                return render_template(generate_path(prefix, "register"))
+
+        else:
+            user_name = cleanse_input(request.form.get('name_input'))
+            user_email = cleanse_input(request.form.get('email_input'))
+            user_password = cleanse_input(request.form.get('password_input'))
+            user_password_confirm = cleanse_input(request.form.get('password_confirm_input'))
+
+            # Check if passwords match
+            if user_password == user_password_confirm:
+                if is_strong_password(user_password):
+
+                    user = connection.query_user_by_email(user_email)
+
+                    if user is not None:
+                        # User already exists using this email
+                        content = error_messages.email_already_taken(user_name, user_email)
+                        return render_template(generate_path(prefix, "register"), **content)
+
+                    else:
+                        # Create a user to insert into the database
+                        to_add = Users(
+                            username=user_name,
+                            display_name=user_name,
+                            user_email=user_email.lower(),
+                            user_password=bcrypt.generate_password_hash(user_password).decode('UTF-8'),  # Flask-Bcrypt password hash
+                            preferred_lang="English"
+                        )
+                        connection.insert(to_add)
+                        connection.commit()
+
+                        return render_template(generate_path(prefix, "email-sent"))
+
+                else:
+                    content = error_messages.password_weak_register(user_name, user_email)
+                    return render_template(generate_path(prefix, "register"), **content)
+
+            else:
+                # If passwords do not match, redirect back to register page with appropriate error message.
+                content = error_messages.password_not_match_register(user_name, user_email)
+                return render_template(generate_path(prefix, "register"), **content)
+
+    @app.route("/en/user-profile")
+    @app.route("/fr/user-profile")
+    @login_required
+    def user_profile():
+        prefix = request.path[1:3]
+        return render_template(generate_path(prefix, 'user-profile'), **generate_user_data(current_user.user_email))
+
+    @app.route("/en/logout")
+    @app.route("/fr/logout")
+    @login_required
+    def logout():
+        prefix = request.path[1:3]
+        logout_user()
+        return render_template(generate_path(prefix, 'logout'))
+
+    @app.route("/en/forgot-password", methods=['GET', 'POST'])
+    @app.route("/fr/forgot-password", methods=['GET', 'POST'])
+    def forgot_password():
+        prefix = request.path[1:3]
+        if request.method == 'GET':
+            return render_template(generate_path(prefix, "forgot-password"))
+        else:
+
+            user_email = cleanse_input(request.form.get('email_input'))
+            user = connection.query_user_by_email(user_email)
+            return send_pass_reset(user_email, user, prefix)
+
+            # msg = 'If an account is associated with the email address, ' \
+            #     'further instructions will arrive in your inbox'
+            # return render_template(generate_path(prefix, "forgot-password"), msg=msg)
+
+    @app.route("/en/new-password/<token>", endpoint='en_new_password', methods=['GET', 'POST'])
+    @app.route("/fr/new-password/<token>", endpoint='fr_new_password', methods=['GET', 'POST'])
+    def new_password(token):
+        prefix = request.path[1:3]
+        if request.method == 'GET':
+            return render_template(generate_path(prefix, 'new-password'), token=token)
+        else:
+            # Try to see if email matches email set in token
+            try:
+                password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
+                email = password_reset_serial.loads(token, salt=api_config.super_secret_salt, max_age=3600)
+            except:
+                content = error_messages.sign_in_change_pass()
+                return redirect(url_for(prefix + '_sign_in', **content))
+
+            user = connection.query_user_by_email(email)
+
+            user_password = cleanse_input(request.form.get('password_input'))
+            user_password_confirm = cleanse_input(request.form.get('password_confirm_input'))
+
+            if user_password == user_password_confirm:
+                if is_strong_password(user_password):
+                    # Create a user to insert into the database
+                    user_password = bcrypt.generate_password_hash(user_password).decode('UTF-8')  # Flask-Bcrypt password hash
+
+                    result = connection.update_user_password(email, user_password)
+
+                    if result:
+                        return render_template(generate_path(prefix, "password-changed"))
+                    else:
+                        content = error_messages.password_db_error(token)
+                        return render_template(generate_path(prefix, "password-changed"))
+                else:
+                    content = error_messages.password_weak_forgot(token)
+                    return render_template(generate_path(prefix, "new-password"), **content)
+
+            # If passwords do not match, redirect back to register page
+            else:
+                content = error_messages.password_no_match_forgot(token)
+                return render_template(generate_path(prefix, "new-password"), **content)
+
+    @app.route("/en/password-changed")
+    @app.route("/fr/password-changed")
+    def password_changed():
+        prefix = request.path[1:3]
+        return render_template(generate_path(prefix, 'password-changed'))
+
+    @app.route("/en/verify-account", methods=['GET', 'POST'])
+    @app.route("/fr/verify-account", methods=['GET', 'POST'])
+    def verify_account():
+        prefix = request.path[1:3]
+        if request.method == 'GET':
+            return render_template(generate_path(prefix, "verify-account"))
+        else:
+            phone = request.form.get('mobile_input')
+            # Create Token and send text  notification
+            # response = notifications_client.send_sms_notification(
+            #     phone_number='+1' + phone,
+            #     template_id='Some ID',
+            #     personalisation={
+            #         'token':token
+            #     }
+            # )
+
+            # Hide Mobile Number
+            # i = 0
+            # hidden_phone = ''
+            # for char in phone:
+            #     if char == '-':
+            #         hidden_phone += char
+            #     else:
+            #         if i < 6:
+            #             hidden_phone += '*'
+            #         else:
+            #             hidden_phone += char
+            #         i += 1
+            return redirect('/' + prefix + '/verify-account/mobile')
+
+    @app.route("/en/verify-account/mobile", methods=['GET', 'POST'])
+    @app.route("/fr/verify-account/mobile", methods=['GET', 'POST'])
+    def verify_account_mobile():
+        prefix = request.path[1:3]
+        phone = 'placeholder: ***-***-3333'
+        return render_template(generate_path(prefix, "verify-mobile"), phone=phone)
+
+
+    def send_pass_reset(user_email, user, prefix):
+        if user is not None and user.is_authenticated:
+            password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
+            password_reset_url = url_for(prefix + '_new_password',
+                                         token=password_reset_serial.dumps(user_email, salt=api_config.super_secret_salt),
+                                         _external=True
+                                         )
+            return render_template(generate_path(prefix, "reset-email-temp"), password_reset_url=password_reset_url)
+            # response = notifications_client.send_email_notification(
+            #     email_address='email_address',
+            #     template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'we
+            # )
+            # General Notification
+
+    def generate_user_data(_email):
+        user = connection.query_user_by_email(_email)
+        return {
+                'id': user.id,
+                'username': user.username,
+                'display_name': user.display_name,
+                'user_email': user.user_email,
+                # 'user_password': user.user_password,
+                'preferred_lang': user.preferred_lang
+                # 'failed_login_attempts': user.failed_login_attempts
+            }
+      
+
     # Every response back to the browser will include these web response headers
     @app.after_request
     def apply_headers(response):
@@ -245,13 +522,13 @@ def register(app):
 
     @app.errorhandler(404)
     def page_not_found(error):
-        path = request.path
-        if "fr" in path:
-            return render_template("/fr/404.html"), HTTPStatus.NOT_FOUND
-        else:
-            return render_template("/en/404.html"), HTTPStatus.NOT_FOUND
+        prefix = request.path[1:3]
+        return render_template(generate_path(prefix, '404')), HTTPStatus.NOT_FOUND
 
-
+    @app.errorhandler(401)
+    def invalid_credentials(error):
+        prefix = request.path[1:3]
+        return render_template(generate_path(prefix, '401')), HTTPStatus.UNAUTHORIZED
 
     @app.errorhandler(models.QueryError)
     def handle_invalid_usage(error):
@@ -261,7 +538,7 @@ def register(app):
     @app.before_request
     def verify_cache():
         cur_time = datetime.now()
-        
+
         if cache.get('last-cache-bump') is None:
             cache.set('last-cache-bump', cur_time)
 
@@ -282,3 +559,16 @@ def register(app):
                     cache.set('last-cache-bump', remote_signal)
             else:
                 app.logger.error("TRACK_CACHE: remote cache datetime was None. Danger Will Robinson.")
+
+
+# Converts 'User' object to a JSON object
+def to_json(user):
+    json_user = {
+        'id': user.id,
+        'username': user.username,
+        'display_name': user.display_name,
+        'user_email': user.user_email,
+        'preferred_lang': user.preferred_lang
+    }
+    return json_user
+
