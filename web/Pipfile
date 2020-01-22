@@ -22,7 +22,6 @@ msrestazure = "==0.5.1"
 Flask = "==1.0"
 PyYAML = "==5.1"
 Flask-PyMongo = "==2.2.0"
-Flask-Compress = "==1.4.0"
 Babel = "==2.6.0"
 Flask-Caching = "==1.4.0"
 flask-login = "*"
@@ -35,3 +34,6 @@ itsdangerous = "*"
 [scripts]
 test = "pytest"
 start = "gunicorn track.wsgi:app --bind=0.0.0.0:5000 --worker-class=sync --access-logfile=- --error-logfile=- --log-level=debug --workers=4"
+
+[pipenv]
+allow_prereleases = true
