@@ -1,42 +1,40 @@
-import setuptools
+import sys
+import os
 
-setuptools.setup(
-    name='tracker',
-    version='0.0.1',
-    long_description='',
-    author='GSA 18F, CDS-SNC',
-    author_email='pulse@cio.gov, cds-snc@tbs-sct.gc.ca',
-    url='https://github.com/cds-snc/tracker',
-    include_package_data=True,
-    packages=[
-        'data',
-    ],
-    classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 3',
-    ],
-    install_requires=[
-        'pyyaml==5.1',
-        'pymongo==3.6.1',
-        'ujson==1.35',
-        'click==6.7',
-        'python-slugify==1.2.1',
-        'azure-keyvault==1.1.0',
-        'msrestazure==0.5.1'
-    ],
-    extras_require={
-        'development': [
-            'mypy==0.590',
-            'pylint==1.8.4',
-            'pytest==3.5.0',
-            'pytest-cov==2.5.1',
-        ],
-    },
-    entry_points='''
-        [console_scripts]
-        tracker=data.cli:main
-    '''
+if __name__ == '__main__':
 
-)
+    try:
+        os.system("sudo apt-get install -y python3-pip")
+    except Exception as e:
+        print(f'Error occurred while installing pip3: {str(e)}')
+
+    _cmd = "pip3 install"
+    if not 'pyyaml' in sys.modules:
+        _cmd = _cmd + " pyyaml"
+    if not 'pymongo' in sys.modules:
+        _cmd = _cmd + " pymongo"
+    if not 'ujson' in sys.modules:
+        _cmd = _cmd + " ujson"
+    if not 'dkimpy' in sys.modules:
+        _cmd = _cmd + " dkimpy"
+    if not 'celery' in sys.modules:
+        _cmd = _cmd + " celery"
+    if not 'kombu' in sys.modules:
+        _cmd = _cmd + " kombu"
+    if not 'pshtt' in sys.modules:
+        _cmd = _cmd + " pshtt"
+    if not 'sslyze' in sys.modules:
+        _cmd = _cmd + " sslyze"
+    if not 'sqlalchemy' in sys.modules:
+        _cmd = _cmd + " sqlalchemy"
+    if not 'postgres' in sys.modules:
+        _cmd = _cmd + " postgres"
+    if not 'redis' in sys.modules:
+        _cmd = _cmd + " redis"
+
+    try:
+        os.system(_cmd)
+    except Exception as e:
+        print(f'Error occurred while installing requirements: {str(e)}')
+
+    print('Done!')

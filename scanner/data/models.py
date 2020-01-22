@@ -1,295 +1,238 @@
-import functools
-import itertools
-import os
-from time import sleep
-import typing
-import pymongo
-from data import logger
+from sqlalchemy import Table, Column, Integer, ForeignKey
+from sqlalchemy.types import Integer, Boolean, DateTime
+from sqlalchemy import create_engine
+from sqlalchemy import Column, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.dialects.postgresql import JSONB
+import psycopg2
+import logger
 
 LOGGER = logger.get_logger(__name__)
 
+base = declarative_base()
 
-class TrackerModelError(Exception):
-    pass
+class Connection:
 
-
-class InsertionError(TrackerModelError):
-    def __init__(self, *args, errors, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.errors = errors
-
-
-def grouper(group_size, iterable):
-    iterator = iter(iterable)
-    while True:
-        chunk = tuple(itertools.islice(iterator, group_size))
-        if not chunk:
-            return
-        yield chunk
-
-
-MAX_TRIES = int(os.environ.get("TRACKER_MAX_RETRIES", 0))
-
-REQUEST_RATE_ERROR = 16500
-DUPLICATE_KEY_ERROR = 11000
-
-DATA = typing.TypeVar('DATA')
-def _retry_write(
-        data: DATA,
-        write_method: typing.Callable[[DATA], typing.Any],
-        times: int
-    ) -> None:
-    '''Attempt `write_method`(`data`) `times` times'''
-
-    if not times:
-        attempts = itertools.count(1) # unlimited attempts as long as work is being done
-    else:
-        attempts = iter(range(1, times+1))
-
-    errors = []
-    for count in attempts:
+    def __init__(self, _user, _password, _host, _port, _db):
         try:
-            write_method(data)
-            break
-        except pymongo.errors.DuplicateKeyError as exc:
-            # After retrying the insertion, some of the documents were duplicates, this is OK
-            break
-        except pymongo.errors.BulkWriteError as exc:
-            if sum(
-                    exc.details.get(field, 0)
-                    for field in ['nInserted', 'nUpserted', 'nMatched', 'nModified', 'nRemoved']
-            ) == 0 and not times:
-                # If no work is being done, and we're not doing a fixed number of attempts, halt
-                raise
+            self.engine = create_engine(f"postgresql+psycopg2://{_user}:{_password}@{_host}/{_db}", echo=True)
 
-            details = exc.details.get('writeErrors', [])
-            if any(error['code'] == REQUEST_RATE_ERROR for error in details):
-                LOGGER.warning('%d: Exceeded RU limit, pausing...', count)
-                sleep(1)
-                continue
-            # Check if all errors were duplicate key errors, if so should be OK
-            elif not all(error['code'] == DUPLICATE_KEY_ERROR for error in details):
-                raise
-            break
-        except pymongo.errors.OperationFailure as exc:
-            # Check if we blew the request rate, if so take a break and try again
-            errors.append(exc)
-            if exc.code == REQUEST_RATE_ERROR:
-                LOGGER.warning('%d: Exceeded RU limit, pausing...', count)
-                sleep(1)
-            else:
-                raise
-        except Exception as exc:
-            LOGGER.exception('Unknown error in write retry loop')
-            raise
-    else:
-        # Loop exited normally, not via a break. This means that it failed each time
-        raise InsertionError("Unable to execute request, failed %d times" % count, errors=errors)
+            base.metadata.create_all(bind=self.engine)
+            Session = sessionmaker(bind=self.engine)
+            self.session = Session()
+            LOGGER.info("Connected to PostgreSQL")
 
-# Data loads clear the entire database first.
-def _clear_collection(
-        client: pymongo.MongoClient,
-        name: str,
-        database: typing.Optional[str] = None,
-        batch_size: typing.Optional[int] = None) -> None:
-    if not batch_size:
-        _retry_write({'_collection': name}, client.get_database(database).get_collection('meta').delete_many, MAX_TRIES)
-    else:
-        collection = client.get_database(database).get_collection('meta')
+            self.domains = Domains()
+            self.organizations = Organizations()
+            self.groups = Groups()
+            self.sectors = Sectors()
+            self.admins = Admins()
+            self.admin_affiliations = Admin_affiliations()
+            self.users = Users()
+            self.user_affiliations = User_affiliations()
+            self.scans = Scans()
+            self.dmarc_scans = Dmarc_scans()
+            self.dkim_scans = Dkim_scans()
+            self.spf_scans = Spf_scans()
+            self.https_scans =  Https_scans()
+            self.ssl_scans = Ssl_scans()
+            self.ciphers = Ciphers()
+            self.guidance = Guidance()
+            self.classification = Classification()
 
-        # In order to chunk up a delete request, we need to first do a find
-        # for the documents we want to delete
-        cursor = collection.find({'_collection': name}, {"_id": True})
-        chunks = (
-            {"_id": {
-                "$in": [doc["_id"] for doc in chunk]
-            }}
-            for chunk in grouper(batch_size, cursor)
-        )
-        for query in chunks:
-            _retry_write(query, collection.delete_many, MAX_TRIES)
+        except Exception as error:
+            LOGGER.error(f"Error while connecting to PostgreSQL: {error}")
 
 
-def _insert_all(
-        client: pymongo.MongoClient,
-        collection: str,
-        documents: typing.Iterable[typing.Dict],
-        database: typing.Optional[str] = None,
-        batch_size: typing.Optional[int] = None) -> None:
-    if not batch_size:
-        _retry_write(
-            [{'_collection': collection, **document} for document in documents],
-            client.get_database(database).get_collection('meta').insert_many,
-            MAX_TRIES
-        )
-    else:
-        document_stream = grouper(batch_size, documents)
-        collect = client.get_database(database).get_collection('meta')
-        method = functools.partial(collect.insert_many, ordered=False)
-        for chunk in document_stream:
-            documents = [{'_collection': collection, **document} for document in chunk]
-            _retry_write(documents, method, MAX_TRIES)
-
-
-def _insert(
-        client: pymongo.MongoClient,
-        collection: str,
-        document: typing.Dict,
-        database: typing.Optional[str] = None) -> None:
-    client.get_database(database).get_collection('meta').insert_one({'_collection': collection, **document})
-
-
-def _upsert_all(
-        client: pymongo.MongoClient,
-        collection: str,
-        documents: typing.Iterable[typing.Dict],
-        key_col: str = '_id',
-        database: typing.Optional[str] = None,
-        batch_size: typing.Optional[int] = None) -> None:
-
-    writes = [
-        pymongo.UpdateOne(
-            {'_collection': collection, key_col: document.get(key_col)},
-            {'$set': {'_collection': collection, **document}},
-            upsert=True,
-        ) for document in documents
-    ]
-
-    if not batch_size:
-        _retry_write(writes, client.get_database(database).get_collection('meta').bulk_write, MAX_TRIES)
-    else:
-        document_stream = grouper(batch_size, writes)
-        collect = client.get_database(database).get_collection('meta')
-        method = functools.partial(collect.bulk_write, ordered=False)
-        for chunk in document_stream:
-            to_write = [write for write in chunk]
-            _retry_write(to_write, method, MAX_TRIES)
-
-def _replace(
-        client: pymongo.MongoClient,
-        collection: str,
-        query: typing.Dict,
-        document: typing.Dict,
-        database: typing.Optional[str] = None) -> None:
-
-    client.get_database(database)\
-          .get_collection('meta')\
-          .replace_one({"_collection": collection, **query}, {"_collection": collection, **document}, upsert=True)
-
-def _find(
-        client: pymongo.MongoClient,
-        collection: str,
-        query: typing.Dict,
-        database: typing.Optional[str] = None) -> typing.Iterable[typing.Dict]:
-    return client.get_database(database)\
-                 .get_collection('meta')\
-                 .find({'_collection': collection, **query}, {'_id': False, '_collection': False})
-
-def _find_with_id(
-        client: pymongo.MongoClient,
-        collection: str,
-        query: typing.Dict,
-        database: typing.Optional[str] = None) -> typing.Iterable[typing.Dict]:
-    return client.get_database(database)\
-                 .get_collection('meta')\
-                 .find({'_collection': collection, **query}, {'_collection': False})
-
-def _delete_one(
-        client: pymongo.MongoClient,
-        collection: str,
-        query: typing.Dict,
-        database: typing.Optional[str] = None) -> typing.Iterable[typing.Dict]:
-    return client.get_database(database)\
-                 .get_collection('meta')\
-                 .delete_one({'_collection': collection, **query})
-
-
-class _Collection():
-
-    def __init__(self, client: pymongo.MongoClient, name: str) -> None:
-        self._name = name
-        self._client = client
+    def close(self):
         try:
-            self._db = client.get_database().name
-        except pymongo.errors.ConfigurationError:
-            self._db = 'track'
+            self.session.close()
+            LOGGER.info("PostgreSQL connection is closed")
 
-    def create_all(self, documents: typing.Iterable[typing.Dict], batch_size: typing.Optional[int] = None) -> None:
-        _insert_all(self._client, self._name, documents, self._db, batch_size)
-
-    def create(self, document: typing.Dict) -> None:
-        _insert(self._client, self._name, document, self._db)
-
-    def upsert_all(self,
-                   documents: typing.Iterable[typing.Dict],
-                   key_column: str,
-                   batch_size: typing.Optional[int] = None
-                  ) -> None:
-        _upsert_all(self._client, self._name, documents, key_column, self._db, batch_size)
-
-    def replace(self, query: typing.Dict, document: typing.Dict) -> None:
-        _replace(self._client, self._name, query, document, self._db)
+        except Exception as error:
+            LOGGER.error(f"Error while closing PostgreSQL connection: {error}")
 
 
-    def all(self) -> typing.Iterable[typing.Dict]:
-        return _find(self._client, self._name, {}, self._db)
+    def insert(self, _data):
+        try:
+            self.session.add(_data)
 
-    def clear(self, batch_size: typing.Optional[int] = None) -> None:
-        _clear_collection(self._client, self._name, self._db, batch_size)
+        except Exception as error:
+            LOGGER.error(f"Error while inserting data: {error}")
 
-    def find(self, query) -> typing.Iterable[typing.Dict]:
-        return _find(self._client, self._name, query, self._db)
+    def insert_all(self, _data):
+        try:
+            self.session.add_all(_data)
 
-    def find_with_id(self, query) -> typing.Iterable[typing.Dict]:
-        return _find_with_id(self._client, self._name, query, self._db)
-
-    def delete_one(self, query) -> typing.Iterable[typing.Dict]:
-        return _delete_one(self._client, self._name, query, self._db)
-
-
-class Connection():
-
-    def __init__(self, connection_string: str) -> None:
-        self._client = pymongo.MongoClient(connection_string)
-
-    def __enter__(self) -> 'Connection':
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
-        self._client.close()
-
-    @property
-    def domains(self) -> _Collection:
-        return _Collection(self._client, 'domains')
-
-    @property
-    def reports(self) -> _Collection:
-        return _Collection(self._client, 'reports')
-
-    @property
-    def organizations(self) -> _Collection:
-        return _Collection(self._client, 'organizations')
-
-    @property
-    def owners(self) -> _Collection:
-        return _Collection(self._client, 'owners')
-
-    @property
-    def input_domains(self) -> _Collection:
-        return _Collection(self._client, 'input_domains')
-
-    @property
-    def ciphers(self) -> _Collection:
-        return _Collection(self._client, 'ciphers')
-
-    @property
-    def flags(self) -> _Collection:
-        return _Collection(self._client, 'flags')
-
-    @property
-    def historical(self) -> _Collection:
-        return _Collection(self._client, 'historical')
+        except Exception as error:
+            LOGGER.error(f"Error while bulk inserting data: {error}")
 
 
-    def close(self) -> None:
-        self._client.close()
+    def commit(self):
+        self.session.commit()
+
+
+    def query(self, _query):
+        return self.session.query(_query).all()
+
+
+    def delete(self, _data):
+        self.session.delete(_data)
+
+
+class Domains(base):
+    __tablename__ = 'domains'
+
+    id = Column(Integer, primary_key=True)
+    domain = Column(String)
+    last_run = Column(DateTime)
+    scan_spf = Column(Boolean)
+    scan_dmarc = Column(Boolean)
+    scan_dmarc_psl = Column(Boolean)
+    scan_mx = Column(Boolean)
+    scan_dkim = Column(Boolean)
+    scan_https = Column(Boolean)
+    scan_ssl = Column(Boolean)
+    dmarc_phase = Column(Integer)
+    organization_id = Column(Integer, ForeignKey('organizations.id'))
+    organization = relationship("Organizations", back_populates="domains", cascade="all, delete")
+    scans = relationship("Scans", back_populates="domain", cascade="all, delete")
+
+
+class Organizations(base):
+    __tablename__ = 'organizations'
+
+    id = Column(Integer, primary_key=True)
+    organization = Column(String)
+    description = Column(String)
+    group_id = Column(Integer, ForeignKey('groups.id'))
+    group = relationship("Groups", back_populates="organizations", cascade="all, delete")
+    domains = relationship("Domains", back_populates="organization", cascade="all, delete")
+    users = relationship("User_affiliations", back_populates="user_organization", cascade="all, delete")
+
+class Groups(base):
+    __tablename__ = 'groups'
+
+    id = Column(Integer, primary_key=True)
+    s_group = Column(String)
+    description = Column(String)
+    sector_id = Column(Integer, ForeignKey('sectors.id'))
+    organizations = relationship("Organizations", back_populates="group", cascade="all, delete")
+    group_sector = relationship("Sectors", back_populates="groups", cascade="all, delete")
+
+class Sectors(base):
+    __tablename__ = 'sectors'
+
+    id = Column(Integer, primary_key=True)
+    sector = Column(String)
+    zone = Column(String)
+    description = Column(String)
+    groups = relationship("Groups", back_populates="group_sector", cascade="all, delete")
+    affiliated_admins = relationship("Admin_affiliations", back_populates="admin_sector", cascade="all, delete")
+
+class Admins(base):
+    __tablename__ = 'admins'
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String)
+    display_name = Column(String)
+    user_email = Column(String)
+    preferred_lang = Column(String)
+    admin_affiliation = relationship("Admin_affiliations", back_populates="admin", cascade="all, delete")
+
+class Admin_affiliations(base):
+    __tablename__ = 'admin_affiliations'
+
+    id = Column(Integer, ForeignKey('admins.id'), primary_key=True)
+    sector_id = Column(Integer, ForeignKey('sectors.id'))
+    permission = Column(String)
+    admin = relationship("Admins", back_populates="admin_affiliation", cascade="all, delete")
+    admin_sector = relationship("Sectors", back_populates="affiliated_admins", cascade="all, delete")
+
+class Users(base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String)
+    display_name = Column(String)
+    user_email = Column(String)
+    preferred_lang = Column(String)
+    user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
+
+class User_affiliations(base):
+    __tablename__ = 'user_affiliations'
+
+    id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    organization_id = Column(Integer, ForeignKey('organizations.id'))
+    permission = Column(String)
+    user = relationship("Users", back_populates="user_affiliation", cascade="all, delete")
+    user_organization = relationship("Organizations", back_populates="users", cascade="all, delete")
+
+class Scans(base):
+    __tablename__ = 'scans'
+
+    id = Column(Integer, primary_key=True)
+    domain_id = Column(Integer, ForeignKey('domains.id'))
+    scan_date = Column(DateTime)
+    initiated_by = Column(String)
+    domain = relationship("Domains", back_populates="scans", cascade="all, delete")
+    dmarc = relationship("Dmarc_scans", back_populates="dmarc_flagged_scan", cascade="all, delete")
+    dkim = relationship("Dkim_scans", back_populates="dkim_flagged_scan", cascade="all, delete")
+    spf = relationship("Spf_scans", back_populates="spf_flagged_scan", cascade="all, delete")
+    https = relationship("Https_scans", back_populates="https_flagged_scan", cascade="all, delete")
+    ssl = relationship("Ssl_scans", back_populates="ssl_flagged_scan", cascade="all, delete")
+
+class Dmarc_scans(base):
+    __tablename__ = 'dmarc_scans'
+
+    id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
+    dmarc_scan = Column(JSONB)
+    dmarc_flagged_scan = relationship("Scans", back_populates="dmarc", cascade="all, delete")
+
+class Dkim_scans(base):
+    __tablename__ = 'dkim_scans'
+
+    id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
+    dkim_scan = Column(JSONB)
+    dkim_flagged_scan = relationship("Scans", back_populates="dkim", cascade="all, delete")
+
+class Spf_scans(base):
+    __tablename__ = 'spf_scans'
+
+    id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
+    spf_scan = Column(JSONB)
+    spf_flagged_scan = relationship("Scans", back_populates="spf", cascade="all, delete")
+
+class Https_scans(base):
+    __tablename__ = 'https_scans'
+
+    id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
+    https_scan = Column(JSONB)
+    https_flagged_scan = relationship("Scans", back_populates="https", cascade="all, delete")
+
+class Ssl_scans(base):
+    __tablename__ = 'ssl_scans'
+
+    id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
+    ssl_scan = Column(JSONB)
+    ssl_flagged_scan = relationship("Scans", back_populates="ssl", cascade="all, delete")
+
+class Ciphers(base):
+    __tablename__ = 'ciphers'
+    id = Column(Integer, primary_key=True)
+    cipher_type = Column(String)
+
+class Guidance(base):
+    __tablename__ = 'guidance'
+
+    id = Column(Integer, primary_key=True)
+    tag_name = Column(String)
+    guidance = Column(String)
+    ref_links = Column(String)
+
+class Classification(base):
+    __tablename__ = 'Classification'
+
+    id = Column(Integer, primary_key=True)
+    UNCLASSIFIED = Column(String)

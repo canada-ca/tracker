@@ -1,5 +1,0 @@
-LC_ALL=C.UTF-8
-LANG=C.UTF-8
-
-0 0 * * 1,3,5 root /opt/scan/tracker/deploy/cron.sh > /proc/1/fd/1 2>/proc/1/fd/2
-# Don't remove the empty line at the end of this file. It is required to run the cron job

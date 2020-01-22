@@ -1,0 +1,48 @@
+{% extends "en/layout-en.html" %}
+
+{% block title %}Track web security compliance - Canada.ca{% endblock %}
+
+{% block pageid_en %}index{% endblock %}
+{% block pageid_fr %}index{% endblock %}
+{% block description %}Track how government sites are becoming more secure.{% endblock description %}
+
+{% block content %}
+
+<section id="main-content" class="flex-1  py-6" role="contentinfo" aria-label="Track web security compliance">
+   <div class="flex flex-col lg:flex-row mx-auto items-auto  sm:w-4/5 xl:w-5/6">
+      <div class="flex-1 mt-6 mr-6">
+         <h1 class="text-5xl font-black mb-6 w-full">User Profile</h1>
+         <h2 class="text-4xl mb-2 font-black">Making government websites more secure</h2>
+          <div class="flex-1 flex-col">
+              <br>
+              <h2>Successfully Logged in</h2>
+              <br>
+              {% if display_name %}
+                <h4>Name: {{ display_name }}</h4>
+                <h4>Email: {{ user_email }}</h4>
+                <h4>Language: {{ preferred_lang }}</h4>
+
+              {% endif %}
+                <br>
+              <a href="/en">Home</a>
+              <a href="logout">Logout</a>
+          </div>
+      </div>
+   </div>
+</section>
+
+
+{% endblock %}
+
+{% block pagerelatedscript %}
+
+<script src="/static/js/https/donuts.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
+<script src="/static/js/https/organizations.js?{{ now() | date("%Y%m%j%H%M%S") }}"></script>
+
+
+{% endblock %}
+{% block languageURL %}/fr/index{% endblock %}
+
+
+
+{% block datemodified %}{{ scan_date | date(format="%Y-%m-%d")}}{% endblock %}

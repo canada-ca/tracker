@@ -27,3 +27,6 @@ scanner/data/backupScanResults
 scanner/data/output
 scanner/logs
 *.csv
+
+# IDE Files
+.idea/
