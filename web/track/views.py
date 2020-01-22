@@ -7,6 +7,7 @@ from http import HTTPStatus
 from .config import *
 from .input_validators import *
 from .user_model import *
+from .email_templates import *
 
 from flask import render_template, Response, abort, request, redirect, url_for
 
@@ -311,8 +312,13 @@ def register(app):
                         connection.commit()
                 else:
                     # This account is locked due to too many failed login attempts
-                    return 'TODO: Redirect to password reset -- User Account has too many failed attempts' \
-                           ' -- Implement Nick\'s reset password feature'
+                    send_pass_reset(user, prefix, template_id=reset_locked_account_password_template())
+
+                    msg = 'Your account has been locked because you have exceeded' \
+                          ' the maximum failed login attempts limit. Please check your' \
+                          ' email for instructions on how to reset your password'
+
+                    return render_template(generate_path(prefix, "forgot-password"), msg=msg)
 
             # The sign in credentials were not valid, display appropriate error to the user.
             content = error_messages.sign_in_incorrect(user_email)
@@ -399,8 +405,7 @@ def register(app):
             user = connection.query_user_by_email(user_email)
 
             if user is not None and user.is_authenticated:
-                template_id = '8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1'
-                send_pass_reset(user, prefix, template_id)
+                send_pass_reset(user, prefix, template_id=reset_forgotten_password_template())
 
             msg = 'If an account is associated with the email address, ' \
                 'further instructions will arrive in your inbox'
@@ -434,6 +439,8 @@ def register(app):
                     result = connection.update_user_password(email, user_password)
 
                     if result:
+                        # A new password resets this account's failed login attempts
+                        connection.reset_failed_login_attempts(user.user_email)
                         return render_template(generate_path(prefix, "password-changed"))
                     else:
                         content = error_messages.password_db_error(token)
