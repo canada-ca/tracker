@@ -23,15 +23,15 @@ from notifications_python_client.notifications import NotificationsAPIClient
 
 from itsdangerous import URLSafeTimedSerializer
 
-NOTIFICATION_API_KEY = os.getenv('_NOTIFICATION_API_KEY')
-NOTIFICATION_API_URL = os.getenv('_NOTIFICATION_API_URL')
-DB_USER = os.getenv('_DB_USER')
-DB_PASS = os.getenv('_DB_PASS')
-DB_HOST = os.getenv('_DB_HOST')
-DB_PORT = os.getenv('_DB_PORT')
-DB_NAME = os.getenv('_DB_NAME')
-SUPER_SECRET_KEY = os.getenv('_SUPER_SECRET_KEY')
-SUPER_SECRET_SALT = os.getenv('_SUPER_SECRET_SALT')
+NOTIFICATION_API_KEY = os.getenv('NOTIFICATION_API_KEY')
+NOTIFICATION_API_URL = os.getenv('NOTIFICATION_API_URL')
+DB_USER = os.getenv('DB_USER')
+DB_PASS = os.getenv('DB_PASS')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
+DB_NAME = os.getenv('DB_NAME')
+SUPER_SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
+SUPER_SECRET_SALT = os.getenv('SUPER_SECRET_SALT')
 
 
 def register(app):
