@@ -19,25 +19,34 @@ from track import models, error_messages
 from track.cache import cache
 
 from notifications_python_client.notifications import NotificationsAPIClient
-from track import api_config
+# from track import api_config
 
 from itsdangerous import URLSafeTimedSerializer
 
-
-notifications_client = NotificationsAPIClient(
-    api_config.api_key,
-    api_config.api_url,
-)
+NOTIFICATION_API_KEY = os.getenv('NOTIFICATION_API_KEY')
+NOTIFICATION_API_URL = os.getenv('NOTIFICATION_API_URL')
+DB_USER = os.getenv('DB_USER')
+DB_PASS = os.getenv('DB_PASS')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
+DB_NAME = os.getenv('DB_NAME')
+SUPER_SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
+SUPER_SECRET_SALT = os.getenv('SUPER_SECRET_SALT')
 
 
 def register(app):
     # Initialize flask-login
 
-    app.secret_key = api_config.super_secret_key
+    app.secret_key = os.getenv('SUPER_SECRET_KEY')
 
     login_manager = LoginManager()
     login_manager.session_protection = "strong"
     login_manager.init_app(app)
+
+    notifications_client = NotificationsAPIClient(
+        NOTIFICATION_API_KEY,
+        NOTIFICATION_API_URL,
+    )
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -277,8 +286,8 @@ def register(app):
     #
 
     # Connection to Postgres database -- TODO: Move to more appropriate (Top level?) location.
-    connection = Connection(_user=api_config.db_user, _password=api_config.db_pass, _host=api_config.db_host,
-                            _port=api_config.db_port, _db=api_config.db_name)
+    connection = Connection(_user=DB_USER, _password=DB_PASS, _host=DB_HOST,
+                            _port=DB_PORT, _db=DB_NAME)
 
     @app.route("/en/sign-in", endpoint='en_sign_in', methods=['GET', 'POST'])
     @app.route("/fr/sign-in", endpoint='fr_sign_in', methods=['GET', 'POST'])
@@ -420,8 +429,8 @@ def register(app):
         else:
             # Try to see if email matches email set in token
             try:
-                password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
-                email = password_reset_serial.loads(token, salt=api_config.super_secret_salt, max_age=3600)
+                password_reset_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
+                email = password_reset_serial.loads(token, salt=SUPER_SECRET_SALT, max_age=3600)
             except:
                 content = error_messages.sign_in_change_pass()
                 return redirect(url_for(prefix + '_sign_in', **content))
@@ -498,9 +507,9 @@ def register(app):
         return render_template(generate_path(prefix, "verify-mobile"), phone=phone)
 
     def send_pass_reset(user, prefix, template_id):
-        password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
+        password_reset_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
         password_reset_url = url_for(prefix + '_new_password',
-                                     token=password_reset_serial.dumps(user.user_email, salt=api_config.super_secret_salt),
+                                     token=password_reset_serial.dumps(user.user_email, salt=SUPER_SECRET_SALT),
                                      _external=True
                                      )
         response = notifications_client.send_email_notification(
