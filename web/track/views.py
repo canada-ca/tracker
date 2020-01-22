@@ -22,11 +22,11 @@ from track import api_config
 
 from itsdangerous import URLSafeTimedSerializer
 
-#
-# notifications_client = NotificationsAPIClient(
-#     api_config.api_key,
-#     api_config.api_url,
-# )
+
+notifications_client = NotificationsAPIClient(
+    api_config.api_key,
+    api_config.api_url,
+)
 
 
 def register(app):
@@ -397,11 +397,14 @@ def register(app):
 
             user_email = cleanse_input(request.form.get('email_input'))
             user = connection.query_user_by_email(user_email)
-            return send_pass_reset(user_email, user, prefix)
 
-            # msg = 'If an account is associated with the email address, ' \
-            #     'further instructions will arrive in your inbox'
-            # return render_template(generate_path(prefix, "forgot-password"), msg=msg)
+            if user is not None and user.is_authenticated:
+                template_id = '8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1'
+                send_pass_reset(user, prefix, template_id)
+
+            msg = 'If an account is associated with the email address, ' \
+                'further instructions will arrive in your inbox'
+            return render_template(generate_path(prefix, "forgot-password"), msg=msg)
 
     @app.route("/en/new-password/<token>", endpoint='en_new_password', methods=['GET', 'POST'])
     @app.route("/fr/new-password/<token>", endpoint='fr_new_password', methods=['GET', 'POST'])
@@ -434,12 +437,11 @@ def register(app):
                         return render_template(generate_path(prefix, "password-changed"))
                     else:
                         content = error_messages.password_db_error(token)
-                        return render_template(generate_path(prefix, "password-changed"))
+                        return render_template(generate_path(prefix, "new-password"), **content)
                 else:
                     content = error_messages.password_weak_forgot(token)
                     return render_template(generate_path(prefix, "new-password"), **content)
 
-            # If passwords do not match, redirect back to register page
             else:
                 content = error_messages.password_no_match_forgot(token)
                 return render_template(generate_path(prefix, "new-password"), **content)
@@ -488,20 +490,20 @@ def register(app):
         phone = 'placeholder: ***-***-3333'
         return render_template(generate_path(prefix, "verify-mobile"), phone=phone)
 
-
-    def send_pass_reset(user_email, user, prefix):
-        if user is not None and user.is_authenticated:
-            password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
-            password_reset_url = url_for(prefix + '_new_password',
-                                         token=password_reset_serial.dumps(user_email, salt=api_config.super_secret_salt),
-                                         _external=True
-                                         )
-            return render_template(generate_path(prefix, "reset-email-temp"), password_reset_url=password_reset_url)
-            # response = notifications_client.send_email_notification(
-            #     email_address='email_address',
-            #     template_id='6e3368a7-0d75-47b1-b4b2-878234e554c9'we
-            # )
-            # General Notification
+    def send_pass_reset(user, prefix, template_id):
+        password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
+        password_reset_url = url_for(prefix + '_new_password',
+                                     token=password_reset_serial.dumps(user.user_email, salt=api_config.super_secret_salt),
+                                     _external=True
+                                     )
+        response = notifications_client.send_email_notification(
+            email_address=user.user_email,
+            personalisation={
+                'user': user.display_name,
+                'password_reset_url': password_reset_url
+            },
+            template_id=template_id
+        )
 
     def generate_user_data(_email):
         user = connection.query_user_by_email(_email)
@@ -514,7 +516,6 @@ def register(app):
                 'preferred_lang': user.preferred_lang
                 # 'failed_login_attempts': user.failed_login_attempts
             }
-      
 
     # Every response back to the browser will include these web response headers
     @app.after_request
