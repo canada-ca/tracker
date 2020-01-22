@@ -355,7 +355,8 @@ def register(app):
                             display_name=user_name,
                             user_email=user_email.lower(),
                             user_password=bcrypt.generate_password_hash(user_password).decode('UTF-8'),  # Flask-Bcrypt password hash
-                            preferred_lang="English"
+                            preferred_lang="English",
+                            failed_login_attempts=0
                         )
                         connection.insert(to_add)
                         connection.commit()
