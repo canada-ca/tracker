@@ -396,7 +396,10 @@ def register(app):
 
             user_email = cleanse_input(request.form.get('email_input'))
             user = connection.query_user_by_email(user_email)
-            send_pass_reset(user_email, user, prefix)
+
+            if user is not None and user.is_authenticated:
+                template_id = '8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1'
+                send_pass_reset(user, prefix, template_id)
 
             msg = 'If an account is associated with the email address, ' \
                 'further instructions will arrive in your inbox'
@@ -486,22 +489,20 @@ def register(app):
         phone = 'placeholder: ***-***-3333'
         return render_template(generate_path(prefix, "verify-mobile"), phone=phone)
 
-    def send_pass_reset(user_email, user, prefix):
-        user_name = user.display_name
-        if user is not None and user.is_authenticated:
-            password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
-            password_reset_url = url_for(prefix + '_new_password',
-                                         token=password_reset_serial.dumps(user_email, salt=api_config.super_secret_salt),
-                                         _external=True
-                                         )
-            response = notifications_client.send_email_notification(
-                email_address=user_email,
-                personalisation={
-                    'user': user_name,
-                    'password_reset_url': password_reset_url
-                },
-                template_id='8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1'
-            )
+    def send_pass_reset(user, prefix, template_id):
+        password_reset_serial = URLSafeTimedSerializer(api_config.super_secret_key)
+        password_reset_url = url_for(prefix + '_new_password',
+                                     token=password_reset_serial.dumps(user.user_email, salt=api_config.super_secret_salt),
+                                     _external=True
+                                     )
+        response = notifications_client.send_email_notification(
+            email_address=user.user_email,
+            personalisation={
+                'user': user.display_name,
+                'password_reset_url': password_reset_url
+            },
+            template_id=template_id
+        )
 
     def generate_user_data(_email):
         user = connection.query_user_by_email(_email)
