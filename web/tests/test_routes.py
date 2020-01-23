@@ -2,6 +2,8 @@ import pytest
 
 from track import create_app
 
+from track.error_messages import *
+
 
 @pytest.fixture()
 def test_client():
@@ -17,6 +19,45 @@ def test_client():
 	ctx.pop()
 
 
+class TestRegisterRoutes:
+
+	# Tests that a weak password is rejected and an appropriate error message is displayed
+
+	def test_weak_password(self, test_client):
+		# Create a dict for the POST parameters
+		params = dict(
+			name_input='Test Name',
+			email_input='test@test.ca',
+			password_input='password',
+			password_confirm_input='password'
+		)
+
+		response = test_client.post('/en/register', data=params, follow_redirects=True)
+
+		# Determine which error message should be expected by calling the appropriate error message handler and parsing
+		error_msg = password_weak_register(params['name_input'], params['email_input'])['error'].encode('UTF-8')
+		assert response.status_code == 200
+		assert error_msg in response.data
+
+	# Tests that mismatched passwords are rejected and that an appropriate error message is displayed
+
+	def test_mismatched_passwords(self, test_client):
+		# Create a dict for the POST parameters
+		params = dict(
+			name_input='Test Name',
+			email_input='test@test.ca',
+			password_input='Password123!',
+			password_confirm_input='DiffPassword123!'
+		)
+
+		response = test_client.post('/en/register', data=params, follow_redirects=True)
+
+		# Determine which error message should be expected by calling the appropriate error message handler and parsing
+		error_msg = password_not_match_register(params['name_input'], params['email_input'])['error'].encode('UTF-8')
+		assert response.status_code == 200
+		assert error_msg in response.data
+
+
 class TestValidRoutes:
 
 	def test_health_check(self, test_client):
@@ -26,12 +67,10 @@ class TestValidRoutes:
 
 	def test_index(self, test_client):
 		response = test_client.get('/en/index/')
-		print(response.data)
 		assert response.status_code == 200
 
 	def test_index_fr(self, test_client):
 		response = test_client.get('/fr/index/')
-		print(response.data)
 		assert response.status_code == 200
 
 
