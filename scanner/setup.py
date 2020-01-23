@@ -3,11 +3,6 @@ import os
 
 if __name__ == '__main__':
 
-    try:
-        os.system("sudo apt-get install -y python3-pip")
-    except Exception as e:
-        print(f'Error occurred while installing pip3: {str(e)}')
-
     _cmd = "pip3 install"
     if not 'pyyaml' in sys.modules:
         _cmd = _cmd + " pyyaml"
