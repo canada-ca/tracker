@@ -3,7 +3,14 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
+[requires]
+python_version = "3.6"
+
 [dev-packages]
+mypy = "==0.590"
+pylint = "==1.8.4"
+pytest = "==3.5.0"
+pytest-cov = "==2.5.1"
 
 [packages]
 flask = "==1.0"
@@ -11,6 +18,14 @@ sqlalchemy = "*"
 graphene-sqlalchemy = "*"
 flask-graphql = "*"
 flask-graphql-auth = "*"
+notifications-python-client = "*"
+gunicorn = "==19.6.0"
+postgres = "*"
+psycopg2-binary = "*"
 
-[requires]
-python_version = "3.6"
+[scripts]
+test = "pytest"
+start = "gunicorn track.wsgi:app --bind=0.0.0.0:5000 --worker-class=sync --access-logfile=- --error-logfile=- --log-level=debug --workers=4"
+
+[pipenv]
+allow_prereleases = true
