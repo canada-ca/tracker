@@ -1,6 +1,9 @@
 from flask import Flask
 from flask_graphql import GraphQLView
 
+from .models import db_session
+from .queries import schema
+
 app = Flask(__name__)
 app.debug = True
 
@@ -13,9 +16,11 @@ app.add_url_rule(
 	)
 )
 
+
 @app.teardown_appcontext
 def shutdown_session(execption=None):
-	# Remove DB Session
+	db_session.remove()
+
 
 if __name__ == '__main__':
 	app.run()
