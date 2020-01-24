@@ -5,6 +5,9 @@ from sqlalchemy import Column, String
 
 from ...models import base
 
+from ..Groups.groupsModel import Groups
+from ..Admins.adminsModel import Admin_affiliations
+
 
 class Sectors(base):
     __tablename__ = 'sectors'

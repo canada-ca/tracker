@@ -6,6 +6,9 @@ from sqlalchemy import Column, String
 
 from ...models import base
 
+from ..Organizations.organizationsModel import Organizations
+from ..Scans.scansModel import Scans
+
 
 class Domains(base):
     __tablename__ = 'domains'
@@ -21,6 +24,6 @@ class Domains(base):
     scan_https = Column(Boolean)
     scan_ssl = Column(Boolean)
     dmarc_phase = Column(Integer)
-    organization_id = Column(Integer, ForeignKey('organizations.id'))
+    organization_id = Column(Integer, ForeignKey('Organizations.id'))
     organization = relationship("Organizations", back_populates="domains", cascade="all, delete")
     scans = relationship("Scans", back_populates="domain", cascade="all, delete")

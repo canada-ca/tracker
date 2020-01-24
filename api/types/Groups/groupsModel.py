@@ -6,6 +6,9 @@ from sqlalchemy import Column, String
 
 from ...models import base
 
+from ..Organizations.organizationsModel import Organizations
+from ..Sectors.sectorsModel import Sectors
+
 
 class Groups(base):
     __tablename__ = 'groups'
