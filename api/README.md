@@ -16,3 +16,6 @@ Windows:
 
 To run the application ensure you are in the tracker directory and run:<br>
 ```python3 api/app.py```
+
+### Accessing the API
+Visit the following URL localhost:5000/graphql
