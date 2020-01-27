@@ -86,7 +86,7 @@ class Users(base):
     user_email = Column(String)
     user_password = Column(String)
     preferred_lang = Column(String)
-    failed_login_attempts = Column(Integer)
+    failed_login_attempts = Column(Integer, default=0)
     user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
 
 class User_affiliations(base):
