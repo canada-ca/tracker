@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField
 
-from .types.User.userSchema import UserConnection
+from schemas.user import UserConnection
 
 
 class Query(graphene.ObjectType):

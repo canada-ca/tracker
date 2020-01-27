@@ -2,15 +2,15 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
-from .userModel import Users as UserModel
+from api.models import Sectors as SectorsModel
 
 
-class User(SQLAlchemyObjectType):
+class Sectors(SQLAlchemyObjectType):
 	class Meta:
-		model = UserModel
+		model = SectorsModel
 		interfaces = (relay.Node, )
 
 
-class UserConnection(relay.Connection):
+class SectorsConnection(relay.Connection):
 	class Meta:
-		node = User
+		node = Sectors

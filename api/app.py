@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_graphql import GraphQLView
 
-from .models import db_session
-from .queries import schema
+from api.db import db_session
+from api.queries import schema
 
 app = Flask(__name__)
 app.debug = True
@@ -23,4 +23,5 @@ def shutdown_session(execption=None):
 
 
 if __name__ == '__main__':
+	# init_db()
 	app.run()

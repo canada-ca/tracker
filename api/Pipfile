@@ -14,7 +14,6 @@ pytest-cov = "==2.5.1"
 
 [packages]
 flask = "==1.0"
-sqlalchemy = "*"
 graphene-sqlalchemy = "*"
 flask-graphql = "*"
 flask-graphql-auth = "*"
@@ -22,10 +21,11 @@ notifications-python-client = "*"
 gunicorn = "==19.6.0"
 postgres = "*"
 psycopg2-binary = "*"
+sqlalchemy = "*"
 
 [scripts]
 test = "pytest"
-start = "gunicorn track.wsgi:app --bind=0.0.0.0:5000 --worker-class=sync --access-logfile=- --error-logfile=- --log-level=debug --workers=4"
+dev = "FLASK_APP=app.py flask run"
 
 [pipenv]
 allow_prereleases = true
