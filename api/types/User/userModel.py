@@ -3,7 +3,6 @@ from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from ...models import base
-from ..Organizations.organizationsModel import Organizations
 
 
 class Users(base):

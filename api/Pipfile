@@ -25,7 +25,7 @@ psycopg2-binary = "*"
 
 [scripts]
 test = "pytest"
-start = "gunicorn track.wsgi:app --bind=0.0.0.0:5000 --worker-class=sync --access-logfile=- --error-logfile=- --log-level=debug --workers=4"
+dev = "FLASK_APP=app.py flask run"
 
 [pipenv]
 allow_prereleases = true

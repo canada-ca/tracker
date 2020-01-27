@@ -6,9 +6,6 @@ from sqlalchemy import Column, String
 
 from ...models import base
 
-from ..Organizations.organizationsModel import Organizations
-from ..Scans.scansModel import Scans
-
 
 class Domains(base):
     __tablename__ = 'domains'

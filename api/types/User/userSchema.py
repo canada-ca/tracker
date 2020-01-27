@@ -10,10 +10,10 @@ class User(SQLAlchemyObjectType):
 	class Meta:
 		model = UserModel
 		interfaces = (relay.Node, )
-		exclude_fields = ('user_password')
+		exclude_fields = 'user_password'
 
 
-class UserAff(SQLAlchemyObjectType):
+class UserAffClass(SQLAlchemyObjectType):
 	class Meta:
 		model = UserAff
 		interfaces = (relay.Node, )
@@ -26,4 +26,4 @@ class UserConnection(relay.Connection):
 
 class UserAffConnection(relay.Connection):
 	class Meta:
-		node = UserAff
+		node = UserAffClass

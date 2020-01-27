@@ -6,10 +6,6 @@ from sqlalchemy import Column, String
 
 from ...models import base
 
-from ..Groups.groupsModel import Groups
-from ..Domains.domainsModel import Domains
-from ..User.userModel import User_affiliations
-
 
 class Organizations(base):
     __tablename__ = 'organizations'
