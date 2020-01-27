@@ -38,6 +38,7 @@ class Organizations(base):
     domains = relationship("Domains", back_populates="organization", cascade="all, delete")
     users = relationship("User_affiliations", back_populates="user_organization", cascade="all, delete")
 
+
 class Groups(base):
     __tablename__ = 'groups'
 
@@ -47,6 +48,7 @@ class Groups(base):
     sector_id = Column(Integer, ForeignKey('sectors.id'))
     organizations = relationship("Organizations", back_populates="group", cascade="all, delete")
     group_sector = relationship("Sectors", back_populates="groups", cascade="all, delete")
+
 
 class Sectors(base):
     __tablename__ = 'sectors'
@@ -58,6 +60,7 @@ class Sectors(base):
     groups = relationship("Groups", back_populates="group_sector", cascade="all, delete")
     affiliated_admins = relationship("Admin_affiliations", back_populates="admin_sector", cascade="all, delete")
 
+
 class Admins(base):
     __tablename__ = 'admins'
 
@@ -68,6 +71,7 @@ class Admins(base):
     preferred_lang = Column(String)
     admin_affiliation = relationship("Admin_affiliations", back_populates="admin", cascade="all, delete")
 
+
 class Admin_affiliations(base):
     __tablename__ = 'admin_affiliations'
 
@@ -76,6 +80,7 @@ class Admin_affiliations(base):
     permission = Column(String)
     admin = relationship("Admins", back_populates="admin_affiliation", cascade="all, delete")
     admin_sector = relationship("Sectors", back_populates="affiliated_admins", cascade="all, delete")
+
 
 class Users(base):
     __tablename__ = 'users'
@@ -89,6 +94,7 @@ class Users(base):
     failed_login_attempts = Column(Integer, default=0)
     user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
 
+
 class User_affiliations(base):
     __tablename__ = 'user_affiliations'
 
@@ -97,6 +103,7 @@ class User_affiliations(base):
     permission = Column(String)
     user = relationship("Users", back_populates="user_affiliation", cascade="all, delete")
     user_organization = relationship("Organizations", back_populates="users", cascade="all, delete")
+
 
 class Scans(base):
     __tablename__ = 'scans'
@@ -112,12 +119,14 @@ class Scans(base):
     https = relationship("Https_scans", back_populates="https_flagged_scan", cascade="all, delete")
     ssl = relationship("Ssl_scans", back_populates="ssl_flagged_scan", cascade="all, delete")
 
+
 class Dmarc_scans(base):
     __tablename__ = 'dmarc_scans'
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dmarc_scan = Column(JSONB)
     dmarc_flagged_scan = relationship("Scans", back_populates="dmarc", cascade="all, delete")
+
 
 class Dkim_scans(base):
     __tablename__ = 'dkim_scans'
@@ -126,12 +135,14 @@ class Dkim_scans(base):
     dkim_scan = Column(JSONB)
     dkim_flagged_scan = relationship("Scans", back_populates="dkim", cascade="all, delete")
 
+
 class Spf_scans(base):
     __tablename__ = 'spf_scans'
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     spf_scan = Column(JSONB)
     spf_flagged_scan = relationship("Scans", back_populates="spf", cascade="all, delete")
+
 
 class Https_scans(base):
     __tablename__ = 'https_scans'
@@ -140,6 +151,7 @@ class Https_scans(base):
     https_scan = Column(JSONB)
     https_flagged_scan = relationship("Scans", back_populates="https", cascade="all, delete")
 
+
 class Ssl_scans(base):
     __tablename__ = 'ssl_scans'
 
@@ -147,10 +159,12 @@ class Ssl_scans(base):
     ssl_scan = Column(JSONB)
     ssl_flagged_scan = relationship("Scans", back_populates="ssl", cascade="all, delete")
 
+
 class Ciphers(base):
     __tablename__ = 'ciphers'
     id = Column(Integer, primary_key=True)
     cipher_type = Column(String)
+
 
 class Guidance(base):
     __tablename__ = 'guidance'
@@ -159,6 +173,7 @@ class Guidance(base):
     tag_name = Column(String)
     guidance = Column(String)
     ref_links = Column(String)
+
 
 class Classification(base):
     __tablename__ = 'Classification'
