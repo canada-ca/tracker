@@ -1,12 +1,12 @@
-#API
+# API
 TODO: Description
 
-###Installing Dependencies
+### Installing Dependencies
 Run pipenv installer in api directory
 
 ```pipenv install```
 
-###Running the API
+### Running the API
 Set Python Path<br><br>
 Linux & MacOS:
 ```export PYTHONPATH=/.../tracker```
