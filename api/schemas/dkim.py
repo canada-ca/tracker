@@ -2,15 +2,15 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import Scans as ScanModel
+from api.models import Dkim_scans as DkimModel
 
 
-class Scans(SQLAlchemyObjectType):
+class Dkim(SQLAlchemyObjectType):
 	class Meta:
-		model = ScanModel
+		model = DkimModel
 		interfaces = (relay.Node, )
 
 
-class ScansConnection(relay.Connection):
+class DkimConnection(relay.Connection):
 	class Meta:
-		node = Scans
+		node = Dkim

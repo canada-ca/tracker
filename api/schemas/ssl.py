@@ -2,15 +2,15 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import Scans as ScanModel
+from api.models import Ssl_scans as SSLModel
 
 
-class Scans(SQLAlchemyObjectType):
+class SSL(SQLAlchemyObjectType):
 	class Meta:
-		model = ScanModel
+		model = SSLModel
 		interfaces = (relay.Node, )
 
 
-class ScansConnection(relay.Connection):
+class SSLConnection(relay.Connection):
 	class Meta:
-		node = Scans
+		node = SSL

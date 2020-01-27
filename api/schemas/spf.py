@@ -2,15 +2,15 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import Scans as ScanModel
+from api.models import Spf_scans as SpfModel
 
 
-class Scans(SQLAlchemyObjectType):
+class Spf(SQLAlchemyObjectType):
 	class Meta:
-		model = ScanModel
+		model = SpfModel
 		interfaces = (relay.Node, )
 
 
-class ScansConnection(relay.Connection):
+class SpfConnection(relay.Connection):
 	class Meta:
-		node = Scans
+		node = Spf
