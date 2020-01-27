@@ -14,7 +14,6 @@ pytest-cov = "==2.5.1"
 
 [packages]
 flask = "==1.0"
-sqlalchemy = "*"
 graphene-sqlalchemy = "*"
 flask-graphql = "*"
 flask-graphql-auth = "*"
@@ -22,6 +21,7 @@ notifications-python-client = "*"
 gunicorn = "==19.6.0"
 postgres = "*"
 psycopg2-binary = "*"
+sqlalchemy = "*"
 
 [scripts]
 test = "pytest"

@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
-from models.groups import Groups as GroupsModel
+from models_not_used.groups import Groups as GroupsModel
 
 
 class Groups (SQLAlchemyObjectType):

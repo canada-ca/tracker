@@ -2,8 +2,8 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
-from models.admins import Admins as AdminsModel
-from models.admins import Admin_affiliations as Admin_aff_Model
+from models_not_used.admins import Admins as AdminsModel
+from models_not_used.admins import AdminAffiliations as Admin_aff_Model
 
 
 class Admins(SQLAlchemyObjectType):

@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
-from models.organizations import Organizations as OrganizationsModel
+from models_not_used.organizations import Organizations as OrganizationsModel
 
 
 class Organizations(SQLAlchemyObjectType):
