@@ -4,11 +4,12 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.types import Integer, DateTime
 from sqlalchemy import Column, String
 
-from ...models import base
+from models import Base
 
 
-class Scans(base):
+class Scans(Base):
     __tablename__ = 'scans'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
     domain_id = Column(Integer, ForeignKey('domains.id'))
@@ -21,36 +22,46 @@ class Scans(base):
     https = relationship("Https_scans", back_populates="https_flagged_scan" , cascade="all, delete")
     ssl = relationship("Ssl_scans", back_populates="ssl_flagged_scan", cascade="all, delete")
 
-class Dmarc_scans(base):
+
+class Dmarc_scans(Base):
     __tablename__ = 'dmarc_scans'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dmarc_scan = Column(JSONB)
     dmarc_flagged_scan = relationship("Scans", back_populates="dmarc", cascade="all, delete")
 
-class Dkim_scans(base):
+
+class Dkim_scans(Base):
     __tablename__ = 'dkim_scans'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dkim_scan = Column(JSONB)
     dkim_flagged_scan = relationship("Scans", back_populates="dkim", cascade="all, delete")
 
-class Spf_scans(base):
+
+class Spf_scans(Base):
     __tablename__ = 'spf_scans'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     spf_scan = Column(JSONB)
     spf_flagged_scan = relationship("Scans", back_populates="spf", cascade="all, delete")
 
-class Https_scans(base):
+
+class Https_scans(Base):
     __tablename__ = 'https_scans'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     https_scan = Column(JSONB)
     https_flagged_scan = relationship("Scans", back_populates="https", cascade="all, delete")
 
-class Ssl_scans(base):
+
+class Ssl_scans(Base):
     __tablename__ = 'ssl_scans'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     ssl_scan = Column(JSONB)

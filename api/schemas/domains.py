@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
-from .domainsModel import Domains as DomainModel
+from models.domains import Domains as DomainModel
 
 
 class Domains(SQLAlchemyObjectType):

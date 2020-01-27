@@ -3,11 +3,12 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer
 from sqlalchemy import Column, String
 
-from ...models import base
+from models import Base
 
 
-class Sectors(base):
+class Sectors(Base):
     __tablename__ = 'sectors'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
     sector = Column(String)

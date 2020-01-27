@@ -2,12 +2,12 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
-from .scansModel import Scans as ScanModel
-from .scansModel import Dmarc_scans as DmarcModel
-from .scansModel import Dkim_scans as DkimModel
-from .scansModel import Spf_scans as SpfModel
-from .scansModel import Https_scans as HttpModel
-from .scansModel import Ssl_scans as SSLModel
+from models.scans import Scans as ScanModel
+from models.scans import Dmarc_scans as DmarcModel
+from models.scans import Dkim_scans as DkimModel
+from models.scans import Spf_scans as SpfModel
+from models.scans import Https_scans as HttpModel
+from models.scans import Ssl_scans as SSLModel
 
 
 class Scans(SQLAlchemyObjectType):

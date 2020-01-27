@@ -2,8 +2,8 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from .userModel import Users as UserModel
-from .userModel import User_affiliations as UserAff
+from models.user import Users as UserModel
+from models.user import User_affiliations as UserAff
 
 
 class User(SQLAlchemyObjectType):

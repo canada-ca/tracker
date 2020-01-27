@@ -2,12 +2,12 @@ from sqlalchemy.types import Integer
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from ...models import base
+from models import Base
 
 
-
-class Admins(base):
+class Admins(Base):
     __tablename__ = 'admins'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
     username = Column(String)
@@ -17,7 +17,7 @@ class Admins(base):
     admin_affiliation = relationship("Admin_affiliations", back_populates="admin", cascade="all, delete")
 
 
-class Admin_affiliations(base):
+class Admin_affiliations(Base):
     __tablename__ = 'admin_affiliations'
 
     id = Column(Integer, ForeignKey('admins.id'), primary_key=True)

@@ -4,11 +4,12 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer
 from sqlalchemy import Column, String
 
-from ...models import base
+from models import Base
 
 
-class Groups(base):
+class Groups(Base):
     __tablename__ = 'groups'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
     s_group = Column(String)

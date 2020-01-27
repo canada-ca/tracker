@@ -4,11 +4,12 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, Boolean, DateTime
 from sqlalchemy import Column, String
 
-from ...models import base
+from models import Base
 
 
-class Domains(base):
+class Domains(Base):
     __tablename__ = 'domains'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
     domain = Column(String)

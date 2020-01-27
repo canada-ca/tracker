@@ -2,11 +2,12 @@ from sqlalchemy.types import Integer
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from ...models import base
+from models import Base
 
 
-class Users(base):
+class Users(Base):
     __tablename__ = 'users'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String)
@@ -18,8 +19,9 @@ class Users(base):
     failed_login_attempts = Column(Integer)
 
 
-class User_affiliations(base):
+class User_affiliations(Base):
     __tablename__ = 'user_affiliations'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     organization_id = Column(Integer, ForeignKey('organizations.id'))
