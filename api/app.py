@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_graphql import GraphQLView
 from flask_graphql_auth import GraphQLAuth
@@ -11,7 +13,7 @@ app.debug = True
 auth = GraphQLAuth(app)
 
 
-app.config["JWT_SECRET_KEY"] = "something"  # change this!
+app.config["JWT_SECRET_KEY"] = os.getenv('SUPER_SECRET_KEY')  # change this!
 app.config["REFRESH_EXP_LENGTH"] = 30
 app.config["ACCESS_EXP_LENGTH"] = 10
 
