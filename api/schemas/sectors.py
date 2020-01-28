@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
-from api.models import Sectors as SectorsModel
+from models import Sectors as SectorsModel
 
 
 class Sectors(SQLAlchemyObjectType):

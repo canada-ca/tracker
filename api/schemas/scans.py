@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import Scans as ScanModel
+from models import Scans as ScanModel
 
 
 class Scans(SQLAlchemyObjectType):

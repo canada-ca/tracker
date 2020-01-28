@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import Spf_scans as SpfModel
+from models import Spf_scans as SpfModel
 
 
 class Spf(SQLAlchemyObjectType):
