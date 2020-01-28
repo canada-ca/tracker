@@ -1,8 +1,5 @@
-import graphene
-from graphene import relay
-from graphene_sqlalchemy import SQLAlchemyConnectionField
-
-from schemas.user import UserConnection
+from schemas.auth_token import *
+from schemas.user import *
 
 
 class Query(graphene.ObjectType):
@@ -10,4 +7,10 @@ class Query(graphene.ObjectType):
 	all_users = SQLAlchemyConnectionField(UserConnection, sort=None)
 
 
-schema = graphene.Schema(query=Query)
+class Mutation(graphene.ObjectType):
+	create_user = CreateUser.Field()
+	auth = AuthMutation.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
+
