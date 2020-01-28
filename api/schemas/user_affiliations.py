@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import User_affiliations as UserAff
+from models import User_affiliations as UserAff
 
 
 class UserAffClass(SQLAlchemyObjectType):

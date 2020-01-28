@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import Ssl_scans as SSLModel
+from models import Ssl_scans as SSLModel
 
 
 class SSL(SQLAlchemyObjectType):

@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import Https_scans as HttpModel
+from models import Https_scans as HttpModel
 
 
 class HTTP(SQLAlchemyObjectType):

@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import Admins as AdminsModel
+from models import Admins as AdminsModel
 
 
 class Admins(SQLAlchemyObjectType):
