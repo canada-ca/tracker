@@ -14,7 +14,7 @@ app.debug = True
 auth = GraphQLAuth(app)
 
 
-app.config["JWT_SECRET_KEY"] = os.getenv('SUPER_SECRET_KEY')  # change this!
+app.config["JWT_SECRET_KEY"] = os.getenv('SUPER_SECRET_KEY')
 app.config["REFRESH_EXP_LENGTH"] = 30
 app.config["ACCESS_EXP_LENGTH"] = 10
 
