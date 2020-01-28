@@ -5,8 +5,10 @@ from flask_graphql import GraphQLView
 from flask_graphql_auth import GraphQLAuth
 from waitress import serve
 
+
 from db import db_session
 from queries import schema
+
 
 app = Flask(__name__)
 app.debug = True
