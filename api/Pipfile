@@ -18,14 +18,14 @@ graphene-sqlalchemy = "*"
 flask-graphql = "*"
 flask-graphql-auth = "*"
 notifications-python-client = "*"
-gunicorn = "==19.6.0"
 postgres = "*"
 psycopg2-binary = "*"
 sqlalchemy = "*"
+waitress = "*"
 
 [scripts]
 test = "pytest"
-dev = "FLASK_APP=app.py flask run"
+server = "python app.py"
 
 [pipenv]
 allow_prereleases = true
