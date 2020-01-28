@@ -1,5 +1,7 @@
 # API
-TODO: Description
+Our API is built on [Flask](https://www.palletsprojects.com/p/flask/), and [GraphQL](https://graphql.org/).
+We have chosen these technologies to provide an example for the Government of Canada with the use of a GraphQL
+API rather than the traditional REST API.
 
 ### Installing Dependencies
 Run pipenv installer in api directory
@@ -7,12 +9,9 @@ Run pipenv installer in api directory
 ```pipenv install```
 
 ### Running the API
-Set Python Path<br><br>
-Linux & MacOS:
-```export PYTHONPATH=/.../tracker```
+To run the API run the following command
 
-Windows:
-```set PYTHONPATH=/.../tracker```
+```pipenv run server```
 
-To run the application ensure you are in the tracker directory and run:<br>
-```python3 api/app.py```
+### Accessing the API
+Visit the following URL localhost:5000/graphql
