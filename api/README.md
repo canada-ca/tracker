@@ -1,5 +1,7 @@
 # API
-TODO: Description
+Our API is built on [Flask](https://www.palletsprojects.com/p/flask/), and [GraphQL](https://graphql.org/).
+We have chosen these technologies to provide an example for the Government of Canada with the use of a GraphQL
+API rather than the traditional REST API.
 
 ### Installing Dependencies
 Run pipenv installer in api directory
