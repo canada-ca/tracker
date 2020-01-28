@@ -1,5 +1,5 @@
-from .schemas.auth_token import *
-from .schemas.user import *
+from schemas.auth_token import *
+from schemas.user import *
 
 
 class Query(graphene.ObjectType):

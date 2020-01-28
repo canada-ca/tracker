@@ -7,9 +7,9 @@ from flask_bcrypt import Bcrypt
 
 from flask import current_app as app
 
-from ..models import Users as UserModel
+from models import Users as UserModel
 
-from ..db import db_session
+from db import db_session
 
 from flask_graphql_auth import (
 	AuthInfoField,
