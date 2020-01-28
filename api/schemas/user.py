@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from api.models import Users as UserModel
+from models import Users as UserModel
 
 
 class User(SQLAlchemyObjectType):

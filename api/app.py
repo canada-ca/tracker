@@ -1,8 +1,9 @@
 from flask import Flask
 from flask_graphql import GraphQLView
+from waitress import serve
 
-from api.db import db_session
-from api.queries import schema
+from db import db_session
+from queries import schema
 
 app = Flask(__name__)
 app.debug = True
@@ -24,4 +25,4 @@ def shutdown_session(execption=None):
 
 if __name__ == '__main__':
 	# init_db()
-	app.run()
+	serve(app, host='0.0.0.0', port=5000)
