@@ -22,6 +22,7 @@ postgres = "*"
 psycopg2-binary = "*"
 sqlalchemy = "*"
 waitress = "*"
+flask-bcrypt = "*"
 
 [scripts]
 test = "pytest"
