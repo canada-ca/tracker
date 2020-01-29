@@ -13,6 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/App.js:68
+msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
+msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
+
 #: src/App.js:14
-msgid "Hello from React"
-msgstr "Hello from React"
+#~ msgid "Hello from React"
+#~ msgstr "Hello from React"
+
+#: src/App.js:65
+msgid "Track web security compliance"
+msgstr "Track web security compliance"
