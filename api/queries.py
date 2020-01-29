@@ -9,7 +9,7 @@ class Query(graphene.ObjectType):
 
 class Mutation(graphene.ObjectType):
 	create_user = CreateUser.Field()
-	auth = AuthMutation.Field()
+	sign_in = SignInUser.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
