@@ -10,15 +10,15 @@ class TestPasswordValidators:
 
 	def test_valid_password_length(self):
 		valid_pass = 'ThisIsAVa1idPassword!'
-		assert has_min_chars(valid_pass)
+		assert is_strong_password(valid_pass)
 
 	def test_invalid_password_length(self):
 		invalid_pass = '2short'
-		assert not has_min_chars(invalid_pass)
+		assert not is_strong_password(invalid_pass)
 
 	def test_empty_password_length(self):
 		invalid_pass = ''
-		assert not has_min_chars(invalid_pass)
+		assert not is_strong_password(invalid_pass)
 
 
 # This class tests the input cleansing function in 'input_validators.py'
