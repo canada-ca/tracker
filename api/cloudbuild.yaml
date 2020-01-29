@@ -1,0 +1,40 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: start_postgres
+    entrypoint: /bin/sh
+    args:
+      [
+        '-c',
+        'docker run -d --network=cloudbuild -p=5432:5432 --name=postgres postgres',
+      ]
+
+  - name: mikewilliamson/wait-for
+    id: wait
+    args: ['postgres:5432']
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: install
+    dir: api
+    entrypoint: pipenv
+    args: ['install', '-d', '--skip-lock']
+    env:
+      - PIPENV_NOSPIN=TRUE
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: test
+    dir: api
+    entrypoint: pipenv
+    args: ['run', 'test']
+    env:
+      - DB_HOST=$_DB_HOST
+      - DB_NAME=$_DB_NAME
+      - DB_PASS=$_DB_PASS
+      - DB_PORT=$_DB_PORT
+      - DB_USER=$_DB_USER
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build
+    dir: api
+    args: ['build', '-t','gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA', '.']
+
+images: ['gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA']

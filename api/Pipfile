@@ -7,13 +7,13 @@ verify_ssl = true
 python_version = "3.6"
 
 [dev-packages]
-mypy = "==0.590"
-pylint = "==1.8.4"
-pytest = "==3.5.0"
-pytest-cov = "==2.5.1"
+mypy = "*"
+pylint = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [packages]
-flask = "==1.0"
+flask = "*"
 graphene-sqlalchemy = "*"
 flask-graphql = "*"
 flask-graphql-auth = "*"
@@ -23,10 +23,12 @@ psycopg2-binary = "*"
 sqlalchemy = "*"
 waitress = "*"
 flask-bcrypt = "*"
+graphene = "*"
+graphql-core = "*"
 
 [scripts]
 test = "pytest"
 server = "python app.py"
 
 [pipenv]
-allow_prereleases = true
+allow_prereleases = false
