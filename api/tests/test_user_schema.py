@@ -33,3 +33,22 @@ class TestUserSchemaPassword:
 		assert executed['errors']
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
+
+	def test_passwords_do_not_match(self):
+		client = Client(schema)
+		executed = client.execute(
+			'''
+			mutation{
+				createUser(username:"testuser", email:"test@test-email.ca", password:"A-Val1d-Pa$$word",
+					confirmPassword:"also-A-Val1d-Pa$$word"){
+					user{
+						username
+					}
+				}
+			}
+			''')
+
+		assert executed['errors']
+		assert executed['errors'][0]
+		assert executed['errors'][0]['message'] == error_passwords_do_not_match()
+
