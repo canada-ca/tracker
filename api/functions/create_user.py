@@ -3,6 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask import current_app as app
 
 from functions.input_validators import *
+from functions.error_messages import *
 
 from models import Users as User
 from db import db_session
@@ -15,10 +16,10 @@ def create_user(username, password, confirm_password, email):
 	email = cleanse_input(email)
 
 	if not is_strong_password(password):
-		raise GraphQLError("Password does not meet minimum requirements (Min. 8 chars, Uppercase, Number, Special Char)")
+		raise GraphQLError(error_password_does_not_meet_requirements())
 
 	if password != confirm_password:
-		raise GraphQLError("Passwords do not match")
+		raise GraphQLError(error_passwords_do_not_match())
 
 	bcrypt = Bcrypt(app)
 
@@ -36,4 +37,4 @@ def create_user(username, password, confirm_password, email):
 	except Exception as e:
 		db_session.rollback()
 		db_session.flush()
-		raise GraphQLError("Error creating account, please try again")
+		raise GraphQLError(error_creating_account())
