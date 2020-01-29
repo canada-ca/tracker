@@ -29,6 +29,7 @@ graphql-core = "*"
 [scripts]
 test = "pytest"
 server = "python app.py"
+schema-export = "python schema_export.py"
 
 [pipenv]
 allow_prereleases = false
