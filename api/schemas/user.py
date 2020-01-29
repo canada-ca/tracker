@@ -10,6 +10,7 @@ from flask_bcrypt import Bcrypt
 from models import Users as User
 from db import db_session
 from functions.input_validators import *
+from functions.error_messages import *
 
 from flask_graphql_auth import (
 	AuthInfoField,
@@ -53,10 +54,10 @@ class CreateUser(graphene.Mutation):
 		email = cleanse_input(email)
 
 		if not is_strong_password(password):
-			raise GraphQLError("Password does not meet minimum requirements (Min. 8 chars, Uppercase, Number, Special Char)")
+			raise GraphQLError(error_password_does_not_meet_requirements())
 
 		if password != confirm_password:
-			raise GraphQLError("Passwords do not match")
+			raise GraphQLError(error_passwords_do_not_match())
 
 		bcrypt = Bcrypt(app)
 
@@ -74,7 +75,7 @@ class CreateUser(graphene.Mutation):
 		except Exception as e:
 			db_session.rollback()
 			db_session.flush()
-		raise GraphQLError("Error creating account, please try again")
+		raise GraphQLError(error_creating_account())
 
 
 class SignInUser(graphene.Mutation):
@@ -92,7 +93,7 @@ class SignInUser(graphene.Mutation):
 		user = User.query.filter(User.user_email == email).first()
 
 		if user is None:
-			raise GraphQLError("User does not exist, please register")
+			raise GraphQLError(error_user_does_not_exist())
 
 		bcrypt = Bcrypt(app)
 
@@ -105,4 +106,4 @@ class SignInUser(graphene.Mutation):
 				user=user
 			)
 		else:
-			raise GraphQLError("Incorrect email or password")
+			raise GraphQLError(error_invalid_credentials())

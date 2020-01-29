@@ -9,6 +9,7 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 from app import schema
+from functions.error_messages import *
 
 
 ##
@@ -29,5 +30,6 @@ class TestUserSchemaPassword:
 			}
 			''')
 
-		assert executed['errors'][0]['message']\
-			== "Password does not meet minimum requirements (Min. 8 chars, Uppercase, Number, Special Char)"
+		assert executed['errors']
+		assert executed['errors'][0]
+		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
