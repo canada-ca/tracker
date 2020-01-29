@@ -1,15 +1,10 @@
 import graphene
-import json
-from graphene import relay, Mutation
+from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-
-from models import Users as User
-from db import db_session
-from functions.input_validators import *
-from functions.error_messages import *
 
 from functions.create_user import create_user
 from functions.sign_in_user import sign_in_user
+from models import Users as User
 
 
 class UserObject(SQLAlchemyObjectType):
