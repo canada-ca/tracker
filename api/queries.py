@@ -8,7 +8,7 @@ class Query(graphene.ObjectType):
 
 
 class Mutation(graphene.ObjectType):
-	create_user = CreateUser.Field()=
+	create_user = CreateUser.Field()
 	sign_in = SignInUser.Field()
 
 
