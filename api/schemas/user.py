@@ -34,6 +34,7 @@ class CreateUser(graphene.Mutation):
 
 class SignInUser(graphene.Mutation):
 	class Arguments:
+
 		email = graphene.String(required=True, description="User's email")
 		password = graphene.String(required=True, description="Users's password")
 
@@ -47,5 +48,4 @@ class SignInUser(graphene.Mutation):
 		return SignInUser(
 			auth_token=user_dict['auth_token'],
 			user=user_dict['user']
-		)
-  
+    )
