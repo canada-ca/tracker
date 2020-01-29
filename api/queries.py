@@ -1,5 +1,6 @@
 from schemas.auth_token import *
 from schemas.user import *
+from graphene_sqlalchemy import SQLAlchemyConnectionField
 
 
 class Query(graphene.ObjectType):
