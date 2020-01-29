@@ -7,10 +7,13 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 
 from db import Base as base
+from db import db_session
 
 
 class Domains(base):
     __tablename__ = 'domains'
+
+    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     domain = Column(String)
@@ -31,6 +34,8 @@ class Domains(base):
 class Organizations(base):
     __tablename__ = 'organizations'
 
+    query = db_session.query_property()
+
     id = Column(Integer, primary_key=True)
     organization = Column(String)
     description = Column(String)
@@ -43,6 +48,8 @@ class Organizations(base):
 class Groups(base):
     __tablename__ = 'groups'
 
+    query = db_session.query_property()
+
     id = Column(Integer, primary_key=True)
     s_group = Column(String)
     description = Column(String)
@@ -53,6 +60,8 @@ class Groups(base):
 
 class Sectors(base):
     __tablename__ = 'sectors'
+
+    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     sector = Column(String)
@@ -65,6 +74,8 @@ class Sectors(base):
 class Admins(base):
     __tablename__ = 'admins'
 
+    query = db_session.query_property()
+
     id = Column(Integer, primary_key=True)
     username = Column(String)
     display_name = Column(String)
@@ -76,6 +87,8 @@ class Admins(base):
 class Admin_affiliations(base):
     __tablename__ = 'admin_affiliations'
 
+    query = db_session.query_property()
+
     id = Column(Integer, ForeignKey('admins.id'), primary_key=True)
     sector_id = Column(Integer, ForeignKey('sectors.id'))
     permission = Column(String)
@@ -85,6 +98,8 @@ class Admin_affiliations(base):
 
 class Users(base):
     __tablename__ = 'users'
+
+    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String)
@@ -99,6 +114,8 @@ class Users(base):
 class User_affiliations(base):
     __tablename__ = 'user_affiliations'
 
+    query = db_session.query_property()
+
     id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     organization_id = Column(Integer, ForeignKey('organizations.id'))
     permission = Column(String)
@@ -108,6 +125,8 @@ class User_affiliations(base):
 
 class Scans(base):
     __tablename__ = 'scans'
+
+    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     domain_id = Column(Integer, ForeignKey('domains.id'))
@@ -124,6 +143,8 @@ class Scans(base):
 class Dmarc_scans(base):
     __tablename__ = 'dmarc_scans'
 
+    query = db_session.query_property()
+
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dmarc_scan = Column(JSONB)
     dmarc_flagged_scan = relationship("Scans", back_populates="dmarc", cascade="all, delete")
@@ -131,6 +152,8 @@ class Dmarc_scans(base):
 
 class Dkim_scans(base):
     __tablename__ = 'dkim_scans'
+
+    query = db_session.query_property()
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dkim_scan = Column(JSONB)
@@ -140,6 +163,8 @@ class Dkim_scans(base):
 class Spf_scans(base):
     __tablename__ = 'spf_scans'
 
+    query = db_session.query_property()
+
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     spf_scan = Column(JSONB)
     spf_flagged_scan = relationship("Scans", back_populates="spf", cascade="all, delete")
@@ -147,6 +172,8 @@ class Spf_scans(base):
 
 class Https_scans(base):
     __tablename__ = 'https_scans'
+
+    query = db_session.query_property()
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     https_scan = Column(JSONB)
@@ -156,6 +183,8 @@ class Https_scans(base):
 class Ssl_scans(base):
     __tablename__ = 'ssl_scans'
 
+    query = db_session.query_property()
+
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     ssl_scan = Column(JSONB)
     ssl_flagged_scan = relationship("Scans", back_populates="ssl", cascade="all, delete")
@@ -163,12 +192,17 @@ class Ssl_scans(base):
 
 class Ciphers(base):
     __tablename__ = 'ciphers'
+
+    query = db_session.query_property()
+
     id = Column(Integer, primary_key=True)
     cipher_type = Column(String)
 
 
 class Guidance(base):
     __tablename__ = 'guidance'
+
+    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     tag_name = Column(String)
@@ -178,6 +212,8 @@ class Guidance(base):
 
 class Classification(base):
     __tablename__ = 'Classification'
+
+    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     UNCLASSIFIED = Column(String)
