@@ -20,3 +20,7 @@ def error_user_does_not_exist():
 
 def error_invalid_credentials():
 	return str("Incorrect email or password")
+
+
+def error_password_not_updated():
+	return str("Unable to update password, please try again")

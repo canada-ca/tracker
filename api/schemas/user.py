@@ -4,6 +4,7 @@ from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from functions.create_user import create_user
 from functions.sign_in_user import sign_in_user
+from functions.update_user_password import update_password
 from models import Users as User
 
 
@@ -34,7 +35,6 @@ class CreateUser(graphene.Mutation):
 
 class SignInUser(graphene.Mutation):
 	class Arguments:
-
 		email = graphene.String(required=True, description="User's email")
 		password = graphene.String(required=True, description="Users's password")
 
@@ -48,4 +48,17 @@ class SignInUser(graphene.Mutation):
 		return SignInUser(
 			auth_token=user_dict['auth_token'],
 			user=user_dict['user']
-    )
+		)
+
+
+class UpdateUserPassword(graphene.Mutation):
+	class Arguments:
+		password = graphene.String(required=True)
+		confirm_password = graphene.String(required=True)
+		email = graphene.String(required=True)
+
+	user = graphene.Field(lambda: UserObject)
+
+	@staticmethod
+	def mutate(self, info, password, confirm_password, email):
+		update_password(email=email, password=password, confirm_password=confirm_password)
