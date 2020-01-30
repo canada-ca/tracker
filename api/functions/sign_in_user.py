@@ -4,6 +4,7 @@ from flask import current_app as app
 from flask_graphql_auth import create_access_token
 
 from functions.input_validators import *
+from functions.error_messages import *
 
 from models import Users as User
 from db import db_session
@@ -15,7 +16,7 @@ def sign_in_user(email, password):
 	user = User.query.filter(User.user_email == email).first()
 
 	if user is None:
-		raise GraphQLError("User does not exist, please register")
+		raise GraphQLError(error_user_does_not_exist())
 
 	bcrypt = Bcrypt(app)
 
@@ -30,4 +31,4 @@ def sign_in_user(email, password):
 
 		return temp_dict
 	else:
-		raise GraphQLError("Incorrect email or password")
+		raise GraphQLError(error_invalid_credentials())

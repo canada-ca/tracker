@@ -1,12 +1,10 @@
 import graphene
-import json
-from graphene import relay, Mutation
+from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-
-from models import Users as User
 
 from functions.create_user import create_user
 from functions.sign_in_user import sign_in_user
+from models import Users as User
 
 
 class UserObject(SQLAlchemyObjectType):
@@ -36,6 +34,7 @@ class CreateUser(graphene.Mutation):
 
 class SignInUser(graphene.Mutation):
 	class Arguments:
+
 		email = graphene.String(required=True, description="User's email")
 		password = graphene.String(required=True, description="Users's password")
 
@@ -44,8 +43,9 @@ class SignInUser(graphene.Mutation):
 
 	@classmethod
 	def mutate(cls, _, info, email, password):
+
 		user_dict = sign_in_user(email, password)
 		return SignInUser(
 			auth_token=user_dict['auth_token'],
 			user=user_dict['user']
-		)
+    )
