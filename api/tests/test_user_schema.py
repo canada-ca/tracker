@@ -87,38 +87,38 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
-	def test_updated_password_no_user_email(self):
-		client = Client(schema)
-		executed = client.execute(
-			'''
-			mutation {
-				updatePassword(email: "", password: "valid-password", confirmPassword: "valid-password") {
-					user {
-						username
-					}
-				}
-			}
-			''')
-
-		assert executed['errors']
-		assert executed['errors'][0]
-		assert executed['errors'][0]['message'] == error_user_does_not_exist()
-
-	def test_updated_password_no_user(self):
-		client = Client(schema)
-		executed = client.execute(
-			'''
-			mutation {
-				updatePassword(email: "testing-fake-email-no-such-user@test.ca",
-					password: "valid-password", confirmPassword: "valid-password") {
-					user {
-						username
-					}
-				}
-			}
-			''')
-
-		assert executed['errors']
-		assert executed['errors'][0]
-		assert executed['errors'][0]['message'] == error_user_does_not_exist()
+	# def test_updated_password_no_user_email(self):
+	# 	client = Client(schema)
+	# 	executed = client.execute(
+	# 		'''
+	# 		mutation {
+	# 			updatePassword(email: "", password: "valid-password", confirmPassword: "valid-password") {
+	# 				user {
+	# 					username
+	# 				}
+	# 			}
+	# 		}
+	# 		''')
+	#
+	# 	assert executed['errors']
+	# 	assert executed['errors'][0]
+	# 	assert executed['errors'][0]['message'] == error_user_does_not_exist()
+	#
+	# def test_updated_password_no_user(self):
+	# 	client = Client(schema)
+	# 	executed = client.execute(
+	# 		'''
+	# 		mutation {
+	# 			updatePassword(email: "testing-fake-email-no-such-user@test.ca",
+	# 				password: "valid-password", confirmPassword: "valid-password") {
+	# 				user {
+	# 					username
+	# 				}
+	# 			}
+	# 		}
+	# 		''')
+	#
+	# 	assert executed['errors']
+	# 	assert executed['errors'][0]
+	# 	assert executed['errors'][0]['message'] == error_user_does_not_exist()
 
