@@ -1,4 +1,3 @@
-import datetime
 from re import compile
 from graphene.types import Scalar
 from graphql.language import ast
@@ -16,7 +15,8 @@ EMAIL_ADDRESS_REGEX = compile(EMAIL_ADDRESS_REGEX)
 
 
 class EmailAddress(Scalar):
-	'''A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.'''
+	'''A field whose value conforms to the standard internet email address format as specified in RFC822:
+	https://www.w3.org/Protocols/rfc822/.'''
 
 	@staticmethod
 	def serialize(value):
