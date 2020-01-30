@@ -1,4 +1,3 @@
-from re import compile
 from graphene.types import Scalar
 from graphql.language import ast
 from graphql import GraphQLError
