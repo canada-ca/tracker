@@ -32,6 +32,36 @@ class TestEmailAddressScalar(unittest.TestCase):
 			value="test.account@canada.ca"
 		))
 
-	def testInvalidEmailSerialize(self):
-		test_email = 'This Will Fail'
-		self.assertRaises(GraphQLError, EmailAddress.serialize(test_email), scalar_error_type("email address", test_email))
+	def testInvalidEmailSerialize1(self):
+		test_value = 'This Will Fail'
+		with self.assertRaisesRegex(GraphQLError, scalar_error_type("email address", test_value)):
+			EmailAddress.serialize(test_value)
+
+	def testInvalidEmailSerialize2(self):
+		test_value = 1234
+		with self.assertRaisesRegex(GraphQLError, scalar_error_type("String", test_value)):
+			EmailAddress.serialize(test_value)
+
+	def testInvalidEmailParseValue1(self):
+		test_value = 'This Will Fail'
+		with self.assertRaisesRegex(GraphQLError, scalar_error_type("email address", test_value)):
+			EmailAddress.parse_value(test_value)
+
+	def testInvalidEmailParseValue2(self):
+		test_value = 1234
+		with self.assertRaisesRegex(GraphQLError, scalar_error_type("String", test_value)):
+			EmailAddress.parse_value(test_value)
+
+	def testInvalidEmailParseLiteral1(self):
+		test_value = ast.StringValue(
+			value='This Will Fail'
+		)
+		with self.assertRaisesRegex(GraphQLError, scalar_error_type("email address", test_value.value)):
+			EmailAddress.parse_literal(test_value)
+
+	def testInvalidEmailParseLiteral2(self):
+		test_value = ast.IntValue(
+			value="1234"
+		)
+		with self.assertRaisesRegex(GraphQLError, scalar_error_only_types("strings", "email address", str(ast.Type))):
+			EmailAddress.parse_literal(test_value)
