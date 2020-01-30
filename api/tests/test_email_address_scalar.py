@@ -19,47 +19,47 @@ from scalars.email_address import *
 
 class TestEmailAddressScalar(unittest.TestCase):
 
-	def testValidEmailSerialize(self):
+	def test_valid_email_serialize(self):
 		test_email = 'test.account@canada.ca'
 		assert EmailAddress.serialize(test_email)
 
-	def testValidEmailParseValue(self):
+	def test_valid_email_parse_value(self):
 		test_email = "test.account@canada.ca"
 		assert EmailAddress.parse_value(test_email)
 
-	def testValidEmailParseLiteral(self):
+	def test_valid_email_parse_literal(self):
 		assert EmailAddress.parse_literal(ast.StringValue(
 			value="test.account@canada.ca"
 		))
 
-	def testInvalidEmailSerialize1(self):
+	def test_invalid_email_serialize_not_email(self):
 		test_value = 'This Will Fail'
 		with self.assertRaisesRegex(GraphQLError, scalar_error_type("email address", test_value)):
 			EmailAddress.serialize(test_value)
 
-	def testInvalidEmailSerialize2(self):
+	def test_invalid_email_serialize_wrong_type(self):
 		test_value = 1234
 		with self.assertRaisesRegex(GraphQLError, scalar_error_type("String", test_value)):
 			EmailAddress.serialize(test_value)
 
-	def testInvalidEmailParseValue1(self):
+	def test_invalid_email_parse_value_not_email(self):
 		test_value = 'This Will Fail'
 		with self.assertRaisesRegex(GraphQLError, scalar_error_type("email address", test_value)):
 			EmailAddress.parse_value(test_value)
 
-	def testInvalidEmailParseValue2(self):
+	def test_invalid_email_parse_value_wrong_type(self):
 		test_value = 1234
 		with self.assertRaisesRegex(GraphQLError, scalar_error_type("String", test_value)):
 			EmailAddress.parse_value(test_value)
 
-	def testInvalidEmailParseLiteral1(self):
+	def test_invalid_email_parse_literal_not_email(self):
 		test_value = ast.StringValue(
 			value='This Will Fail'
 		)
 		with self.assertRaisesRegex(GraphQLError, scalar_error_type("email address", test_value.value)):
 			EmailAddress.parse_literal(test_value)
 
-	def testInvalidEmailParseLiteral2(self):
+	def test_invalid_email_parse_literal_wrong_ast_type(self):
 		test_value = ast.IntValue(
 			value="1234"
 		)
