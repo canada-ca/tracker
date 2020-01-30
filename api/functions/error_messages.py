@@ -24,3 +24,11 @@ def error_invalid_credentials():
 
 def error_password_not_updated():
 	return str("Unable to update password, please try again")
+
+
+def scalar_error_type(value_type, value):
+	return str("Value is not a valid " + str(value_type) + ": " + str(value))
+
+
+def scalar_error_only_types(value_types, expected_types, value):
+	return str("Can only validate " + str(value_types) + " as " + str(expected_types) + " but got a: " + str(type(value)))
