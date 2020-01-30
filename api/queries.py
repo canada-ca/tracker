@@ -11,6 +11,7 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
 	create_user = CreateUser.Field()
 	sign_in = SignInUser.Field()
+	update_password = UpdateUserPassword.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

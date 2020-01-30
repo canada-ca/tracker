@@ -22,6 +22,10 @@ def error_invalid_credentials():
 	return str("Incorrect email or password")
 
 
+def error_password_not_updated():
+	return str("Unable to update password, please try again")
+
+
 def scalar_error_type(value_type, value):
 	return str("Value is not a valid " + str(value_type) + ": " + str(value))
 
