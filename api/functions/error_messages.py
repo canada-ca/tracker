@@ -20,3 +20,11 @@ def error_user_does_not_exist():
 
 def error_invalid_credentials():
 	return str("Incorrect email or password")
+
+
+def scalar_error_type(value_type, value):
+	return str("Value is not a valid " + value_type + ": " + value)
+
+
+def scalar_error_only_types(value_types, expected_types, value):
+	return str("Can only validate " + value_types + " as " + expected_types + " but got a: " + str(type(value)))

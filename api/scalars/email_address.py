@@ -4,7 +4,15 @@ from graphene.types import Scalar
 from graphql.language import ast
 from graphql import GraphQLError
 
-EMAIL_ADDRESS_REGEX = compile('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')
+from functions.error_messages import *
+
+EMAIL_ADDRESS_REGEX = '''(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[
+\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[
+a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[
+0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[
+\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'''
+
+EMAIL_ADDRESS_REGEX = compile(EMAIL_ADDRESS_REGEX)
 
 
 class EmailAddress(Scalar):
@@ -13,27 +21,29 @@ class EmailAddress(Scalar):
 	@staticmethod
 	def serialize(value):
 		if not isinstance(value, str):
-			raise GraphQLError("Value is not string: " + str(type(value)))
+			raise GraphQLError(scalar_error_type("String", value))
 
 		if not EMAIL_ADDRESS_REGEX.search(value):
-			raise GraphQLError("Value is not a valid email address: " + value)
+			raise GraphQLError(scalar_error_type("email address", value))
 
 		return value
 
 	@staticmethod
 	def parse_value(value):
 		if not isinstance(value, str):
-			raise GraphQLError("Value is not string: " + str(type(value)))
+			raise GraphQLError(scalar_error_type("String", value))
 
 		if not EMAIL_ADDRESS_REGEX.search(value):
-			raise GraphQLError("Value is not a valid email address: " + value)
+			raise GraphQLError(scalar_error_type("email address", value))
 
 		return value
 
 	@staticmethod
 	def parse_literal(node):
 		if not isinstance(node, ast.StringValue):
-			raise GraphQLError("Can only validate strings as email addresses but got a: " + str(ast.Type))
+			raise GraphQLError(scalar_error_only_types("strings", "email address", str(ast.Type)))
 
 		if not EMAIL_ADDRESS_REGEX.search(node.value):
-			raise GraphQLError("Value is not a valid email address: " + node.value)
+			raise GraphQLError(scalar_error_type("email address", node.value))
+
+		return node.value
