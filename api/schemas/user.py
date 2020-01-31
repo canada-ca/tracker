@@ -13,6 +13,7 @@ class UserObject(SQLAlchemyObjectType):
 	class Meta:
 		model = User
 		interfaces = (relay.Node,)
+		exclude_fields = ("user_password", )
 
 
 class UserConnection(relay.Connection):
