@@ -39,6 +39,7 @@ def user_table():
 
 	meta.create_all(engine)
 
+	# This fixture just needs to run to setup a postgres testing instance
 	return connection
 
 
@@ -47,7 +48,7 @@ def user_table():
 
 class TestUserSchemaPassword:
 
-	def test_password_too_short(self):
+	def test_password_too_short(self, user_table):
 		client = Client(schema)
 		executed = client.execute(
 			'''
@@ -64,7 +65,7 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
-	def test_passwords_do_not_match(self):
+	def test_passwords_do_not_match(self, user_table):
 		client = Client(schema)
 		executed = client.execute(
 			'''
@@ -82,7 +83,8 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_passwords_do_not_match()
 
-	def test_updated_passwords_do_not_match(self):
+	def test_updated_passwords_do_not_match(self, user_table):
+
 		client = Client(schema)
 		executed = client.execute(
 			'''
@@ -100,7 +102,7 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_passwords_do_not_match()
 
-	def test_updated_password_too_short(self):
+	def test_updated_password_too_short(self, user_table):
 		client = Client(schema)
 		executed = client.execute(
 			'''
@@ -117,54 +119,7 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
-	def test_mock_db(self):
-		url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
-
-		engine = create_engine(url, echo=True)
-		c = engine.connect()
-
-		try:
-			c = engine.connect()
-			assert True
-		except:
-			assert False
-
-		meta = MetaData()
-
-		users = Table(
-			'users', meta,
-			Column('id', Integer, primary_key=True),
-			Column('username', String),
-			Column('display_name', String),
-			Column('user_email', String),
-			Column('user_password', String),
-			Column('preferred_lang', String, default="English"),
-			Column('failed_login_attempts', Integer, default=0),
-		)
-
-		meta.create_all(engine)
-
-		assert True
-
-		client = Client(schema)
-		executed = client.execute(
-			'''
-			mutation{
-				createUser(username:"testuser", email:"test@test-email.ca",
-					password:"testtesttesttest", confirmPassword:"testtesttesttest"){
-					user{
-						username
-					}
-				}
-			}
-			''')
-		print(str(executed))
-
-		assert True
-
 	def test_updated_password_no_user_email(self, user_table):
-
-		connection = user_table  # This is likely not needed.
 
 		client = Client(schema)
 		executed = client.execute(
@@ -182,35 +137,7 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == scalar_error_type("email address", "")
 
-	def test_updated_password_no_user(self):
-
-		url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
-
-		engine = create_engine(url, echo=True)
-		c = engine.connect()
-
-		try:
-			c = engine.connect()
-			assert True
-		except:
-			assert False
-
-		meta = MetaData()
-
-		users = Table(
-			'users', meta,
-			Column('id', Integer, primary_key=True),
-			Column('username', String),
-			Column('display_name', String),
-			Column('user_email', String),
-			Column('user_password', String),
-			Column('preferred_lang', String, default="English"),
-			Column('failed_login_attempts', Integer, default=0),
-		)
-
-		meta.create_all(engine)
-
-		assert True
+	def test_updated_password_no_user(self, user_table):
 
 		client = Client(schema)
 		executed = client.execute(
