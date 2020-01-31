@@ -36,7 +36,7 @@ export const Header = () => {
               margin-bottom: 15px;
             `}
           >
-            {i18n.locale == 'fr' && (
+            {i18n.locale === 'fr' && (
               <img
                 css={css`
                   width: 272px;
@@ -46,7 +46,7 @@ export const Header = () => {
                 alt="Government of Canada"
               />
             )}
-            {i18n.locale == 'en' && (
+            {i18n.locale === 'en' && (
               <img
                 css={css`
                   width: 272px;

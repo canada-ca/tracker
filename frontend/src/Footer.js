@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
+import PropTypes from 'prop-types'
 
 export const Footer = ({ children }) => (
   <footer
@@ -34,3 +35,7 @@ export const Footer = ({ children }) => (
     </div>
   </footer>
 )
+
+Footer.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.node),
+}

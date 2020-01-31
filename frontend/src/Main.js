@@ -1,6 +1,6 @@
 import React from 'react'
-import { Trans, t } from '@lingui/macro'
-import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+import { Trans } from '@lingui/macro'
 import { LabelledMeter } from './LabelledMeter'
 import {
   Box,
@@ -11,11 +11,7 @@ import {
   Grommet,
 } from 'grommet'
 import { theme } from './theme'
-// columns, rows and areas are for Grid with a known number of contents / boxes.
 
-// if size if small, we only 1 column
-// if size if medium, we only 2 column
-// if size if large or xlarge, we 3 three columns
 const columns = {
   xsmall: ['auto'],
   small: ['auto'],
@@ -24,9 +20,6 @@ const columns = {
   xlarge: ['auto', 'auto'],
 }
 
-// if size if small, we have 3 rows
-// if size if medium, we have 2 rows
-// if size if large or xlarge, we have 1 row
 const rows = {
   xsmall: ['xsmall', 'xsmall', 'xsmall'],
   small: ['xsmall', 'xsmall', 'xsmall'],
@@ -59,16 +52,9 @@ const areas = {
   ],
 }
 
-const ResponsiveGrid = ({
-  children,
-  overrideColumns,
-  overrideRows,
-  areas,
-  ...props
-}) => (
+const ResponsiveGrid = ({ children, areas, ...props }) => (
   <ResponsiveContext.Consumer>
     {size => {
-      // take into consideration if not array is sent but a simple string
       let columnsVal = columns
       if (columns) {
         if (columns[size]) {
@@ -83,7 +69,6 @@ const ResponsiveGrid = ({
         }
       }
 
-      // also if areas is a simple array not an object of arrays for different sizes
       let areasVal = areas
       if (areas && !Array.isArray(areas)) areasVal = areas[size]
 
@@ -101,9 +86,6 @@ const ResponsiveGrid = ({
   </ResponsiveContext.Consumer>
 )
 
-// this is an example for a responsive Grid.
-// with this example, you can either have a fixed Grid (with a known number content)
-// or generic one (with unkown number of contents like a list that renders)
 export function Main() {
   return (
     <Grommet theme={theme}>
@@ -137,4 +119,9 @@ export function Main() {
       </Box>
     </Grommet>
   )
+}
+
+ResponsiveGrid.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.node),
+  areas: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.object)),
 }

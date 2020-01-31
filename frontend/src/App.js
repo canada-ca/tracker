@@ -1,27 +1,11 @@
-import React, { Component, useState } from 'react'
+import React from 'react'
 import { i18n } from '@lingui/core'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { I18nProvider } from '@lingui/react'
-import { Trans, t } from '@lingui/macro'
-import { Header } from './Header'
 import { SignatureBlock } from './SignatureBlock'
-import { Footer } from './Footer'
 import { theme } from './theme'
 import { Main } from './Main'
-import canadaWordmark from './images/canada-wordmark.svg'
-import {
-  Text,
-  Stack,
-  Box,
-  Button,
-  Collapsible,
-  Heading,
-  Grommet,
-  Grid,
-  Layer,
-  ResponsiveContext,
-  extendDefaultTheme,
-} from 'grommet'
+import { Box, Button, Heading, Grommet, Grid, ResponsiveContext } from 'grommet'
 
 export const App = () => {
   return (
