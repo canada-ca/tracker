@@ -18,5 +18,7 @@ Visit the following URL localhost:5000/graphql
 
 ### Running tests locally
 To run test locally run 
-```cloud-build-local --config=api/cloudbuild.yaml --substitutions=BRANCH_NAME=<branch name>,SHORT_SHA=<commit hash>,_DB_HOST=postgres,_DB_NAME=auth,_DB_PASS=postgres,_DB_PORT=5432,_DB_USER=postgres --dryrun=false .```
+```
+cloud-build-local --config=api/cloudbuild.yaml --substitutions=BRANCH_NAME=<branch name>,SHORT_SHA=<commit hash>,_DB_HOST=postgres,_DB_NAME=auth,_DB_PASS=postgres,_DB_PORT=5432,_DB_USER=postgres --dryrun=false .
+```
 from the root directory of the repository.
