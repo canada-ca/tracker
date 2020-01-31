@@ -17,6 +17,31 @@ from app import schema
 from functions.error_messages import *
 
 
+@pytest.fixture()
+def user_table():
+	url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
+
+	engine = create_engine(url, echo=True)
+	connection = engine.connect()
+
+	meta = MetaData()
+
+	users = Table(
+		'users', meta,
+		Column('id', Integer, primary_key=True),
+		Column('username', String),
+		Column('display_name', String),
+		Column('user_email', String),
+		Column('user_password', String),
+		Column('preferred_lang', String, default="English"),
+		Column('failed_login_attempts', Integer, default=0),
+	)
+
+	meta.create_all(engine)
+
+	return connection
+
+
 ##
 # This class of tests handle any api calls that have to do with user passwords.
 
@@ -137,35 +162,9 @@ class TestUserSchemaPassword:
 
 		assert True
 
-	def test_updated_password_no_user_email(self):
+	def test_updated_password_no_user_email(self, user_table):
 
-		url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
-
-		engine = create_engine(url, echo=True)
-		c = engine.connect()
-
-		try:
-			c = engine.connect()
-			assert True
-		except:
-			assert False
-
-		meta = MetaData()
-
-		users = Table(
-			'users', meta,
-			Column('id', Integer, primary_key=True),
-			Column('username', String),
-			Column('display_name', String),
-			Column('user_email', String),
-			Column('user_password', String),
-			Column('preferred_lang', String, default="English"),
-			Column('failed_login_attempts', Integer, default=0),
-		)
-
-		meta.create_all(engine)
-
-		assert True
+		connection = user_table  # This is likely not needed.
 
 		client = Client(schema)
 		executed = client.execute(
