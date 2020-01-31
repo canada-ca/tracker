@@ -5,6 +5,11 @@ import sys
 import os
 
 # This is the only way I could get imports to work for unit testing.  TODO: See if there is a better way!
+from sqlalchemy import create_engine, Table, MetaData, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, scoped_session
+
+
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
@@ -87,38 +92,141 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
-	# def test_updated_password_no_user_email(self):
-	# 	client = Client(schema)
-	# 	executed = client.execute(
-	# 		'''
-	# 		mutation {
-	# 			updatePassword(email: "", password: "valid-password", confirmPassword: "valid-password") {
-	# 				user {
-	# 					username
-	# 				}
-	# 			}
-	# 		}
-	# 		''')
-	#
-	# 	assert executed['errors']
-	# 	assert executed['errors'][0]
-	# 	assert executed['errors'][0]['message'] == error_user_does_not_exist()
-	#
-	# def test_updated_password_no_user(self):
-	# 	client = Client(schema)
-	# 	executed = client.execute(
-	# 		'''
-	# 		mutation {
-	# 			updatePassword(email: "testing-fake-email-no-such-user@test.ca",
-	# 				password: "valid-password", confirmPassword: "valid-password") {
-	# 				user {
-	# 					username
-	# 				}
-	# 			}
-	# 		}
-	# 		''')
-	#
-	# 	assert executed['errors']
-	# 	assert executed['errors'][0]
-	# 	assert executed['errors'][0]['message'] == error_user_does_not_exist()
+	def test_mock_db(self):
+		url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
+
+		engine = create_engine(url, echo=True)
+		c = engine.connect()
+
+		try:
+			c = engine.connect()
+			assert True
+		except:
+			assert False
+
+		meta = MetaData()
+
+		users = Table(
+			'users', meta,
+			Column('id', Integer, primary_key=True),
+			Column('username', String),
+			Column('display_name', String),
+			Column('user_email', String),
+			Column('user_password', String),
+			Column('preferred_lang', String, default="English"),
+			Column('failed_login_attempts', Integer, default=0),
+		)
+
+		meta.create_all(engine)
+
+		assert True
+
+		client = Client(schema)
+		executed = client.execute(
+			'''
+			mutation{
+				createUser(username:"testuser", email:"test@test-email.ca",
+					password:"testtesttesttest", confirmPassword:"testtesttesttest"){
+					user{
+						username
+					}
+				}
+			}
+			''')
+		print(str(executed))
+
+		assert True
+
+	def test_updated_password_no_user_email(self):
+
+		url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
+
+		engine = create_engine(url, echo=True)
+		c = engine.connect()
+
+		try:
+			c = engine.connect()
+			assert True
+		except:
+			assert False
+
+		meta = MetaData()
+
+		users = Table(
+			'users', meta,
+			Column('id', Integer, primary_key=True),
+			Column('username', String),
+			Column('display_name', String),
+			Column('user_email', String),
+			Column('user_password', String),
+			Column('preferred_lang', String, default="English"),
+			Column('failed_login_attempts', Integer, default=0),
+		)
+
+		meta.create_all(engine)
+
+		assert True
+
+		client = Client(schema)
+		executed = client.execute(
+			'''
+			mutation {
+				updatePassword(email: "", password: "valid-password", confirmPassword: "valid-password") {
+					user {
+						username
+					}
+				}
+			}
+			''')
+
+		assert executed['errors']
+		assert executed['errors'][0]
+		assert executed['errors'][0]['message'] == scalar_error_type("email address", "")
+
+	def test_updated_password_no_user(self):
+
+		url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
+
+		engine = create_engine(url, echo=True)
+		c = engine.connect()
+
+		try:
+			c = engine.connect()
+			assert True
+		except:
+			assert False
+
+		meta = MetaData()
+
+		users = Table(
+			'users', meta,
+			Column('id', Integer, primary_key=True),
+			Column('username', String),
+			Column('display_name', String),
+			Column('user_email', String),
+			Column('user_password', String),
+			Column('preferred_lang', String, default="English"),
+			Column('failed_login_attempts', Integer, default=0),
+		)
+
+		meta.create_all(engine)
+
+		assert True
+
+		client = Client(schema)
+		executed = client.execute(
+			'''
+			mutation {
+				updatePassword(email: "testing-fake-email-no-such-user@test.ca",
+					password: "valid-password", confirmPassword: "valid-password") {
+					user {
+						username
+					}
+				}
+			}
+			''')
+
+		assert executed['errors']
+		assert executed['errors'][0]
+		assert executed['errors'][0]['message'] == error_user_does_not_exist()
 

@@ -12,6 +12,10 @@ steps:
     id: wait
     args: ['postgres:5432']
 
+  - name: 'gcr.io/cloud-builders/docker'
+    id: psql-create-db
+    args: ['exec', 'postgres', 'psql', '-c', 'CREATE DATABASE auth;', '-U', 'postgres']
+
   - name: 'gcr.io/track-compliance/ci'
     id: install
     dir: api
