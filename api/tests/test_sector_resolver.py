@@ -100,3 +100,54 @@ from app import schema
 # 		result_eval = client.execute(query)
 #
 # 		self.assertDictEqual(result_refr, result_eval)
+#
+# 	def test_sector_by_id_invalid(self):
+# 		client = Client(schema)
+# 		query = """
+# 			query{
+# 				getSectorById(id: 55){
+# 					id,
+# 					sector,
+# 					zone,
+# 					description
+# 				}
+# 			}
+# 			"""
+# 		executed = client.execute(query)
+# 		assert executed['errors']
+# 		assert executed['errors'][0]
+# 		assert executed['errors'][0]['message'] == "Error, Invalid ID"
+#
+# 	def test_sector_by_zone_invalid(self):
+# 		client = Client(schema)
+# 		query = """
+# 			query{
+# 				getSectorByZone(zone: "fdsfa"){
+# 					id,
+# 					sector,
+# 					zone,
+# 					description
+# 				}
+# 			}
+# 			"""
+# 		executed = client.execute(query)
+# 		assert executed['errors']
+# 		assert executed['errors'][0]
+# 		assert executed['errors'][0]['message'] == "Error, Zone does not exist"
+#
+# 	def test_sector_by_sector_invalid(self):
+# 		client = Client(schema)
+# 		query = """
+# 		query{
+# 			getSectorsBySector(sector: "Should Not Work") {
+# 				id
+# 				zone
+# 				description
+# 			}
+# 		}
+# 		"""
+# 		executed = client.execute(query)
+# 		assert executed['errors']
+# 		assert executed['errors'][0]
+# 		assert executed['errors'][0]['message'] == "Error, Sector does not exist"
+

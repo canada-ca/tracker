@@ -8,7 +8,7 @@ def resolve_get_sector_by_id(self, info, **kwargs):
 	query = Sectors.get_query(info).filter(
 		SectorsModel.id == sector_id
 	)
-	if query is None:
+	if not len(query.all()):
 		raise GraphQLError("Error, Invalid ID")
 	return query.all()
 
@@ -18,7 +18,7 @@ def resolve_get_sectors_by_sector(self, info, **kwargs):
 	query = Sectors.get_query(info).filter(
 		SectorsModel.sector == sector
 	)
-	if query is None:
+	if not len(query.all()):
 		raise GraphQLError("Error, Sector does not exist")
 	return query.all()
 
@@ -28,6 +28,6 @@ def resolve_get_sector_by_zone(self, info, **kwargs):
 	query = Sectors.get_query(info).filter(
 		SectorsModel.zone == zone
 	)
-	if query is None:
+	if not len(query.all()):
 		raise GraphQLError("Error, Zone does not exist")
 	return query.all()
