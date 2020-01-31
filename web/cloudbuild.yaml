@@ -16,7 +16,9 @@ steps:
     id: install
     dir: web
     entrypoint: pipenv
-    args: ['install', '-d']
+    args: ['sync', '-d', '--bare']
+    env:
+      - PIPENV_NOSPIN=TRUE
 
   - name: 'gcr.io/track-compliance/ci'
     id: test
