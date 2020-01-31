@@ -6,6 +6,7 @@ import pytest
 from graphene.test import Client
 from functions.error_messages import *
 
+
 # This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
@@ -19,7 +20,6 @@ from app import schema
 @pytest.fixture()
 def setup_db():
 	db.init_app(app)
-
 
 ##
 # This class of tests handle any api calls that have to do with user passwords.
@@ -98,7 +98,6 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
 	def test_updated_password_no_user_email(self, setup_db):
-
 		client = Client(schema)
 		executed = client.execute(
 			'''
@@ -114,6 +113,7 @@ class TestUserSchemaPassword:
 		assert executed['errors']
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == scalar_error_type("email address", "")
+
 
 	def test_updated_password_no_user(self, setup_db):
 
@@ -134,4 +134,3 @@ class TestUserSchemaPassword:
 			assert executed['errors']
 			assert executed['errors'][0]
 			assert executed['errors'][0]['message'] == error_user_does_not_exist()
-

@@ -27,6 +27,7 @@ graphene = "*"
 graphql-core = "*"
 flask-script = "*"
 flask-migrate = "*"
+pytest = "*"
 
 [scripts]
 test = "pytest"
