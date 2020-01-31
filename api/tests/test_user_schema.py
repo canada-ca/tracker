@@ -21,9 +21,9 @@ from app import schema
 def setup_db():
 	db.init_app(app)
 
+
 ##
 # This class of tests handle any api calls that have to do with user passwords.
-
 class TestUserSchemaPassword:
 
 	def test_password_too_short(self, setup_db):
@@ -113,7 +113,6 @@ class TestUserSchemaPassword:
 		assert executed['errors']
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == scalar_error_type("email address", "")
-
 
 	def test_updated_password_no_user(self, setup_db):
 
