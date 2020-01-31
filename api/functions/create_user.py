@@ -34,6 +34,7 @@ def create_user(username, password, confirm_password, email):
 	db_session.add(user)
 	try:
 		db_session.commit()
+		return user
 	except Exception as e:
 		db_session.rollback()
 		db_session.flush()
