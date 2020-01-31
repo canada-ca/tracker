@@ -7,7 +7,7 @@ export const SignatureBlock = () => {
   const { i18n } = useLingui()
   return (
     <>
-      {i18n.locale == 'fr' && (
+      {i18n.locale === 'fr' && (
         <img
           width="272px"
           height="25.219px"
@@ -15,7 +15,7 @@ export const SignatureBlock = () => {
           alt="Government of Canada"
         />
       )}
-      {i18n.locale == 'en' && (
+      {i18n.locale === 'en' && (
         <img
           width="272px"
           height="25.219px"

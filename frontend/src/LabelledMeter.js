@@ -1,6 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Box, Meter, Stack, Text } from 'grommet'
-import { grommet } from 'grommet/themes'
 
 export const LabelledMeter = ({ meterValue }) => {
   return (
@@ -9,7 +9,7 @@ export const LabelledMeter = ({ meterValue }) => {
         <Meter
           type="circle"
           background="dark-6"
-          values={[{ value: meterValue, color: "neutral-3" }]}
+          values={[{ value: meterValue, color: 'neutral-3' }]}
           size="xsmall"
           thickness="small"
         />
@@ -22,4 +22,8 @@ export const LabelledMeter = ({ meterValue }) => {
       </Stack>
     </Box>
   )
+}
+
+LabelledMeter.propTypes = {
+  meterValue: PropTypes.number,
 }
