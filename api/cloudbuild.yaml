@@ -5,7 +5,7 @@ steps:
     args:
       [
         '-c',
-        'docker run -d --network=cloudbuild -p=5432:5432 --name=postgres postgres',
+        'docker run -d --network=cloudbuild -p=5432:5432 --name=postgres postgres:alpine',
       ]
 
   - name: mikewilliamson/wait-for
