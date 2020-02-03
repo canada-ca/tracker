@@ -12,6 +12,7 @@ from schemas.user import *
 from schemas.sectors import Sectors
 from schemas.groups import Groups
 
+
 from resolvers.sectors import (
 	resolve_get_sector_by_id,
 	resolve_get_sectors_by_sector,

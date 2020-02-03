@@ -1,4 +1,7 @@
-from schemas.groups import *
+from schemas.groups import (
+	Groups,
+	GroupsModel
+)
 from graphql import GraphQLError
 
 
