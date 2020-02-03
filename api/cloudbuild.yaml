@@ -13,9 +13,10 @@ steps:
     id: wait
     args: ['postgres:5432']
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: postgres:alpine
     id: psql-create-db
-    args: ['exec', 'postgres', 'psql', '-c', 'CREATE DATABASE auth;', '-U', 'postgres']
+    entrypoint: 'psql'
+    args: ['--host', 'postgres', '-c', 'CREATE DATABASE auth;', '-U', 'postgres']
 
   - name: 'gcr.io/track-compliance/ci'
     id: install

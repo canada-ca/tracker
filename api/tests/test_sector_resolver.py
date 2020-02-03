@@ -1,5 +1,6 @@
 import sys
 import os
+from os.path import dirname, join, expanduser, normpath, realpath
 
 import pytest
 from graphene.test import Client
@@ -9,8 +10,8 @@ from unittest import TestCase
 
 # This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
-SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
-sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
+SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
+sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from app import schema
 
@@ -75,8 +76,8 @@ class TestSectorResolver(TestCase):
 		query = """
 			query{
 				getSectorById(id: 1) {
-					sector,
-					zone,
+					sector
+					zone
 					description
 				}
 			}
@@ -129,8 +130,8 @@ class TestSectorResolver(TestCase):
 		query = """
 			query{
 				getSectorByZone(zone: "GC_GA"){
-					sector,
-					zone,
+					sector
+					zone
 					description
 				}
 			}
@@ -157,9 +158,9 @@ class TestSectorResolver(TestCase):
 		query = """
 			query{
 				getSectorById(id: 55){
-					id,
-					sector,
-					zone,
+					id
+					sector
+					zone
 					description
 				}
 			}
@@ -174,9 +175,9 @@ class TestSectorResolver(TestCase):
 		query = """
 			query{
 				getSectorByZone(zone: "fdsfa"){
-					id,
-					sector,
-					zone,
+					id
+					sector
+					zone
 					description
 				}
 			}

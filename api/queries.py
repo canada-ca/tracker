@@ -30,17 +30,17 @@ class Query(graphene.ObjectType):
 	# all_users = graphene.List(UserObject, failedAttempts=graphene.Int(), resolver=resolve_all_users)
 	get_sector_by_id = graphene.List(
 		of_type=Sectors,
-		id=graphene.Argument(graphene.Int, required=False),
+		id=graphene.Argument(graphene.Int, required=True),
 		resolver=resolve_get_sector_by_id
 	)
 	get_sectors_by_sector = graphene.List(
 		of_type=Sectors,
-		sector=graphene.Argument(graphene.String, required=False),
+		sector=graphene.Argument(graphene.String, required=True),
 		resolver=resolve_get_sectors_by_sector
 	)
 	get_sector_by_zone = graphene.List(
 		of_type=Sectors,
-		zone=graphene.Argument(graphene.String, required=False),
+		zone=graphene.Argument(graphene.String, required=True),
 		resolver=resolve_get_sector_by_zone
 	)
 
