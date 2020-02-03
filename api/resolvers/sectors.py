@@ -4,7 +4,7 @@ from graphql import GraphQLError
 
 # Resolvers
 def resolve_get_sector_by_id(self, info, **kwargs):
-	sector_id = kwargs.get('id', 0)
+	sector_id = kwargs.get('id', 1)
 	query = Sectors.get_query(info).filter(
 		SectorsModel.id == sector_id
 	)
