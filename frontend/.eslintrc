@@ -1,4 +1,4 @@
-module.exports = {
+{
   extends: ['standard', 'prettier', 'plugin:react/recommended'],
   plugins: ['jest'],
   env: {
