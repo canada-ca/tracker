@@ -11,14 +11,7 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from db_manager.manage import app, create_db
-
 from models import Sectors
-
-
-@pytest.fixture(scope='class')
-def create_database():
-	create_db()
 
 
 @pytest.mark.usefixtures('create_database')
