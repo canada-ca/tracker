@@ -49,5 +49,7 @@ app.add_url_rule(
 
 
 if __name__ == '__main__':
+	# Serve will run the graphqli
+	# Manager allows you to make migration commands
 	# serve(app, host='0.0.0.0', port=5000)
 	manager.run()
