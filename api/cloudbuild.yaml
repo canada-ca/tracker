@@ -5,18 +5,23 @@ steps:
     args:
       [
         '-c',
-        'docker run -d --network=cloudbuild -p=5432:5432 --name=postgres postgres:alpine',
+        'docker run -d --network=cloudbuild -p=5432:5432 --name=postgres postgres',
       ]
 
   - name: mikewilliamson/wait-for
     id: wait
     args: ['postgres:5432']
 
+  - name: postgres:alpine
+    id: psql-create-db
+    entrypoint: 'psql'
+    args: ['--host', 'postgres', '-c', 'CREATE DATABASE track_dmarc;', '-U', 'postgres']
+
   - name: 'gcr.io/track-compliance/ci'
     id: install
     dir: api
     entrypoint: pipenv
-    args: ['sync', '-d', '--bare']
+    args: ['install', '-d', '--skip-lock']
     env:
       - PIPENV_NOSPIN=TRUE
 

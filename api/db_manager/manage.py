@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate, MigrateCommand, init, migrate, upgrade
 
 from sqlalchemy.types import Integer, Boolean, DateTime
 from sqlalchemy import Column, String,  ForeignKey
@@ -16,21 +16,16 @@ DB_PORT = os.getenv('DB_PORT')
 DB_NAME = os.getenv('DB_NAME')
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}'
-
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+# app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/track_dmarc'
+data_base = SQLAlchemy(app)
+migrate = Migrate(app, data_base)
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 
-def create_db():
-    db.init_app(app)
-    migrate.init_app(app, db)
-
-
-class Domains(db.Model):
+class Domains(data_base.Model):
     __tablename__ = 'domains'
 
     id = Column(Integer, primary_key=True)
@@ -49,7 +44,7 @@ class Domains(db.Model):
     scans = relationship("Scans", back_populates="domain", cascade="all, delete")
 
 
-class Organizations(db.Model):
+class Organizations(data_base.Model):
     __tablename__ = 'organizations'
 
     id = Column(Integer, primary_key=True)
@@ -61,7 +56,7 @@ class Organizations(db.Model):
     users = relationship("User_affiliations", back_populates="user_organization", cascade="all, delete")
 
 
-class Groups(db.Model):
+class Groups(data_base.Model):
     __tablename__ = 'groups'
 
     id = Column(Integer, primary_key=True)
@@ -72,7 +67,7 @@ class Groups(db.Model):
     group_sector = relationship("Sectors", back_populates="groups", cascade="all, delete")
 
 
-class Sectors(db.Model):
+class Sectors(data_base.Model):
     __tablename__ = 'sectors'
 
     id = Column(Integer, primary_key=True)
@@ -83,7 +78,7 @@ class Sectors(db.Model):
     affiliated_admins = relationship("Admin_affiliations", back_populates="admin_sector", cascade="all, delete")
 
 
-class Admins(db.Model):
+class Admins(data_base.Model):
     __tablename__ = 'admins'
 
     id = Column(Integer, primary_key=True)
@@ -94,7 +89,7 @@ class Admins(db.Model):
     admin_affiliation = relationship("Admin_affiliations", back_populates="admin", cascade="all, delete")
 
 
-class Admin_affiliations(db.Model):
+class Admin_affiliations(data_base.Model):
     __tablename__ = 'admin_affiliations'
 
     id = Column(Integer, ForeignKey('admins.id'), primary_key=True)
@@ -104,7 +99,7 @@ class Admin_affiliations(db.Model):
     admin_sector = relationship("Sectors", back_populates="affiliated_admins", cascade="all, delete")
 
 
-class Users(db.Model):
+class Users(data_base.Model):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -117,7 +112,7 @@ class Users(db.Model):
     user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
 
 
-class User_affiliations(db.Model):
+class User_affiliations(data_base.Model):
     __tablename__ = 'user_affiliations'
 
     id = Column(Integer, ForeignKey('users.id'), primary_key=True)
@@ -127,7 +122,7 @@ class User_affiliations(db.Model):
     user_organization = relationship("Organizations", back_populates="users", cascade="all, delete")
 
 
-class Scans(db.Model):
+class Scans(data_base.Model):
     __tablename__ = 'scans'
 
     id = Column(Integer, primary_key=True)
@@ -142,7 +137,7 @@ class Scans(db.Model):
     ssl = relationship("Ssl_scans", back_populates="ssl_flagged_scan", cascade="all, delete")
 
 
-class Dmarc_scans(db.Model):
+class Dmarc_scans(data_base.Model):
     __tablename__ = 'dmarc_scans'
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
@@ -150,7 +145,7 @@ class Dmarc_scans(db.Model):
     dmarc_flagged_scan = relationship("Scans", back_populates="dmarc", cascade="all, delete")
 
 
-class Dkim_scans(db.Model):
+class Dkim_scans(data_base.Model):
     __tablename__ = 'dkim_scans'
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
@@ -158,7 +153,7 @@ class Dkim_scans(db.Model):
     dkim_flagged_scan = relationship("Scans", back_populates="dkim", cascade="all, delete")
 
 
-class Spf_scans(db.Model):
+class Spf_scans(data_base.Model):
     __tablename__ = 'spf_scans'
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
@@ -166,7 +161,7 @@ class Spf_scans(db.Model):
     spf_flagged_scan = relationship("Scans", back_populates="spf", cascade="all, delete")
 
 
-class Https_scans(db.Model):
+class Https_scans(data_base.Model):
     __tablename__ = 'https_scans'
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
@@ -174,7 +169,7 @@ class Https_scans(db.Model):
     https_flagged_scan = relationship("Scans", back_populates="https", cascade="all, delete")
 
 
-class Ssl_scans(db.Model):
+class Ssl_scans(data_base.Model):
     __tablename__ = 'ssl_scans'
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
@@ -182,14 +177,14 @@ class Ssl_scans(db.Model):
     ssl_flagged_scan = relationship("Scans", back_populates="ssl", cascade="all, delete")
 
 
-class Ciphers(db.Model):
+class Ciphers(data_base.Model):
     __tablename__ = 'ciphers'
 
     id = Column(Integer, primary_key=True)
     cipher_type = Column(String)
 
 
-class Guidance(db.Model):
+class Guidance(data_base.Model):
     __tablename__ = 'guidance'
 
     id = Column(Integer, primary_key=True)
@@ -198,7 +193,7 @@ class Guidance(db.Model):
     ref_links = Column(String)
 
 
-class Classification(db.Model):
+class Classification(data_base.Model):
     __tablename__ = 'Classification'
 
     id = Column(Integer, primary_key=True)
