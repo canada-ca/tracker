@@ -1,7 +1,5 @@
-import os
-from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.types import Integer, Boolean, DateTime
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
