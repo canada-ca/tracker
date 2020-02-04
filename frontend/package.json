@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --env.mode=production --config webpack.config.js",
     "dev": "webpack-dev-server --hot --env.mode=development",
-    "start": "serve -l 3000 -s dist",
+    "start": "serve -l tcp://0.0.0.0:3000 -s dist",
     "test": "jest",
     "lint": "eslint src",
     "extract": "lingui extract",
