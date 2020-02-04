@@ -12,20 +12,32 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from models import Sectors
+from app import app, db
 
 
-@pytest.mark.usefixtures('create_database')
+@pytest.fixture(scope='class')
+def build_db():
+	with app.app_context():
+		from flask_migrate import init as _init
+		from flask_migrate import migrate as _migrate
+		from flask_migrate import upgrade as _upgrade
+	_init()
+	_migrate()
+	_upgrade()
+
+
+@pytest.mark.usefixtures('build_db')
 class TestDBCreation:
 	def test_db_create(self):
-		from db import db_session
+		from db import db
 
 		sector = Sectors(
 			sector='GC_F',
 			zone='GC',
 			description='Future Government of Canada'
 		)
-		db_session.add(sector)
-		db_session.commit()
+		db.session.add(sector)
+		db.session.commit()
 
 		ret_sector = Sectors.query().filter(
 			sector='GC_F'

@@ -19,7 +19,7 @@ app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}'
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/track_dmarc'
 data_base = SQLAlchemy(app)
-migrate = Migrate(app, data_base)
+migrate_db_del = Migrate(app, data_base)
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
@@ -199,5 +199,6 @@ class Classification(data_base.Model):
     id = Column(Integer, primary_key=True)
     UNCLASSIFIED = Column(String)
 
+
 if __name__ == '__main__':
-	manager.run()
+    manager.run()
