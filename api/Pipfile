@@ -25,6 +25,8 @@ waitress = "*"
 flask-bcrypt = "*"
 graphene = "*"
 graphql-core = "*"
+flask-script = "*"
+flask-migrate = "*"
 
 [scripts]
 test = "pytest"
