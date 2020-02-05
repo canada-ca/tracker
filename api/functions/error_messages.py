@@ -26,6 +26,14 @@ def error_password_not_updated():
 	return str("Unable to update password, please try again")
 
 
+def error_user_not_updated():
+	return str("User not updated, please try again")
+
+
+def error_otp_code_is_invalid():
+	return str("OTP code is invalid, please try again")
+
+
 def scalar_error_type(value_type, value):
 	return str("Value is not a valid " + str(value_type) + ": " + str(value))
 
