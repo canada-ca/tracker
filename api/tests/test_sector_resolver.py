@@ -18,6 +18,7 @@ from app import schema
 
 @pytest.fixture(scope='class')
 def build_sectors_table():
+	"""Build database to allow proper testing of sector resolvers"""
 	url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
 
 	engine = create_engine(url, echo=True)
@@ -72,6 +73,7 @@ def build_sectors_table():
 @pytest.mark.usefixtures('build_sectors_table')
 class TestSectorResolver(TestCase):
 	def test_get_sector_by_id(self):
+		"""Test get_sector_by_id resolver"""
 		client = Client(schema)
 		query = """
 			query{
@@ -100,6 +102,7 @@ class TestSectorResolver(TestCase):
 		self.assertDictEqual(result_refr, result_eval)
 
 	def test_get_sector_by_sector(self):
+		"""Test get_sector_by_sector resolver"""
 		client = Client(schema)
 		query = """
 			query{
@@ -126,6 +129,7 @@ class TestSectorResolver(TestCase):
 		self.assertDictEqual(result_refr, result_eval)
 
 	def test_get_sector_by_zone(self):
+		"""Test get_sector_by_zone resolver"""
 		client = Client(schema)
 		query = """
 			query{
@@ -154,6 +158,7 @@ class TestSectorResolver(TestCase):
 		self.assertDictEqual(result_refr, result_eval)
 
 	def test_sector_by_id_invalid(self):
+		"""Test get_sector_by_id invalid ID error handling"""
 		client = Client(schema)
 		query = """
 			query{
@@ -171,6 +176,7 @@ class TestSectorResolver(TestCase):
 		assert executed['errors'][0]['message'] == "Error, Invalid ID"
 
 	def test_sector_by_zone_invalid(self):
+		"""Test get_sector_by_zone invalid Zone error handling"""
 		client = Client(schema)
 		query = """
 			query{
@@ -188,6 +194,7 @@ class TestSectorResolver(TestCase):
 		assert executed['errors'][0]['message'] == "Error, Zone does not exist"
 
 	def test_sector_by_sector_invalid(self):
+		"""Test get_sector_by_sector invalid sector error handling"""
 		client = Client(schema)
 		query = """
 		query{
