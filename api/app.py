@@ -16,20 +16,19 @@ from db import (
 from queries import schema
 
 app = Flask(__name__)
-app.debug = True
-
-auth = GraphQLAuth(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
-db.init_app(app)
-
 app.config["JWT_SECRET_KEY"] = os.getenv('SUPER_SECRET_KEY')
 app.config["REFRESH_EXP_LENGTH"] = 30
 app.config["ACCESS_EXP_LENGTH"] = 10
+app.debug = True
 
+
+auth = GraphQLAuth(app)
+
+db.init_app(app)
 
 app.add_url_rule(
 	'/graphql',
