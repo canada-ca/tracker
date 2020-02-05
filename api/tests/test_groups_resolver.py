@@ -18,6 +18,7 @@ from app import schema
 
 @pytest.fixture(scope='class')
 def build_db_tables():
+	"""Build database for group resolver testing"""
 	url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
 
 	engine = create_engine(url, echo=True)
@@ -75,6 +76,7 @@ def build_db_tables():
 @pytest.mark.usefixtures('build_db_tables')
 class TestGroupResolver(TestCase):
 	def test_get_group_by_id(self):
+		"""Test get_group_by_id resolver"""
 		client = Client(schema)
 		query = """
 				query{

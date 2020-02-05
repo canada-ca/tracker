@@ -7,6 +7,7 @@ from graphql import GraphQLError
 
 # Resolvers
 def resolve_get_group_by_id(self, info, **kwargs):
+	"""Return a group by its row ID"""
 	group_id = kwargs.get('id', 1)
 	query = Groups.get_query(info).filter(
 		GroupsModel.id == group_id
@@ -17,6 +18,7 @@ def resolve_get_group_by_id(self, info, **kwargs):
 
 
 def resolve_get_group_by_group(self, info, **kwargs):
+	"""Return a list of groups by its group"""
 	group = kwargs.get('group')
 	query = Groups.get_query(info).filter(
 		GroupsModel.s_group == group
@@ -27,6 +29,7 @@ def resolve_get_group_by_group(self, info, **kwargs):
 
 
 def resolve_get_group_by_sector_id(self, info, **kwargs):
+	"""Return a list of groups by their sector_id"""
 	sector_id = kwargs.get('sectorID')
 	query = Groups.get_query(info).filter(
 		GroupsModel.sector_id == sector_id
