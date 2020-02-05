@@ -10,8 +10,7 @@ from db import (
 	DB_NAME,
 	DB_HOST,
 	DB_PASS,
-	DB_USER,
-	DB_PORT
+	DB_USER
 )
 
 from queries import schema
