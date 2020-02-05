@@ -11,14 +11,13 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from models import Sectors
 from db import *
-
 from manage import app
 
 
 @pytest.fixture(scope='class')
 def build_db():
 
-	app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/track_dmarc'
+	app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}'
 	app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
