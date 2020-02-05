@@ -4,6 +4,8 @@ from os.path import dirname, join, expanduser, normpath, realpath
 
 import pytest
 
+from sqlalchemy import create_engine
+
 # This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
@@ -15,36 +17,19 @@ from manage import app
 
 
 @pytest.fixture(scope='class')
-def build_db():
+def initialize_db():
 
 	db.init_app(app)
 
-	sector = Sectors(
-		sector='GC_F',
-		zone='GC',
-		description='Future Government of Canada'
-	)
-	with app.app_context():
-		db.session.add(sector)
-		db.session.commit()
 
-
-@pytest.mark.usefixtures('build_db')
+@pytest.mark.usefixtures('initialize_db')
 class TestDBCreation:
 	def test_db_create(self):
+		tables = set()
+		tables.add("alembic_version")
 
-		sector = Sectors(
-			sector='GC_F',
-			zone='GC',
-			description='Future Government of Canada'
-		)
-		with app.app_context():
-			db.session.add(sector)
-			db.session.commit()
+		for key in db.metadata.tables.keys():
+			tables.add(key)
 
-		with app.app_context():
-			ret_sector = Sectors.query.filter(
-				Sectors.sector == 'GC_F'
-			)
-
-		assert len(ret_sector.all())
+		engine = create_engine(f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}')
+		assert tables == set(engine.table_names())
