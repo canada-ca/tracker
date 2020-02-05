@@ -6,7 +6,7 @@ from functions.input_validators import *
 from functions.error_messages import *
 
 from models import Users as User
-from db import db_session
+from db import db
 
 
 def create_user(username, password, confirm_password, email):
@@ -31,11 +31,11 @@ def create_user(username, password, confirm_password, email):
 		user_password=bcrypt.generate_password_hash(password=password).decode('UTF-8')  # Hash the password
 	)
 
-	db_session.add(user)
+	db.session.add(user)
 	try:
-		db_session.commit()
+		db.session.commit()
 		return user
 	except Exception as e:
-		db_session.rollback()
-		db_session.flush()
+		db.session.rollback()
+		db.session.flush()
 		raise GraphQLError(error_creating_account())

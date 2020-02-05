@@ -7,7 +7,7 @@ from functions.input_validators import *
 from functions.error_messages import *
 
 from models import Users as User
-from db import db_session
+from db import db
 
 
 def sign_in_user(email, password):
