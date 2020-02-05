@@ -26,6 +26,42 @@ steps:
       - PIPENV_NOSPIN=TRUE
 
   - name: 'gcr.io/track-compliance/ci'
+    id: dbInit
+    dir: api
+    entrypoint: pipenv
+    args: ['run', 'db-init']
+    env:
+      - DB_HOST=$_DB_HOST
+      - DB_NAME=$_DB_NAME
+      - DB_PASS=$_DB_PASS
+      - DB_PORT=$_DB_PORT
+      - DB_USER=$_DB_USER
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: dbMigrate
+    dir: api
+    entrypoint: pipenv
+    args: ['run', 'db-migrate']
+    env:
+      - DB_HOST=$_DB_HOST
+      - DB_NAME=$_DB_NAME
+      - DB_PASS=$_DB_PASS
+      - DB_PORT=$_DB_PORT
+      - DB_USER=$_DB_USER
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: dbUpgrade
+    dir: api
+    entrypoint: pipenv
+    args: ['run', 'db-upgrade']
+    env:
+      - DB_HOST=$_DB_HOST
+      - DB_NAME=$_DB_NAME
+      - DB_PASS=$_DB_PASS
+      - DB_PORT=$_DB_PORT
+      - DB_USER=$_DB_USER
+
+  - name: 'gcr.io/track-compliance/ci'
     id: test
     dir: api
     entrypoint: pipenv

@@ -3,3 +3,5 @@ Dockerfile
 tests
 README.md
 cloudbuild.yaml
+migrations/**/*
+migrations
