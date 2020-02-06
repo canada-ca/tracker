@@ -13,90 +13,118 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from app import schema
+from app import app, schema
+from models import Groups, Sectors
+from db import db
 
 
 @pytest.fixture(scope='class')
-def build_db_tables():
+def group_test_resolver_db_init():
 	"""Build database for group resolver testing"""
-	url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
+	db.init_app(app)
+	with app.app_context():
+		if Sectors.query.first() is None:
+			sector = Sectors(
+				sector="GC",
+				zone="GC_A",
+				description="Arts"
+			)
+			db.session.add(sector)
+			db.session.commit()
 
-	engine = create_engine(url, echo=True)
-	connection = engine.connect()
-
-	meta = MetaData()
-
-	sectors = Table(
-		'sectors', meta,
-		Column('id', Integer, primary_key=True),
-		Column('sector', String),
-		Column('zone', String),
-		Column('description', String),
-	)
-
-	groups = Table(
-		'groups', meta,
-		Column('id', Integer, primary_key=True),
-		Column('s_group', String),
-		Column('description', String),
-		Column('sector_id', Integer, ForeignKey('sectors.id')),
-		relationship('group_sector', "Sectors", back_populates="groups", cascade="all, delete")
-	)
-
-	meta.create_all(engine)
-
-	from models import Sectors
-	from db import db_session
-
-	if Sectors.query.first() is None:
-		sector = Sectors(
-			sector="GC",
-			zone="GC_A",
-			description="Arts"
-		)
-		db_session.add(sector)
-		db_session.commit()
-
-	from models import Groups
-	from db import db_session
-
-	if Groups.query.first() is None:
-		group = Groups(
-			s_group='GC_A',
-			description='Arts',
-			sector_id=1
-		)
-		db_session.add(group)
-		db_session.commit()
-
-		# This fixture just needs to run to setup a postgres testing instance
-		return connection
+		if Groups.query.first() is None:
+			group = Groups(
+				s_group='GC_A',
+				description='Arts',
+				sector_id=1
+			)
+			db.session.add(group)
+			db.session.commit()
 
 
-@pytest.mark.usefixtures('build_db_tables')
+@pytest.mark.usefixtures('group_test_resolver_db_init')
 class TestGroupResolver(TestCase):
-	def test_get_group_by_id(self):
+	def test_get_group_resolvers_by_id(self):
 		"""Test get_group_by_id resolver"""
-		client = Client(schema)
-		query = """
-				query{
-					getGroupById(id:1) {
-						sGroup,
-						description
-					}
-				}"""
+		with app.app_context():
+			client = Client(schema)
+			query = """
+					query{
+						getGroupById(id:1) {
+							sGroup,
+							description
+						}
+					}"""
 
-		result_refr = {
-			"data": {
-				"getGroupById": [
-					{
-						"sGroup": "GC_A",
-						"description": "Arts"
-					}
-				]
+			result_refr = {
+				"data": {
+					"getGroupById": [
+						{
+							"sGroup": "GC_A",
+							"description": "Arts"
+						}
+					]
+				}
 			}
-		}
 
-		result_eval = client.execute(query)
+			result_eval = client.execute(query)
+		self.assertDictEqual(result_refr, result_eval)
 
+	def test_get_group_resolvers_by_group(self):
+		""""Test get_group_by_group resolver"""
+		with app.app_context():
+			client = Client(schema)
+			query = """
+					query{
+						getGroupByGroup(group: "GC_A"){
+							description
+							sectorId
+						}
+					}"""
+
+			result_refr = {
+				"data": {
+					"getGroupByGroup": [
+						{
+							"description": "Arts",
+							"sectorId": 1
+						}
+					]
+				}
+			}
+
+			result_eval = client.execute(query)
+		self.assertDictEqual(result_refr, result_eval)
+
+	def test_get_group_resolvers_by_sector_id(self):
+		"""Test get_group_by_sector_id resolver"""
+		with app.app_context():
+			client = Client(schema)
+			query = """
+					{
+						getGroupBySectorId(sectorID: 1) {
+							description
+							sGroup
+							groupSector {
+								zone
+								description
+							}
+						}
+					}"""
+			result_refr = {
+				"data": {
+					"getGroupBySectorId": [
+						{
+							"description": "Arts",
+							"sGroup": "GC_A",
+							"groupSector": {
+								"zone": "GC_A",
+								"description": "Arts"
+							}
+						}
+					]
+				}
+			}
+
+			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
