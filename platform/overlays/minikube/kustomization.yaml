@@ -13,6 +13,7 @@ resources:
 - frontend-namespace.yaml
 - api-namespace.yaml
 - tracker-api-virtual-service.yaml
+- istio-authentication-policy.yaml
 images:
 - name: gcr.io/track-compliance/api
   newTag: master-5bf6a86

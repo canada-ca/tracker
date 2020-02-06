@@ -16,7 +16,7 @@ class Connection:
 
     def __init__(self, _user, _password, _host, _port, _db):
         try:
-            self.engine = create_engine(f"postgresql+psycopg2://{_user}:{_password}@{_host}/{_db}", echo=True)
+            self.engine = create_engine(f"postgresql+psycopg2://{_user}:{_password}@{_host}/{_db}", connect_args={'sslmode':'disable'}, echo=True)
 
             base.metadata.create_all(bind=self.engine)
             Session = sessionmaker(bind=self.engine)
