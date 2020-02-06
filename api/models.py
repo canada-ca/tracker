@@ -1,19 +1,13 @@
-import os
-from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.types import Integer, Boolean, DateTime
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
-
-from db import Base as base
-from db import db_session
+from db import db
 
 
-class Domains(base):
+class Domains(db.Model):
     __tablename__ = 'domains'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     domain = Column(String)
@@ -31,10 +25,8 @@ class Domains(base):
     scans = relationship("Scans", back_populates="domain", cascade="all, delete")
 
 
-class Organizations(base):
+class Organizations(db.Model):
     __tablename__ = 'organizations'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     organization = Column(String)
@@ -45,10 +37,8 @@ class Organizations(base):
     users = relationship("User_affiliations", back_populates="user_organization", cascade="all, delete")
 
 
-class Groups(base):
+class Groups(db.Model):
     __tablename__ = 'groups'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     s_group = Column(String)
@@ -58,10 +48,8 @@ class Groups(base):
     group_sector = relationship("Sectors", back_populates="groups", cascade="all, delete")
 
 
-class Sectors(base):
+class Sectors(db.Model):
     __tablename__ = 'sectors'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     sector = Column(String)
@@ -71,10 +59,8 @@ class Sectors(base):
     affiliated_admins = relationship("Admin_affiliations", back_populates="admin_sector", cascade="all, delete")
 
 
-class Admins(base):
+class Admins(db.Model):
     __tablename__ = 'admins'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     username = Column(String)
@@ -84,10 +70,8 @@ class Admins(base):
     admin_affiliation = relationship("Admin_affiliations", back_populates="admin", cascade="all, delete")
 
 
-class Admin_affiliations(base):
+class Admin_affiliations(db.Model):
     __tablename__ = 'admin_affiliations'
-
-    query = db_session.query_property()
 
     id = Column(Integer, ForeignKey('admins.id'), primary_key=True)
     sector_id = Column(Integer, ForeignKey('sectors.id'))
@@ -96,10 +80,8 @@ class Admin_affiliations(base):
     admin_sector = relationship("Sectors", back_populates="affiliated_admins", cascade="all, delete")
 
 
-class Users(base):
+class Users(db.Model):
     __tablename__ = 'users'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String)
@@ -111,10 +93,8 @@ class Users(base):
     user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
 
 
-class User_affiliations(base):
+class User_affiliations(db.Model):
     __tablename__ = 'user_affiliations'
-
-    query = db_session.query_property()
 
     id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     organization_id = Column(Integer, ForeignKey('organizations.id'))
@@ -123,10 +103,8 @@ class User_affiliations(base):
     user_organization = relationship("Organizations", back_populates="users", cascade="all, delete")
 
 
-class Scans(base):
+class Scans(db.Model):
     __tablename__ = 'scans'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     domain_id = Column(Integer, ForeignKey('domains.id'))
@@ -140,69 +118,55 @@ class Scans(base):
     ssl = relationship("Ssl_scans", back_populates="ssl_flagged_scan", cascade="all, delete")
 
 
-class Dmarc_scans(base):
+class Dmarc_scans(db.Model):
     __tablename__ = 'dmarc_scans'
-
-    query = db_session.query_property()
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dmarc_scan = Column(JSONB)
     dmarc_flagged_scan = relationship("Scans", back_populates="dmarc", cascade="all, delete")
 
 
-class Dkim_scans(base):
+class Dkim_scans(db.Model):
     __tablename__ = 'dkim_scans'
-
-    query = db_session.query_property()
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dkim_scan = Column(JSONB)
     dkim_flagged_scan = relationship("Scans", back_populates="dkim", cascade="all, delete")
 
 
-class Spf_scans(base):
+class Spf_scans(db.Model):
     __tablename__ = 'spf_scans'
-
-    query = db_session.query_property()
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     spf_scan = Column(JSONB)
     spf_flagged_scan = relationship("Scans", back_populates="spf", cascade="all, delete")
 
 
-class Https_scans(base):
+class Https_scans(db.Model):
     __tablename__ = 'https_scans'
-
-    query = db_session.query_property()
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     https_scan = Column(JSONB)
     https_flagged_scan = relationship("Scans", back_populates="https", cascade="all, delete")
 
 
-class Ssl_scans(base):
+class Ssl_scans(db.Model):
     __tablename__ = 'ssl_scans'
-
-    query = db_session.query_property()
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     ssl_scan = Column(JSONB)
     ssl_flagged_scan = relationship("Scans", back_populates="ssl", cascade="all, delete")
 
 
-class Ciphers(base):
+class Ciphers(db.Model):
     __tablename__ = 'ciphers'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     cipher_type = Column(String)
 
 
-class Guidance(base):
+class Guidance(db.Model):
     __tablename__ = 'guidance'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     tag_name = Column(String)
@@ -210,10 +174,8 @@ class Guidance(base):
     ref_links = Column(String)
 
 
-class Classification(base):
+class Classification(db.Model):
     __tablename__ = 'Classification'
-
-    query = db_session.query_property()
 
     id = Column(Integer, primary_key=True)
     UNCLASSIFIED = Column(String)

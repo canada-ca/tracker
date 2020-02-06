@@ -31,8 +31,9 @@ class CreateUser(graphene.Mutation):
 
 	@staticmethod
 	def mutate(self, info, username, password, confirm_password, email):
-		create_user(username, password, confirm_password, email)
-
+		user = create_user(username, password, confirm_password, email)
+		return CreateUser(user=user)
+	
 
 class SignInUser(graphene.Mutation):
 	class Arguments:

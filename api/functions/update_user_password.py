@@ -6,7 +6,7 @@ from functions.input_validators import *
 from functions.error_messages import *
 
 from models import Users as User
-from db import db_session
+from db import db
 
 
 def update_password(email, password, confirm_password):
@@ -30,7 +30,7 @@ def update_password(email, password, confirm_password):
 	user = User.query.filter(User.user_email == email)\
 		.update({'user_password': bcrypt.generate_password_hash(password).decode('UTF-8')})
 
-	db_session.commit()
+	db.session.commit()
 
 	if not user:
 		raise GraphQLError(error_password_not_updated())

@@ -1,11 +1,12 @@
 steps:
+  # Passing POSTGRES_USER here creates a database of the same name
   - name: 'gcr.io/cloud-builders/docker'
     id: start_postgres
     entrypoint: /bin/sh
     args:
       [
-        '-c',
-        'docker run -d --network=cloudbuild -p=5432:5432 --name=postgres postgres',
+        "-c",
+        "docker run -d --network=cloudbuild -p=5432:5432 -e POSTGRES_USER=$_DB_NAME -e POSTGRES_PASSWORD=$_DB_PASS --name=postgres postgres:alpine",
       ]
 
   - name: mikewilliamson/wait-for
@@ -20,9 +21,21 @@ steps:
     id: install
     dir: api
     entrypoint: pipenv
-    args: ['install', '-d', '--skip-lock']
+    args: ['sync', '-d', '--bare']
     env:
       - PIPENV_NOSPIN=TRUE
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: dbInit
+    dir: api
+    entrypoint: pipenv
+    args: ['run', 'db-upgrade']
+    env:
+      - DB_HOST=$_DB_HOST
+      - DB_NAME=$_DB_NAME
+      - DB_PASS=$_DB_PASS
+      - DB_PORT=$_DB_PORT
+      - DB_USER=$_DB_NAME
 
   - name: 'gcr.io/track-compliance/ci'
     id: test
@@ -34,7 +47,7 @@ steps:
       - DB_NAME=$_DB_NAME
       - DB_PASS=$_DB_PASS
       - DB_PORT=$_DB_PORT
-      - DB_USER=$_DB_USER
+      - DB_USER=$_DB_NAME
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build

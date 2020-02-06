@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const { getIfUtils, removeEmpty } = require('webpack-config-utils')
 
 module.exports = ({ mode }) => {
-  const { ifProduction, ifNotProduction } = getIfUtils(mode)
+  const { ifNotProduction } = getIfUtils(mode)
 
   return {
     mode,

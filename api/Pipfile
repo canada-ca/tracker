@@ -25,11 +25,16 @@ waitress = "*"
 flask-bcrypt = "*"
 graphene = "*"
 graphql-core = "*"
+flask-script = "*"
+flask-migrate = "*"
 
 [scripts]
 test = "pytest"
 server = "python app.py"
 schema-export = "python schema_export.py"
+db-init = 'python manage.py db init'
+db-migrate = 'python manage.py db migrate'
+db-upgrade = 'python manage.py db upgrade'
 
 [pipenv]
 allow_prereleases = false
