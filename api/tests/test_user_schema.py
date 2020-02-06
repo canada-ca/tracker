@@ -1,46 +1,24 @@
-import pytest
-from graphene.test import Client
-
 import sys
 import os
+from os.path import dirname, join, expanduser, normpath, realpath
 
-# This is the only way I could get imports to work for unit testing.  TODO: See if there is a better way!
-from sqlalchemy import create_engine, Table, MetaData, Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
-
-
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
-sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-from app import schema
+import pytest
+from graphene.test import Client
 from functions.error_messages import *
+
+# This is the only way I could get imports to work for unit testing.
+PACKAGE_PARENT = '..'
+SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
+sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
+
+from db import *
+from app import app
+from app import schema
 
 
 @pytest.fixture()
-def user_table():
-	url = "postgresql+psycopg2://postgres:postgres@postgres:5432/auth"
-
-	engine = create_engine(url, echo=True)
-	connection = engine.connect()
-
-	meta = MetaData()
-
-	users = Table(
-		'users', meta,
-		Column('id', Integer, primary_key=True),
-		Column('username', String),
-		Column('display_name', String),
-		Column('user_email', String),
-		Column('user_password', String),
-		Column('preferred_lang', String, default="English"),
-		Column('failed_login_attempts', Integer, default=0),
-	)
-
-	meta.create_all(engine)
-
-	# This fixture just needs to run to setup a postgres testing instance
-	return connection
+def setup_db():
+	db.init_app(app)
 
 
 ##
@@ -48,7 +26,7 @@ def user_table():
 
 class TestUserSchemaPassword:
 
-	def test_password_too_short(self, user_table):
+	def test_password_too_short(self, setup_db):
 		client = Client(schema)
 		executed = client.execute(
 			'''
@@ -65,7 +43,7 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
-	def test_passwords_do_not_match(self, user_table):
+	def test_passwords_do_not_match(self, setup_db):
 		client = Client(schema)
 		executed = client.execute(
 			'''
@@ -83,7 +61,7 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_passwords_do_not_match()
 
-	def test_updated_passwords_do_not_match(self, user_table):
+	def test_updated_passwords_do_not_match(self, setup_db):
 
 		client = Client(schema)
 		executed = client.execute(
@@ -102,7 +80,7 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_passwords_do_not_match()
 
-	def test_updated_password_too_short(self, user_table):
+	def test_updated_password_too_short(self, setup_db):
 		client = Client(schema)
 		executed = client.execute(
 			'''
@@ -119,7 +97,7 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
-	def test_updated_password_no_user_email(self, user_table):
+	def test_updated_password_no_user_email(self, setup_db):
 
 		client = Client(schema)
 		executed = client.execute(
@@ -137,7 +115,7 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == scalar_error_type("email address", "")
 
-	def test_updated_password_no_user(self, user_table):
+	def test_updated_password_no_user(self, setup_db):
 
 		client = Client(schema)
 		executed = client.execute(
