@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: tracker-frontend-virtual-service
+  namespace: frontend
+spec:
+  hosts:
+    - '*'
+  gateways:
+    - ingressgateway.istio-system.svc.cluster.local
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: tracker-frontend.frontend.svc.cluster.local
+            port:
+              number: 3000

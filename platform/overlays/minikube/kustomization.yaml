@@ -1,4 +1,33 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+- istio.yaml
+- tracker-frontend-deployment.yaml
+- tracker-frontend-service.yaml
+- tracker-frontend-virtual-service.yaml
 - ../../bases
+- tracker-api-deployment.yaml
+- tracker-api-service.yaml
+- postgres-deployment.yaml
+- postgres-service.yaml
+- frontend-namespace.yaml
+- api-namespace.yaml
+- tracker-api-virtual-service.yaml
+images:
+- name: gcr.io/track-compliance/api
+  newTag: master-5bf6a86
+- name: gcr.io/track-compliance/frontend
+  newTag: master-6f3c03f
+secretGenerator:
+- envs:
+  - .env.kiali
+  name: kiali
+  namespace: istio-system
+- envs:
+  - .env.postgres
+  name: postgres
+  namespace: api
+- envs:
+  - .env.api
+  name: api
+  namespace: api

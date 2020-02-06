@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tracker-api
+  name: tracker-api
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracker-api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tracker-api
+    spec:
+      initContainers:
+      - name: database-migration
+        image: gcr.io/track-compliance/api
+        command: ['pipenv']
+        args: ['run', 'db-upgrade']
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_PASS
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_NAME
+        - name: DB_HOST
+          value: postgres
+        - name: DB_PORT
+          value: "5432"
+      containers:
+      - image: gcr.io/track-compliance/api
+        name: frontend
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_PASS
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_NAME
+        - name: DB_HOST
+          value: postgres
+        - name: DB_PORT
+          value: "5432"
+        resources: {}
+status: {}
