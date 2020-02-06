@@ -3,5 +3,7 @@ kind: Namespace
 metadata:
   creationTimestamp: null
   name: api
+  labels:
+    istio-injection: enabled
 spec: {}
 status: {}

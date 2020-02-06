@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   creationTimestamp: null
   name: frontend
-  annotations:
+  labels:
     istio-injection: enabled
 spec: {}
 status: {}
