@@ -15,7 +15,7 @@ steps:
 
   - name: 'gcr.io/cloud-builders/docker'
     id: psql-create-db
-    args: ['exec', 'postgres', 'psql', '-c', 'CREATE DATABASE auth;', '-U', 'postgres']
+    args: ['exec', 'postgres', 'psql', '-c', 'CREATE DATABASE track-dmarc;', '-U', 'postgres']
 
   - name: 'gcr.io/track-compliance/ci'
     id: install
