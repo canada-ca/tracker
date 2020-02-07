@@ -3,7 +3,7 @@
 
 
 def error_password_does_not_meet_requirements():
-	return str("Password does not meet minimum requirements (Min. 8 chars, Uppercase, Number, Special Char)")
+	return str("Password does not meet minimum requirements (Must be 12 or more chars long)")
 
 
 def error_passwords_do_not_match():
