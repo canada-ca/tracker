@@ -18,6 +18,10 @@ def error_user_does_not_exist():
 	return str("User does not exist, please register")
 
 
+def error_email_in_use():
+	return str("An account already uses that email address, please try again")
+
+
 def error_invalid_credentials():
 	return str("Incorrect email or password")
 
