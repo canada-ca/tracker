@@ -1,10 +1,9 @@
 from sqlalchemy.types import Integer, Boolean, DateTime
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
 from db import db
-
 
 class Domains(db.Model):
     __tablename__ = 'domains'
