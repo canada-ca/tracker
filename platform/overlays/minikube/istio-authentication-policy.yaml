@@ -5,7 +5,19 @@ metadata:
   namespace: api
 spec:
   peers:
-  - mtls: {}
+  - mtls:
+      mode: PERMISSIVE
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: api-dr
+  namespace: api
+spec:
+  host: "*.api.svc.cluster.local" #only affects requests to the api namespace
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
 ---
 apiVersion: authentication.istio.io/v1alpha1
 kind: Policy
@@ -14,4 +26,17 @@ metadata:
   namespace: frontend
 spec:
   peers:
-  - mtls: {}
+  - mtls:
+      mode: PERMISSIVE
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: frontend-dr
+  namespace: frontend
+spec:
+  host: "*.frontend.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---

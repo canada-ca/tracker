@@ -20,7 +20,7 @@ class TestDBCreation:
 		"""This test determines that the postgres db is created with the expected tables"""
 		# Arrange
 		db.init_app(app)
-		engine = create_engine(f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}', connect_args={'sslmode':'disable'}, echo=True)
+                engine = create_engine(f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}')
 		tables = set()
 
 		# Act

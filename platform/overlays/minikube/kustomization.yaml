@@ -16,7 +16,7 @@ resources:
 - istio-authentication-policy.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-5bf6a86
+  newTag: mutual-tls-8835bbb
 - name: gcr.io/track-compliance/frontend
   newTag: master-6f3c03f
 secretGenerator:

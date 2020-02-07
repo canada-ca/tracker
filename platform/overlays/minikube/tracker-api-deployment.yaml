@@ -45,7 +45,7 @@ spec:
           value: "5432"
       containers:
       - image: gcr.io/track-compliance/api
-        name: frontend
+        name: api
         env:
         - name: DB_USER
           valueFrom:
