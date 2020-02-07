@@ -1,5 +1,5 @@
 from sqlalchemy.types import Integer, Boolean, DateTime
-from sqlalchemy import Column, String, ForeignKey, Enum
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
