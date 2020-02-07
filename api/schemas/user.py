@@ -63,4 +63,5 @@ class UpdateUserPassword(graphene.Mutation):
 
 	@staticmethod
 	def mutate(self, info, password, confirm_password, email):
-		update_password(email=email, password=password, confirm_password=confirm_password)
+		user = update_password(email=email, password=password, confirm_password=confirm_password)
+		return UpdateUserPassword(user=user)

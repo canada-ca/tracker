@@ -35,4 +35,5 @@ def update_password(email, password, confirm_password):
 	if not user:
 		raise GraphQLError(error_password_not_updated())
 	else:
+		user = User.query.filter(User.user_email == email).first()
 		return user
