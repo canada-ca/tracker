@@ -6,7 +6,7 @@ from models import Users as User
 
 from functions.error_messages import *
 
-from db import db_session
+from db import db
 
 import pyotp
 
@@ -32,7 +32,7 @@ def validate_two_factor(email, otp_code):
 		user = User.query.filter(User.user_email == email) \
 			.update({'two_factor_auth': True})
 
-		db_session.commit()
+		db.session.commit()
 
 		user = User.query.filter(User.user_email == email).first()
 
