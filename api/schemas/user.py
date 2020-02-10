@@ -5,6 +5,8 @@ from graphene_sqlalchemy import SQLAlchemyObjectType
 from functions.create_user import create_user
 from functions.sign_in_user import sign_in_user
 from functions.update_user_password import update_password
+from functions.validate_two_factor import validate_two_factor
+
 from models import Users as User
 from scalars.email_address import *
 
@@ -65,3 +67,15 @@ class UpdateUserPassword(graphene.Mutation):
 	def mutate(self, info, password, confirm_password, email):
 		user = update_password(email=email, password=password, confirm_password=confirm_password)
 		return UpdateUserPassword(user=user)
+
+class ValidateTwoFactor(graphene.Mutation):
+	class Arguments:
+		email = EmailAddress(required=True)
+		otp_code = graphene.String(required=True)
+
+	user = graphene.Field(lambda: UserObject)
+
+	@staticmethod
+	def mutate(self, info, email, otp_code):
+		user_to_rtn = validate_two_factor(email=email, otp_code=otp_code)
+		return ValidateTwoFactor(user=user_to_rtn)
