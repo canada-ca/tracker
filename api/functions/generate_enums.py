@@ -21,7 +21,7 @@ from models import (
 	Users
 )
 
-app = create_enum_app()
+app = create_enum_app('prod')
 db = create_enum_db(app)
 
 
