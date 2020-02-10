@@ -21,15 +21,15 @@ from models import (
 	Users
 )
 
-app = create_enum_app('prod')
-db = create_enum_db(app)
-
 
 def create_enums(Table, column):
 	"""
 	Function to allow the creation of enums for various uses. Function takes in SQLAlchemy Model, and the
 	Column that you would like your enums to be created. The value of the enum is equal to that of the name
 	"""
+	app = create_enum_app('prod')
+	db = create_enum_db(app)
+	
 	with app.app_context():
 		query = db.session.query(Table).options(load_only(column))
 		rows = db.session.execute(query).fetchall()
