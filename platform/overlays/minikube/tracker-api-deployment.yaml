@@ -46,6 +46,8 @@ spec:
       containers:
       - image: gcr.io/track-compliance/api
         name: api
+        ports:
+        - containerPort: 5000
         env:
         - name: DB_USER
           valueFrom:

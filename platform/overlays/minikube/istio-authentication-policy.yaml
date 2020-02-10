@@ -1,42 +1,20 @@
-apiVersion: authentication.istio.io/v1alpha1
-kind: Policy
+apiVersion: "authentication.istio.io/v1alpha1"
+kind: MeshPolicy
 metadata:
   name: default
-  namespace: api
+  namespace: istio-system
 spec:
   peers:
   - mtls:
       mode: PERMISSIVE
 ---
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: "networking.istio.io/v1alpha3"
 kind: DestinationRule
-metadata:
-  name: api-dr
-  namespace: api
-spec:
-  host: "*.api.svc.cluster.local" #only affects requests to the api namespace
-  trafficPolicy:
-    tls:
-      mode: ISTIO_MUTUAL
----
-apiVersion: authentication.istio.io/v1alpha1
-kind: Policy
 metadata:
   name: default
-  namespace: frontend
+  namespace: istio-system
 spec:
-  peers:
-  - mtls:
-      mode: PERMISSIVE
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: frontend-dr
-  namespace: frontend
-spec:
-  host: "*.frontend.svc.cluster.local"
+  host: "*"
   trafficPolicy:
     tls:
       mode: ISTIO_MUTUAL
----
