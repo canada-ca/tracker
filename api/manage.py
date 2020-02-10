@@ -3,7 +3,7 @@ from flask import Flask
 from flask_migrate import Migrate, MigrateCommand, init, migrate, upgrade
 from flask_script import Manager
 
-from models import *
+from models import db
 from db import (
 	DB_NAME,
 	DB_HOST,

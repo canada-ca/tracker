@@ -25,6 +25,7 @@ def sector_test_resolver_db_init():
 	with app.app_context():
 		if Sectors.query.first() is None:
 			sector = Sectors(
+				id=1,
 				sector="GC",
 				zone="GC_A",
 				description="Arts"
@@ -33,6 +34,7 @@ def sector_test_resolver_db_init():
 			db.session.commit()
 
 			sector = Sectors(
+				id=2,
 				sector="GC_F",
 				zone="GC",
 				description="Future Government of Canada"
@@ -41,6 +43,7 @@ def sector_test_resolver_db_init():
 			db.session.commit()
 
 			sector = Sectors(
+				id=3,
 				sector="GC",
 				zone="GC_GA",
 				description="Government Administration"
@@ -56,14 +59,14 @@ class TestSectorResolver(TestCase):
 		with app.app_context():
 			client = Client(schema)
 			query = """
-				query{
-					getSectorById(id: 1) {
-						sector
-						zone
-						description
-					}
+			{
+				getSectorById(id: 1) {
+					sector
+					zone
+					description
 				}
-				"""
+			}
+			"""
 
 			result_refr = {
 				"data": {
@@ -86,13 +89,13 @@ class TestSectorResolver(TestCase):
 		with app.app_context():
 			client = Client(schema)
 			query = """
-				query{
-					getSectorsBySector(sector: "GC_F") {
-						zone
-						description
-					}
+			{
+				getSectorsBySector(sector: GC_F) {
+					zone
+					description
 				}
-				"""
+			}
+			"""
 
 			result_refr = {
 				"data": {
@@ -114,26 +117,25 @@ class TestSectorResolver(TestCase):
 		with app.app_context():
 			client = Client(schema)
 			query = """
-				query{
-					getSectorByZone(zone: "GC_GA"){
+				{
+					getSectorByZone(zone: GC_GA) {
 						sector
 						zone
 						description
 					}
-				}
-				"""
+				}"""
 
 			result_refr = {
-				"data": {
-					"getSectorByZone": [
-						{
-							"sector": "GC",
-							"zone": "GC_GA",
-							"description": "Government Administration"
-						}
-					]
+					"data": {
+						"getSectorByZone": [
+							{
+								"sector": "GC",
+								"zone": "GC_GA",
+								"description": "Government Administration"
+							}
+						]
+					}
 				}
-			}
 
 			result_eval = client.execute(query)
 
@@ -144,48 +146,28 @@ class TestSectorResolver(TestCase):
 		with app.app_context():
 			client = Client(schema)
 			query = """
-				query{
-					getSectorById(id: 55){
-						id
-						sector
-						zone
-						description
-					}
+			{
+				getSectorById(id: 55){
+					id
+					sector
+					zone
+					description
 				}
-				"""
+			}
+			"""
 			executed = client.execute(query)
 
 		assert executed['errors']
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == "Error, Invalid ID"
 
-	def test_sector_by_zone_invalid(self):
-		"""Test get_sector_by_zone invalid Zone error handling"""
-		with app.app_context():
-			client = Client(schema)
-			query = """
-				query{
-					getSectorByZone(zone: "fdsfa"){
-						id
-						sector
-						zone
-						description
-					}
-				}
-				"""
-			executed = client.execute(query)
-
-		assert executed['errors']
-		assert executed['errors'][0]
-		assert executed['errors'][0]['message'] == "Error, Zone does not exist"
-
 	def test_sector_resolver_by_sector_invalid(self):
 		"""Test get_sector_by_sector invalid sector error handling"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
-			query{
-				getSectorsBySector(sector: "Should Not Work") {
+			{
+				getSectorsBySector(sector: str) {
 					id
 					zone
 					description
@@ -196,4 +178,24 @@ class TestSectorResolver(TestCase):
 
 		assert executed['errors']
 		assert executed['errors'][0]
-		assert executed['errors'][0]['message'] == "Error, Sector does not exist"
+		assert executed['errors'][0]['message'] == 'Argument "sector" has invalid value str.\nExpected type "sector", found str.'
+
+	def test_sector_resolver_by_zone_invalid(self):
+		"""Test get_sector_by_zone invalid Zone error handling"""
+		with app.app_context():
+			client = Client(schema)
+			query = """
+			{
+				getSectorByZone(zone: str) {
+					id
+					sector
+					zone
+					description
+				}
+			}
+			"""
+			executed = client.execute(query)
+
+		assert executed['errors']
+		assert executed['errors'][0]
+		assert executed['errors'][0]['message'] == 'Argument "zone" has invalid value str.\nExpected type "zone", found str.'

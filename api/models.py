@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 from db import db
 
+
 class Domains(db.Model):
     __tablename__ = 'domains'
 
