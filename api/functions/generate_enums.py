@@ -1,6 +1,6 @@
 import enum
 from sqlalchemy.orm import load_only
-from model_enums import app, db
+from model_enums import create_enum_app, create_enum_db
 from models import (
 	Admin_affiliations,
 	Admins,
@@ -20,6 +20,9 @@ from models import (
 	User_affiliations,
 	Users
 )
+
+app = create_enum_app()
+db = create_enum_db(app)
 
 
 def create_enums(Table, column):

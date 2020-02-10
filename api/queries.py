@@ -7,17 +7,12 @@ from model_enums.sectors import SectorEnum, ZoneEnum
 
 from schemas.user import (
 	UserConnection,
-	UserObject,
 	CreateUser,
 	SignInUser,
 	UpdateUserPassword
 )
 
-from schemas.sectors import (
-	Sectors,
-	SectorsModel,
-	SectorsConnection
-)
+from schemas.sectors import Sectors
 
 from resolvers.sectors import (
 	resolve_get_sector_by_id,
@@ -33,17 +28,20 @@ class Query(graphene.ObjectType):
 	get_sector_by_id = graphene.List(
 		of_type=Sectors,
 		id=graphene.Argument(graphene.Int, required=True),
-		resolver=resolve_get_sector_by_id
+		resolver=resolve_get_sector_by_id,
+		description = "Allows selection of all sectors from a given sector ID"
 	)
 	get_sectors_by_sector = graphene.List(
 		of_type=Sectors,
 		sector=graphene.Argument(graphene.Enum.from_enum(SectorEnum), required=True),
-		resolver=resolve_get_sectors_by_sector
+		resolver=resolve_get_sectors_by_sector,
+		description="Allows selection of sector information from a given sector enum"
 	)
 	get_sector_by_zone = graphene.List(
 		of_type=Sectors,
 		zone=graphene.Argument(graphene.Enum.from_enum(ZoneEnum), required=True),
-		resolver=resolve_get_sector_by_zone
+		resolver=resolve_get_sector_by_zone,
+		description="Allows selection of all sectors from a given zone enum"
 	)
 
 

@@ -4,7 +4,6 @@ from os.path import dirname, join, expanduser, normpath, realpath
 
 import pytest
 from graphene.test import Client
-from sqlalchemy import create_engine, Table, MetaData, Column, Integer, String
 
 from unittest import TestCase
 
@@ -26,8 +25,8 @@ def sector_test_resolver_db_init():
 		if Sectors.query.first() is None:
 			sector = Sectors(
 				id=1,
-				sector="GC",
-				zone="GC_A",
+				zone="GC",
+				sector="GC_A",
 				description="Arts"
 			)
 			db.session.add(sector)
@@ -35,8 +34,8 @@ def sector_test_resolver_db_init():
 
 			sector = Sectors(
 				id=2,
-				sector="GC_F",
-				zone="GC",
+				zone="GC_F",
+				sector="GC",
 				description="Future Government of Canada"
 			)
 			db.session.add(sector)
@@ -44,8 +43,8 @@ def sector_test_resolver_db_init():
 
 			sector = Sectors(
 				id=3,
-				sector="GC",
-				zone="GC_GA",
+				zone="GC",
+				sector="GC_GA",
 				description="Government Administration"
 			)
 			db.session.add(sector)
@@ -72,8 +71,8 @@ class TestSectorResolver(TestCase):
 				"data": {
 					"getSectorById": [
 						{
-							"sector": "GC",
-							"zone": "GC_A",
+							"sector": "GC_A",
+							"zone": "GC",
 							"description": "Arts"
 						}
 					]
@@ -89,12 +88,12 @@ class TestSectorResolver(TestCase):
 		with app.app_context():
 			client = Client(schema)
 			query = """
-			{
-				getSectorsBySector(sector: GC_F) {
-					zone
-					description
+				{
+					getSectorsBySector(sector: GC_A){
+						zone
+						description
+					}
 				}
-			}
 			"""
 
 			result_refr = {
@@ -102,7 +101,7 @@ class TestSectorResolver(TestCase):
 					"getSectorsBySector": [
 						{
 							"zone": "GC",
-							"description": "Future Government of Canada"
+							"description": "Arts"
 						}
 					]
 				}
@@ -118,9 +117,8 @@ class TestSectorResolver(TestCase):
 			client = Client(schema)
 			query = """
 				{
-					getSectorByZone(zone: GC_GA) {
+					getSectorByZone(zone: GC) {
 						sector
-						zone
 						description
 					}
 				}"""
@@ -129,8 +127,11 @@ class TestSectorResolver(TestCase):
 					"data": {
 						"getSectorByZone": [
 							{
-								"sector": "GC",
-								"zone": "GC_GA",
+								"sector": "GC_A",
+								"description": "Arts"
+							},
+							{
+								"sector": "GC_GA",
 								"description": "Government Administration"
 							}
 						]
