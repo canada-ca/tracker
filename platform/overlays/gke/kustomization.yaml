@@ -2,3 +2,22 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ../../bases
+- ingressgateway.yaml
+images:
+- name: gcr.io/track-compliance/api
+  newTag: mutual-tls-8835bbb
+- name: gcr.io/track-compliance/frontend
+  newTag: master-6f3c03f
+secretGenerator:
+- envs:
+  - .env.kiali
+  name: kiali
+  namespace: istio-system
+- envs:
+  - .env.postgres
+  name: postgres
+  namespace: api
+- envs:
+  - .env.api
+  name: api
+  namespace: api
