@@ -3,19 +3,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 
-def create_enum_app(mode):
+def create_enum_app():
 	enum_app = Flask(__name__)
 
-	if mode == 'testing':
-		DB_USER = os.getenv('AZURE_DB_USER')
-		DB_PASS = os.getenv('AZURE_DB_PASS')
-		DB_HOST = os.getenv('AZURE_DB_HOST')
-		DB_NAME = os.getenv('AZURE_DB_NAME')
-	elif mode == 'prod':
-		DB_USER = os.getenv('DB_USER')
-		DB_PASS = os.getenv('DB_PASS')
-		DB_HOST = os.getenv('DB_HOST')
-		DB_NAME = os.getenv('DB_NAME')
+	DB_USER = os.getenv('DB_USER')
+	DB_PASS = os.getenv('DB_PASS')
+	DB_HOST = os.getenv('DB_HOST')
+	DB_NAME = os.getenv('DB_NAME')
 
 	enum_app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}'
 	enum_app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True

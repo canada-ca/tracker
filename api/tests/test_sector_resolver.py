@@ -12,9 +12,10 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from app import app, schema
+from app import app
 from db import db
 from models import Sectors
+from queries import schema
 
 
 @pytest.fixture(scope='class')
@@ -34,9 +35,9 @@ def sector_test_resolver_db_init():
 
 			sector = Sectors(
 				id=2,
-				zone="GC_F",
-				sector="GC",
-				description="Future Government of Canada"
+				zone="TEST",
+				sector="TEST_DEV",
+				description="Development test cases"
 			)
 			db.session.add(sector)
 			db.session.commit()
@@ -117,7 +118,7 @@ class TestSectorResolver(TestCase):
 			client = Client(schema)
 			query = """
 				{
-					getSectorByZone(zone: GC) {
+					getSectorByZone(zone: TEST) {
 						sector
 						description
 					}
@@ -127,12 +128,8 @@ class TestSectorResolver(TestCase):
 					"data": {
 						"getSectorByZone": [
 							{
-								"sector": "GC_A",
-								"description": "Arts"
-							},
-							{
-								"sector": "GC_GA",
-								"description": "Government Administration"
+								"sector": "TEST_DEV",
+								"description": "Development test cases"
 							}
 						]
 					}

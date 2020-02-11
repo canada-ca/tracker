@@ -14,7 +14,7 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from db import *
 from app import app
-from app import schema
+from queries import schema
 
 
 @pytest.fixture()

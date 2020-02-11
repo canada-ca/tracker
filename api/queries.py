@@ -29,7 +29,7 @@ class Query(graphene.ObjectType):
 		of_type=Sectors,
 		id=graphene.Argument(graphene.Int, required=True),
 		resolver=resolve_get_sector_by_id,
-		description = "Allows selection of all sectors from a given sector ID"
+		description="Allows selection of all sectors from a given sector ID"
 	)
 	get_sectors_by_sector = graphene.List(
 		of_type=Sectors,
