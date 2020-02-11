@@ -113,23 +113,3 @@ class TestUserSchemaPassword:
 		assert executed['errors']
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == scalar_error_type("email address", "")
-
-	def test_updated_password_no_user(self, setup_db):
-
-		client = Client(schema)
-		with app.app_context():
-			executed = client.execute(
-				'''
-				mutation {
-					updatePassword(email: "testing-fake-email-no-such-user@test.ca",
-						password: "valid-password", confirmPassword: "valid-password") {
-						user {
-							username
-						}
-					}
-				}
-				''')
-
-			assert executed['errors']
-			assert executed['errors'][0]
-			assert executed['errors'][0]['message'] == error_user_does_not_exist()
