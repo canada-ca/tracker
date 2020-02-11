@@ -28,6 +28,7 @@ graphql-core = "*"
 flask-script = "*"
 flask-migrate = "*"
 pytest = "*"
+pyotp = "*"
 
 [scripts]
 test = "pytest"

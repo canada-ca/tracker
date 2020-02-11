@@ -1,7 +1,9 @@
+import os
 from graphene_sqlalchemy import SQLAlchemyConnectionField
 import graphene
 from sqlalchemy.orm import joinedload
-from graphene import relay
+from graphene import relay, String
+import pyotp
 
 from model_enums.sectors import SectorEnums, ZoneEnums
 
@@ -11,6 +13,8 @@ from schemas.user import (
 	SignInUser,
 	UpdateUserPassword
 )
+
+from schemas.user import *
 
 from schemas.sectors import Sectors
 
@@ -22,6 +26,7 @@ from resolvers.sectors import (
 
 
 class Query(graphene.ObjectType):
+	"""The central gathering point for all of the GraphQL queries."""
 	node = relay.Node.Field()
 	all_users = SQLAlchemyConnectionField(UserConnection, sort=None)
 	# all_users = graphene.List(UserObject, failedAttempts=graphene.Int(), resolver=resolve_all_users)
@@ -44,11 +49,20 @@ class Query(graphene.ObjectType):
 		description="Allows selection of all sectors from a given zone enum"
 	)
 
+	generate_otp_url = String(email=String(required=True))
+
+	@staticmethod
+	def resolve_generate_otp_url(self, info, email):
+		totp = pyotp.totp.TOTP(os.getenv('BASE32_SECRET'))  # This needs to be a 16 char base32 secret key
+		return totp.provisioning_uri(email, issuer_name="Tracker")
+
 
 class Mutation(graphene.ObjectType):
+	"""The central gathering point for all of the GraphQL mutations."""
 	create_user = CreateUser.Field()
 	sign_in = SignInUser.Field()
 	update_password = UpdateUserPassword.Field()
+	authenticate_two_factor = ValidateTwoFactor.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

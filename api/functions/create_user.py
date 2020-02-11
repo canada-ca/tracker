@@ -23,19 +23,24 @@ def create_user(username, password, confirm_password, email):
 
 	bcrypt = Bcrypt(app)
 
-	user = User(
-		username=username,
-		user_email=email,
-		preferred_lang='English',
-		display_name='Default Display Name',
-		user_password=bcrypt.generate_password_hash(password=password).decode('UTF-8')  # Hash the password
-	)
+	user = User.query.filter(User.user_email == email).first()
 
-	db.session.add(user)
-	try:
-		db.session.commit()
-		return user
-	except Exception as e:
-		db.session.rollback()
-		db.session.flush()
-		raise GraphQLError(error_creating_account())
+	if user is None:
+		user = User(
+			username=username,
+			user_email=email,
+			preferred_lang='English',
+			display_name='Default Display Name',
+			user_password=bcrypt.generate_password_hash(password=password).decode('UTF-8')  # Hash the password
+		)
+
+		db.session.add(user)
+		try:
+			db.session.commit()
+			return user
+		except Exception as e:
+			db.session.rollback()
+			db.session.flush()
+			raise GraphQLError(error_creating_account())
+	else:
+		raise GraphQLError(error_email_in_use())

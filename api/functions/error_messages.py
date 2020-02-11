@@ -18,12 +18,24 @@ def error_user_does_not_exist():
 	return str("User does not exist, please register")
 
 
+def error_email_in_use():
+	return str("An account already uses that email address, please try again")
+
+
 def error_invalid_credentials():
 	return str("Incorrect email or password")
 
 
 def error_password_not_updated():
 	return str("Unable to update password, please try again")
+
+
+def error_user_not_updated():
+	return str("User not updated, please try again")
+
+
+def error_otp_code_is_invalid():
+	return str("OTP code is invalid, please try again")
 
 
 def scalar_error_type(value_type, value):
