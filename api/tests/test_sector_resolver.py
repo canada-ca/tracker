@@ -158,42 +158,42 @@ class TestSectorResolver(TestCase):
 		assert executed['errors']
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == "Error, Invalid ID"
-	#
-	# def test_sector_resolver_by_sector_invalid(self):
-	# 	"""Test get_sector_by_sector invalid sector error handling"""
-	# 	with app.app_context():
-	# 		client = Client(schema)
-	# 		query = """
-	# 		{
-	# 			getSectorsBySector(sector: str) {
-	# 				id
-	# 				zone
-	# 				description
-	# 			}
-	# 		}
-	# 		"""
-	# 		executed = client.execute(query)
-	#
-	# 	assert executed['errors']
-	# 	assert executed['errors'][0]
-	# 	assert executed['errors'][0]['message'] == f'Argument "sector" has invalid value str.\n\n Expected type "SectorEnums", found str.'
-	#
-	# def test_sector_resolver_by_zone_invalid(self):
-	# 	"""Test get_sector_by_zone invalid Zone error handling"""
-	# 	with app.app_context():
-	# 		client = Client(schema)
-	# 		query = """
-	# 		{
-	# 			getSectorByZone(zone: str) {
-	# 				id
-	# 				sector
-	# 				zone
-	# 				description
-	# 			}
-	# 		}
-	# 		"""
-	# 		executed = client.execute(query)
-	#
-	# 	assert executed['errors']
-	# 	assert executed['errors'][0]
-	# 	assert executed['errors'][0]['message'] == 'Argument "zone" has invalid value str.\nExpected type "ZoneEnums", found str.'
+
+	def test_sector_resolver_by_sector_invalid(self):
+		"""Test get_sector_by_sector invalid sector error handling"""
+		with app.app_context():
+			client = Client(schema)
+			query = """
+			{
+				getSectorsBySector(sector: str) {
+					id
+					zone
+					description
+				}
+			}
+			"""
+			executed = client.execute(query)
+
+		assert executed['errors']
+		assert executed['errors'][0]
+		assert executed['errors'][0]['message'] == f'Argument "sector" has invalid value str.\nExpected type "SectorEnums", found str.'
+
+	def test_sector_resolver_by_zone_invalid(self):
+		"""Test get_sector_by_zone invalid Zone error handling"""
+		with app.app_context():
+			client = Client(schema)
+			query = """
+			{
+				getSectorByZone(zone: str) {
+					id
+					sector
+					zone
+					description
+				}
+			}
+			"""
+			executed = client.execute(query)
+
+		assert executed['errors']
+		assert executed['errors'][0]
+		assert executed['errors'][0]['message'] == 'Argument "zone" has invalid value str.\nExpected type "ZoneEnums", found str.'
