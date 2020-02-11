@@ -36,7 +36,7 @@ class SectorEnums(graphene.Enum):
 		elif self == SectorEnums.GC_GA: return 'Government Administration'
 		elif self == SectorEnums.GC_H: return 'Health'
 		elif self == SectorEnums.GC_IBD: return 'Industry and Business Development'
-		elif self == SectorEnums.GC.IATD: return 'International Affairs Trade & Development'
+		elif self == SectorEnums.GC_IATD: return 'International Affairs Trade & Development'
 		elif self == SectorEnums.GC_L: return 'Legal'
 		elif self == SectorEnums.GC_NRED: return 'Natural Resources Energy & Environment'
 		elif self == SectorEnums.GC_SID: return 'Security Intelligence and Defence'
