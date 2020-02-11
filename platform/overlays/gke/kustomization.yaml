@@ -21,3 +21,6 @@ secretGenerator:
   - .env.api
   name: api
   namespace: api
+patchesStrategicMerge:
+- tracker-api-deployment.yaml
+- tracker-frontend-deployment.yaml

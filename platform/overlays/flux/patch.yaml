@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flux
+  namespace: flux
+spec:
+  template:
+    spec:
+      containers:
+        - name: flux
+          args:
+            - --manifest-generation=true
+            - --memcached-hostname=memcached.flux
+            - --memcached-service=
+            - --ssh-keygen-dir=/var/fluxd/keygen
+            - --git-branch=master
+            - --git-ci-skip=true
+            - --git-path=platform
+            - --git-user=fluxcd
+            - --git-email=fluxcd@users.noreply.github.com
+            - --git-url=git@github.com:canada-ca/tracker.git
