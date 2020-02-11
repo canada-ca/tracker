@@ -31,6 +31,7 @@ To run the API run the following command
 ### Accessing the API
 Visit the following URL localhost:5000/graphql
 
+
 ### Running tests locally
 To run test locally run 
 ```
