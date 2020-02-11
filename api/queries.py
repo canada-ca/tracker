@@ -3,7 +3,7 @@ import graphene
 from sqlalchemy.orm import joinedload
 from graphene import relay
 
-from model_enums.sectors import SectorEnum, ZoneEnum
+from model_enums.sectors import SectorEnums, ZoneEnums
 
 from schemas.user import (
 	UserConnection,
@@ -33,13 +33,13 @@ class Query(graphene.ObjectType):
 	)
 	get_sectors_by_sector = graphene.List(
 		of_type=Sectors,
-		sector=graphene.Argument(graphene.Enum.from_enum(SectorEnum), required=True),
+		sector=graphene.Argument(SectorEnums, required=True),
 		resolver=resolve_get_sectors_by_sector,
 		description="Allows selection of sector information from a given sector enum"
 	)
 	get_sector_by_zone = graphene.List(
 		of_type=Sectors,
-		zone=graphene.Argument(graphene.Enum.from_enum(ZoneEnum), required=True),
+		zone=graphene.Argument(ZoneEnums, required=True),
 		resolver=resolve_get_sector_by_zone,
 		description="Allows selection of all sectors from a given zone enum"
 	)
