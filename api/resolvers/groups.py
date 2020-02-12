@@ -1,8 +1,15 @@
+from graphql import GraphQLError
+from sqlalchemy.orm import load_only
+
 from schemas.groups import (
 	Groups,
 	GroupsModel
 )
-from graphql import GraphQLError
+
+from schemas.sectors import (
+	Sectors,
+	SectorsModel
+)
 
 
 # Resolvers
@@ -28,12 +35,21 @@ def resolve_get_group_by_group(self, info, **kwargs):
 	return query.all()
 
 
-def resolve_get_group_by_sector_id(self, info, **kwargs):
-	"""Return a list of groups by their sector_id"""
-	sector_id = kwargs.get('sectorID')
+def resolve_get_group_by_sector(self, info, **kwargs):
+	"""Return a list of groups by by their associated sector"""
+	sector = kwargs.get('sector')
+
+	sector_id = Sectors.get_query(info).filter(
+		SectorsModel.sector == sector
+	).options(load_only('id'))
+
+	if not len(sector_id.all()):
+		raise GraphQLError("Error, no sector associated with that enum")
+
 	query = Groups.get_query(info).filter(
 		GroupsModel.sector_id == sector_id
 	)
+
 	if not len(query.all()):
-		raise GraphQLError("Error, no group with that sector ID")
+		raise GraphQLError("Error, no groups associated with that sector")
 	return query.all()
