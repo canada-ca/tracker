@@ -75,8 +75,8 @@ class TestGroupResolver(TestCase):
 		with app.app_context():
 			client = Client(schema)
 			query = """
-					query{
-						getGroupByGroup(group: "GC_A"){
+					{
+						getGroupByGroup(group: GC_A){
 							description
 							sectorId
 						}
@@ -96,16 +96,16 @@ class TestGroupResolver(TestCase):
 			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
 
-	def test_get_group_resolvers_by_sector_id(self):
+	def test_get_group_resolvers_by_sector(self):
 		"""Test get_group_by_sector_id resolver"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 					{
-						getGroupBySectorId(sectorID: 1) {
+						getGroupBySector(sector: GC_A){
 							description
-							sGroup
-							groupSector {
+							groupSector{
+								id
 								zone
 								description
 							}
@@ -113,12 +113,12 @@ class TestGroupResolver(TestCase):
 					}"""
 			result_refr = {
 				"data": {
-					"getGroupBySectorId": [
+					"getGroupBySector": [
 						{
 							"description": "Arts",
-							"sGroup": "GC_A",
 							"groupSector": {
-								"zone": "GC_A",
+								"id": "U2VjdG9yczox",
+								"zone": "GC",
 								"description": "Arts"
 							}
 						}
