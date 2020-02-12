@@ -1,10 +1,7 @@
 version: 1
 commandUpdated:
   generators:
-    - command: >-
-      sops --pgp 2169E8FC653F507213945C99E400758E7F6D3DAD -d api.enc.env > api.env
-      sops --pgp 2169E8FC653F507213945C99E400758E7F6D3DAD -d postgres.enc.env > postgres.env
-      kustomize build .
+    - command: "sops --pgp 2169E8FC653F507213945C99E400758E7F6D3DAD -d api.enc.env > api.env && sops --pgp 2169E8FC653F507213945C99E400758E7F6D3DAD -d postgres.enc.env > postgres.env && kustomize build ."
   updaters:
     - containerImage:
         command: >-
