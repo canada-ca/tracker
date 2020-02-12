@@ -52,6 +52,7 @@ class Mutation(graphene.ObjectType):
 	sign_in = SignInUser.Field()
 	update_password = UpdateUserPassword.Field()
 	authenticate_two_factor = ValidateTwoFactor.Field()
+	update_user_role = UpdateUserRole.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

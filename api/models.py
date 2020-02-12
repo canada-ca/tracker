@@ -91,7 +91,7 @@ class Users(db.Model):
     preferred_lang = Column(String)
     failed_login_attempts = Column(Integer, default=0)
     tfa_validated = Column(Boolean, default=False)
-    user_role = Column(String, default="admin")
+    user_role = Column(String, default="user")
     user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
 
 
