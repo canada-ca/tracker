@@ -1,8 +1,0 @@
-version: 1
-commandUpdated:
-  generators:
-    - command: kustomize build overlays/gke
-  updaters:
-    - containerImage:
-        command: >-
-          cd overlays/gke && kustomize edit set image "$FLUX_IMG:$FLUX_TAG"

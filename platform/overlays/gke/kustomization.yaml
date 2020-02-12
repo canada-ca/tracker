@@ -10,15 +10,11 @@ images:
   newTag: master-6f3c03f
 secretGenerator:
 - envs:
-  - .env.kiali
-  name: kiali
-  namespace: istio-system
-- envs:
-  - .env.postgres
+  - postgres.env
   name: postgres
   namespace: api
 - envs:
-  - .env.api
+  - api.env
   name: api
   namespace: api
 patchesStrategicMerge:
