@@ -15,7 +15,7 @@ spec:
             - --ssh-keygen-dir=/var/fluxd/keygen
             - --git-branch=master
             - --git-ci-skip=true
-            - --git-path=platform
+            - --git-path=platform/overlays/gke
             - --git-user=fluxcd
             - --git-email=fluxcd@users.noreply.github.com
             - --git-url=git@github.com:canada-ca/tracker.git
