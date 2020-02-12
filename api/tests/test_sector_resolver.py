@@ -7,19 +7,21 @@ from graphene.test import Client
 
 from unittest import TestCase
 
-# This is the only way I could get imports to work for unit testing.
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
-sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
-
 from app import app
 from db import db
 from models import Sectors
 from queries import schema
 
 
+# This is the only way I could get imports to work for unit testing.
+PACKAGE_PARENT = '..'
+SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
+sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
+
+
 @pytest.fixture(scope='class')
 def sector_test_resolver_db_init():
+	"""Build database for sector resolver testing"""
 	db.init_app(app)
 
 	with app.app_context():
@@ -49,6 +51,16 @@ def sector_test_resolver_db_init():
 				description="Government Administration"
 			)
 			db.session.add(sector)
+			db.session.commit()
+
+		yield
+
+		with app.app_context():
+			Sectors.query.filter(Sectors.id == 1).delete()
+			db.session.commit()
+			Sectors.query.filter(Sectors.id == 2).delete()
+			db.session.commit()
+			Sectors.query.filter(Sectors.id == 3).delete()
 			db.session.commit()
 
 
@@ -145,7 +157,7 @@ class TestSectorResolver(TestCase):
 			client = Client(schema)
 			query = """
 			{
-				getSectorById(id: 55){
+				getSectorById(id: 9999){
 					id
 					sector
 					zone
@@ -196,4 +208,4 @@ class TestSectorResolver(TestCase):
 
 		assert executed['errors']
 		assert executed['errors'][0]
-		assert executed['errors'][0]['message'] == 'Argument "zone" has invalid value str.\nExpected type "ZoneEnums", found str.'
+		assert executed['errors'][0]['message'] == f'Argument "zone" has invalid value str.\nExpected type "ZoneEnums", found str.'
