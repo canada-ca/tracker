@@ -1,5 +1,5 @@
 import React from 'react'
-import { arrayOf, node } from 'prop-types'
+import { node } from 'prop-types'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { SignatureBlock } from './SignatureBlock'
 import { Box, Button, Header, Grid, ResponsiveContext } from 'grommet'
