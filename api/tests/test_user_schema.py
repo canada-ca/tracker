@@ -115,4 +115,29 @@ class TestUserSchemaPassword:
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == scalar_error_type("email address", "")
 
+	def test_create_success(self, setup_db):
+		with app.app_context():
+			client = Client(schema)
+			executed = client.execute(
+				'''
+				mutation {
+					createUser(username: "testuser", email: "test@test-email.ca", password: "testtesttest", confirmPassword: "testtesttest") {
+						user {
+							username
+							userEmail
+						}
+					}
+				}
+				''')
+
+			assert executed["data"]
+			assert executed["data"]["createUser"]
+			assert executed["data"]["createUser"]["user"]
+			assert executed["data"]["createUser"]["user"]["username"]
+			assert executed["data"]["createUser"]["user"]["username"] == "testuser"
+
+			assert executed["data"]["createUser"]["user"]["userEmail"]
+			assert executed["data"]["createUser"]["user"]["userEmail"] == "test@test-email.ca"
+
+
 
