@@ -68,6 +68,7 @@ class UpdateUserPassword(graphene.Mutation):
 		user = update_password(email=email, password=password, confirm_password=confirm_password)
 		return UpdateUserPassword(user=user)
 
+
 class ValidateTwoFactor(graphene.Mutation):
 	class Arguments:
 		email = EmailAddress(required=True)
