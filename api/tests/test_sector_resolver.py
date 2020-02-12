@@ -53,15 +53,15 @@ def sector_test_resolver_db_init():
 			db.session.add(sector)
 			db.session.commit()
 
-	yield
+		yield
 
-	with app.app_context():
-		Sectors.query.filter(Sectors.id == 1).delete()
-		db.session.commit()
-		Sectors.query.filter(Sectors.id == 2).delete()
-		db.session.commit()
-		Sectors.query.filter(Sectors.id == 3).delete()
-		db.session.commit()
+		with app.app_context():
+			Sectors.query.filter(Sectors.id == 1).delete()
+			db.session.commit()
+			Sectors.query.filter(Sectors.id == 2).delete()
+			db.session.commit()
+			Sectors.query.filter(Sectors.id == 3).delete()
+			db.session.commit()
 
 
 @pytest.mark.usefixtures('sector_test_resolver_db_init')
@@ -157,7 +157,7 @@ class TestSectorResolver(TestCase):
 			client = Client(schema)
 			query = """
 			{
-				getSectorById(id: 55){
+				getSectorById(id: 9999){
 					id
 					sector
 					zone
@@ -208,4 +208,4 @@ class TestSectorResolver(TestCase):
 
 		assert executed['errors']
 		assert executed['errors'][0]
-		assert executed['errors'][0]['message'] == 'Argument "zone" has invalid value str.\nExpected type "ZoneEnums", found str.'
+		assert executed['errors'][0]['message'] == f'Argument "zone" has invalid value str.\nExpected type "ZoneEnums", found str.'

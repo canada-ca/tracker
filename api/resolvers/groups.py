@@ -20,7 +20,7 @@ def resolve_get_group_by_id(self, info, **kwargs):
 		GroupsModel.id == group_id
 	)
 	if not len(query.all()):
-		raise GraphQLError("Error, invalid ID")
+		raise GraphQLError("Error, Invalid ID")
 	return query.all()
 
 
