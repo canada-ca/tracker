@@ -7,15 +7,16 @@ from graphene.test import Client
 
 from unittest import TestCase
 
-# This is the only way I could get imports to work for unit testing.
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
-sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
-
 from app import app
 from db import db
 from models import Sectors
 from queries import schema
+
+
+# This is the only way I could get imports to work for unit testing.
+PACKAGE_PARENT = '..'
+SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
+sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 @pytest.fixture(scope='class')

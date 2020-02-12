@@ -1,21 +1,21 @@
 import sys
 import os
+from os.path import dirname, join, expanduser, normpath, realpath
 
 import pytest
 from graphene.test import Client
-from sqlalchemy import create_engine, Table, MetaData, Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
 
 from unittest import TestCase
 
+from app import app
+from db import db
+from models import Sectors, Groups
+from queries import schema
+
 # This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
-SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
-sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-
-from app import app, schema
-from models import Groups, Sectors
-from db import db
+SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
+sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 @pytest.fixture(scope='class')
