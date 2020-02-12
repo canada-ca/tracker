@@ -20,6 +20,7 @@ from queries import schema
 
 @pytest.fixture(scope='class')
 def sector_test_resolver_db_init():
+	"""Build database for sector resolver testing"""
 	db.init_app(app)
 
 	with app.app_context():
@@ -50,6 +51,16 @@ def sector_test_resolver_db_init():
 			)
 			db.session.add(sector)
 			db.session.commit()
+
+	yield
+
+	with app.app_context():
+		Sectors.query.filter(Sectors.id == 1).delete()
+		db.session.commit()
+		Sectors.query.filter(Sectors.id == 2).delete()
+		db.session.commit()
+		Sectors.query.filter(Sectors.id == 3).delete()
+		db.session.commit()
 
 
 @pytest.mark.usefixtures('sector_test_resolver_db_init')

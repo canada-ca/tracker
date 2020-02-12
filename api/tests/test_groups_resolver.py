@@ -22,11 +22,13 @@ from db import db
 def group_test_resolver_db_init():
 	"""Build database for group resolver testing"""
 	db.init_app(app)
+
 	with app.app_context():
 		if Sectors.query.first() is None:
 			sector = Sectors(
-				sector="GC",
-				zone="GC_A",
+				id=1,
+				zone="GC",
+				sector="GC_A",
 				description="Arts"
 			)
 			db.session.add(sector)
@@ -34,12 +36,21 @@ def group_test_resolver_db_init():
 
 		if Groups.query.first() is None:
 			group = Groups(
+				id=1,
 				s_group='GC_A',
 				description='Arts',
 				sector_id=1
 			)
 			db.session.add(group)
 			db.session.commit()
+
+	yield
+
+	with app.app_context():
+		Groups.query.filter(Groups.id == 1).delete()
+		db.session.commit()
+		Sectors.query.filter(Sectors.id == 1).delete()
+		db.session.commit()
 
 
 @pytest.mark.usefixtures('group_test_resolver_db_init')
