@@ -9,12 +9,12 @@ spec:
       containers:
         - name: flux
           args:
-            - --manifest-generation=true
+            - --manifest-generation
             - --memcached-hostname=memcached.flux
             - --memcached-service=
             - --ssh-keygen-dir=/var/fluxd/keygen
             - --git-branch=master
-            - --git-ci-skip=true
+            - --git-ci-skip
             - --git-path=platform/overlays/gke
             - --git-user=fluxcd
             - --git-email=fluxcd@users.noreply.github.com
