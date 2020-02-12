@@ -39,7 +39,11 @@ class Query(graphene.ObjectType):
 
 	@query_jwt_required
 	def resolve_test_user_claims(self, info, message):
-		return MessageField(message=str(get_jwt_claims()))
+		role = get_jwt_claims()['roles']
+		if role == "admin":
+			return MessageField(message=str(get_jwt_claims()))
+		else:
+			return MessageField("Not an admin, please log in")
 
 
 class Mutation(graphene.ObjectType):
