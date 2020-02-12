@@ -83,6 +83,31 @@ class TestUserSchemaValidAPICalls:
 			assert executed["data"]["createUser"]["user"]["userEmail"]
 			assert executed["data"]["createUser"]["user"]["userEmail"] == "test@test-email.ca"
 
+	def test_sign_in(self, setup_empty_db_with_user):
+		with app.app_context():
+			client = Client(schema)
+			executed = client.execute(
+				'''
+				mutation{
+					signIn(email:"testuser@testemail.ca", password:"testpassword123"){
+						user{
+							username
+						}
+						authToken
+					}
+				}
+				''')
+
+			assert executed["data"]
+			assert executed["data"]["signIn"]
+			assert executed["data"]["signIn"]["user"]
+			assert executed["data"]["signIn"]["user"]
+			assert executed["data"]["signIn"]["user"]["username"]
+			assert executed["data"]["signIn"]["user"]["username"] == "testuser"
+
+			assert executed["data"]["signIn"]["authToken"]
+			assert executed["data"]["signIn"]["authToken"] != ""
+
 	def test_update_password(self, setup_empty_db_with_user):
 		with app.app_context():
 			client = Client(schema)
