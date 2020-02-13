@@ -19,13 +19,13 @@ class Query(graphene.ObjectType):
 	generate_otp_url = graphene.String(
 		email=graphene.Argument(EmailAddress, required=True),
 		resolver=resolve_generate_otp_url,
-		description="An api endpoint used to generate a OTP url"
+		description="An api endpoint used to generate a OTP url used for two factor authentication."
 	)
 
 	test_user_claims = graphene.String(
 		token=graphene.Argument(graphene.String, required=True),
 		resolver=resolve_test_user_claims,
-		description="An api endpoint to view a current user's claims"
+		description="An api endpoint to view a current user's claims -- Requires an active JWT."
 	)
 
 
