@@ -86,12 +86,13 @@ class ValidateTwoFactor(graphene.Mutation):
 
 class UpdateUserRole(graphene.Mutation):
 	class Arguments:
-		token = graphene.String()
+		token = graphene.String(required=True)
 		email = EmailAddress(required=True)
 		role = graphene.String(required=True)
 
 	user = graphene.Field(lambda: UserObject)
 
+	@mutation_jwt_required
 	def mutate(self, info, email, role):
-	    user = update_user_role(email=email, role=role)
-	    return UpdateUserRole(user=user)
+		user = update_user_role(email=email, new_role=role)
+		return UpdateUserRole(user=user)

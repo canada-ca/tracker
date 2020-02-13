@@ -5,18 +5,10 @@ from graphene import String
 from flask_graphql_auth import *
 import pyotp
 
-
-class MessageField(graphene.ObjectType):
-	message = graphene.String()
-
-
-class ProtectedUnion(graphene.Union):
-	class Meta:
-		types = (MessageField, AuthInfoField)
-
-	@classmethod
-	def resolve_type(cls, instance, info):
-		return type(instance)
+from resolvers.users import (
+	resolve_test_user_claims,
+	resolve_generate_otp_url,
+)
 
 
 class Query(graphene.ObjectType):
@@ -24,26 +16,17 @@ class Query(graphene.ObjectType):
 	node = relay.Node.Field()
 	all_users = SQLAlchemyConnectionField(UserConnection, sort=None)
 
-	generate_otp_url = String(email=String(required=True))
-
-	@staticmethod
-	def resolve_generate_otp_url(self, info, email):
-		totp = pyotp.totp.TOTP(os.getenv('BASE32_SECRET'))  # This needs to be a 16 char base32 secret key
-		return totp.provisioning_uri(email, issuer_name="Tracker")
-
-	# TODO: Refactor out this test method and make it actually work ;)
-
-	test_user_claims = graphene.Field(
-		type=ProtectedUnion, message=graphene.String(), token=graphene.String()
+	generate_otp_url = graphene.String(
+		email=graphene.Argument(EmailAddress, required=True),
+		resolver=resolve_generate_otp_url,
+		description="An api endpoint used to generate a OTP url"
 	)
 
-	@query_jwt_required
-	def resolve_test_user_claims(self, info, message):
-		role = get_jwt_claims()['roles']
-		if role == "admin":
-			return MessageField(message=str(get_jwt_claims()))
-		else:
-			return MessageField("Not an admin, please log in")
+	test_user_claims = graphene.String(
+		token=graphene.Argument(graphene.String, required=True),
+		resolver=resolve_test_user_claims,
+		description="An api endpoint to view a current user's claims"
+	)
 
 
 class Mutation(graphene.ObjectType):
@@ -56,4 +39,3 @@ class Mutation(graphene.ObjectType):
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
-

@@ -6,9 +6,9 @@ from graphql import GraphQLError
 from flask_graphql_auth import *
 
 
-def update_user_role(email, role):
+def update_user_role(email, new_role):
     """Updates the user role associate with the user given by email address"""
-    user = User.query.filter(User.user_email==email).first()
+    user = User.query.filter(User.user_email == email).first()
 
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
@@ -17,8 +17,7 @@ def update_user_role(email, role):
 
     if role == "admin":
         user = User.query.filter(User.user_email == email)\
-                .update({'user_role': role})
-
+                .update({'user_role': new_role})
         db.session.commit()
     else:
         raise GraphQLError(error_not_an_admin())
