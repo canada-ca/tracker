@@ -7,6 +7,9 @@ from graphene.test import Client
 
 from unittest import TestCase
 
+import model_enums
+model_enums._called_from_test = True
+
 from app import app
 from db import db
 from models import Sectors, Groups
@@ -44,13 +47,13 @@ def group_test_resolver_db_init():
 			db.session.add(group)
 			db.session.commit()
 
-		yield
+			yield
 
-		with app.app_context():
-			Groups.query.filter(Groups.id == 1).delete()
-			db.session.commit()
-			Sectors.query.filter(Sectors.id == 1).delete()
-			db.session.commit()
+			with app.app_context():
+				Groups.query.filter(Groups.id == 1).delete()
+				db.session.commit()
+				Sectors.query.filter(Sectors.id == 1).delete()
+				db.session.commit()
 
 
 @pytest.mark.usefixtures('group_test_resolver_db_init')
