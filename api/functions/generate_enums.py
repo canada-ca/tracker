@@ -49,3 +49,7 @@ def create_enums(Table, enum_name, column):
 # from models import Groups
 #
 # GroupEnums = create_enums(Groups, 'GroupEnums', 's_group')
+
+# Put this above other file import in the test files
+# import model_enums
+# model_enums._called_from_test = True
