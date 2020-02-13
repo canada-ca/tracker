@@ -44,13 +44,13 @@ def group_test_resolver_db_init():
 			db.session.add(group)
 			db.session.commit()
 
-		yield
+			yield
 
-		with app.app_context():
-			Groups.query.filter(Groups.id == 1).delete()
-			db.session.commit()
-			Sectors.query.filter(Sectors.id == 1).delete()
-			db.session.commit()
+			with app.app_context():
+				Groups.query.filter(Groups.id == 1).delete()
+				db.session.commit()
+				Sectors.query.filter(Sectors.id == 1).delete()
+				db.session.commit()
 
 
 @pytest.mark.usefixtures('group_test_resolver_db_init')
