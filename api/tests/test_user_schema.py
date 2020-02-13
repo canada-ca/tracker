@@ -7,6 +7,7 @@ from flask_bcrypt import Bcrypt
 from graphene.test import Client
 from functions.error_messages import *
 
+
 # This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
@@ -14,7 +15,7 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from db import *
 from app import app
-from app import schema
+from queries import schema
 
 from models import Users as User
 
@@ -182,7 +183,6 @@ class TestUserSchemaErrors:
 		assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
 	def test_updated_password_no_user_email(self, setup_empty_db):
-
 		client = Client(schema)
 		executed = client.execute(
 			'''
@@ -198,4 +198,3 @@ class TestUserSchemaErrors:
 		assert executed['errors']
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == scalar_error_type("email address", "")
-

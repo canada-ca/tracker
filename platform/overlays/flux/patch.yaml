@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flux
+  namespace: flux
+spec:
+  template:
+    spec:
+      containers:
+        - name: flux
+          args:
+            - --manifest-generation
+            - --memcached-hostname=memcached.flux
+            - --memcached-service=
+            - --ssh-keygen-dir=/var/fluxd/keygen
+            - --git-branch=master
+            - --git-ci-skip
+            - --git-path=platform/overlays/gke
+            - --git-user=fluxcd
+            - --git-email=fluxcd@users.noreply.github.com
+            - --git-url=git@github.com:canada-ca/tracker.git
+            - --git-gpg-key-import=/root/gpg-signing-key
+            - --git-signing-key=2169E8FC653F507213945C99E400758E7F6D3DAD
+          volumeMounts:
+          - name: gpg-signing-key
+            mountPath: /root/gpg-signing-key/
+            readOnly: true
+      volumes:
+      - name: gpg-signing-key
+        secret:
+          secretName: flux-gpg-signing-key
+          defaultMode: 0400
