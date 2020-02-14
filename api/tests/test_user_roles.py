@@ -53,6 +53,7 @@ class TestUserClaims:
         user = User.query.first()
 
         assert user.user_role == "user"
+        assert not user.user_role == "admin"
 
 
 class TestSuperAdminFunction:
