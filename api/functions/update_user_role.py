@@ -8,12 +8,10 @@ from flask_graphql_auth import *
 
 def update_user_role(email, new_role):
     """
-        Updates the user role associate with the user given by email address
-
-        :param email: The email address associated with the user who's role will be updated.
-        :param new_role: The new role that will be given to the user.
-
-        :returns user: The newly updated user object retrieved from the DB (after the update is committed).
+    Updates the user role associate with the user given by email address
+    :param email: The email address associated with the user who's role will be updated.
+    :param new_role: The new role that will be given to the user.
+    :returns user: The newly updated user object retrieved from the DB (after the update is committed).
     """
     user = User.query.filter(User.user_email == email).first()
 
@@ -23,7 +21,7 @@ def update_user_role(email, new_role):
 
     role = get_jwt_claims()['roles']  # Pulls the 'role' out of the JWT user claims associated with the token.
 
-    if role == "admin":  # If an admin, update the user.
+    if role == "admin":  # If an admin, update the user. #TODO: Make this check more robust
         user = User.query.filter(User.user_email == email)\
                 .update({'user_role': new_role})
         db.session.commit()
