@@ -7,17 +7,13 @@ export const locales = {
 
 export async function activate(locale) {
   let catalog
-  if (process.env.NODE_ENV === 'development') {
+
+  try {
     catalog = await import(
-      /* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */
-      `@lingui/loader!./locales/${locale}.po`
+      /* webpackChunkName: "i18n-[index]" */ `@lingui/loader!./locales/${locale}.po`
     )
-  } else {
-    // for production or test use js:
-    catalog = await import(
-      /* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */
-      `./locales/${locale}.js`
-    )
+  } catch (e) {
+    // this fails only during tests due to webpack errors.
   }
 
   i18n.load(locale, catalog)
