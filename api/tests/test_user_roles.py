@@ -4,6 +4,8 @@ from ..user_roles import *
 import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath
+from graphene.test import Client
+
 
 import pytest
 
@@ -48,8 +50,9 @@ def setup_empty_db_with_user():
             User.query.delete()
 
 
-class TestUserClaims:
-    def test_default_role_user_claims(self, setup_empty_db_with_user):
+class TestUserRole:
+    def test_default_role(self, setup_empty_db_with_user):
+        # Get the user that was created in pyfixture.
         user = User.query.first()
 
         assert user.user_role == "user"
