@@ -15,9 +15,12 @@ from model_enums.organiztions import OrganizationsEnum
 
 from schemas.user import *
 
+from scalars.url import URL
+
 from schemas.sectors import Sectors
 from schemas.groups import Groups
 from schemas.organizations import Organizations
+from schemas.domains import Domains
 
 
 from resolvers.sectors import (
@@ -33,7 +36,6 @@ from resolvers.groups import (
 
 )
 
-
 from resolvers.users import (
 	resolve_test_user_claims,
 	resolve_generate_otp_url,
@@ -45,6 +47,11 @@ from resolvers.organizations import (
 	resolve_get_orgs_by_group
 )
 
+from resolvers.domains import (
+	resolve_get_domain_by_id,
+	resolve_get_domain_by_domain,
+	resolve_get_domain_by_organization
+)
 
 class Query(graphene.ObjectType):
 	"""The central gathering point for all of the GraphQL queries."""
@@ -106,6 +113,24 @@ class Query(graphene.ObjectType):
 		group=graphene.Argument(GroupEnums, required=True),
 		resolver=resolve_get_orgs_by_group,
 		description="Allows the selection of organizations from a given group"
+	)
+	get_domain_by_id = graphene.List(
+		of_type=Domains,
+		id=graphene.Argument(graphene.Int, required=True),
+		resolver=resolve_get_domain_by_id,
+		description="Allows the selection of a domain from a given ID"
+	)
+	get_domain_by_domain = graphene.List(
+		of_type=Domains,
+		url=graphene.Argument(URL, required=True),
+		resolver=resolve_get_domain_by_domain,
+		description="Allows the selection of a domain from a given domain"
+	)
+	get_domain_by_organization = graphene.List(
+		of_type=Domains,
+		org=graphene.Argument(OrganizationsEnum, required=True),
+		resolver=resolve_get_domain_by_organization,
+		description="Allows the selection of domains under an organization"
 	)
 
 	generate_otp_url = graphene.String(
