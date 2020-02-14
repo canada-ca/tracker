@@ -1,4 +1,5 @@
 from flask_graphql_auth import *
+from functions.error_messages import *
 from user_roles import *
 import pyotp
 import os
@@ -15,7 +16,7 @@ def resolve_test_user_claims(self, info):
     if is_admin(role):
         return str(get_jwt_claims())
     else:
-        return str("Not an admin, please log in")
+        return str(error_not_an_admin())
 
 
 def resolve_generate_otp_url(self, info, email):

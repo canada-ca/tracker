@@ -5,6 +5,7 @@ import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath
 from graphene.test import Client
+from functions.error_messages import error_not_an_admin
 
 
 import pytest
@@ -26,7 +27,7 @@ def setup_db():
     db.init_app(app)
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture()
 def setup_empty_db_with_user():
     db.init_app(app)
     with app.app_context():
@@ -41,6 +42,15 @@ def setup_empty_db_with_user():
 
             )
             db.session.add(test_user)
+
+            # Insert an admin into DB
+            test_admin = User(
+                username="testadmin",
+                user_email="testadmin@testemail.ca",
+                user_password=bcrypt.generate_password_hash(password="testpassword123").decode("UTF-8"),
+                user_role='admin'
+            )
+            db.session.add(test_admin)
             db.session.commit()
 
         yield
@@ -57,6 +67,54 @@ class TestUserRole:
 
         assert user.user_role == "user"
         assert not user.user_role == "admin"
+
+    def test_update_role(self, setup_empty_db_with_user):
+        client = Client(schema)
+        get_token = client.execute(
+            '''
+            mutation{
+                signIn(email:"testadmin@testemail.ca", password:"testpassword123"){
+                    authToken
+                }
+            }
+            ''')
+        assert get_token['data']['signIn']['authToken'] is not None
+        token = get_token['data']['signIn']['authToken']
+        assert token is not None
+
+        executed = client.execute(
+            '''
+            {
+                testUserClaims(token:"''' + str(token) + '''")
+            }
+            ''')
+        assert executed['data']
+        assert executed['data']['testUserClaims']
+        assert executed['data']['testUserClaims'] == "{'roles': 'admin'}"
+
+    def test_user_not_admin(self, setup_empty_db_with_user):
+        client = Client(schema)
+        get_token = client.execute(
+            '''
+            mutation{
+                signIn(email:"testuser@testemail.ca", password:"testpassword123"){
+                    authToken
+                }
+            }
+            ''')
+        assert get_token['data']['signIn']['authToken'] is not None
+        token = get_token['data']['signIn']['authToken']
+        assert token is not None
+
+        executed = client.execute(
+            '''
+            {
+                testUserClaims(token:"''' + str(token) + '''")
+            }
+            ''')
+        assert executed['data']
+        assert executed['data']['testUserClaims']
+        assert executed['data']['testUserClaims'] == error_not_an_admin()
 
 
 class TestSuperAdminFunction:
