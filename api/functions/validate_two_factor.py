@@ -12,15 +12,13 @@ import pyotp
 
 
 def validate_two_factor(email, otp_code):
-	"""This function validates that the otp given for a specific user is valid, and if it is,
+	"""
+	This function validates that the otp given for a specific user is valid, and if it is,
 	authenticates that user's 2FA column in postgres.
-
 	:param email - Email address of the user who is going to be validated for 2FA
 	:param otp_code - The one time password (otp) that they are attempting to verify
-
 	:returns User object if queried successfully, null if not
 	"""
-
 	valid_code = pyotp.totp.TOTP(os.getenv('BASE32_SECRET')).verify(otp_code)  # todo: Update to use an env variable.
 
 	user = User.query.filter(User.user_email == email).first()
