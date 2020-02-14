@@ -13,7 +13,9 @@ api/schema.json
 **/bin
 **/include
 **/lib
-**/.env
+**/*.env
+!**/*.enc.env
+**/flux-gpg-signing-key.yaml
 
 # Linting
 **/.mypy_cache/

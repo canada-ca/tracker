@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tracker-api
+  name: tracker-api
+  namespace: api
+  annotations:
+    fluxcd.io/automated: "true"
+    fluxcd.io/tag.api: glob:master-*
