@@ -12,8 +12,9 @@ model_enums._called_from_test = True
 
 from app import app
 from db import db
-from models import Sectors, Groups
+from models import Sectors, Groups, Organizations
 from queries import schema
+
 
 # This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
@@ -22,12 +23,13 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 @pytest.fixture(scope='class')
-def group_test_resolver_db_init():
+def org_test_resolver_db_init():
 	"""Build database for group resolver testing"""
 	db.init_app(app)
 
-	sector_added = False
-	group_added = False
+	sectors_added = False
+	groups_added = False
+	org_added = False
 
 	with app.app_context():
 		if Sectors.query.first() is None:
@@ -39,7 +41,7 @@ def group_test_resolver_db_init():
 			)
 			db.session.add(sector)
 			db.session.commit()
-			sector_added = True
+			sectors_added = True
 
 		if Groups.query.first() is None:
 			group = Groups(
@@ -50,65 +52,53 @@ def group_test_resolver_db_init():
 			)
 			db.session.add(group)
 			db.session.commit()
-			group_added = True
+			groups_added = True
+
+		if Organizations.query.first() is None:
+			org = Organizations(
+				id=1,
+				organization='Arts',
+				description='Arts',
+				group_id=1
+			)
+			db.session.add(org)
+			db.session.commit()
+			org_added = True
 
 	yield
 
 	with app.app_context():
-		if group_added:
+		if org_added:
+			Organizations.query.filter(Organizations.id == 1).delete()
+			db.session.commit()
+		if groups_added:
 			Groups.query.filter(Groups.id == 1).delete()
 			db.session.commit()
-		if sector_added:
+		if sectors_added:
 			Sectors.query.filter(Sectors.id == 1).delete()
 			db.session.commit()
 
 
-@pytest.mark.usefixtures('group_test_resolver_db_init')
-class TestGroupResolver(TestCase):
-	def test_get_group_resolvers_by_id(self):
-		"""Test get_group_by_id resolver"""
-		with app.app_context():
-			client = Client(schema)
-			query = """
-				query{
-					getGroupById(id:1) {
-						sGroup,
-						description
-					}
-				}"""
-
-			result_refr = {
-				"data": {
-					"getGroupById": [
-						{
-							"sGroup": "GC_A",
-							"description": "Arts"
-						}
-					]
-				}
-			}
-
-			result_eval = client.execute(query)
-		self.assertDictEqual(result_refr, result_eval)
-
-	def test_get_group_resolvers_by_group(self):
-		""""Test get_group_by_group resolver"""
+@pytest.mark.usefixtures('org_test_resolver_db_init')
+class TestOrgResolver(TestCase):
+	def test_get_org_resolvers_by_id(self):
+		"""Test get_organization_by_id resolver"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getGroupByGroup(group: GC_A){
+					getOrgById(id: 1){
 						description
-						sectorId
+						organization
 					}
 				}"""
 
 			result_refr = {
 				"data": {
-					"getGroupByGroup": [
+					"getOrgById": [
 						{
 							"description": "Arts",
-							"sectorId": 1
+							"organization": "Arts"
 						}
 					]
 				}
@@ -117,31 +107,49 @@ class TestGroupResolver(TestCase):
 			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
 
-	def test_get_group_resolvers_by_sector(self):
-		"""Test get_group_by_sector_id resolver"""
+	def test_get_org_resolvers_by_org(self):
+		""""Test get_org_by_org resolver"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getGroupBySector(sector: GC_A){
+					getOrgByOrg(org: Arts){
 						description
-						groupSector{
-							id
-							zone
-							description
+						organization
+					}
+				}"""
+
+			result_refr = {
+				"data": {
+					"getOrgByOrg": [
+						{
+							"description": "Arts",
+							"organization": "Arts"
 						}
+					]
+				}
+			}
+
+			result_eval = client.execute(query)
+		self.assertDictEqual(result_refr, result_eval)
+
+	def test_get_org_resolvers_by_group(self):
+		"""Test get_org_by_group_id resolver"""
+		with app.app_context():
+			client = Client(schema)
+			query = """
+				{
+					getOrgByGroup(group: GC_A){
+						description
+						groupId
 					}
 				}"""
 			result_refr = {
 				"data": {
-					"getGroupBySector": [
+					"getOrgByGroup": [
 						{
 							"description": "Arts",
-							"groupSector": {
-								"id": "U2VjdG9yczox",
-								"zone": "GC",
-								"description": "Arts"
-							}
+							"groupId": 1
 						}
 					]
 				}
@@ -150,16 +158,15 @@ class TestGroupResolver(TestCase):
 			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
 
-	def test_group_resolver_by_id_invalid(self):
-		"""Test get_group_by_id invalid ID error handling"""
+	def test_org_resolver_by_id_invalid(self):
+		"""Test get_org_by_id invalid ID error handling"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getGroupById(id: 9999){
-						id
+					getOrgById(id: 9999){
 						description
-						sectorId
+						groupId
 					}
 				}
 			"""
@@ -169,16 +176,15 @@ class TestGroupResolver(TestCase):
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == "Error, Invalid ID"
 
-	def test_group_resolver_by_group_invalid(self):
-		"""Test get_group_by_group invalid sector error handling"""
+	def test_org_resolver_by_org_invalid(self):
+		"""Test get_org_by_org invalid sector error handling"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getGroupByGroup(group: fds){
+					getOrgByOrg(org: fds){
 						id
 						description
-						sectorId
 					}
 				}
 			"""
@@ -186,18 +192,17 @@ class TestGroupResolver(TestCase):
 
 		assert executed['errors']
 		assert executed['errors'][0]
-		assert executed['errors'][0]['message'] == f'Argument "group" has invalid value fds.\nExpected type "GroupEnums", found fds.'
+		assert executed['errors'][0]['message'] == f'Argument "org" has invalid value fds.\nExpected type "OrganizationsEnum", found fds.'
 
-	def test_group_resolver_by_sector_invalid(self):
-		"""Test get_group_by_sector invalid Zone error handling"""
+	def test_org_resolver_by_group_invalid(self):
+		"""Test get_org_by_group invalid Zone error handling"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getGroupBySector(sector: dsa){
+					getOrgByGroup(group: dsa){
 						id
 						description
-						sectorId
 					}
 				}
 			"""
@@ -205,4 +210,4 @@ class TestGroupResolver(TestCase):
 
 		assert executed['errors']
 		assert executed['errors'][0]
-		assert executed['errors'][0]['message'] == f'Argument "sector" has invalid value dsa.\nExpected type "SectorEnums", found dsa.'
+		assert executed['errors'][0]['message'] == f'Argument "group" has invalid value dsa.\nExpected type "GroupEnums", found dsa.'

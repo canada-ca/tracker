@@ -7,11 +7,13 @@ import pyotp
 
 from model_enums.sectors import SectorEnums, ZoneEnums
 from model_enums.groups import GroupEnums
+from model_enums.organiztions import OrganizationsEnum
 
 from schemas.user import *
 
 from schemas.sectors import Sectors
 from schemas.groups import Groups
+from schemas.organizations import Organizations
 
 
 from resolvers.sectors import (
@@ -24,6 +26,12 @@ from resolvers.groups import (
 	resolve_get_group_by_id,
 	resolve_get_group_by_group,
 	resolve_get_group_by_sector
+)
+
+from resolvers.organizations import (
+	resolve_get_org_by_id,
+	resolve_get_org_by_org,
+	resolve_get_orgs_by_group
 )
 
 
@@ -54,7 +62,7 @@ class Query(graphene.ObjectType):
 	)
 	get_group_by_id = graphene.List(
 		of_type=Groups,
-		id=graphene.Argument(graphene.Int, required=False),
+		id=graphene.Argument(graphene.Int, required=True),
 		resolver=resolve_get_group_by_id,
 		description="Allows selection of a group from a given group ID"
 	)
@@ -69,6 +77,24 @@ class Query(graphene.ObjectType):
 		sector=graphene.Argument(SectorEnums, required=True),
 		resolver=resolve_get_group_by_sector,
 		description="Allows selection of groups from a given sector enum"
+	)
+	get_org_by_id = graphene.List(
+		of_type=Organizations,
+		id=graphene.Argument(graphene.Int, required=True),
+		resolver=resolve_get_org_by_id,
+		description="Allows the selection of an organization from a given ID"
+	)
+	get_org_by_org = graphene.List(
+		of_type=Organizations,
+		org=graphene.Argument(OrganizationsEnum, required=True),
+		resolver=resolve_get_org_by_org,
+		description="Allows the selection of an organization from its given organization code"
+	)
+	get_org_by_group = graphene.List(
+		of_type=Organizations,
+		group=graphene.Argument(GroupEnums, required=True),
+		resolver=resolve_get_orgs_by_group,
+		description="Allows the selection of organizations from a given group"
 	)
 
 	generate_otp_url = String(email=String(required=True))
