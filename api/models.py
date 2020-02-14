@@ -90,7 +90,8 @@ class Users(db.Model):
     user_password = Column(String)
     preferred_lang = Column(String)
     failed_login_attempts = Column(Integer, default=0)
-    two_factor_auth = Column(Boolean, default=False)
+    tfa_validated = Column(Boolean, default=False)
+    user_role = Column(String, default="user")
     user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
 
 

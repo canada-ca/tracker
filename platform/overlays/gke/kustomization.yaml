@@ -5,9 +5,9 @@ resources:
 - ingressgateway.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-df67c58
+  newTag: master-4766a7a
 - name: gcr.io/track-compliance/frontend
-  newTag: master-acf5335
+  newTag: master-eca39b4
 secretGenerator:
 - envs:
   - postgres.env

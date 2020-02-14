@@ -7,6 +7,9 @@ from graphene.test import Client
 
 from unittest import TestCase
 
+import model_enums
+model_enums._called_from_test = True
+
 from app import app
 from db import db
 from models import Sectors

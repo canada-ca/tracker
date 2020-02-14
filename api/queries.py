@@ -1,5 +1,9 @@
 import os
 from graphene_sqlalchemy import SQLAlchemyConnectionField
+from graphene import String
+from flask_graphql_auth import *
+import pyotp
+
 import graphene
 from sqlalchemy.orm import joinedload
 from graphene import relay, String
@@ -7,11 +11,13 @@ import pyotp
 
 from model_enums.sectors import SectorEnums, ZoneEnums
 from model_enums.groups import GroupEnums
+from model_enums.organiztions import OrganizationsEnum
 
 from schemas.user import *
 
 from schemas.sectors import Sectors
 from schemas.groups import Groups
+from schemas.organizations import Organizations
 
 
 from resolvers.sectors import (
@@ -24,6 +30,19 @@ from resolvers.groups import (
 	resolve_get_group_by_id,
 	resolve_get_group_by_group,
 	resolve_get_group_by_sector
+
+)
+
+
+from resolvers.users import (
+	resolve_test_user_claims,
+	resolve_generate_otp_url,
+)
+
+from resolvers.organizations import (
+	resolve_get_org_by_id,
+	resolve_get_org_by_org,
+	resolve_get_orgs_by_group
 )
 
 
@@ -54,7 +73,7 @@ class Query(graphene.ObjectType):
 	)
 	get_group_by_id = graphene.List(
 		of_type=Groups,
-		id=graphene.Argument(graphene.Int, required=False),
+		id=graphene.Argument(graphene.Int, required=True),
 		resolver=resolve_get_group_by_id,
 		description="Allows selection of a group from a given group ID"
 	)
@@ -70,13 +89,36 @@ class Query(graphene.ObjectType):
 		resolver=resolve_get_group_by_sector,
 		description="Allows selection of groups from a given sector enum"
 	)
+	get_org_by_id = graphene.List(
+		of_type=Organizations,
+		id=graphene.Argument(graphene.Int, required=True),
+		resolver=resolve_get_org_by_id,
+		description="Allows the selection of an organization from a given ID"
+	)
+	get_org_by_org = graphene.List(
+		of_type=Organizations,
+		org=graphene.Argument(OrganizationsEnum, required=True),
+		resolver=resolve_get_org_by_org,
+		description="Allows the selection of an organization from its given organization code"
+	)
+	get_org_by_group = graphene.List(
+		of_type=Organizations,
+		group=graphene.Argument(GroupEnums, required=True),
+		resolver=resolve_get_orgs_by_group,
+		description="Allows the selection of organizations from a given group"
+	)
 
-	generate_otp_url = String(email=String(required=True))
+	generate_otp_url = graphene.String(
+		email=graphene.Argument(EmailAddress, required=True),
+		resolver=resolve_generate_otp_url,
+		description="An api endpoint used to generate a OTP url used for two factor authentication."
+	)
 
-	@staticmethod
-	def resolve_generate_otp_url(self, info, email):
-		totp = pyotp.totp.TOTP(os.getenv('BASE32_SECRET'))  # This needs to be a 16 char base32 secret key
-		return totp.provisioning_uri(email, issuer_name="Tracker")
+	test_user_claims = graphene.String(
+		token=graphene.Argument(graphene.String, required=True),
+		resolver=resolve_test_user_claims,
+		description="An api endpoint to view a current user's claims -- Requires an active JWT."
+	)
 
 
 class Mutation(graphene.ObjectType):
@@ -85,7 +127,7 @@ class Mutation(graphene.ObjectType):
 	sign_in = SignInUser.Field()
 	update_password = UpdateUserPassword.Field()
 	authenticate_two_factor = ValidateTwoFactor.Field()
+	update_user_role = UpdateUserRole.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
-

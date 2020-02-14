@@ -24,8 +24,7 @@ def sign_in_user(email, password):
 	password_match = bcrypt.check_password_hash(user.user_password, password)
 
 	if email_match and password_match:
-		# todo: Query database to get roles associated with "this" user!
-		user_claims = {"roles": "admin"}
+		user_claims = {"roles": user.user_role}
 		temp_dict = {
 			'auth_token': create_access_token(user.id, user_claims=user_claims),
 			'user': user

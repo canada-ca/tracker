@@ -30,6 +30,14 @@ def error_password_not_updated():
 	return str("Unable to update password, please try again")
 
 
+def error_role_not_updated():
+	return str("Unable to update user's role, please try again")
+
+
+def error_not_an_admin():
+	return str("You are not allowed to perform admin actions, please try again")
+
+
 def error_user_not_updated():
 	return str("User not updated, please try again")
 
