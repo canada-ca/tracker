@@ -12,7 +12,7 @@ model_enums._called_from_test = True
 
 from app import app
 from db import db
-from models import Sectors, Groups, Organizations
+from models import Sectors, Groups, Organizations, Domains
 from queries import schema
 
 
@@ -23,21 +23,22 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 @pytest.fixture(scope='class')
-def org_test_resolver_db_init():
+def domain_test_resolver_db_init():
 	"""Build database for domain resolver testing"""
 	db.init_app(app)
 
 	sectors_added = False
 	groups_added = False
 	org_added = False
+	domain_added = False
 
 	with app.app_context():
 		if Sectors.query.first() is None:
 			sector = Sectors(
-				id=1,
+				id=2,
 				zone="GC",
-				sector="GC_A",
-				description="Arts"
+				sector="GC_BF",
+				description="Banking and Finance"
 			)
 			db.session.add(sector)
 			db.session.commit()
@@ -45,10 +46,10 @@ def org_test_resolver_db_init():
 
 		if Groups.query.first() is None:
 			group = Groups(
-				id=1,
-				s_group='GC_A',
-				description='Arts',
-				sector_id=1
+				id=2,
+				s_group='GC_BF',
+				description='Banking and Finance',
+				sector_id=2
 			)
 			db.session.add(group)
 			db.session.commit()
@@ -56,49 +57,60 @@ def org_test_resolver_db_init():
 
 		if Organizations.query.first() is None:
 			org = Organizations(
-				id=1,
-				organization='Arts',
-				description='Arts',
-				group_id=1
+				id=6,
+				organization='BOC',
+				description='BOC - Bank of Canada',
+				group_id=2
 			)
 			db.session.add(org)
 			db.session.commit()
 			org_added = True
 
+		if Domains.query.first() is None:
+			domain = Domains(
+				id=15,
+				domain='bankofcanada.ca',
+				organization_id=6
+			)
+			db.session.add(domain)
+			db.session.commit()
+			domain_added = True
+
 	yield
 
 	with app.app_context():
+		if domain_added:
+			Domains.query.filter(Domains.id == 15).delete()
+			db.session.commit()
 		if org_added:
-			Organizations.query.filter(Organizations.id == 1).delete()
+			Organizations.query.filter(Organizations.id == 6).delete()
 			db.session.commit()
 		if groups_added:
-			Groups.query.filter(Groups.id == 1).delete()
+			Groups.query.filter(Groups.id == 2).delete()
 			db.session.commit()
 		if sectors_added:
-			Sectors.query.filter(Sectors.id == 1).delete()
+			Sectors.query.filter(Sectors.id == 2).delete()
 			db.session.commit()
 
 
-@pytest.mark.usefixtures('org_test_resolver_db_init')
+@pytest.mark.usefixtures('domain_test_resolver_db_init')
 class TestOrgResolver(TestCase):
-	def test_get_org_resolvers_by_id(self):
-		"""Test get_organization_by_id resolver"""
+	def test_get_domain_resolvers_by_id(self):
+		"""Test get_domain_by_id resolver"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getOrgById(id: 1){
-						description
-						organization
+					getDomainById(id: 15){
+						domain
 					}
 				}"""
 
 			result_refr = {
 				"data": {
-					"getOrgById": [
+					"getDomainById": [
 						{
-							"description": "Arts",
-							"organization": "Arts"
+							"domain": "bankofcanada.ca"
 						}
 					]
 				}
@@ -107,24 +119,22 @@ class TestOrgResolver(TestCase):
 			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
 
-	def test_get_org_resolvers_by_org(self):
-		""""Test get_org_by_org resolver"""
+	def test_get_domain_resolvers_by_domain(self):
+		""""Test get_domain_by_domain resolver"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getOrgByOrg(org: Arts){
-						description
-						organization
+					getDomainByDomain(url: "bankofcanada.ca"){
+						domain
 					}
 				}"""
 
 			result_refr = {
 				"data": {
-					"getOrgByOrg": [
+					"getDomainByDomain": [
 						{
-							"description": "Arts",
-							"organization": "Arts"
+							"domain": "bankofcanada.ca"
 						}
 					]
 				}
@@ -133,23 +143,21 @@ class TestOrgResolver(TestCase):
 			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
 
-	def test_get_org_resolvers_by_group(self):
-		"""Test get_org_by_group_id resolver"""
+	def test_get_domain_resolvers_by_org(self):
+		"""Test get_domain_by_org_enum resolver"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getOrgByGroup(group: GC_A){
-						description
-						groupId
+					getDomainByOrganization(org: BOC){
+						domain
 					}
 				}"""
 			result_refr = {
 				"data": {
-					"getOrgByGroup": [
+					"getDomainByOrganization": [
 						{
-							"description": "Arts",
-							"groupId": 1
+							"domain": "bankofcanada.ca"
 						}
 					]
 				}
@@ -158,15 +166,14 @@ class TestOrgResolver(TestCase):
 			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
 
-	def test_org_resolver_by_id_invalid(self):
-		"""Test get_org_by_id invalid ID error handling"""
+	def test_domain_resolver_by_id_invalid(self):
+		"""Test get_domain_by_id invalid ID error handling"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getOrgById(id: 9999){
-						description
-						groupId
+					getDomainById(id: 9999){
+						domain
 					}
 				}
 			"""
@@ -176,15 +183,31 @@ class TestOrgResolver(TestCase):
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == "Error, Invalid ID"
 
-	def test_org_resolver_by_org_invalid(self):
-		"""Test get_org_by_org invalid sector error handling"""
+	def test_domain_resolver_by_org_invalid(self):
+		"""Test get_domain_by_domain invalid sector error handling"""
 		with app.app_context():
 			client = Client(schema)
 			query = """
 				{
-					getOrgByOrg(org: fds){
-						id
-						description
+					getDomainByDomain(url: "google.ca"){
+						domain
+					}
+				}
+			"""
+			executed = client.execute(query)
+
+		assert executed['errors']
+		assert executed['errors'][0]
+		assert executed['errors'][0]['message'] == 'Error, domain  does not exist'
+
+	def test_domain_resolver_by_org_invalid(self):
+		"""Test get_domain_by_org invalid Zone error handling"""
+		with app.app_context():
+			client = Client(schema)
+			query = """
+				{
+					getDomainByOrganization(org: fds){
+						domain
 					}
 				}
 			"""
@@ -193,21 +216,3 @@ class TestOrgResolver(TestCase):
 		assert executed['errors']
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == f'Argument "org" has invalid value fds.\nExpected type "OrganizationsEnum", found fds.'
-
-	def test_org_resolver_by_group_invalid(self):
-		"""Test get_org_by_group invalid Zone error handling"""
-		with app.app_context():
-			client = Client(schema)
-			query = """
-				{
-					getOrgByGroup(group: dsa){
-						id
-						description
-					}
-				}
-			"""
-			executed = client.execute(query)
-
-		assert executed['errors']
-		assert executed['errors'][0]
-		assert executed['errors'][0]['message'] == f'Argument "group" has invalid value dsa.\nExpected type "GroupEnums", found dsa.'
