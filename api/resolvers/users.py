@@ -1,4 +1,5 @@
 from flask_graphql_auth import *
+from user_roles import *
 import pyotp
 import os
 
@@ -11,7 +12,7 @@ def resolve_test_user_claims(self, info):
     """
     role = get_jwt_claims()['roles']
 
-    if role == "admin":
+    if is_admin(role):
         return str(get_jwt_claims())
     else:
         return str("Not an admin, please log in")

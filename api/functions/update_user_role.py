@@ -2,6 +2,7 @@ from functions.error_messages import *
 from db import db
 from models import Users as User
 from graphql import GraphQLError
+from user_roles import *
 
 from flask_graphql_auth import *
 
@@ -23,7 +24,7 @@ def update_user_role(email, new_role):
 
     role = get_jwt_claims()['roles']  # Pulls the 'role' out of the JWT user claims associated with the token.
 
-    if role == "admin":  # If an admin, update the user.
+    if is_admin(role):  # If an admin, update the user.
         user = User.query.filter(User.user_email == email)\
                 .update({'user_role': new_role})
         db.session.commit()
