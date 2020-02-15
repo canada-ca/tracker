@@ -13,14 +13,38 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/App.js:68
+#: src/LandingPage.js:16
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 
-#: src/App.js:14
-#~ msgid "Hello from React"
-#~ msgstr "Hello from React"
+#: src/PageNotFound.js:9
+msgid "Page not found"
+msgstr "Page not found"
+
+#: src/App.js:29
+msgid "Pre-Alpha"
+msgstr "Pre-Alpha"
+
+#: src/App.js:55
+msgid "Privacy"
+msgstr "Privacy"
+
+#: src/App.js:27
+msgid "Skip to main content"
+msgstr "Skip to main content"
+
+#: src/PageNotFound.js:12
+msgid "Sorry, the page you were trying to view does not exist."
+msgstr "Sorry, the page you were trying to view does not exist."
 
 #: src/App.js:65
+msgid "Terms & conditions"
+msgstr "Terms & conditions"
+
+#: src/App.js:30
+msgid "This service is being developed in the open"
+msgstr "This service is being developed in the open"
+
+#: src/LandingPage.js:11
 msgid "Track web security compliance"
 msgstr "Track web security compliance"
