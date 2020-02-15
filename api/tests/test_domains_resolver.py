@@ -143,6 +143,7 @@ class TestOrgResolver(TestCase):
 			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
 
+	@pytest.mark.skip(reason="TODO: seed db")
 	def test_get_domain_resolvers_by_org(self):
 		"""Test get_domain_by_org_enum resolver"""
 		with app.app_context():
