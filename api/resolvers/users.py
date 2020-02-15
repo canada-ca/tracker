@@ -18,7 +18,7 @@ def resolve_test_user_claims(self, info):
     if is_admin(role):
         return str(get_jwt_claims())
     else:
-        rturn str(error_not_an_admin())  # TODO: Switch to GQL Raise error -- from web IDE
+        return str(error_not_an_admin())  # TODO: Switch to GQL Raise error -- from web IDE
 
 
 def resolve_generate_otp_url(self, info, email):
