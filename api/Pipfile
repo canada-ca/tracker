@@ -37,6 +37,7 @@ schema-export = "python schema_export.py"
 db-init = 'python manage.py db init'
 db-migrate = 'python manage.py db migrate'
 db-upgrade = 'python manage.py db upgrade'
+db-history = 'python manage.py db history'
 
 [pipenv]
 allow_prereleases = false
