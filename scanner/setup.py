@@ -16,8 +16,8 @@ if __name__ == '__main__':
         _cmd = _cmd + " celery"
     if not 'kombu' in sys.modules:
         _cmd = _cmd + " kombu"
-    if not 'pshtt' in sys.modules:
-        _cmd = _cmd + " pshtt"
+    if not 'psht' in sys.modules:
+        _cmd = _cmd + " psht"
     if not 'sslyze' in sys.modules:
         _cmd = _cmd + " sslyze"
     if not 'sqlalchemy' in sys.modules:

@@ -30,11 +30,8 @@ def dispatch(connection: Connection):
 
     cipher_list = []
 
-    for ciph in connection.query(Ciphers):
+    for ciph in connection.get(Ciphers):
         cipher_list.append(ciph.cipher_type)
-
-    _https_worker = "https_worker_" + str(datetime.timestamp(datetime.utcnow())) + "@%h"
-    subprocess.Popen(["celery", "-A", "scheduling.tasks", "worker", "--loglevel=INFO", "-n", _https_worker, "-Q", "https"])
 
     _ssl_worker = "ssl_worker_" + str(datetime.timestamp(datetime.utcnow())) + "@%h"
     subprocess.Popen(["celery", "-A", "scheduling.tasks", "worker", "--loglevel=INFO", "-n", _ssl_worker, "-Q", "ssl"])
@@ -48,7 +45,7 @@ def dispatch(connection: Connection):
     _results_worker = "results_worker_" + str(datetime.timestamp(datetime.utcnow())) + "@%h"
     subprocess.Popen(["celery", "-A", "scheduling.tasks", "worker", "--loglevel=INFO", "-n", _results_worker, "-Q", "results"])
 
-    for dom in connection.query(Domains):
+    for dom in connection.get(Domains):
 
         domain = to_json(dom)
         domain_count = domain_count + 1
