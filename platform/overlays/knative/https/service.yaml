@@ -7,7 +7,4 @@ spec:
   template:
     spec:
       containers:
-        - image: gcr.io/knative-samples/helloworld-go # The URL to the image of the app
-          env:
-            - name: scanner_type
-              value: "https"
+        - image: gcr.io/track-compliance/https # The URL to the image of the app
