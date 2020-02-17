@@ -23,64 +23,6 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
-@pytest.fixture(scope='class')
-def org_test_resolver_db_init():
-	"""Build database for domain resolver testing"""
-	db.init_app(app)
-
-	sectors_added = False
-	groups_added = False
-	org_added = False
-
-	with app.app_context():
-		if Sectors.query.first() is None:
-			sector = Sectors(
-				id=1,
-				zone="GC",
-				sector="GC_A",
-				description="Arts"
-			)
-			db.session.add(sector)
-			db.session.commit()
-			sectors_added = True
-
-		if Groups.query.first() is None:
-			group = Groups(
-				id=1,
-				s_group='GC_A',
-				description='Arts',
-				sector_id=1
-			)
-			db.session.add(group)
-			db.session.commit()
-			groups_added = True
-
-		if Organizations.query.first() is None:
-			org = Organizations(
-				id=1,
-				organization='Arts',
-				description='Arts',
-				group_id=1
-			)
-			db.session.add(org)
-			db.session.commit()
-			org_added = True
-
-	yield
-
-	with app.app_context():
-		if org_added:
-			Organizations.query.filter(Organizations.id == 1).delete()
-			db.session.commit()
-		if groups_added:
-			Groups.query.filter(Groups.id == 1).delete()
-			db.session.commit()
-		if sectors_added:
-			Sectors.query.filter(Sectors.id == 1).delete()
-			db.session.commit()
-
-
-@pytest.mark.usefixtures('org_test_resolver_db_init')
 class TestOrgResolver(TestCase):
 	def test_get_org_resolvers_by_id(self):
 		"""Test get_organization_by_id resolver"""
@@ -108,7 +50,6 @@ class TestOrgResolver(TestCase):
 			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
 
-	@pytest.mark.skip(reason="TODO: seed the db")
 	def test_get_org_resolvers_by_org(self):
 		""""Test get_org_by_org resolver"""
 		with app.app_context():

@@ -21,49 +21,6 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
-@pytest.fixture(scope='class')
-def group_test_resolver_db_init():
-	"""Build database for group resolver testing"""
-	db.init_app(app)
-
-	sector_added = False
-	group_added = False
-
-	with app.app_context():
-		if Sectors.query.first() is None:
-			sector = Sectors(
-				id=1,
-				zone="GC",
-				sector="GC_A",
-				description="Arts"
-			)
-			db.session.add(sector)
-			db.session.commit()
-			sector_added = True
-
-		if Groups.query.first() is None:
-			group = Groups(
-				id=1,
-				s_group='GC_A',
-				description='Arts',
-				sector_id=1
-			)
-			db.session.add(group)
-			db.session.commit()
-			group_added = True
-
-	yield
-
-	with app.app_context():
-		if group_added:
-			Groups.query.filter(Groups.id == 1).delete()
-			db.session.commit()
-		if sector_added:
-			Sectors.query.filter(Sectors.id == 1).delete()
-			db.session.commit()
-
-
-@pytest.mark.usefixtures('group_test_resolver_db_init')
 class TestGroupResolver(TestCase):
 	def test_get_group_resolvers_by_id(self):
 		"""Test get_group_by_id resolver"""
