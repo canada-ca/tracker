@@ -24,35 +24,11 @@ def setup_db():
     db.init_app(app)
 
 
-@pytest.fixture()
-def setup_empty_db_with_user():
-    db.init_app(app)
-    with app.app_context():
-        bcrypt = Bcrypt(app)
-
-        if User.query.first() is None:
-            # Insert a user into DB
-            test_user = User(
-                username="testuser",
-                user_email="testuser@testemail.ca",
-                user_password=bcrypt.generate_password_hash(password="testpassword123").decode("UTF-8"),
-
-            )
-            db.session.add(test_user)
-            db.session.commit()
-
-        yield
-
-        # Delete all users after testing
-        with app.app_context():
-            User.query.delete()
-
-
 ##
 # This class of tests works within the 'createUser' api endpoint
 class TestCreateUser:
 
-    def test_successful_creation(self, setup_empty_db_with_user):
+    def test_successful_creation(self):
         """Test that ensures a user can be created successfully using the api endpoint"""
         client = Client(schema)
         executed = client.execute(
@@ -73,7 +49,7 @@ class TestCreateUser:
         assert executed['data']['createUser']['user']['username'] == "user-test"
         assert executed['data']['createUser']['user']['userEmail'] == "different-email@testemail.ca"
 
-    def test_email_address_in_use(self, setup_empty_db_with_user):
+    def test_email_address_in_use(self):
         """Test that ensures each user has a unique email address"""
         client = Client(schema)
         executed = client.execute(
@@ -91,7 +67,7 @@ class TestCreateUser:
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == error_email_in_use()
 
-    def test_password_too_short(self, setup_db):
+    def test_password_too_short(self):
         """Test that ensure that a user's password meets the valid length requirements"""
         client = Client(schema)
         executed = client.execute(
@@ -109,7 +85,7 @@ class TestCreateUser:
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
-    def test_passwords_do_not_match(self, setup_db):
+    def test_passwords_do_not_match(self):
         """Test to ensure that user password matches their password confirmation"""
         client = Client(schema)
         executed = client.execute(
@@ -133,7 +109,7 @@ class TestCreateUser:
 # This class of tests works within the 'updatePassword' api endpoint
 class TestUpdatePassword:
 
-    def test_update_password_success(self, setup_empty_db_with_user):
+    def test_update_password_success(self):
         """Test to ensure that a user is returned when their password is updated successfully"""
         client = Client(schema)
         executed = client.execute(
@@ -155,7 +131,7 @@ class TestUpdatePassword:
         assert executed['data']['updatePassword']['user']['username'] == "testuser"
         assert executed['data']['updatePassword']['user']['userEmail'] == "testuser@testemail.ca"
 
-    def test_updated_passwords_do_not_match(self, setup_db):
+    def test_updated_passwords_do_not_match(self):
         """Test to ensure that user's new password matches their password confirmation"""
         client = Client(schema)
         executed = client.execute(
@@ -174,7 +150,7 @@ class TestUpdatePassword:
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == error_passwords_do_not_match()
 
-    def test_updated_password_too_short(self, setup_db):
+    def test_updated_password_too_short(self):
         """Test that ensure that a user's password meets the valid length requirements"""
         client = Client(schema)
         executed = client.execute(
@@ -192,7 +168,7 @@ class TestUpdatePassword:
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
-    def test_updated_password_no_user_email(self, setup_db):
+    def test_updated_password_no_user_email(self):
         """Test that ensures an empty string submitted as email will not be accepted"""
         client = Client(schema)
         executed = client.execute(
@@ -215,7 +191,7 @@ class TestUpdatePassword:
 # This class of tests works within the 'authenticateTwoFactor' api endpoint
 class TestValidateTwoFactor:
 
-    def test_successful_validation(self, setup_empty_db_with_user):
+    def test_successful_validation(self):
         """Test that ensures a validation is successful when all params are proper"""
         totp = pyotp.TOTP('base32secret3232')
         otp_code = totp.now()  # Generates a code that is valid for 30s. Plenty of time to execute the query
@@ -237,7 +213,7 @@ class TestValidateTwoFactor:
         assert executed['data']['authenticateTwoFactor']['user']
         assert executed['data']['authenticateTwoFactor']['user']['userEmail'] == "testuser@testemail.ca"
 
-    def test_user_does_not_exist(self, setup_empty_db_with_user):
+    def test_user_does_not_exist(self):
         """Test that an error is raised if the user specified does not exist"""
         client = Client(schema)
         executed = client.execute(
@@ -255,7 +231,7 @@ class TestValidateTwoFactor:
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == error_user_does_not_exist()
 
-    def test_invalid_otp_code(self, setup_empty_db_with_user):
+    def test_invalid_otp_code(self):
         """Test that an error is raised if the user specified does not exist"""
         client = Client(schema)
         executed = client.execute(
