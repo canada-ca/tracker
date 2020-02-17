@@ -1,10 +1,10 @@
 from flask_bcrypt import Bcrypt
 
 from models import Users
-from app import app
 
 
 def seed_users(db):
+	from manage import app
 	bcrypt = Bcrypt(app)
 
 	test_user = Users(
