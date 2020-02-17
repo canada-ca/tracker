@@ -2,22 +2,27 @@
 
 This project tracks the Government of Canada domains for adherence to digital security best practices and federal requirements.
 
-## Project Structure
+## Repo Structure
 
-This project is organized in the monorepo style with the various components separationed into their own folders.
+This project is organized in the [monorepo](https://en.wikipedia.org/wiki/Monorepo) style with the various components separated into their own folders.
 
 ```sh
 .
+├── api
 ├── ci
+├── frontend
 ├── platform
 ├── scanner
-├── web
 └── README.md
 ```
-The [ci](ci/README.md) folder contains an image used in the CI process, but the main event is the next three folders.
 
-The [scanner](scanner/README.md) folder contains everything related to the `scanner` service, and the [web](web/README.md) contains everything for the `web` service that shows the results of the scan.
+The [ci](ci/README.md) folder contains an image used in the CI process, but the main event is the next three folders:
+The [frontend](frontend/README.md), and [api](api/README.md) folders containing the two main parts parts of the applicationand the [platform](platform/README.md) folder which contains the Kubernetes configuration needed to deploy the tracker on the cloud provider of your choice.
 
-The Kubernetes configuration needed to deploy the tracker on the cloud provider of your choice lives in the [platform](platform/README.md) folder.
+The [scanner](scanner/README.md) folder contains everything related to the old `scanner` service, which is no longer in use and is currently hanging around for reference purposes.
 
-Further details can be found in the readme files contained in their respective folders.
+## Application structure
+
+In accordance with TBS policy stating developers should ["Validate your API design by consuming it"](https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=15249#claD.2.2.4), and ["Use microservices built around business capabilities."](https://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=15249#claC.2.3.10) the application is architected as an API/consumer pair giving a minimalist microservices architecture.
+
+Further details can be found in the README files contained in their respective folders.
