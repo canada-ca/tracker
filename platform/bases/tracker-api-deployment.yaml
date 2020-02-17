@@ -43,6 +43,30 @@ spec:
           value: postgres
         - name: DB_PORT
           value: "5432"
+      - name: database-seed
+        image: gcr.io/track-compliance/api
+        command: ['pipenv']
+        args: ['run', 'db-seed']
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_PASS
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DB_NAME
+        - name: DB_HOST
+          value: postgres
+        - name: DB_PORT
+          value: "5432"
       containers:
       - image: gcr.io/track-compliance/api
         name: api
