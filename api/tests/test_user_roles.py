@@ -1,6 +1,6 @@
 from flask_bcrypt import Bcrypt
 
-from ..user_roles import *
+from user_roles import (is_super_admin, is_admin, is_user)
 import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath

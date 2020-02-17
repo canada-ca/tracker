@@ -1,8 +1,8 @@
-from functions.error_messages import *
+from functions.error_messages import (error_user_does_not_exist, error_not_an_admin, error_role_not_updated)
 from db import db
 from models import Users as User
 from graphql import GraphQLError
-from user_roles import *
+from user_roles import is_admin
 
 from flask_graphql_auth import *
 

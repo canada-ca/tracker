@@ -1,7 +1,7 @@
 from graphql import GraphQLError
 from flask_graphql_auth import *
-from functions.error_messages import *
-from user_roles import *
+from functions.error_messages import error_not_an_admin
+from user_roles import is_admin
 import pyotp
 import os
 
