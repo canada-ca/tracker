@@ -212,7 +212,7 @@ class TestUpdatePassword:
 
 
 ##
-# This class of tests works within the 'updatePassword' api endpoint
+# This class of tests works within the 'authenticateTwoFactor' api endpoint
 class TestValidateTwoFactor:
 
     def test_successful_validation(self, setup_empty_db_with_user):
