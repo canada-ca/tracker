@@ -186,3 +186,44 @@ class TestUpdatePassword:
         assert executed['errors']
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == scalar_error_type("email address", "")
+
+
+##
+# This class of tests works within the 'updatePassword' api endpoint
+class TestValidateTwoFactor:
+
+    def test_user_does_not_exist(self, setup_empty_db_with_user):
+        """Test that an error is raised if the user specified does not exist"""
+        client = Client(schema)
+        executed = client.execute(
+            '''
+            mutation {
+                authenticateTwoFactor(email: "anotheruser@testemail.ca", otpCode: "000000") {
+                    user {
+                        username
+                    }
+                }
+            }
+            ''')
+
+        assert executed['errors']
+        assert executed['errors'][0]
+        assert executed['errors'][0]['message'] == error_user_does_not_exist()
+
+    def test_invalid_otp_code(self, setup_empty_db_with_user):
+        """Test that an error is raised if the user specified does not exist"""
+        client = Client(schema)
+        executed = client.execute(
+            '''
+            mutation {
+                authenticateTwoFactor(email: "testuser@testemail.ca", otpCode: "000000") {
+                    user {
+                        username
+                    }
+                }
+            }
+            ''')
+
+        assert executed['errors']
+        assert executed['errors'][0]
+        assert executed['errors'][0]['message'] == error_otp_code_is_invalid()
