@@ -5,9 +5,9 @@ resources:
 - ../../bases
 images:
 - name: gcr.io/track-compliance/api
-  newTag: mutual-tls-8835bbb
+  newTag: master-d0df5d6
 - name: gcr.io/track-compliance/frontend
-  newTag: master-6f3c03f
+  newTag: master-6e7e449
 secretGenerator:
 - envs:
   - .env.kiali
