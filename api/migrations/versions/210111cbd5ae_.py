@@ -114,7 +114,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('domain_id', sa.Integer(), nullable=True),
     sa.Column('scan_date', sa.DateTime(), nullable=True),
-    sa.Column('initiated_by', sa.String(), nullable=True),
+    sa.Column('initiated_by', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['domain_id'], ['domains.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

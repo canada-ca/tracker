@@ -111,7 +111,7 @@ class Scans(db.Model):
     id = Column(Integer, primary_key=True)
     domain_id = Column(Integer, ForeignKey('domains.id'))
     scan_date = Column(DateTime)
-    initiated_by = Column(String)
+    initiated_by = Column(Integer, ForeignKey('users.id'))
     domain = relationship("Domains", back_populates="scans", cascade="all, delete")
     dmarc = relationship("Dmarc_scans", back_populates="dmarc_flagged_scan", cascade="all, delete")
     dkim = relationship("Dkim_scans", back_populates="dkim_flagged_scan", cascade="all, delete")
