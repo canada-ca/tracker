@@ -5,8 +5,9 @@ API rather than the traditional REST API.
 
 ### Installing Dependencies
 Run pipenv installer in api directory
-
-```pipenv install```
+```
+pipenv install
+```
 
 ### Setting Up Database
 To setup the initial postgres database tables run the following commands
@@ -25,7 +26,7 @@ pipenv run db-upgrade
 ```
 
 #### Seeding Data into Database
-If you have any data setup for insert in the api/functions/db_seeding files run the following commands
+If you have any data setup for insert in the ```api/functions/db_seeding``` files run the following commands
 ```
 pipenv run db-seed
 ```
@@ -37,8 +38,9 @@ pipenv run db-remove-seed
 ```
 ### Running the API
 To run the API run the following command
-
-```pipenv run server```
+```
+pipenv run server
+```
 
 ### Accessing the API
 Visit the following URL localhost:5000/graphql
