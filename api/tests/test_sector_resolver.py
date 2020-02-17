@@ -11,8 +11,6 @@ import model_enums
 model_enums._called_from_test = True
 
 from app import app
-from db import db
-from models import Sectors
 from queries import schema
 
 
@@ -22,52 +20,6 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
-@pytest.fixture(scope='class')
-def sector_test_resolver_db_init():
-	"""Build database for sector resolver testing"""
-	db.init_app(app)
-
-	with app.app_context():
-		if Sectors.query.first() is None:
-			sector = Sectors(
-				id=1,
-				zone="GC",
-				sector="GC_A",
-				description="Arts"
-			)
-			db.session.add(sector)
-			db.session.commit()
-
-			sector = Sectors(
-				id=2,
-				zone="TEST",
-				sector="TEST_DEV",
-				description="Development test cases"
-			)
-			db.session.add(sector)
-			db.session.commit()
-
-			sector = Sectors(
-				id=3,
-				zone="GC",
-				sector="GC_GA",
-				description="Government Administration"
-			)
-			db.session.add(sector)
-			db.session.commit()
-
-		yield
-
-		with app.app_context():
-			Sectors.query.filter(Sectors.id == 1).delete()
-			db.session.commit()
-			Sectors.query.filter(Sectors.id == 2).delete()
-			db.session.commit()
-			Sectors.query.filter(Sectors.id == 3).delete()
-			db.session.commit()
-
-
-@pytest.mark.usefixtures('sector_test_resolver_db_init')
 class TestSectorResolver(TestCase):
 	def test_get_sector_resolver_by_id(self):
 		"""Test get_sector_by_id resolver"""

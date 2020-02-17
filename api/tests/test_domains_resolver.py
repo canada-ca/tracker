@@ -22,78 +22,6 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
-@pytest.fixture(scope='class')
-def domain_test_resolver_db_init():
-	"""Build database for domain resolver testing"""
-	db.init_app(app)
-
-	sectors_added = False
-	groups_added = False
-	org_added = False
-	domain_added = False
-
-	with app.app_context():
-		if Sectors.query.first() is None:
-			sector = Sectors(
-				id=2,
-				zone="GC",
-				sector="GC_BF",
-				description="Banking and Finance"
-			)
-			db.session.add(sector)
-			db.session.commit()
-			sectors_added = True
-
-		if Groups.query.first() is None:
-			group = Groups(
-				id=2,
-				s_group='GC_BF',
-				description='Banking and Finance',
-				sector_id=2
-			)
-			db.session.add(group)
-			db.session.commit()
-			groups_added = True
-
-		if Organizations.query.first() is None:
-			org = Organizations(
-				id=6,
-				organization='BOC',
-				description='BOC - Bank of Canada',
-				group_id=2
-			)
-			db.session.add(org)
-			db.session.commit()
-			org_added = True
-
-		if Domains.query.first() is None:
-			domain = Domains(
-				id=15,
-				domain='bankofcanada.ca',
-				organization_id=6
-			)
-			db.session.add(domain)
-			db.session.commit()
-			domain_added = True
-
-	yield
-
-	with app.app_context():
-		if domain_added:
-			Domains.query.filter(Domains.id == 15).delete()
-			db.session.commit()
-		if org_added:
-			Organizations.query.filter(Organizations.id == 6).delete()
-			db.session.commit()
-		if groups_added:
-			Groups.query.filter(Groups.id == 2).delete()
-			db.session.commit()
-		if sectors_added:
-			Sectors.query.filter(Sectors.id == 2).delete()
-			db.session.commit()
-
-
-@pytest.mark.usefixtures('domain_test_resolver_db_init')
 class TestOrgResolver(TestCase):
 	def test_get_domain_resolvers_by_id(self):
 		"""Test get_domain_by_id resolver"""
@@ -143,7 +71,6 @@ class TestOrgResolver(TestCase):
 			result_eval = client.execute(query)
 		self.assertDictEqual(result_refr, result_eval)
 
-	@pytest.mark.skip(reason="TODO: seed db")
 	def test_get_domain_resolvers_by_org(self):
 		"""Test get_domain_by_org_enum resolver"""
 		with app.app_context():
@@ -184,7 +111,7 @@ class TestOrgResolver(TestCase):
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == "Error, Invalid ID"
 
-	def test_domain_resolver_by_org_invalid(self):
+	def test_domain_resolver_by_url_invalid(self):
 		"""Test get_domain_by_domain invalid sector error handling"""
 		with app.app_context():
 			client = Client(schema)
