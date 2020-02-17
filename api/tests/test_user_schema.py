@@ -2,6 +2,7 @@ import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath
 
+import pyotp
 import pytest
 from flask_bcrypt import Bcrypt
 from graphene.test import Client
@@ -191,6 +192,28 @@ class TestUpdatePassword:
 ##
 # This class of tests works within the 'updatePassword' api endpoint
 class TestValidateTwoFactor:
+
+    def test_successful_validation(self, setup_empty_db_with_user):
+        """Test that ensures a validation is successful when all params are proper"""
+        totp = pyotp.TOTP('base32secret3232')
+        otp_code = totp.now()  # Generates a code that is valid for 30s. Plenty of time to execute the query
+
+        client = Client(schema)
+        executed = client.execute(
+            '''
+            mutation {
+                authenticateTwoFactor(email: "testuser@testemail.ca", otpCode: "''' + otp_code + '''") {
+                    user {
+                        username
+                        userEmail
+                    }
+                }
+            }
+            ''')
+        assert executed['data']
+        assert executed['data']['authenticateTwoFactor']
+        assert executed['data']['authenticateTwoFactor']['user']
+        assert executed['data']['authenticateTwoFactor']['user']['userEmail'] == "testuser@testemail.ca"
 
     def test_user_does_not_exist(self, setup_empty_db_with_user):
         """Test that an error is raised if the user specified does not exist"""

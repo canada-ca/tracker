@@ -29,7 +29,7 @@ def validate_two_factor(email, otp_code):
 
 	if valid_code:
 		user = User.query.filter(User.user_email == email) \
-			.update({'two_factor_auth': True})
+			.update({'tfa_validated': True})
 
 		db.session.commit()
 
