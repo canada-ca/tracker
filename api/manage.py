@@ -46,6 +46,9 @@ manager.add_command('db', MigrateCommand)
 
 @manager.command
 def seed():
+	"""
+	Cli command allows the insertion of data into db
+	"""
 	seed_guidance(db)
 	seed_classification(db)
 	seed_ciphers(db)
@@ -67,6 +70,9 @@ def seed():
 
 @manager.command
 def remove_seed():
+	"""
+	Cli command allows the removal of seeded data from the db
+	"""
 	remove_dkim(db)
 	remove_ssl(db)
 	remove_http(db)
