@@ -39,7 +39,7 @@ def sector_test_resolver_db_init():
 			db.session.commit()
 
 			sector = Sectors(
-				id=2,
+				id=25,
 				zone="TEST",
 				sector="TEST_DEV",
 				description="Development test cases"

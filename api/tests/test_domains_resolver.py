@@ -184,7 +184,7 @@ class TestOrgResolver(TestCase):
 		assert executed['errors'][0]
 		assert executed['errors'][0]['message'] == "Error, Invalid ID"
 
-	def test_domain_resolver_by_org_invalid(self):
+	def test_domain_resolver_by_url_invalid(self):
 		"""Test get_domain_by_domain invalid sector error handling"""
 		with app.app_context():
 			client = Client(schema)
