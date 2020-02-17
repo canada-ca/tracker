@@ -22,6 +22,7 @@ def setup_db():
 	db.init_app(app)
 
 
+
 ##
 # This class of tests handle any api calls that have to do with user passwords.
 class TestUserSchemaPassword:

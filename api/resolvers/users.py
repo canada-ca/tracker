@@ -1,7 +1,7 @@
 from graphql import GraphQLError
 from flask_graphql_auth import *
-
 from functions.error_messages import error_not_an_admin
+from user_roles import is_admin
 import pyotp
 import os
 
@@ -15,10 +15,10 @@ def resolve_test_user_claims(self, info):
     """
     role = get_jwt_claims()['roles']
 
-    if role == "admin":
+    if is_admin(role):
         return str(get_jwt_claims())
     else:
-        raise GraphQLError(error_not_an_admin())
+        return str(error_not_an_admin())  # TODO: Switch to GQL Raise error -- from web IDE
 
 
 def resolve_generate_otp_url(self, info, email):
