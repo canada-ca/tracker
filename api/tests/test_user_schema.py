@@ -30,42 +30,56 @@ class TestCreateUser:
 
     def test_successful_creation(self):
         """Test that ensures a user can be created successfully using the api endpoint"""
-        client = Client(schema)
-        executed = client.execute(
-            '''
-            mutation{
-                createUser(username:"user-test", email:"different-email@testemail.ca",
-                    password:"testpassword123", confirmPassword:"testpassword123"){
-                    user{
-                        username
-                        userEmail
+        with app.app_context():
+            client = Client(schema)
+            executed = client.execute(
+                '''
+                mutation{
+                    createUser(username:"user-test", email:"different-email@testemail.ca",
+                        password:"testpassword123", confirmPassword:"testpassword123"){
+                        user{
+                            username
+                            userEmail
+                        }
                     }
                 }
-            }
-            ''')
-        assert executed['data']
-        assert executed['data']['createUser']
-        assert executed['data']['createUser']['user']
-        assert executed['data']['createUser']['user']['username'] == "user-test"
-        assert executed['data']['createUser']['user']['userEmail'] == "different-email@testemail.ca"
+                ''')
+            assert executed['data']
+            assert executed['data']['createUser']
+            assert executed['data']['createUser']['user']
+            assert executed['data']['createUser']['user']['username'] == "user-test"
+            assert executed['data']['createUser']['user']['userEmail'] == "different-email@testemail.ca"
 
     def test_email_address_in_use(self):
         """Test that ensures each user has a unique email address"""
-        client = Client(schema)
-        executed = client.execute(
-            '''
-            mutation{
-                createUser(username:"testuser", email:"testuser@testemail.ca",
-                    password:"testpassword123", confirmPassword:"testpassword123"){
-                    user{
-                        username
+        with app.app_context():
+            client = Client(schema)
+            executed_first = client.execute(
+                '''
+                mutation{
+                    createUser(username:"testuser", email:"testuser@testemail.ca",
+                        password:"testpassword123", confirmPassword:"testpassword123"){
+                        user{
+                            username
+                        }
                     }
                 }
-            }
-            ''')
-        assert executed['errors']
-        assert executed['errors'][0]
-        assert executed['errors'][0]['message'] == error_email_in_use()
+                ''')
+            executed = client.execute(
+                '''
+                mutation{
+                    createUser(username:"testuser", email:"testuser@testemail.ca",
+                        password:"testpassword123", confirmPassword:"testpassword123"){
+                        user{
+                            username
+                        }
+                    }
+                }
+                ''')
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == error_email_in_use()
 
     def test_password_too_short(self):
         """Test that ensure that a user's password meets the valid length requirements"""
@@ -111,25 +125,26 @@ class TestUpdatePassword:
 
     def test_update_password_success(self):
         """Test to ensure that a user is returned when their password is updated successfully"""
-        client = Client(schema)
-        executed = client.execute(
-            '''
-            mutation {
-                updatePassword(email: "testuser@testemail.ca", password: "another-super-long-password",
-                    confirmPassword: "another-super-long-password") {
-                    user {
-                        username
-                        userEmail
+        with app.app_context():
+            client = Client(schema)
+            executed = client.execute(
+                '''
+                mutation {
+                    updatePassword(email: "testuser@testemail.ca", password: "another-super-long-password",
+                        confirmPassword: "another-super-long-password") {
+                        user {
+                            username
+                            userEmail
+                        }
                     }
                 }
-            }
-            ''')
+                ''')
 
-        assert executed['data']
-        assert executed['data']['updatePassword']
-        assert executed['data']['updatePassword']['user']
-        assert executed['data']['updatePassword']['user']['username'] == "testuser"
-        assert executed['data']['updatePassword']['user']['userEmail'] == "testuser@testemail.ca"
+            assert executed['data']
+            assert executed['data']['updatePassword']
+            assert executed['data']['updatePassword']['user']
+            assert executed['data']['updatePassword']['user']['username'] == "testuser"
+            assert executed['data']['updatePassword']['user']['userEmail'] == "testuser@testemail.ca"
 
     def test_updated_passwords_do_not_match(self):
         """Test to ensure that user's new password matches their password confirmation"""
@@ -193,58 +208,61 @@ class TestValidateTwoFactor:
 
     def test_successful_validation(self):
         """Test that ensures a validation is successful when all params are proper"""
-        totp = pyotp.TOTP('base32secret3232')
-        otp_code = totp.now()  # Generates a code that is valid for 30s. Plenty of time to execute the query
+        with app.app_context():
+            totp = pyotp.TOTP('base32secret3232')
+            otp_code = totp.now()  # Generates a code that is valid for 30s. Plenty of time to execute the query
 
-        client = Client(schema)
-        executed = client.execute(
-            '''
-            mutation {
-                authenticateTwoFactor(email: "testuser@testemail.ca", otpCode: "''' + otp_code + '''") {
-                    user {
-                        username
-                        userEmail
+            client = Client(schema)
+            executed = client.execute(
+                '''
+                mutation {
+                    authenticateTwoFactor(email: "testuser@testemail.ca", otpCode: "''' + otp_code + '''") {
+                        user {
+                            username
+                            userEmail
+                        }
                     }
                 }
-            }
-            ''')
-        assert executed['data']
-        assert executed['data']['authenticateTwoFactor']
-        assert executed['data']['authenticateTwoFactor']['user']
-        assert executed['data']['authenticateTwoFactor']['user']['userEmail'] == "testuser@testemail.ca"
+                ''')
+            assert executed['data']
+            assert executed['data']['authenticateTwoFactor']
+            assert executed['data']['authenticateTwoFactor']['user']
+            assert executed['data']['authenticateTwoFactor']['user']['userEmail'] == "testuser@testemail.ca"
 
     def test_user_does_not_exist(self):
         """Test that an error is raised if the user specified does not exist"""
-        client = Client(schema)
-        executed = client.execute(
-            '''
-            mutation {
-                authenticateTwoFactor(email: "anotheruser@testemail.ca", otpCode: "000000") {
-                    user {
-                        username
+        with app.app_context():
+            client = Client(schema)
+            executed = client.execute(
+                '''
+                mutation {
+                    authenticateTwoFactor(email: "anotheruser@testemail.ca", otpCode: "000000") {
+                        user {
+                            username
+                        }
                     }
                 }
-            }
-            ''')
+                ''')
 
-        assert executed['errors']
-        assert executed['errors'][0]
-        assert executed['errors'][0]['message'] == error_user_does_not_exist()
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == error_user_does_not_exist()
 
     def test_invalid_otp_code(self):
         """Test that an error is raised if the user specified does not exist"""
-        client = Client(schema)
-        executed = client.execute(
-            '''
-            mutation {
-                authenticateTwoFactor(email: "testuser@testemail.ca", otpCode: "000000") {
-                    user {
-                        username
+        with app.app_context():
+            client = Client(schema)
+            executed = client.execute(
+                '''
+                mutation {
+                    authenticateTwoFactor(email: "testuser@testemail.ca", otpCode: "000000") {
+                        user {
+                            username
+                        }
                     }
                 }
-            }
-            ''')
+                ''')
 
-        assert executed['errors']
-        assert executed['errors'][0]
-        assert executed['errors'][0]['message'] == error_otp_code_is_invalid()
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == error_otp_code_is_invalid()

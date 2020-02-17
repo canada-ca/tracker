@@ -1,13 +1,13 @@
 from flask_bcrypt import Bcrypt
 
-from models import Users as User
+from models import Users
 from app import app
 
 
 def seed_users(db):
 	bcrypt = Bcrypt(app)
 
-	test_user = User(
+	test_user = Users(
 		username="testuser",
 		user_email="testuser@testemail.ca",
 		user_password=bcrypt.generate_password_hash(password="testpassword123").decode("UTF-8"),
@@ -18,4 +18,4 @@ def seed_users(db):
 
 
 def remove_users(db):
-	User.query.delete()
+	Users.query.delete()
