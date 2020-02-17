@@ -2,7 +2,6 @@ import os
 import requests
 import subprocess
 import json
-from pshtt import cli
 from flask import Flask, request
 from datetime import datetime
 
@@ -15,10 +14,9 @@ def enqueue():
         body = request.json
         domain = body['domain']
         scan_id = body['scan_id']
-
         res = {}
         res["results"] = scan(scan_id, domain)
-        res["scan_type"] = "https"
+        res["scan_type"] = "ssl"
         requests.post(url="http://ISTIO_INGRESS/enqueue", data=res,
                     headers={"Content-Type": "application/json", "Host": "result-processor.default.example.com"})
 
@@ -26,12 +24,12 @@ def enqueue():
     except Exception as e:
         return str(e)
 
-
 def scan(scan_id, domain):
 
     try:
+        res_dict = {}
 
-        res_dict = cli.run([domain])
+        # do stuff
 
         return res_dict
 
