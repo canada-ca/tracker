@@ -23,6 +23,18 @@ in the data base run the following commands
 pipenv run db-migrate
 pipenv run db-upgrade
 ```
+
+#### Seeding Data into Database
+If you have any data setup for insert in the api/functions/db_seeding files run the following commands
+```
+pipenv run db-seed
+```
+
+#### Removing Seeded Data from Database
+If you have inserted any data using the seed command, you can remove it from the database using the following command
+```
+pipenv run db-remove-seed
+```
 ### Running the API
 To run the API run the following command
 
