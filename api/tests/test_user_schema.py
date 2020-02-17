@@ -47,9 +47,33 @@ def setup_empty_db_with_user():
             User.query.delete()
 
 
+##
+# This class of tests works within the 'createUser' api endpoint
 class TestCreateUser:
 
+    def test_successful_creation(self, setup_empty_db_with_user):
+        """Test that ensures a user can be created successfully using the api endpoint"""
+        client = Client(schema)
+        executed = client.execute(
+            '''
+            mutation{
+                createUser(username:"user-test", email:"different-email@testemail.ca",
+                    password:"testpassword123", confirmPassword:"testpassword123"){
+                    user{
+                        username
+                        userEmail
+                    }
+                }
+            }
+            ''')
+        assert executed['data']
+        assert executed['data']['createUser']
+        assert executed['data']['createUser']['user']
+        assert executed['data']['createUser']['user']['username'] == "user-test"
+        assert executed['data']['createUser']['user']['userEmail'] == "different-email@testemail.ca"
+
     def test_email_address_in_use(self, setup_empty_db_with_user):
+        """Test that ensures each user has a unique email address"""
         client = Client(schema)
         executed = client.execute(
             '''
@@ -66,12 +90,8 @@ class TestCreateUser:
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == error_email_in_use()
 
-
-##
-# This class of tests handle any api calls that have to do with user passwords.
-class TestUserSchemaPassword:
-
     def test_password_too_short(self, setup_db):
+        """Test that ensure that a user's password meets the valid length requirements"""
         client = Client(schema)
         executed = client.execute(
             '''
@@ -89,6 +109,7 @@ class TestUserSchemaPassword:
         assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
     def test_passwords_do_not_match(self, setup_db):
+        """Test to ensure that user password matches their password confirmation"""
         client = Client(schema)
         executed = client.execute(
             '''
@@ -106,7 +127,13 @@ class TestUserSchemaPassword:
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == error_passwords_do_not_match()
 
+
+##
+# This class of tests works within the 'updatePassword' api endpoint
+class TestUpdatePassword:
+
     def test_updated_passwords_do_not_match(self, setup_db):
+        """Test to ensure that user's new password matches their password confirmation"""
         client = Client(schema)
         executed = client.execute(
             '''
@@ -125,6 +152,7 @@ class TestUserSchemaPassword:
         assert executed['errors'][0]['message'] == error_passwords_do_not_match()
 
     def test_updated_password_too_short(self, setup_db):
+        """Test that ensure that a user's password meets the valid length requirements"""
         client = Client(schema)
         executed = client.execute(
             '''
@@ -142,6 +170,7 @@ class TestUserSchemaPassword:
         assert executed['errors'][0]['message'] == error_password_does_not_meet_requirements()
 
     def test_updated_password_no_user_email(self, setup_db):
+        """Test that ensures an empty string submitted as email will not be accepted"""
         client = Client(schema)
         executed = client.execute(
             '''
