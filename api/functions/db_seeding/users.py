@@ -18,4 +18,5 @@ def seed_users(db):
 
 
 def remove_users(db):
-	Users.query.delete()
+	Users.query.filter(Users.user_email == "testuser@testemail.ca").delete()
+	db.session.commit()
