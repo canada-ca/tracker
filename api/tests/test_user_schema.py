@@ -133,6 +133,28 @@ class TestCreateUser:
 # This class of tests works within the 'updatePassword' api endpoint
 class TestUpdatePassword:
 
+    def test_update_password_success(self, setup_empty_db_with_user):
+        """Test to ensure that a user is returned when their password is updated successfully"""
+        client = Client(schema)
+        executed = client.execute(
+            '''
+            mutation {
+                updatePassword(email: "testuser@testemail.ca", password: "another-super-long-password",
+                    confirmPassword: "another-super-long-password") {
+                    user {
+                        username
+                        userEmail
+                    }
+                }
+            }
+            ''')
+
+        assert executed['data']
+        assert executed['data']['updatePassword']
+        assert executed['data']['updatePassword']['user']
+        assert executed['data']['updatePassword']['user']['username'] == "testuser"
+        assert executed['data']['updatePassword']['user']['userEmail'] == "testuser@testemail.ca"
+
     def test_updated_passwords_do_not_match(self, setup_db):
         """Test to ensure that user's new password matches their password confirmation"""
         client = Client(schema)
