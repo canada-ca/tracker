@@ -28,12 +28,12 @@ you can run the following command to rollback the database to the previous versi
 ```
 pipenv run db-downgrade
 ```
-####Database Update Errors
-#####Column Type Changes
+#### Database Update Errors
+##### Column Type Changes
 When changing column types a `sqlalchemy.exc.ProgrammingError` may occur and require you to change the generated 
 `op.alter_column()` to a `op.execute()` and write out an PSQL statement inside.
 
-#####Foreign Key Relationships
+##### Foreign Key Relationships
 When creating a foreign key flask-migrate does not create a name for the constraint and an error may occur during
 a database downgrade. To correct this error, find the latest version file in `migrations/versions/` and set the
 first argument of `op.create_foreign_key()` and `op.drop_constraint()`.
