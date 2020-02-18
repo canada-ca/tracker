@@ -1,7 +1,8 @@
+from datetime import date
 from graphql import GraphQLError
-from sqlalchemy import and_
 from sqlalchemy.orm import load_only
 import sqlalchemy as sq
+from sqlalchemy import between
 
 from schemas.scans import (
     Scans,
@@ -47,7 +48,7 @@ def resolve_get_scans_by_date_range(self, info, **kwargs):
     start_date = kwargs.get('startDate')
     end_date = kwargs.get('endDate')
     query = Scans.get_query(info).filter(
-        sq.func.date_trunc('day', ScanModel.scan_date) >= start_date,
+        sq.func.date_trunc('day', ScanModel.scan_date) >= start_date
     ).filter(
         sq.func.date_trunc('day', ScanModel.scan_date) <= end_date
     )

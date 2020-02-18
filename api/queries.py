@@ -154,8 +154,8 @@ class Query(graphene.ObjectType):
     )
     get_scans_by_date_range = graphene.List(
         of_type=Scans,
-        start_date=graphene.Argument(graphene.Date, required=True),
-        end_date=graphene.Argument(graphene.Date, required=True),
+        startDate=graphene.Argument(graphene.Date, required=True),
+        endDate=graphene.Argument(graphene.Date, required=True),
         resolver=resolve_get_scans_by_date_range,
         description="Allows selection of scans from a given date range"
     )
