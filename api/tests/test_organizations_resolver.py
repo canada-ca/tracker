@@ -74,7 +74,6 @@ class TestOrgResolver(TestCase):
 			}
 
 			result_eval = client.execute(query)
-			print(json.dumps(result_eval))
 		self.assertDictEqual(result_refr, result_eval)
 
 	def test_get_org_resolvers_by_group(self):

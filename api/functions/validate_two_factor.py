@@ -19,16 +19,17 @@ def validate_two_factor(email, otp_code):
 	:param otp_code - The one time password (otp) that they are attempting to verify
 	:returns User object if queried successfully, null if not
 	"""
-	valid_code = pyotp.totp.TOTP(os.getenv('BASE32_SECRET')).verify(otp_code)  # todo: Update to use an env variable.
 
 	user = User.query.filter(User.user_email == email).first()
 
 	if user is None:
 		raise GraphQLError(error_user_does_not_exist())
 
+	valid_code = pyotp.totp.TOTP(os.getenv('BASE32_SECRET')).verify(otp_code)
+
 	if valid_code:
 		user = User.query.filter(User.user_email == email) \
-			.update({'two_factor_auth': True})
+			.update({'tfa_validated': True})
 
 		db.session.commit()
 
