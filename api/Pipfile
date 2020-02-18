@@ -40,6 +40,7 @@ db-upgrade = 'python manage.py db upgrade'
 db-history = 'python manage.py db history'
 db-seed = 'python manage.py seed'
 db-remove-seed = 'python manage.py remove_seed'
+db-downgrade = 'python manage.py db downgrade'
 
 [pipenv]
 allow_prereleases = false
