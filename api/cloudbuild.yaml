@@ -57,10 +57,6 @@ steps:
       - DB_PORT=$_DB_PORT
       - DB_USER=$_DB_NAME
       - BASE32_SECRET=$_BASE32_SECRET
-      - AZURE_DB_HOST=$_AZURE_DB_HOST
-      - AZURE_DB_NAME=$_AZURE_DB_NAME
-      - AZURE_DB_PASS=$_AZURE_DB_PASS
-      - AZURE_DB_USER=$_AZURE_DB_USER
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build
