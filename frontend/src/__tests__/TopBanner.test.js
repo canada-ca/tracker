@@ -21,7 +21,7 @@ describe('<TopBanner />', () => {
     )
     const test = getByRole('img')
     expect(test.getAttribute('alt')).toBe(
-      'Symbol of the Government of Canada - Symbole du Gouvernement du Canada',
+      'Symbol of the Government of Canada',
     )
   })
 })
