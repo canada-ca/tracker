@@ -1,4 +1,3 @@
-from datetime import date
 from graphql import GraphQLError
 from sqlalchemy.orm import load_only
 import sqlalchemy as sq
