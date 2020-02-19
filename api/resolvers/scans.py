@@ -73,3 +73,22 @@ def resolve_get_scans_by_domain(self, info, **kwargs):
     if not len(query.all()):
         raise GraphQLError("Error, no scans associated with that domain")
     return query.all()
+
+
+def resolve_get_scans_by_user_id(self, info, **kwargs):
+    """Return a list of scans based on a user id"""
+    user = kwargs.get('id')
+    user_id = User.get_query(info).filter(
+        UserModel.id == user
+    ).options(load_only('id'))
+
+    if not len(user_id.all()):
+        raise GraphQLError("Error, cannot find user")
+
+    query = Scans.get_query(info).filter(
+        ScanModel.initiated_by == user_id
+    )
+
+    if not len(query.all()):
+        raise GraphQLError("Error, no scans initiated by that user")
+    return query.all()

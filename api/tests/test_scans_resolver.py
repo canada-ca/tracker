@@ -169,6 +169,54 @@ class TestSectorResolver(TestCase):
 
             self.assertDictEqual(result_refr, result_eval)
 
+    def test_scan_resolver_get_scans_by_user_id(self):
+        """Test get_scans_by_user_id resolver"""
+        with app.app_context():
+            client = Client(schema)
+            query = """
+            {
+                getScansByUserId(id: 1) {
+                    id
+                    initiatedBy
+                    domain {
+                        domain
+                    }
+                }
+            }
+            """
+
+            result_refr = {
+                "data": {
+                    "getScansByUserId": [
+                        {
+                            "id": "U2NhbnM6MQ==",
+                            "initiatedBy": 1,
+                            "domain": {
+                                "domain": "bankofcanada.ca"
+                            }
+                        },
+                        {
+                            "id": "U2NhbnM6Mg==",
+                            "initiatedBy": 1,
+                            "domain": {
+                                "domain": "bankofcanada.ca"
+                            }
+                        },
+                        {
+                            "id": "U2NhbnM6Mw==",
+                            "initiatedBy": 1,
+                            "domain": {
+                                "domain": "bankofcanada.ca"
+                            }
+                        }
+                    ]
+                }
+            }
+
+            result_eval = client.execute(query)
+
+            self.assertDictEqual(result_refr, result_eval)
+
     def test_scan_resolver_by_id_invalid(self):
         """Test get_scan_by_id invalid ID error handling"""
         with app.app_context():
@@ -254,3 +302,37 @@ class TestSectorResolver(TestCase):
         assert executed['errors']
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == "Error, no scans associated with that domain"
+
+    def test_scan_resolver_by_user_id_invalid_no_scans(self):
+        """Test get_scan_by_user_id cannot find associated scans"""
+        with app.app_context():
+            client = Client(schema)
+            query = """
+            {
+                getScansByUserId(id: 2) {
+                    id
+                }
+            }
+            """
+            executed = client.execute(query)
+
+        assert executed['errors']
+        assert executed['errors'][0]
+        assert executed['errors'][0]['message'] == "Error, no scans initiated by that user"
+
+    def test_scan_resolver_by_user_invalid_id(self):
+        """Test get_scan_by_user_id cannot find id"""
+        with app.app_context():
+            client = Client(schema)
+            query = """
+            {
+                getScansByUserId(id: 999) {
+                    id
+                }
+            }
+            """
+            executed = client.execute(query)
+
+        assert executed['errors']
+        assert executed['errors'][0]
+        assert executed['errors'][0]['message'] == "Error, cannot find user"

@@ -57,7 +57,8 @@ from resolvers.scans import (
     resolve_get_scan_by_id,
     resolve_get_scans_by_date,
     resolve_get_scans_by_date_range,
-    resolve_get_scans_by_domain
+    resolve_get_scans_by_domain,
+    resolve_get_scans_by_user_id
 )
 
 
@@ -164,6 +165,12 @@ class Query(graphene.ObjectType):
         url=graphene.Argument(URL, required=True),
         resolver=resolve_get_scans_by_domain,
         description="Allows selection of scans from a given URL"
+    )
+    get_scans_by_user_id = graphene.List(
+        of_type=Scans,
+        id=graphene.Argument(graphene.Int, required=True),
+        resolver=resolve_get_scans_by_user_id,
+        description="Allows selection of scans initiated by a given user"
     )
 
     generate_otp_url = graphene.String(
