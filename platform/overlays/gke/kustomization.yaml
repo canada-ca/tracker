@@ -7,7 +7,7 @@ images:
 - name: gcr.io/track-compliance/api
   newTag: master-e1055bf
 - name: gcr.io/track-compliance/frontend
-  newTag: master-334f26c
+  newTag: master-33c3d9b
 secretGenerator:
 - envs:
   - postgres.env
