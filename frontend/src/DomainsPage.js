@@ -2,7 +2,7 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Trans } from '@lingui/macro'
-import { Layout } from './components/layout'
+import { Layout } from './Layout'
 import { Heading, Text, Stack, List, ListItem } from '@chakra-ui/core'
 
 export function DomainsPage() {

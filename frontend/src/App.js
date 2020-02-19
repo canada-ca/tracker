@@ -7,12 +7,12 @@ import { LandingPage } from './LandingPage'
 import { DomainsPage } from './DomainsPage'
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
-import { TopBanner } from './components/topbanner'
-import { PhaseBanner } from './components/phase-banner'
-import { Footer } from './components/footer'
+import { TopBanner } from './TopBanner'
+import { PhaseBanner } from './PhaseBanner'
+import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { Flex, Link, CSSReset } from '@chakra-ui/core'
-import { SkipLink } from './components/skip-link'
+import { SkipLink } from './SkipLink'
 
 export default function App() {
   const { i18n } = useLingui()

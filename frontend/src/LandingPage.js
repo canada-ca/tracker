@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import { Layout } from './components/layout'
+import { Layout } from './Layout'
 import { Heading, Text, Stack } from '@chakra-ui/core'
 
 export function LandingPage() {
