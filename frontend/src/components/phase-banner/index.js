@@ -23,7 +23,7 @@ export function PhaseBanner({ phase, children }) {
           >
             {phase}
           </Tag>
-          <Text fontSize="md">{children}</Text>
+          <Text fontSize={["xs", "sm", "md"]}>{children}</Text>
         </Flex>
       </Layout>
     </Flex>
