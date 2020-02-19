@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { LocaleSwitcher } from '../../LocaleSwitcher'
+import { LocaleSwitcher } from './LocaleSwitcher'
 import { useLingui } from '@lingui/react'
-import sigEn from '../../images/sig-blk-en.svg'
-import sigFr from '../../images/sig-blk-fr.svg'
+import sigEn from './images/sig-blk-en.svg'
+import sigFr from './images/sig-blk-fr.svg'
 import { Flex, Box, Image } from '@chakra-ui/core'
-import { Layout } from '../layout'
+import { Layout } from './Layout'
 
 export const TopBanner = props => {
   const { i18n } = useLingui()

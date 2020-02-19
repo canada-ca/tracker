@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Flex, Tag, Text } from '@chakra-ui/core'
-import { Layout } from '../layout'
+import { Layout } from './Layout'
 
 export function PhaseBanner({ phase, children }) {
   return (

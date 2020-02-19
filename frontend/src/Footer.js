@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useLingui } from '@lingui/react'
-import wmms from '../../images/wmms-blk.svg'
+import wmms from './images/wmms-blk.svg'
 import { Box, Flex, List, Image, ListItem } from '@chakra-ui/core'
-import { Layout } from '../layout'
+import { Layout } from './Layout'
 
 export const Footer = props => {
   const { i18n } = useLingui()

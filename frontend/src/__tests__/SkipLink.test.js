@@ -1,19 +1,10 @@
 import React from 'react'
-import { ThemeProvider } from 'emotion-theming'
 import { render, cleanup } from '@testing-library/react'
-import theme from '../../../theme'
-import { SkipLink } from '..'
+import { ThemeProvider, theme } from '@chakra-ui/core'
+import { SkipLink } from '../SkipLink'
 
 describe('SkipLinks', () => {
   afterEach(cleanup)
-
-  it('Render without crashing', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <SkipLink to="#top">skip to top</SkipLink>
-      </ThemeProvider>,
-    )
-  })
 
   it('are visible by default', () => {
     const { getByText } = render(
