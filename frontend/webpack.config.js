@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackRootPlugin = require('html-webpack-root-plugin')
 const HtmlWebpackInlineSVGPlugin = require('html-webpack-inline-svg-plugin')
@@ -18,6 +19,14 @@ module.exports = ({ mode }) => {
       }),
     }),
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          GRAPHQL_ENDPOINT: ifNotProduction(
+            '"http://localhost:9002/graphql"',
+            '"/graphql"',
+          ),
+        },
+      }),
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         meta: {

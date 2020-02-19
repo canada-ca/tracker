@@ -17,19 +17,32 @@ msgstr ""
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 
+#: src/App.js:49
+#: src/DomainsPage.js:29
+msgid "Domains"
+msgstr "Domains"
+
+#: src/App.js:46
+msgid "Home"
+msgstr "Home"
+
+#: src/App.js:52
+msgid "Organisations"
+msgstr "Organisations"
+
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page not found"
 
-#: src/App.js:29
+#: src/App.js:39
 msgid "Pre-Alpha"
 msgstr "Pre-Alpha"
 
-#: src/App.js:55
+#: src/App.js:76
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/App.js:27
+#: src/App.js:37
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -37,11 +50,15 @@ msgstr "Skip to main content"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Sorry, the page you were trying to view does not exist."
 
-#: src/App.js:65
+#: src/App.js:86
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
-#: src/App.js:30
+#: src/DomainsPage.js:34
+msgid "This is the full list of domains"
+msgstr "This is the full list of domains"
+
+#: src/App.js:40
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
