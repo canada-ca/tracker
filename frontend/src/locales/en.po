@@ -17,32 +17,32 @@ msgstr ""
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 
-#: src/App.js:49
-#: src/DomainsPage.js:29
+#: src/App.js:43
+#: src/DomainsPage.js:24
 msgid "Domains"
 msgstr "Domains"
 
-#: src/App.js:46
+#: src/App.js:40
 msgid "Home"
 msgstr "Home"
 
 #: src/App.js:52
-msgid "Organisations"
-msgstr "Organisations"
+#~ msgid "Organisations"
+#~ msgstr "Organisations"
 
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page not found"
 
-#: src/App.js:39
+#: src/App.js:33
 msgid "Pre-Alpha"
 msgstr "Pre-Alpha"
 
-#: src/App.js:76
+#: src/App.js:67
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/App.js:37
+#: src/App.js:31
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -50,15 +50,19 @@ msgstr "Skip to main content"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Sorry, the page you were trying to view does not exist."
 
-#: src/App.js:86
+#: src/TopBanner.js:25
+msgid "Symbole du Gouvernement du Canada - Symbol of the Government of Canada"
+msgstr "Symbole du Gouvernement du Canada - Symbol of the Government of Canada"
+
+#: src/App.js:77
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
-#: src/DomainsPage.js:34
+#: src/DomainsPage.js:29
 msgid "This is the full list of domains"
 msgstr "This is the full list of domains"
 
-#: src/App.js:40
+#: src/App.js:34
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
