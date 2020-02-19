@@ -22,99 +22,64 @@ from queries import schema
 from models import Users as User
 
 
-@pytest.fixture()
-def setup_db():
-    db.init_app(app)
-
-
-@pytest.fixture()
-def setup_empty_db_with_user():
-    db.init_app(app)
-    with app.app_context():
-        bcrypt = Bcrypt(app)
-
-        if User.query.first() is None:
-            # Insert a user into DB
-            test_user = User(
-                username="testuser",
-                user_email="testuser@testemail.ca",
-                user_password=bcrypt.generate_password_hash(password="testpassword123").decode("UTF-8"),
-
-            )
-            db.session.add(test_user)
-
-            # Insert an admin into DB
-            test_admin = User(
-                username="testadmin",
-                user_email="testadmin@testemail.ca",
-                user_password=bcrypt.generate_password_hash(password="testpassword123").decode("UTF-8"),
-                user_role='admin'
-            )
-            db.session.add(test_admin)
-            db.session.commit()
-
-        yield
-
-        # Delete all users after testing
-        with app.app_context():
-            User.query.delete()
-
-
 class TestUserRole:
-    def test_default_role(self, setup_empty_db_with_user):
-        # Get the user that was created in pyfixture.
-        user = User.query.first()
+    def test_default_role(self):
+        with app.app_context():
+            # Get the user that was created in pyfixture.  Test default role
+            user = User.query.filter(User.user_email == "testuser@testemail.ca").first()
 
-        assert user.user_role == "user"
-        assert not user.user_role == "admin"
+            assert user.user_role == "user"
+            assert not user.user_role == "admin"
 
-    def test_update_role(self, setup_empty_db_with_user):
-        client = Client(schema)
-        get_token = client.execute(
-            '''
-            mutation{
-                signIn(email:"testadmin@testemail.ca", password:"testpassword123"){
-                    authToken
+    def test_update_role(self):
+        with app.app_context():
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(email:"testadmin@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
                 }
-            }
-            ''')
-        assert get_token['data']['signIn']['authToken'] is not None
-        token = get_token['data']['signIn']['authToken']
-        assert token is not None
+                ''')
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
 
-        executed = client.execute(
-            '''
-            {
-                testUserClaims(token:"''' + str(token) + '''")
-            }
-            ''')
-        assert executed['data']
-        assert executed['data']['testUserClaims']
-        assert executed['data']['testUserClaims'] == "{'roles': 'admin'}"
-
-    def test_user_not_admin(self, setup_empty_db_with_user):
-        client = Client(schema)
-        get_token = client.execute(
-            '''
-            mutation{
-                signIn(email:"testuser@testemail.ca", password:"testpassword123"){
-                    authToken
+            executed = client.execute(
+                '''
+                {
+                    testUserClaims(token:"''' + str(token) + '''")
                 }
-            }
-            ''')
-        assert get_token['data']['signIn']['authToken'] is not None
-        token = get_token['data']['signIn']['authToken']
-        assert token is not None
+                ''')
+            assert executed['data']
+            assert executed['data']['testUserClaims']
+            assert executed['data']['testUserClaims'] == "{'roles': 'admin'}"
 
-        executed = client.execute(
-            '''
-            {
-                testUserClaims(token:"''' + str(token) + '''")
-            }
-            ''')
-        assert executed['data']
-        assert executed['data']['testUserClaims']
-        assert executed['data']['testUserClaims'] == error_not_an_admin()
+    def test_user_not_admin(self):
+        with app.app_context():
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(email:"testuser@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''')
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            executed = client.execute(
+                '''
+                {
+                    testUserClaims(token:"''' + str(token) + '''")
+                }
+                ''')
+            assert executed['data']
+            assert executed['data']['testUserClaims']
+            assert executed['data']['testUserClaims'] == error_not_an_admin()
 
 
 class TestSuperAdminFunction:

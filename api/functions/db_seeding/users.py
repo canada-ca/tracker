@@ -14,9 +14,18 @@ def seed_users(db):
 
 	)
 	db.session.add(test_user)
+
+	test_admin = Users(
+		username="testadmin",
+		user_email="testadmin@testemail.ca",
+		user_password=bcrypt.generate_password_hash(password="testpassword123").decode("UTF-8"),
+		user_role='admin'
+	)
+	db.session.add(test_admin)
+
 	db.session.commit()
 
 
 def remove_users(db):
-	Users.query.filter(Users.user_email == "testuser@testemail.ca").delete()
+	Users.query.delete()
 	db.session.commit()
