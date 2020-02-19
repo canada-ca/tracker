@@ -6,28 +6,57 @@ import pyotp
 import pytest
 from flask_bcrypt import Bcrypt
 from graphene.test import Client
-from functions.error_messages import *
+
 
 # This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
+from manage import seed, remove_seed
+seed()
 from db import *
 from app import app
 from queries import schema
-from models import Users as User
+from models import Users
+from functions.error_messages import *
+remove_seed()
 
 
-@pytest.fixture()
-def setup_db():
+@pytest.fixture(scope='class')
+def user_schema_test_db_init():
     db.init_app(app)
+    bcrypt = Bcrypt(app)
+
+    with app.app_context():
+        test_user = Users(
+            username="testuser",
+            user_email="testuser@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8"),
+        )
+        db.session.add(test_user)
+        test_admin = Users(
+            username="testadmin",
+            user_email="testadmin@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8"),
+            user_role='admin'
+        )
+        db.session.add(test_admin)
+        db.session.commit()
+
+    yield
+
+    with app.app_context():
+        Users.query.delete()
+        db.session.commit()
 
 
 ##
 # This class of tests works within the 'createUser' api endpoint
+@pytest.mark.usefixtures('user_schema_test_db_init')
 class TestCreateUser:
-
     def test_successful_creation(self):
         """Test that ensures a user can be created successfully using the api endpoint"""
         with app.app_context():
@@ -121,8 +150,8 @@ class TestCreateUser:
 
 ##
 # This class of tests works within the 'updatePassword' api endpoint
+@pytest.mark.usefixtures('user_schema_test_db_init')
 class TestUpdatePassword:
-
     def test_update_password_success(self):
         """Test to ensure that a user is returned when their password is updated successfully"""
         with app.app_context():
@@ -204,8 +233,8 @@ class TestUpdatePassword:
 
 ##
 # This class of tests works within the 'authenticateTwoFactor' api endpoint
+@pytest.mark.usefixtures('user_schema_test_db_init')
 class TestValidateTwoFactor:
-
     def test_successful_validation(self):
         """Test that ensures a validation is successful when all params are proper"""
         with app.app_context():

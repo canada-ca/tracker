@@ -5,8 +5,7 @@ import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath
 from graphene.test import Client
-from functions.error_messages import error_not_an_admin
-
+from flask_bcrypt import Bcrypt
 
 import pytest
 
@@ -15,18 +14,52 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from db import *
+from manage import seed, remove_seed
+seed()
+from db import db
 from app import app
 from queries import schema
+from models import Users
+from functions.error_messages import error_not_an_admin
+remove_seed()
 
-from models import Users as User
+
+@pytest.fixture(scope='class')
+def user_role_test_db_init():
+    db.init_app(app)
+    bcrypt = Bcrypt(app)
+
+    with app.app_context():
+        test_user = Users (
+            username="testuser",
+            user_email="testuser@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8"),
+        )
+        db.session.add(test_user)
+        test_admin = Users(
+            username="testadmin",
+            user_email="testadmin@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8"),
+            user_role='admin'
+        )
+        db.session.add(test_admin)
+        db.session.commit()
+
+    yield
+
+    with app.app_context():
+        Users.query.delete()
+        db.session.commit()
 
 
+@pytest.mark.usefixtures('user_role_test_db_init')
 class TestUserRole:
     def test_default_role(self):
         with app.app_context():
             # Get the user that was created in pyfixture.  Test default role
-            user = User.query.filter(User.user_email == "testuser@testemail.ca").first()
+            user = Users.query.filter(Users.user_email == "testuser@testemail.ca").first()
 
             assert user.user_role == "user"
             assert not user.user_role == "admin"

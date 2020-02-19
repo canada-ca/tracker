@@ -4,7 +4,6 @@ from flask import Flask
 from flask_graphql import GraphQLView
 from flask_graphql_auth import GraphQLAuth
 from waitress import serve
-
 from db import (
 	db,
 	DB_NAME,
@@ -13,9 +12,7 @@ from db import (
 	DB_USER,
 	DB_PORT
 )
-
 from queries import schema
-
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
