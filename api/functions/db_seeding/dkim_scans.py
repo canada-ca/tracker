@@ -1,9 +1,9 @@
 from models import Dkim_scans
 
 
-def seed_dkim(db):
-	pass
+def seed_dkim(db, app):
+    pass
 
 
-def remove_dkim(db):
-	pass
+def remove_dkim(db, app):
+    pass

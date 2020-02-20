@@ -34,18 +34,6 @@ steps:
       - DB_USER=$_DB_NAME
 
   - name: 'gcr.io/track-compliance/ci'
-    id: dbInsert
-    dir: api
-    entrypoint: pipenv
-    args: ['run', 'db-seed']
-    env:
-      - DB_HOST=$_DB_HOST
-      - DB_NAME=$_DB_NAME
-      - DB_PASS=$_DB_PASS
-      - DB_PORT=$_DB_PORT
-      - DB_USER=$_DB_NAME
-
-  - name: 'gcr.io/track-compliance/ci'
     id: test
     dir: api
     entrypoint: pipenv
