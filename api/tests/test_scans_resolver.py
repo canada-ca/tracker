@@ -42,7 +42,7 @@ def scans_test_db_init():
         db.session.add(user)
         domain = Domains(
             id=1,
-            domain='bankofcanada.ca'
+            domain='valid.canada.ca'
         )
         db.session.add(domain)
         domain = Domains(
@@ -98,7 +98,7 @@ class TestScansResolver(TestCase):
                         {
                             "scanDate": "2020-02-18T09:43:14",
                             "domain": {
-                                "domain": "bankofcanada.ca"
+                                "domain": "valid.canada.ca"
                             }
                         }
                     ]
@@ -130,7 +130,7 @@ class TestScansResolver(TestCase):
                         {
                             "scanDate": "2020-02-18T09:43:14",
                             "domain": {
-                                "domain": "bankofcanada.ca"
+                                "domain": "valid.canada.ca"
                             }
                         }
                     ]
@@ -162,13 +162,13 @@ class TestScansResolver(TestCase):
                         {
                             "scanDate": "2020-02-18T09:43:14",
                             "domain": {
-                                "domain": "bankofcanada.ca"
+                                "domain": "valid.canada.ca"
                             }
                         },
                         {
                             "scanDate": "2020-02-15T09:43:17",
                             "domain": {
-                                "domain": "bankofcanada.ca"
+                                "domain": "valid.canada.ca"
                             }
                         }
                     ]
@@ -185,7 +185,7 @@ class TestScansResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getScansByDomain(url: "bankofcanada.ca") {
+                getScansByDomain(url: "valid.canada.ca") {
                     scanDate
                     domain {
                         domain
@@ -200,13 +200,13 @@ class TestScansResolver(TestCase):
                         {
                             "scanDate": "2020-02-18T09:43:14",
                             "domain": {
-                                "domain": "bankofcanada.ca"
+                                "domain": "valid.canada.ca"
                             }
                         },
                         {
                             "scanDate": "2020-02-15T09:43:17",
                             "domain": {
-                                "domain": "bankofcanada.ca"
+                                "domain": "valid.canada.ca"
                             }
                         }
                     ]
@@ -224,7 +224,6 @@ class TestScansResolver(TestCase):
             query = """
             {
                 getScansByUserId(id: 1) {
-                    id
                     initiatedBy
                     domain {
                         domain
@@ -237,17 +236,15 @@ class TestScansResolver(TestCase):
                 "data": {
                     "getScansByUserId": [
                         {
-                            "id": "U2NhbnM6MQ==",
                             "initiatedBy": 1,
                             "domain": {
-                                "domain": "bankofcanada.ca"
+                                "domain": "valid.canada.ca"
                             }
                         },
                         {
-                            "id": "U2NhbnM6Mg==",
                             "initiatedBy": 1,
                             "domain": {
-                                "domain": "bankofcanada.ca"
+                                "domain": "valid.canada.ca"
                             }
                         }
                     ]
