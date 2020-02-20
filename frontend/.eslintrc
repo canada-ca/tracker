@@ -6,12 +6,14 @@
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
-  "plugins": ["jest"],
+  "plugins": ["jest", "react-hooks"],
   "env": {
     "jest/globals": true
   },
   "rules": {
     "comma-dangle": ["error", "always-multiline"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "no-unused-vars": [
       "error",
       {
