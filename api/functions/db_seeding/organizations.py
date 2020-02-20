@@ -4,8 +4,8 @@ from models import Organizations
 def seed_org(db, app):
     org = Organizations(
         id=1,
-        organization='Arts',
-        description='Arts',
+        organization='ORG1',
+        description='Organization 1',
         group_id=1
     )
     with app.app_context():
@@ -13,9 +13,9 @@ def seed_org(db, app):
         db.session.commit()
 
     org = Organizations(
-        id=6,
-        organization='BOC',
-        description='BOC - Bank of Canada',
+        id=2,
+        organization='ORG2',
+        description='Organization 2',
         group_id=2
     )
     with app.app_context():
