@@ -5,7 +5,7 @@ resources:
 - ingressgateway.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-968f355
+  newTag: master-686dbec
 - name: gcr.io/track-compliance/frontend
   newTag: master-c5a19fd
 secretGenerator:
