@@ -33,7 +33,7 @@ export default function App() {
           <PhaseBanner phase={<Trans>Pre-Alpha</Trans>}>
             <Trans>This service is being developed in the open</Trans>
           </PhaseBanner>
-          <TopBanner lang={i18n.locale} />
+          <TopBanner />
         </header>
         <Navigation>
           <Link to="/">
