@@ -22,26 +22,25 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
+
 @pytest.fixture(scope='class')
 def group_test_db_init():
     db.init_app(app)
     with app.app_context():
         sector = Sectors(
             id=1,
-            zone="GC",
-            sector="GC_A",
-            description="Arts"
+            zone="ZO1",
+            sector="SEC1",
+            description="Sector 1"
         )
         db.session.add(sector)
-
         sector = Sectors(
             id=2,
-            zone="GC",
-            sector="GC_BF",
-            description="Banking and Finance"
+            zone="ZO2",
+            sector="SEC2",
+            description="Sector 2"
         )
         db.session.add(sector)
-
         sector = Sectors(
             id=25,
             zone="TEST",
@@ -52,16 +51,15 @@ def group_test_db_init():
         db.session.commit()
         group = Groups(
             id=1,
-            s_group='GC_A',
-            description='Arts',
+            s_group='GO1',
+            description='Group 1',
             sector_id=1
         )
         db.session.add(group)
-
         group = Groups(
             id=2,
-            s_group='GC_BF',
-            description='Banking and Finance',
+            s_group='GO2',
+            description='Group 2',
             sector_id=2
         )
         db.session.add(group)
@@ -90,8 +88,8 @@ class TestGroupResolver(TestCase):
                 "data": {
                     "getGroupById": [
                         {
-                            "sGroup": "GC_A",
-                            "description": "Arts"
+                            "sGroup": "GO1",
+                            "description": "Group 1"
                         }
                     ]
                 }
@@ -106,7 +104,7 @@ class TestGroupResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getGroupByGroup(group: GC_A){
+                getGroupByGroup(group: GO1){
                     description
                     sectorId
                 }
@@ -115,7 +113,7 @@ class TestGroupResolver(TestCase):
                 "data": {
                     "getGroupByGroup": [
                         {
-                            "description": "Arts",
+                            "description": "Group 1",
                             "sectorId": 1
                         }
                     ]
@@ -131,10 +129,9 @@ class TestGroupResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getGroupBySector(sector: GC_A){
+                getGroupBySector(sector: SEC1){
                     description
                     groupSector{
-                        id
                         zone
                         description
                     }
@@ -144,11 +141,10 @@ class TestGroupResolver(TestCase):
                 "data": {
                     "getGroupBySector": [
                         {
-                            "description": "Arts",
+                            "description": "Group 1",
                             "groupSector": {
-                                "id": "U2VjdG9yczox",
-                                "zone": "GC",
-                                "description": "Arts"
+                                "zone": "ZO1",
+                                "description": "Sector 1"
                             }
                         }
                     ]

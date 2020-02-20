@@ -4,9 +4,9 @@ from models import Sectors
 def seed_sectors(db, app):
     sector = Sectors(
         id=1,
-        zone="GC",
-        sector="GC_A",
-        description="Arts"
+        zone="ZO1",
+        sector="SEC1",
+        description="Sector 1"
     )
     with app.app_context():
         db.session.add(sector)
@@ -14,9 +14,9 @@ def seed_sectors(db, app):
 
     sector = Sectors(
         id=2,
-        zone="GC",
-        sector="GC_BF",
-        description="Banking and Finance"
+        zone="ZO2",
+        sector="SEC2",
+        description="Sector 2"
     )
     with app.app_context():
         db.session.add(sector)

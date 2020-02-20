@@ -4,8 +4,8 @@ from models import Groups
 def seed_groups(db, app):
     group = Groups(
         id=1,
-        s_group='GC_A',
-        description='Arts',
+        s_group='GO1',
+        description='Group 1',
         sector_id=1
     )
     with app.app_context():
@@ -14,8 +14,8 @@ def seed_groups(db, app):
 
     group = Groups(
         id=2,
-        s_group='GC_BF',
-        description='Banking and Finance',
+        s_group='GO2',
+        description='Group 2',
         sector_id=2
     )
     with app.app_context():
