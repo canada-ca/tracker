@@ -5,10 +5,17 @@ from os.path import dirname, join, expanduser, normpath, realpath
 import pytest
 from graphene.test import Client
 
+from flask_bcrypt import Bcrypt
+
 from unittest import TestCase
 
+from manage import seed, remove_seed
+seed()
 from app import app
+from db import db
+from models import Scans, Domains, Users
 from queries import schema
+remove_seed()
 
 # This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
@@ -16,7 +23,60 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
-class TestSectorResolver(TestCase):
+@pytest.fixture(scope='class')
+def scans_test_db_init():
+    db.init_app(app)
+    with app.app_context():
+        bcrypt = Bcrypt(app)
+        user = Users(
+            id=1,
+            username="testuser",
+            user_email="testuser@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8")
+        )
+        db.session.add(user)
+        user = Users(
+            id=2
+        )
+        db.session.add(user)
+        domain = Domains(
+            id=1,
+            domain='bankofcanada.ca'
+        )
+        db.session.add(domain)
+        domain = Domains(
+            id=2,
+            domain='www.testdomain.ca'
+        )
+        db.session.add(domain)
+        scan = Scans(
+            id=1,
+            scan_date="2020-02-18T09:43:14",
+            domain_id=1,
+            initiated_by=1
+        )
+        db.session.add(scan)
+        scan = Scans(
+            id=2,
+            scan_date="2020-02-15T09:43:17",
+            domain_id=1,
+            initiated_by=1
+        )
+        db.session.add(scan)
+        db.session.commit()
+
+    yield
+
+    with app.app_context():
+        Scans.query.delete()
+        Domains.query.delete()
+        Users.query.delete()
+        db.session.commit()
+
+
+@pytest.mark.usefixtures('scans_test_db_init')
+class TestScansResolver(TestCase):
     def test_get_scan_resolver_by_id(self):
         """Test get_sector_by_id resolver"""
         with app.app_context():
@@ -110,12 +170,6 @@ class TestSectorResolver(TestCase):
                             "domain": {
                                 "domain": "bankofcanada.ca"
                             }
-                        },
-                        {
-                            "scanDate": "2020-02-17T09:43:22",
-                            "domain": {
-                                "domain": "bankofcanada.ca"
-                            }
                         }
                     ]
                 }
@@ -151,12 +205,6 @@ class TestSectorResolver(TestCase):
                         },
                         {
                             "scanDate": "2020-02-15T09:43:17",
-                            "domain": {
-                                "domain": "bankofcanada.ca"
-                            }
-                        },
-                        {
-                            "scanDate": "2020-02-17T09:43:22",
                             "domain": {
                                 "domain": "bankofcanada.ca"
                             }
@@ -197,13 +245,6 @@ class TestSectorResolver(TestCase):
                         },
                         {
                             "id": "U2NhbnM6Mg==",
-                            "initiatedBy": 1,
-                            "domain": {
-                                "domain": "bankofcanada.ca"
-                            }
-                        },
-                        {
-                            "id": "U2NhbnM6Mw==",
                             "initiatedBy": 1,
                             "domain": {
                                 "domain": "bankofcanada.ca"
