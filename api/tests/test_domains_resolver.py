@@ -28,17 +28,17 @@ def domain_test_db_init():
     db.init_app(app)
     with app.app_context():
         org = Organizations(
-            id=6,
-            organization='BOC',
-            description='BOC - Bank of Canada',
+            id=2,
+            organization='ORG2',
+            description='Organization 2',
         )
         db.session.add(org)
         db.session.commit()
 
         domain = Domains(
-            id=15,
-            domain='bankofcanada.ca',
-            organization_id=6
+            id=1,
+            domain='somecooldomain.ca',
+            organization_id=2
         )
         db.session.add(domain)
         db.session.commit()
@@ -59,7 +59,7 @@ class TestDomainsResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getDomainById(id: 15){
+                getDomainById(id: 1){
                     domain
                 }
             }"""
@@ -67,7 +67,7 @@ class TestDomainsResolver(TestCase):
                 "data": {
                     "getDomainById": [
                         {
-                            "domain": "bankofcanada.ca"
+                            "domain": "somecooldomain.ca"
                         }
                     ]
                 }
@@ -82,7 +82,7 @@ class TestDomainsResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getDomainByDomain(url: "bankofcanada.ca"){
+                getDomainByDomain(url: "somecooldomain.ca"){
                     domain
                 }
             }"""
@@ -90,7 +90,7 @@ class TestDomainsResolver(TestCase):
                 "data": {
                     "getDomainByDomain": [
                         {
-                            "domain": "bankofcanada.ca"
+                            "domain": "somecooldomain.ca"
                         }
                     ]
                 }
@@ -105,7 +105,7 @@ class TestDomainsResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getDomainByOrganization(org: BOC){
+                getDomainByOrganization(org: ORG2){
                     domain
                 }
             }"""
@@ -113,7 +113,7 @@ class TestDomainsResolver(TestCase):
                 "data": {
                     "getDomainByOrganization": [
                         {
-                            "domain": "bankofcanada.ca"
+                            "domain": "somecooldomain.ca"
                         }
                     ]
                 }

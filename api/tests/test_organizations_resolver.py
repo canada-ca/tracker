@@ -29,31 +29,16 @@ def org_test_db_build():
     with app.app_context():
         group = Groups(
             id=1,
-            s_group='GC_A',
-            description='Arts',
-        )
-        db.session.add(group)
-
-        group = Groups(
-            id=2,
-            s_group='GC_BF',
-            description='Banking and Finance',
+            s_group='GO1',
+            description='Group 1',
         )
         db.session.add(group)
 
         org = Organizations(
             id=1,
-            organization='Arts',
-            description='Arts',
+            organization='ORG1',
+            description='Organization 1',
             group_id=1
-        )
-        db.session.add(org)
-
-        org = Organizations(
-            id=6,
-            organization='BOC',
-            description='BOC - Bank of Canada',
-            group_id=2
         )
         db.session.add(org)
         db.session.commit()
@@ -83,8 +68,8 @@ class TestOrgResolver(TestCase):
                 "data": {
                     "getOrgById": [
                         {
-                            "description": "Arts",
-                            "organization": "Arts"
+                            "description": "Organization 1",
+                            "organization": "ORG1"
                         }
                     ]
                 }
@@ -99,7 +84,7 @@ class TestOrgResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getOrgByOrg(org: Arts){
+                getOrgByOrg(org: ORG1){
                     description
                     organization
                 }
@@ -108,8 +93,8 @@ class TestOrgResolver(TestCase):
                 "data": {
                     "getOrgByOrg": [
                         {
-                            "description": "Arts",
-                            "organization": "Arts"
+                            "description": "Organization 1",
+                            "organization": "ORG1"
                         }
                     ]
                 }
@@ -124,7 +109,7 @@ class TestOrgResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getOrgByGroup(group: GC_A){
+                getOrgByGroup(group: GO1){
                     description
                     groupId
                 }
@@ -133,7 +118,7 @@ class TestOrgResolver(TestCase):
                 "data": {
                     "getOrgByGroup": [
                         {
-                            "description": "Arts",
+                            "description": "Organization 1",
                             "groupId": 1
                         }
                     ]

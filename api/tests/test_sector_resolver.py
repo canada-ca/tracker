@@ -28,9 +28,9 @@ def sector_test_db_init():
     with app.app_context():
         sector = Sectors(
             id=1,
-            zone="GC",
-            sector="GC_A",
-            description="Arts"
+            zone="ZO1",
+            sector="SEC1",
+            description="Sector 1"
         )
         with app.app_context():
             db.session.add(sector)
@@ -38,9 +38,9 @@ def sector_test_db_init():
 
         sector = Sectors(
             id=2,
-            zone="GC",
-            sector="GC_BF",
-            description="Banking and Finance"
+            zone="ZO2",
+            sector="SEC2",
+            description="Sector 2"
         )
         db.session.add(sector)
 
@@ -78,9 +78,9 @@ class TestSectorResolver(TestCase):
                 "data": {
                     "getSectorById": [
                         {
-                            "sector": "GC_A",
-                            "zone": "GC",
-                            "description": "Arts"
+                            "sector": "SEC1",
+                            "zone": "ZO1",
+                            "description": "Sector 1"
                         }
                     ]
                 }
@@ -96,7 +96,7 @@ class TestSectorResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getSectorsBySector(sector: GC_A){
+                getSectorsBySector(sector: SEC1){
                     zone
                     description
                 }
@@ -105,8 +105,8 @@ class TestSectorResolver(TestCase):
                 "data": {
                     "getSectorsBySector": [
                         {
-                            "zone": "GC",
-                            "description": "Arts"
+                            "zone": "ZO1",
+                            "description": "Sector 1"
                         }
                     ]
                 }
