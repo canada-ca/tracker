@@ -43,6 +43,13 @@ spec:
           value: postgres
         - name: DB_PORT
           value: "5432"
+        resources:
+          limits:
+            cpu: 3m
+            memory: 70Mi
+          requests:
+            cpu: 3m
+            memory: 70Mi
       containers:
       - image: gcr.io/track-compliance/api
         name: api
@@ -68,5 +75,11 @@ spec:
           value: postgres
         - name: DB_PORT
           value: "5432"
-        resources: {}
+        resources:
+          limits:
+            cpu: 3m
+            memory: 70Mi
+          requests:
+            cpu: 3m
+            memory: 70Mi
 status: {}
