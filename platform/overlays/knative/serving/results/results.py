@@ -6,8 +6,8 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-@app.route('/enqueue', methods=['GET', 'POST'])
-def enqueue():
+@app.route('/dispatch', methods=['GET', 'POST'])
+def dispatch():
 
     try:
         result_dict = request.json["results"]
@@ -38,5 +38,5 @@ def process_results(result_dict, scan_type):
 
 
 if __name__ == "__main__":
-    # Port number defaults to 8080, can be configured within corresponding service.yaml
+    # Port number defaults to 8080, can be configured within corresponding deployment.yaml
     app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))

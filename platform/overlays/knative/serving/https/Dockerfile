@@ -6,13 +6,15 @@ WORKDIR $SCANNER_HOME
 COPY . ./
 
 # Install production dependencies.
-RUN pip3 install Flask gunicorn
+#RUN pip3 install Flask gunicorn
 
-RUN pip3 install celery
 RUN pip3 install pshtt
+RUN pip3 install cloudevents
+RUN pip3 install kubernetes
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 https:app
+#CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 https:app
+CMD python3 https.py
