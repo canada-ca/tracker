@@ -6,7 +6,8 @@ from flask_graphql_auth import create_access_token
 from functions.input_validators import *
 from functions.error_messages import *
 
-from models import Users as User
+from models import Users
+from models import User_affiliations
 from db import db
 
 
@@ -19,7 +20,7 @@ def sign_in_user(user_name, password):
     """
     user_name = cleanse_input(user_name)
     password = cleanse_input(password)
-    user = User.query.filter(User.user_name == user_name).first()
+    user = Users.query.filter(Users.user_name == user_name).first()
 
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
@@ -32,7 +33,22 @@ def sign_in_user(user_name, password):
     # If the given user credentials are valid
     if email_match and password_match:
         # Fetch user's role from the database and include it as claims on the JWT being generated
-        user_claims = {"roles": user.user_role}
+        user_aff = User_affiliations.query.filter(User_affiliations.user_id == user.id).all()
+
+        if len(user_aff):
+            user_roles = dict
+            counter = 0
+            for select in user_aff:
+                temp_dict = {
+                    'org_id': select[2],
+                    'permission': select[3]
+                }
+                user_roles.update({counter: temp_dict})
+                counter += 1
+        else:
+            user_roles = 'none'
+
+        user_claims = {"roles": user_roles}
 
         # A temporary dictionary that will be returned to the graphql resolver
         temp_dict = {
