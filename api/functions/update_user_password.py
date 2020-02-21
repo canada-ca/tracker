@@ -32,8 +32,7 @@ def update_password(user_name, password, confirm_password):
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
 
-    bcrypt = Bcrypt(
-        app)  # Create the bcrypt object that will handle password hashing and verification
+    bcrypt = Bcrypt(app)  # Create the bcrypt object that will handle password hashing and verification
 
     user = User.query.filter(User.user_name == user_name) \
         .update({'user_password': bcrypt.generate_password_hash(
