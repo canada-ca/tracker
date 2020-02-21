@@ -13,8 +13,6 @@ from db import (
 )
 
 from functions.db_seeding import (
-    seed_admin_aff, remove_admin_aff,
-    seed_admin, remove_admin,
     seed_ciphers, remove_ciphers,
     seed_classification, remove_classification,
     seed_dkim, remove_dkim,
@@ -57,8 +55,6 @@ def seed():
     seed_domains(db, app)
     seed_users(db, app)
     seed_user_aff(db, app)
-    seed_admin(db, app)
-    seed_admin_aff(db, app)
     seed_scans(db, app)
     seed_dmarc(db, app)
     seed_spf(db, app)
@@ -76,8 +72,6 @@ def remove_seed():
     remove_spf(db, app)
     remove_dmarc(db, app)
     remove_scans(db, app)
-    remove_admin_aff(db, app)
-    remove_admin(db, app)
     remove_user_aff(db, app)
     remove_users(db, app)
     remove_domains(db, app)
