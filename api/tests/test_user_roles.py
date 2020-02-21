@@ -31,15 +31,15 @@ def user_role_test_db_init():
 
     with app.app_context():
         test_user = Users (
-            username="testuser",
-            user_email="testuser@testemail.ca",
+            display_name="testuser",
+            user_name="testuser@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
         )
         db.session.add(test_user)
         test_admin = Users(
-            username="testadmin",
-            user_email="testadmin@testemail.ca",
+            display_name="testadmin",
+            user_name="testadmin@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
             user_role='admin'
@@ -59,7 +59,7 @@ class TestUserRole:
     def test_default_role(self):
         with app.app_context():
             # Get the user that was created in pyfixture.  Test default role
-            user = Users.query.filter(Users.user_email == "testuser@testemail.ca").first()
+            user = Users.query.filter(Users.user_name == "testuser@testemail.ca").first()
 
             assert user.user_role == "user"
             assert not user.user_role == "admin"
@@ -70,7 +70,7 @@ class TestUserRole:
             get_token = client.execute(
                 '''
                 mutation{
-                    signIn(email:"testadmin@testemail.ca", password:"testpassword123"){
+                    signIn(userName:"testadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
@@ -95,7 +95,7 @@ class TestUserRole:
             get_token = client.execute(
                 '''
                 mutation{
-                    signIn(email:"testuser@testemail.ca", password:"testpassword123"){
+                    signIn(userName:"testuser@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }

@@ -30,15 +30,15 @@ def user_schema_test_db_init():
 
     with app.app_context():
         test_user = Users(
-            username="testuser",
-            user_email="testuser@testemail.ca",
+            display_name="testuser",
+            user_name="testuser@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
         )
         db.session.add(test_user)
         test_admin = Users(
-            username="testadmin",
-            user_email="testadmin@testemail.ca",
+            display_name="testadmin",
+            user_name="testadmin@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
             user_role='admin'
@@ -64,11 +64,11 @@ class TestCreateUser:
             executed = client.execute(
                 '''
                 mutation{
-                    createUser(username:"user-test", email:"different-email@testemail.ca",
+                    createUser(displayName:"user-test", userName:"different-email@testemail.ca",
                         password:"testpassword123", confirmPassword:"testpassword123"){
                         user{
-                            username
-                            userEmail
+                            userName
+                            displayName
                         }
                     }
                 }
@@ -76,8 +76,8 @@ class TestCreateUser:
             assert executed['data']
             assert executed['data']['createUser']
             assert executed['data']['createUser']['user']
-            assert executed['data']['createUser']['user']['username'] == "user-test"
-            assert executed['data']['createUser']['user']['userEmail'] == "different-email@testemail.ca"
+            assert executed['data']['createUser']['user']['userName'] == "different-email@testemail.ca"
+            assert executed['data']['createUser']['user']['displayName'] == "user-test"
 
     def test_email_address_in_use(self):
         """Test that ensures each user has a unique email address"""
@@ -86,10 +86,10 @@ class TestCreateUser:
             executed_first = client.execute(
                 '''
                 mutation{
-                    createUser(username:"testuser", email:"testuser@testemail.ca",
+                    createUser(displayName:"testuser", userName:"testuser@testemail.ca",
                         password:"testpassword123", confirmPassword:"testpassword123"){
                         user{
-                            username
+                            userName
                         }
                     }
                 }
@@ -97,10 +97,10 @@ class TestCreateUser:
             executed = client.execute(
                 '''
                 mutation{
-                    createUser(username:"testuser", email:"testuser@testemail.ca",
+                    createUser(displayName:"testuser", userName:"testuser@testemail.ca",
                         password:"testpassword123", confirmPassword:"testpassword123"){
                         user{
-                            username
+                            userName
                         }
                     }
                 }
@@ -116,9 +116,9 @@ class TestCreateUser:
         executed = client.execute(
             '''
             mutation{
-                createUser(username:"testuser", email:"test@test-email.ca", password:"test", confirmPassword:"test"){
+                createUser(displayName:"testuser", userName:"test@test-email.ca", password:"test", confirmPassword:"test"){
                     user{
-                        username
+                        userName
                     }
                 }
             }
@@ -134,10 +134,10 @@ class TestCreateUser:
         executed = client.execute(
             '''
             mutation{
-                createUser(username:"testuser", email:"test@test-email.ca", password:"A-Val1d-Pa$$word",
+                createUser(displayName:"testuser", userName:"test@test-email.ca", password:"A-Val1d-Pa$$word",
                     confirmPassword:"also-A-Val1d-Pa$$word"){
                     user{
-                        username
+                        userName
                     }
                 }
             }
@@ -159,11 +159,11 @@ class TestUpdatePassword:
             executed = client.execute(
                 '''
                 mutation {
-                    updatePassword(email: "testuser@testemail.ca", password: "another-super-long-password",
+                    updatePassword(userName: "testuser@testemail.ca", password: "another-super-long-password",
                         confirmPassword: "another-super-long-password") {
                         user {
-                            username
-                            userEmail
+                            userName
+                            displayName
                         }
                     }
                 }
@@ -172,8 +172,8 @@ class TestUpdatePassword:
             assert executed['data']
             assert executed['data']['updatePassword']
             assert executed['data']['updatePassword']['user']
-            assert executed['data']['updatePassword']['user']['username'] == "testuser"
-            assert executed['data']['updatePassword']['user']['userEmail'] == "testuser@testemail.ca"
+            assert executed['data']['updatePassword']['user']['userName'] == "testuser@testemail.ca"
+            assert executed['data']['updatePassword']['user']['displayName'] == "testuser"
 
     def test_updated_passwords_do_not_match(self):
         """Test to ensure that user's new password matches their password confirmation"""
@@ -181,10 +181,10 @@ class TestUpdatePassword:
         executed = client.execute(
             '''
             mutation {
-                updatePassword(email: "test@test-email.ca", password: "a-super-long-password",
+                updatePassword(userName: "test@test-email.ca", password: "a-super-long-password",
                     confirmPassword: "another-super-long-password") {
                     user {
-                        username
+                        userName
                     }
                 }
             }
@@ -200,9 +200,9 @@ class TestUpdatePassword:
         executed = client.execute(
             '''
             mutation {
-                updatePassword(email: "test@test-email.ca", password: "password", confirmPassword: "password") {
+                updatePassword(userName: "test@test-email.ca", password: "password", confirmPassword: "password") {
                     user {
-                        username
+                        userName
                     }
                 }
             }
@@ -218,9 +218,9 @@ class TestUpdatePassword:
         executed = client.execute(
             '''
             mutation {
-                updatePassword(email: "", password: "valid-password", confirmPassword: "valid-password") {
+                updatePassword(userName: "", password: "valid-password", confirmPassword: "valid-password") {
                     user {
-                        username
+                        userName
                     }
                 }
             }
@@ -245,10 +245,9 @@ class TestValidateTwoFactor:
             executed = client.execute(
                 '''
                 mutation {
-                    authenticateTwoFactor(email: "testuser@testemail.ca", otpCode: "''' + otp_code + '''") {
+                    authenticateTwoFactor(userName: "testuser@testemail.ca", otpCode: "''' + otp_code + '''") {
                         user {
-                            username
-                            userEmail
+                            userName
                         }
                     }
                 }
@@ -256,7 +255,7 @@ class TestValidateTwoFactor:
             assert executed['data']
             assert executed['data']['authenticateTwoFactor']
             assert executed['data']['authenticateTwoFactor']['user']
-            assert executed['data']['authenticateTwoFactor']['user']['userEmail'] == "testuser@testemail.ca"
+            assert executed['data']['authenticateTwoFactor']['user']['userName'] == "testuser@testemail.ca"
 
     def test_user_does_not_exist(self):
         """Test that an error is raised if the user specified does not exist"""
@@ -265,9 +264,9 @@ class TestValidateTwoFactor:
             executed = client.execute(
                 '''
                 mutation {
-                    authenticateTwoFactor(email: "anotheruser@testemail.ca", otpCode: "000000") {
+                    authenticateTwoFactor(userName: "anotheruser@testemail.ca", otpCode: "000000") {
                         user {
-                            username
+                            userName
                         }
                     }
                 }
@@ -284,9 +283,9 @@ class TestValidateTwoFactor:
             executed = client.execute(
                 '''
                 mutation {
-                    authenticateTwoFactor(email: "testuser@testemail.ca", otpCode: "000000") {
+                    authenticateTwoFactor(userName: "testuser@testemail.ca", otpCode: "000000") {
                         user {
-                            username
+                            userName
                         }
                     }
                 }
