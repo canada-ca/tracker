@@ -23,15 +23,6 @@ Notes:
 
 from . import pshtt
 from . import utils
-from . import __version__
-from .utils import smart_open
-
-import csv
-import docopt
-import logging
-import sys
-
-import pytablewriter
 
 
 def to_json_dict(results):
