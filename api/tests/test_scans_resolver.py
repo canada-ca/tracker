@@ -30,8 +30,8 @@ def scans_test_db_init():
         bcrypt = Bcrypt(app)
         user = Users(
             id=1,
-            username="testuser",
-            user_email="testuser@testemail.ca",
+            display_name="testuser",
+            user_name="testuser@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8")
         )
