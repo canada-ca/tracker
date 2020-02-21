@@ -27,22 +27,22 @@ class UserConnection(relay.Connection):
 
 class CreateUser(graphene.Mutation):
     class Arguments:
-        username = graphene.String(required=True)
+        display_name = graphene.String(required=True)
         password = graphene.String(required=True)
         confirm_password = graphene.String(required=True)
-        email = EmailAddress(required=True)
+        user_name = EmailAddress(required=True)
 
     user = graphene.Field(lambda: UserObject)
 
     @staticmethod
-    def mutate(self, info, username, password, confirm_password, email):
-        user = create_user(username, password, confirm_password, email)
+    def mutate(self, info, display_name, password, confirm_password, user_name):
+        user = create_user(display_name, password, confirm_password, user_name)
         return CreateUser(user=user)
 
 
 class SignInUser(graphene.Mutation):
     class Arguments:
-        email = EmailAddress(required=True, description="User's email")
+        user_name = EmailAddress(required=True, description="User's email")
         password = graphene.String(required=True,
                                    description="Users's password")
 
@@ -50,8 +50,8 @@ class SignInUser(graphene.Mutation):
     auth_token = graphene.String(description="Token returned to user")
 
     @classmethod
-    def mutate(cls, _, info, email, password):
-        user_dict = sign_in_user(email, password)
+    def mutate(cls, _, info, user_name, password):
+        user_dict = sign_in_user(user_name, password)
         return SignInUser(
             auth_token=user_dict['auth_token'],
             user=user_dict['user']
@@ -62,39 +62,39 @@ class UpdateUserPassword(graphene.Mutation):
     class Arguments:
         password = graphene.String(required=True)
         confirm_password = graphene.String(required=True)
-        email = EmailAddress(required=True)
+        user_name = EmailAddress(required=True)
 
     user = graphene.Field(lambda: UserObject)
 
     @staticmethod
-    def mutate(self, info, password, confirm_password, email):
-        user = update_password(email=email, password=password,
+    def mutate(self, info, password, confirm_password, user_name):
+        user = update_password(user_name=user_name, password=password,
                                confirm_password=confirm_password)
         return UpdateUserPassword(user=user)
 
 
 class ValidateTwoFactor(graphene.Mutation):
     class Arguments:
-        email = EmailAddress(required=True)
+        user_name = EmailAddress(required=True)
         otp_code = graphene.String(required=True)
 
     user = graphene.Field(lambda: UserObject)
 
     @staticmethod
-    def mutate(self, info, email, otp_code):
-        user_to_rtn = validate_two_factor(email=email, otp_code=otp_code)
+    def mutate(self, info, user_name, otp_code):
+        user_to_rtn = validate_two_factor(user_name=user_name, otp_code=otp_code)
         return ValidateTwoFactor(user=user_to_rtn)
 
 
 class UpdateUserRole(graphene.Mutation):
     class Arguments:
         token = graphene.String(required=True)
-        email = EmailAddress(required=True)
+        user_name = EmailAddress(required=True)
         role = graphene.String(required=True)
 
     user = graphene.Field(lambda: UserObject)
 
     @mutation_jwt_required
-    def mutate(self, info, email, role):
-        user = update_user_role(email=email, new_role=role)
+    def mutate(self, info, user_name, role):
+        user = update_user_role(user_name=user_name, new_role=role)
         return UpdateUserRole(user=user)

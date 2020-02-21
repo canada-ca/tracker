@@ -84,9 +84,8 @@ class Users(db.Model):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String)
+    user_name = Column(String)
     display_name = Column(String)
-    user_email = Column(String)
     user_password = Column(String)
     preferred_lang = Column(String)
     failed_login_attempts = Column(Integer, default=0)
