@@ -2,9 +2,11 @@ from graphql import GraphQLError
 from flask_bcrypt import Bcrypt
 from flask import current_app as app
 from flask_graphql_auth import create_access_token
+from sqlalchemy.orm import load_only
 
 from functions.input_validators import *
 from functions.error_messages import *
+from functions.orm_to_dict import orm_to_dict
 
 from models import Users
 from models import User_affiliations
@@ -34,20 +36,19 @@ def sign_in_user(user_name, password):
     if email_match and password_match:
         # Fetch user's role from the database and include it as claims on the JWT being generated
         user_aff = User_affiliations.query.filter(User_affiliations.user_id == user.id).all()
-
+        user_aff = orm_to_dict(user_aff)
         if len(user_aff):
-            user_roles = dict
+            user_roles = []
             counter = 0
             for select in user_aff:
                 temp_dict = {
-                    'org_id': select[2],
-                    'permission': select[3]
+                    'org_id': select['organization_id'],
+                    'permission': select['permission']
                 }
-                user_roles.update({counter: temp_dict})
                 counter += 1
+                user_roles.append(temp_dict)
         else:
             user_roles = 'none'
-
         user_claims = {"roles": user_roles}
 
         # A temporary dictionary that will be returned to the graphql resolver

@@ -2,8 +2,9 @@ from graphql import GraphQLError
 from flask_graphql_auth import *
 from sqlalchemy.orm import load_only
 
-from user_roles import is_admin
+from user_roles import is_admin, is_super_admin
 from functions.error_messages import (error_user_does_not_exist, error_not_an_admin, error_role_not_updated)
+from functions.orm_to_dict import orm_to_dict
 from db import db
 from models import Users as User
 from models import Organizations
@@ -26,15 +27,23 @@ def update_user_role(user_name, org, new_role):
 
     roles = get_jwt_claims()['roles']  # Pulls the 'role' out of the JWT user claims associated with the token.
 
-    if is_admin(roles, org):  # If an admin, update the user.
+    def update_role(user, new_role, org):
         org_id = Organizations.query.filter(Organizations.organization == org)\
-            .options(load_only('id'))
-        for role in roles:
-            if role['org_id'] == org_id:
-                User_affiliations.query\
-                    .filter(User_affiliations.user_id == user.id)\
-                    .update({'permission': new_role})
-        db.session.commit()
+            .options(load_only('id'))\
+            .all()
+        org_id = orm_to_dict(org_id)[0]['id']
+        User_affiliations.query\
+            .filter(User_affiliations.user_id == user.id)\
+            .filter(User_affiliations.organization_id == org_id)\
+            .update({'permission': new_role})
+        return db.session.commit()
+
+    if is_admin(roles, org) and (new_role == 'user'):  # If an admin, update the user.
+        update_role(user, new_role, org)
+    elif is_super_admin(roles, org) and (new_role == 'user' or
+                                         new_role == 'admin' or
+                                         new_role == 'super_admin'):
+        update_role(user, new_role, org)
     else:
         raise GraphQLError(error_not_an_admin())
 

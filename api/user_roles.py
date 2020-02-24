@@ -1,4 +1,5 @@
 from sqlalchemy.orm import load_only
+from functions.orm_to_dict import orm_to_dict
 from models import Organizations
 """
 This file enables a simple to manage way of defining permissions based on user roles.
@@ -25,7 +26,9 @@ def is_super_admin(user_role, org):
     """
     org_id = Organizations.query\
         .filter(Organizations.organization == org)\
-        .options(load_only('id'))
+        .options(load_only('id'))\
+        .all()
+    org_id = orm_to_dict(org_id)[0]['id']
     for role in user_role:
         if role['org_id'] == org_id and role['permission'] == 'super_admin':
             return True

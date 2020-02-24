@@ -96,8 +96,9 @@ class UpdateUserRole(graphene.Mutation):
         role = RoleEnums(required=True)
 
     user = graphene.Field(lambda: UserObject)
+    status = graphene.String()
 
     @mutation_jwt_required
     def mutate(self, info, user_name, org, role):
-        update_user_role(user_name=user_name, org=org, new_role=role)
-        return graphene.String('Update Complete')
+        user = update_user_role(user_name=user_name, org=org, new_role=role)
+        return UpdateUserRole(user=user, status="Update Successful")

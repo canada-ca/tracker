@@ -56,7 +56,6 @@ class Sectors(db.Model):
     zone = Column(String)
     description = Column(String)
     groups = relationship("Groups", back_populates="group_sector", cascade="all, delete")
-    affiliated_admins = relationship("Admin_affiliations", back_populates="admin_sector", cascade="all, delete")
 
 
 class Users(db.Model):
