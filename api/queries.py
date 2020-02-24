@@ -61,6 +61,10 @@ from resolvers.scans import (
     resolve_get_scans_by_user_id
 )
 
+from resolvers.notification_emails import (
+    resolve_send_password_reset
+)
+
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
@@ -183,6 +187,12 @@ class Query(graphene.ObjectType):
         token=graphene.Argument(graphene.String, required=True),
         resolver=resolve_test_user_claims,
         description="An api endpoint to view a current user's claims -- Requires an active JWT."
+    )
+
+    send_password_reset = graphene.String(
+        email=graphene.Argument(EmailAddress, required=True),
+        resolver=resolve_send_password_reset,
+        description="An api endpoint that will send an email to a given email address so a user can reset their password for the web app"
     )
 
 
