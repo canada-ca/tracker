@@ -110,9 +110,9 @@ class TestUserRole:
                     testUserClaims(token:"''' + str(token) + '''")
                 }
                 ''')
-            assert executed['data']
-            assert executed['data']['testUserClaims']
-            assert executed['data']['testUserClaims'] == error_not_an_admin()
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == error_not_an_admin()
 
 
 class TestSuperAdminFunction:
