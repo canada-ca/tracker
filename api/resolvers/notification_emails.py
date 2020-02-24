@@ -19,7 +19,31 @@ notifications_client = NotificationsAPIClient(
 def resolve_send_password_reset(self, info, email):
     template_id = '8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1'
     password_reset_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
-    password_reset_url = "TODO: Send correct url -- Will it be a graphql api call?  Will it go to mikes front end?"
+    password_reset_url = "TODO: Send to front end"
+    # password_reset_url = url_for('_new_password',
+    #                              token=password_reset_serial.dumps(
+    #                                  email, salt=SUPER_SECRET_SALT),
+    #                              _external=True
+    #                              )
+
+    response = notifications_client.send_email_notification(
+        email_address=email,
+        personalisation={
+            'user': email,
+            'password_reset_url': password_reset_url
+        },
+        template_id=template_id
+    )
+    if response is not None:
+        return True
+    else:
+        return False
+
+
+def resolve_send_validation_email(self, info, email):
+    template_id = 'TODO: Create template in notification admin'
+    password_reset_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
+    password_reset_url = "TODO: Send to front end"
     # password_reset_url = url_for('_new_password',
     #                              token=password_reset_serial.dumps(
     #                                  email, salt=SUPER_SECRET_SALT),

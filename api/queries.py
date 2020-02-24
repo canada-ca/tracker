@@ -62,7 +62,8 @@ from resolvers.scans import (
 )
 
 from resolvers.notification_emails import (
-    resolve_send_password_reset
+    resolve_send_password_reset,
+    resolve_send_validation_email
 )
 
 
@@ -192,7 +193,13 @@ class Query(graphene.ObjectType):
     send_password_reset = graphene.String(
         email=graphene.Argument(EmailAddress, required=True),
         resolver=resolve_send_password_reset,
-        description="An api endpoint that will send an email to a given email address so a user can reset their password for the web app"
+        description="An api endpoint that will send an email to a given email address so a user can reset their password for the web app."
+    )
+
+    send_validation_email = graphene.String(
+        email=graphene.Argument(EmailAddress, required=True),
+        resolver=resolve_send_validation_email,
+        description="An api endpoint that will send a verification email to a given email address."
     )
 
 
