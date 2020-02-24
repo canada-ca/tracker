@@ -25,6 +25,13 @@ spec:
           - name: gpg-signing-key
             mountPath: /root/gpg-signing-key/
             readOnly: true
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
       volumes:
       - name: gpg-signing-key
         secret:
