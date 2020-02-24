@@ -1,0 +1,29 @@
+---
+# memcached deployment used by Flux to cache
+# container image metadata.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memcached
+  namespace: flux
+spec:
+  selector:
+    matchLabels:
+      name: memcached
+  template:
+    metadata:
+      labels:
+        name: memcached
+    spec:
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+      containers:
+      - name: memcached
+        resources:
+          requests:
+            cpu: 250m
+            memory: 550Mi
+          limits:
+            cpu: 250m
+            memory: 550Mi
+
