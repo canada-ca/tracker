@@ -1,11 +1,8 @@
-from graphql import GraphQLError
-from flask_graphql_auth import *
-from functions.error_messages import error_not_an_admin
-from user_roles import is_admin
 import pyotp
 import os
 
 
+<<<<<<< HEAD
 @query_jwt_required
 def resolve_test_user_claims(self, info):
     """
@@ -21,6 +18,8 @@ def resolve_test_user_claims(self, info):
         raise GraphQLError(error_not_an_admin())
 
 
+=======
+>>>>>>> Current user role testing now working. Added in user_read, and user_write roles
 def resolve_generate_otp_url(self, info, email):
     """
     This resolver adds an api endpoint that returns a url for OTP validation

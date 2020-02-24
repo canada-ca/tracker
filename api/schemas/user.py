@@ -7,11 +7,8 @@ from functions.create_user import create_user
 from functions.sign_in_user import sign_in_user
 from functions.update_user_password import update_password
 from functions.validate_two_factor import validate_two_factor
-from functions.update_user_role import update_user_role
 
 from models import Users as User
-from model_enums.organiztions import OrganizationsEnum
-from model_enums.roles import RoleEnums
 from scalars.email_address import *
 
 
@@ -86,19 +83,3 @@ class ValidateTwoFactor(graphene.Mutation):
     def mutate(self, info, user_name, otp_code):
         user_to_rtn = validate_two_factor(user_name=user_name, otp_code=otp_code)
         return ValidateTwoFactor(user=user_to_rtn)
-
-
-class UpdateUserRole(graphene.Mutation):
-    class Arguments:
-        token = graphene.String(required=True)
-        user_name = EmailAddress(required=True)
-        org = OrganizationsEnum(required=True)
-        role = RoleEnums(required=True)
-
-    user = graphene.Field(lambda: UserObject)
-    status = graphene.String()
-
-    @mutation_jwt_required
-    def mutate(self, info, user_name, org, role):
-        user = update_user_role(user_name=user_name, org=org, new_role=role)
-        return UpdateUserRole(user=user, status="Update Successful")
