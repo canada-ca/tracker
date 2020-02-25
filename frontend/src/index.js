@@ -14,7 +14,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import fetch from 'isomorphic-unfetch'
 
 const client = new ApolloClient({
-  link: createHttpLink({ uri: process.env.GRAPHQL_ENDPOINT, fetch }),
+  link: createHttpLink({ fetch }),
   cache: new InMemoryCache(),
 })
 

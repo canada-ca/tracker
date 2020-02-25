@@ -16,8 +16,8 @@ const mocks = [
     request: {
       query: gql`
         {
-          getDomainByOrganization(org: BOC) {
-            domain
+          domains(organization: BOC) {
+            url
           }
         }
       `,
@@ -25,12 +25,12 @@ const mocks = [
     },
     result: {
       data: {
-        getDomainByOrganization: [
+        domains: [
           {
-            domain: 'canada.ca',
+            url: 'canada.ca',
           },
           {
-            domain: 'alpha.canada.ca',
+            url: 'alpha.canada.ca',
           },
         ],
       },
