@@ -1,11 +1,9 @@
-from flask_bcrypt import Bcrypt
-
-from user_roles import (is_super_admin, is_admin, is_user_read, is_user_write)
 import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath
 from graphene.test import Client
 from flask_bcrypt import Bcrypt
+from flask import request
 
 import pytest
 from unittest import TestCase
@@ -22,6 +20,12 @@ from app import app
 from queries import schema
 from models import Users, User_affiliations, Organizations
 from functions.error_messages import error_not_an_admin
+from functions.auth_functions import (
+    is_super_admin,
+    is_admin,
+    is_user_write,
+    is_user_read
+)
 remove_seed()
 
 
@@ -110,9 +114,11 @@ class TestUserRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(token:"''' + str(token) + '''", org: ORG1)
+                    testUserClaims(org: ORG1)
                 }
-                ''')
+                ''', context_value={'headers': {
+                    'Authorization': token
+                }})
             assert executed['data']
             assert executed['data']['testUserClaims']
             assert executed['data']['testUserClaims'] == "Passed"
@@ -135,61 +141,50 @@ class TestUserRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(token:"''' + str(token) + '''", org: ORG1)
+                    testUserClaims(org: ORG1)
                 }
-                ''')
+                ''', context_value=)
             assert executed['errors']
             assert executed['errors'][0]
             assert executed['errors'][0]['message'] == error_not_an_admin()
 
 
 @pytest.mark.usefixtures('user_role_test_db_init')
-class TestSuperAdminFunction:
+class TestAuthFunction:
     def test_valid_super_admin(self):
-        user_role = [{'org_id': 1, 'permission': 'super_admin'}]
-        org = 'ORG1'
-        assert is_super_admin(user_role, org)
+        user_role = [{'user_id': 3, 'org_id': 1, 'permission': 'super_admin'}]
+        assert is_super_admin(user_role)
 
     def test_invalid_super_admin(self):
-        user_role = [{'org_id': 1, 'permission': 'admin'}]
-        org = 'ORG1'
-        assert not is_super_admin(user_role, org)
+        user_role = [{'user_id': 2, 'org_id': 1, 'permission': 'admin'}]
+        assert not is_super_admin(user_role)
 
-
-@pytest.mark.usefixtures('user_role_test_db_init')
-class TestAdminFunction:
     def test_valid_admin(self):
-        user_role = [{'org_id': 1, 'permission': 'admin'}]
+        user_role = [{'user_id': 2, 'org_id': 1, 'permission': 'admin'}]
         org = 'ORG1'
         assert is_admin(user_role, org)
 
     def test_invalid_admin(self):
-        user_role = [{'org_id': 1, 'permission': 'user'}]
+        user_role = [{'user_id': 1, 'org_id': 1, 'permission': 'user_write'}]
         org = 'ORG1'
         assert not is_admin(user_role, org)
 
-
-@pytest.mark.usefixtures('user_role_test_db_init')
-class TestUserWriteFunction:
     def test_valid_user_write(self):
-        user_role = [{'org_id': 1, 'permission': 'user_write'}]
+        user_role = [{'user_id': 1, 'org_id': 1, 'permission': 'user_write'}]
         org = 'ORG1'
         assert is_user_write(user_role, org)
 
-    def test_invalid_role(self):
-        user_role = [{'org_id': 1, 'permission': ''}]
+    def test_invalid_user_write(self):
+        user_role = [{'user_id': 1, 'org_id': 1, 'permission': ''}]
         org = 'ORG1'
         assert not is_user_write(user_role, org)
 
-
-@pytest.mark.usefixtures('user_role_test_db_init')
-class TestUserReadFunction:
     def test_valid_user_read(self):
-        user_role = [{'org_id': 1, 'permission': 'user_read'}]
+        user_role = [{'user_id': 1, 'org_id': 1, 'permission': 'user_read'}]
         org = 'ORG1'
         assert is_user_read(user_role, org)
 
-    def test_invalid_role(self):
-        user_role = [{'org_id': 1, 'permission': ''}]
+    def test_invalid_user_read(self):
+        user_role = [{'user_id': 1, 'org_id': 1, 'permission': ''}]
         org = 'ORG1'
         assert not is_user_read(user_role, org)

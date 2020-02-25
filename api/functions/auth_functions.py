@@ -10,10 +10,11 @@ def is_super_admin(user_role):
     :return: Returns true or false based on if this user is the given role
     """
     user_id = user_role[0]['user_id']
-    user_is_super_admin = User_affiliations.query \
-        .filter(User_affiliations.user_id == user_id) \
-        .filter(User_affiliations.permission == 'super_admin') \
-        .first()
+    with app.app_context():
+        user_is_super_admin = User_affiliations.query \
+            .filter(User_affiliations.user_id == user_id) \
+            .filter(User_affiliations.permission == 'super_admin') \
+            .first()
     if user_is_super_admin:
         return True
     return False
