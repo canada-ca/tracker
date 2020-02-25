@@ -24,8 +24,22 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
-class TestErrorHandling:
+class TestPasswordReset:
+    def test_email_sent_successfully(self):
+        """Test for ensuring that an email is sent to a valid email address"""
+        client = Client(schema)
+        executed = client.execute(
+            '''
+            {
+                sendPasswordReset(email: "testuser@testemail.ca")
+            }
+            ''')
+        assert executed['data']
+        assert executed['data']['sendPasswordReset']
+        assert "Hello testuser," in executed['data']['sendPasswordReset']
+
     def test_invalid_email(self):
+        """Tests to ensure that an invalid email address will raise an error"""
         client = Client(schema)
         executed = client.execute(
             '''
@@ -36,3 +50,32 @@ class TestErrorHandling:
         assert executed['errors']
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == scalar_error_type("email address", "invalid-email.ca")
+
+
+class TestVerifyEmail:
+    def test_email_sent_successfully(self):
+        """Test for ensuring that an email is sent to a valid email address"""
+        client = Client(schema)
+        executed = client.execute(
+            '''
+            {
+                sendValidationEmail(email: "testuser@testemail.ca")
+            }
+            ''')
+        assert executed['data']
+        assert executed['data']['sendPasswordReset']
+        assert "Hello testuser," in executed['data']['sendPasswordReset']
+
+    def test_invalid_email(self):
+        """Tests to ensure that an invalid email address will raise an error"""
+        client = Client(schema)
+        executed = client.execute(
+            '''
+            {
+              sendValidationEmail(email: "invalid-email.ca")
+            }
+            ''')
+        assert executed['errors']
+        assert executed['errors'][0]
+        assert executed['errors'][0]['message'] == scalar_error_type("email address", "invalid-email.ca")
+
