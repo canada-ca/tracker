@@ -41,7 +41,7 @@ class TestPasswordReset:
         assert executed['data']
         assert executed['data']['sendPasswordReset']
         assert "Hello testuser," in executed['data']['sendPasswordReset']
-        assert password_reset_template() in executed['data']['sendValidationEmail']
+        assert password_reset_template() in executed['data']['sendPasswordReset']
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
