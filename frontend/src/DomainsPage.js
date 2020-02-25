@@ -8,8 +8,8 @@ import { Heading, Text, Stack, List, ListItem } from '@chakra-ui/core'
 export function DomainsPage() {
   const { loading, error, data } = useQuery(gql`
     {
-      getDomainByOrganization(org: BOC) {
-        domain
+      domains(organization: BOC) {
+        url
       }
     }
   `)
@@ -29,10 +29,10 @@ export function DomainsPage() {
               <Trans>This is the full list of domains</Trans>
             </Text>
             <List>
-              {data.getDomainByOrganization.map(domain => {
+              {data.domains.map((domain, i) => {
                 return (
-                  <ListItem key={domain.domain}>
-                    <Text>{domain.domain}</Text>
+                  <ListItem key={domain.url + i}>
+                    <Text>{domain.url}</Text>
                   </ListItem>
                 )
               })}

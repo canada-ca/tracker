@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  envoy:
+    image: envoyproxy/envoy-alpine-dev
+    entrypoint: envoy
+    command: ["-c", "/etc/envoy-dev.yaml", "--service-cluster", "envoy"]
+    volumes:
+      - ./envoy-dev.yaml:/etc/envoy-dev.yaml
+    expose:
+      - "3000"
+      - "3001"
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+  frontend:
+    image: node:alpine
+    working_dir: /app
+    command: npm run dev
+    volumes:
+      - ./:/app
+    expose:
+      - "3000"
+  api:
+    image: apisguru/graphql-faker
+    volumes:
+      - ./schema.faker.graphql:/workdir/schema.faker.graphql
+    expose:
+      - "9002"
+
+volumes:
+  driver: {}

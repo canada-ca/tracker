@@ -1,0 +1,1093 @@
+type DmarcRecord {
+  record: String
+    @examples(
+      values: [
+        "v=DMARC1; p=none; pct=100; rua=mailto:dmarc@cyber.gc.ca; ruf=mailto:dmarc@cyber.gc.ca; fo=1"
+        "v=DMARC1; p=none; sp=none; rua=mailto:dmarc@cyber.gc.ca"
+      ]
+    )
+}
+
+type PPolicy {
+  value: String @examples(values: ["none", "missing", "quarantine", "reject"])
+}
+
+type SpPolicy {
+  value: String @examples(values: ["none", "missing", "quarantine", "reject"])
+}
+
+type Pct {
+  value: Int @examples(values: [0, 20, 60, 70, 90, 100])
+}
+
+type DmarcTags {
+  value: String
+    @examples(
+      values: [
+        "DMARC-GC"
+        "DMARC-missing"
+        "P-missing"
+        "P-None"
+        "P-quarantine"
+        "CNAME-DMARC"
+        "RUA-none"
+      ]
+    )
+}
+
+type SpfLookups {
+  value: Int @examples(values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+}
+
+type SpfRecord {
+  record: String
+    @examples(
+      values: [
+        "v=spf1 ip4:40.92.0.0/15 ip4:40.107.0.0/16 ip4:52.100.0.0/14 ip4:104.47.0.0/17 ip6:2a01:111:f400::/48 ip6:2a01:111:f403::/48 -all"
+        "v=spf1 ip4:198.103.111.114/31 ip4:205.193.224.70 ip4:205.193.224.90 ip4:216.13.57.101 ip4:216.13.57.102 ip4:209.82.9.21 ip4:209.82.9.23 ip4:198.103.112.150/31 ip4:205.192.34.113 ip4:205.192.34.56 ip4:205.192.34.58 -all"
+      ]
+    )
+}
+
+type SpfDefault {
+  record: String @examples(values: ["neutral", "softfail", "include", "fail"])
+}
+
+type SpfTags {
+  value: String
+    @examples(
+      values: [
+        "SPF-GC"
+        "SPF-missing"
+        "SPF-bad-path"
+        "ALL-missing"
+        "INCLUDE-limit"
+      ]
+    )
+}
+
+type DkimType {
+  value: String @examples(values: ["rsa", "ed25519"])
+}
+
+type DkimRecord {
+  record: String
+    @examples(
+      values: [
+        "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3rvAQg9bl72tae1RFu4zdx1ZE4E8VUbQfxDcm;"
+      ]
+    )
+}
+
+type DkimKeyLength {
+  value: String @examples(values: ["sub1024", "1024", "2048", "2048plus"])
+}
+
+type DkimTags {
+  value: String
+    @examples(
+      values: [
+        "DKIM-GC"
+        "DKIM-missing"
+        "P-1024"
+        "P-2048"
+        "P-invalid"
+        "T-enabled"
+      ]
+    )
+}
+
+type EmailScan implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  domain: String @fake(type: domainName)
+  timestamp: DateTime @fake(type: pastDate)
+  dmarc: DMARC
+  spf: SPF
+  dkim: DKIM
+}
+type DMARC {
+  id: ID!
+  domain: String @fake(type: domainName)
+  timestamp: DateTime @fake(type: pastDate)
+  record: [DmarcRecord]
+  p_policy: [PPolicy]
+  sp_policy: [SpPolicy]
+  pct: [Pct]
+  dmarcGuidanceTags: [DmarcTags]
+}
+type SPF {
+  id: ID!
+  domain: String @fake(type: domainName)
+  timestamp: DateTime @fake(type: pastDate)
+  lookups: [SpfLookups]
+  record: [SpfRecord]
+  spf_default: [SpfDefault]
+  spfGuidanceTags: [SpfTags]
+}
+
+type DKIM {
+  id: ID!
+  domain: String @fake(type: domainName)
+  timestamp: DateTime @fake(type: pastDate)
+  record: [DkimRecord]
+  key_length: [DkimKeyLength]
+  dkimGuidanceTags: [DkimTags]
+}
+
+type CreateUser {
+  user: UserObject
+}
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+type Cipher {
+  name: String
+    @examples(
+      values: [
+        "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"
+        "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305"
+        "TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+        "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"
+        "TLS_RSA_WITH_AES_128_GCM_SHA256"
+      ]
+    )
+}
+
+type TLSVersion {
+  version: Float @examples(values: [1.1, 1.2, 1.3])
+}
+
+type TLSScan implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  domain: String @fake(type: domainName)
+  timestamp: DateTime @fake(type: pastDate)
+  ciphers: [Cipher]
+  supportedVersions: [TLSVersion]
+}
+
+type DMARCScan implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  domain: String @fake(type: domainName)
+  timestamp: DateTime @fake(type: pastDate)
+  ciphers: [Cipher]
+  supportedVersions: [TLSVersion]
+}
+
+type DNS implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  """
+  Host address
+  """
+  a: String @fake(type: domainName)
+  """
+  IPv6 host address
+  """
+  aaaa: String @fake(type: ipv6Address)
+  """
+  Auto resolved alias
+  """
+  alias: String
+  """
+  Canonical name for an alias
+  """
+  cname: String
+  """
+  Mail eXchange
+  """
+  mx: String
+  """
+  Name Server
+  """
+  ns: String
+  """
+  Pointer
+  """
+  ptr: String
+  """
+  Start Of Authority
+  """
+  soa: String
+}
+
+type WWWScan {
+  tls: [TLSScan]
+}
+
+type Domain implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  dns: DNS
+  url: String @fake(type: domainName)
+  www: [WWWScan]
+  email: [EmailScan]
+  organization: Organization
+}
+
+type DomainsConnection {
+  """
+  Pagination data for this connection.
+  """
+  pageInfo: PageInfo!
+
+  """
+  Contains the nodes in this connection.
+  """
+  edges: [DomainsEdge]!
+}
+
+"""
+A Relay edge containing a `Domains` and its cursor.
+"""
+type DomainsEdge {
+  """
+  The item at the end of the edge
+  """
+  node: Domain
+
+  """
+  A cursor for use in pagination
+  """
+  cursor: String!
+}
+
+"""
+A field whose value conforms to the standard internet email address format as specified in RFC822:
+https://www.w3.org/Protocols/rfc822/.
+"""
+scalar EmailAddress
+
+enum GroupEnums {
+  """
+  Arts
+  """
+  GC_A
+
+  """
+  Banking and Finance
+  """
+  GC_BF
+
+  """
+  Border Services and Immigration
+  """
+  GC_BSI
+
+  """
+  Government Administration
+  """
+  GC_GA
+
+  """
+  Health
+  """
+  GC_H
+
+  """
+  Industry and Business Development
+  """
+  GC_IBD
+
+  """
+  International Affairs Trade & Development
+  """
+  GC_IATD
+
+  """
+  Legal
+  """
+  GC_L
+
+  """
+  Natural Resources Energy & Environment
+  """
+  GC_NRED
+
+  """
+  Security Intelligence and Defence
+  """
+  GC_SID
+
+  """
+  Transportation
+  """
+  GC_T
+
+  """
+  Social and Cultural Development
+  """
+  GC_SCD
+
+  """
+  Government of Canada Future
+  """
+  GC_F
+
+  """
+  Government (Provincial/Territorial)
+  """
+  CI_PT
+
+  """
+  British Columbia
+  """
+  CI_PT_BC
+
+  """
+  Alberta
+  """
+  CI_PT_AB
+
+  """
+  Saskatchewan
+  """
+  CI_PT_SK
+
+  """
+  Manitoba
+  """
+  CI_PT_MB
+
+  """
+  Ontario
+  """
+  CI_PT_ON
+
+  """
+  Quebec
+  """
+  CI_PT_QC
+
+  """
+  New Brunswick
+  """
+  CI_PT_NB
+
+  """
+  Nova Scotia
+  """
+  CI_PT_NS
+
+  """
+  Prince Edward Island
+  """
+  CI_PT_PEI
+
+  """
+  Newfoundland and Labrador
+  """
+  CI_PT_NL
+
+  """
+  Yukon
+  """
+  CI_PT_YT
+
+  """
+  Nunavut
+  """
+  CI_PT_NU
+
+  """
+  Northwest Territories
+  """
+  CI_PT_NT
+
+  """
+  Government (Municipal)
+  """
+  CI_MUNIC
+
+  """
+  British Columbia
+  """
+  CI_MUNIC_BC
+
+  """
+  Alberta
+  """
+  CI_MUNIC_AB
+
+  """
+  Saskatchewan
+  """
+  CI_MUNIC_SK
+
+  """
+  Manitoba
+  """
+  CI_MUNIC_MB
+
+  """
+  Ontario
+  """
+  CI_MUNIC_ON
+
+  """
+  Quebec
+  """
+  CI_MUNIC_QC
+
+  """
+  New Brunswick
+  """
+  CI_MUNIC_NB
+
+  """
+  Nova Scotia
+  """
+  CI_MUNIC_NS
+
+  """
+  Prince Edward Island
+  """
+  CI_MUNIC_PEI
+
+  """
+  Newfoundland and Labrador
+  """
+  CI_MUNIC_NL
+
+  """
+  Yukon
+  """
+  CI_MUNIC_YT
+
+  """
+  Nunavut
+  """
+  CI_MUNIC_NU
+
+  """
+  Northwest Territories
+  """
+  CI_MUNIC_NT
+
+  """
+  Information and Communication Technology
+  """
+  CI_ICT
+
+  """
+  Finance
+  """
+  CI_FIN
+
+  """
+  Energy and Utilities
+  """
+  CI_UTIL
+
+  """
+  Electricity
+  """
+  CI_UTIL_ELECT
+
+  """
+  Oil and Gas
+  """
+  CI_UTIL_OIL
+
+  """
+  Nuclear
+  """
+  CI_UTIL_NCLR
+
+  """
+  Mines and Minerals
+  """
+  CI_UTIL_MINE
+
+  """
+  Transportation
+  """
+  CI_TRANS
+
+  """
+  Air
+  """
+  CI_TRANS_AIR
+
+  """
+  Marine
+  """
+  CI_TRANS_SEA
+
+  """
+  Rail
+  """
+  CI_TRANS_RAIL
+
+  """
+  Road
+  """
+  CI_TRANS_ROAD
+
+  """
+  Manufacturing
+  """
+  CI_MANUF
+
+  """
+  Health
+  """
+  CI_HEALTH
+
+  """
+  Food
+  """
+  CI_FOOD
+
+  """
+  Water
+  """
+  CI_WATER
+
+  """
+  Safety
+  """
+  CI_SAFETY
+
+  """
+  Other
+  """
+  CI_OTHER
+
+  """
+  Industrial Control Systems
+  """
+  CI_SCADA
+
+  """
+  Cyber Security
+  """
+  CI_CYBER
+
+  """
+  Academia
+  """
+  CI_EDU
+
+  """
+  Non-Critical
+  """
+  CI_NCSI
+
+  """
+  Assess
+  """
+  S1
+
+  """
+  Deploy
+  """
+  S2
+
+  """
+  Enforce
+  """
+  S3
+
+  """
+  Maintain
+  """
+  S4
+}
+
+type Group implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  description: String
+  sectorId: Int
+  organizations(
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): OrganizationsConnection
+  groupSector: Sector
+}
+
+type GroupsConnection {
+  """
+  Pagination data for this connection.
+  """
+  pageInfo: PageInfo!
+
+  """
+  Contains the nodes in this connection.
+  """
+  edges: [GroupsEdge]!
+}
+
+"""
+A Relay edge containing a `Groups` and its cursor.
+"""
+type GroupsEdge {
+  """
+  The item at the end of the edge
+  """
+  node: Group
+
+  """
+  A cursor for use in pagination
+  """
+  cursor: String!
+}
+
+"""
+The central gathering point for all of the GraphQL mutations.
+"""
+type Mutation {
+  createUser(
+    confirmPassword: String!
+    email: EmailAddress!
+    password: String!
+    username: String!
+  ): CreateUser
+  signIn(
+    """
+    User's email
+    """
+    email: EmailAddress!
+
+    """
+    Users's password
+    """
+    password: String!
+  ): SignInUser
+  updatePassword(
+    confirmPassword: String!
+    email: EmailAddress!
+    password: String!
+  ): UpdateUserPassword
+  authenticateTwoFactor(
+    email: EmailAddress!
+    otpCode: String!
+  ): ValidateTwoFactor
+  updateUserRole(
+    email: EmailAddress!
+    role: String!
+    token: String!
+  ): UpdateUserRole
+}
+
+"""
+An object with an ID
+"""
+interface Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+}
+
+type Organization implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  name: String
+  description: String
+  group: Group
+  domains(
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): DomainsConnection
+}
+
+type OrganizationsConnection {
+  """
+  Pagination data for this connection.
+  """
+  pageInfo: PageInfo!
+
+  """
+  Contains the nodes in this connection.
+  """
+  edges: [OrganizationsEdge]!
+}
+
+"""
+A Relay edge containing a `Organizations` and its cursor.
+"""
+type OrganizationsEdge {
+  """
+  The item at the end of the edge
+  """
+  node: Organization
+
+  """
+  A cursor for use in pagination
+  """
+  cursor: String!
+}
+
+"""
+An enumeration.
+"""
+enum OrganizationsEnum {
+  """
+  Arts
+  """
+  Arts
+
+  """
+  BOC - Bank of Canada
+  """
+  BOC
+}
+
+"""
+The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
+"""
+type PageInfo {
+  """
+  When paginating forwards, are there more items?
+  """
+  hasNextPage: Boolean!
+
+  """
+  When paginating backwards, are there more items?
+  """
+  hasPreviousPage: Boolean!
+
+  """
+  When paginating backwards, the cursor to continue.
+  """
+  startCursor: String
+
+  """
+  When paginating forwards, the cursor to continue.
+  """
+  endCursor: String
+}
+
+"""
+The central gathering point for all of the GraphQL queries.
+"""
+type Query {
+  """
+  The ID of the object
+  """
+  node(id: ID!): Node
+  allUsers(before: String, after: String, first: Int, last: Int): UserConnection
+
+  """
+  Allows selection of a sector from a given sector ID
+  """
+  getSectorById(id: Int!): [Sector]
+
+  sector(name: SectorEnums!): Sector
+
+  """
+  Allows selection of sector information from a given sector enum
+  """
+  getSectorsBySector(sector: SectorEnums!): [Sector]
+
+  """
+  Allows selection of all sectors from a given zone enum
+  """
+  getSectorByZone(zone: ZoneEnums!): [Sector]
+
+  """
+  Allows selection of a group from a given group ID
+  """
+  getGroupById(id: Int!): [Group]
+
+  """
+  Allows the selection of group information from a given group enum
+  """
+  getGroupByGroup(group: GroupEnums!): [Group]
+
+  """
+  Allows selection of groups from a given sector enum
+  """
+  getGroupBySector(sector: SectorEnums!): [Group]
+
+  """
+  Allows the selection of an organization from a given ID
+  """
+  getOrgById(id: Int!): [Organization]
+
+  """
+  Allows the selection of an organization from its given organization code
+  """
+  organization(name: OrganizationsEnum!): Organization
+
+  """
+  Allows the selection of organizations from a given group
+  """
+  getOrgByGroup(group: GroupEnums!): [Organization]
+
+  """
+  Allows the selection of a domain from a given ID
+  """
+  getDomainById(id: Int!): [Domain]
+
+  """
+  Allows the selection of a domain from a given domain
+  """
+  domain(url: URL!): Domain
+
+  """
+  Allows the selection of domains under an organization
+  """
+  domains(organization: OrganizationsEnum!): [Domain]
+
+  """
+  An api endpoint used to generate a OTP url used for two factor authentication.
+  """
+  generateOtpUrl(email: EmailAddress!): String
+
+  """
+  An api endpoint to view a current user's claims -- Requires an active JWT.
+  """
+  testUserClaims(token: String!): String
+}
+
+enum SectorEnums {
+  """
+  Arts
+  """
+  GC_A
+
+  """
+  Banking and Finance
+  """
+  GC_BF
+
+  """
+  Border Services and Immigration
+  """
+  GC_BSI
+
+  """
+  Government Administration
+  """
+  GC_GA
+
+  """
+  Health
+  """
+  GC_H
+
+  """
+  Industry and Business Development
+  """
+  GC_IBD
+
+  """
+  International Affairs Trade & Development
+  """
+  GC_IATD
+
+  """
+  Legal
+  """
+  GC_L
+
+  """
+  Natural Resources Energy & Environment
+  """
+  GC_NRED
+
+  """
+  Security Intelligence and Defence
+  """
+  GC_SID
+
+  """
+  Transportation
+  """
+  GC_T
+
+  """
+  Social and Cultural Development
+  """
+  GC_SCD
+
+  """
+  Future Government of Canada
+  """
+  GC_F
+
+  """
+  Government (Provincial/Territorial/Municipal)
+  """
+  CI_PTM
+
+  """
+  Information and Communication Technology
+  """
+  CI_ICT
+
+  """
+  Finance
+  """
+  CI_FIN
+
+  """
+  Energy and Utilities
+  """
+  CI_UTIL
+
+  """
+  Transportation
+  """
+  CI_TRANS
+
+  """
+  Manufacturing
+  """
+  CI_MANUF
+
+  """
+  Health
+  """
+  CI_HEALTH
+
+  """
+  Food
+  """
+  CI_FOOD
+
+  """
+  Water
+  """
+  CI_WATER
+
+  """
+  Safety
+  """
+  CI_SAFETY
+
+  """
+  Other
+  """
+  CI_OTHER
+
+  """
+  Development test cases
+  """
+  TEST_DEV
+}
+
+type Sector implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  name: String
+  zone: String
+  description: String
+  groups(before: String, after: String, first: Int, last: Int): GroupsConnection
+}
+
+type SignInUser {
+  user: UserObject
+
+  """
+  Token returned to user
+  """
+  authToken: String
+}
+
+type UpdateUserPassword {
+  user: UserObject
+}
+
+type UpdateUserRole {
+  user: UserObject
+}
+
+"""
+A field whose value conforms to the standard URL format as specified in RFC3986:
+https://www.ietf.org/rfc/rfc3986.txt.
+"""
+scalar URL
+
+type UserConnection {
+  """
+  Pagination data for this connection.
+  """
+  pageInfo: PageInfo!
+
+  """
+  Contains the nodes in this connection.
+  """
+  edges: [UserEdge]!
+}
+
+"""
+A Relay edge containing a `User` and its cursor.
+"""
+type UserEdge {
+  """
+  The item at the end of the edge
+  """
+  node: UserObject
+
+  """
+  A cursor for use in pagination
+  """
+  cursor: String!
+}
+
+type UserObject implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  username: String
+  displayName: String
+  userEmail: String
+  preferredLang: String
+  failedLoginAttempts: Int
+  tfaValidated: Boolean
+  userRole: String
+}
+
+type ValidateTwoFactor {
+  user: UserObject
+}
+
+enum ZoneEnums {
+  """
+  Government of Canada
+  """
+  GC
+
+  """
+  Critical Infrastructure
+  """
+  CI
+
+  """
+  Development Test Case
+  """
+  TEST
+}
+

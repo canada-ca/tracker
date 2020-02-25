@@ -19,14 +19,6 @@ module.exports = ({ mode }) => {
       }),
     }),
     plugins: [
-      new webpack.DefinePlugin({
-        'process.env': {
-          GRAPHQL_ENDPOINT: ifNotProduction(
-            '"http://localhost:9002/graphql"',
-            '"/graphql"',
-          ),
-        },
-      }),
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         meta: {
