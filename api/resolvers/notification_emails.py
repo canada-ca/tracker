@@ -4,6 +4,10 @@ from flask import url_for
 from itsdangerous import URLSafeTimedSerializer
 from notifications_python_client import NotificationsAPIClient
 
+from functions.email_templates import (
+    email_verification_template,
+    password_reset_template)
+
 NOTIFICATION_API_KEY = os.getenv('NOTIFICATION_API_KEY')
 NOTIFICATION_API_URL = os.getenv('NOTIFICATION_API_URL')
 
@@ -17,14 +21,11 @@ notifications_client = NotificationsAPIClient(
 
 
 def resolve_send_password_reset(self, info, email):
-    template_id = '8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1'
+    template_id = password_reset_template()
     password_reset_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
-    password_reset_url = "TODO: Send to front end"
-    # password_reset_url = url_for('_new_password',
-    #                              token=password_reset_serial.dumps(
-    #                                  email, salt=SUPER_SECRET_SALT),
-    #                              _external=True
-    #                              )
+    # TODO: Add the proper URL not just token
+    password_reset_url = password_reset_serial.dumps(
+                                      email, salt=SUPER_SECRET_SALT)
 
     response = notifications_client.send_email_notification(
         email_address=email,
@@ -41,20 +42,18 @@ def resolve_send_password_reset(self, info, email):
 
 
 def resolve_send_validation_email(self, info, email):
-    template_id = 'TODO: Create template in notification admin'
-    password_reset_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
-    password_reset_url = "TODO: Send to front end"
-    # password_reset_url = url_for('_new_password',
-    #                              token=password_reset_serial.dumps(
-    #                                  email, salt=SUPER_SECRET_SALT),
-    #                              _external=True
-    #                              )
+    template_id = email_verification_template()
+
+    verify_email_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
+    # TODO: Add the proper URL not just token
+    verify_email_url = verify_email_serial.dumps(
+        email, salt=SUPER_SECRET_SALT)
 
     response = notifications_client.send_email_notification(
         email_address=email,
         personalisation={
             'user': email,
-            'password_reset_url': password_reset_url
+            'verify_email_url': verify_email_url
         },
         template_id=template_id
     )
