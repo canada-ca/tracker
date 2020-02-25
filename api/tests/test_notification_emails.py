@@ -63,8 +63,8 @@ class TestVerifyEmail:
             }
             ''')
         assert executed['data']
-        assert executed['data']['sendPasswordReset']
-        assert "Hello testuser," in executed['data']['sendPasswordReset']
+        assert executed['data']['sendValidationEmail']
+        assert "Hello testuser," in executed['data']['sendValidationEmail']
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
