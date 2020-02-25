@@ -30,15 +30,12 @@ def resolve_send_password_reset(self, info, email):
     response = notifications_client.send_email_notification(
         email_address=email,
         personalisation={
-            'user': email,
+            'user': email.split('@')[0],  # A pseudo username
             'password_reset_url': password_reset_url
         },
         template_id=template_id
     )
-    if response is not None:
-        return True
-    else:
-        return False
+    return response
 
 
 def resolve_send_validation_email(self, info, email):
@@ -52,14 +49,11 @@ def resolve_send_validation_email(self, info, email):
     response = notifications_client.send_email_notification(
         email_address=email,
         personalisation={
-            'user': email,
+            'user': email.split('@')[0],  # A pseudo username
             'verify_email_url': verify_email_url
         },
         template_id=template_id
     )
-    if response is not None:
-        return True
-    else:
-        return False
+    return response
 
 
