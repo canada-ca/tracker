@@ -9,6 +9,10 @@ from unittest import TestCase
 
 from functions.error_messages import scalar_error_type
 
+from functions.email_templates import (
+    email_verification_template,
+    password_reset_template)
+
 from manage import seed, remove_seed
 
 seed()
@@ -37,6 +41,7 @@ class TestPasswordReset:
         assert executed['data']
         assert executed['data']['sendPasswordReset']
         assert "Hello testuser," in executed['data']['sendPasswordReset']
+        assert password_reset_template() in executed['data']['sendValidationEmail']
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
@@ -65,6 +70,7 @@ class TestVerifyEmail:
         assert executed['data']
         assert executed['data']['sendValidationEmail']
         assert "Hello testuser," in executed['data']['sendValidationEmail']
+        assert email_verification_template() in executed['data']['sendValidationEmail']
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
