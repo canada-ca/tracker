@@ -3,7 +3,8 @@ import os
 from os.path import dirname, join, expanduser, normpath, realpath
 from graphene.test import Client
 from flask_bcrypt import Bcrypt
-from flask import request
+from flask import Request
+from werkzeug.test import create_environ
 
 import pytest
 from unittest import TestCase
@@ -111,14 +112,18 @@ class TestUserRole(TestCase):
             token = get_token['data']['signIn']['authToken']
             assert token is not None
 
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+
             executed = client.execute(
                 '''
                 {
                     testUserClaims(org: ORG1)
                 }
-                ''', context_value={'headers': {
-                    'Authorization': token
-                }})
+                ''', context_value=request_headers)
             assert executed['data']
             assert executed['data']['testUserClaims']
             assert executed['data']['testUserClaims'] == "Passed"
@@ -138,12 +143,18 @@ class TestUserRole(TestCase):
             token = get_token['data']['signIn']['authToken']
             assert token is not None
 
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+
             executed = client.execute(
                 '''
                 {
                     testUserClaims(org: ORG1)
                 }
-                ''', context_value=)
+                ''', context_value=request_headers)
             assert executed['errors']
             assert executed['errors'][0]
             assert executed['errors'][0]['message'] == error_not_an_admin()

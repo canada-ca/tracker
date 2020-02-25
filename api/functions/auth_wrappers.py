@@ -20,7 +20,7 @@ def decode_auth_token(request):
     """
     auth_header = request.headers.get('Authorization')
     try:
-        payload = jwt.decode(auth_header, os.getenv('SUPER_SECRET_KEY'))
+        payload = jwt.decode(auth_header, os.getenv('SUPER_SECRET_KEY'), algorithms='HS256')
         return payload['roles']
     except jwt.ExpiredSignatureError:
         raise GraphQLError('Signature expired. Please login again')
