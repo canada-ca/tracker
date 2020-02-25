@@ -29,6 +29,7 @@ flask-migrate = "*"
 pytest = "*"
 pyotp = "*"
 pyjwt = "*"
+flask-graphql-auth = "*"
 
 [scripts]
 test = "pytest"
