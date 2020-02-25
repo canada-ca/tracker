@@ -11,7 +11,7 @@ from scalars.email_address import *
 from models import User_affiliations as UserAff
 from schemas.user import UserObject
 
-from functions.auth_wrappers import require_super_admin
+from functions.auth_wrappers import require_token
 
 
 class UserAffClass(SQLAlchemyObjectType):
@@ -34,7 +34,7 @@ class UpdateUserRole(graphene.Mutation):
     user = graphene.Field(lambda: UserObject)
     status = graphene.String()
 
-    @require_super_admin
+    @require_token
     def mutate(self, info, **kwargs):
-        user = update_user_role(user_name=kwargs.get('userName'), org=kwargs.get('org'), new_role=kwargs.get('role'))
+        user = update_user_role(**kwargs)
         return UpdateUserRole(user=user, status="Update Successful")

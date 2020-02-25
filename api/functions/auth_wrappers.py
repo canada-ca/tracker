@@ -68,66 +68,12 @@ def check_user_claims(user_claims):
         raise GraphQLError("User has no claims")
 
 
-def require_super_admin(method):
+def require_token(method):
     def wrapper(self, *args, **kwargs):
         auth_resp = decode_auth_token(args[0].context)
         if isinstance(auth_resp, list):
             user_claims = check_user_claims(auth_resp)
-            super_admin = False
-            for claim in user_claims:
-                if claim['permission'] == 'super_admin':
-                    super_admin = True
-            org_id_list = []
-            if super_admin:
-                for value in db.session.query(Organizations.id).distinct():
-                    org_id_list.append(value)
-            kwargs['orgIDList'] = org_id_list
-            return method(self, *args, **kwargs)
-        raise GraphQLError(auth_resp)
-
-    return wrapper
-
-
-def require_admin(method):
-    def wrapper(self, *args, **kwargs):
-        auth_resp = decode_auth_token(args[0].context)
-        if isinstance(auth_resp, list):
-            user_claims = check_user_claims(auth_resp)
-            org_id_list = []
-            for claim in user_claims:
-                if claim['permission'] in user_admin_perm:
-                    org_id_list.append(claim['org_id'])
-            kwargs['orgIDList'] = org_id_list
-            return method(self, *args, **kwargs)
-        raise GraphQLError(auth_resp)
-    return wrapper
-
-
-def require_user_write(method):
-    def wrapper(self, *args, **kwargs):
-        auth_resp = decode_auth_token(args[0].context)
-        if isinstance(auth_resp, list):
-            user_claims = check_user_claims(auth_resp)
-            org_id_list = []
-            for claim in user_claims:
-                if claim['permission'] in user_write_perm:
-                    org_id_list.append(claim['org_id'])
-            kwargs['orgIDList'] = org_id_list
-            return method(self, *args, **kwargs)
-        raise GraphQLError(auth_resp)
-    return wrapper
-
-
-def require_user_read(method):
-    def wrapper(self, *args, **kwargs):
-        auth_resp = decode_auth_token(args[0].context)
-        if isinstance(auth_resp, list):
-            user_claims = check_user_claims(auth_resp)
-            org_id_list = []
-            for claim in user_claims:
-                if claim['permission'] in user_read_perm:
-                    org_id_list.append(claim['org_id'])
-            kwargs['orgIDList'] = org_id_list
+            kwargs['user_roles'] = user_claims
             return method(self, *args, **kwargs)
         raise GraphQLError(auth_resp)
     return wrapper
