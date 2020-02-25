@@ -1,5 +1,4 @@
 from graphql import GraphQLError
-from flask_graphql_auth import *
 from sqlalchemy.orm import load_only
 
 from user_roles import is_admin, is_super_admin
@@ -25,7 +24,7 @@ def update_user_role(user_name, org, new_role):
         # State that no such user exists using that email address
         raise GraphQLError(error_user_does_not_exist())
 
-    roles = get_jwt_claims()['roles']  # Pulls the 'role' out of the JWT user claims associated with the token.
+    # roles = get_jwt_claims()['roles']  # Pulls the 'role' out of the JWT user claims associated with the token.
 
     def update_role(user, new_role, org):
         org_id = Organizations.query.filter(Organizations.organization == org)\

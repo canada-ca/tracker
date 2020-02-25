@@ -1,7 +1,6 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from flask_graphql_auth import *
 
 from functions.update_user_role import update_user_role
 
@@ -11,6 +10,8 @@ from scalars.email_address import *
 
 from models import User_affiliations as UserAff
 from schemas.user import UserObject
+
+from functions.auth_wrappers import require_super_admin
 
 
 class UserAffClass(SQLAlchemyObjectType):
@@ -26,7 +27,6 @@ class UserAffConnection(relay.Connection):
 
 class UpdateUserRole(graphene.Mutation):
     class Arguments:
-        token = graphene.String(required=True)
         user_name = EmailAddress(required=True)
         org = OrganizationsEnum(required=True)
         role = RoleEnums(required=True)
@@ -34,7 +34,7 @@ class UpdateUserRole(graphene.Mutation):
     user = graphene.Field(lambda: UserObject)
     status = graphene.String()
 
-    @mutation_jwt_required
-    def mutate(self, info, user_name, org, role):
-        user = update_user_role(user_name=user_name, org=org, new_role=role)
+    @require_super_admin
+    def mutate(self, info, **kwargs):
+        user = update_user_role(user_name=kwargs.get('userName'), org=kwargs.get('org'), new_role=kwargs.get('role'))
         return UpdateUserRole(user=user, status="Update Successful")

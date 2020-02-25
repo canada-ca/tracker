@@ -1,7 +1,9 @@
+import jwt
+import datetime
+import os
 from graphql import GraphQLError
 from flask_bcrypt import Bcrypt
 from flask import current_app as app
-from flask_graphql_auth import create_access_token
 from sqlalchemy.orm import load_only
 
 from functions.input_validators import *
@@ -42,6 +44,7 @@ def sign_in_user(user_name, password):
             counter = 0
             for select in user_aff:
                 temp_dict = {
+                    'user_id': select['user_id'],
                     'org_id': select['organization_id'],
                     'permission': select['permission']
                 }
@@ -49,11 +52,23 @@ def sign_in_user(user_name, password):
                 user_roles.append(temp_dict)
         else:
             user_roles = 'none'
-        user_claims = {"roles": user_roles}
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=1800),
+                'iat': datetime.datetime.utcnow(),
+                "roles": user_roles
+            }
+            token = jwt.encode(
+                payload,
+                os.getenv('SUPER_SECRET_KEY'),
+                algorithm='HS256'
+            ).decode('utf-8')
+        except Exception as e:
+            raise GraphQLError('Token Generation Error: ' + str(e))
 
         # A temporary dictionary that will be returned to the graphql resolver
         temp_dict = {
-            'auth_token': create_access_token(user.id, user_claims=user_claims),
+            'auth_token': token,
             'user': user
         }
 
