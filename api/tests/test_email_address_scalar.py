@@ -15,7 +15,8 @@ SCRIPT_DIR = os.path.dirname(
     os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from scalars.email_address import EmailAddress, scalar_error_type, scalar_error_only_types
+from scalars.email_address import EmailAddress, scalar_error_type, \
+    scalar_error_only_types
 
 
 class TestEmailAddressScalar(unittest.TestCase):

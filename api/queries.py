@@ -1,23 +1,25 @@
-import os
 from graphene_sqlalchemy import SQLAlchemyConnectionField
-from graphene import String
-import pyotp
 
 import graphene
-from sqlalchemy.orm import joinedload
-from graphene import relay, String
-import pyotp
+from graphene import relay
 
 from model_enums.sectors import SectorEnums, ZoneEnums
 from model_enums.groups import GroupEnums
 from model_enums.organiztions import OrganizationsEnum
 
-from schemas.user import *
+from schemas.user import (
+    UserConnection,
+    CreateUser,
+    SignInUser,
+    UpdateUserPassword,
+    ValidateTwoFactor
+)
 from schemas.user_affiliations import (
     UpdateUserRole
 )
 
 from scalars.url import URL
+from scalars.email_address import EmailAddress
 
 from schemas.sectors import Sectors
 from schemas.groups import Groups

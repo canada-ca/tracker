@@ -9,10 +9,11 @@ from graphene.test import Client
 from unittest import TestCase
 
 from manage import seed, remove_seed
+
 seed()
 from app import app
 from db import db
-from models import Sectors, Groups, Organizations
+from models import Groups, Organizations
 from queries import schema
 remove_seed()
 
@@ -160,8 +161,7 @@ class TestOrgResolver(TestCase):
 
         assert executed['errors']
         assert executed['errors'][0]
-        assert executed['errors'][0][
-                   'message'] == f'Argument "org" has invalid value fds.\nExpected type "OrganizationsEnum", found fds.'
+        assert executed['errors'][0]['message'] == f'Argument "org" has invalid value fds.\nExpected type "OrganizationsEnum", found fds.'
 
     def test_org_resolver_by_group_invalid(self):
         """Test get_org_by_group invalid Zone error handling"""
@@ -178,5 +178,4 @@ class TestOrgResolver(TestCase):
 
         assert executed['errors']
         assert executed['errors'][0]
-        assert executed['errors'][0][
-                   'message'] == f'Argument "group" has invalid value dsa.\nExpected type "GroupEnums", found dsa.'
+        assert executed['errors'][0]['message'] == f'Argument "group" has invalid value dsa.\nExpected type "GroupEnums", found dsa.'
