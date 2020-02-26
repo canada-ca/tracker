@@ -40,7 +40,10 @@ class TestPasswordReset:
             ''')
         assert executed['data']
         assert executed['data']['sendPasswordReset']
+
+        # Checks that the correct user name is sent.
         assert "Hello testuser," in executed['data']['sendPasswordReset']
+        # Checks that the correct template is sent.
         assert password_reset_template() in executed['data']['sendPasswordReset']
 
     def test_invalid_email(self):
@@ -69,7 +72,10 @@ class TestVerifyEmail:
             ''')
         assert executed['data']
         assert executed['data']['sendValidationEmail']
+
+        # Checks that the correct user name is sent.
         assert "Hello testuser," in executed['data']['sendValidationEmail']
+        # Checks that the correct template is sent.
         assert email_verification_template() in executed['data']['sendValidationEmail']
 
     def test_invalid_email(self):

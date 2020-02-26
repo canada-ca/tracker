@@ -23,9 +23,10 @@ notifications_client = NotificationsAPIClient(
 def resolve_send_password_reset(self, info, email):
     template_id = password_reset_template()
     password_reset_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
-    # TODO: Add the proper URL not just token
-    password_reset_url = password_reset_serial.dumps(
-                                      email, salt=SUPER_SECRET_SALT)
+
+    # TODO: Change to deployment URL
+    password_reset_url = "http://localhost:3000/reset-password/" + password_reset_serial.dumps(
+        email, salt=SUPER_SECRET_SALT)
 
     response = notifications_client.send_email_notification(
         email_address=email,
@@ -42,8 +43,9 @@ def resolve_send_validation_email(self, info, email):
     template_id = email_verification_template()
 
     verify_email_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
-    # TODO: Add the proper URL not just token
-    verify_email_url = verify_email_serial.dumps(
+
+    # TODO: Change to deployment URL
+    verify_email_url = "http://localhost:3000/verify-email/" + verify_email_serial.dumps(
         email, salt=SUPER_SECRET_SALT)
 
     response = notifications_client.send_email_notification(
