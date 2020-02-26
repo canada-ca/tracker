@@ -1,7 +1,6 @@
 import os
 from graphene_sqlalchemy import SQLAlchemyConnectionField
 from graphene import String
-from flask_graphql_auth import *
 import pyotp
 
 import graphene

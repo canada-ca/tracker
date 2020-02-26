@@ -1,7 +1,6 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from flask_graphql_auth import *
 
 from functions.create_user import create_user
 from functions.sign_in_user import sign_in_user

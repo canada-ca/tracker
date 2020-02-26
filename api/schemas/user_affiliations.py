@@ -6,7 +6,7 @@ from functions.update_user_role import update_user_role
 
 from model_enums.organiztions import OrganizationsEnum
 from model_enums.roles import RoleEnums
-from scalars.email_address import *
+from scalars.email_address import EmailAddress
 
 from models import User_affiliations as UserAff
 from schemas.user import UserObject
