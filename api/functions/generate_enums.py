@@ -1,5 +1,5 @@
 import graphene
-import enum
+from enum import Enum
 from sqlalchemy.orm import load_only
 from model_enums import create_enum_app, create_enum_db
 
@@ -22,9 +22,9 @@ def create_enums(Table, enum_name, column):
         enum_dict.update({select[1]: select[1]})
 
     if not len(enum_dict):
-        ret_enum = enum.Enum(enum_name, 'EMPTY')
+        ret_enum = Enum(enum_name, 'EMPTY')
     else:
-        ret_enum = enum.Enum(enum_name, enum_dict)
+        ret_enum = Enum(enum_name, enum_dict)
 
     return graphene.Enum.from_enum(ret_enum)
 
@@ -48,23 +48,23 @@ def create_enum_with_descriptions(Table, enum_name, enum_column, description_col
         enum_dict.update({select[1]: select[1]})
 
     if not len(enum_dict):
-        ret_enum = enum.Enum(enum_name, 'EMPTY')
+        ret_enum = Enum(enum_name, 'EMPTY')
     else:
-        ret_enum = enum.Enum(enum_name, enum_dict)
+        ret_enum = Enum(enum_name, enum_dict)
 
     description_dict = dict()
 
-    for e in ret_enum:
+    for enum in ret_enum:
         with app.app_context():
             query = db.session.query(Table).filter(
-                getattr(Table, enum_column) == e.name).options(
+                getattr(Table, enum_column) == enum.name).options(
                     load_only(description_column))
             row = db.session.execute(query).first()
 
             try:
-                description_dict.update({e.name: row[1]})
+                description_dict.update({enum.name: row[1]})
             except:
-                description_dict.update({e.name: "Error loading description"})
+                description_dict.update({enum.name: "Error loading description"})
 
         @property
         def description(self):
