@@ -60,7 +60,7 @@ def sign_in_user(user_name, password):
             }
             token = jwt.encode(
                 payload,
-                os.getenv('SUPER_SECRET_KEY'),
+                str(os.getenv('SUPER_SECRET_KEY')),
                 algorithm='HS256'
             ).decode('utf-8')
         except Exception as e:
