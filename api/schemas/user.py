@@ -51,7 +51,7 @@ class SignInUser(graphene.Mutation):
     def mutate(cls, _, info, user_name, password):
         user_dict = sign_in_user(user_name, password)
         return SignInUser(
-            auth_token=user_dict['auth_token'],
+            auth_token=str(user_dict['auth_token']),
             user=user_dict['user']
         )
 
