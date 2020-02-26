@@ -1,10 +1,10 @@
 def orm_to_dict(sql):
-    d1 = []
+    rtr_list = []
     counter = 0
     for row in sql:
-        d2 = {}
+        row_contents = {}
         for column in row.__table__.columns:
-            d2[column.name] = getattr(row, column.name)
+            row_contents[column.name] = getattr(row, column.name)
         counter += 1
-        d1.append(d2)
-    return d1
+        rtr_list.append(row_contents)
+    return rtr_list
