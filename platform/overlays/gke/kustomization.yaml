@@ -7,16 +7,7 @@ images:
 - name: gcr.io/track-compliance/api
   newTag: master-48db84c
 - name: gcr.io/track-compliance/frontend
-  newTag: master-e821237
-secretGenerator:
-- envs:
-  - postgres.env
-  name: postgres
-  namespace: api
-- envs:
-  - api.env
-  name: api
-  namespace: api
+  newTag: master-1b59595
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
