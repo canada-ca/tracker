@@ -6,11 +6,11 @@ from models import Organizations as OrganizationsModel
 
 
 class Organizations(SQLAlchemyObjectType):
-	class Meta:
-		model = OrganizationsModel
-		interfaces = (relay.Node, )
+    class Meta:
+        model = OrganizationsModel
+        interfaces = (relay.Node,)
 
 
 class OrganizationsConnection(relay.Connection):
-	class Meta:
-		node = Organizations
+    class Meta:
+        node = Organizations

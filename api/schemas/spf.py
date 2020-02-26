@@ -6,11 +6,11 @@ from models import Spf_scans as SpfModel
 
 
 class Spf(SQLAlchemyObjectType):
-	class Meta:
-		model = SpfModel
-		interfaces = (relay.Node, )
+    class Meta:
+        model = SpfModel
+        interfaces = (relay.Node,)
 
 
 class SpfConnection(relay.Connection):
-	class Meta:
-		node = Spf
+    class Meta:
+        node = Spf

@@ -5,12 +5,12 @@ from graphene_sqlalchemy import SQLAlchemyObjectType
 from models import Groups as GroupsModel
 
 
-class Groups (SQLAlchemyObjectType):
-	class Meta:
-		model = GroupsModel
-		interfaces = (relay.Node, )
+class Groups(SQLAlchemyObjectType):
+    class Meta:
+        model = GroupsModel
+        interfaces = (relay.Node,)
 
 
 class GroupsConnection(relay.Connection):
-	class Meta:
-		node = Groups
+    class Meta:
+        node = Groups
