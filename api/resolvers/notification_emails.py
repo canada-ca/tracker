@@ -1,12 +1,16 @@
 import os
 
-from flask import url_for
 from itsdangerous import URLSafeTimedSerializer
 from notifications_python_client import NotificationsAPIClient
 
 from functions.email_templates import (
     email_verification_template,
     password_reset_template)
+from schemas.notification_email import (
+    Content,
+    Template,
+    NotificationEmail
+)
 
 NOTIFICATION_API_KEY = os.getenv('NOTIFICATION_API_KEY')
 NOTIFICATION_API_URL = os.getenv('NOTIFICATION_API_URL')
@@ -36,7 +40,8 @@ def resolve_send_password_reset(self, info, email):
         },
         template_id=template_id
     )
-    return response
+
+    return populate_notification_email(response)
 
 
 def resolve_send_validation_email(self, info, email):
@@ -56,6 +61,35 @@ def resolve_send_validation_email(self, info, email):
         },
         template_id=template_id
     )
-    return response
+
+    return populate_notification_email(response)
 
 
+def populate_notification_email(response):
+    """
+    This function populates a NotificationEmail object to be sent to GraphQL
+    :param response: The email response dict from notification client
+    :return: The populated NotificationEmail object ot be sent to GraphQL
+    """
+    content = Content(response['content']['body'],
+                      response['content']['from_email'],
+                      response['content']['subject'])
+
+    id = response['id']
+
+    reference = response['reference']
+
+    scheduled_for = response['scheduled_for']
+
+    template = Template(response['template']['id'],
+                        response['template']['uri'],
+                        response['template']['version'])
+
+    uri = response['uri']
+
+    return NotificationEmail(content,
+                             id,
+                             reference,
+                             scheduled_for,
+                             template,
+                             uri)

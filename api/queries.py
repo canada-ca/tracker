@@ -1,58 +1,28 @@
-import os
 from graphene_sqlalchemy import SQLAlchemyConnectionField
-from graphene import String
-from flask_graphql_auth import *
-import pyotp
 
-import graphene
-from sqlalchemy.orm import joinedload
-from graphene import relay, String
-import pyotp
-
-from model_enums.sectors import SectorEnums, ZoneEnums
 from model_enums.groups import GroupEnums
 from model_enums.organiztions import OrganizationsEnum
-
-from schemas.user import *
-
-from scalars.url import URL
-
-from schemas.sectors import Sectors
-from schemas.groups import Groups
-from schemas.organizations import Organizations
-from schemas.domains import Domains
-from schemas.scans import Scans
-
-from resolvers.sectors import (
-    resolve_get_sector_by_id,
-    resolve_get_sectors_by_sector,
-    resolve_get_sector_by_zone
+from model_enums.sectors import SectorEnums, ZoneEnums
+from resolvers.domains import (
+    resolve_get_domain_by_id,
+    resolve_get_domain_by_domain,
+    resolve_get_domain_by_organization
 )
-
 from resolvers.groups import (
     resolve_get_group_by_id,
     resolve_get_group_by_group,
     resolve_get_group_by_sector
 
 )
-
-from resolvers.users import (
-    resolve_test_user_claims,
-    resolve_generate_otp_url,
+from resolvers.notification_emails import (
+    resolve_send_password_reset,
+    resolve_send_validation_email
 )
-
 from resolvers.organizations import (
     resolve_get_org_by_id,
     resolve_get_org_by_org,
     resolve_get_orgs_by_group
 )
-
-from resolvers.domains import (
-    resolve_get_domain_by_id,
-    resolve_get_domain_by_domain,
-    resolve_get_domain_by_organization
-)
-
 from resolvers.scans import (
     resolve_get_scan_by_id,
     resolve_get_scans_by_date,
@@ -60,11 +30,23 @@ from resolvers.scans import (
     resolve_get_scans_by_domain,
     resolve_get_scans_by_user_id
 )
-
-from resolvers.notification_emails import (
-    resolve_send_password_reset,
-    resolve_send_validation_email
+from resolvers.sectors import (
+    resolve_get_sector_by_id,
+    resolve_get_sectors_by_sector,
+    resolve_get_sector_by_zone
 )
+from resolvers.users import (
+    resolve_test_user_claims,
+    resolve_generate_otp_url,
+)
+from scalars.url import URL
+from schemas.domains import Domains
+from schemas.groups import Groups
+from schemas.notification_email import (NotificationEmail)
+from schemas.organizations import Organizations
+from schemas.scans import Scans
+from schemas.sectors import Sectors
+from schemas.user import *
 
 
 class Query(graphene.ObjectType):
@@ -190,13 +172,15 @@ class Query(graphene.ObjectType):
         description="An api endpoint to view a current user's claims -- Requires an active JWT."
     )
 
-    send_password_reset = graphene.String(
+    send_password_reset = graphene.Field(
+        NotificationEmail,
         email=graphene.Argument(EmailAddress, required=True),
         resolver=resolve_send_password_reset,
         description="An api endpoint that will send an email to a given email address so a user can reset their password for the web app."
     )
 
-    send_validation_email = graphene.String(
+    send_validation_email = graphene.Field(
+        NotificationEmail,
         email=graphene.Argument(EmailAddress, required=True),
         resolver=resolve_send_validation_email,
         description="An api endpoint that will send a verification email to a given email address."

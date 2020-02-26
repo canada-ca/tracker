@@ -20,6 +20,7 @@ from db import db
 from app import app
 from models import Sectors
 from queries import schema
+
 remove_seed()
 
 # This is the only way I could get imports to work for unit testing.
@@ -35,29 +36,46 @@ class TestPasswordReset:
         executed = client.execute(
             '''
             {
-                sendPasswordReset(email: "testuser@testemail.ca")
+                sendPasswordReset(email: "testuser@testemail.ca") {
+                    content{
+                        body
+                    }
+                    template{
+                        id
+                    }
+                }
             }
             ''')
+
         assert executed['data']
         assert executed['data']['sendPasswordReset']
+        assert executed['data']['sendPasswordReset']['content']
+        assert executed['data']['sendPasswordReset']['content']['body']
+        assert executed['data']['sendPasswordReset']['template']
+        assert executed['data']['sendPasswordReset']['template']['id']
 
         # Checks that the correct user name is sent.
-        assert "Hello testuser," in executed['data']['sendPasswordReset']
+        assert "Hello testuser," \
+               in executed['data']['sendPasswordReset']['content']['body']
+
         # Checks that the correct template is sent.
-        assert password_reset_template() in executed['data']['sendPasswordReset']
+        assert executed['data']['sendPasswordReset']['template']['id'] \
+               == password_reset_template()
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
         client = Client(schema)
         executed = client.execute(
             '''
-            {
-                sendPasswordReset(email: "invalid-email.ca")
+                sendPasswordReset(email: "invalid-email.ca") {
+                    id
+                }
             }
             ''')
         assert executed['errors']
         assert executed['errors'][0]
-        assert executed['errors'][0]['message'] == scalar_error_type("email address", "invalid-email.ca")
+        assert executed['errors'][0]['message'] == scalar_error_type(
+            "email address", "invalid-email.ca")
 
 
 class TestVerifyEmail:
@@ -67,16 +85,30 @@ class TestVerifyEmail:
         executed = client.execute(
             '''
             {
-                sendValidationEmail(email: "testuser@testemail.ca")
+                sendValidationEmail(email: "testuser@testemail.ca") {
+                    content{
+                        body
+                    }
+                    template{
+                        id
+                    }
+                }
             }
             ''')
         assert executed['data']
         assert executed['data']['sendValidationEmail']
+        assert executed['data']['sendValidationEmail']['content']
+        assert executed['data']['sendValidationEmail']['content']['body']
+        assert executed['data']['sendValidationEmail']['template']
+        assert executed['data']['sendValidationEmail']['template']['id']
 
         # Checks that the correct user name is sent.
-        assert "Hello testuser," in executed['data']['sendValidationEmail']
+        assert "Hello testuser," \
+               in executed['data']['sendValidationEmail']['content']['body']
+
         # Checks that the correct template is sent.
-        assert email_verification_template() in executed['data']['sendValidationEmail']
+        assert executed['data']['sendValidationEmail']['template']['id'] \
+               == email_verification_template()
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
@@ -84,10 +116,12 @@ class TestVerifyEmail:
         executed = client.execute(
             '''
             {
-              sendValidationEmail(email: "invalid-email.ca")
+                sendValidationEmail(email: "invalid-email.ca"){
+                    id
+                }
             }
             ''')
         assert executed['errors']
         assert executed['errors'][0]
-        assert executed['errors'][0]['message'] == scalar_error_type("email address", "invalid-email.ca")
-
+        assert executed['errors'][0]['message'] == scalar_error_type(
+            "email address", "invalid-email.ca")
