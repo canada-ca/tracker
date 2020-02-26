@@ -1,3 +1,5 @@
+import graphene
+from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField
 
 from model_enums.groups import GroupEnums
@@ -39,6 +41,7 @@ from resolvers.users import (
     resolve_test_user_claims,
     resolve_generate_otp_url,
 )
+from scalars.email_address import EmailAddress
 from scalars.url import URL
 from schemas.domains import Domains
 from schemas.groups import Groups
@@ -46,7 +49,14 @@ from schemas.notification_email import (NotificationEmail)
 from schemas.organizations import Organizations
 from schemas.scans import Scans
 from schemas.sectors import Sectors
-from schemas.user import *
+
+from schemas.user import (
+    UserConnection,
+    CreateUser,
+    SignInUser,
+    UpdateUserPassword,
+    ValidateTwoFactor,
+    UpdateUserRole)
 
 
 class Query(graphene.ObjectType):

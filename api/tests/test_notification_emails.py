@@ -1,24 +1,16 @@
-import sys
 import os
+import sys
 from os.path import dirname, join, expanduser, normpath, realpath
 
-import pytest
 from graphene.test import Client
-
-from unittest import TestCase
-
-from functions.error_messages import scalar_error_type
 
 from functions.email_templates import (
     email_verification_template,
     password_reset_template)
-
+from functions.error_messages import scalar_error_type
 from manage import seed, remove_seed
 
 seed()
-from db import db
-from app import app
-from models import Sectors
 from queries import schema
 
 remove_seed()

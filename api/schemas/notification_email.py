@@ -12,7 +12,7 @@ class Template(graphene.ObjectType):
     """This class handles the inner nested dict given by key: 'template'. """
     id = graphene.String()
     uri = graphene.String()
-    version = graphene.String()
+    version = graphene.Int()
 
 
 class NotificationEmail(graphene.ObjectType):
