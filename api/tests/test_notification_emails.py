@@ -67,9 +67,10 @@ class TestPasswordReset:
         client = Client(schema)
         executed = client.execute(
             '''
+            {
                 sendPasswordReset(email: "invalid-email.ca") {
-                    id
-                }
+                        id
+                    }
             }
             ''')
         assert executed['errors']
