@@ -6,6 +6,7 @@ from graphene import relay
 from model_enums.sectors import SectorEnums, ZoneEnums
 from model_enums.groups import GroupEnums
 from model_enums.organiztions import OrganizationsEnum
+from model_enums.roles import RoleEnums
 
 from schemas.user import (
     UserConnection,
@@ -188,6 +189,7 @@ class Query(graphene.ObjectType):
 
     test_user_claims = graphene.String(
         org=graphene.Argument(OrganizationsEnum, required=True),
+        role=graphene.Argument(RoleEnums, required=True),
         resolver=resolve_test_user_claims,
         description="An api endpoint to view a current user's claims -- Requires an active JWT."
     )

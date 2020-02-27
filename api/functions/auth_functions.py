@@ -3,6 +3,10 @@ from functions.orm_to_dict import orm_to_dict
 from models import Organizations, User_affiliations
 from manage import app
 
+admin_perms = ['super_admin', 'admin']
+user_write_perms = ['super_admin', 'admin', 'user_write']
+user_read_perms = ['super_admin', 'admin', 'user_write', 'user_read']
+
 
 def is_super_admin(user_role):
     """
@@ -32,7 +36,7 @@ def is_admin(user_role, org):
             .options(load_only('id'))
         org_id = orm_to_dict(org_id)[0]['id']
     for role in user_role:
-        if role['org_id'] == org_id and role['permission'] == 'admin':
+        if role['org_id'] == org_id and role['permission'] in admin_perms:
             return True
     return False
 
@@ -49,7 +53,7 @@ def is_user_write(user_role, org):
             .options(load_only('id'))
         org_id = orm_to_dict(org_id)[0]['id']
     for role in user_role:
-        if role['org_id'] == org_id and role['permission'] == 'user_write':
+        if role['org_id'] == org_id and role['permission'] in user_write_perms:
             return True
     return False
 
@@ -66,6 +70,6 @@ def is_user_read(user_role, org):
             .options(load_only('id'))
         org_id = orm_to_dict(org_id)[0]['id']
     for role in user_role:
-        if role['org_id'] == org_id and role['permission'] == 'user_read':
+        if role['org_id'] == org_id and role['permission'] in user_read_perms:
             return True
     return False
