@@ -44,14 +44,12 @@ def check_user_claims(user_claims):
             user_aff = orm_to_dict(user_aff)
         if len(user_aff):
             user_roles = []
-            counter = 0
             for select in user_aff:
                 temp_dict = {
                     'user_id': select['user_id'],
                     'org_id': select['organization_id'],
                     'permission': select['permission']
                 }
-                counter += 1
                 user_roles.append(temp_dict)
 
         user_claim_diff = list(
