@@ -1,32 +1,33 @@
 version: "3.7"
 services:
   postgres:
+    network_mode: host
     image: postgres:alpine
     env_file:
       - postgres.env
     expose:
       - "5432"
   api:
+    network_mode: host
     image: gcr.io/track-compliance/api
     restart: always
     env_file:
-      - api.env
+      - .env
     volumes:
       - ./:/app
     ports:
-      - "5000:5000"
+      - "5000"
     depends_on:
       - postgres
       - migration
   migration:
+    network_mode: host
     image: gcr.io/track-compliance/api
     command: pipenv run db-upgrade
     env_file:
-      - api.env
+      - .env
     volumes:
       - ./:/app
-    expose:
-      - "5000"
     depends_on:
       - postgres
 
