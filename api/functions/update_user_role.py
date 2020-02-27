@@ -51,7 +51,7 @@ def update_user_role(**kwargs):
             raise GraphQLError(error_not_an_admin())
 
     elif new_role == 'user_read' or new_role == 'user_write':
-        if is_super_admin(user_roles) or is_admin(user_roles, org):
+        if is_admin(user_roles, org):
             update_user_role_db()
         else:
             raise GraphQLError(error_not_an_admin())
