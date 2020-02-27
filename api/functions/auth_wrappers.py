@@ -36,13 +36,13 @@ def check_user_claims(user_claims):
     :param user_claims: A list of dicts that contain the users claims
     :return: Returns a valid list of user claims
     """
-    if len(user_claims):
+    if user_claims:
         user_id = user_claims[0]['user_id']
         with app.app_context():
             user_aff = User_affiliations.query.filter(
                 User_affiliations.user_id == user_id).all()
             user_aff = orm_to_dict(user_aff)
-        if len(user_aff):
+        if user_aff:
             user_roles = []
             for select in user_aff:
                 temp_dict = {
@@ -56,10 +56,10 @@ def check_user_claims(user_claims):
             itertools.filterfalse(lambda x: x in user_claims, user_roles)) \
                           + list(
             itertools.filterfalse(lambda x: x in user_roles, user_claims))
-        if len(user_claim_diff):
+        if user_claim_diff:
             print(user_claim_diff)
-            raise GraphQLError(
-                "User has a difference in their claims, Please sign in again.")
+            # User has a difference in their claims
+            raise GraphQLError("Error, Please sign in again.")
         else:
             return user_claims
     else:
