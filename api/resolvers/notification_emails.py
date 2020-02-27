@@ -1,4 +1,5 @@
 import os
+from flask import request
 
 from itsdangerous import URLSafeTimedSerializer
 from notifications_python_client import NotificationsAPIClient
@@ -28,9 +29,9 @@ def resolve_send_password_reset(self, info, email):
     template_id = password_reset_template()
     password_reset_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
 
-    # TODO: Change to deployment URL
-    password_reset_url = "http://localhost:3000/reset-password/" + password_reset_serial.dumps(
-        email, salt=SUPER_SECRET_SALT)
+    # Note: request.headers['Origin'] returns the server name that made the req
+    password_reset_url = request.headers['Origin'] + "/reset-password/" \
+                + password_reset_serial.dumps(email, salt=SUPER_SECRET_SALT)
 
     response = notifications_client.send_email_notification(
         email_address=email,
@@ -49,9 +50,9 @@ def resolve_send_validation_email(self, info, email):
 
     verify_email_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
 
-    # TODO: Change to deployment URL
-    verify_email_url = "http://localhost:3000/verify-email/" + verify_email_serial.dumps(
-        email, salt=SUPER_SECRET_SALT)
+    # Note: request.headers['Origin'] returns the server name that made the req
+    verify_email_url = request.headers['Origin'] + "/verify-email/" \
+                   + verify_email_serial.dumps(email, salt=SUPER_SECRET_SALT)
 
     response = notifications_client.send_email_notification(
         email_address=email,
