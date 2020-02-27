@@ -6,11 +6,11 @@ from models import Dkim_scans as DkimModel
 
 
 class Dkim(SQLAlchemyObjectType):
-	class Meta:
-		model = DkimModel
-		interfaces = (relay.Node, )
+    class Meta:
+        model = DkimModel
+        interfaces = (relay.Node,)
 
 
 class DkimConnection(relay.Connection):
-	class Meta:
-		node = Dkim
+    class Meta:
+        node = Dkim

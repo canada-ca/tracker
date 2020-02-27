@@ -7,11 +7,11 @@ from models import Sectors as SectorsModel
 
 
 class Sectors(SQLAlchemyObjectType):
-	class Meta:
-		model = SectorsModel
-		interfaces = (relay.Node, )
+    class Meta:
+        model = SectorsModel
+        interfaces = (relay.Node,)
 
 
 class SectorsConnection(relay.Connection):
-	class Meta:
-		node = Sectors
+    class Meta:
+        node = Sectors

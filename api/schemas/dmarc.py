@@ -6,11 +6,11 @@ from models import Dmarc_scans as DmarcModel
 
 
 class Dmarc(SQLAlchemyObjectType):
-	class Meta:
-		model = DmarcModel
-		interfaces = (relay.Node, )
+    class Meta:
+        model = DmarcModel
+        interfaces = (relay.Node,)
 
 
 class DmarcConnection(relay.Connection):
-	class Meta:
-		node = Dmarc
+    class Meta:
+        node = Dmarc

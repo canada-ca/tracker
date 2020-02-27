@@ -45,6 +45,7 @@ steps:
       - DB_PORT=$_DB_PORT
       - DB_USER=$_DB_NAME
       - BASE32_SECRET=$_BASE32_SECRET
+      - SUPER_SECRET_SALT=$_SUPER_SECRET_SALT
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build

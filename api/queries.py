@@ -1,21 +1,26 @@
-import os
 from graphene_sqlalchemy import SQLAlchemyConnectionField
-from graphene import String
-from flask_graphql_auth import *
-import pyotp
 
 import graphene
-from sqlalchemy.orm import joinedload
-from graphene import relay, String
-import pyotp
+from graphene import relay
 
 from model_enums.sectors import SectorEnums, ZoneEnums
 from model_enums.groups import GroupEnums
 from model_enums.organiztions import OrganizationsEnum
+from model_enums.roles import RoleEnums
 
-from schemas.user import *
+from schemas.user import (
+    UserConnection,
+    CreateUser,
+    SignInUser,
+    UpdateUserPassword,
+    ValidateTwoFactor
+)
+from schemas.user_affiliations import (
+    UpdateUserRole
+)
 
 from scalars.url import URL
+from scalars.email_address import EmailAddress
 
 from schemas.sectors import Sectors
 from schemas.groups import Groups
@@ -37,8 +42,11 @@ from resolvers.groups import (
 )
 
 from resolvers.users import (
-    resolve_test_user_claims,
-    resolve_generate_otp_url,
+   resolve_generate_otp_url
+)
+
+from resolvers.user_affiliations import (
+    resolve_test_user_claims
 )
 
 from resolvers.organizations import (
@@ -180,7 +188,8 @@ class Query(graphene.ObjectType):
     )
 
     test_user_claims = graphene.String(
-        token=graphene.Argument(graphene.String, required=True),
+        org=graphene.Argument(OrganizationsEnum, required=True),
+        role=graphene.Argument(RoleEnums, required=True),
         resolver=resolve_test_user_claims,
         description="An api endpoint to view a current user's claims -- Requires an active JWT."
     )
