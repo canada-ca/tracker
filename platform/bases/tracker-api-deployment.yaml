@@ -39,6 +39,31 @@ spec:
             secretKeyRef:
               name: api
               key: DB_NAME
+        - name: BASE32_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: BASE32_SECRET
+        - name: SUPER_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SUPER_SECRET_KEY
+        - name: SUPER_SECRET_SALT
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SUPER_SECRET_SALT
+        - name: NOTIFICATION_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_API_KEY
+        - name: NOTIFICATION_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_API_URL
         - name: DB_HOST
           value: postgres
         - name: DB_PORT
@@ -71,6 +96,31 @@ spec:
             secretKeyRef:
               name: api
               key: DB_NAME
+        - name: BASE32_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: BASE32_SECRET
+        - name: SUPER_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SUPER_SECRET_KEY
+        - name: SUPER_SECRET_SALT
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SUPER_SECRET_SALT
+        - name: NOTIFICATION_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_API_KEY
+        - name: NOTIFICATION_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: NOTIFICATION_API_URL
         - name: DB_HOST
           value: postgres
         - name: DB_PORT
