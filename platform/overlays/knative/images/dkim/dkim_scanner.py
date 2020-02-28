@@ -3,7 +3,7 @@ import sys
 import requests
 import logging
 import json
-from dkim import *
+from dkimpy import *
 from flask import Flask, request
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -43,12 +43,13 @@ def dispatch():
 def scan(scan_id, domain):
 
     try:
-        scan_result = load_pk_from_dns(domain)
-    except DKIMException as e:
+        scan_session = dnsplug.Session()
+        record = scan_session.dns(domain, 'TXT')
+    except dnsplug.DNSError as e:
         logging.error("(SCAN: %s) - Failed to perform DomainKeys Identified Mail scan on given domain: %s" % (scan_id, e))
         return None
 
-    return scan_result
+    return record
 
 if __name__ == "__main__":
     # Port number defaults to 8080, can be configured as an ENV
