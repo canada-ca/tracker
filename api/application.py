@@ -1,5 +1,4 @@
 from waitress import serve
-from flask import Flask
 
 from app import create_application
 from app.graphql_endpoint import add_graphql_endpoint
