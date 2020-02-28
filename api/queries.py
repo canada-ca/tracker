@@ -48,6 +48,7 @@ from resolvers.groups import (
 from resolvers.notification_emails import (
     resolve_send_password_reset,
     resolve_send_validation_email
+)
 
 from resolvers.users import (
    resolve_generate_otp_url
@@ -74,7 +75,6 @@ from resolvers.sectors import (
     resolve_get_sector_by_zone
 )
 from resolvers.users import (
-    resolve_test_user_claims,
     resolve_generate_otp_url,
 )
 from scalars.email_address import EmailAddress
@@ -92,7 +92,7 @@ from schemas.user import (
     SignInUser,
     UpdateUserPassword,
     ValidateTwoFactor,
-    UpdateUserRole)
+    )
 
 
 class Query(graphene.ObjectType):
