@@ -2,13 +2,42 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField
 
+
 from model_enums.groups import GroupEnums
 from model_enums.organiztions import OrganizationsEnum
+
 from model_enums.sectors import SectorEnums, ZoneEnums
 from resolvers.domains import (
     resolve_get_domain_by_id,
     resolve_get_domain_by_domain,
     resolve_get_domain_by_organization
+)
+from model_enums.roles import RoleEnums
+
+from schemas.user import (
+    UserConnection,
+    CreateUser,
+    SignInUser,
+    UpdateUserPassword,
+    ValidateTwoFactor
+)
+from schemas.user_affiliations import (
+    UpdateUserRole
+)
+
+from scalars.url import URL
+from scalars.email_address import EmailAddress
+
+from schemas.sectors import Sectors
+from schemas.groups import Groups
+from schemas.organizations import Organizations
+from schemas.domains import Domains
+from schemas.scans import Scans
+
+from resolvers.sectors import (
+    resolve_get_sector_by_id,
+    resolve_get_sectors_by_sector,
+    resolve_get_sector_by_zone
 )
 from resolvers.groups import (
     resolve_get_group_by_id,
@@ -19,6 +48,13 @@ from resolvers.groups import (
 from resolvers.notification_emails import (
     resolve_send_password_reset,
     resolve_send_validation_email
+
+from resolvers.users import (
+   resolve_generate_otp_url
+)
+
+from resolvers.user_affiliations import (
+    resolve_test_user_claims
 )
 from resolvers.organizations import (
     resolve_get_org_by_id,
@@ -177,7 +213,8 @@ class Query(graphene.ObjectType):
     )
 
     test_user_claims = graphene.String(
-        token=graphene.Argument(graphene.String, required=True),
+        org=graphene.Argument(OrganizationsEnum, required=True),
+        role=graphene.Argument(RoleEnums, required=True),
         resolver=resolve_test_user_claims,
         description="An api endpoint to view a current user's claims -- Requires an active JWT."
     )

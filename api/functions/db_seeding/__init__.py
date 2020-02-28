@@ -1,5 +1,3 @@
-from functions.db_seeding.admin_affiliations import seed_admin_aff, remove_admin_aff
-from functions.db_seeding.admins import seed_admin, remove_admin
 from functions.db_seeding.ciphers import seed_ciphers, remove_ciphers
 from functions.db_seeding.classification import seed_classification, remove_classification
 from functions.db_seeding.dkim_scans import seed_dkim, remove_dkim

@@ -10,6 +10,7 @@ from flask_bcrypt import Bcrypt
 from unittest import TestCase
 
 from manage import seed, remove_seed
+
 seed()
 from app import app
 from db import db

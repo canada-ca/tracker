@@ -6,11 +6,11 @@ from models import Scans as ScanModel
 
 
 class Scans(SQLAlchemyObjectType):
-	class Meta:
-		model = ScanModel
-		interfaces = (relay.Node, )
+    class Meta:
+        model = ScanModel
+        interfaces = (relay.Node,)
 
 
 class ScansConnection(relay.Connection):
-	class Meta:
-		node = Scans
+    class Meta:
+        node = Scans

@@ -12,9 +12,8 @@ from manage import seed, remove_seed
 seed()
 from app import app
 from db import db
-from models import Sectors, Groups, Organizations, Domains
+from models import Organizations, Domains
 from queries import schema
-
 remove_seed()
 
 # This is the only way I could get imports to work for unit testing.

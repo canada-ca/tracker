@@ -50,6 +50,7 @@ steps:
       - NOTIFICATION_API_KEY=$_NOTIFICATION_API_KEY
       - NOTIFICATION_API_URL=$_NOTIFICATION_API_URL
 
+
   - name: 'gcr.io/cloud-builders/docker'
     id: build
     dir: api

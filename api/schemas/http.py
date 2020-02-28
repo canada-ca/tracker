@@ -6,11 +6,11 @@ from models import Https_scans as HttpModel
 
 
 class HTTP(SQLAlchemyObjectType):
-	class Meta:
-		model = HttpModel
-		interfaces = (relay.Node, )
+    class Meta:
+        model = HttpModel
+        interfaces = (relay.Node,)
 
 
 class HttpConnection(relay.Connection):
-	class Meta:
-		node = HTTP
+    class Meta:
+        node = HTTP

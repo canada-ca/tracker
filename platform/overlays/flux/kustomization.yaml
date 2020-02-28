@@ -2,6 +2,19 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 patchesStrategicMerge:
 - patch.yaml
+- memcached-dep.yaml
 resources:
 - ./bases
-- flux-gpg-signing-key.yaml
+- api-namespace.yaml
+- frontend-namespace.yaml
+secretGenerator:
+- envs:
+  - postgres.env
+  name: postgres
+  namespace: api
+- envs:
+  - api.env
+  name: api
+  namespace: api
+generatorOptions:
+  disableNameSuffixHash: true

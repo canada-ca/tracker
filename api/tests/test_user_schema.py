@@ -40,8 +40,7 @@ def user_schema_test_db_init():
             display_name="testadmin",
             user_name="testadmin@testemail.ca",
             user_password=bcrypt.generate_password_hash(
-                password="testpassword123").decode("UTF-8"),
-            user_role='admin'
+                password="testpassword123").decode("UTF-8")
         )
         db.session.add(test_admin)
         db.session.commit()
