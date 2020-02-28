@@ -1,7 +1,7 @@
 from graphql import GraphQLError
 from schemas.sectors import Sectors, SectorsModel
 from model_enums.sectors import SectorEnums
-from manage import app
+from app.application import app
 
 
 # Resolvers
