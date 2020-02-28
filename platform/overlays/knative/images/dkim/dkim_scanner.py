@@ -3,7 +3,7 @@ import sys
 import requests
 import logging
 import json
-from checkdmarc import *
+from dkim import *
 from flask import Flask, request
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -29,7 +29,7 @@ def dispatch():
             payload = json.dumps({"results": str(res), "scan_type": "dkim"})
 
         else:
-            raise Exception("(SCAN: %s) - An error occurred while attempting to perform checkdmarc scan" % scan_id)
+            raise Exception("(SCAN: %s) - An error occurred while attempting to perform dkim scan" % scan_id)
         try:
             response = requests.post('http://34.67.57.19/dispatch', headers=headers, data=payload)
             logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
@@ -43,9 +43,9 @@ def dispatch():
 def scan(scan_id, domain):
 
     try:
-        scan_result = check_domains(domain)
-    except (DNSException, SPFError, DMARCError) as e:
-        logging.error("(SCAN: %s) - Failed to check the given domains for DMARC/SPF records: %s" % (scan_id, e))
+        scan_result = load_pk_from_dns(domain)
+    except DKIMException as e:
+        logging.error("(SCAN: %s) - Failed to perform DomainKeys Identified Mail scan on given domain: %s" % (scan_id, e))
         return None
 
     return scan_result
