@@ -12,7 +12,7 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from db import *
-from api import app, db
+from manage import app
 
 
 class TestDBCreation:

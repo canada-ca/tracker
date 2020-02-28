@@ -1,3 +1,5 @@
+from flask import Flask
+
 from db import (
     db,
     DB_NAME,
@@ -7,12 +9,15 @@ from db import (
     DB_PORT
 )
 
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
-def create_application(application):
-    application.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-    application.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-    application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    application.debug = True
-    db.init_app(application)
 
-    return application
+def create_application():
+
+    app.debug = True
+    db.init_app(app)
+
+    return app

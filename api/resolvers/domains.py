@@ -1,7 +1,7 @@
 from graphql import GraphQLError
 from sqlalchemy.orm import load_only
 
-from app.application import app
+from app import app
 
 from schemas.domains import (
     Domains,

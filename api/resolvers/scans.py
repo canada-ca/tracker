@@ -3,7 +3,7 @@ from sqlalchemy.orm import load_only
 import sqlalchemy as sq
 from sqlalchemy import between
 
-from app.application import app
+from app import app
 
 from schemas.scans import (
     Scans,

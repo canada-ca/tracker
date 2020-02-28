@@ -5,7 +5,7 @@ from functions.auth_functions import is_admin, is_super_admin
 from functions.error_messages import (error_user_does_not_exist, error_not_an_admin, error_role_not_updated)
 from functions.orm_to_dict import orm_to_dict
 from db import db
-from manage import app
+from app import app
 from models import Users as User
 from models import Organizations as Orgs
 from models import User_affiliations as User_aff

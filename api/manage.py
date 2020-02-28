@@ -4,7 +4,7 @@ from flask_migrate import Migrate, MigrateCommand, init, migrate, upgrade
 from flask_script import Manager
 
 from models import db
-from api.db import (
+from db import (
     DB_NAME,
     DB_HOST,
     DB_PASS,

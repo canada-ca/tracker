@@ -32,7 +32,7 @@ pyjwt = "*"
 
 [scripts]
 test = "pytest"
-server = "python app/application.py"
+server = "python application.py"
 schema-export = "python schema_export.py"
 db-init = 'python manage.py db init'
 db-migrate = 'python manage.py db migrate'
