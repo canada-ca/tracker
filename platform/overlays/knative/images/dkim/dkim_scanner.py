@@ -44,12 +44,15 @@ def scan(scan_id, domain):
 
     try:
         scan_session = dnsplug.Session()
-        record = scan_session.dns(domain, 'TXT')
+        scan_info = list()
+        for query in ['A', 'AAAA', 'MX', 'PTR', 'TXT', 'SPF']:
+            record = scan_session.dns(domain, query)
+            scan_info.append(record)
     except dnsplug.DNSError as e:
         logging.error("(SCAN: %s) - Failed to perform DomainKeys Identified Mail scan on given domain: %s" % (scan_id, e))
         return None
 
-    return record
+    return scan_info
 
 if __name__ == "__main__":
     # Port number defaults to 8080, can be configured as an ENV
