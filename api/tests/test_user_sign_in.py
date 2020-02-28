@@ -89,4 +89,10 @@ class TestSignInUser:
             assert executed['errors'][0]['message']
             assert executed['errors'][0]['message'] == error_invalid_credentials()
 
+            failed_user = Users.query\
+                .filter(Users.user_name == "testuser@testemail.ca").first()
+
+            assert failed_user is not None
+            assert failed_user.failed_login_attempts == 1
+
 

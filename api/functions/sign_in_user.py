@@ -72,4 +72,8 @@ def sign_in_user(user_name, password):
 
         return temp_dict
     else:
+
+        Users.query.filter(Users.user_name == user_name).first()\
+            .update({'failed_login_attempts': Users.failed_login_attempts + 1})
+
         raise GraphQLError(error_invalid_credentials())
