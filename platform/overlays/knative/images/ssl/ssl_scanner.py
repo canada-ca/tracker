@@ -47,12 +47,12 @@ def scan(scan_id, domain):
     try:
         server_tester = ServerConnectivityTester(hostname=domain)
 
-        logging.info("\nTesting connectivity with %s:%s..." % (server_tester.hostname, server_tester.port))
+        logging.info("\n(SCAN: %s) - Testing connectivity with %s:%s..." % (scan_id, server_tester.hostname, server_tester.port))
         server_info = server_tester.perform()
-        logging.info("Server Info %s\n" % server_info)
+        logging.info("(SCAN: %s) - Server Info %s\n" % (scan_id, server_info))
     except ServerConnectivityError as e:
         # Could not establish an SSL connection to the server
-        logging.error("Could not connect to %s: %s" % (e.server_info.hostname, e.error_message))
+        logging.error("(SCAN: %s) - Could not connect to %s: %s" % (scan_id, e.server_info.hostname, e.error_message))
         return None
 
     command = Tlsv10ScanCommand()
