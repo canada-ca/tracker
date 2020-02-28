@@ -70,6 +70,9 @@ def sign_in_user(user_name, password):
             'user': user
         }
 
+        Users.query.filter(Users.user_name == user_name).update({'failed_login_attempts': 0})
+        db.session.commit()
+
         return temp_dict
     else:
 

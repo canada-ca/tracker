@@ -38,6 +38,15 @@ def user_schema_test_db_init():
                 password="testpassword123").decode("UTF-8"),
         )
         db.session.add(test_user)
+
+        test_already_failed_user = Users(
+            display_name="testuser",
+            user_name="test_already_failed_user@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8"),
+            failed_login_attempts=123456789
+        )
+        db.session.add(test_already_failed_user)
         db.session.commit()
 
     yield
@@ -71,7 +80,10 @@ class TestSignInUser:
             assert executed['data']['signIn']['user']['userName'] == "testuser@testemail.ca"
 
     def test_invalid_credentials(self):
-        """Test that ensures a user can be signed in"""
+        """
+        Test that ensures invalid credential errors are caught,
+         and failed login attempts are incremented.
+        """
         with app.app_context():
             client = Client(schema)
             executed = client.execute(
@@ -94,5 +106,29 @@ class TestSignInUser:
 
             assert failed_user is not None
             assert failed_user.failed_login_attempts == 1
+
+    def test_successful_login_sets_failed_attempts_to_zero(self):
+        """Test that ensures a user can be signed in"""
+        with app.app_context():
+            client = Client(schema)
+            executed = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"test_already_failed_user@testemail.ca",
+                     password:"testpassword123"){
+                        user{
+                            userName
+                            failedLoginAttempts
+                        }
+                    }
+                }
+                ''')
+
+            user = Users.query\
+                .filter(Users.user_name ==
+                        "test_already_failed_user@testemail.ca").first()
+
+            assert user is not None
+            assert user.failed_login_attempts == 0
 
 
