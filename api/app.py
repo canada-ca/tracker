@@ -3,6 +3,9 @@ import os
 from flask import Flask
 from flask_graphql import GraphQLView
 from waitress import serve
+
+from backend import DepthAnalysisBackend
+
 from db import (
     db,
     DB_NAME,
@@ -23,11 +26,14 @@ app.debug = True
 
 db.init_app(app)
 
+backend = DepthAnalysisBackend()
+
 app.add_url_rule(
     '/graphql',
     view_func=GraphQLView.as_view(
         'graphql',
         schema=schema,
+        backend=DepthAnalysisBackend(),
         graphiql=True
     )
 )
