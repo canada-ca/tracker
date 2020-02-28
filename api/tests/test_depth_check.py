@@ -14,8 +14,7 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from manage import seed, remove_seed
 seed()
-from db import *
-from app import app
+from api import app, db
 from queries import schema
 from models import Sectors, Groups
 from backend.security_check import SecurityAnalysisBackend

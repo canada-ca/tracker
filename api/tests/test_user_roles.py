@@ -16,8 +16,7 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from manage import seed, remove_seed
 seed()
-from db import db
-from app import app
+from api import app, db
 from queries import schema
 from models import Users, User_affiliations, Organizations
 from functions.error_messages import error_not_an_admin

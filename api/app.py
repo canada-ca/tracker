@@ -1,19 +1,8 @@
-import os
-
-from flask import Flask
 from flask_graphql import GraphQLView
 from waitress import serve
 
 from backend.security_check import SecurityAnalysisBackend
 
-from db import (
-    db,
-    DB_NAME,
-    DB_HOST,
-    DB_PASS,
-    DB_USER,
-    DB_PORT
-)
 from queries import schema
 
 app = Flask(__name__)

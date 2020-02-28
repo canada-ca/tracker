@@ -10,8 +10,7 @@ from unittest import TestCase
 from manage import seed, remove_seed
 
 seed()
-from db import db
-from app import app
+from api import app, db
 from models import Sectors
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
