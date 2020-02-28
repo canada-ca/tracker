@@ -19,7 +19,9 @@ from db import *
 from app import app
 from queries import schema
 from models import Users
-from functions.error_messages import *
+from functions.error_messages import(
+    error_invalid_credentials
+)
 remove_seed()
 
 
@@ -48,8 +50,8 @@ def user_schema_test_db_init():
 ##
 # This class of tests works within the 'createUser' api endpoint
 @pytest.mark.usefixtures('user_schema_test_db_init')
-class TestCreateUser:
-    def test_successful_creation(self):
+class TestSignInUser:
+    def test_successful_sign_in(self):
         """Test that ensures a user can be signed in"""
         with app.app_context():
             client = Client(schema)
@@ -67,5 +69,24 @@ class TestCreateUser:
             assert executed['data']['signIn']
             assert executed['data']['signIn']['user']
             assert executed['data']['signIn']['user']['userName'] == "testuser@testemail.ca"
+
+    def test_invalid_credentials(self):
+        """Test that ensures a user can be signed in"""
+        with app.app_context():
+            client = Client(schema)
+            executed = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuser@testemail.ca", password:"testpassword1234"){
+                        user{
+                            userName
+                        }
+                    }
+                }
+                ''')
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message']
+            assert executed['errors'][0]['message'] == error_invalid_credentials()
 
 
