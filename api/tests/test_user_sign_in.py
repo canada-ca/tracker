@@ -20,7 +20,8 @@ from app import app
 from queries import schema
 from models import Users
 from functions.error_messages import(
-    error_invalid_credentials
+    error_invalid_credentials,
+    error_too_many_failed_login_attempts
 )
 remove_seed()
 
@@ -44,9 +45,19 @@ def user_schema_test_db_init():
             user_name="test_already_failed_user@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
-            failed_login_attempts=123456789
+            failed_login_attempts=3
         )
         db.session.add(test_already_failed_user)
+
+        test_too_many_failed_user = Users(
+            display_name="testuser",
+            user_name="test_too_many_failed_user@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8"),
+            failed_login_attempts=30
+        )
+        db.session.add(test_too_many_failed_user)
+
         db.session.commit()
 
     yield
@@ -118,7 +129,6 @@ class TestSignInUser:
                      password:"testpassword123"){
                         user{
                             userName
-                            failedLoginAttempts
                         }
                     }
                 }
@@ -130,5 +140,25 @@ class TestSignInUser:
 
             assert user is not None
             assert user.failed_login_attempts == 0
+
+    def test_too_many_failed_attempts(self):
+        """Test that ensures a user can be signed in"""
+        with app.app_context():
+            client = Client(schema)
+            executed = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"test_too_many_failed_user@testemail.ca",
+                     password:"testpassword123"){
+                        user{
+                            userName
+                        }
+                    }
+                }
+                ''')
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message']
+            assert executed['errors'][0]['message'] == error_too_many_failed_login_attempts()
 
 

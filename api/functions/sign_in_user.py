@@ -29,6 +29,9 @@ def sign_in_user(user_name, password):
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
 
+    if user.failed_login_attempts >= 5:
+        raise GraphQLError(error_too_many_failed_login_attempts())
+
     bcrypt = Bcrypt(app)  # Create the bcrypt object that will handle password hashing and verification
 
     email_match = user_name == user.user_name

@@ -36,7 +36,7 @@ def update_password(user_name, password, confirm_password):
 
     user = User.query.filter(User.user_name == user_name) \
         .update({'user_password': bcrypt.generate_password_hash(
-        password).decode('UTF-8')})
+        password).decode('UTF-8'), 'failed_login_attempts': 0})
 
     db.session.commit()
 

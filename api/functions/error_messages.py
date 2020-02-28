@@ -57,6 +57,11 @@ def error_otp_code_is_invalid():
 	return str("OTP code is invalid, please try again")
 
 
+def error_too_many_failed_login_attempts():
+    """Function that returns an error message when a user has too many failed login attempts associated with their account"""
+    return str("Too many failed login attempts, please reset your password")
+
+
 def scalar_error_type(value_type, value):
 	"""Function that returns an error message when a scalar type is invalid"""
 	return str("Value is not a valid " + str(value_type) + ": " + str(value))
