@@ -31,8 +31,7 @@ def mkdir_p(path):
 
 
 def json_for(object):
-    return json.dumps(object, sort_keys=True,
-                      indent=2, default=format_datetime)
+    return json.dumps(object, sort_keys=True, default=format_datetime)
 
 
 def write(content, destination, binary=False):

@@ -1,8 +1,12 @@
 import os
+import sys
 import subprocess
 import json
+import logging
 from flask import Flask, request
 from datetime import datetime
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = Flask(__name__)
 
@@ -17,13 +21,13 @@ def dispatch():
 
         # Succeeded
         if res[1] is True:
-            return res[0]
+            logging.info('Succeeded\n')
         # Failed
         else:
             raise Exception(res[0])
 
     except Exception as e:
-        return str(e)
+        logging.error('Failed: %s\n' % str(e))
 
 def process_results(result_dict, scan_type):
 
