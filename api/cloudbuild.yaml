@@ -45,7 +45,11 @@ steps:
       - DB_PORT=$_DB_PORT
       - DB_USER=$_DB_NAME
       - BASE32_SECRET=$_BASE32_SECRET
+      - SUPER_SECRET_KEY=$_SUPER_SECRET_KEY
       - SUPER_SECRET_SALT=$_SUPER_SECRET_SALT
+      - NOTIFICATION_API_KEY=$_NOTIFICATION_API_KEY
+      - NOTIFICATION_API_URL=$_NOTIFICATION_API_URL
+
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build
