@@ -21,6 +21,10 @@ def measure_depth(selection_set, level=1):
 
 
 class DepthAnalysisBackend(GraphQLCoreBackend):
+    def __init__(self, max_depth):
+        super().__init__()
+        self.max_depth = max_depth
+
     def document_from_string(self, schema, document_string):
         """
         This function checks to see if the current query maxes the maximum depth
@@ -39,7 +43,7 @@ class DepthAnalysisBackend(GraphQLCoreBackend):
                     continue
                 if not isinstance(definition, FragmentSpread):
                     depth = measure_depth(definition.selection_set)
-                    if depth > 10:  # set your depth max here
+                    if depth > self.max_depth:  # set your depth max here
                         raise Exception('Query is too complex')
 
         return document

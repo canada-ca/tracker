@@ -18,22 +18,21 @@ from queries import schema
 
 app = Flask(__name__)
 
-app.config[
-    'SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.debug = True
 
 db.init_app(app)
 
-backend = DepthAnalysisBackend()
+backend = DepthAnalysisBackend(10)
 
 app.add_url_rule(
     '/graphql',
     view_func=GraphQLView.as_view(
         'graphql',
         schema=schema,
-        backend=DepthAnalysisBackend(),
+        backend=backend,
         graphiql=True
     )
 )
