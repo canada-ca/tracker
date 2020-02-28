@@ -1,4 +1,4 @@
-apiVersion: serving.knative.dev/v1
+apiVersion: images.knative.dev/v1
 kind: Service
 metadata:
   name: result-processor # The name of the app

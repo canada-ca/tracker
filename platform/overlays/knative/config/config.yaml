@@ -27,6 +27,39 @@ spec:
 
 ---
 
+# The trigger for "https-scan" events
+
+#apiVersion: config.knative.dev/v1alpha1
+#kind: Trigger
+#metadata:
+#  name: https-scan-trigger
+#  namespace: tracker
+#spec:
+#  broker: default
+#  filter:
+#    attributes:
+#      type: https-scan
+#  subscriber:
+#    ref:
+#      apiVersion: v1
+#      kind: Service
+#      name: svc
+
+---
+
+# The broker
+
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Broker
+metadata:
+  name: default
+  namespace: tracker
+spec:
+  channelTemplateSpec:
+    apiVersion: messaging.knative.dev/v1alpha1
+    kind: InMemoryChannel
+---
+
 # The Channel events are sent to.
 
 apiVersion: messaging.knative.dev/v1alpha1
@@ -34,67 +67,68 @@ kind: InMemoryChannel
 metadata:
   name: chan
   namespace: tracker
+
 ---
 
 # The Subscription to the InMemoryChannel.
 
-apiVersion: messaging.knative.dev/v1alpha1
-kind: Subscription
-metadata:
-  name: sub
-  namespace: tracker
-spec:
-  channel:
-    apiVersion: messaging.knative.dev/v1alpha1
-    kind: InMemoryChannel
-    name: chan
-  subscriber:
-    ref:
-      apiVersion: v1
-      kind: Service
-      name: svc
-
----
-
-# K8s Service which points at the Deployment below.
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: svc
-  namespace: tracker
-spec:
-  selector:
-    app: https-scanner
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
-
----
+#apiVersion: messaging.knative.dev/v1alpha1
+#kind: Subscription
+#metadata:
+#  name: sub
+#  namespace: tracker
+#spec:
+#  channel:
+#    apiVersion: messaging.knative.dev/v1alpha1
+#    kind: InMemoryChannel
+#    name: chan
+#  subscriber:
+#    ref:
+#      apiVersion: v1
+#      kind: Service
+#      name: svc
 
 # K8s Deployment that simply writes input requests to its log.
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
 metadata:
   name: https-scanner
   namespace: tracker
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: https-scanner
   template:
-    metadata:
-      labels:
-        app: https-scanner
     spec:
       containers:
-        - name: https-scanner-container
+        - name: https-scanner
           image: gcr.io/track-compliance/https # The URL to the image of the app
-          ports:
-            - containerPort: 8080
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: result-processor
+  namespace: tracker
+spec:
+  template:
+    spec:
+      containers:
+        - name: result-processor
+          image: gcr.io/track-compliance/results # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: ssl-scanner
+  namespace: tracker
+spec:
+  template:
+    spec:
+      containers:
+        - name: ssl-scanner
+          image: gcr.io/track-compliance/ssl # The URL to the image of the app
 
 ---
 

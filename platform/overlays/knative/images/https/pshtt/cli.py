@@ -21,6 +21,7 @@ Notes:
   CSV output will always be written to disk, defaulting to results.csv.
 """
 
+import re
 from . import pshtt
 from . import utils
 
@@ -28,6 +29,8 @@ from . import utils
 def to_json_dict(results):
     # Generate (yield) all the results before exporting to JSON
     results = list(results)
+    for line in results:
+        line = re.sub('[\n ]', '', line)
     json_content = utils.json_for(results)
 
     return json_content
