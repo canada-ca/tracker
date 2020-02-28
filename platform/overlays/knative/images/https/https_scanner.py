@@ -45,7 +45,7 @@ def scan(scan_id, domain):
         res_dict = cli.run([domain])
         return res_dict
     except Exception as e:
-        logging.error(str(e))
+        logging.error("(SCAN: %s) - %s", (scan_id, str(e)))
         return None
 
 

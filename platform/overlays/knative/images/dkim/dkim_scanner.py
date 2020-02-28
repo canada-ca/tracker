@@ -45,7 +45,7 @@ def scan(scan_id, domain):
     try:
         scan_result = check_domains(domain)
     except (DNSException, SPFError, DMARCError) as e:
-        logging.error("(SCAN: %s) - Failed to check the given domains for DMARC/SPF records: %s" % (scan_id,e))
+        logging.error("(SCAN: %s) - Failed to check the given domains for DMARC/SPF records: %s" % (scan_id, e))
         return None
 
     return scan_result
