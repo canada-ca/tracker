@@ -19,7 +19,7 @@ from graphql.language.ast import (
 )
 
 
-class DepthLimitReadched(Exception):
+class DepthLimitReached(Exception):
     pass
 
 
