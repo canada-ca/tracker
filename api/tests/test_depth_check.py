@@ -20,7 +20,7 @@ from db import *
 from app import app
 from queries import schema
 from models import Sectors, Groups
-from backend import DepthAnalysisBackend
+from backend import SecurityAnalysisBackend
 remove_seed()
 
 
@@ -56,7 +56,7 @@ def user_schema_test_db_init():
 @pytest.mark.usefixtures('user_schema_test_db_init')
 class TestDepthCheck(TestCase):
     def test_valid_depth_query(self):
-        backend = DepthAnalysisBackend(10)
+        backend = SecurityAnalysisBackend(10)
         client = Client(schema)
         query = client.execute(
             '''
@@ -92,7 +92,7 @@ class TestDepthCheck(TestCase):
         self.assertDictEqual(result_refr, query)
 
     def test_invalid_depth_query(self):
-        backend = DepthAnalysisBackend(10)
+        backend = SecurityAnalysisBackend(10)
         client = Client(schema)
         executed = client.execute(
             '''

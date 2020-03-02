@@ -21,7 +21,7 @@ from app import app
 from queries import schema
 from models import Users, User_affiliations, Organizations
 from functions.error_messages import error_not_an_admin
-from backend.depth_check import DepthAnalysisBackend
+from backend.security_check import SecurityAnalysisBackend
 remove_seed()
 
 
@@ -80,7 +80,7 @@ def user_role_test_db_init():
 class TestUserUpdateWriteRole(TestCase):
     def test_user_claim_update_to_user_write(self):
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -146,7 +146,7 @@ class TestUserUpdateWriteRole(TestCase):
 class TestUserUpdateAdminRole(TestCase):
     def test_user_claim_update_to_admin(self):
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -212,7 +212,7 @@ class TestUserUpdateAdminRole(TestCase):
 class TestUserUpdateSuperAdminRole(TestCase):
     def test_user_claim_update_to_super_admin(self):
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -278,7 +278,7 @@ class TestUserUpdateSuperAdminRole(TestCase):
 class TestUserUpdateAdminRoleInvalid(TestCase):
     def test_user_claim_update_to_user_write(self):
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''

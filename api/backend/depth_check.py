@@ -1,15 +1,9 @@
 from typing import (
-    Union,
-    Optional,
-    Any,
     Dict,
     List
 )
-from graphql import GraphQLDocument, GraphQLSchema
-from graphql.backend.core import GraphQLCoreBackend
 from graphql.language.ast import (
     Document,
-    FragmentSpread,
     FragmentDefinition,
     OperationDefinition,
     Node,
@@ -18,14 +12,8 @@ from graphql.language.ast import (
     InlineFragment
 )
 
-from backend.cost_map import cost_map
-
 
 class DepthLimitReached(Exception):
-    pass
-
-
-class CostLimitReached(Exception):
     pass
 
 
@@ -93,30 +81,3 @@ def check_max_depth(max_depth: int, document: Document):
             raise DepthLimitReached(
                 'Query is too complex'
             )
-
-
-def check_cost_analysis(max_cost: int, document: Document):
-    queries = get_queries_and_mutations(document.definitions)
-    total_cost = 0
-
-    for query in queries:
-        for selection in query.selection_set.selections:
-            current_select = selection.name.value
-            total_cost += cost_map[current_select]
-    if total_cost > max_cost:
-        raise CostLimitReached(
-            'Query cost is too high'
-        )
-
-
-class DepthAnalysisBackend(GraphQLCoreBackend):
-    def __init__(self, max_depth=10, max_cost=10, executor: Optional[Any] = None):
-        super().__init__(executor=executor)
-        self.max_depth = max_depth
-        self.max_cost = max_cost
-
-    def document_from_string(self, schema: GraphQLSchema, document_string: Union[Document, str]) -> GraphQLDocument:
-        document = super().document_from_string(schema, document_string)
-        check_max_depth(max_depth=self.max_depth, document=document.document_ast)
-        check_cost_analysis(max_cost=self.max_cost, document=document.document_ast)
-        return document

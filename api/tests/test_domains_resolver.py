@@ -14,7 +14,7 @@ from app import app
 from db import db
 from models import Organizations, Domains
 from queries import schema
-from backend.depth_check import DepthAnalysisBackend
+from backend.security_check import SecurityAnalysisBackend
 remove_seed()
 
 # This is the only way I could get imports to work for unit testing.
@@ -56,7 +56,7 @@ class TestDomainsResolver(TestCase):
     def test_get_domain_resolvers_by_id(self):
         """Test get_domain_by_id resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -80,7 +80,7 @@ class TestDomainsResolver(TestCase):
     def test_get_domain_resolvers_by_domain(self):
         """"Test get_domain_by_domain resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -104,7 +104,7 @@ class TestDomainsResolver(TestCase):
     def test_get_domain_resolvers_by_org(self):
         """Test get_domain_by_org_enum resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -128,7 +128,7 @@ class TestDomainsResolver(TestCase):
     def test_domain_resolver_by_id_invalid(self):
         """Test get_domain_by_id invalid ID error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -145,7 +145,7 @@ class TestDomainsResolver(TestCase):
     def test_domain_resolver_by_url_invalid(self):
         """Test get_domain_by_domain invalid sector error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -163,7 +163,7 @@ class TestDomainsResolver(TestCase):
     def test_domain_resolver_by_org_invalid(self):
         """Test get_domain_by_org invalid Zone error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {

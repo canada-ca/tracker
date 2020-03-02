@@ -15,7 +15,7 @@ from app import app
 from db import db
 from models import Groups, Organizations
 from queries import schema
-from backend.depth_check import DepthAnalysisBackend
+from backend.security_check import SecurityAnalysisBackend
 remove_seed()
 
 # This is the only way I could get imports to work for unit testing.
@@ -58,7 +58,7 @@ class TestOrgResolver(TestCase):
     def test_get_org_resolvers_by_id(self):
         """Test get_organization_by_id resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -84,7 +84,7 @@ class TestOrgResolver(TestCase):
     def test_get_org_resolvers_by_org(self):
         """"Test get_org_by_org resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -110,7 +110,7 @@ class TestOrgResolver(TestCase):
     def test_get_org_resolvers_by_group(self):
         """Test get_org_by_group_id resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -136,7 +136,7 @@ class TestOrgResolver(TestCase):
     def test_org_resolver_by_id_invalid(self):
         """Test get_org_by_id invalid ID error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -154,7 +154,7 @@ class TestOrgResolver(TestCase):
     def test_org_resolver_by_org_invalid(self):
         """Test get_org_by_org invalid sector error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -172,7 +172,7 @@ class TestOrgResolver(TestCase):
     def test_org_resolver_by_group_invalid(self):
         """Test get_org_by_group invalid Zone error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {

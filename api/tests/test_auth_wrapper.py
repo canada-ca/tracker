@@ -20,7 +20,7 @@ from db import db
 from app import app
 from queries import schema
 from models import Users, User_affiliations, Organizations
-from backend.depth_check import DepthAnalysisBackend
+from backend.security_check import SecurityAnalysisBackend
 remove_seed()
 
 
@@ -107,7 +107,7 @@ def user_role_test_db_init():
 class TestUserRole(TestCase):
     def test_user_read_claim(self):
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -139,7 +139,7 @@ class TestUserRole(TestCase):
 
     def test_user_write_claim(self):
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -171,7 +171,7 @@ class TestUserRole(TestCase):
 
     def test_admin_claim(self):
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -203,7 +203,7 @@ class TestUserRole(TestCase):
 
     def test_super_admin_claim(self):
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -235,7 +235,7 @@ class TestUserRole(TestCase):
 
     def test_user_not_admin(self):
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''

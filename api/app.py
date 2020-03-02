@@ -4,7 +4,7 @@ from flask import Flask
 from flask_graphql import GraphQLView
 from waitress import serve
 
-from backend import DepthAnalysisBackend
+from backend import SecurityAnalysisBackend
 
 from db import (
     db,
@@ -25,7 +25,7 @@ app.debug = True
 
 db.init_app(app)
 
-backend = DepthAnalysisBackend(10)
+backend = SecurityAnalysisBackend(max_depth=10, max_cost=1000)
 
 app.add_url_rule(
     '/graphql',

@@ -16,7 +16,7 @@ from app import app
 from db import db
 from models import Scans, Domains, Users
 from queries import schema
-from backend.depth_check import DepthAnalysisBackend
+from backend.security_check import SecurityAnalysisBackend
 remove_seed()
 
 # This is the only way I could get imports to work for unit testing.
@@ -82,7 +82,7 @@ class TestScansResolver(TestCase):
     def test_get_scan_resolver_by_id(self):
         """Test get_sector_by_id resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -115,7 +115,7 @@ class TestScansResolver(TestCase):
     def test_get_scans_by_date(self):
         """Test get_scans_by_date resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -148,7 +148,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_get_scans_by_date_range(self):
         """Test get_scans_by_date_range resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -187,7 +187,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_get_scans_by_domain(self):
         """Test get_scans_by_domain resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -226,7 +226,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_get_scans_by_user_id(self):
         """Test get_scans_by_user_id resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -265,7 +265,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_by_id_invalid(self):
         """Test get_scan_by_id invalid ID error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -284,7 +284,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_by_date_invalid(self):
         """Test get_scan_by_date invalid date error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -302,7 +302,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_by_date_range_invalid(self):
         """Test get_scan_by_date_range invalid date range error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -320,7 +320,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_by_nonexsiting_domain_invalid(self):
         """Test get_scan_by_domain invalid domain error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -338,7 +338,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_by_domain_invalid(self):
         """Test get_scan_by_domain no scan assocaited with that domain error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -356,7 +356,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_by_user_id_invalid_no_scans(self):
         """Test get_scan_by_user_id cannot find associated scans"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -374,7 +374,7 @@ class TestScansResolver(TestCase):
     def test_scan_resolver_by_user_invalid_id(self):
         """Test get_scan_by_user_id cannot find id"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {

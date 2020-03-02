@@ -14,7 +14,7 @@ from db import db
 from app import app
 from models import Sectors
 from queries import schema
-from backend.depth_check import DepthAnalysisBackend
+from backend.security_check import SecurityAnalysisBackend
 remove_seed()
 
 # This is the only way I could get imports to work for unit testing.
@@ -66,7 +66,7 @@ class TestSectorResolver(TestCase):
     def test_get_sector_resolver_by_id(self):
         """Test get_sector_by_id resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -95,7 +95,7 @@ class TestSectorResolver(TestCase):
     def test_get_sector_resolver_by_sector(self):
         """Test get_sector_by_sector resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -122,7 +122,7 @@ class TestSectorResolver(TestCase):
     def test_get_sector_resolver_by_zone(self):
         """Test get_sector_by_zone resolver"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -149,7 +149,7 @@ class TestSectorResolver(TestCase):
     def test_sector_resolver_by_id_invalid(self):
         """Test get_sector_by_id invalid ID error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -169,7 +169,7 @@ class TestSectorResolver(TestCase):
     def test_sector_resolver_by_sector_invalid(self):
         """Test get_sector_by_sector invalid sector error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -188,7 +188,7 @@ class TestSectorResolver(TestCase):
     def test_sector_resolver_by_zone_invalid(self):
         """Test get_sector_by_zone invalid Zone error handling"""
         with app.app_context():
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             query = """
             {

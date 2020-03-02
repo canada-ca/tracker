@@ -13,7 +13,7 @@ from app import app
 
 seed()
 from queries import schema
-from backend.depth_check import DepthAnalysisBackend
+from backend.security_check import SecurityAnalysisBackend
 remove_seed()
 
 # This is the only way I could get imports to work for unit testing.
@@ -27,7 +27,7 @@ class TestPasswordReset:
         """Test for ensuring that an email is sent to a valid email address"""
         request_headers = {'Origin': "https://testserver.com"}
         with app.test_request_context(headers=request_headers):
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -65,7 +65,7 @@ class TestPasswordReset:
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
-        backend = DepthAnalysisBackend()
+        backend = SecurityAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             '''
@@ -86,7 +86,7 @@ class TestVerifyEmail:
         """Test for ensuring that an email is sent to a valid email address"""
         request_headers = {'Origin': "https://testserver.com"}
         with app.test_request_context(headers=request_headers):
-            backend = DepthAnalysisBackend()
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -124,7 +124,7 @@ class TestVerifyEmail:
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
-        backend = DepthAnalysisBackend()
+        backend = SecurityAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             '''
