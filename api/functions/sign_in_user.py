@@ -78,7 +78,7 @@ def sign_in_user(user_name, password):
 
         return temp_dict
     else:
-
+        # Increment the user's failed login count and raise an appropriate error
         Users.query.filter(Users.user_name == user_name)\
             .update({'failed_login_attempts': Users.failed_login_attempts + 1})
         db.session.commit()

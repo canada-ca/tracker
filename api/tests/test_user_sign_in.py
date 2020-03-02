@@ -41,7 +41,7 @@ def user_schema_test_db_init():
         db.session.add(test_user)
 
         test_already_failed_user = Users(
-            display_name="testuser",
+            display_name="test_failed_user",
             user_name="test_already_failed_user@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
@@ -50,7 +50,7 @@ def user_schema_test_db_init():
         db.session.add(test_already_failed_user)
 
         test_too_many_failed_user = Users(
-            display_name="testuser",
+            display_name="test_too_many_fails_user",
             user_name="test_too_many_failed_user@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
@@ -68,17 +68,20 @@ def user_schema_test_db_init():
 
 
 ##
-# This class of tests works within the 'createUser' api endpoint
+# This class of tests works within the 'signIn' api endpoint
 @pytest.mark.usefixtures('user_schema_test_db_init')
 class TestSignInUser:
     def test_successful_sign_in(self):
-        """Test that ensures a user can be signed in"""
+        """
+        Test that ensures a user can be signed in successfully
+        """
         with app.app_context():
             client = Client(schema)
             executed = client.execute(
                 '''
                 mutation{
-                    signIn(userName:"testuser@testemail.ca", password:"testpassword123"){
+                    signIn(userName:"testuser@testemail.ca",
+                            password:"testpassword123"){
                         user{
                             userName
                         }
@@ -88,7 +91,8 @@ class TestSignInUser:
             assert executed['data']
             assert executed['data']['signIn']
             assert executed['data']['signIn']['user']
-            assert executed['data']['signIn']['user']['userName'] == "testuser@testemail.ca"
+            assert executed['data']['signIn']['user']['userName'] \
+                   == "testuser@testemail.ca"
 
     def test_invalid_credentials(self):
         """
@@ -100,7 +104,8 @@ class TestSignInUser:
             executed = client.execute(
                 '''
                 mutation{
-                    signIn(userName:"testuser@testemail.ca", password:"testpassword1234"){
+                    signIn(userName:"testuser@testemail.ca",
+                            password:"testpassword1234"){
                         user{
                             userName
                         }
@@ -110,7 +115,8 @@ class TestSignInUser:
             assert executed['errors']
             assert executed['errors'][0]
             assert executed['errors'][0]['message']
-            assert executed['errors'][0]['message'] == error_invalid_credentials()
+            assert executed['errors'][0]['message'] \
+                   == error_invalid_credentials()
 
             failed_user = Users.query\
                 .filter(Users.user_name == "testuser@testemail.ca").first()
@@ -119,7 +125,10 @@ class TestSignInUser:
             assert failed_user.failed_login_attempts == 1
 
     def test_successful_login_sets_failed_attempts_to_zero(self):
-        """Test that ensures a user can be signed in"""
+        """
+        Test that ensures a user can be signed in, and that when they do, their
+        user count is updated to be 0.
+        """
         with app.app_context():
             client = Client(schema)
             executed = client.execute(
@@ -159,6 +168,7 @@ class TestSignInUser:
             assert executed['errors']
             assert executed['errors'][0]
             assert executed['errors'][0]['message']
-            assert executed['errors'][0]['message'] == error_too_many_failed_login_attempts()
+            assert executed['errors'][0]['message'] \
+                   == error_too_many_failed_login_attempts()
 
 
