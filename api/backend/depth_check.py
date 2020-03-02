@@ -39,8 +39,6 @@ class DepthAnalysisBackend(GraphQLCoreBackend):
         for definition in ast.definitions:
             # We are only interested in queries
             if not isinstance(definition, FragmentDefinition):
-                if definition.operation != 'query':
-                    continue
                 if not isinstance(definition, FragmentSpread):
                     depth = measure_depth(definition.selection_set)
                     if depth > self.max_depth:  # set your depth max here
