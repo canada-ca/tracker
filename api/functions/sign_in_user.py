@@ -29,6 +29,8 @@ def sign_in_user(user_name, password):
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
 
+    # Checks the amount of failed login attempts and if the time since the last
+    # Attempt was more than 30min (1800s)
     if user.failed_login_attempts and (user.failed_login_attempt_time + 1800) \
             < datetime.datetime.now().timestamp():
         raise GraphQLError(error_too_many_failed_login_attempts())
