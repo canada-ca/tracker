@@ -84,7 +84,7 @@ def check_max_depth(max_depth: int, document: Document):
     for query in queries:
         depth = measure_depth(query, fragments)
         if depth > max_depth:
-            raise DepthLimitReadched(
+            raise DepthLimitReached(
                 'Query is too complex'
             )
 
