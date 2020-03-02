@@ -13,7 +13,7 @@ from app import app
 
 seed()
 from queries import schema
-
+from backend.depth_check import DepthAnalysisBackend
 remove_seed()
 
 # This is the only way I could get imports to work for unit testing.
@@ -27,6 +27,7 @@ class TestPasswordReset:
         """Test for ensuring that an email is sent to a valid email address"""
         request_headers = {'Origin': "https://testserver.com"}
         with app.test_request_context(headers=request_headers):
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -40,7 +41,7 @@ class TestPasswordReset:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
 
             assert executed['data']
             assert executed['data']['sendPasswordReset']
@@ -64,6 +65,7 @@ class TestPasswordReset:
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
+        backend = DepthAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             '''
@@ -72,7 +74,7 @@ class TestPasswordReset:
                         id
                     }
             }
-            ''')
+            ''', backend=backend)
         assert executed['errors']
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == scalar_error_type(
@@ -84,6 +86,7 @@ class TestVerifyEmail:
         """Test for ensuring that an email is sent to a valid email address"""
         request_headers = {'Origin': "https://testserver.com"}
         with app.test_request_context(headers=request_headers):
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -97,7 +100,7 @@ class TestVerifyEmail:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert executed['data']
             assert executed['data']['sendValidationEmail']
             assert executed['data']['sendValidationEmail']['content']
@@ -121,6 +124,7 @@ class TestVerifyEmail:
 
     def test_invalid_email(self):
         """Tests to ensure that an invalid email address will raise an error"""
+        backend = DepthAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             '''
@@ -129,7 +133,7 @@ class TestVerifyEmail:
                     id
                 }
             }
-            ''')
+            ''', backend=backend)
         assert executed['errors']
         assert executed['errors'][0]
         assert executed['errors'][0]['message'] == scalar_error_type(

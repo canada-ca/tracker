@@ -21,7 +21,7 @@ def measure_depth(selection_set, level=1):
 
 
 class DepthAnalysisBackend(GraphQLCoreBackend):
-    def __init__(self, max_depth):
+    def __init__(self, max_depth=10):
         super().__init__()
         self.max_depth = max_depth
 

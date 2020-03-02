@@ -14,6 +14,7 @@ from app import app
 from db import db
 from models import Sectors, Groups
 from queries import schema
+from backend.depth_check import DepthAnalysisBackend
 remove_seed()
 
 # This is the only way I could get imports to work for unit testing.
@@ -75,6 +76,7 @@ class TestGroupResolver(TestCase):
     def test_get_group_resolvers_by_id(self):
         """Test get_group_by_id resolver"""
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -94,12 +96,13 @@ class TestGroupResolver(TestCase):
                 }
             }
 
-            result_eval = client.execute(query)
+            result_eval = client.execute(query, backend=backend)
         self.assertDictEqual(result_refr, result_eval)
 
     def test_get_group_resolvers_by_group(self):
         """"Test get_group_by_group resolver"""
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -119,12 +122,13 @@ class TestGroupResolver(TestCase):
                 }
             }
 
-            result_eval = client.execute(query)
+            result_eval = client.execute(query, backend=backend)
         self.assertDictEqual(result_refr, result_eval)
 
     def test_get_group_resolvers_by_sector(self):
         """Test get_group_by_sector_id resolver"""
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -150,12 +154,13 @@ class TestGroupResolver(TestCase):
                 }
             }
 
-            result_eval = client.execute(query)
+            result_eval = client.execute(query, backend=backend)
         self.assertDictEqual(result_refr, result_eval)
 
     def test_group_resolver_by_id_invalid(self):
         """Test get_group_by_id invalid ID error handling"""
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -165,7 +170,7 @@ class TestGroupResolver(TestCase):
                     sectorId
                 }
             }"""
-            executed = client.execute(query)
+            executed = client.execute(query, backend=backend)
 
         assert executed['errors']
         assert executed['errors'][0]
@@ -174,6 +179,7 @@ class TestGroupResolver(TestCase):
     def test_group_resolver_by_group_invalid(self):
         """Test get_group_by_group invalid sector error handling"""
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -183,7 +189,7 @@ class TestGroupResolver(TestCase):
                     sectorId
                 }
             }"""
-            executed = client.execute(query)
+            executed = client.execute(query, backend=backend)
 
         assert executed['errors']
         assert executed['errors'][0]
@@ -193,6 +199,7 @@ class TestGroupResolver(TestCase):
     def test_group_resolver_by_sector_invalid(self):
         """Test get_group_by_sector invalid Zone error handling"""
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             query = """
             {
@@ -202,7 +209,7 @@ class TestGroupResolver(TestCase):
                     sectorId
                 }
             }"""
-            executed = client.execute(query)
+            executed = client.execute(query, backend=backend)
 
         assert executed['errors']
         assert executed['errors'][0]

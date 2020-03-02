@@ -21,12 +21,7 @@ from app import app
 from queries import schema
 from models import Users, User_affiliations, Organizations
 from functions.error_messages import error_not_an_admin
-from functions.auth_functions import (
-    is_super_admin,
-    is_admin,
-    is_user_write,
-    is_user_read
-)
+from backend.depth_check import DepthAnalysisBackend
 remove_seed()
 
 
@@ -85,6 +80,7 @@ def user_role_test_db_init():
 class TestUserUpdateWriteRole(TestCase):
     def test_user_claim_update_to_user_write(self):
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -93,7 +89,7 @@ class TestUserUpdateWriteRole(TestCase):
                         authToken
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert get_token['data']['signIn']['authToken'] is not None
             token = get_token['data']['signIn']['authToken']
             assert token is not None
@@ -111,7 +107,7 @@ class TestUserUpdateWriteRole(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers)
+                ''', context_value=request_headers, backend=backend)
             assert executed['data']
             assert executed['data']['updateUserRole']
             assert executed['data']['updateUserRole']['status'] == 'Update Successful'
@@ -124,7 +120,7 @@ class TestUserUpdateWriteRole(TestCase):
                         authToken
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert get_token['data']['signIn']['authToken'] is not None
             token = get_token['data']['signIn']['authToken']
             assert token is not None
@@ -140,7 +136,7 @@ class TestUserUpdateWriteRole(TestCase):
                 {
                     testUserClaims(org: ORG1, role: USER_WRITE)
                 }
-                ''', context_value=request_headers)
+                ''', context_value=request_headers, backend=backend)
             assert executed['data']
             assert executed['data']['testUserClaims']
             assert executed['data']['testUserClaims'] == 'User Passed User Write Claim'
@@ -150,6 +146,7 @@ class TestUserUpdateWriteRole(TestCase):
 class TestUserUpdateAdminRole(TestCase):
     def test_user_claim_update_to_admin(self):
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -158,7 +155,7 @@ class TestUserUpdateAdminRole(TestCase):
                         authToken
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert get_token['data']['signIn']['authToken'] is not None
             token = get_token['data']['signIn']['authToken']
             assert token is not None
@@ -176,7 +173,7 @@ class TestUserUpdateAdminRole(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers)
+                ''', context_value=request_headers, backend=backend)
             assert executed['data']
             assert executed['data']['updateUserRole']
             assert executed['data']['updateUserRole']['status'] == 'Update Successful'
@@ -189,7 +186,7 @@ class TestUserUpdateAdminRole(TestCase):
                         authToken
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert get_token['data']['signIn']['authToken'] is not None
             token = get_token['data']['signIn']['authToken']
             assert token is not None
@@ -205,7 +202,7 @@ class TestUserUpdateAdminRole(TestCase):
                 {
                     testUserClaims(org: ORG1, role: ADMIN)
                 }
-                ''', context_value=request_headers)
+                ''', context_value=request_headers, backend=backend)
             assert executed['data']
             assert executed['data']['testUserClaims']
             assert executed['data']['testUserClaims'] == 'User Passed Admin Claim'
@@ -215,6 +212,7 @@ class TestUserUpdateAdminRole(TestCase):
 class TestUserUpdateSuperAdminRole(TestCase):
     def test_user_claim_update_to_super_admin(self):
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -223,7 +221,7 @@ class TestUserUpdateSuperAdminRole(TestCase):
                         authToken
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert get_token['data']['signIn']['authToken'] is not None
             token = get_token['data']['signIn']['authToken']
             assert token is not None
@@ -241,7 +239,7 @@ class TestUserUpdateSuperAdminRole(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers)
+                ''', context_value=request_headers, backend=backend)
             assert executed['data']
             assert executed['data']['updateUserRole']
             assert executed['data']['updateUserRole']['status'] == 'Update Successful'
@@ -254,7 +252,7 @@ class TestUserUpdateSuperAdminRole(TestCase):
                         authToken
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert get_token['data']['signIn']['authToken'] is not None
             token = get_token['data']['signIn']['authToken']
             assert token is not None
@@ -270,7 +268,7 @@ class TestUserUpdateSuperAdminRole(TestCase):
                 {
                     testUserClaims(org: ORG1, role: SUPER_ADMIN)
                 }
-                ''', context_value=request_headers)
+                ''', context_value=request_headers, backend=backend)
             assert executed['data']
             assert executed['data']['testUserClaims']
             assert executed['data']['testUserClaims'] == 'User Passed Super Admin Claim'
@@ -280,6 +278,7 @@ class TestUserUpdateSuperAdminRole(TestCase):
 class TestUserUpdateAdminRoleInvalid(TestCase):
     def test_user_claim_update_to_user_write(self):
         with app.app_context():
+            backend = DepthAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
                 '''
@@ -288,7 +287,7 @@ class TestUserUpdateAdminRoleInvalid(TestCase):
                         authToken
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert get_token['data']['signIn']['authToken'] is not None
             token = get_token['data']['signIn']['authToken']
             assert token is not None
@@ -306,7 +305,7 @@ class TestUserUpdateAdminRoleInvalid(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers)
+                ''', context_value=request_headers, backend=backend)
             assert executed['errors']
             assert executed['errors'][0]
             assert executed['errors'][0]['message'] == error_not_an_admin()
