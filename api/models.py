@@ -1,3 +1,4 @@
+from graphene import Time
 from sqlalchemy.types import Integer, Boolean, DateTime
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
@@ -67,6 +68,7 @@ class Users(db.Model):
     user_password = Column(String)
     preferred_lang = Column(String)
     failed_login_attempts = Column(Integer, default=0)
+    failed_login_attempt_time = Column(String)
     tfa_validated = Column(Boolean, default=False)
     user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
 
