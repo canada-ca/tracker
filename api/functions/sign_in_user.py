@@ -29,10 +29,9 @@ def sign_in_user(user_name, password):
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
 
-    if user.failed_login_attempts >= 5:
-        # Check if 30min (or 1800 seconds) have passed since failed login
-        if (user.failed_login_attempt_time + 1800) > datetime.datetime.now().timestamp():
-            raise GraphQLError(error_too_many_failed_login_attempts())
+    if user.failed_login_attempts and (user.failed_login_attempt_time + 1800) \
+            < datetime.datetime.now().timestamp():
+        raise GraphQLError(error_too_many_failed_login_attempts())
 
     bcrypt = Bcrypt(app)  # Create the bcrypt object that will handle password hashing and verification
 

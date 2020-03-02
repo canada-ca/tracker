@@ -1,6 +1,7 @@
 import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath
+import datetime
 
 import pyotp
 import pytest
@@ -37,6 +38,7 @@ def user_schema_test_db_init():
             user_name="testuser@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
+            failed_login_attempt_time=datetime.datetime.now().timestamp() + 1920, # This mocks that the user is accessing the service 32 mins after their last failed login attempt
         )
         db.session.add(test_user)
 
@@ -45,7 +47,8 @@ def user_schema_test_db_init():
             user_name="test_already_failed_user@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
-            failed_login_attempts=3
+            failed_login_attempts=3,
+            failed_login_attempt_time=datetime.datetime.now().timestamp() + 1920, # This mocks that the user is accessing the service 32 mins after their last failed login attempt
         )
         db.session.add(test_already_failed_user)
 
@@ -54,7 +57,8 @@ def user_schema_test_db_init():
             user_name="test_too_many_failed_user@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
-            failed_login_attempts=30
+            failed_login_attempts=30,
+            failed_login_attempt_time=0,
         )
         db.session.add(test_too_many_failed_user)
 
@@ -123,6 +127,7 @@ class TestSignInUser:
 
             assert failed_user is not None
             assert failed_user.failed_login_attempts == 1
+            assert failed_user.failed_login_attempt_time is not 0
 
     def test_successful_login_sets_failed_attempts_to_zero(self):
         """
@@ -149,6 +154,7 @@ class TestSignInUser:
 
             assert user is not None
             assert user.failed_login_attempts == 0
+            assert user.failed_login_attempt_time == 0
 
     def test_too_many_failed_attempts(self):
         """Test that ensures a user can be signed in"""
