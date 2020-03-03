@@ -3,6 +3,10 @@ kind: Kustomization
 resources:
 - ../../bases
 - ingressgateway.yaml
+- cert-manager-namespace.yaml
+- cert-manager.yaml
+- certificate.yaml
+- letsencrypt-issuer.yaml
 images:
 - name: gcr.io/track-compliance/api
   newTag: master-edcdbde
