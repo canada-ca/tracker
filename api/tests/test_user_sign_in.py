@@ -138,15 +138,6 @@ class TestSignInUser:
             assert failed_user.failed_login_attempts == 1
             assert failed_user.failed_login_attempt_time is not 0
 
-            assert executed['data']
-            assert executed['data']['signIn']
-
-            assert executed['data']['signIn']['user'][
-                       'failedLoginAttempts'] == 1
-
-            assert executed['data']['signIn']['user'][
-                       'failedLoginAttemptTime'] != 0
-
     def test_successful_login_sets_failed_attempts_to_zero(self):
         """
         Test that ensures a user can be signed in, and that when they do, their
