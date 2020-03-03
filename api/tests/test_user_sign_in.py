@@ -112,6 +112,8 @@ class TestSignInUser:
                             password:"testpassword1234"){
                         user{
                             userName
+                            failedLoginAttempts
+                            failedLoginAttemptTime
                         }
                     }
                 }
@@ -143,6 +145,8 @@ class TestSignInUser:
                      password:"testpassword123"){
                         user{
                             userName
+                            failedLoginAttempts
+                            failedLoginAttemptTime
                         }
                     }
                 }
@@ -155,6 +159,11 @@ class TestSignInUser:
             assert user is not None
             assert user.failed_login_attempts == 0
             assert user.failed_login_attempt_time == 0
+
+            assert executed['data']
+            assert executed['data']['signIn']
+            assert executed['data']['signIn']['user']['failedLoginAttempts'] == 0
+            assert executed['data']['signIn']['user']['failedLoginAttemptTime'] == 0
 
     def test_too_many_failed_attempts(self):
         """Test that ensures a user can be signed in"""
