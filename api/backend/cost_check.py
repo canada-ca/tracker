@@ -10,9 +10,11 @@ from graphql.language.ast import (
     Field,
     InlineFragment
 )
+from backend import (
+    get_fragments,
+    get_queries_and_mutations
+)
 
-from backend.depth_check import get_queries_and_mutations
-from backend.depth_check import get_fragments
 from backend.cost_map import cost_map
 
 

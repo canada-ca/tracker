@@ -1,7 +1,4 @@
-from typing import (
-    Dict,
-    List
-)
+from typing import Dict
 from graphql.language.ast import (
     Document,
     FragmentDefinition,
@@ -12,25 +9,14 @@ from graphql.language.ast import (
     InlineFragment
 )
 
+from backend import (
+    get_fragments,
+    get_queries_and_mutations
+)
+
 
 class DepthLimitReached(Exception):
     pass
-
-
-def get_fragments(definitions) -> Dict[str, FragmentDefinition]:
-    return {
-        definition.name.value: definition
-        for definition in definitions
-        if isinstance(definition, FragmentDefinition)
-    }
-
-
-def get_queries_and_mutations(definitions) -> List[OperationDefinition]:
-    return [
-        definition
-        for definition in definitions
-        if isinstance(definition, OperationDefinition)
-    ]
 
 
 def measure_depth(node: Node, fragments: Dict[str, FragmentDefinition]) -> int:
