@@ -25,20 +25,6 @@ from schemas.user_affiliations import (
     UpdateUserRole
 )
 
-from scalars.url import URL
-from scalars.email_address import EmailAddress
-
-from schemas.sectors import Sectors
-from schemas.groups import Groups
-from schemas.organizations import Organizations
-from schemas.domains import Domains
-from schemas.scans import Scans
-
-from resolvers.sectors import (
-    resolve_get_sector_by_id,
-    resolve_get_sectors_by_sector,
-    resolve_get_sector_by_zone
-)
 from resolvers.groups import (
     resolve_get_group_by_id,
     resolve_get_group_by_group,
@@ -79,7 +65,7 @@ from resolvers.users import (
 )
 from scalars.email_address import EmailAddress
 from scalars.url import URL
-from schemas.domains import Domains
+from schemas.domains import Domains, DomainManagement
 from schemas.groups import Groups
 from schemas.notification_email import (NotificationEmail)
 from schemas.organizations import Organizations
@@ -87,7 +73,7 @@ from schemas.scans import Scans
 from schemas.sectors import Sectors
 
 from schemas.user import (
-    UserConnection,
+    UserObject,
     CreateUser,
     SignInUser,
     UpdateUserPassword,
@@ -98,10 +84,12 @@ from schemas.user import (
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
-    all_users = SQLAlchemyConnectionField(UserConnection, sort=None)
-    # all_users = graphene.List(UserObject, failedAttempts=graphene.Int(), resolver=resolve_all_users)
-    # all_sectors = SQLAlchemyConnectionField(SectorsConnection, sort=None)
-    # all_groups = SQLAlchemyConnectionField(GroupsConnection, sort=None)
+    users = SQLAlchemyConnectionField(UserObject._meta.connection, sort=None)
+    sector = SQLAlchemyConnectionField(Sectors._meta.connection, sort=None)
+    group = SQLAlchemyConnectionField(Groups._meta.connection, sort=None)
+    organization = SQLAlchemyConnectionField(Organizations._meta.connection, sort=None)
+    domains = SQLAlchemyConnectionField(Domains._meta.connection, sort=None)
+    domain_management = SQLAlchemyConnectionField(DomainManagement._meta.connection, sort=None)
     get_sector_by_id = graphene.List(
         of_type=Sectors,
         id=graphene.Argument(graphene.Int, required=True),
@@ -162,7 +150,7 @@ class Query(graphene.ObjectType):
         resolver=resolve_get_domain_by_id,
         description="Allows the selection of a domain from a given ID"
     )
-    get_domain_by_domain = graphene.List(
+    domain = graphene.List(
         of_type=Domains,
         url=graphene.Argument(URL, required=True),
         resolver=resolve_get_domain_by_domain,
