@@ -22,7 +22,8 @@ from queries import schema
 from models import Users
 from functions.error_messages import(
     error_invalid_credentials,
-    error_too_many_failed_login_attempts
+    error_too_many_failed_login_attempts,
+    error_user_does_not_exist
 )
 remove_seed()
 
@@ -88,6 +89,8 @@ class TestSignInUser:
                             password:"testpassword123"){
                         user{
                             userName
+                            failedLoginAttempts
+                            failedLoginAttemptTime
                         }
                     }
                 }
@@ -97,6 +100,11 @@ class TestSignInUser:
             assert executed['data']['signIn']['user']
             assert executed['data']['signIn']['user']['userName'] \
                    == "testuser@testemail.ca"
+
+            assert executed['data']['signIn']['user'][
+                       'failedLoginAttempts'] == 0
+            assert executed['data']['signIn']['user'][
+                       'failedLoginAttemptTime'] == 0
 
     def test_invalid_credentials(self):
         """
@@ -111,7 +119,6 @@ class TestSignInUser:
                     signIn(userName:"testuser@testemail.ca",
                             password:"testpassword1234"){
                         user{
-                            userName
                             failedLoginAttempts
                             failedLoginAttemptTime
                         }
@@ -131,6 +138,15 @@ class TestSignInUser:
             assert failed_user.failed_login_attempts == 1
             assert failed_user.failed_login_attempt_time is not 0
 
+            assert executed['data']
+            assert executed['data']['signIn']
+
+            assert executed['data']['signIn']['user'][
+                       'failedLoginAttempts'] == 1
+
+            assert executed['data']['signIn']['user'][
+                       'failedLoginAttemptTime'] != 0
+
     def test_successful_login_sets_failed_attempts_to_zero(self):
         """
         Test that ensures a user can be signed in, and that when they do, their
@@ -144,7 +160,6 @@ class TestSignInUser:
                     signIn(userName:"test_already_failed_user@testemail.ca",
                      password:"testpassword123"){
                         user{
-                            userName
                             failedLoginAttempts
                             failedLoginAttemptTime
                         }
@@ -186,4 +201,22 @@ class TestSignInUser:
             assert executed['errors'][0]['message'] \
                    == error_too_many_failed_login_attempts()
 
-
+    def test_no_such_user(self):
+        """Test that ensures error message is sent if user does not exist"""
+        with app.app_context():
+            client = Client(schema)
+            executed = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"nouser@testemail.ca",
+                     password:"testpassword123"){
+                        user{
+                            userName
+                        }
+                    }
+                }
+                ''')
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message']
+            assert executed['errors'][0]['message'] == error_user_does_not_exist()
