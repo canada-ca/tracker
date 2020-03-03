@@ -2,9 +2,7 @@ import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath
 
-import pyotp
 import pytest
-from flask_bcrypt import Bcrypt
 from graphene.test import Client
 
 from unittest import TestCase
@@ -16,7 +14,7 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from manage import seed, remove_seed
 seed()
-from db import *
+from db import db
 from app import app
 from queries import schema
 from models import Sectors, Groups

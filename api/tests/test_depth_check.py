@@ -2,9 +2,7 @@ import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath
 
-import pyotp
 import pytest
-from flask_bcrypt import Bcrypt
 from graphene.test import Client
 
 from unittest import TestCase
