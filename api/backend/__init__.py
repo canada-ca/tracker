@@ -7,8 +7,6 @@ from graphql.language.ast import (
     OperationDefinition
 )
 
-from backend.security_check import SecurityAnalysisBackend
-
 
 def get_fragments(definitions) -> Dict[str, FragmentDefinition]:
     return {

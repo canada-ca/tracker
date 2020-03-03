@@ -18,7 +18,7 @@ from db import db
 from app import app
 from queries import schema
 from models import Sectors, Groups
-from backend import SecurityAnalysisBackend
+from backend.security_check import SecurityAnalysisBackend
 remove_seed()
 
 

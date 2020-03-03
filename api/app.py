@@ -4,7 +4,7 @@ from flask import Flask
 from flask_graphql import GraphQLView
 from waitress import serve
 
-from backend import SecurityAnalysisBackend
+from backend.security_check import SecurityAnalysisBackend
 
 from db import (
     db,
