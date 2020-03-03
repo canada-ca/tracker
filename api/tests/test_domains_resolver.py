@@ -61,14 +61,14 @@ class TestDomainsResolver(TestCase):
             query = """
             {
                 getDomainById(id: 1){
-                    domain
+                    url
                 }
             }"""
             result_refr = {
                 "data": {
                     "getDomainById": [
                         {
-                            "domain": "somecooldomain.ca"
+                            "url": "somecooldomain.ca"
                         }
                     ]
                 }
@@ -84,15 +84,15 @@ class TestDomainsResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getDomainByDomain(url: "somecooldomain.ca"){
-                    domain
+                domain(url: "somecooldomain.ca"){
+                    url
                 }
             }"""
             result_refr = {
                 "data": {
-                    "getDomainByDomain": [
+                    "domain": [
                         {
-                            "domain": "somecooldomain.ca"
+                            "url": "somecooldomain.ca"
                         }
                     ]
                 }
@@ -109,14 +109,14 @@ class TestDomainsResolver(TestCase):
             query = """
             {
                 getDomainByOrganization(org: ORG2){
-                    domain
+                    url
                 }
             }"""
             result_refr = {
                 "data": {
                     "getDomainByOrganization": [
                         {
-                            "domain": "somecooldomain.ca"
+                            "url": "somecooldomain.ca"
                         }
                     ]
                 }
@@ -133,7 +133,7 @@ class TestDomainsResolver(TestCase):
             query = """
             {
                 getDomainById(id: 9999){
-                    domain
+                    url
                 }
             }"""
             executed = client.execute(query, backend=backend)
@@ -149,8 +149,8 @@ class TestDomainsResolver(TestCase):
             client = Client(schema)
             query = """
             {
-                getDomainByDomain(url: "google.ca"){
-                    domain
+                domain(url: "google.ca"){
+                    url
                 }
             }"""
             executed = client.execute(query, backend=backend)
@@ -168,7 +168,7 @@ class TestDomainsResolver(TestCase):
             query = """
             {
                 getDomainByOrganization(org: fds){
-                    domain
+                    url
                 }
             }"""
             executed = client.execute(query, backend=backend)

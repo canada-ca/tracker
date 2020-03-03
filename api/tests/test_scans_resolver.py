@@ -89,7 +89,7 @@ class TestScansResolver(TestCase):
                 getScanById(id: 1) {
                     scanDate
                     domain {
-                        domain
+                        url
                     }
                 }
             }
@@ -101,7 +101,7 @@ class TestScansResolver(TestCase):
                         {
                             "scanDate": "2020-02-18T09:43:14",
                             "domain": {
-                                "domain": "valid.canada.ca"
+                                "url": "valid.canada.ca"
                             }
                         }
                     ]
@@ -122,7 +122,7 @@ class TestScansResolver(TestCase):
                 getScansByDate(date: "2020-02-18") {
                     scanDate
                     domain {
-                        domain
+                        url
                     }
                 }
             }
@@ -134,7 +134,7 @@ class TestScansResolver(TestCase):
                         {
                             "scanDate": "2020-02-18T09:43:14",
                             "domain": {
-                                "domain": "valid.canada.ca"
+                                "url": "valid.canada.ca"
                             }
                         }
                     ]
@@ -155,7 +155,7 @@ class TestScansResolver(TestCase):
                 getScansByDateRange(startDate: "2020-02-15", endDate: "2020-02-18"){
                     scanDate
                     domain {
-                        domain
+                        url
                     }
                 }
             }
@@ -167,13 +167,13 @@ class TestScansResolver(TestCase):
                         {
                             "scanDate": "2020-02-18T09:43:14",
                             "domain": {
-                                "domain": "valid.canada.ca"
+                                "url": "valid.canada.ca"
                             }
                         },
                         {
                             "scanDate": "2020-02-15T09:43:17",
                             "domain": {
-                                "domain": "valid.canada.ca"
+                                "url": "valid.canada.ca"
                             }
                         }
                     ]
@@ -194,7 +194,7 @@ class TestScansResolver(TestCase):
                 getScansByDomain(url: "valid.canada.ca") {
                     scanDate
                     domain {
-                        domain
+                        url
                     }
                 }
             }
@@ -206,13 +206,13 @@ class TestScansResolver(TestCase):
                         {
                             "scanDate": "2020-02-18T09:43:14",
                             "domain": {
-                                "domain": "valid.canada.ca"
+                                "url": "valid.canada.ca"
                             }
                         },
                         {
                             "scanDate": "2020-02-15T09:43:17",
                             "domain": {
-                                "domain": "valid.canada.ca"
+                                "url": "valid.canada.ca"
                             }
                         }
                     ]
@@ -233,7 +233,7 @@ class TestScansResolver(TestCase):
                 getScansByUserId(id: 1) {
                     initiatedBy
                     domain {
-                        domain
+                        url
                     }
                 }
             }
@@ -245,13 +245,13 @@ class TestScansResolver(TestCase):
                         {
                             "initiatedBy": 1,
                             "domain": {
-                                "domain": "valid.canada.ca"
+                                "url": "valid.canada.ca"
                             }
                         },
                         {
                             "initiatedBy": 1,
                             "domain": {
-                                "domain": "valid.canada.ca"
+                                "url": "valid.canada.ca"
                             }
                         }
                     ]
