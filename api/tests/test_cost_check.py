@@ -54,9 +54,9 @@ def user_schema_test_db_init():
 ##
 # This class of tests works within the 'createUser' api endpoint
 @pytest.mark.usefixtures('user_schema_test_db_init')
-class TestDepthCheck(TestCase):
-    def test_valid_depth_query(self):
-        backend = SecurityAnalysisBackend(10)
+class TestCostCheck(TestCase):
+    def test_valid_cost_query(self):
+        backend = SecurityAnalysisBackend()
         client = Client(schema)
         query = client.execute(
             '''
@@ -91,55 +91,51 @@ class TestDepthCheck(TestCase):
         }
         self.assertDictEqual(result_refr, query)
 
-    def test_invalid_depth_query(self):
-        backend = SecurityAnalysisBackend(10)
+    def test_invalid_cost_query(self):
+        backend = SecurityAnalysisBackend(10, 5)
         client = Client(schema)
         executed = client.execute(
             '''
             {
-              getSectorById(id: 1) {
-                groups{
-                  edges{
-                    node{
-                      groupSector{
-                        groups{
-                          edges{
-                            node{
-                              groupSector{
-                                groups{
-                                  edges{
-                                    node{
-                                      groupSector{
-                                        groups{
-                                          edges{
-                                            node{
-                                              groupSector{
-                                                groups{
-                                                  edges{
-                                                    node{
-                                                      groupSector
-                                                    }
-                                                  }
-                                                }
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
+                getSectorById(id: 1) {
+                    groups {
+                        edges {
+                            node {
+                                sectorId
                             }
-                          }
                         }
-                      }
                     }
-                  }
+                    groups {
+                        edges {
+                            node {
+                                sectorId
+                            }
+                        }
+                    }
+                    groups {
+                        edges {
+                            node {
+                                sectorId
+                            }
+                        }
+                    }
+                    groups {
+                        edges {
+                            node {
+                                sectorId
+                            }
+                        }
+                    }
+                    groups {
+                        edges {
+                            node {
+                                sectorId
+                            }
+                        }
+                    }
                 }
-              }
             }
             ''', backend=backend)
         assert executed['errors']
         assert executed['errors'][0]
-        assert executed['errors'][0]['message'] == 'Query is too complex'
+        assert executed['errors'][0]['message'] == 'Query cost is too high'
