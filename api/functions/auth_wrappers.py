@@ -4,7 +4,7 @@ import os
 from graphql import GraphQLError
 
 from functions.orm_to_dict import orm_to_dict
-from manage import app, db
+from app import app
 from models import User_affiliations, Organizations
 
 user_admin_perm = ['super_admin', 'admin']

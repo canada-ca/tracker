@@ -1,11 +1,11 @@
 from graphql import GraphQLError
 from flask_bcrypt import Bcrypt
-from flask import current_app as app
 
 from functions.input_validators import *
 from functions.error_messages import *
 
 from models import Users as User
+from app import app
 from db import db
 
 

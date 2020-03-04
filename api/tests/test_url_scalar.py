@@ -1,9 +1,6 @@
 import sys
 import os
 
-import pytest
-from graphene.test import Client
-from graphql import GraphQLScalarType
 from graphql.language import ast
 from graphql import GraphQLError
 

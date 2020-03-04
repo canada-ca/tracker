@@ -1,7 +1,7 @@
 from sqlalchemy.orm import load_only
 from functions.orm_to_dict import orm_to_dict
 from models import Organizations, User_affiliations
-from manage import app
+from app import app
 
 admin_perms = ['super_admin', 'admin']
 user_write_perms = ['super_admin', 'admin', 'user_write']
