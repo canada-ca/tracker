@@ -40,7 +40,7 @@ def receive():
 
 def dispatch(payload):
     try:
-        response = requests.post('http://34.67.57.19/dispatch', headers=headers, data=payload)
+        response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
         logging.info("Scan %s completed. Results queued for processing...\n" % payload["scan_id"])
         logging.info(str(response.text))
         return str(response.text)

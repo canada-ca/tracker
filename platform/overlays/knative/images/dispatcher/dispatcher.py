@@ -45,12 +45,12 @@ def dispatch(payload, dkim_flag):
 
     if dkim_flag:
         headers['Host'] = dkim_host
-        requests.post('http://34.67.57.19/dispatch', headers=headers, data=payload)
+        requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
     else:
         for host in scanner_hosts:
             headers['Host'] = host
             try:
-                requests.post('http://34.67.57.19/dispatch', headers=headers, data=payload)
+                requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
                 logging.info("Scan %s dispatched...\n" % payload["scan_id"])
             except Exception as e:
                 logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (payload["scan_id"], e))
