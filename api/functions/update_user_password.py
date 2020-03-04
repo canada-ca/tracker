@@ -1,3 +1,5 @@
+import datetime
+
 from graphql import GraphQLError
 from flask_bcrypt import Bcrypt
 
@@ -35,8 +37,11 @@ def update_password(user_name, password, confirm_password):
     bcrypt = Bcrypt(app)  # Create the bcrypt object that will handle password hashing and verification
 
     user = User.query.filter(User.user_name == user_name) \
-        .update({'user_password': bcrypt.generate_password_hash(
-        password).decode('UTF-8')})
+        .update({
+            'user_password': bcrypt.generate_password_hash(password).decode('UTF-8'),
+            'failed_login_attempts': 0,
+            'failed_login_attempt_time': 0
+        })
 
     db.session.commit()
 

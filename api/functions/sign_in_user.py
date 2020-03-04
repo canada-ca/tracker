@@ -29,6 +29,12 @@ def sign_in_user(user_name, password):
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
 
+    # Checks the amount of failed login attempts and if the time since the last
+    # Attempt was more than 30min (1800s)
+    if user.failed_login_attempts and (user.failed_login_attempt_time + 1800) \
+            < datetime.datetime.now().timestamp():
+        raise GraphQLError(error_too_many_failed_login_attempts())
+
     bcrypt = Bcrypt(app)  # Create the bcrypt object that will handle password hashing and verification
 
     email_match = user_name == user.user_name
@@ -70,6 +76,23 @@ def sign_in_user(user_name, password):
             'user': user
         }
 
+        Users.query.filter(Users.user_name == user_name).update({
+            'failed_login_attempts': 0,
+            'failed_login_attempt_time': 0
+        })
+        db.session.commit()
+
         return temp_dict
     else:
+        # Increment the user's failed login count and raise an appropriate error
+        # Generate a timestamp and also add that to the user update.
+        time_stamp = datetime.datetime.now().timestamp()
+
+        Users.query.filter(Users.user_name == user_name)\
+            .update({
+                'failed_login_attempts': Users.failed_login_attempts + 1,
+                'failed_login_attempt_time': time_stamp
+             })
+        db.session.commit()
+
         raise GraphQLError(error_invalid_credentials())
