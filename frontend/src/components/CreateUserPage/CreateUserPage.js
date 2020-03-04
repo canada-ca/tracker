@@ -3,20 +3,21 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Input,
+  Input, Link,
   Stack,
   Text,
 } from "@chakra-ui/core";
 import {Layout} from "../../Layout";
 import gql from 'graphql-tag'
 import {useMutation} from "@apollo/react-hooks";
+import {Link as RouteLink} from "react-router-dom";
 
 export function CreateUserPage(){
     const [createUser, { loading, error, data }] = useMutation(gql`
-    mutation{
-      createUser(displayName:"testuser", userName:"test@test-email.ca", password:"password123123", confirmPassword:"password123123"){
-        user{
-          userName
+    mutation CreateUser($displayName: String!, $userName: EmailAddress!, $password: String!, $confirmPassword: String!) {
+      createUser(displayName: $displayName, userName: $userName, password: $password, confirmPassword: $confirmPassword) {
+        user {
+          username
         }
       }
     }
@@ -24,28 +25,38 @@ export function CreateUserPage(){
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
-  if(data) return <p>{data.createUser.user.userName}</p>
 
   return (
-    <Layout>
-      <Text mb={4} fontSize="2xl">Data: {data}</Text>
-      <Stack spacing={2}>
+      <Stack spacing={2} mx="auto">
+        <Text mb={4} fontSize="2xl">Create an account by entering an email and password.</Text>
         <FormControl>
           <FormLabel htmlFor="email">Email address</FormLabel>
-          <Input type="email" id="email" required/>
+          <Input type="email" id="email" placeholder="Enter email"/>
         </FormControl>
         <FormControl>
           <FormLabel htmlFor="password">Password</FormLabel>
-          <Input type="password" id="password" required/>
+          <Input type="password" id="password" placeholder="Enter password"/>
         </FormControl>
         <FormControl>
           <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-          <Input type="password" id="confirmPassword" required/>
+          <Input type="password" id="confirmPassword" placeholder="Confirm password"/>
         </FormControl>
-        <Stack isInline spacing={2}>
-          <Button variantColor="teal" size="md" onClick={() => createUser()}>Create Account</Button>
+        <Stack mt={6} isInline spacing={2}>
+
+          <Button variantColor="teal" size="md" onClick={() => createUser({
+            variables: {
+              displayName:"testuser",
+              userName:"testemail@testemail.ca",
+              password:"qwerty123456",
+              confirmPassword:"qwerty123456"},
+          })}>Create Account</Button>
+
+          <Button variantColor="teal" variant="outline">
+            <Link as={RouteLink} to="/sign_in">
+              Back
+            </Link>
+          </Button>
         </Stack>
       </Stack>
-    </Layout>
   )
 }

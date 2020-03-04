@@ -661,9 +661,9 @@ The central gathering point for all of the GraphQL mutations.
 type Mutation {
   createUser(
     confirmPassword: String!
-    email: EmailAddress!
+    userName: EmailAddress!
     password: String!
-    username: String!
+    displayName: String!
   ): CreateUser
   signIn(
     """

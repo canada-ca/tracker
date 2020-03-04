@@ -47,9 +47,6 @@ export default function App() {
           <Link to="/sign_in">
             <Trans>Sign In</Trans>
           </Link>
-          <Link to="/create_user">
-            <Trans>Sign Up</Trans>
-          </Link>
         </Navigation>
         <Main>
           <Route exact path="/">
