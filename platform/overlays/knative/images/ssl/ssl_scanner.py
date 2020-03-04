@@ -19,8 +19,8 @@ headers = {
 app = Flask(__name__)
 
 
-@app.route('/dispatch', methods=['GET', 'POST'])
-def dispatch():
+@app.route('/receive', methods=['GET', 'POST'])
+def receive():
 
     logging.info("Event received\n")
 
@@ -29,18 +29,25 @@ def dispatch():
         domain = request.json['domain']
         res = scan(scan_id, domain)
         if res is not None:
-            payload = json.dumps({"results": str(res), "scan_type": "ssl"})
+            payload = json.dumps({"results": str(res), "scan_type": "ssl", "scan_id": scan_id})
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to establish SSL connection" % scan_id)
-        try:
-            response = requests.post('http://34.67.57.19/dispatch', headers=headers, data=payload)
-            logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
-            logging.info(str(response.text))
-            return str(response.text)
-        except Exception as e:
-            logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
+
+        dispatch(payload)
+
     except Exception as e:
         logging.error(str(e)+'\n')
+
+
+def dispatch(payload):
+    try:
+        response = requests.post('http://34.67.57.19/dispatch', headers=headers, data=payload)
+        logging.info("Scan %s completed. Results queued for processing...\n" % payload["scan_id"])
+        logging.info(str(response.text))
+        return str(response.text)
+    except Exception as e:
+        logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (payload["scan_id"], e))
+
 
 def scan(scan_id, domain):
 
