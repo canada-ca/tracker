@@ -5,6 +5,8 @@ import { Global, css } from '@emotion/core'
 import { PageNotFound } from './PageNotFound'
 import { LandingPage } from './LandingPage'
 import { DomainsPage } from './DomainsPage'
+import {SignInPage} from "./components/SignInPage/SignInPage"
+import {CreateUserPage} from "./components/CreateUserPage/CreateUserPage"
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
 import { TopBanner } from './TopBanner'
@@ -42,6 +44,12 @@ export default function App() {
           <Link to="/domains">
             <Trans>Domains</Trans>
           </Link>
+          <Link to="/sign_in">
+            <Trans>Sign In</Trans>
+          </Link>
+          <Link to="/create_user">
+            <Trans>Sign Up</Trans>
+          </Link>
         </Navigation>
         <Main>
           <Route exact path="/">
@@ -50,6 +58,13 @@ export default function App() {
 
           <Route path="/domains">
             <DomainsPage />
+          </Route>
+
+          <Route path="/sign_in">
+            <SignInPage/>
+          </Route>
+          <Route path="/create_user">
+            <CreateUserPage/>
           </Route>
 
           <Route>
