@@ -7,7 +7,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/core";
-import {Layout} from "../../Layout";
 import gql from 'graphql-tag'
 import {useMutation} from "@apollo/react-hooks";
 import {Link as RouteLink} from "react-router-dom";
@@ -25,6 +24,7 @@ export function CreateUserPage(){
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
+  if (data) console.log(data)
 
   return (
       <Stack spacing={2} mx="auto">
