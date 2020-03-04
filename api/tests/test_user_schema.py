@@ -19,6 +19,7 @@ from db import *
 from app import app
 from queries import schema
 from models import Users
+from backend.security_check import SecurityAnalysisBackend
 from functions.error_messages import *
 remove_seed()
 
@@ -59,6 +60,7 @@ class TestCreateUser:
     def test_successful_creation(self):
         """Test that ensures a user can be created successfully using the api endpoint"""
         with app.app_context():
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -71,7 +73,7 @@ class TestCreateUser:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert executed['data']
             assert executed['data']['createUser']
             assert executed['data']['createUser']['user']
@@ -81,6 +83,7 @@ class TestCreateUser:
     def test_email_address_in_use(self):
         """Test that ensures each user has a unique email address"""
         with app.app_context():
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed_first = client.execute(
                 '''
@@ -92,7 +95,7 @@ class TestCreateUser:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
             executed = client.execute(
                 '''
                 mutation{
@@ -103,7 +106,7 @@ class TestCreateUser:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
 
             assert executed['errors']
             assert executed['errors'][0]
@@ -111,6 +114,7 @@ class TestCreateUser:
 
     def test_password_too_short(self):
         """Test that ensure that a user's password meets the valid length requirements"""
+        backend = SecurityAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             '''
@@ -121,7 +125,7 @@ class TestCreateUser:
                     }
                 }
             }
-            ''')
+            ''', backend=backend)
 
         assert executed['errors']
         assert executed['errors'][0]
@@ -129,6 +133,7 @@ class TestCreateUser:
 
     def test_passwords_do_not_match(self):
         """Test to ensure that user password matches their password confirmation"""
+        backend = SecurityAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             '''
@@ -140,7 +145,7 @@ class TestCreateUser:
                     }
                 }
             }
-            ''')
+            ''', backend=backend)
 
         assert executed['errors']
         assert executed['errors'][0]
@@ -154,6 +159,7 @@ class TestUpdatePassword:
     def test_update_password_success(self):
         """Test to ensure that a user is returned when their password is updated successfully"""
         with app.app_context():
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -166,7 +172,7 @@ class TestUpdatePassword:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
 
             assert executed['data']
             assert executed['data']['updatePassword']
@@ -176,6 +182,7 @@ class TestUpdatePassword:
 
     def test_updated_passwords_do_not_match(self):
         """Test to ensure that user's new password matches their password confirmation"""
+        backend = SecurityAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             '''
@@ -187,7 +194,7 @@ class TestUpdatePassword:
                     }
                 }
             }
-            ''')
+            ''', backend=backend)
 
         assert executed['errors']
         assert executed['errors'][0]
@@ -195,6 +202,7 @@ class TestUpdatePassword:
 
     def test_updated_password_too_short(self):
         """Test that ensure that a user's password meets the valid length requirements"""
+        backend = SecurityAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             '''
@@ -205,7 +213,7 @@ class TestUpdatePassword:
                     }
                 }
             }
-            ''')
+            ''', backend=backend)
 
         assert executed['errors']
         assert executed['errors'][0]
@@ -213,6 +221,7 @@ class TestUpdatePassword:
 
     def test_updated_password_no_user_email(self):
         """Test that ensures an empty string submitted as email will not be accepted"""
+        backend = SecurityAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             '''
@@ -223,7 +232,7 @@ class TestUpdatePassword:
                     }
                 }
             }
-            ''')
+            ''', backend=backend)
 
         assert executed['errors']
         assert executed['errors'][0]
@@ -237,6 +246,7 @@ class TestValidateTwoFactor:
     def test_successful_validation(self):
         """Test that ensures a validation is successful when all params are proper"""
         with app.app_context():
+            backend = SecurityAnalysisBackend()
             totp = pyotp.TOTP('base32secret3232')
             otp_code = totp.now()  # Generates a code that is valid for 30s. Plenty of time to execute the query
 
@@ -250,7 +260,7 @@ class TestValidateTwoFactor:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert executed['data']
             assert executed['data']['authenticateTwoFactor']
             assert executed['data']['authenticateTwoFactor']['user']
@@ -259,6 +269,7 @@ class TestValidateTwoFactor:
     def test_user_does_not_exist(self):
         """Test that an error is raised if the user specified does not exist"""
         with app.app_context():
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -269,7 +280,7 @@ class TestValidateTwoFactor:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
 
             assert executed['errors']
             assert executed['errors'][0]
@@ -278,6 +289,7 @@ class TestValidateTwoFactor:
     def test_invalid_otp_code(self):
         """Test that an error is raised if the user specified does not exist"""
         with app.app_context():
+            backend=SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -288,7 +300,7 @@ class TestValidateTwoFactor:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
 
             assert executed['errors']
             assert executed['errors'][0]

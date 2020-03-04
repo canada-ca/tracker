@@ -19,6 +19,7 @@ from db import *
 from app import app
 from queries import schema
 from models import Users
+from backend.security_check import SecurityAnalysisBackend
 from functions.error_messages import(
     error_invalid_credentials
 )
@@ -54,6 +55,7 @@ class TestSignInUser:
     def test_successful_sign_in(self):
         """Test that ensures a user can be signed in"""
         with app.app_context():
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -64,7 +66,7 @@ class TestSignInUser:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert executed['data']
             assert executed['data']['signIn']
             assert executed['data']['signIn']['user']
@@ -73,6 +75,7 @@ class TestSignInUser:
     def test_invalid_credentials(self):
         """Test that ensures a user can be signed in"""
         with app.app_context():
+            backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
                 '''
@@ -83,7 +86,7 @@ class TestSignInUser:
                         }
                     }
                 }
-                ''')
+                ''', backend=backend)
             assert executed['errors']
             assert executed['errors'][0]
             assert executed['errors'][0]['message']
