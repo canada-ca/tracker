@@ -160,6 +160,20 @@ spec:
 
 ---
 
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: dispatcher
+  namespace: tracker
+spec:
+  template:
+    spec:
+      containers:
+        - name: dispatcher
+          image: gcr.io/track-compliance/dispatcher # The URL to the image of the app
+
+---
+
 # Everything after this is just structure for the above.
 
 ---

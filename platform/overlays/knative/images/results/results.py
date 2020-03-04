@@ -11,8 +11,8 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = Flask(__name__)
 
-@app.route('/dispatch', methods=['GET', 'POST'])
-def dispatch():
+@app.route('/receive', methods=['GET', 'POST'])
+def receive():
 
     try:
         result_dict = request.json["results"]
