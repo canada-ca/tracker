@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
 - ../../bases
 - ingressgateway.yaml
-- cert-manager-namespace.yaml
 - cert-manager.yaml
 - certificate.yaml
 - letsencrypt-issuer.yaml
