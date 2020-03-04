@@ -25,7 +25,7 @@ def receive():
     dkim_flag = False
 
     try:
-        for key, val in request.json:
+        for key, val in request.json.items():
             if key is 'dkim':
                 dkim_flag = val
             else:
