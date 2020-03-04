@@ -72,6 +72,8 @@ from schemas.organizations import Organizations
 from schemas.scans import Scans
 from schemas.sectors import Sectors
 
+from schemas.email_scan import EmailScan
+
 from schemas.user import (
     UserObject,
     CreateUser,
@@ -90,6 +92,7 @@ class Query(graphene.ObjectType):
     organization = SQLAlchemyConnectionField(Organizations._meta.connection, sort=None)
     domains = SQLAlchemyConnectionField(Domains._meta.connection, sort=None)
     domain_management = SQLAlchemyConnectionField(DomainManagement._meta.connection, sort=None)
+    email_scan = SQLAlchemyConnectionField(EmailScan)
     get_sector_by_id = graphene.List(
         of_type=Sectors,
         id=graphene.Argument(graphene.Int, required=True),

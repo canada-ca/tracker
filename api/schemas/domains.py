@@ -1,4 +1,5 @@
 import graphene
+import graphene_sqlalchemy
 from graphene import ObjectType, relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 from graphene_sqlalchemy.types import ORMField
