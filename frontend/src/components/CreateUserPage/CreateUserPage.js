@@ -37,15 +37,15 @@ export function CreateUserPage(){
   return (
       <Stack spacing={2} mx="auto">
         <Text mb={4} fontSize="2xl">Create an account by entering an email and password.</Text>
-        <FormControl>
+        <FormControl isRequired>
           <FormLabel htmlFor="email">Email address</FormLabel>
           <Input type="email" id="email" placeholder="Enter email"/>
         </FormControl>
-        <FormControl>
+        <FormControl isRequired>
           <FormLabel htmlFor="password">Password</FormLabel>
           <Input type="password" id="password" placeholder="Enter password"/>
         </FormControl>
-        <FormControl>
+        <FormControl isRequired>
           <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
           <Input type="password" id="confirmPassword" placeholder="Confirm password"/>
         </FormControl>
@@ -59,10 +59,8 @@ export function CreateUserPage(){
               confirmPassword:"qwerty123456"},
           })}>Create Account</Button>
 
-          <Button variantColor="teal" variant="outline">
-            <Link as={RouteLink} to="/sign_in">
+          <Button as={RouteLink} to="/sign_in" variantColor="teal" variant="outline">
               Back
-            </Link>
           </Button>
         </Stack>
       </Stack>
