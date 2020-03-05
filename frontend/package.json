@@ -30,6 +30,7 @@
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "emotion-theming": "^10.0.27",
+    "formik": "^2.1.4",
     "graphql": "^14.6.0",
     "isomorphic-unfetch": "^3.0.0",
     "prop-types": "^15.7.2",
