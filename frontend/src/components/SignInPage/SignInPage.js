@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Text, Input, InputGroup, InputRightElement, FormErrorMessage, FormControl, FormLabel, Stack, Button, Link} from '@chakra-ui/core'
+import { Text, Input, InputGroup, InputRightElement, FormErrorMessage, FormControl, Stack, Button, Link} from '@chakra-ui/core'
 import {Link as RouteLink} from 'react-router-dom'
 import {useMutation} from "@apollo/react-hooks";
 import gql from 'graphql-tag'
@@ -61,7 +61,7 @@ export function SignInPage(){
 
               <Field name="email" validate={validateField}>
                 {({ field, form}) => (
-                  <FormControl mt={4} mb={4} isInvalid={form.errors.email && form.touched.email}>
+                  <FormControl mt={4} mb={4} isInvalid={form.errors.email && form.touched.email} isRequired>
                     <Input {...field} id="email" placeholder="Email" />
                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                   </FormControl>
@@ -70,7 +70,7 @@ export function SignInPage(){
 
               <Field name="password" validate={validateField}>
                 {({ field, form}) => (
-                  <FormControl mb={2} isInvalid={form.errors.password && form.touched.password}>
+                  <FormControl mb={2} isInvalid={form.errors.password && form.touched.password} isRequired>
                     <InputGroup size="md">
                       <Input
                         {...field}
@@ -89,7 +89,7 @@ export function SignInPage(){
                   </FormControl>
                 )}
               </Field>
-              <Link as={RouteLink} to="/forgot_password">Forgot?</Link>
+              <Link as={RouteLink} to="/forgot-password">Forgot?</Link>
 
               <Stack mt={6} spacing={4} isInline>
                 <Button
@@ -100,7 +100,7 @@ export function SignInPage(){
                   Sign In
                 </Button>
 
-                <Button as={RouteLink} to="/create_user"variantColor="teal" variant="outline">
+                <Button as={RouteLink} to="/create-user"variantColor="teal" variant="outline">
                     Create Account
                 </Button>
 

@@ -44,7 +44,7 @@ export default function App() {
           <Link to="/domains">
             <Trans>Domains</Trans>
           </Link>
-          <Link to="/sign_in">
+          <Link to="/sign-in">
             <Trans>Sign In</Trans>
           </Link>
         </Navigation>
@@ -57,10 +57,10 @@ export default function App() {
             <DomainsPage />
           </Route>
 
-          <Route path="/sign_in">
+          <Route path="/sign-in">
             <SignInPage/>
           </Route>
-          <Route path="/create_user">
+          <Route path="/create-user">
             <CreateUserPage/>
           </Route>
 

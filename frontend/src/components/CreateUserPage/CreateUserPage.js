@@ -1,16 +1,15 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 import {
   Button,
   FormControl, FormErrorMessage,
-  FormLabel,
-  Input, InputGroup, InputRightElement, Link,
-  Stack,
+  Input, Stack,
   Text,
 } from "@chakra-ui/core";
 import gql from 'graphql-tag'
 import {useMutation} from "@apollo/react-hooks";
 import {Link as RouteLink} from "react-router-dom";
-import {Field, Formik, useFormikContext} from "formik";
+import {Field, Formik} from "formik";
 
 export function CreateUserPage(){
     const [createUser, { loading, error, data }] = useMutation(gql`
@@ -51,7 +50,7 @@ export function CreateUserPage(){
           initialValues={{ email: "", password: "", confirmPassword: ""}}
           onSubmit={(values, actions) => {
             setTimeout(() => {
-              createUser({variables: {userName:values.email, password:values.password, confirmPassword:values.confirmPassword, displayName:values.displayName}});
+              createUser({variables: {userName:values.email, password:values.password, confirmPassword:values.confirmPassword, displayName:values.email}});
               actions.setSubmitting(false);
             }, 500);
           }}>
@@ -95,7 +94,7 @@ export function CreateUserPage(){
                   Create Account
                 </Button>
 
-                <Button as={RouteLink} to="/sign_in" variantColor="teal" variant="outline">
+                <Button as={RouteLink} to="/sign-in" variantColor="teal" variant="outline">
                     Back
                 </Button>
 
