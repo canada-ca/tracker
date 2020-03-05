@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import { Text, Input, InputGroup, InputRightElement, FormErrorMessage, FormControl, FormLabel, Stack, Button, Link } from '@chakra-ui/core'
+import { Text, Input, InputGroup, InputRightElement, FormErrorMessage, FormControl, FormLabel, Stack, Button} from '@chakra-ui/core'
 import {Link as RouteLink} from 'react-router-dom'
 import {useMutation} from "@apollo/react-hooks";
 import gql from 'graphql-tag'
@@ -35,7 +36,7 @@ export function SignInPage(){
 
   function validateField(value){
     let error;
-    if(!value || value == ""){
+    if(!value || value === ""){
       error = "Field can not be empty";
     }
     return error;
