@@ -7,13 +7,16 @@ from models import Dmarc_scans
 
 
 class DmarcTags(SQLAlchemyObjectType):
+    """
+    Current settings of the currently configured SPF
+    """
     class Meta:
         model = Dmarc_scans
         exclude_fields = (
             "id", "dmarc_scan"
         )
 
-    value = graphene.String()
+    value = graphene.String(description="Important tags retrieved during scan")
 
     with app.app_context():
         def resolve_value(self: Dmarc_scans, info):

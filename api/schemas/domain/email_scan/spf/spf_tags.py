@@ -6,12 +6,15 @@ from models import Spf_scans
 
 
 class SPFTags(SQLAlchemyObjectType):
+    """
+    Current settings of the currently configured SPF
+    """
     class Meta:
         model = Spf_scans
         exclude_fields = (
             "id", "spf_scan"
         )
-    value = graphene.String()
+    value = graphene.String(description="Important tags retrieved during scan")
 
     with app.app_context():
         def resolve_value(self: Spf_scans, info):

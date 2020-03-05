@@ -6,6 +6,11 @@ from models import Dmarc_scans
 
 
 class Pct(SQLAlchemyObjectType):
+    """
+    The percentage of messages to which the DMARC policy is to be
+    applied. This tag provides a way to gradually implement and test the
+    impact of the policy.
+    """
     class Meta:
         model = Dmarc_scans
         exclude_fields = (

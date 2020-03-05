@@ -21,10 +21,18 @@ class EmailScan(SQLAlchemyObjectType):
             "id", "domain_id",
             "scan_date", "initiated_by"
         )
-    domain = URL()
-    timestamp = graphene.DateTime()
-    dmarc = graphene.List(lambda: DMARC)
-    spf = graphene.List(lambda: SPF)
+    domain = URL(description="The domain the scan was run on")
+    timestamp = graphene.DateTime(description="The time the scan was initiated")
+    dmarc = graphene.List(
+        lambda: DMARC,
+        description="Domain-based Message Authentication, Reporting, "
+                    "and Conformance (DMARC) "
+    )
+    spf = graphene.List(
+        lambda: SPF,
+        description="Sender Policy Framework (SPF) for Authorizing Use of "
+                    "Domains in Email "
+    )
 
     with app.app_context():
         def resolve_domain(self: Scans, info):
