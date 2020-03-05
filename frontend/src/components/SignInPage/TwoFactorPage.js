@@ -64,6 +64,7 @@ export function TwoFactorPage(){
                 {({ field, form}) => (
                   <FormControl mt={4} mb={4} isInvalid={form.errors.otpCode && form.touched.otpCode} isRequired>
                       <InputGroup>
+                        {/* eslint-disable-next-line react/no-children-prop */}
                         <InputLeftElement color="gray.300" fontSize="1.2em" children={<Icon name="lock" color="gray.300" />} />
                           <Input {...field} id="otpCode" placeholder="Two-factor code" />
                       </InputGroup>
