@@ -1,10 +1,8 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from sqlalchemy.orm import load_only
 
 from app import app
-from db import db
 from models import Scans
 from scalars.url import URL
 
@@ -14,6 +12,9 @@ from schemas.domain.email_scan.shared_functions import get_timestamp, get_domain
 
 
 class EmailScan(SQLAlchemyObjectType):
+    """
+    Results of DKIM, DMARC, and SPF scans, on domains
+    """
     class Meta:
         model = Scans
         interfaces = (relay.Node, )
