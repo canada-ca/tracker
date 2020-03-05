@@ -3,7 +3,7 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Input, Link,
+  Input,
   Stack,
   Text,
 } from "@chakra-ui/core";
