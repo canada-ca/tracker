@@ -49,7 +49,7 @@ export default function App() {
           </Route>
 
           <Route path="/domains">
-            <DomainsPage />
+            <DomainsPage/>
           </Route>
 
           <Route>
