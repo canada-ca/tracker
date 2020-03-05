@@ -4,7 +4,8 @@ import requests
 import logging
 import json
 import dkim
-from dkim import dnsplug
+from dkim import dnsplug, crypto
+from dkim.crypto import *
 from flask import Flask, request
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -48,6 +49,39 @@ def dispatch(payload):
         logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (payload["scan_id"], e))
 
 
+def bitsize(x):
+    """Return size of long in bits."""
+    return len(bin(x)) - 2
+
+
+def load_pk(name, s=None):
+    if not s:
+        raise KeyFormatError("missing public key: %s"%name)
+    try:
+        if type(s) is str:
+          s = s.encode('ascii')
+        pub = dkim.util.parse_tag_value(s)
+    except InvalidTagValueList as e:
+        raise KeyFormatError(e)
+    try:
+        if pub[b'k'] == b'ed25519':
+            pk = nacl.signing.VerifyKey(pub[b'p'], encoder=nacl.encoding.Base64Encoder)
+            keysize = 256
+            ktag = b'ed25519'
+    except KeyError:
+        pub[b'k'] = b'rsa'
+    if pub[b'k'] == b'rsa':
+        try:
+            pk = parse_public_key(base64.b64decode(pub[b'p']))
+            keysize = bitsize(pk['modulus'])
+        except KeyError:
+            raise KeyFormatError("incomplete public key: %s" % s)
+        except (TypeError,UnparsableKeyError) as e:
+            raise KeyFormatError("could not parse public key (%s): %s" % (pub[b'p'],e))
+        ktag = b'rsa'
+    return pk, keysize, ktag
+
+
 def scan(scan_id, domain):
 
     record = {}
@@ -55,31 +89,19 @@ def scan(scan_id, domain):
     try:
         # Retrieve public key from DNS
         pk_txt = dnsplug.get_txt_dnspython(domain)
-        if type(pk_txt) is str:
-            pub = dkim.util.parse_tag_value(pk_txt)
-            verified_by = list(pub.keys())[0].decode('ascii')
-            key_val = list(pub.keys())[0].decode('ascii')
-        else:
-            pub = dkim.util.parse_tag_value(pk_txt)
-            verified_by = list(pub.keys())[0].decode('ascii')
-            key_val = list(pub.keys())[0].decode('ascii')
 
-        record["public_key"] = pub
-        record["verified_by"] = verified_by
+        pk, keysize, ktag = load_pk(domain, pk_txt)
+
+        # Parse values and convert to dictionary
+        pub = dkim.util.parse_tag_value(pk_txt)
+        key_val = pub[b'p'].decode('ascii')
+
+        record["txt"] = pub
         record["public_key_value"] = key_val
-
-        try:
-            record["record"] = str(pk[0]["modulus"])
-        except KeyError:
-            pass
-        try:
-            record["key_length"] = pk[1]
-        except KeyError:
-            pass
-        try:
-            record["key_type"] = pk[2].decode('UTF-8')
-        except KeyError:
-            pass
+        record["key_size"] = keysize
+        record["key_type"] = ktag.decode('ascii')
+        record["modulus"] = pk["modulus"]
+        record["public_exponent"] = pk["publicExponent"]
 
     except Exception as e:
         logging.error("(SCAN: %s) - Failed to perform DomainKeys Identified Mail scan on given domain: %s" % (scan_id, e))
