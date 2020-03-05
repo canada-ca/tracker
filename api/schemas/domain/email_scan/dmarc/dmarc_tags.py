@@ -20,7 +20,7 @@ class DmarcTags(SQLAlchemyObjectType):
             tags = {}
 
             if "missing" in self.dmarc_scan:
-                return tags.update({"dmarc": "missing"})
+                return tags.update({"dmarc2": "missing"})
 
             # Check P Policy Tag
             if self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "missing":
@@ -48,9 +48,9 @@ class DmarcTags(SQLAlchemyObjectType):
             # Check RUA Tag
             for value in self.dmarc_scan["dmarc"]["tags"]["rua"]["value"]:
                 if value["address"] == "dmarc@cyber.gc.ca":
-                    tags.update({"dmarc10": "RUF-CCCS"})
+                    tags.update({"dmarc10": "RUA-CCCS"})
                 else:
-                    tags.update({"dmarc12": "RUF-none"})
+                    tags.update({"dmarc12": "RUA-none"})
 
             # Check RUF Tag
             for value in self.dmarc_scan["dmarc"]["tags"]["ruf"]["value"]:

@@ -8,6 +8,8 @@ from models import Dmarc_scans, Scans, Domains
 
 from scalars.url import URL
 
+from schemas.domain.email_scan.shared_functions import get_timestamp, get_domain
+
 from schemas.domain.email_scan.dmarc.dmarc_record import DmarcRecord
 from schemas.domain.email_scan.dmarc.pp_policy import PPPolicy
 from schemas.domain.email_scan.dmarc.sp_policy import SPPolicy
@@ -22,7 +24,7 @@ class DMARC(SQLAlchemyObjectType):
             "id", "dmarc_scan"
         )
     id = graphene.ID()
-    domain = URL
+    domain = URL()
     timestamp = graphene.DateTime()
     record = graphene.List(lambda: DmarcRecord)
     p_policy = graphene.List(lambda: PPPolicy)
@@ -32,19 +34,10 @@ class DMARC(SQLAlchemyObjectType):
 
     with app.app_context():
         def resolve_domain(self: Dmarc_scans, info):
-            domain_id = db.session.query(Scans).filter(
-                Scans.id == self.id
-            ).options(load_only('domain_id')).first()
-            domain = db.session.query(Domains).filter(
-                Domains.id == domain_id.domain_id
-            ).options(load_only('domain')).first()
-            return domain.domain
+            return get_domain(self, info)
 
         def resolve_timestamp(self: Dmarc_scans, info):
-            timestamp = db.session.query(Scans).filter(
-                Scans.id == self.id
-            ).options(load_only('scan_date')).first()
-            return timestamp.scan_date
+            return get_timestamp(self, info)
 
         def resolve_record(self: Dmarc_scans, info):
             return DmarcRecord.get_query(info).all()
