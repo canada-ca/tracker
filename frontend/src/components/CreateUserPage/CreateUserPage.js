@@ -16,7 +16,8 @@ export function CreateUserPage(){
     mutation CreateUser($displayName: String!, $userName: EmailAddress!, $password: String!, $confirmPassword: String!) {
       createUser(displayName: $displayName, userName: $userName, password: $password, confirmPassword: $confirmPassword) {
         user {
-          username
+          userName
+          failedLoginAttempts
         }
       }
     }
@@ -24,7 +25,14 @@ export function CreateUserPage(){
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
-  if (data) console.log(data)
+
+  if (data){
+    if(data.error){
+      console.log(error);
+    }
+    console.log(data.createUser.user)
+    // Do something with the data.  Ie: Redirect if no error?
+  }
 
   return (
       <Stack spacing={2} mx="auto">

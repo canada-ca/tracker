@@ -669,7 +669,7 @@ type Mutation {
     """
     User's email
     """
-    email: EmailAddress!
+    userName: EmailAddress!
 
     """
     Users's password
@@ -678,15 +678,15 @@ type Mutation {
   ): SignInUser
   updatePassword(
     confirmPassword: String!
-    email: EmailAddress!
+    userName: EmailAddress!
     password: String!
   ): UpdateUserPassword
   authenticateTwoFactor(
-    email: EmailAddress!
+    userName: EmailAddress!
     otpCode: String!
   ): ValidateTwoFactor
   updateUserRole(
-    email: EmailAddress!
+    userName: EmailAddress!
     role: String!
     token: String!
   ): UpdateUserRole
@@ -860,7 +860,7 @@ type Query {
   """
   An api endpoint used to generate a OTP url used for two factor authentication.
   """
-  generateOtpUrl(email: EmailAddress!): String
+  generateOtpUrl(userName: EmailAddress!): String
 
   """
   An api endpoint to view a current user's claims -- Requires an active JWT.
@@ -1061,11 +1061,11 @@ type UserObject implements Node {
   The ID of the object.
   """
   id: ID!
-  username: String
+  userName: String
   displayName: String
-  userEmail: String
   preferredLang: String
   failedLoginAttempts: Int
+  failedLoginAttemptTime: Float
   tfaValidated: Boolean
   userRole: String
 }
