@@ -198,17 +198,19 @@ def process_results(results, scan_type):
                 report["tlsv10"] = tlsv10
                 report["tlsv11"] = tlsv11
 
-        elif scan_type is "dmarc":
-
-        elif scan_type is "dkim":
-
-
-
         return "Finished", True
 
     except Exception as e:
         return str(e), False
     """
+    try:
+
+        if scan_type is "dmarc":
+            report = {'dmarc': results['dmarc']}
+
+    except Exception as e:
+        return str(e), False
+
     return "Finished", True
 
 

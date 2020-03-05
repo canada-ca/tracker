@@ -49,8 +49,12 @@ def dispatch(payload):
 
 def scan(scan_id, domain):
 
+    # Single-item list to pass off to check_domains function
+    domain_list = list()
+    domain_list.append(domain)
+
     try:
-        scan_result = check_domains(domain)
+        scan_result = json.loads(json.dumps(check_domains(domain_list)))
     except (DNSException, SPFError, DMARCError) as e:
         logging.error("(SCAN: %s) - Failed to check the given domains for DMARC/SPF records: %s" % (scan_id, e))
         return None
