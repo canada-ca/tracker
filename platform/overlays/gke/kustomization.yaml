@@ -14,3 +14,5 @@ images:
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
+- tracker-api-virtual-service.yaml
+- tracker-frontend-virtual-service.yaml

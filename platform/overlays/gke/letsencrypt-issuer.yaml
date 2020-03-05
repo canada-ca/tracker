@@ -12,7 +12,9 @@ spec:
     solvers:
     # An empty 'selector' means that this solver matches all domains
     - selector: {}
-      http01: {}
+      http01:
+        ingress:
+          class: istio
 ---
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
@@ -28,4 +30,6 @@ spec:
     solvers:
     # An empty 'selector' means that this solver matches all domains
     - selector: {}
-      http01: {}
+      http01:
+        ingress:
+          class: istio

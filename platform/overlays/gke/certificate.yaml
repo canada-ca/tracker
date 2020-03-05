@@ -4,7 +4,7 @@ metadata:
   name: ingress-cert
   namespace: istio-system
 spec:
-  secretName: ingress-cert
+  secretName: istio-ingressgateway-certs
   issuerRef:
     name: letsencrypt-staging
     kind: Issuer

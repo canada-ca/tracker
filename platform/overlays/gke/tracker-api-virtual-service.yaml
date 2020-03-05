@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: tracker-frontend-virtual-service
-  namespace: frontend
+  name: tracker-api-virtual-service
+  namespace: api
 spec:
   gateways:
     - ingressgateway.istio-system.svc.cluster.local

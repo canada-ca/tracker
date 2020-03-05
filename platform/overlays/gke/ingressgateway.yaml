@@ -5,11 +5,23 @@ metadata:
   namespace: istio-system
 spec:
   selector:
-    istio: ingressgateway
+    app: istio-ingressgateway
   servers:
     - port:
         number: 80
-        name: http-80
+        name: http
         protocol: HTTP
       hosts:
         - "*"
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "*"
+      tls:
+        mode: SIMPLE
+        privateKey: /etc/istio/ingressgateway-certs/tls.key
+        serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
