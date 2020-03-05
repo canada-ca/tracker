@@ -61,6 +61,7 @@ def sector_test_db_init():
         db.session.commit()
 
 
+@pytest.mark.skip()
 @pytest.mark.usefixtures('sector_test_db_init')
 class TestSectorResolver(TestCase):
     def test_get_sector_resolver_by_id(self):

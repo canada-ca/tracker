@@ -77,6 +77,7 @@ def scans_test_db_init():
         db.session.commit()
 
 
+@pytest.mark.skip()
 @pytest.mark.usefixtures('scans_test_db_init')
 class TestScansResolver(TestCase):
     def test_get_scan_resolver_by_id(self):

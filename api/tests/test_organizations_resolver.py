@@ -53,6 +53,7 @@ def org_test_db_build():
         db.session.commit()
 
 
+@pytest.mark.skip()
 @pytest.mark.usefixtures("org_test_db_build")
 class TestOrgResolver(TestCase):
     def test_get_org_resolvers_by_id(self):

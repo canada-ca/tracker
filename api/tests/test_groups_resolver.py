@@ -71,6 +71,7 @@ def group_test_db_init():
         Sectors.query.delete()
         db.session.commit()
 
+@pytest.mark.skip()
 @pytest.mark.usefixtures('group_test_db_init')
 class TestGroupResolver(TestCase):
     def test_get_group_resolvers_by_id(self):

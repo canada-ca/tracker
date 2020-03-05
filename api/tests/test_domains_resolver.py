@@ -51,6 +51,7 @@ def domain_test_db_init():
         db.session.commit()
 
 
+@pytest.mark.skip()
 @pytest.mark.usefixtures('domain_test_db_init')
 class TestDomainsResolver(TestCase):
     def test_get_domain_resolvers_by_id(self):
