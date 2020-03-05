@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 import {Box, Stack, Text, Button} from '@chakra-ui/core'
 import {Link as RouteLink} from "react-router-dom";
