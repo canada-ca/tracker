@@ -96,6 +96,19 @@ def scan(scan_id, domain):
         pub = dkim.util.parse_tag_value(pk_txt)
         key_val = pub[b'p'].decode('ascii')
 
+        record["testing"]["t_enabled"] = False
+        record["testing"]["t_value"] = None
+
+        for key in pub:
+            if key.decode('ascii') is 't':
+                record["testing"]["t_enabled"] = True
+                record["testing"]["t_value"] = pub[key]
+
+        if keysize < 1024:
+            record["p_sub1024"] = True
+        elif keysize == 1024:
+            record["p_1024"] = True
+
         record["txt"] = pub
         record["public_key_value"] = key_val
         record["key_size"] = keysize
