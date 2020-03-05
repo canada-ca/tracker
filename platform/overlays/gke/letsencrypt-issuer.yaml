@@ -1,7 +1,7 @@
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
 metadata:
-  name: letsencrypt-prod
+  name: letsencrypt
   namespace: istio-system
 spec:
   acme:
@@ -10,6 +10,22 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
-    - http01:
-        ingress:
-          class: istio
+    # An empty 'selector' means that this solver matches all domains
+    - selector: {}
+      http01: {}
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: letsencrypt-staging
+  namespace: istio-system
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: mike@korora.ca
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+    # An empty 'selector' means that this solver matches all domains
+    - selector: {}
+      http01: {}

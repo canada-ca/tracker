@@ -5547,6 +5547,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: cert-manager
+  labels:
+    certmanager.k8s.io/disable-validation: "true"
 ---
 # Source: cert-manager/templates/cainjector-serviceaccount.yaml
 apiVersion: v1
@@ -5645,7 +5647,7 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
   name: cert-manager-cainjector:leaderelection
-  namespace: kube-system
+  namespace: cert-manager
   labels:
     app: cainjector
     app.kubernetes.io/name: cainjector
@@ -5667,7 +5669,7 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   name: cert-manager-cainjector:leaderelection
-  namespace: kube-system
+  namespace: cert-manager
   labels:
     app: cainjector
     app.kubernetes.io/name: cainjector
@@ -5717,7 +5719,7 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   name: cert-manager-webhook:webhook-authentication-reader
-  namespace: kube-system
+  namespace: cert-manager
   labels:
     app: webhook
     app.kubernetes.io/name: webhook
@@ -5762,7 +5764,7 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
   name: cert-manager:leaderelection
-  namespace: kube-system
+  namespace: cert-manager
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
@@ -5784,7 +5786,7 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   name: cert-manager:leaderelection
-  namespace: kube-system
+  namespace: cert-manager
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
@@ -6266,7 +6268,7 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
           - --v=2
-          - --leader-election-namespace=kube-system
+          - --leader-election-namespace=cert-manager
           env:
           - name: POD_NAMESPACE
             valueFrom:
@@ -6317,7 +6319,7 @@ spec:
           args:
           - --v=2
           - --cluster-resource-namespace=$(POD_NAMESPACE)
-          - --leader-election-namespace=kube-system
+          - --leader-election-namespace=cert-manager
           - --webhook-namespace=$(POD_NAMESPACE)
           - --webhook-ca-secret=cert-manager-webhook-ca
           - --webhook-serving-secret=cert-manager-webhook-tls

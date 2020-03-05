@@ -6,8 +6,8 @@ metadata:
 spec:
   secretName: ingress-cert
   issuerRef:
-    name: letsencrypt
-    kind: ClusterIssuer
+    name: letsencrypt-staging
+    kind: Issuer
   commonName: it.actually.works
   dnsNames:
   - it.actually.works
