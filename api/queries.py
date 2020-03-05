@@ -72,7 +72,6 @@ from schemas.notification_email import (NotificationEmail)
 # from schemas.organizations import Organizations
 # from schemas.scans import Scans
 # from schemas.sectors import Sectors
-# from schemas.dmarc import Record
 
 
 from schemas.user import (
@@ -88,6 +87,7 @@ class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
     users = SQLAlchemyConnectionField(UserObject._meta.connection, sort=None)
+
     # sector = SQLAlchemyConnectionField(Sectors._meta.connection, sort=None)
     # group = SQLAlchemyConnectionField(Groups._meta.connection, sort=None)
     # organization = SQLAlchemyConnectionField(Organizations._meta.connection, sort=None)
