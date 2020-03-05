@@ -186,10 +186,17 @@ class ListObject(SQLAlchemyObjectType):
                 query = SingleObject.get_query(info)
                 return query
 ```
-To include a relay node in a object type we use a `graphene.ConnectionField()` and 
-just put in the object `NodeQueryObject._meta.connction` we use the `._meta.connection`
-to help the schema understand which connection belongs to which objects or else we may 
-encounter a conflict where two objects have the same connection name.
+To build a relay.Node we need to create a connection class that we can connect the 
+original object to. We need to add an interfaces field in the original objects 
+`class Meta:` -> `interfaces = (relay.Node, )`. Adding this will inform that the 
+object it is waiting for a connection class. To create the actual relay node we need 
+to create a `class ObjectNameConnection(relay.Connection)` object. In this connection 
+object we need to add a `class Meta:` again but this time with a `node = NodeQueryObject` 
+this will now connect the node with a `relay.Connection()` . To include a relay node in 
+a object type we use a `graphene.ConnectionField()` and just put in the object 
+`NodeQueryObject._meta.connction` we use the `._meta.connection`to help the schema understand 
+which connection belongs to which objects or else we may encounter a conflict where two 
+objects have the same connection name.
 
 ---
 
