@@ -1,10 +1,36 @@
 import React from 'react';
 import { Text, Input, InputGroup, InputRightElement, FormControl, FormLabel, Stack, Button, Link } from '@chakra-ui/core'
 import {Link as RouteLink} from 'react-router-dom'
+import {useMutation} from "@apollo/react-hooks";
+import gql from 'graphql-tag'
+
 
 export function SignInPage(){
     const [show, setShow] = React.useState(false);
     const handleClick = () => setShow(!show);
+
+    const [signIn, { loading, error, data }] = useMutation(gql`
+    mutation SignIn($userName: EmailAddress!, $password: String!) {
+      signIn(userName: $userName, password: $password) {
+        user {
+          userName
+          failedLoginAttempts
+        }
+        authToken
+      }
+    }
+  `)
+
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>{String(error)}</p>
+
+  if (data){
+    if(data.error){
+      console.log(error);
+    }
+    console.log(data.signIn)
+    // Do something with the data.  Ie: Redirect if no error?
+  }
 
   return(
       <Stack spacing={2} mx="auto">
@@ -29,7 +55,10 @@ export function SignInPage(){
 
         <Stack mt={6} isInline spacing={2}>
 
-          <Button variantColor="teal" size="md">Sign In</Button>
+          <Button variantColor="teal" size="md" onClick={() => signIn({
+            variables: {
+              userName:"testemail@testemail.ca",
+              password:"qwerty123456"}})}>Sign In</Button>
 
           <Button variantColor="teal" variant="outline">
             <Link as={RouteLink} to="/create_user">
