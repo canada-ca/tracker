@@ -40,7 +40,9 @@ This is an example to write a single type object. We use an `SQLAlchemyObjectTyp
 it gives us the ability to include this type as a `graphene.List()` in another type
 and be related to that entry. One interesting thing is that the self object that is being
 passed into the resolve is actually an instance of the model that you are querying.
+
 ---
+
 ### Writing A Single Object That Contains Another Single Object
 ```python
 import graphene
@@ -188,7 +190,9 @@ To include a relay node in a object type we use a `graphene.ConnectionField()` a
 just put in the object `NodeQueryObject._meta.connction` we use the `._meta.connection`
 to help the schema understand which connection belongs to which objects or else we may 
 encounter a conflict where two objects have the same connection name.
+
 ---
+
 ### Adding Objects And Relays To Schema
 ```python
 import graphene
