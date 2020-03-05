@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Text, Input, InputGroup, InputRightElement, FormErrorMessage, FormControl, FormLabel, Stack, Button} from '@chakra-ui/core'
+import { Text, Input, InputGroup, InputRightElement, FormErrorMessage, FormControl, FormLabel, Stack, Button, Link} from '@chakra-ui/core'
 import {Link as RouteLink} from 'react-router-dom'
 import {useMutation} from "@apollo/react-hooks";
 import gql from 'graphql-tag'
@@ -43,8 +43,8 @@ export function SignInPage(){
   }
 
   return(
-      <Stack spacing={2} mx="auto">
-        <Text mb={4} fontSize="2xl">Sign in with your username and password.</Text>
+      <Stack spacing={4} mx="auto">
+        <Text fontSize="2xl">Sign in with your username and password.</Text>
 
         <Formik
           initialValues={{ email: "", password: ""}}
@@ -61,9 +61,8 @@ export function SignInPage(){
 
               <Field name="email" validate={validateField}>
                 {({ field, form}) => (
-                  <FormControl isInvalid={form.errors.email && form.touched.email}>
-                    <FormLabel htmlFor="email">Email:</FormLabel>
-                    <Input {...field} id="email" placeholder="email" />
+                  <FormControl mt={4} mb={4} isInvalid={form.errors.email && form.touched.email}>
+                    <Input {...field} id="email" placeholder="Email" />
                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -71,14 +70,13 @@ export function SignInPage(){
 
               <Field name="password" validate={validateField}>
                 {({ field, form}) => (
-                  <FormControl isInvalid={form.errors.password && form.touched.password}>
-                    <FormLabel htmlFor="password">Password:</FormLabel>
+                  <FormControl mb={2} isInvalid={form.errors.password && form.touched.password}>
                     <InputGroup size="md">
                       <Input
                         {...field}
                         pr="4.5rem"
                         type={show ? "text" : "password"}
-                        placeholder="password"
+                        placeholder="Password"
                         id="password"
                       />
                       <InputRightElement width="4.5rem">
@@ -87,10 +85,11 @@ export function SignInPage(){
                         </Button>
                       </InputRightElement>
                     </InputGroup>
-                    <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
+              <Link as={RouteLink} to="/forgot_password">Forgot?</Link>
 
               <Stack mt={6} spacing={4} isInline>
                 <Button

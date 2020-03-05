@@ -1,15 +1,16 @@
 import React from 'react'
 import {
   Button,
-  FormControl,
+  FormControl, FormErrorMessage,
   FormLabel,
-  Input,
+  Input, InputGroup, InputRightElement, Link,
   Stack,
   Text,
 } from "@chakra-ui/core";
 import gql from 'graphql-tag'
 import {useMutation} from "@apollo/react-hooks";
 import {Link as RouteLink} from "react-router-dom";
+import {Field, Formik, useFormikContext} from "formik";
 
 export function CreateUserPage(){
     const [createUser, { loading, error, data }] = useMutation(gql`
@@ -34,35 +35,76 @@ export function CreateUserPage(){
     // Do something with the data.  Ie: Redirect if no error?
   }
 
+  /* A function for the Formik to validate fields in the form */
+  function validateField(value){
+    let error;
+    if(!value || value === ""){
+      error = "Field can not be empty";
+    }
+    return error;
+  }
+
   return (
       <Stack spacing={2} mx="auto">
         <Text mb={4} fontSize="2xl">Create an account by entering an email and password.</Text>
-        <FormControl isRequired>
-          <FormLabel htmlFor="email">Email address</FormLabel>
-          <Input type="email" id="email" placeholder="Enter email"/>
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <Input type="password" id="password" placeholder="Enter password"/>
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-          <Input type="password" id="confirmPassword" placeholder="Confirm password"/>
-        </FormControl>
-        <Stack mt={6} isInline spacing={2}>
+        <Formik
+          initialValues={{ email: "", password: "", confirmPassword: ""}}
+          onSubmit={(values, actions) => {
+            setTimeout(() => {
+              createUser({variables: {userName:values.email, password:values.password, confirmPassword:values.confirmPassword, displayName:values.displayName}});
+              actions.setSubmitting(false);
+            }, 500);
+          }}>
 
-          <Button variantColor="teal" size="md" onClick={() => createUser({
-            variables: {
-              displayName:"testuser",
-              userName:"testemail@testemail.ca",
-              password:"qwerty123456",
-              confirmPassword:"qwerty123456"},
-          })}>Create Account</Button>
+          {props => (
+            <form onSubmit={props.handleSubmit}>
 
-          <Button as={RouteLink} to="/sign_in" variantColor="teal" variant="outline">
-              Back
-          </Button>
-        </Stack>
+              <Field name="email" validate={validateField}>
+                {({ field, form}) => (
+                  <FormControl mt={4} mb={4} isInvalid={form.errors.email && form.touched.email} isRequired>
+                    <Input {...field} id="email" placeholder="Email" />
+                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+
+              <Field name="password" validate={validateField}>
+                {({ field, form}) => (
+                  <FormControl mt={4} mb={4} isInvalid={form.errors.password && form.touched.password} isRequired>
+                    <Input {...field} id="password" placeholder="Password" />
+                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+
+              <Field name="confirmPassword" validate={validateField}>
+                {({ field, form}) => (
+                  <FormControl mt={4} mb={4} isInvalid={form.errors.confirmPassword && form.touched.confirmPassword} isRequired>
+                    <Input {...field} id="confirmPassword" placeholder="Confirm password" />
+                    <FormErrorMessage>{form.errors.confirmPassword}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+
+              <Stack mt={6} spacing={4} isInline>
+                <Button
+                  variantColor="teal"
+                  isLoading={props.isSubmitting}
+                  type="submit"
+                >
+                  Create Account
+                </Button>
+
+                <Button as={RouteLink} to="/sign_in" variantColor="teal" variant="outline">
+                    Back
+                </Button>
+
+              </Stack>
+
+            </form>
+
+          )}
+        </Formik>
       </Stack>
   )
 }
