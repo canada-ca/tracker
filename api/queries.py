@@ -82,7 +82,7 @@ from schemas.user import (
     ValidateTwoFactor,
     )
 
-from schemas.domain.email_scan import EmailScan
+from schemas.domain import Domain
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
@@ -93,7 +93,7 @@ class Query(graphene.ObjectType):
     # group = SQLAlchemyConnectionField(Groups._meta.connection, sort=None)
     # organization = SQLAlchemyConnectionField(Organizations._meta.connection, sort=None)
 
-    email_scan = SQLAlchemyConnectionField(EmailScan._meta.connection, sort=None)
+    domain = SQLAlchemyConnectionField(Domain._meta.connection, sort=None)
 
     # get_sector_by_id = graphene.List(
     #     of_type=Sectors,

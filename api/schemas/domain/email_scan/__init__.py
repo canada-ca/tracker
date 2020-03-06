@@ -1,9 +1,10 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
+from graphql import ResolveInfo
 
 from app import app
-from models import Scans
+from models import Scans, Dmarc_scans, Spf_scans
 from scalars.url import URL
 
 from schemas.domain.email_scan.dmarc import DMARC
@@ -43,10 +44,12 @@ class EmailScan(SQLAlchemyObjectType):
             return get_timestamp(self, info)
 
         def resolve_dmarc(self: Scans, info):
-            return DMARC.get_query(info).all()
+            query = DMARC.get_query(info)
+            return query.filter(self.id == Dmarc_scans.id).all()
 
-        def resolve_spf(self: Scans, info):
-            return SPF.get_query(info).all()
+        def resolve_spf(self: Scans, info: ResolveInfo):
+            query = SPF.get_query(info)
+            return query.filter(self.id == Spf_scans.id).all()
 
 
 class EmailScanConnection(relay.Connection):
