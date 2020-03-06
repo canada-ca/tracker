@@ -9,6 +9,7 @@ import { useQuery } from "@apollo/react-hooks";
 var QRCode = require('qrcode.react');
 
 export function QRcodePage({userName}){
+
   // This function generates the URL when the page loads
   const { loading, error, data } = useQuery(gql`
     query GenerateOtpUrl($userName:EmailAddress!){

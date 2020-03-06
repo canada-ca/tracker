@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/core";
 import gql from 'graphql-tag'
 import { useMutation } from "@apollo/react-hooks";
-import { Link as RouteLink } from "react-router-dom";
+import { Link as RouteLink, Redirect } from "react-router-dom";
 import { Field, Formik } from "formik";
 
 export function CreateUserPage(){
@@ -30,8 +30,12 @@ export function CreateUserPage(){
     if(data.error){
       console.log(error);
     }
-    console.log(data.createUser.user)
-    // Do something with the data.  Ie: Redirect if no error?
+
+    // If data is returned, there is no error so redirect to two-factor code page
+    return <Redirect to={{
+      pathname: '/two-factor-code',
+      state: {userName: data.createUser.userName},
+    }}/>
   }
 
   /* A function for the Formik to validate fields in the form */
