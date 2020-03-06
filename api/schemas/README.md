@@ -104,7 +104,7 @@ class ListObject(SQLAlchemyObjectType):
 
         def resolve_single_object(self: ExampleModel2, info):
             query = SingleObject.get_query(info)
-            return query
+            return query.all()
 ```
 If you are creating just a single object type, but want to include a single object type
 as a sub-selection you need to create a new field of it as type `graphene.List()` you 
@@ -184,7 +184,7 @@ class ListObject(SQLAlchemyObjectType):
 
             def resolve_single_object(self: ExampleModel2, info):
                 query = SingleObject.get_query(info)
-                return query
+                return query.all()
 ```
 ##### Creating Node
 To build a relay Node using `SQLAlchemyObjectType` we need to create a connection class that we can connect the 
