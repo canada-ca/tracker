@@ -107,7 +107,7 @@ def scan(scan_id, domain):
         elif keysize == 1024:
             record["p_1024"] = True
 
-        record["txt"] = pub
+        record["txt_record"] = pub
         record["public_key_value"] = key_val
         record["key_size"] = keysize
         record["key_type"] = ktag.decode('ascii')
