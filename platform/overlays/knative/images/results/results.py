@@ -208,6 +208,9 @@ def process_results(results, scan_type):
         if scan_type is "dmarc":
             report = {'dmarc': results['dmarc']}
 
+        elif scan_type is "dkim":
+            report = {'dkim': results}
+
     except Exception as e:
         return str(e), False
 

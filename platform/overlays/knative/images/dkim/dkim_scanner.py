@@ -118,9 +118,7 @@ def scan(scan_id, domain):
         logging.error("(SCAN: %s) - Failed to perform DomainKeys Identified Mail scan on given domain: %s" % (scan_id, e))
         return None
 
-    finalized = {"dkim": record}
-
-    return finalized
+    return record
 
 if __name__ == "__main__":
     # Port number defaults to 8080, can be configured as an ENV
