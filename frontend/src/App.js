@@ -5,8 +5,8 @@ import { Global, css } from '@emotion/core'
 import { PageNotFound } from './PageNotFound'
 import { LandingPage } from './LandingPage'
 import { DomainsPage } from './DomainsPage'
-import {SignInPage} from "./components/SignInPage/SignInPage"
-import {CreateUserPage} from "./components/CreateUserPage/CreateUserPage"
+import {SignInPage} from "./SignInPage"
+import {CreateUserPage} from "./CreateUserPage"
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
 import { TopBanner } from './TopBanner'
