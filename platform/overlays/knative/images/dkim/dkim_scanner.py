@@ -96,13 +96,11 @@ def scan(scan_id, domain):
         pub = dkim.util.parse_tag_value(pk_txt)
         key_val = pub[b'p'].decode('ascii')
 
-        record["testing"]["t_enabled"] = False
-        record["testing"]["t_value"] = None
+        record["t_value"] = None
 
         for key in pub:
             if key.decode('ascii') is 't':
-                record["testing"]["t_enabled"] = True
-                record["testing"]["t_value"] = pub[key]
+                record["t_value"] = pub[key]
 
         if keysize < 1024:
             record["p_sub1024"] = True
@@ -120,7 +118,9 @@ def scan(scan_id, domain):
         logging.error("(SCAN: %s) - Failed to perform DomainKeys Identified Mail scan on given domain: %s" % (scan_id, e))
         return None
 
-    return record
+    finalized = {"dkim": record}
+
+    return finalized
 
 if __name__ == "__main__":
     # Port number defaults to 8080, can be configured as an ENV
