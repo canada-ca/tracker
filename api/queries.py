@@ -83,6 +83,8 @@ from schemas.user import (
     )
 
 from schemas.domain import Domain
+from resolvers.domains import resolve_domain
+
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
@@ -93,7 +95,9 @@ class Query(graphene.ObjectType):
     # group = SQLAlchemyConnectionField(Groups._meta.connection, sort=None)
     # organization = SQLAlchemyConnectionField(Organizations._meta.connection, sort=None)
 
-    domain = SQLAlchemyConnectionField(Domain._meta.connection, sort=None)
+    domain_object = SQLAlchemyConnectionField(Domain._meta.connection, sort=None)
+
+    domain = graphene.Field(lambda: Domain, url=URL(), resolver=resolve_domain)
 
     # get_sector_by_id = graphene.List(
     #     of_type=Sectors,

@@ -2,56 +2,56 @@ from graphql import GraphQLError
 from sqlalchemy.orm import load_only
 
 from app import app
+from models import Organizations as OrgModel
 
-from schemas.domains import (
-    Domains,
-    DomainModel
-)
+from functions.auth_wrappers import require_token
+from functions.auth_functions import is_super_admin, is_user_read
 
-from schemas.organizations import (
-    Organizations,
-    OrganizationsModel
-)
+from schemas.domain import Domain, Domains
+from schemas.organizations import Organization
 
 
-# Resolvers
-def resolve_get_domain_by_id(self, info, **kwargs):
-    """Return a domain by its row ID"""
-    group_id = kwargs.get('id', 1)
-    with app.app_context():
-        query = Domains.get_query(info).filter(
-            DomainModel.id == group_id
-        )
-    if not len(query.all()):
-        raise GraphQLError("Error, Invalid ID")
-    return query.all()
-
-
-def resolve_get_domain_by_domain(self, info, **kwargs):
+@require_token
+def resolve_domain(self, info, **kwargs):
     """Return a domain  by a url"""
     domain = kwargs.get('url')
+    user_role = kwargs.get('user_roles')
+
     with app.app_context():
-        query = Domains.get_query(info).filter(
-            DomainModel.domain == domain
-        )
+        org_id_list = []
+        for role in user_role:
+            org_id_list.append(role["org_id"])
+
+        if is_super_admin(user_role):
+            query = Domains.get_query(info).filter(
+                Domains.domain == domain
+            )
+        elif is_user_read(user_role):
+            query = Domains.get_query(info).filter(
+                Domains.domain == domain
+            ).filter(
+                Domains.organization_id.in_(org_id_list)
+            )
+
     if not len(query.all()):
         raise GraphQLError("Error, domain  does not exist")
     return query.all()
 
 
-def resolve_get_domain_by_organization(self, info, **kwargs):
+@require_token
+def resolve_domains(self, info, **kwargs):
     """Return a list of domains by by their associated organization"""
     organization = kwargs.get('org')
     with app.app_context():
-        organization_id = Organizations.get_query(info).filter(
-            OrganizationsModel.organization == organization
+        organization_id = Organization.get_query(info).filter(
+            OrgModel.organization == organization
         ).options(load_only('id'))
 
     if not len(organization_id.all()):
         raise GraphQLError("Error, no organization associated with that enum")
     with app.app_context():
         query = Domains.get_query(info).filter(
-            DomainModel.organization_id == organization_id
+            Domains.organization_id == organization_id
         )
 
     if not len(query.all()):

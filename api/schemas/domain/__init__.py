@@ -21,7 +21,6 @@ class Domain(SQLAlchemyObjectType):
             "organization_id", "organization",
             "scans"
         )
-    dns = graphene.String(description="Domain Name Server")
     url = URL(description="The domain the scan was run on")
     email = graphene.ConnectionField(
         EmailScan._meta.connection,
@@ -44,3 +43,8 @@ class Domain(SQLAlchemyObjectType):
         def resolve_www(self, info):
             query = WWWScan.get_query(info)
             return query.all()
+
+
+class DomainConnection(relay.Connection):
+    class Meta:
+        node = Domain
