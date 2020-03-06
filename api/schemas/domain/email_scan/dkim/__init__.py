@@ -5,7 +5,8 @@ from app import app
 from models import Dkim_scans
 from scalars.url import URL
 
-from schemas.domain.email_scan.shared_functions import get_domain, get_timestamp
+from functions.get_domain import get_domain
+from functions.get_timestamp import get_timestamp
 
 from schemas.domain.email_scan.dkim.dkim_record import DkimRecord
 from schemas.domain.email_scan.dkim.dkim_key_length import DkimKeyLength

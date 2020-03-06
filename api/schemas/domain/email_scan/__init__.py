@@ -10,7 +10,8 @@ from scalars.url import URL
 from schemas.domain.email_scan.dkim import DKIM
 from schemas.domain.email_scan.dmarc import DMARC
 from schemas.domain.email_scan.spf import SPF
-from schemas.domain.email_scan.shared_functions import get_timestamp, get_domain
+from functions.get_domain import get_domain
+from functions.get_timestamp import get_timestamp
 
 
 class EmailScan(SQLAlchemyObjectType):

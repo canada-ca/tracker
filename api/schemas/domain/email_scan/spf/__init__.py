@@ -6,7 +6,8 @@ from models import Spf_scans
 
 from scalars.url import URL
 
-from schemas.domain.email_scan.shared_functions import get_timestamp, get_domain
+from functions.get_domain import get_domain
+from functions.get_timestamp import get_timestamp
 
 from schemas.domain.email_scan.spf.spf_default import SPFDefault
 from schemas.domain.email_scan.spf.spf_lookups import SPFLookups

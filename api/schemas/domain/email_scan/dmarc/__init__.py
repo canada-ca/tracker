@@ -6,7 +6,8 @@ from models import Dmarc_scans
 
 from scalars.url import URL
 
-from schemas.domain.email_scan.shared_functions import get_timestamp, get_domain
+from functions.get_domain import get_domain
+from functions.get_timestamp import get_timestamp
 
 from schemas.domain.email_scan.dmarc.dmarc_record import DmarcRecord
 from schemas.domain.email_scan.dmarc.pp_policy import PPPolicy

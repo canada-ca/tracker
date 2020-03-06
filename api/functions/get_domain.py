@@ -12,10 +12,3 @@ def get_domain(self, info):
         Domains.id == domain_id.domain_id
     ).options(load_only('domain')).first()
     return domain.domain
-
-
-def get_timestamp(self, info):
-    timestamp = db.session.query(Scans).filter(
-        Scans.id == self.id
-    ).options(load_only('scan_date')).first()
-    return timestamp.scan_date
