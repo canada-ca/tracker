@@ -8,6 +8,8 @@ from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
 
+from schemas.domain.www_scan.https.https_tags import HTTPSTags
+
 
 class HTTPS(SQLAlchemyObjectType):
     class Meta:
@@ -15,15 +17,15 @@ class HTTPS(SQLAlchemyObjectType):
         exclude_fields = (
             "id", "https_scan"
         )
-    id = graphene.ID()
-    domain = URL()
-    timestamp = graphene.DateTime()
+    id = graphene.ID(description="The ID of the object")
+    domain = URL(description="The domain the scan was run on")
+    timestamp = graphene.DateTime(description="The time the scan was initiated")
     implementation = graphene.String()
     enforced = graphene.String()
     hsts = graphene.String()
     hsts_age = graphene.String()
     preloaded = graphene.String()
-    https_guidance_tags = graphene.List(lambda: HTTPS)
+    https_guidance_tags = graphene.List(lambda: HTTPSTags)
 
     with app.app_context():
         def resole_domain(self: Https_scans, info):

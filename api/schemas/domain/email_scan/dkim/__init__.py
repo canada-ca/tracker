@@ -8,8 +8,6 @@ from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
 
-from schemas.domain.email_scan.dkim.dkim_record import DkimRecord
-from schemas.domain.email_scan.dkim.dkim_key_length import DkimKeyLength
 from schemas.domain.email_scan.dkim.dkim_tags import DkimTags
 
 
@@ -29,13 +27,11 @@ class DKIM(SQLAlchemyObjectType):
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="Time when scan was initiated")
-    record = graphene.List(
-        lambda: DkimRecord,
+    record = graphene.String(
         description="DKIM record retrieved during the scan of the "
                     "given domain "
     )
-    key_length = graphene.List(
-        lambda: DkimKeyLength,
+    key_length = graphene.Int(
         description="Length of DKIM public key"
     )
     dkim_guidance_tags = graphene.List(
@@ -51,10 +47,10 @@ class DKIM(SQLAlchemyObjectType):
             get_timestamp(self, info)
 
         def resolve_record(self, info):
-            return DkimRecord.get_query(info).all()
+            return self.dkim_scan["dkim"]["txt_record"]
 
         def resolve_key_length(self, info):
-            return DkimKeyLength.get_query(info).all()
+            return self.dkim_scan["dkim"]["key_size"]
 
         def resolve_dkim_guidance_tags(self, info):
             return DkimTags.get_query(info).all()

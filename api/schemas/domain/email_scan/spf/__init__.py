@@ -9,9 +9,6 @@ from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
 
-from schemas.domain.email_scan.spf.spf_default import SPFDefault
-from schemas.domain.email_scan.spf.spf_lookups import SPFLookups
-from schemas.domain.email_scan.spf.spf_record import SPFRecord
 from schemas.domain.email_scan.spf.spf_tags import SPFTags
 
 
@@ -33,17 +30,14 @@ class SPF(SQLAlchemyObjectType):
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
-    lookups = graphene.List(
-        lambda: SPFLookups,
+    lookups = graphene.String(
         description="The current amount of DNS lookups"
     )
-    record = graphene.List(
-        lambda: SPFRecord,
+    record = graphene.String(
         description="SPF record retrieved during the scan of the "
                     "given domain "
     )
-    spf_default = graphene.List(
-        lambda: SPFDefault,
+    spf_default = graphene.String(
         description="Instruction of what a recipient should do if there is "
                     "not a match to your SPF record. "
     )
@@ -60,13 +54,19 @@ class SPF(SQLAlchemyObjectType):
             return get_timestamp(self, info)
 
         def resolve_lookups(self: Spf_scans, info):
-            return SPFLookups.get_query(info).all()
+            return self.spf_scan["spf"]["dns_lookups"]
 
         def resolve_record(self: Spf_scans, info):
-            return SPFRecord.get_query(info).all()
+            return self.spf_scan["spf"]["record"]
 
         def resolve_spf_default(self: Spf_scans, info):
-            return SPFDefault.get_query(info).all()
+            if self.spf_scan["spf"]["parsed"]["all"] == "fail":
+                if self.spf_scan["spf"]["record"][-4:] == "-all":
+                    return "hardfail"
+                elif self.spf_scan["spf"]["record"][-4:] == "~all":
+                    return "softfail"
+            else:
+                return self.spf_scan["spf"]["parsed"]["all"]
 
         def resolve_spf_guidance_tags(self: Spf_scans, info):
             return SPFTags.get_query(info).all()

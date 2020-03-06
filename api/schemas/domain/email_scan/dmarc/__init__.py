@@ -9,10 +9,6 @@ from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
 
-from schemas.domain.email_scan.dmarc.dmarc_record import DmarcRecord
-from schemas.domain.email_scan.dmarc.pp_policy import PPPolicy
-from schemas.domain.email_scan.dmarc.sp_policy import SPPolicy
-from schemas.domain.email_scan.dmarc.pct import Pct
 from schemas.domain.email_scan.dmarc.dmarc_tags import DmarcTags
 
 
@@ -32,25 +28,21 @@ class DMARC(SQLAlchemyObjectType):
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="Time when scan was initiated")
-    record = graphene.List(
-        lambda: DmarcRecord,
+    record = graphene.String(
         description="DMARC record retrieved during the scan of the "
                     "given domain "
     )
-    p_policy = graphene.List(
-        lambda: PPPolicy,
+    p_policy = graphene.String(
         description="The requested policy you wish mailbox providers to apply "
                     "when your email fails DMARC authentication and alignment"
                     " checks. "
     )
-    sp_policy = graphene.List(
-        lambda: SPPolicy,
+    sp_policy = graphene.String(
         description="This tag is used to indicate a requested policy for all "
                     "subdomains where mail is failing the DMARC "
                     "authentication and alignment checks. "
     )
-    pct = graphene.List(
-        lambda: Pct,
+    pct = graphene.Int(
         description="The percentage of messages to which the DMARC policy is "
                     "to be applied. "
     )
@@ -67,16 +59,16 @@ class DMARC(SQLAlchemyObjectType):
             return get_timestamp(self, info)
 
         def resolve_record(self: Dmarc_scans, info):
-            return DmarcRecord.get_query(info).all()
+            return self.dmarc_scan["dmarc"]["record"]
 
         def resolve_p_policy(self: Dmarc_scans, info):
-            return PPPolicy.get_query(info).all()
+            return self.dmarc_scan["dmarc"]["tags"]["p"]["value"]
 
         def resolve_sp_policy(self: Dmarc_scans, info):
-            return SPPolicy.get_query(info).all()
+            return self.dmarc_scan["dmarc"]["tags"]["sp"]["value"]
 
         def resolve_pct(self: Dmarc_scans, info):
-            return Pct.get_query(info).all()
+            return self.dmarc_scan["dmarc"]["tags"]["pct"]["value"]
 
         def resolve_dmarc_guidance_tags(self: Dmarc_scans, info):
             return DmarcTags.get_query(info).all()

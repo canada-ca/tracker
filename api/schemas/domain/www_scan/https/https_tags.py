@@ -7,7 +7,7 @@ from models import Https_scans
 
 class HTTPSTags(SQLAlchemyObjectType):
     class Meta:
-        model = Https_scans,
+        model = Https_scans
         exclude_fields = (
             "id", "https_scan"
         )

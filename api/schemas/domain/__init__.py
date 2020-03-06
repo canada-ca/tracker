@@ -6,7 +6,9 @@ from graphene_sqlalchemy.types import ORMField
 from app import app
 from models import Domains
 from scalars.url import URL
+
 from schemas.domain.email_scan import EmailScan
+from schemas.domain.www_scan import WWWScan
 
 
 class Domain(SQLAlchemyObjectType):
@@ -21,10 +23,13 @@ class Domain(SQLAlchemyObjectType):
         )
     dns = graphene.String(description="Domain Name Server")
     url = URL(description="The domain the scan was run on")
-    www = graphene.String()
     email = graphene.ConnectionField(
         EmailScan._meta.connection,
         description="DKIM, DMARC, and SPF scan results"
+    )
+    www = graphene.ConnectionField(
+        WWWScan._meta.connection,
+        description="HTTPS, and SSL scan results"
     )
     organization = ORMField(model_attr='organization')
 
@@ -34,4 +39,8 @@ class Domain(SQLAlchemyObjectType):
 
         def resolve_email(self, info):
             query = EmailScan.get_query(info)
+            return query.all()
+
+        def resolve_www(self, info):
+            query = WWWScan.get_query(info)
             return query.all()
