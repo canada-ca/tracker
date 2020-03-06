@@ -94,7 +94,7 @@ export function SignInPage(){
                   </FormControl>
                 )}
               </Field>
-              <Link as={RouteLink} to="/forgot-password">Forgot?</Link>
+              <Link as={RouteLink} to="/forgot-password">Forgot your password?</Link>
 
               <Stack mt={6} spacing={4} isInline>
                 <Button
@@ -105,7 +105,7 @@ export function SignInPage(){
                   Sign In
                 </Button>
 
-                <Button as={RouteLink} to="/create-user"variantColor="teal" variant="outline">
+                <Button as={RouteLink} to="/create-user" variantColor="teal" variant="outline">
                     Create Account
                 </Button>
 
