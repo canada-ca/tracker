@@ -174,6 +174,8 @@ def process_results(results, scan_type):
                 # ITPIN cares about usage of TLS 1.0 and TLS 1.1
                 tlsv10 = boolean_for(results["TLSv1.0"])
                 tlsv11 = boolean_for(results["TLSv1.1"])
+                tlsv12 = boolean_for(results["TLSv1.2"])
+                tlsv13 = boolean_for(results["TLSv1.3"])
 
                 used_ciphers = {cipher for cipher in results.accepted_cipher_list}
                 bad_ciphers = list(used_ciphers - results.accepted_cipher_list)
@@ -203,6 +205,7 @@ def process_results(results, scan_type):
             report["tlsv10"] = tlsv10
             report["tlsv11"] = tlsv11
             report["tlsv12"] = tlsv12
+            report["tlsv13"] = tlsv13
 
     except Exception as e:
         return str(e), False

@@ -77,8 +77,6 @@ def scan(scan_id, domain):
     concurrent_scanner.queue_scan_command(server_info, CertificateInfoScanCommand())
 
     scan_result = concurrent_scanner.run_scan_command(server_info, command)
-    for cipher in scan_result.accepted_cipher_list:
-        logging.info("    %s" % cipher.name)
 
     return scan_result
 
