@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Text, Input, InputGroup, InputRightElement, FormErrorMessage, FormControl, Stack, Button, Link } from '@chakra-ui/core'
+import { Text, Input, InputGroup, InputRightElement, InputLeftElement, Icon, FormErrorMessage, FormControl, Stack, Button, Link } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
 import { useMutation } from "@apollo/react-hooks";
 import gql from 'graphql-tag'
@@ -62,7 +62,10 @@ export function SignInPage(){
               <Field name="email" validate={validateField}>
                 {({ field, form}) => (
                   <FormControl mt={4} mb={4} isInvalid={form.errors.email && form.touched.email} isRequired>
-                    <Input {...field} id="email" placeholder="Email" />
+                      <InputGroup>
+                        <InputLeftElement><Icon name="email" color="gray.300" /></InputLeftElement>
+                          <Input {...field} id="email" placeholder="Email" />
+                      </InputGroup>
                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -72,6 +75,8 @@ export function SignInPage(){
                 {({ field, form}) => (
                   <FormControl mb={2} isInvalid={form.errors.password && form.touched.password} isRequired>
                     <InputGroup size="md">
+                      <InputLeftElement><Icon name="lock" color="gray.300" /></InputLeftElement>
+
                       <Input
                         {...field}
                         pr="4.5rem"
