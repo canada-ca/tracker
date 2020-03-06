@@ -1,8 +1,8 @@
  /* eslint-disable react/prop-types */
 import React from 'react';
-import {Stack, Text, FormControl, FormErrorMessage, Input, InputLeftElement, InputGroup, Icon, Button} from "@chakra-ui/core";
-import {Formik, Field} from "formik";
-import {useMutation} from "@apollo/react-hooks";
+import { Stack, Text, FormControl, FormErrorMessage, Input, InputLeftElement, InputGroup, Icon, Button } from "@chakra-ui/core";
+import { Formik, Field } from "formik";
+import { useMutation } from "@apollo/react-hooks";
 import gql from 'graphql-tag'
 
 export function TwoFactorPage(){
