@@ -7,9 +7,9 @@ import {
   Text,
 } from "@chakra-ui/core";
 import gql from 'graphql-tag'
-import {useMutation} from "@apollo/react-hooks";
-import {Link as RouteLink} from "react-router-dom";
-import {Field, Formik} from "formik";
+import { useMutation } from "@apollo/react-hooks";
+import { Link as RouteLink } from "react-router-dom";
+import { Field, Formik } from "formik";
 
 export function CreateUserPage(){
     const [createUser, { loading, error, data }] = useMutation(gql`
