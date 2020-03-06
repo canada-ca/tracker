@@ -19,10 +19,13 @@ class Domain(SQLAlchemyObjectType):
             "organization_id", "organization",
             "scans"
         )
-    dns = graphene.String()
-    url = URL()
+    dns = graphene.String(description="Domain Name Server")
+    url = URL(description="The domain the scan was run on")
     www = graphene.String()
-    email = graphene.ConnectionField(EmailScan._meta.connection)
+    email = graphene.ConnectionField(
+        EmailScan._meta.connection,
+        description="DKIM, DMARC, and SPF scan results"
+    )
     organization = ORMField(model_attr='organization')
 
     with app.app_context():

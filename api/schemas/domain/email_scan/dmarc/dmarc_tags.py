@@ -8,7 +8,6 @@ from models import Dmarc_scans
 
 class DmarcTags(SQLAlchemyObjectType):
     """
-    Current settings of the currently configured SPF
     """
     class Meta:
         model = Dmarc_scans

@@ -11,8 +11,8 @@ class DkimKeyLength(SQLAlchemyObjectType):
         exclude_fields = (
             "id", "dkim_scan"
         )
-    value = graphene.String(description="Record value retrieved during scan")
+    value = graphene.String(description="Length of DKIM public key")
 
     with app.app_context():
-        def resolve_record(self: Dkim_scans, info):
-            return self.dkim_scan["dmarc"]["record"]
+        def resolve_value(self: Dkim_scans, info):
+            return self.dkim_scan["dkim"]["key_size"]
