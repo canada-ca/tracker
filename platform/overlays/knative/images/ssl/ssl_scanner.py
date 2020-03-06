@@ -5,8 +5,10 @@ import logging
 import json
 from sslyze.ssl_settings import TlsWrappedProtocolEnum
 from sslyze.server_connectivity_tester import ServerConnectivityError, ServerConnectivityTester
-from sslyze.plugins.openssl_cipher_suites_plugin import Tlsv12ScanCommand, Tlsv10ScanCommand
-from sslyze.synchronous_scanner import SynchronousScanner
+from sslyze.plugins.openssl_cipher_suites_plugin import Tlsv12ScanCommand, Tlsv10ScanCommand, \
+    Tlsv11ScanCommand, Tlsv13ScanCommand, Sslv20ScanCommand, Sslv30ScanCommand
+from sslyze.plugins.openssl_certificate_info_plugin import CertificateInfoScanCommand
+from sslyze.concurrent_scanner import ConcurrentScanner
 from flask import Flask, request
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -64,9 +66,17 @@ def scan(scan_id, domain):
 
     command = Tlsv10ScanCommand()
 
-    synchronous_scanner = SynchronousScanner()
+    concurrent_scanner = ConcurrentScanner()
 
-    scan_result = synchronous_scanner.run_scan_command(server_info, command)
+    concurrent_scanner.queue_scan_command(server_info, Sslv20ScanCommand())
+    concurrent_scanner.queue_scan_command(server_info, Sslv30ScanCommand())
+    concurrent_scanner.queue_scan_command(server_info, Tlsv10ScanCommand())
+    concurrent_scanner.queue_scan_command(server_info, Tlsv11ScanCommand())
+    concurrent_scanner.queue_scan_command(server_info, Tlsv12ScanCommand())
+    concurrent_scanner.queue_scan_command(server_info, Tlsv13ScanCommand())
+    concurrent_scanner.queue_scan_command(server_info, CertificateInfoScanCommand())
+
+    scan_result = concurrent_scanner.run_scan_command(server_info, command)
     for cipher in scan_result.accepted_cipher_list:
         logging.info("    %s" % cipher.name)
 
