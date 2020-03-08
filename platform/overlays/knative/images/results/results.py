@@ -148,50 +148,48 @@ def process_results(results, scan_type):
             any_rc4 = None
             any_3des = None
             bad_ciphers = []
+            #good_ciphers = Retrieve acceptable ciphers
             acceptable_ciphers = None
             signature_algorithm = None
             good_cert = -1
             tlsv10 = None
             tlsv11 = None
 
-            # values: unknown or N/A (-1), No (0), Yes (1)
+            # values: No (0), Yes (1)
             bod_crypto = None
 
-            if sslyze is None:
-                bod_crypto = -1  # Unknown
+            ###
+            # BOD 18-01 (cyber.dhs.gov) cares about SSLv2, SSLv3, RC4, and 3DES.
+            any_rc4 = boolean_for(results["Any RC4"])
 
+            if results.get("Any 3DES"):
+                any_3des = boolean_for(results["Any 3DES"])
+            sslv2 = boolean_for(results["SSLv2"])
+            sslv3 = boolean_for(results["SSLv3"])
+
+            ###
+            # ITPIN cares about usage of TLS 1.0/1.1/1.2
+            tlsv10 = boolean_for(results["TLSv1.0"])
+            tlsv11 = boolean_for(results["TLSv1.1"])
+            tlsv12 = boolean_for(results["TLSv1.2"])
+
+            tlsv13 = boolean_for(results["TLSv1.3"])
+
+            used_ciphers = {cipher for cipher in results.accepted_cipher_list}
+            bad_ciphers = list(used_ciphers - good_ciphers)
+            signature_algorithm = results.get("Signature Algorithm", "sha1")
+            acceptable_ciphers = not bad_ciphers
+
+            match = re.match(r"sha(?:3-)?(\d+)(?:-\d+)?$", signature_algorithm)
+            if match:
+                good_cert = int(int(match.group(1)) >= 256)
             else:
-                ###
-                # BOD 18-01 (cyber.dhs.gov) cares about SSLv2, SSLv3, RC4, and 3DES.
-                any_rc4 = boolean_for(results["Any RC4"])
+                logging.error("Could not decipher %s algorithm", signature_algorithm)
 
-                if results.get("Any 3DES"):
-                    any_3des = boolean_for(results["Any 3DES"])
-                sslv2 = boolean_for(results["SSLv2"])
-                sslv3 = boolean_for(results["SSLv3"])
-
-                ###
-                # ITPIN cares about usage of TLS 1.0 and TLS 1.1
-                tlsv10 = boolean_for(results["TLSv1.0"])
-                tlsv11 = boolean_for(results["TLSv1.1"])
-                tlsv12 = boolean_for(results["TLSv1.2"])
-                tlsv13 = boolean_for(results["TLSv1.3"])
-
-                used_ciphers = {cipher for cipher in results.accepted_cipher_list}
-                bad_ciphers = list(used_ciphers - results.accepted_cipher_list)
-                signature_algorithm = results.get("Signature Algorithm", "sha1")
-                acceptable_ciphers = not bad_ciphers
-
-                match = re.match(r"sha(?:3-)?(\d+)(?:-\d+)?$", signature_algorithm)
-                if match:
-                    good_cert = int(int(match.group(1)) >= 256)
-                else:
-                    logging.error("Could not decipher %s algorithm", signature_algorithm)
-
-                if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11, not acceptable_ciphers]):
-                    bod_crypto = 0
-                else:
-                    bod_crypto = 1
+            if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11, not acceptable_ciphers]):
+                bod_crypto = 0
+            else:
+                bod_crypto = 1
 
             report["bod_crypto"] = bod_crypto
             report["rc4"] = any_rc4
@@ -206,6 +204,9 @@ def process_results(results, scan_type):
             report["tlsv11"] = tlsv11
             report["tlsv12"] = tlsv12
             report["tlsv13"] = tlsv13
+
+            report["heartbleed"] = results
+            report["openssl_ccs_injection"] = result
 
     except Exception as e:
         return str(e), False
