@@ -85,13 +85,16 @@ def resolve_domains(self, info, **kwargs):
 
     # Retrieve org id from organization enum
     with app.app_context():
-        organization_id = db.session.query(Organizations).filter(
+        org_orm = db.session.query(Organizations).filter(
             Organizations.organization == organization
         ).options(load_only('id'))
 
     # Check if org exists
-    if not len(organization_id.all()):
+    if not len(org_orm.all()):
         raise GraphQLError("Error, no organization associated with that enum")
+
+    # Convert or
+    org_id = org_orm.first().id
 
     # Generate list of org's the user has access to
     org_id_list = []
@@ -105,7 +108,7 @@ def resolve_domains(self, info, **kwargs):
     # that domain
     if is_super_admin(user_role=user_role):
         query_rtn = query.filter(
-            Domains.organization_id == organization_id
+            Domains.organization_id == org_id
         ).all()
 
         # If org has no domains related to it
@@ -113,10 +116,10 @@ def resolve_domains(self, info, **kwargs):
             raise GraphQLError("Error, no domains associated with that organization")
     # If user fails super admin test
     else:
-        #
-        if is_user_read(user_role, organization_id):
+        # Check if user has permission to view org
+        if is_user_read(user_role, org_id):
             query_rtn = query.filter(
-                Domains.organization_id == organization_id
+                Domains.organization_id == org_id
             ).all()
         else:
             raise GraphQLError("Error, you do not have permission to view that organization")
