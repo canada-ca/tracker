@@ -160,7 +160,16 @@ def process_results(results, scan_type):
 
             tlsv13 = "TLSV1_3" in results.keys()
 
-            used_ciphers = {cipher for cipher in results.accepted_cipher_list}
+            highest_ssl_version_supported = None
+
+            for version in ["SSLV2", "SSLV3", "TLSV1", "TLSV1_1", "TLSV1_2", "TLSV1_3"]:
+                if version in results.keys():
+                    report["ssl"][version] = True
+                    highest_ssl_version_supported = version
+                else:
+                    report["ssl"][version] = False
+
+            used_ciphers = {cipher for cipher in results[highest_ssl_version_supported].accepted_cipher_list}
             signature_algorithm = results["signature_algorithm"]
 
             if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11]):
@@ -168,30 +177,32 @@ def process_results(results, scan_type):
             else:
                 bod_crypto = True
 
-            conn_type = results["connection_type"]
+            starttls = results["starttls"]
+
             heartbleed = results["is_vulnerable_to_heartbleed"]
+            ccs_injection = results["is_vulnerable_to_ccs_injection"]
 
             if results["signature_algorithm"] is "SHA256" or "SHA384" or "AEAD":
                 good_cert = True
             else:
                 good_cert = False
 
-            report["bod_crypto"] = bod_crypto
-            report["rc4"] = any_rc4
-            report["3des"] = any_3des
-            report["sslv2"] = sslv2
-            report["sslv3"] = sslv3
-            report["used_ciphers"] = used_ciphers
-            report["good_cert"] = good_cert
-            report["signature_algorithm"] = signature_algorithm
-            report["tlsv10"] = tlsv10
-            report["tlsv11"] = tlsv11
-            report["tlsv12"] = tlsv12
-            report["tlsv13"] = tlsv13
-            report["connection_type"] = conn_type
+            report["ssl"]["bod_crypto"] = bod_crypto
+            report["ssl"]["rc4"] = any_rc4
+            report["ssl"]["3des"] = any_3des
+            report["ssl"]["sslv2"] = sslv2
+            report["ssl"]["sslv3"] = sslv3
+            report["ssl"]["tlsv1_0"] = tlsv10
+            report["ssl"]["tlsv1_1"] = tlsv11
+            report["ssl"]["tlsv1_2"] = tlsv12
+            report["ssl"]["tlsv1_3"] = tlsv13
+            report["ssl"]["used_ciphers"] = used_ciphers
+            report["ssl"]["good_cert"] = good_cert
+            report["ssl"]["signature_algorithm"] = signature_algorithm
+            report["ssl"]["starttls"] = starttls
 
-            report["heartbleed"] = heartbleed
-            report["openssl_ccs_injection"] = conn_type
+            report["ssl"]["heartbleed"] = heartbleed
+            report["ssl"]["openssl_ccs_injection"] = ccs_injection
 
     except Exception as e:
         return str(e), False
