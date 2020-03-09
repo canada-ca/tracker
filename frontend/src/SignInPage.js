@@ -48,7 +48,7 @@ export function SignInPage() {
   function validateField(value) {
     let error
     if (!value || value === '') {
-      error = 'Field can not be empty'
+      error = ' can not be empty'
     }
     return error
   }
@@ -85,7 +85,7 @@ export function SignInPage() {
                     </InputLeftElement>
                     <Input {...field} id="email" placeholder="Email" />
                   </InputGroup>
-                  <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                  <FormErrorMessage>Email{form.errors.email}</FormErrorMessage>
                 </FormControl>
               )}
             </Field>
@@ -120,7 +120,7 @@ export function SignInPage() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                  <FormErrorMessage>Password{form.errors.password}</FormErrorMessage>
                 </FormControl>
               )}
             </Field>

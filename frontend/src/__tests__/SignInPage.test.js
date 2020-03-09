@@ -66,11 +66,11 @@ describe('<SignInPage />', () => {
     })
 
     const errorElement = await waitForElement(
-      () => getByText(container, /Field can not be empty/i),
+      () => getByText(container, /Email can not be empty/i),
       { container },
     )
 
-    expect(errorElement.innerHTML).toMatch(/Field can not be empty/i)
+    expect(errorElement.innerHTML).toMatch(/Email can not be empty/i)
   })
 
   test('an empty input for password field displays an error message', async () => {
@@ -91,15 +91,15 @@ describe('<SignInPage />', () => {
     const password = container.querySelector('#password')
 
     await wait(() => {
-      fireEvent.blur(email)
+      fireEvent.blur(password)
     })
 
     const errorElement = await waitForElement(
-      () => getByText(container, /Field can not be empty/i),
+      () => getByText(container, /Password can not be empty/i),
       { container },
     )
 
-    expect(errorElement.innerHTML).toMatch(/Field can not be empty/i)
+    expect(errorElement.innerHTML).toMatch(/Password can not be empty/i)
   })
 
   test('Show/Hide password button toggles properly', async () => {
