@@ -143,27 +143,11 @@ def process_results(results, scan_type):
 
             # Get cipher/protocol data via sslyze for a host.
 
-            sslv2 = None
-            sslv3 = None
-            any_rc4 = None
-            any_3des = None
-            bad_ciphers = []
-            #good_ciphers = Retrieve acceptable ciphers
-            acceptable_ciphers = None
-            signature_algorithm = None
-            good_cert = -1
-            tlsv10 = None
-            tlsv11 = None
-
-            # values: No (0), Yes (1)
-            bod_crypto = None
-
             ###
             # BOD 18-01 (cyber.dhs.gov) cares about SSLv2, SSLv3, RC4, and 3DES.
-            any_rc4 = boolean_for(results["Any RC4"])
+            any_rc4 = results["rc4"]
 
-            if results.get("Any 3DES"):
-                any_3des = boolean_for(results["Any 3DES"])
+            any_3des = results["3des"]
 
             sslv2 = "SSLV2" in results.keys()
             sslv3 = "SSLV3" in results.keys()
@@ -177,22 +161,20 @@ def process_results(results, scan_type):
             tlsv13 = "TLSV1_3" in results.keys()
 
             used_ciphers = {cipher for cipher in results.accepted_cipher_list}
-            #bad_ciphers = list(used_ciphers - good_ciphers)
-            signature_algorithm = results.get("Signature Algorithm", "sha1")
-            #acceptable_ciphers = not bad_ciphers
+            signature_algorithm = results["signature_algorithm"]
 
-            match = re.match(r"sha(?:3-)?(\d+)(?:-\d+)?$", signature_algorithm)
-            if match:
-                good_cert = int(int(match.group(1)) >= 256)
+            if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11]):
+                bod_crypto = False
             else:
-                logging.error("Could not decipher %s algorithm", signature_algorithm)
-
-            if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11]):#, not acceptable_ciphers]):
-                bod_crypto = 0
-            else:
-                bod_crypto = 1
+                bod_crypto = True
 
             conn_type = results["connection_type"]
+            heartbleed = results["is_vulnerable_to_heartbleed"]
+
+            if results["signature_algorithm"] is "SHA256" or "SHA384" or "AEAD":
+                good_cert = True
+            else:
+                good_cert = False
 
             report["bod_crypto"] = bod_crypto
             report["rc4"] = any_rc4
@@ -200,8 +182,6 @@ def process_results(results, scan_type):
             report["sslv2"] = sslv2
             report["sslv3"] = sslv3
             report["used_ciphers"] = used_ciphers
-            #report["accepted_ciphers"] = acceptable_ciphers
-            #report["bad_ciphers"] = bad_ciphers
             report["good_cert"] = good_cert
             report["signature_algorithm"] = signature_algorithm
             report["tlsv10"] = tlsv10
@@ -210,7 +190,7 @@ def process_results(results, scan_type):
             report["tlsv13"] = tlsv13
             report["connection_type"] = conn_type
 
-            report["heartbleed"] = results
+            report["heartbleed"] = heartbleed
             report["openssl_ccs_injection"] = conn_type
 
     except Exception as e:
