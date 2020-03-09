@@ -29,7 +29,7 @@ export function TwoFactorPage(){
   }
 
    /* A function for the Formik to validate fields in the form */
-  function validateField(value){
+  function validateCode(value){
     let error;
     if(!value || value === ""){
       error = "Field can not be empty";
@@ -37,7 +37,7 @@ export function TwoFactorPage(){
     else if(value.length !== 6){
       error = "Code must be six characters"
     }
-    if(value.match(/[a-z]/i)){
+    else if(value.match(/[a-z]/i)){
       error = "Code must be numbers only"
     }
     return error;
@@ -60,9 +60,9 @@ export function TwoFactorPage(){
           {props => (
             <form onSubmit={props.handleSubmit}>
 
-              <Field name="otpCode" validate={validateField}>
+              <Field name="otpCode" validate={validateCode}>
                 {({ field, form}) => (
-                  <FormControl mt={4} mb={4} isInvalid={form.errors.otpCode && form.touched.otpCode} isRequired>
+                  <FormControl mt={4} mb={4} isInvalid={form.errors.otpCode && form.touched.otpCode}>
                       <InputGroup>
                         {/* eslint-disable-next-line react/no-children-prop */}
                         <InputLeftElement color="gray.300" fontSize="1.2em" children={<Icon name="lock" color="gray.300" />} />
