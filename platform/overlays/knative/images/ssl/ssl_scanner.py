@@ -128,7 +128,7 @@ def scan(scan_id, domain):
     res = {"connection_type": connection_type}
     for result in scan_results:
         if result.__class__.__name__ is "CipherSuiteScanResult":
-            res[tls_supported] = {"accepted_cipher_list": result.accepted_cipher_list,
+            res["tls_supported"] = {"accepted_cipher_list": result.accepted_cipher_list,
                               "errored_cipher_list": result.errored_cipher_list,
                               "preferred_cipher": result.preferred_cipher,
                               "rejected_cipher_list": result.rejected_cipher_list}
@@ -140,6 +140,18 @@ def scan(scan_id, domain):
             res["is_vulnerable_to_heartbleed"] = result.is_vulnerable_to_heartbleed
 
         elif result.__class__.__name__ is "CertificateInfoScanResult":
+            res["signature_algorithm"] = result.verified_certificate_chain[0].signature_hash_algorithm.__class__.__name__
+
+    rc4 = False
+    triple_des = False
+    for cipher in res["tls_supported"]["accepted_cipher_list"]:
+        if "RC4" in cipher.name:
+            rc4 = True
+        if "3DES" in cipher.name:
+            triple_des = True
+
+    res["rc4"] = rc4
+    res["3des"] = triple_des
 
     return res
 

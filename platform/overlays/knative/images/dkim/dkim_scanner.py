@@ -111,7 +111,7 @@ def scan(scan_id, domain):
         record["public_key_value"] = key_val
         record["key_size"] = keysize
         record["key_type"] = ktag.decode('ascii')
-        record["modulus"] = pk["modulus"]
+        record["public_key_modulus"] = pk["modulus"]
         record["public_exponent"] = pk["publicExponent"]
 
     except Exception as e:
