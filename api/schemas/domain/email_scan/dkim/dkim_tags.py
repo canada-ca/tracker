@@ -21,13 +21,13 @@ class DkimTags(SQLAlchemyObjectType):
                 return tags.update({"dkim2": "missing"})
 
             if self.dkim_scan["dkim"]["key_size"] >= 2048 \
-            and self.dkim_scan["dkim"]["public_key_value"] == "RSA":
+            and self.dkim_scan["dkim"]["key_type"] == "rsa":
                 tags.update({"dkim5": "P-2048"})
             elif self.dkim_scan["dkim"]["key_size"] == 1024 \
-            and self.dkim_scan["dkim"]["public_key_value"] == "RSA":
+            and self.dkim_scan["dkim"]["key_type"] == "rsa":
                 tags.update({"dkim4": "P-1024"})
             elif self.dkim_scan["dkim"]["key_size"] < 1024 \
-            and self.dkim_scan["dkim"]["public_key_value"] == "RSA":
+            and self.dkim_scan["dkim"]["key_type"] == "rsa":
                 tags.update({"dkim3": "P-sub1024"})
             else:
                 tags.update({"dkim6": "P-invalid"})
