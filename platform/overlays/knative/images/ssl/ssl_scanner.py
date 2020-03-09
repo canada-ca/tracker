@@ -61,7 +61,13 @@ def get_server_info(scan_id, domain):
         logging.info("\n(SCAN: %s) - Testing connectivity with %s:%s..." % (scan_id, server_tester.hostname, server_tester.port))
         server_info = server_tester.perform()
         logging.info("(SCAN: %s) - Server Info %s\n" % (scan_id, server_info))
-        return server_info, "TLS"
+
+        for _port in ServerConnectivityTester.TLS_DEFAULT_PORTS:
+            if get_server_info_starttls(scan_id, domain, _port) is not None:
+                return server_info, True
+
+        return server_info, False
+
     except ServerConnectivityError as e:
 
         server_info = None
@@ -74,12 +80,12 @@ def get_server_info(scan_id, domain):
                 server_info = get_server_info_starttls(scan_id, domain, _port)
 
         if server_info is not None:
-            return server_info, "StartTLS"
+            return server_info, True
         else:
             # Could not establish a StartTLS connection to the server
             logging.error("(SCAN: %s) - Could not establish secure connection to %s using StartTLS: %s" % (
             scan_id, e.server_info.hostname, e.error_message))
-            return None
+            return None, False
 
 
 def get_server_info_starttls(scan_id, domain, port):
@@ -97,7 +103,7 @@ def get_server_info_starttls(scan_id, domain, port):
 
 def scan(scan_id, domain):
 
-    server_info, connection_type = get_server_info(scan_id, domain)
+    server_info, starttls = get_server_info(scan_id, domain)
 
     if not server_info:
         return None
@@ -125,10 +131,10 @@ def scan(scan_id, domain):
 
     scan_results = concurrent_scanner.get_results()
 
-    res = {"connection_type": connection_type}
+    res = {"starttls": starttls}
     for result in scan_results:
         if result.__class__.__name__ is "CipherSuiteScanResult":
-            res["tls_supported"] = {"accepted_cipher_list": result.accepted_cipher_list,
+            res[tls_supported] = {"accepted_cipher_list": result.accepted_cipher_list,
                               "errored_cipher_list": result.errored_cipher_list,
                               "preferred_cipher": result.preferred_cipher,
                               "rejected_cipher_list": result.rejected_cipher_list}
