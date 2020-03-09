@@ -107,78 +107,78 @@ def user_role_test_db_init():
 class TestAuthFunctions:
     def test_user_read_check_perm_user_read(self):
         user_role = [{'user_id': 1, 'org_id': 1, 'permission': 'user_read'}]
-        org = 'ORG1'
-        assert is_user_read(user_role, org)
+        org_id = 1
+        assert is_user_read(user_role, org_id)
 
     def test_user_read_check_perm_user_write(self):
         user_role = [{'user_id': 2, 'org_id': 1, 'permission': 'user_write'}]
-        org = 'ORG1'
-        assert is_user_read(user_role, org)
+        org_id = 1
+        assert is_user_read(user_role, org_id)
 
     def test_user_read_check_perm_user_admin(self):
         user_role = [{'user_id': 3, 'org_id': 1, 'permission': 'admin'}]
-        org = 'ORG1'
-        assert is_user_read(user_role, org)
+        org_id = 1
+        assert is_user_read(user_role, org_id)
 
     def test_user_read_check_perm_super_admin(self):
         user_role = [{'user_id': 4, 'org_id': 1, 'permission': 'super_admin'}]
-        org = 'ORG1'
-        assert is_user_read(user_role, org)
+        org_id = 1
+        assert is_user_read(user_role, org_id)
 
     def test_user_read_check_invalid(self):
         user_role = [{'user_id': 1, 'org_id': 1, 'permission': ''}]
-        org = 'ORG1'
-        assert not is_user_read(user_role, org)
+        org_id = 1
+        assert not is_user_read(user_role, org_id)
 
     def test_user_write_check_perm_user_read(self):
         user_role = [{'user_id': 1, 'org_id': 1, 'permission': 'user_read'}]
-        org = 'ORG1'
-        assert not is_user_write(user_role, org)
+        org_id = 1
+        assert not is_user_write(user_role, org_id)
 
     def test_user_write_check_perm_user_write(self):
         user_role = [{'user_id': 2, 'org_id': 1, 'permission': 'user_write'}]
-        org = 'ORG1'
-        assert is_user_write(user_role, org)
+        org_id = 1
+        assert is_user_write(user_role, org_id)
 
     def test_user_write_check_perm_user_admin(self):
         user_role = [{'user_id': 3, 'org_id': 1, 'permission': 'admin'}]
-        org = 'ORG1'
-        assert is_user_write(user_role, org)
+        org_id = 1
+        assert is_user_write(user_role, org_id)
 
     def test_user_write_check_perm_super_admin(self):
         user_role = [{'user_id': 4, 'org_id': 1, 'permission': 'super_admin'}]
-        org = 'ORG1'
-        assert is_user_write(user_role, org)
+        org_id = 1
+        assert is_user_write(user_role, org_id)
 
     def test_user_write_check_invalid(self):
         user_role = [{'user_id': 1, 'org_id': 1, 'permission': ''}]
-        org = 'ORG1'
-        assert not is_user_write(user_role, org)
+        org_id = 1
+        assert not is_user_write(user_role, org_id)
 
     def test_admin_check_perm_user_read(self):
         user_role = [{'user_id': 1, 'org_id': 1, 'permission': 'user_read'}]
-        org = 'ORG1'
-        assert not is_admin(user_role, org)
+        org_id = 1
+        assert not is_admin(user_role, org_id)
 
     def test_admin_check_perm_user_write(self):
         user_role = [{'user_id': 2, 'org_id': 1, 'permission': 'user_write'}]
-        org = 'ORG1'
-        assert not is_admin(user_role, org)
+        org_id = 1
+        assert not is_admin(user_role, org_id)
 
     def test_admin_check_perm_user_admin(self):
         user_role = [{'user_id': 3, 'org_id': 1, 'permission': 'admin'}]
-        org = 'ORG1'
-        assert is_admin(user_role, org)
+        org_id = 1
+        assert is_admin(user_role, org_id)
 
     def test_admin_check_perm_super_admin(self):
         user_role = [{'user_id': 4, 'org_id': 1, 'permission': 'super_admin'}]
-        org = 'ORG1'
-        assert is_admin(user_role, org)
+        org_id = 1
+        assert is_admin(user_role, org_id)
 
     def test_admin_check_invalid(self):
         user_role = [{'user_id': 1, 'org_id': 1, 'permission': ''}]
-        org = 'ORG1'
-        assert not is_admin(user_role, org)
+        org_id = 1
+        assert not is_admin(user_role, org_id)
 
     def test_super_admin_check_perm_user_read(self):
         user_role = [{'user_id': 1, 'org_id': 1, 'permission': 'user_read'}]
