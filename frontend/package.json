@@ -51,6 +51,7 @@
     "@lingui/macro": "^3.0.0-7",
     "@testing-library/jest-dom": "^5.1.1",
     "@testing-library/react": "^9.4.1",
+    "@testing-library/user-event": "^10.0.0",
     "acorn": "^7.1.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "^8.0.6",

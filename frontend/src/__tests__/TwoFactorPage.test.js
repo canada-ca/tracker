@@ -8,6 +8,7 @@ import {
   waitForElement,
   fireEvent,
   getByText,
+  queryByText,
 } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
@@ -17,6 +18,7 @@ import { createHttpLink } from 'apollo-link-http'
 import fetch from 'isomorphic-unfetch'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from '@apollo/react-hooks'
+import userEvent from '@testing-library/user-event'
 
 i18n.load('en', { en: {} })
 i18n.activate('en')
@@ -71,5 +73,107 @@ describe('<TwoFactorPage />', () => {
     )
 
     expect(errorElement.innerHTML).toMatch(/Field can not be empty/i)
+  })
+
+  test('5 digit code displays an error message', async () => {
+    const { container } = render(
+      <ApolloProvider client={client}>
+        <MemoryRouter initialEntries={['/']}>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <TwoFactorPage />
+            </I18nProvider>
+          </ThemeProvider>
+        </MemoryRouter>
+      </ApolloProvider>,
+    )
+
+    expect(render).toBeTruthy()
+
+    const otpCode = container.querySelector('#otpCode')
+
+    await wait(() => {
+      userEvent.type(otpCode, '12345')
+    })
+
+    expect(otpCode.value).toBe('12345')
+
+    await wait(() => {
+      fireEvent.blur(otpCode)
+    })
+
+    const errorElement = await waitForElement(
+      () => getByText(container, /Code must be six characters/i),
+      { container },
+    )
+
+    expect(errorElement.innerHTML).toMatch(/Code must be six characters/i)
+  })
+
+  test('non digit code displays an error message', async () => {
+    const { container } = render(
+      <ApolloProvider client={client}>
+        <MemoryRouter initialEntries={['/']}>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <TwoFactorPage />
+            </I18nProvider>
+          </ThemeProvider>
+        </MemoryRouter>
+      </ApolloProvider>,
+    )
+
+    expect(render).toBeTruthy()
+
+    const otpCode = container.querySelector('#otpCode')
+
+    await wait(() => {
+      userEvent.type(otpCode, 'grapefruit')
+    })
+
+    expect(otpCode.value).toBe('grapefruit')
+
+    await wait(() => {
+      fireEvent.blur(otpCode)
+    })
+
+    const errorElement = await waitForElement(
+      () => getByText(container, /Code must be numbers only/i),
+      { container },
+    )
+
+    expect(errorElement.innerHTML).toMatch(/Code must be numbers only/i)
+  })
+
+  test('6 digit code does not display an error message', async () => {
+    const { container } = render(
+      <ApolloProvider client={client}>
+        <MemoryRouter initialEntries={['/']}>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <TwoFactorPage />
+            </I18nProvider>
+          </ThemeProvider>
+        </MemoryRouter>
+      </ApolloProvider>,
+    )
+
+    expect(render).toBeTruthy()
+
+    const otpCode = container.querySelector('#otpCode')
+
+    await wait(() => {
+      userEvent.type(otpCode, '654321')
+    })
+
+    expect(otpCode.value).toBe('654321')
+
+    await wait(() => {
+      fireEvent.blur(otpCode)
+    })
+
+    expect(queryByText(container, /Field can not be empty/i)).toBe(null)
+    expect(queryByText(container, /Code must be numbers only/i)).toBe(null)
+    expect(queryByText(container, /Code must be six characters/i)).toBe(null)
   })
 })
