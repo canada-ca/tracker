@@ -80,8 +80,9 @@ export function TwoFactorPage() {
                     <InputLeftElement
                       color="gray.300"
                       fontSize="1.2em"
-                      children={<Icon name="lock" color="gray.300" />}
-                    />
+                    >
+                      <Icon name="lock" color="gray.300" />
+                    </InputLeftElement>
                     <Input
                       {...field}
                       id="otpCode"
