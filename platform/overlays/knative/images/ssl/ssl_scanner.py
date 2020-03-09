@@ -101,22 +101,47 @@ def scan(scan_id, domain):
 
     if not server_info:
         return None
+    else:
+        tls_supported = str(server_info.highest_ssl_version_supported).split('.')[1]
 
     concurrent_scanner = ConcurrentScanner()
 
     concurrent_scanner.queue_scan_command(server_info, OpenSslCcsInjectionScanCommand())
     concurrent_scanner.queue_scan_command(server_info, HeartbleedScanCommand())
-    concurrent_scanner.queue_scan_command(server_info, Sslv20ScanCommand())
-    concurrent_scanner.queue_scan_command(server_info, Sslv30ScanCommand())
-    concurrent_scanner.queue_scan_command(server_info, Tlsv10ScanCommand())
-    concurrent_scanner.queue_scan_command(server_info, Tlsv11ScanCommand())
-    concurrent_scanner.queue_scan_command(server_info, Tlsv12ScanCommand())
-    concurrent_scanner.queue_scan_command(server_info, Tlsv13ScanCommand())
     concurrent_scanner.queue_scan_command(server_info, CertificateInfoScanCommand())
 
-    scan_result = concurrent_scanner.get_results()
+    if tls_supported is "SSLV2":
+        concurrent_scanner.queue_scan_command(server_info, Sslv20ScanCommand())
+    elif tls_supported is "SSLV3":
+        concurrent_scanner.queue_scan_command(server_info, Sslv30ScanCommand())
+    elif tls_supported is "TLSV1":
+        concurrent_scanner.queue_scan_command(server_info, Tlsv10ScanCommand())
+    elif tls_supported is "TLSV1_1":
+        concurrent_scanner.queue_scan_command(server_info, Tlsv11ScanCommand())
+    elif tls_supported is "TLSV1_2":
+        concurrent_scanner.queue_scan_command(server_info, Tlsv12ScanCommand())
+    elif tls_supported is "TLSV1_3":
+        concurrent_scanner.queue_scan_command(server_info, Tlsv13ScanCommand())
 
-    return scan_result
+    scan_results = concurrent_scanner.get_results()
+
+    res = {"connection_type": connection_type}
+    for result in scan_results:
+        if result.__class__.__name__ is "CipherSuiteScanResult":
+            res[tls_supported] = {"accepted_cipher_list": result.accepted_cipher_list,
+                              "errored_cipher_list": result.errored_cipher_list,
+                              "preferred_cipher": result.preferred_cipher,
+                              "rejected_cipher_list": result.rejected_cipher_list}
+
+        elif result.__class__.__name__ is "OpenSslCcsInjectionScanResult":
+            res["is_vulnerable_to_ccs_injection"] = result.is_vulnerable_to_ccs_injection
+
+        elif result.__class__.__name__ is "HeartbleedScanResult":
+            res["is_vulnerable_to_heartbleed"] = result.is_vulnerable_to_heartbleed
+
+        elif result.__class__.__name__ is "CertificateInfoScanResult":
+
+    return res
 
 
 if __name__ == "__main__":

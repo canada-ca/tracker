@@ -164,21 +164,22 @@ def process_results(results, scan_type):
 
             if results.get("Any 3DES"):
                 any_3des = boolean_for(results["Any 3DES"])
-            sslv2 = boolean_for(results["SSLv2"])
-            sslv3 = boolean_for(results["SSLv3"])
+
+            sslv2 = "SSLV2" in results.keys()
+            sslv3 = "SSLV3" in results.keys()
 
             ###
             # ITPIN cares about usage of TLS 1.0/1.1/1.2
-            tlsv10 = boolean_for(results["TLSv1.0"])
-            tlsv11 = boolean_for(results["TLSv1.1"])
-            tlsv12 = boolean_for(results["TLSv1.2"])
+            tlsv10 = "TLSV1" in results.keys()
+            tlsv11 = "TLSV1_1" in results.keys()
+            tlsv12 = "TLSV1_2" in results.keys()
 
-            tlsv13 = boolean_for(results["TLSv1.3"])
+            tlsv13 = "TLSV1_3" in results.keys()
 
             used_ciphers = {cipher for cipher in results.accepted_cipher_list}
-            bad_ciphers = list(used_ciphers - good_ciphers)
+            #bad_ciphers = list(used_ciphers - good_ciphers)
             signature_algorithm = results.get("Signature Algorithm", "sha1")
-            acceptable_ciphers = not bad_ciphers
+            #acceptable_ciphers = not bad_ciphers
 
             match = re.match(r"sha(?:3-)?(\d+)(?:-\d+)?$", signature_algorithm)
             if match:
@@ -186,27 +187,31 @@ def process_results(results, scan_type):
             else:
                 logging.error("Could not decipher %s algorithm", signature_algorithm)
 
-            if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11, not acceptable_ciphers]):
+            if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11]):#, not acceptable_ciphers]):
                 bod_crypto = 0
             else:
                 bod_crypto = 1
+
+            conn_type = results["connection_type"]
 
             report["bod_crypto"] = bod_crypto
             report["rc4"] = any_rc4
             report["3des"] = any_3des
             report["sslv2"] = sslv2
             report["sslv3"] = sslv3
-            report["accepted_ciphers"] = acceptable_ciphers
-            report["bad_ciphers"] = bad_ciphers
+            report["used_ciphers"] = used_ciphers
+            #report["accepted_ciphers"] = acceptable_ciphers
+            #report["bad_ciphers"] = bad_ciphers
             report["good_cert"] = good_cert
             report["signature_algorithm"] = signature_algorithm
             report["tlsv10"] = tlsv10
             report["tlsv11"] = tlsv11
             report["tlsv12"] = tlsv12
             report["tlsv13"] = tlsv13
+            report["connection_type"] = conn_type
 
             report["heartbleed"] = results
-            report["openssl_ccs_injection"] = result
+            report["openssl_ccs_injection"] = conn_type
 
     except Exception as e:
         return str(e), False
