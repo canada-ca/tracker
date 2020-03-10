@@ -55,7 +55,7 @@ def sign_in_user(user_name, password):
                 }
                 user_roles.append(temp_dict)
         else:
-            user_roles = 'none'
+            user_roles = ['none']
         try:
             payload = {
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=1800),

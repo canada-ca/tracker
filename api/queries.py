@@ -4,10 +4,7 @@ from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
 
 from app import app
 
-from model_enums.groups import GroupEnums
 from model_enums.organiztions import OrganizationsEnum
-
-from model_enums.sectors import SectorEnums, ZoneEnums
 
 from model_enums.roles import RoleEnums
 
@@ -18,6 +15,7 @@ from schemas.user import (
     UpdateUserPassword,
     ValidateTwoFactor
 )
+
 from schemas.user_affiliations import (
     UpdateUserRole
 )
@@ -41,10 +39,6 @@ from resolvers.users import (
 from scalars.email_address import EmailAddress
 from scalars.url import URL
 from schemas.notification_email import (NotificationEmail)
-# from schemas.groups import Groups
-# from schemas.organizations import Organizations
-# from schemas.scans import Scans
-# from schemas.sectors import Sectors
 
 
 from schemas.user import (
@@ -66,10 +60,6 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
     users = SQLAlchemyConnectionField(UserObject._meta.connection, sort=None)
 
-    # sector = SQLAlchemyConnectionField(Sectors._meta.connection, sort=None)
-    # group = SQLAlchemyConnectionField(Groups._meta.connection, sort=None)
-    # organization = SQLAlchemyConnectionField(Organizations._meta.connection, sort=None)
-
     domain = SQLAlchemyConnectionField(
         Domain._meta.connection,
         url=graphene.Argument(URL, required=True),
@@ -81,7 +71,7 @@ class Query(graphene.ObjectType):
 
     domains = SQLAlchemyConnectionField(
         Domain._meta.connection,
-        organization=graphene.Argument(OrganizationsEnum, required=True),
+        organization=graphene.Argument(OrganizationsEnum, required=False),
         sort=None
     )
     with app.app_context():

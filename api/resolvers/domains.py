@@ -83,45 +83,67 @@ def resolve_domains(self, info, **kwargs):
     organization = kwargs.get('organization')
     user_role = kwargs.get('user_roles')
 
-    # Retrieve org id from organization enum
-    with app.app_context():
-        org_orm = db.session.query(Organizations).filter(
-            Organizations.organization == organization
-        ).options(load_only('id'))
-
-    # Check if org exists
-    if not len(org_orm.all()):
-        raise GraphQLError("Error, no organization associated with that enum")
-
-    # Convert or
-    org_id = org_orm.first().id
-
     # Generate list of org's the user has access to
     org_id_list = []
     for role in user_role:
         org_id_list.append(role["org_id"])
 
+    if not org_id_list:
+        raise GraphQLError("Error, you have not been assigned to any organization")
+
     # Retrieve information based on query
     query = Domain.get_query(info)
 
-    # Check if user is super admin, and if true return all domains belonging to
-    # that domain
-    if is_super_admin(user_role=user_role):
-        query_rtn = query.filter(
-            Domains.organization_id == org_id
-        ).all()
+    if organization:
+        # Retrieve org id from organization enum
+        with app.app_context():
+            org_orm = db.session.query(Organizations).filter(
+                Organizations.organization == organization
+            ).options(load_only('id'))
 
-        # If org has no domains related to it
-        if not len(query_rtn):
-            raise GraphQLError("Error, no domains associated with that organization")
-    # If user fails super admin test
-    else:
-        # Check if user has permission to view org
-        if is_user_read(user_role, org_id):
+        # Check if org exists
+        if not len(org_orm.all()):
+            raise GraphQLError("Error, no organization associated with that enum")
+
+        # Convert to int id
+        org_id = org_orm.first().id
+
+        # Check if user is super admin, and if true return all domains belonging to
+        # that domain
+        if is_super_admin(user_role=user_role):
             query_rtn = query.filter(
                 Domains.organization_id == org_id
             ).all()
-        else:
-            raise GraphQLError("Error, you do not have permission to view that organization")
 
-    return query_rtn
+            # If org has no domains related to it
+            if not len(query_rtn):
+                raise GraphQLError(
+                    "Error, no domains associated with that organization")
+        # If user fails super admin test
+        else:
+            # Check if user has permission to view org
+            if is_user_read(user_role, org_id):
+                query_rtn = query.filter(
+                    Domains.organization_id == org_id
+                ).all()
+            else:
+                raise GraphQLError(
+                    "Error, you do not have permission to view that organization")
+
+        return query_rtn
+    else:
+        if is_super_admin(user_role=user_role):
+            query_rtn = query.all()
+            if not query_rtn:
+                raise GraphQLError("Error, no domains to view")
+            return query_rtn
+        else:
+            query_rtr = []
+            for org_id in org_id_list:
+                if is_user_read(user_role, org_id):
+                    tmp_query = query.filter(
+                        Domains.organization_id == org_id
+                    ).first()
+                    query_rtr.append(tmp_query)
+            return query_rtr
+
