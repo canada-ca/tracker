@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/core";
 import gql from 'graphql-tag'
 import { useMutation } from "@apollo/react-hooks";
-import { Link as RouteLink, Redirect } from "react-router-dom";
+import { Link as RouteLink } from "react-router-dom";
 import { Field, Formik } from "formik";
 
 export function CreateUserPage(){
@@ -31,11 +31,11 @@ export function CreateUserPage(){
       console.log(error);
     }
 
-    // If data is returned, there is no error so redirect to two-factor code page
+    /* Check that a user's 2fa needs validation before this redirection.
     return <Redirect to={{
       pathname: '/two-factor-code',
       state: {userName: data.createUser.userName},
-    }}/>
+    }}/>*/
   }
 
   /* A function for the Formik to validate fields in the form */
