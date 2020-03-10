@@ -13,7 +13,6 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import ApolloClient from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
-import fetch from 'isomorphic-unfetch'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { CreateUserPage } from '../CreateUserPage'
@@ -23,9 +22,8 @@ i18n.activate('en')
 
 describe('<SignInPage />', () => {
   afterEach(cleanup)
-
   const client = new ApolloClient({
-    link: createHttpLink({ fetch }),
+    link: createHttpLink({ uri: 'http://0.0.0.0:3000/graphql' }),
     cache: new InMemoryCache(),
   })
 
@@ -35,7 +33,7 @@ describe('<SignInPage />', () => {
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-                <CreateUserPage/>
+              <CreateUserPage />
             </I18nProvider>
           </ThemeProvider>
         </MemoryRouter>
@@ -50,7 +48,7 @@ describe('<SignInPage />', () => {
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-                <CreateUserPage/>
+              <CreateUserPage />
             </I18nProvider>
           </ThemeProvider>
         </MemoryRouter>
@@ -79,7 +77,7 @@ describe('<SignInPage />', () => {
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-                <CreateUserPage/>
+              <CreateUserPage />
             </I18nProvider>
           </ThemeProvider>
         </MemoryRouter>
@@ -108,7 +106,7 @@ describe('<SignInPage />', () => {
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={i18n}>
-                <CreateUserPage/>
+              <CreateUserPage />
             </I18nProvider>
           </ThemeProvider>
         </MemoryRouter>
@@ -129,5 +127,61 @@ describe('<SignInPage />', () => {
     )
 
     expect(errorElement.innerHTML).toMatch(/Confirm Password can not be empty/i)
+  })
+
+  test('successful creation of a new user results in proper message being displayed', async () => {
+    const { container } = render(
+      <ApolloProvider client={client}>
+        <MemoryRouter initialEntries={['/']}>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <CreateUserPage />
+            </I18nProvider>
+          </ThemeProvider>
+        </MemoryRouter>
+      </ApolloProvider>,
+    )
+
+    expect(render).toBeTruthy()
+
+    const email = container.querySelector('#email')
+    const password = container.querySelector('#password')
+    const confirmPassword = container.querySelector('#confirmPassword')
+    const form = container.querySelector('#form')
+
+    await wait(() => {
+      fireEvent.change(email, {
+        target: {
+          value: 'testuser@testemail.ca',
+        },
+      })
+    })
+
+    await wait(() => {
+      fireEvent.change(password, {
+        target: {
+          value: 'testuserpassword123',
+        },
+      })
+    })
+
+    await wait(() => {
+      fireEvent.change(confirmPassword, {
+        target: {
+          value: 'testuserpassword123',
+        },
+      })
+    })
+
+    await wait(() => {
+      fireEvent.submit(form)
+    })
+
+    const successMsg = await waitForElement(
+      () => getByText(container, /Your account has been successfuly created/i),
+      { container },
+    )
+
+    //expect(successMsg.innerHTML).toMatch(/Your account has been successfuly created, you may now sign into your account!/i)
   })
 })
