@@ -23,7 +23,8 @@ class DMARC(SQLAlchemyObjectType):
     class Meta:
         model = Dmarc_scans
         exclude_fields = (
-            "id", "dmarc_scan"
+            "id",
+            "dmarc_scan"
         )
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")

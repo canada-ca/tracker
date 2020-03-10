@@ -16,9 +16,12 @@ class Domain(SQLAlchemyObjectType):
         model = Domains
         interfaces = (relay.Node, )
         exclude_fields = (
-            "id", "domain",
-            "last_run", "dmarc_phase",
-            "organization_id", "organization",
+            "id",
+            "domain",
+            "last_run",
+            "dmarc_phase",
+            "organization_id",
+            "organization",
             "scans"
         )
     url = URL(description="The domain the scan was run on")

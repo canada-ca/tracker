@@ -12,7 +12,8 @@ class SPFTags(SQLAlchemyObjectType):
     class Meta:
         model = Spf_scans
         exclude_fields = (
-            "id", "spf_scan"
+            "id",
+            "spf_scan"
         )
     value = graphene.String(description="Important tags retrieved during scan")
 

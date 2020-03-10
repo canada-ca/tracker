@@ -15,7 +15,8 @@ class HTTPS(SQLAlchemyObjectType):
     class Meta:
         model = Https_scans
         exclude_fields = (
-            "id", "https_scan"
+            "id",
+            "https_scan"
         )
     id = graphene.ID(description="The ID of the object")
     domain = URL(description="The domain the scan was run on")

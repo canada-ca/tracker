@@ -14,7 +14,8 @@ class SSL(SQLAlchemyObjectType):
     class Meta:
         model = Ssl_scans
         exclude_fields = (
-            "id", "ssl_scan"
+            "id",
+            "ssl_scan"
         )
     id = graphene.ID()
     domain = URL()

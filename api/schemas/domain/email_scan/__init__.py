@@ -22,8 +22,10 @@ class EmailScan(SQLAlchemyObjectType):
         model = Scans
         interfaces = (relay.Node, )
         exclude_fields = (
-            "id", "domain_id",
-            "scan_date", "initiated_by"
+            "id",
+            "domain_id",
+            "scan_date",
+            "initiated_by"
         )
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")

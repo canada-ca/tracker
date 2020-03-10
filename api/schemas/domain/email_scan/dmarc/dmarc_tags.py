@@ -12,7 +12,8 @@ class DmarcTags(SQLAlchemyObjectType):
     class Meta:
         model = Dmarc_scans
         exclude_fields = (
-            "id", "dmarc_scan"
+            "id",
+            "dmarc_scan"
         )
 
     value = graphene.String(description="Important tags retrieved during scan")

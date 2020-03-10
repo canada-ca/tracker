@@ -9,7 +9,8 @@ class DkimTags(SQLAlchemyObjectType):
     class Meta:
         model = Dkim_scans
         exclude_fields = (
-            "id", "dkim_scan"
+            "id",
+            "dkim_scan"
         )
     value = graphene.String(description="Key tags found during scan")
 

@@ -9,7 +9,8 @@ class HTTPSTags(SQLAlchemyObjectType):
     class Meta:
         model = Https_scans
         exclude_fields = (
-            "id", "https_scan"
+            "id",
+            "https_scan"
         )
     value = graphene.String()
 

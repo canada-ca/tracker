@@ -22,7 +22,8 @@ class DKIM(SQLAlchemyObjectType):
     class Meta:
         model = Dkim_scans
         exclude_fields = (
-            "id", "dkim_scan"
+            "id",
+            "dkim_scan"
         )
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")

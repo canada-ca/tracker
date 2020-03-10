@@ -27,9 +27,9 @@ def decode_auth_token(request):
         )
         return payload['roles']
     except jwt.ExpiredSignatureError:
-        raise GraphQLError('Signature expired. please login again', )
+        raise GraphQLError('Signature expired, please login again')
     except jwt.InvalidTokenError:
-        raise GraphQLError('Invalid token. please login again')
+        raise GraphQLError('Invalid token, please login again')
 
 
 def check_user_claims(user_claims):

@@ -25,7 +25,8 @@ class SPF(SQLAlchemyObjectType):
     class Meta:
         model = Spf_scans
         exclude_fields = (
-            "id", "spf_scan"
+            "id",
+            "spf_scan"
         )
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
