@@ -860,7 +860,7 @@ type Query {
   """
   An api endpoint used to generate a OTP url used for two factor authentication.
   """
-  generateOtpUrl(userName: EmailAddress!): String
+  generateOtpUrl(userName: EmailAddress!): String @examples(values: ["otpauth://totp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App"])
 
   """
   An api endpoint to view a current user's claims -- Requires an active JWT.
