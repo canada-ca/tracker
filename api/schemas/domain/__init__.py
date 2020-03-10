@@ -1,0 +1,53 @@
+import graphene
+from graphene import relay
+from graphene_sqlalchemy import SQLAlchemyObjectType
+from graphene_sqlalchemy.types import ORMField
+
+from app import app
+from models import Domains
+from scalars.url import URL
+
+from schemas.domain.email_scan import EmailScan
+from schemas.domain.www_scan import WWWScan
+
+
+class Domain(SQLAlchemyObjectType):
+    class Meta:
+        model = Domains
+        interfaces = (relay.Node, )
+        exclude_fields = (
+            "id",
+            "domain",
+            "last_run",
+            "dmarc_phase",
+            "organization_id",
+            "organization",
+            "scans"
+        )
+    url = URL(description="The domain the scan was run on")
+    email = graphene.ConnectionField(
+        EmailScan._meta.connection,
+        description="DKIM, DMARC, and SPF scan results"
+    )
+    www = graphene.ConnectionField(
+        WWWScan._meta.connection,
+        description="HTTPS, and SSL scan results"
+    )
+    organization = ORMField(model_attr='organization')
+
+    with app.app_context():
+        def resolve_url(self: Domains, info):
+            return self.domain
+
+        def resolve_email(self, info):
+            query = EmailScan.get_query(info)
+            return query.all()
+
+        def resolve_www(self, info):
+            query = WWWScan.get_query(info)
+            return query.all()
+
+
+class DomainConnection(relay.Connection):
+    class Meta:
+        node = Domain

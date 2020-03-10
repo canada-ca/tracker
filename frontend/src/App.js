@@ -7,6 +7,7 @@ import { LandingPage } from './LandingPage'
 import { DomainsPage } from './DomainsPage'
 import { SignInPage } from "./SignInPage"
 import { CreateUserPage } from "./CreateUserPage"
+import { QRcodePage } from './QRcodePage'
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
 import { TopBanner } from './TopBanner'
@@ -60,8 +61,13 @@ export default function App() {
           <Route path="/sign-in">
             <SignInPage/>
           </Route>
+
           <Route path="/create-user">
             <CreateUserPage/>
+          </Route>
+
+          <Route path="/two-factor-code">
+            <QRcodePage userName={""}/>
           </Route>
 
           <Route>

@@ -17,7 +17,7 @@ seed()
 from app import app
 from db import db
 from queries import schema
-from models import Sectors, Groups
+from models import Users
 from backend.security_check import SecurityAnalysisBackend
 remove_seed()
 
@@ -27,25 +27,17 @@ def user_schema_test_db_init():
     db.init_app(app)
 
     with app.app_context():
-        test_sector = Sectors(
+        test_user = Users(
             id=1,
-            zone='ZO1',
-            sector='SO1'
+            display_name="test"
         )
-        db.session.add(test_sector)
-        test_group = Groups(
-            id=1,
-            s_group='GO1',
-            sector_id=1
-        )
-        db.session.add(test_group)
+        db.session.add(test_user)
         db.session.commit()
 
     yield
 
     with app.app_context():
-        Groups.query.delete()
-        Sectors.query.delete()
+        Users.query.delete()
         db.session.commit()
 
 
@@ -54,40 +46,35 @@ def user_schema_test_db_init():
 @pytest.mark.usefixtures('user_schema_test_db_init')
 class TestDepthCheck(TestCase):
     def test_valid_depth_query(self):
-        backend = SecurityAnalysisBackend(10)
-        client = Client(schema)
-        query = client.execute(
-            '''
-            {
-                getSectorById(id: 1) {
-                    groups {
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            query = client.execute(
+                '''
+                {
+                    users {
                         edges {
                             node {
-                                sectorId
+                                displayName
                             }
                         }
                     }
                 }
-            }
-            ''', backend=backend)
-        result_refr = {
-            "data": {
-                "getSectorById": [
-                    {
-                        "groups": {
-                            "edges": [
-                                {
-                                    "node": {
-                                        "sectorId": 1
-                                    }
+                ''', backend=backend)
+            result_refr = {
+                "data": {
+                    "users": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "displayName": "test"
                                 }
-                            ]
-                        }
+                            }
+                        ]
                     }
-                ]
+                }
             }
-        }
-        self.assertDictEqual(result_refr, query)
+            self.assertDictEqual(result_refr, query)
 
     def test_invalid_depth_query(self):
         backend = SecurityAnalysisBackend(10)

@@ -5,9 +5,9 @@ resources:
 - ingressgateway.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-75fe6f3
+  newTag: master-edcdbde
 - name: gcr.io/track-compliance/frontend
-  newTag: master-a3ca9c3
+  newTag: master-01955fa
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
