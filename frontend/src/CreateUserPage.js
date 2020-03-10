@@ -38,7 +38,7 @@ export function CreateUserPage(){
   function validateField(value){
     let error;
     if(!value || value === ""){
-      error = "Field can not be empty";
+      error = " can not be empty";
     }
     return error;
   }
@@ -62,7 +62,7 @@ export function CreateUserPage(){
                 {({ field, form}) => (
                   <FormControl mt={4} mb={4} isInvalid={form.errors.email && form.touched.email} isRequired>
                     <Input {...field} id="email" placeholder="Email" />
-                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                    <FormErrorMessage>Email{form.errors.email}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
@@ -71,7 +71,7 @@ export function CreateUserPage(){
                 {({ field, form}) => (
                   <FormControl mt={4} mb={4} isInvalid={form.errors.password && form.touched.password} isRequired>
                     <Input {...field} id="password" placeholder="Password" />
-                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                    <FormErrorMessage>Password{form.errors.password}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
@@ -80,7 +80,7 @@ export function CreateUserPage(){
                 {({ field, form}) => (
                   <FormControl mt={4} mb={4} isInvalid={form.errors.confirmPassword && form.touched.confirmPassword} isRequired>
                     <Input {...field} id="confirmPassword" placeholder="Confirm password" />
-                    <FormErrorMessage>{form.errors.confirmPassword}</FormErrorMessage>
+                    <FormErrorMessage>Confirm Password{form.errors.confirmPassword}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
