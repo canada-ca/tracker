@@ -35,7 +35,7 @@ export function CreateUserPage(){
     return <Redirect to={{
       pathname: '/two-factor-code',
       state: {userName: data.createUser.userName},
-    }}/>*/
+    }}/> */
   }
 
   /* A function for the Formik to validate fields in the form */
