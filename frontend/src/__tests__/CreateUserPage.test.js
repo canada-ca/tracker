@@ -10,7 +10,6 @@ import {
   waitForElement,
   fireEvent,
   getByText,
-  queryByText,
 } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { CreateUserPage } from '../CreateUserPage'
@@ -125,7 +124,6 @@ describe('<CreateUserPage />', () => {
   })
 
   test('successful creation of a new user results in proper message being displayed', async () => {
-    
     const values = {
       email: 'testuser@testemail.ca',
       password: 'testuserpassword',
@@ -136,13 +134,23 @@ describe('<CreateUserPage />', () => {
       {
         request: {
           query: gql`
-          mutation CreateUser($displayName: String!, $userName: EmailAddress!, $password: String!, $confirmPassword: String!) {
-            createUser(displayName: $displayName, userName: $userName, password: $password, confirmPassword: $confirmPassword) {
-              user {
-                userName
+            mutation CreateUser(
+              $displayName: String!
+              $userName: EmailAddress!
+              $password: String!
+              $confirmPassword: String!
+            ) {
+              createUser(
+                displayName: $displayName
+                userName: $userName
+                password: $password
+                confirmPassword: $confirmPassword
+              ) {
+                user {
+                  userName
+                }
               }
             }
-          }
           `,
           variables: {
             userName: values.email,
