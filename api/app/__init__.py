@@ -1,5 +1,7 @@
 from flask import Flask
 
+from app.logger import logger
+
 from db import (
     db,
     DB_NAME,

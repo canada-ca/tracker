@@ -4,7 +4,7 @@ import os
 from graphql import GraphQLError
 
 from functions.orm_to_dict import orm_to_dict
-from app import app
+from app import app, logger
 from models import User_affiliations, Organizations
 
 user_admin_perm = ['super_admin', 'admin']
@@ -27,7 +27,7 @@ def decode_auth_token(request):
         )
         return payload['roles']
     except jwt.ExpiredSignatureError:
-        raise GraphQLError('Signature expired. please login again')
+        raise GraphQLError('Signature expired. please login again', )
     except jwt.InvalidTokenError:
         raise GraphQLError('Invalid token. please login again')
 
@@ -79,6 +79,6 @@ def require_token(method):
             user_claims = check_user_claims(auth_resp)
             kwargs['user_roles'] = user_claims
             return method(self, *args, **kwargs)
-        raise GraphQLError(auth_resp)
+        # raise GraphQLError(auth_resp)
 
     return wrapper
