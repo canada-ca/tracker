@@ -62,7 +62,7 @@ def create_enum_with_descriptions(Table, enum_name, enum_column, description_col
             row = db.session.execute(query).first()
 
             try:
-                description_dict.update({enum.name: row[1]})
+                description_dict.update({enum.name: row[1]["description"]})
             except:
                 description_dict.update({enum.name: "Error loading description"})
 

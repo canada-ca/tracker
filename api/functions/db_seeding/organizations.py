@@ -5,27 +5,29 @@ def seed_org(db, app):
     org = Organizations(
         id=1,
         organization='ORG1',
-        description='Organization 1',
-        group_id=1
+        org_tags={
+            "description": 'Organization 1'
+        }
     )
     with app.app_context():
         db.session.add(org)
-        db.session.commit()
 
     org = Organizations(
         id=2,
         organization='ORG2',
-        description='Organization 2',
-        group_id=2
+        org_tags={
+            "description": 'Organization 2'
+        }
     )
     with app.app_context():
         db.session.add(org)
-        db.session.commit()
 
     org = Organizations(
         id=3,
         organization='ORG3',
-        description='Organization 3',
+        org_tags={
+            "description": 'Organization 3'
+        }
     )
     with app.app_context():
         db.session.add(org)
