@@ -24,32 +24,9 @@ class Organizations(db.Model):
 
     id = Column(Integer, primary_key=True)
     organization = Column(String)
-    description = Column(String)
-    group_id = Column(Integer, ForeignKey('groups.id'))
-    group = relationship("Groups", back_populates="organizations", cascade="all, delete")
+    org_tags = Column(JSONB)
     domains = relationship("Domains", back_populates="organization", cascade="all, delete")
     users = relationship("User_affiliations", back_populates="user_organization", cascade="all, delete")
-
-
-class Groups(db.Model):
-    __tablename__ = 'groups'
-
-    id = Column(Integer, primary_key=True)
-    s_group = Column(String)
-    description = Column(String)
-    sector_id = Column(Integer, ForeignKey('sectors.id'))
-    organizations = relationship("Organizations", back_populates="group", cascade="all, delete")
-    group_sector = relationship("Sectors", back_populates="groups", cascade="all, delete")
-
-
-class Sectors(db.Model):
-    __tablename__ = 'sectors'
-
-    id = Column(Integer, primary_key=True)
-    sector = Column(String)
-    zone = Column(String)
-    description = Column(String)
-    groups = relationship("Groups", back_populates="group_sector", cascade="all, delete")
 
 
 class Users(db.Model):
