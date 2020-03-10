@@ -29,7 +29,6 @@ export function CreateUserPage() {
       ) {
         user {
           userName
-          failedLoginAttempts
         }
       }
     }

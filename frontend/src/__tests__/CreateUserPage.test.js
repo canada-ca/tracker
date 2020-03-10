@@ -1,5 +1,8 @@
 import React from 'react'
 import { i18n } from '@lingui/core'
+import { I18nProvider } from '@lingui/react'
+import { ThemeProvider, theme } from '@chakra-ui/core'
+import { MemoryRouter } from 'react-router-dom'
 import {
   render,
   cleanup,
@@ -7,53 +10,44 @@ import {
   waitForElement,
   fireEvent,
   getByText,
+  queryByText,
 } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import { ThemeProvider, theme } from '@chakra-ui/core'
-import { I18nProvider } from '@lingui/react'
-import ApolloClient from 'apollo-client'
-import fetch from 'isomorphic-unfetch' 
-import { createHttpLink } from 'apollo-link-http'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { ApolloProvider } from '@apollo/react-hooks'
+import { MockedProvider } from '@apollo/react-testing'
 import { CreateUserPage } from '../CreateUserPage'
+import gql from 'graphql-tag'
 
 i18n.load('en', { en: {} })
 i18n.activate('en')
 
 describe('<CreateUserPage />', () => {
   afterEach(cleanup)
-  const client = new ApolloClient({
-    link: createHttpLink({ uri: 'http://0.0.0.0:3000/graphql', fetch: fetch }),
-    cache: new InMemoryCache(),
-  })
 
   it('successfully renders the component', () => {
     render(
-      <ApolloProvider client={client}>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
               <CreateUserPage />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </ApolloProvider>,
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
     )
     expect(render).toBeTruthy()
   })
 
   test('an empty input for email field displays an error message', async () => {
     const { container } = render(
-      <ApolloProvider client={client}>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
               <CreateUserPage />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </ApolloProvider>,
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
     )
 
     expect(render).toBeTruthy()
@@ -74,15 +68,15 @@ describe('<CreateUserPage />', () => {
 
   test('an empty input for password field displays an error message', async () => {
     const { container } = render(
-      <ApolloProvider client={client}>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
               <CreateUserPage />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </ApolloProvider>,
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
     )
 
     expect(render).toBeTruthy()
@@ -103,15 +97,15 @@ describe('<CreateUserPage />', () => {
 
   test('an empty input for confirm password field displays an error message', async () => {
     const { container } = render(
-      <ApolloProvider client={client}>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
               <CreateUserPage />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </ApolloProvider>,
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
     )
 
     expect(render).toBeTruthy()
@@ -131,18 +125,54 @@ describe('<CreateUserPage />', () => {
   })
 
   test('successful creation of a new user results in proper message being displayed', async () => {
-    const { container } = render(
-      <ApolloProvider client={client}>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <CreateUserPage />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </ApolloProvider>,
-    )
+    
+    const values = {
+      email: 'testuser@testemail.ca',
+      password: 'testuserpassword',
+      confirmPassword: 'testuserpassword',
+    }
 
+    const mocks = [
+      {
+        request: {
+          query: gql`
+          mutation CreateUser($displayName: String!, $userName: EmailAddress!, $password: String!, $confirmPassword: String!) {
+            createUser(displayName: $displayName, userName: $userName, password: $password, confirmPassword: $confirmPassword) {
+              user {
+                userName
+              }
+            }
+          }
+          `,
+          variables: {
+            userName: values.email,
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+            displayName: values.email,
+          },
+        },
+        result: {
+          data: {
+            createUser: {
+              user: {
+                userName: 'Thalia.Rosenbaum@gmail.com',
+              },
+            },
+          },
+        },
+      },
+    ]
+    const { container } = render(
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <CreateUserPage />
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
+    )
     expect(render).toBeTruthy()
 
     const email = container.querySelector('#email')
@@ -153,7 +183,7 @@ describe('<CreateUserPage />', () => {
     await wait(() => {
       fireEvent.change(email, {
         target: {
-          value: 'testuser@testemail.ca',
+          value: values.email,
         },
       })
     })
@@ -161,7 +191,7 @@ describe('<CreateUserPage />', () => {
     await wait(() => {
       fireEvent.change(password, {
         target: {
-          value: 'testuserpassword123',
+          value: values.password,
         },
       })
     })
@@ -169,7 +199,7 @@ describe('<CreateUserPage />', () => {
     await wait(() => {
       fireEvent.change(confirmPassword, {
         target: {
-          value: 'testuserpassword123',
+          value: values.confirmPassword,
         },
       })
     })
@@ -183,6 +213,8 @@ describe('<CreateUserPage />', () => {
       { container },
     )
 
-    expect(successMsg.innerHTML).toMatch(/Your account has been successfuly created, you may now sign into your account!/i)
+    expect(successMsg.innerHTML).toMatch(
+      /Your account has been successfuly created, you may now sign into your account!/i,
+    )
   })
 })
