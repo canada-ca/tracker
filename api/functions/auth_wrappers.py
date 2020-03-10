@@ -79,6 +79,6 @@ def require_token(method):
             user_claims = check_user_claims(auth_resp)
             kwargs['user_roles'] = user_claims
             return method(self, *args, **kwargs)
-        # raise GraphQLError(auth_resp)
+        raise GraphQLError(auth_resp)
 
     return wrapper
