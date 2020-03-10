@@ -1,16 +1,15 @@
-import graphene
 from graphene import relay
-from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
+from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from models import Organizations as OrganizationsModel
+from models import Organizations as OrgModel
 
 
-class Organizations(SQLAlchemyObjectType):
+class Organization(SQLAlchemyObjectType):
     class Meta:
-        model = OrganizationsModel
-        interfaces = (relay.Node,)
+        model = OrgModel
+        interface = (relay.Node, )
 
 
-class OrganizationsConnection(relay.Connection):
+class OrganizationConnection(relay.Connection):
     class Meta:
-        node = Organizations
+        node = Organization

@@ -22,6 +22,14 @@ def seed_org(db, app):
         db.session.add(org)
         db.session.commit()
 
+    org = Organizations(
+        id=3,
+        organization='ORG3',
+        description='Organization 3',
+    )
+    with app.app_context():
+        db.session.add(org)
+        db.session.commit()
 
 def remove_org(db, app):
     with app.app_context():

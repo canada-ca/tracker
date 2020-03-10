@@ -13,13 +13,6 @@ class Domains(db.Model):
     id = Column(Integer, primary_key=True)
     domain = Column(String)
     last_run = Column(DateTime)
-    scan_spf = Column(Boolean)
-    scan_dmarc = Column(Boolean)
-    scan_dmarc_psl = Column(Boolean)
-    scan_mx = Column(Boolean)
-    scan_dkim = Column(Boolean)
-    scan_https = Column(Boolean)
-    scan_ssl = Column(Boolean)
     dmarc_phase = Column(Integer)
     organization_id = Column(Integer, ForeignKey('organizations.id'))
     organization = relationship("Organizations", back_populates="domains", cascade="all, delete")
@@ -92,11 +85,6 @@ class Scans(db.Model):
     scan_date = Column(DateTime)
     initiated_by = Column(Integer, ForeignKey('users.id'))
     domain = relationship("Domains", back_populates="scans", cascade="all, delete")
-    dmarc = relationship("Dmarc_scans", back_populates="dmarc_flagged_scan", cascade="all, delete")
-    dkim = relationship("Dkim_scans", back_populates="dkim_flagged_scan", cascade="all, delete")
-    spf = relationship("Spf_scans", back_populates="spf_flagged_scan", cascade="all, delete")
-    https = relationship("Https_scans", back_populates="https_flagged_scan", cascade="all, delete")
-    ssl = relationship("Ssl_scans", back_populates="ssl_flagged_scan", cascade="all, delete")
 
 
 class Dmarc_scans(db.Model):
@@ -104,7 +92,6 @@ class Dmarc_scans(db.Model):
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dmarc_scan = Column(JSONB)
-    dmarc_flagged_scan = relationship("Scans", back_populates="dmarc", cascade="all, delete")
 
 
 class Dkim_scans(db.Model):
@@ -112,7 +99,6 @@ class Dkim_scans(db.Model):
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dkim_scan = Column(JSONB)
-    dkim_flagged_scan = relationship("Scans", back_populates="dkim", cascade="all, delete")
 
 
 class Spf_scans(db.Model):
@@ -120,7 +106,6 @@ class Spf_scans(db.Model):
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     spf_scan = Column(JSONB)
-    spf_flagged_scan = relationship("Scans", back_populates="spf", cascade="all, delete")
 
 
 class Https_scans(db.Model):
@@ -128,7 +113,6 @@ class Https_scans(db.Model):
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     https_scan = Column(JSONB)
-    https_flagged_scan = relationship("Scans", back_populates="https", cascade="all, delete")
 
 
 class Ssl_scans(db.Model):
@@ -136,7 +120,6 @@ class Ssl_scans(db.Model):
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     ssl_scan = Column(JSONB)
-    ssl_flagged_scan = relationship("Scans", back_populates="ssl", cascade="all, delete")
 
 
 class Ciphers(db.Model):
