@@ -40,7 +40,7 @@ export function CreateUserPage() {
 
   if (data) {
     if (data.error) {
-      //Switch statement to handle the errors that we expect could come back from the API.
+      // Switch statement to handle the errors that we expect could come back from the API.
     } else {
       return (
         <Stack spacing={8} mx="auto" alignItems="center">

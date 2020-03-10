@@ -12,6 +12,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import ApolloClient from 'apollo-client'
+import fetch from 'isomorphic-unfetch' 
 import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from '@apollo/react-hooks'
@@ -20,10 +21,10 @@ import { CreateUserPage } from '../CreateUserPage'
 i18n.load('en', { en: {} })
 i18n.activate('en')
 
-describe('<SignInPage />', () => {
+describe('<CreateUserPage />', () => {
   afterEach(cleanup)
   const client = new ApolloClient({
-    link: createHttpLink({ uri: 'http://0.0.0.0:3000/graphql' }),
+    link: createHttpLink({ uri: 'http://0.0.0.0:3000/graphql', fetch: fetch }),
     cache: new InMemoryCache(),
   })
 
@@ -182,6 +183,6 @@ describe('<SignInPage />', () => {
       { container },
     )
 
-    //expect(successMsg.innerHTML).toMatch(/Your account has been successfuly created, you may now sign into your account!/i)
+    expect(successMsg.innerHTML).toMatch(/Your account has been successfuly created, you may now sign into your account!/i)
   })
 })
