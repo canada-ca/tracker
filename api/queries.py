@@ -63,7 +63,8 @@ class Query(graphene.ObjectType):
     domain = SQLAlchemyConnectionField(
         Domain._meta.connection,
         url=graphene.Argument(URL, required=True),
-        sort=None
+        sort=None,
+        description="Select information on a specific domain."
     )
     with app.app_context():
         def resolve_domain(self, info, **kwargs):
@@ -72,7 +73,9 @@ class Query(graphene.ObjectType):
     domains = SQLAlchemyConnectionField(
         Domain._meta.connection,
         organization=graphene.Argument(OrganizationsEnum, required=False),
-        sort=None
+        sort=None,
+        description="Select information on an organizations domains, or all "
+                    "domains a user has access to. "
     )
     with app.app_context():
         def resolve_domains(self, info, **kwargs):
