@@ -62,12 +62,14 @@ def user_role_test_db_init():
                 password="testpassword123").decode("UTF-8")
         )
         db.session.add(test_super_admin)
-        test_org = Organizations(
+        org = Organizations(
             id=1,
             organization='ORG1',
-            description='Organization 1',
+            org_tags={
+                "description": 'Organization 1'
+            }
         )
-        db.session.add(test_org)
+        db.session.add(org)
         test_admin_role = User_affiliations(
             user_id=1,
             organization_id=1,

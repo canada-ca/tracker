@@ -18,12 +18,10 @@ from functions.db_seeding import (
     seed_dkim, remove_dkim,
     seed_dmarc, remove_dmarc,
     seed_domains, remove_domains,
-    seed_groups, remove_groups,
     seed_guidance, remove_guidance,
     seed_http, remove_http,
     seed_org, remove_org,
     seed_scans, remove_scans,
-    seed_sectors, remove_sectors,
     seed_spf, remove_spf,
     seed_ssl, remove_ssl,
     seed_user_aff, remove_user_aff,
@@ -48,8 +46,6 @@ def seed():
     seed_guidance(db, app)
     seed_classification(db, app)
     seed_ciphers(db, app)
-    seed_sectors(db, app)
-    seed_groups(db, app)
     seed_org(db, app)
     seed_domains(db, app)
     seed_users(db, app)
@@ -75,8 +71,6 @@ def remove_seed():
     remove_users(db, app)
     remove_domains(db, app)
     remove_org(db, app)
-    remove_groups(db, app)
-    remove_sectors(db, app)
     remove_ciphers(db, app)
     remove_classification(db, app)
     remove_guidance(db, app)

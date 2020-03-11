@@ -53,19 +53,25 @@ def domain_test_db_init():
         org = Organizations(
             id=1,
             organization='ORG1',
-            description='Organization 1',
+            org_tags={
+                "description": 'Organization 1'
+            }
         )
         db.session.add(org)
         org = Organizations(
             id=2,
             organization='ORG2',
-            description='Organization 2',
+            org_tags={
+                "description": 'Organization 2'
+            }
         )
         db.session.add(org)
         org = Organizations(
             id=3,
             organization='ORG3',
-            description='Organization 3',
+            org_tags={
+                "description": 'Organization 3'
+            }
         )
         db.session.add(org)
 
