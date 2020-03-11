@@ -21,21 +21,21 @@ class SSLTags(SQLAlchemyObjectType):
             if "missing" in self.ssl_scan:
                 return tags.update({"ssl2": "SSL-missing"})
 
-            if self.ssl_scan["ssl"]["rc4"] == "True":
+            if self.ssl_scan["ssl"]["rc4"]:
                 tags.update({"ssl4": "SSL-rc4"})
 
-            if self.ssl_scan["ssl"]["3des"] == "True":
+            if self.ssl_scan["ssl"]["3des"]:
                 tags.update({"ssl5": "SSL-3des"})
 
-            if self.ssl_scan["ssl"]["starttls"] == "True":
+            if self.ssl_scan["ssl"]["starttls"]:
                 tags.update({"ssl6": "SSL-starttls"})
 
             # Check Ciphers
 
-            if self.ssl_scan["ssl"]["heartbleed"] == "True":
+            if self.ssl_scan["ssl"]["heartbleed"]:
                 tags.update({"ssl9": "Vulnerability-heartbleed"})
 
-            if self.ssl_scan["ssl"]["openssl_ccs_injection"] == "True":
+            if self.ssl_scan["ssl"]["openssl_ccs_injection"]:
                 tags.update({"ssl10": "Vulnerability-ccs-injection"})
 
             return tags

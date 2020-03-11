@@ -22,14 +22,55 @@ class SSL(SQLAlchemyObjectType):
     id = graphene.ID()
     domain = URL()
     timestamp = graphene.DateTime()
+    ssl_version = graphene.String()
+    tls_version = graphene.String()
     ssl_guidance_tags = graphene.List(lambda: SSLTags)
 
     with app.app_context():
-        def resolve_domain(self, info):
+        def resolve_domain(self: Ssl_scans, info):
             return get_domain(self, info)
 
-        def resolve_timestamp(self, info):
+        def resolve_timestamp(self: Ssl_scans, info):
             return get_timestamp(self, info)
 
-        def resolve_ssl_guidance_tags(self, info):
+        def resolve_ssl_version(self: Ssl_scans, info):
+            if self.ssl_scan["ssl"]["sslv2"]:
+                return "SSL Version 2"
+            elif self.ssl_scan["ssl"]["sslv3"]:
+                return "SSL Version 3"
+
+        def resolve_tls_version(self: Ssl_scans, info):
+            if self.ssl_scan["ssl"]["tlsv1_0"]:
+                return "TLS Version 1.0"
+            elif self.ssl_scan["ssl"]["tlsv1_1"]:
+                return "TLS Version 1.1"
+            elif self.ssl_scan["ssl"]["tlsv1_2"]:
+                return "TLS Version 1.2"
+            elif self.ssl_scan["ssl"]["tlsv1_3"]:
+                return "TLS Version 1.3"
+
+        def resolve_ssl_guidance_tags(self: Ssl_scans, info):
             return SSLTags.get_query(info).all()
+
+
+# tags = {
+#     "ssl": {
+#         "rc4": true,
+#         "3des": true,
+#         "sslv2": true,
+#         "sslv3": true,
+#         "tlsv1_0": true,
+#         "tlsv1_1": true,
+#         "tlsv1_2": true,
+#         "tlsv1_3": true,
+#         "starttls": true,
+#         "good_cert": true,
+#         "bod_crypto": "True",
+#         "heartbleed": true,
+#         "used_ciphers": [
+#             "SHA256"
+#         ],
+#         "signature_algorithm": "SHA256",
+#         "openssl_ccs_injection": true
+#     }
+# }
