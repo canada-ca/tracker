@@ -25,7 +25,7 @@ class DkimTags(SQLAlchemyObjectType):
         def resolve_value(self: Dkim_scans, info):
             tags = {}
 
-            if "missing" in self.dkim_scan:
+            if self.dkim_scan["dkim"]["missing"]:
                 return tags.update({"dkim2": "missing"})
 
             if self.dkim_scan["dkim"]["key_size"] >= 4096 \
