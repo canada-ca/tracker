@@ -31,11 +31,15 @@ class SSLTags(SQLAlchemyObjectType):
             if self.ssl_scan["ssl"]["starttls"]:
                 tags.update({"ssl6": "SSL-starttls"})
 
+            # Check Cert
+            if self.ssl_scan["ssl"]["acceptable-certificate"]:
+                tags.update({"ssl7": "SSL-acceptable-certificate"})
+
             # Check Ciphers
             cipher_list = self.ssl_scan["ssl"]["used_ciphers"]
             for cipher in cipher_list:
-                if ("SHA256" or "SHA384" or "AEAD") in cipher:
-                    tags.update({"ssl7": "SSL-acceptable-certificate"})
+                if not ("SHA256" or "SHA384" or "AEAD") in cipher:
+                    tags.update({"ssl8": "SSL-invalid-cipher"})
 
             if self.ssl_scan["ssl"]["heartbleed"]:
                 tags.update({"ssl9": "Vulnerability-heartbleed"})
