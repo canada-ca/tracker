@@ -39,16 +39,16 @@ class HTTPS(SQLAlchemyObjectType):
             return self.https_scan["https"]["implementation"]
 
         def resolve_enforced(self: Https_scans, info):
-            return self.https_scan["https"]["enforced"]
+            return self.https_scan["https"]["Domain Enforces HTTPS"]
 
         def resolve_hsts(self: Https_scans, info):
-            return self.https_scan["https"]["hsts"]
+            return self.https_scan["https"]["HSTS"]
 
         def resolve_hsts_age(self: Https_scans, info):
-            return self.https_scan["https"]["hsts_age"]
+            return self.https_scan["https"]["HSTS Max Age"]
 
         def resolve_preloaded(self: Https_scans, info):
-            return self.https_scan["https"]["preloaded"]
+            return self.https_scan["https"]["HSTS Preloaded"]
 
         def resolve_https_guidance_tags(self: Https_scans, info):
-            return HTTPS.get_query(info).all()
+            return HTTPSTags.get_query(info).all()
