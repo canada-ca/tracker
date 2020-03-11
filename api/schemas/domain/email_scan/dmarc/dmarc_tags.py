@@ -22,7 +22,7 @@ class DmarcTags(SQLAlchemyObjectType):
         def resolve_value(self: Dmarc_scans, info):
             tags = {}
 
-            if "missing" in self.dmarc_scan:
+            if self.dmarc_scan["dmarc"]["missing"]:
                 return tags.update({"dmarc2": "missing"})
 
             # Check P Policy Tag
