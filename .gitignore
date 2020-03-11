@@ -1,6 +1,6 @@
 **/.DS_Store
 
-platform/**/.env*
+platform/**/*.json
 
 api/schema.json
 
@@ -14,8 +14,6 @@ api/schema.json
 **/include
 **/lib
 **/*.env
-!**/*.enc.env
-**/flux-gpg-signing-key.yaml
 
 # Linting
 **/.mypy_cache/

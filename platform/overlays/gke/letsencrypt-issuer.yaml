@@ -1,0 +1,37 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: letsencrypt
+  namespace: istio-system
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: mike@korora.ca
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - dns01:
+        clouddns:
+          project: track-compliance
+          serviceAccountSecretRef:
+            name: cert-manager-credentials
+            key: gcp-dns-admin.json
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: letsencrypt-staging
+  namespace: istio-system
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: mike@korora.ca
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+    - dns01:
+        clouddns:
+          project: track-compliance
+          serviceAccountSecretRef:
+            name: cert-manager-credentials
+            key: gcp-dns-admin.json
