@@ -39,6 +39,9 @@ class SPFTags(SQLAlchemyObjectType):
                 elif self.spf_scan["spf"]["record"][-4:] == "~all":
                     tags.update({"spf6": "ALL-softfail"})
 
+            if self.spf_scan["spf"]["record"][-4:] == "-all":
+                tags.update({"spf9": "A-all"})
+
             if self.spf_scan["spf"]["dns_lookups"] > 10:
                 tags.update({"spf10": "INCLUDE-limit"})
 
