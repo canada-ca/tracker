@@ -13,10 +13,11 @@ import {
   Button,
   Link,
 } from '@chakra-ui/core'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink, Redirect } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Formik, Field } from 'formik'
+import { LandingPage } from './LandingPage'
 
 export function SignInPage() {
   const [show, setShow] = React.useState(false)
@@ -41,8 +42,18 @@ export function SignInPage() {
     if (data.error) {
       console.log(error)
     }
-    console.log(data.signIn)
-    // Do something with the data.  Ie: Redirect if no error?
+    // Get the authToken from the api response and save in local storage
+    localStorage.setItem('jwt', data.signIn.authToken)
+    return (
+      <Redirect
+        push
+        to={{
+          pathname: '/',
+          state: { userName: data.signIn.userName },
+        }}
+        component={LandingPage}
+      />
+    )
   }
 
   function validateField(value) {
@@ -59,9 +70,9 @@ export function SignInPage() {
 
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={(values, actions) => {
-          setTimeout(() => {
-            signIn({
+        onSubmit={async(values, actions) => {
+          setTimeout(async () => {
+            await signIn({
               variables: { userName: values.email, password: values.password },
             })
 
@@ -70,7 +81,7 @@ export function SignInPage() {
         }}
       >
         {props => (
-          <form onSubmit={props.handleSubmit}>
+          <form id="form" onSubmit={props.handleSubmit}>
             <Field name="email" validate={validateField}>
               {({ field, form }) => (
                 <FormControl
@@ -120,7 +131,9 @@ export function SignInPage() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  <FormErrorMessage>Password{form.errors.password}</FormErrorMessage>
+                  <FormErrorMessage>
+                    Password{form.errors.password}
+                  </FormErrorMessage>
                 </FormControl>
               )}
             </Field>

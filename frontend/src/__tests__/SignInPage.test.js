@@ -13,6 +13,8 @@ import {
   getByText,
 } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
+import gql from 'graphql-tag'
+import App from '../App'
 
 i18n.load('en', { en: {} })
 i18n.activate('en')
@@ -136,12 +138,50 @@ describe('<SignInPage />', () => {
   })
 
   test('successful sign-in redirects to home page', async () => {
+    const values = {
+      email: 'testuser@testemail.ca',
+      password: 'testuserpassword',
+    }
+
+    const mocks = [
+      {
+        request: {
+          query: gql`
+            mutation SignIn($userName: EmailAddress!, $password: String!) {
+              signIn(userName: $userName, password: $password) {
+                user {
+                  userName
+                  failedLoginAttempts
+                }
+                authToken
+              }
+            }
+          `,
+          variables: {
+            userName: values.email,
+            password: values.password,
+          },
+        },
+        result: {
+          data: {
+            signIn: {
+              user: {
+                userName: 'Thalia.Rosenbaum@gmail.com',
+                failedLoginAttempts: 4,
+              },
+              authToken: 'test123stringJWT',
+            },
+          },
+        },
+      },
+    ]
+
     const { container } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider>
-              <SignInPage />
+          <MemoryRouter initialEntries={['/sign-in']} initialIndex={0}>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <App />
             </MockedProvider>
           </MemoryRouter>
         </I18nProvider>
@@ -149,5 +189,36 @@ describe('<SignInPage />', () => {
     )
 
     expect(render).toBeTruthy()
+
+    const email = container.querySelector('#email')
+    const password = container.querySelector('#password')
+    const form = container.querySelector('#form')
+
+    await wait(() => {
+      fireEvent.change(email, {
+        target: {
+          value: values.email,
+        },
+      })
+    })
+
+    await wait(() => {
+      fireEvent.change(password, {
+        target: {
+          value: values.password,
+        },
+      })
+    })
+
+    await wait(() => {
+      fireEvent.submit(form)
+    })
+
+    const homeHeading = await waitForElement(
+      () => getByText(container, /Track web security compliance/i),
+      { container },
+    )
+
+    expect(homeHeading.innerHTML).toMatch(/Track web security compliance/i)
   })
 })

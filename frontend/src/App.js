@@ -5,8 +5,8 @@ import { Global, css } from '@emotion/core'
 import { PageNotFound } from './PageNotFound'
 import { LandingPage } from './LandingPage'
 import { DomainsPage } from './DomainsPage'
-import { SignInPage } from "./SignInPage"
-import { CreateUserPage } from "./CreateUserPage"
+import { SignInPage } from './SignInPage'
+import { CreateUserPage } from './CreateUserPage'
 import { QRcodePage } from './QRcodePage'
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
@@ -17,7 +17,7 @@ import { Navigation } from './Navigation'
 import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 
-export default function App() {
+export default function App(props) {
   const { i18n } = useLingui()
 
   return (
@@ -45,9 +45,17 @@ export default function App() {
           <Link to="/domains">
             <Trans>Domains</Trans>
           </Link>
-          <Link to="/sign-in">
-            <Trans>Sign In</Trans>
-          </Link>
+
+          {// Dynamically decide if the link should be sign in or sign out.
+          localStorage.getItem('jwt') == undefined || props.jwt ? (
+            <Link to="/sign-in">
+              <Trans>Sign In</Trans>
+            </Link>
+          ) : (
+            <Link to="/sign-out">
+              <Trans>Sign Out</Trans>
+            </Link>
+          )}
         </Navigation>
         <Main>
           <Route exact path="/">
@@ -55,19 +63,19 @@ export default function App() {
           </Route>
 
           <Route path="/domains">
-            <DomainsPage/>
+            <DomainsPage />
           </Route>
 
           <Route path="/sign-in">
-            <SignInPage/>
+            <SignInPage />
           </Route>
 
           <Route path="/create-user">
-            <CreateUserPage/>
+            <CreateUserPage />
           </Route>
 
           <Route path="/two-factor-code">
-            <QRcodePage userName={""}/>
+            <QRcodePage userName={''} />
           </Route>
 
           <Route>

@@ -1061,7 +1061,7 @@ type UserObject implements Node {
   The ID of the object.
   """
   id: ID!
-  userName: String
+  userName: String @fake(type: email)
   displayName: String
   preferredLang: String
   failedLoginAttempts: Int
