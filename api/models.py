@@ -77,6 +77,11 @@ class Dkim_scans(db.Model):
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
     dkim_scan = Column(JSONB)
 
+class Mx_scans(db.Model):
+    __tablename__ = 'mx_scans'
+
+    id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
+    mx_scan = Column(JSONB)
 
 class Spf_scans(db.Model):
     __tablename__ = 'spf_scans'
