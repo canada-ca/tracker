@@ -22,35 +22,23 @@ class HTTPSTags(SQLAlchemyObjectType):
             if "missing" in self.https_scan:
                 return tags.update({"https2": "HTTPS-missing"})
 
-            # Check Downgrade
-            "Downgrades HTTPS"
-
-            # Check bad chain
-            if not self.https_scan["https"]["HTTPS Bad Chain"]:
-                tags.update({"https4": "HTTPS-bad-chain"})
-
-            # Check bad hostname
-            "HTTPS Bad Hostname"
-
-            # Check HTTPS enforced
-            "Domain Enforces HTTPS"
+            implementation_tags = {
+                "Downgrades HTTPS": {"https3": "HTTPS-downgraded"},
+                "Valid HTTPS":
+            }
+            if self.https_scan["https"]["implementation"]
 
             # Check for HSTS
-            if not self.https_scan["https"]["HSTS"]:
+            if not self.https_scan["https"]["hsts"]:
                 tags.update({"https8": "HSTS-missing"})
 
             # Check HSTS Age
-            if not self.https_scan["https"]["HSTS Max Age"] < 31536000:
+            if not self.https_scan["https"]["hsts_age"] < 31536000:
                 tags.update({"https9": "HSTS-short-age"})
 
-            # Check HSTS pre-load
-            if self.https_scan["https"]["HSTS Preload Ready"] \
-                and not self.https_scan["https"]["HSTS Preloaded"]:
+            # Check HSTS preload status
+            if self.https_scan["https"]["preloaded_status"]:
                 tags.update({"https10": "HSTS-preload-ready"})
-
-            # Check HSTS preloaded
-            if not self.https_scan["https"]["HSTS Preloaded"]:
-                tags.update({"https11": "HSTS-not-preloaded"})
 
             # Check HTTPS Cert Expired
             if self.https_scan["https"]["HTTPS Expired Cert"]:
