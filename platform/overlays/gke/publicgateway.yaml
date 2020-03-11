@@ -1,11 +1,11 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: ingressgateway
+  name: publicgateway
   namespace: istio-system
 spec:
   selector:
-    app: istio-ingressgateway
+    istio: ingressgateway
   servers:
     - port:
         number: 80

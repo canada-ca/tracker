@@ -5,4 +5,4 @@ metadata:
   namespace: api
 spec:
   gateways:
-    - ingressgateway.istio-system.svc.cluster.local
+    - publicgateway.istio-system.svc.cluster.local
