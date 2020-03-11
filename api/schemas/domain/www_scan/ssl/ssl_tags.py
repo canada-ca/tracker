@@ -13,7 +13,7 @@ class SSLTags(SQLAlchemyObjectType):
             "id",
             "ssl_scan"
         )
-    value = graphene.String()
+    value = graphene.String(description="Important tags retrieved during scan")
 
     with app.app_context():
         def resolve_value(self: Ssl_scans, info):

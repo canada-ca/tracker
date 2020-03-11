@@ -32,7 +32,10 @@ class WWWScan(SQLAlchemyObjectType):
         lambda: HTTPS,
         description="Hyper Text Transfer Protocol Secure scan results"
     )
-    ssl = graphene.List(lambda: SSL)
+    ssl = graphene.List(
+        lambda: SSL,
+        description="Secure Socket Layer Scan Results"
+    )
 
     with app.app_context():
         def resolve_domain(self: Scans, info):

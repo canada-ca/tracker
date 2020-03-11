@@ -19,12 +19,15 @@ class SSL(SQLAlchemyObjectType):
             "id",
             "ssl_scan"
         )
-    id = graphene.ID()
-    domain = URL()
-    timestamp = graphene.DateTime()
-    ssl_version = graphene.String()
-    tls_version = graphene.String()
-    ssl_guidance_tags = graphene.List(lambda: SSLTags)
+    id = graphene.ID(description="ID of the object")
+    domain = URL(description="The domain the scan was run on")
+    timestamp = graphene.DateTime(description="Time when scan was initiated")
+    ssl_version = graphene.String(description="Version of SSL being ran")
+    tls_version = graphene.String(description="Version of TLS being ran")
+    ssl_guidance_tags = graphene.List(
+        lambda: SSLTags,
+        description="Key tags found during SSL scan"
+    )
 
     with app.app_context():
         def resolve_domain(self: Ssl_scans, info):
