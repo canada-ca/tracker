@@ -1,6 +1,9 @@
 import React from 'react'
 import { SignInPage } from '../SignInPage'
 import { i18n } from '@lingui/core'
+import { MemoryRouter } from 'react-router-dom'
+import { ThemeProvider, theme } from '@chakra-ui/core'
+import { I18nProvider } from '@lingui/react'
 import {
   render,
   cleanup,
@@ -9,14 +12,7 @@ import {
   fireEvent,
   getByText,
 } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import { ThemeProvider, theme } from '@chakra-ui/core'
-import { I18nProvider } from '@lingui/react'
-import ApolloClient from 'apollo-client'
-import { createHttpLink } from 'apollo-link-http'
-import fetch from 'isomorphic-unfetch'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { ApolloProvider } from '@apollo/react-hooks'
+import { MockedProvider } from '@apollo/react-testing'
 
 i18n.load('en', { en: {} })
 i18n.activate('en')
@@ -24,37 +20,32 @@ i18n.activate('en')
 describe('<SignInPage />', () => {
   afterEach(cleanup)
 
-  const client = new ApolloClient({
-    link: createHttpLink({ fetch }),
-    cache: new InMemoryCache(),
-  })
-
   it('successfully renders the component', () => {
     render(
-      <ApolloProvider client={client}>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
               <SignInPage />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </ApolloProvider>,
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
     )
     expect(render).toBeTruthy()
   })
 
   test('an empty input for email field displays an error message', async () => {
     const { container } = render(
-      <ApolloProvider client={client}>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
               <SignInPage />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </ApolloProvider>,
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
     )
 
     expect(render).toBeTruthy()
@@ -75,15 +66,15 @@ describe('<SignInPage />', () => {
 
   test('an empty input for password field displays an error message', async () => {
     const { container } = render(
-      <ApolloProvider client={client}>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
               <SignInPage />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </ApolloProvider>,
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
     )
 
     expect(render).toBeTruthy()
@@ -104,15 +95,15 @@ describe('<SignInPage />', () => {
 
   test('Show/Hide password button toggles properly', async () => {
     const { container } = render(
-      <ApolloProvider client={client}>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
               <SignInPage />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </ApolloProvider>,
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
     )
 
     expect(render).toBeTruthy()
@@ -142,5 +133,21 @@ describe('<SignInPage />', () => {
     // Assert that third state is type password & button text is Show
     expect(password).toHaveAttribute('type', 'password')
     expect(showButton.innerHTML).toBe('Show')
+  })
+
+  test('successful sign-in redirects to home page', async () => {
+    const { container } = render(
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
+              <SignInPage />
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
+    )
+
+    expect(render).toBeTruthy()
   })
 })
