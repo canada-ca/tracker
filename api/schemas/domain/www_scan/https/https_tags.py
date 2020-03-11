@@ -23,14 +23,17 @@ class HTTPSTags(SQLAlchemyObjectType):
                 return tags.update({"https2": "HTTPS-missing"})
 
             # Check Downgrade
+            "Downgrades HTTPS"
 
             # Check bad chain
             if not self.https_scan["https"]["HTTPS Bad Chain"]:
                 tags.update({"https4": "HTTPS-bad-chain"})
 
             # Check bad hostname
+            "HTTPS Bad Hostname"
 
             # Check HTTPS enforced
+            "Domain Enforces HTTPS"
 
             # Check for HSTS
             if not self.https_scan["https"]["HSTS"]:
