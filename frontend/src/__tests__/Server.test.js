@@ -2,6 +2,12 @@ import request from 'supertest'
 import { Server } from '../Server'
 
 describe('Server', () => {
+  it('does not include express headers', async () => {
+    const server = new Server()
+    const { headers } = await request(server).get('/')
+    expect(headers).not.toHaveProperty('x-powered-by')
+  })
+
   describe('GET', () => {
     describe('/alive', () => {
       it('confirms the server is running', async () => {
