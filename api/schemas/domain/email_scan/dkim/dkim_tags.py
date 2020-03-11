@@ -19,6 +19,7 @@ class DkimTags(SQLAlchemyObjectType):
             "id",
             "dkim_scan"
         )
+
     value = graphene.String(description="Key tags found during scan")
 
     with app.app_context():
