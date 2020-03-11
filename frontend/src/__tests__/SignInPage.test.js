@@ -137,7 +137,7 @@ describe('<SignInPage />', () => {
     expect(showButton.innerHTML).toBe('Show')
   })
 
-  test('successful sign-in redirects to home page', async () => {
+  test('successful sign-in redirects to home page and displays sign out button', async () => {
     const values = {
       email: 'testuser@testemail.ca',
       password: 'testuserpassword',
@@ -220,5 +220,14 @@ describe('<SignInPage />', () => {
     )
 
     expect(homeHeading.innerHTML).toMatch(/Track web security compliance/i)
+
+    const signOutBtn = await waitForElement(
+      () => getByText(container, /Sign Out/i),
+      { container },
+    )
+
+    expect(signOutBtn.innerHTML).toMatch(/Sign Out/i)
+
+
   })
 })

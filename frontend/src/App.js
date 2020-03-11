@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
-import { Route } from 'react-router-dom'
+/* eslint-disable no-unused-expressions */
+import React, { useEffect } from 'react'
+import { Route, useLocation } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { Global, css } from '@emotion/core'
 import { PageNotFound } from './PageNotFound'
@@ -20,6 +21,16 @@ import { SkipLink } from './SkipLink'
 
 export default function App() {
   const { i18n } = useLingui()
+
+  const location = useLocation()
+  const refreshComponent = React.useState()
+
+  useEffect(() => {
+    // If the homepage is clicked, refresh the state.
+    if (location.pathname === '/') {
+      refreshComponent // TODO: Ask mike about unused expression.
+    }
+  })
 
   return (
     <>
@@ -53,7 +64,13 @@ export default function App() {
               <Trans>Sign In</Trans>
             </Link>
           ) : (
-            <Link to="/sign-out">
+            <Link
+              to="/"
+              onClick={() => {
+                // This clears the JWT, essentially logging the user out in one go
+                window.localStorage.clear()
+              }}
+            >
               <Trans>Sign Out</Trans>
             </Link>
           )}
