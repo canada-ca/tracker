@@ -1,4 +1,4 @@
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
 metadata:
   name: letsencrypt
@@ -10,13 +10,14 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
-    # An empty 'selector' means that this solver matches all domains
-    - selector: {}
-      http01:
-        ingress:
-          class: istio
+    - dns01:
+        clouddns:
+          project: track-compliance
+          serviceAccountSecretRef:
+            name: cert-manager-credentials
+            key: gcp-dns-admin.json
 ---
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
 metadata:
   name: letsencrypt-staging
@@ -28,8 +29,9 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
-    # An empty 'selector' means that this solver matches all domains
-    - selector: {}
-      http01:
-        ingress:
-          class: istio
+    - dns01:
+        clouddns:
+          project: track-compliance
+          serviceAccountSecretRef:
+            name: cert-manager-credentials
+            key: gcp-dns-admin.json

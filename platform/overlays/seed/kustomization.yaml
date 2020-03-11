@@ -1,12 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-resources:
-- ../../bases
-images:
-- name: gcr.io/track-compliance/api
-  newTag: master-968f355
-- name: gcr.io/track-compliance/frontend
-  newTag: master-c5a19fd
 secretGenerator:
 - envs:
   - postgres.env
@@ -20,5 +13,13 @@ secretGenerator:
   - kiali.env
   name: kiali
   namespace: istio-system
+- files:
+  - gcp-dns-admin.json
+  name: cert-manager-credentials
+  namespace: istio-system
 generatorOptions:
   disableNameSuffixHash: true
+resources:
+- api-namespace.yaml
+- frontend-namespace.yaml
+- istio-system-namespace.yaml

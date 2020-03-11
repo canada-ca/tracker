@@ -4,7 +4,12 @@ The files in this folder are patches and additions to the base configuration
 stored in the bases folder.  These patches and additions provide all the needed
 tweaks and configuration needed to run the app on GKE.
 
-This config assumes that Istio is already resident in the cluster, so you will
-need to create the cluster with the `--addons=Istio` and
-`--istio-config-auth=MTLS_PERMISSIVE` options.
+The istio for this project is generated with the following command:
+
+```sh
+istioctl manifest generate --set values.kiali.enabled=true \
+  --set values.tracing.enabled=true \
+  --set values.global.proxy.accessLogFile="/dev/stdout" \
+  --set values.gateways.istio-ingressgateway.loadBalancerIP=34.95.5.243 > ../../bases/istio.yaml
+```
 

@@ -1,19 +1,13 @@
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: ingress-cert
   namespace: istio-system
 spec:
-  secretName: istio-ingressgateway-certs
+  secretName: tracker-credential
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt
     kind: Issuer
-  commonName: it.actually.works
+  commonName: istio.actually.works
   dnsNames:
-  - it.actually.works
-  acme:
-    config:
-    - http01:
-        ingressClass: istio
-      domains:
-      - it.actually.works
+  - istio.actually.works

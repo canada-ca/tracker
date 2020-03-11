@@ -23,5 +23,6 @@ spec:
         - "*"
       tls:
         mode: SIMPLE
-        privateKey: /etc/istio/ingressgateway-certs/tls.key
-        serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+        credentialName: tracker-credential
+        privateKey: sds
+        serverCertificate: sds
