@@ -43,7 +43,7 @@ export function SignInPage() {
       console.log(error)
     }
     // Get the authToken from the api response and save in local storage
-    localStorage.setItem('jwt', data.signIn.authToken)
+    window.localStorage.setItem('jwt', data.signIn.authToken)
     return (
       <Redirect
         push

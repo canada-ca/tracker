@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react'
 import { Route } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
@@ -17,7 +18,7 @@ import { Navigation } from './Navigation'
 import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 
-export default function App(props) {
+export default function App() {
   const { i18n } = useLingui()
 
   return (
@@ -47,7 +48,7 @@ export default function App(props) {
           </Link>
 
           {// Dynamically decide if the link should be sign in or sign out.
-          localStorage.getItem('jwt') == undefined || props.jwt ? (
+          window.localStorage.getItem('jwt') == null ? (
             <Link to="/sign-in">
               <Trans>Sign In</Trans>
             </Link>
