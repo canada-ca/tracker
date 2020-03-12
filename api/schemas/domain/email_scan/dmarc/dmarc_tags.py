@@ -25,16 +25,6 @@ class DmarcTags(SQLAlchemyObjectType):
             if self.dmarc_scan["dmarc"]["missing"]:
                 return tags.update({"dmarc2": "missing"})
 
-            # Check P Policy Tag
-            if self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "missing":
-                tags.update({"dmarc3": "P-missing"})
-            elif self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "none":
-                tags.update({"dmarc4": "P-none"})
-            elif self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "quarantine":
-                tags.update({"dmarc5": "P-quarantine"})
-            elif self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "reject":
-                tags.update({"dmarc6": "P-reject"})
-
             # Check PCT Tag
             if self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] == 100:
                 tags.update({"dmarc7": "PCT-100"})
@@ -62,14 +52,30 @@ class DmarcTags(SQLAlchemyObjectType):
                 else:
                     tags.update({"dmarc13": "RUF-none"})
 
+            # Check P Policy Tag
+            p_tags = {
+                "missing": {"dmarc3": "P-missing"},
+                "none": {"dmarc4": "P-none"},
+                "quarantine": {"dmarc5": "P-quarantine"},
+                "reject": {"dmarc6": "P-reject"}
+            }
+            p_status = p_tags.get(
+                self.dmarc_scan["dmarc"]["tags"]["p"]["value"]
+            )
+            if p_status is not None:
+                tags.update(p_status)
+
             # Check SP tag
-            if self.dmarc_scan["dmarc"]["tags"]["sp"]["value"] == "missing":
-                tags.update({"dmarc16": "SP-missing"})
-            elif self.dmarc_scan["dmarc"]["tags"]["sp"]["value"] == "none":
-                tags.update({"dmarc17": "SP-none"})
-            elif self.dmarc_scan["dmarc"]["tags"]["sp"]["value"] == "quarantine":
-                tags.update({"dmarc18": "SP-quarantine"})
-            elif self.dmarc_scan["dmarc"]["tags"]["sp"]["value"] == "reject":
-                tags.update({"dmarc19": "SP-reject"})
+            sp_tags = {
+                "missing": {"dmarc16": "SP-missing"},
+                "none": {"dmarc17": "SP-none"},
+                "quarantine": {"dmarc18": "SP-quarantine"},
+                "reject": {"dmarc19": "SP-reject"}
+            }
+            sp_status = sp_tags.get(
+                self.dmarc_scan["dmarc"]["tags"]["sp"]["value"]
+            )
+            if sp_status is not None:
+                tags.update(sp_status)
 
             return tags
