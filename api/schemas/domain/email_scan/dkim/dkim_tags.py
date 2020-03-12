@@ -44,6 +44,10 @@ class DkimTags(SQLAlchemyObjectType):
             else:
                 tags.update({"dkim6": "P-invalid"})
 
+            # Check If T Enabled
+            if "t" in self.dkim_scan["dkim"]:
+                tags.update({"dkim13": "T-enabled"})
+
             # Get Current Scan Timestamp
             current_scan = db.session.query(Scans).filter(
                 Scans.id == self.id
