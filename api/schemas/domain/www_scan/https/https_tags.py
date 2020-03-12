@@ -19,33 +19,65 @@ class HTTPSTags(SQLAlchemyObjectType):
         def resolve_value(self: Https_scans, info):
             tags = {}
 
-            if self.https_scan["https"]["missing"]:
+            if 'missing' in self.https_scan["https"]:
                 return tags.update({"https2": "HTTPS-missing"})
 
+            # Check Implementation Tags
             implementation_tags = {
                 "Downgrades HTTPS": {"https3": "HTTPS-downgraded"},
-                "Valid HTTPS":
+                "Valid HTTPS": {"dsa": "dsa"},
+                "Bad Chain": {"https4": "HTTPS-bad-chain"},
+                "Bad Hostname": {"https5": "HTTPS-bad-hostname"}
             }
-            if self.https_scan["https"]["implementation"]
+            implementation_status = implementation_tags.get(
+                self.https_scan["https"]["implementation"]
+            )
+            if implementation_status is not None:
+                tags.update(implementation_status)
 
-            # Check for HSTS
-            if not self.https_scan["https"]["hsts"]:
-                tags.update({"https8": "HSTS-missing"})
+            # Check Enforcement
+            enforced_tags = {
+                "Not Enforced": {"fds": "fsfd"},
+                "Strict": {"fs": "fds"},
+                "Moderate": {"https7": "HTTPS-moderately-enforced"},
+                "Weak": {"https6": "HTTPS-weakly-enforced"}
+            }
+            enforced_status = enforced_tags.get(
+                    self.https_scan["https"]["enforced"]
+                )
+            if enforced_status is not None:
+                tags.update(enforced_status)
 
-            # Check HSTS Age
-            if not self.https_scan["https"]["hsts_age"] < 31536000:
-                tags.update({"https9": "HSTS-short-age"})
+            # Check HSTS
+            hsts_tags = {
+                "No HSTS": {"https8": "HSTS-missing"},
+                "HSTS Fully Implemented": {"dsa", "fs"},
+                "HSTS Max Age Too Short": {"https9": "HSTS-short-age"},
+            }
+            hsts_status = hsts_tags.get(
+                self.https_scan["https"]["hsts"]
+            )
+            if hsts_status is not None:
+                tags.update(hsts_status)
 
-            # Check HSTS preload status
-            if self.https_scan["https"]["preloaded_status"]:
-                tags.update({"https10": "HSTS-preload-ready"})
+            # Check Preload
+            preload_tags = {
+                "HSTS Preloaded": {"fds": "fdsf"},
+                "HSTS Preload Ready": {"https10": "HSTS-preload-ready"},
+                "HSTS Not Preloaded": {"https11": "HSTS-not-preloaded"}
+            }
+            preload_status = preload_tags.get(
+                self.https_scan["https"]["preload_status"]
+            )
+            if preload_status is not None:
+                tags.update(preload_status)
 
             # Check HTTPS Cert Expired
-            if self.https_scan["https"]["HTTPS Expired Cert"]:
+            if self.https_scan["https"]["expired_cert"]:
                 tags.update({"https12": "HTTPS-certificate-expired"})
 
             # Check if HTTPS Cert is Self Signed
-            if self.https_scan["https"]["HTTPS Self Signed Cert"]:
+            if self.https_scan["https"]["self_signed_cert"]:
                 tags.update({"https13": "HTTPS-certificate-self-signed"})
 
             return tags
