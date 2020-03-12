@@ -5,6 +5,7 @@ import subprocess
 import json
 import logging
 import requests
+import jwt
 from flask import Flask, request
 from datetime import datetime
 
@@ -18,6 +19,19 @@ scanner_hosts = ['https-scanner.tracker.example.com',
 
 dkim_host = 'dkim-scanner.tracker.example.com'
 
+
+@app.errorhandler(jwt.InvalidTokenError)
+def invalid_token():
+    # 401 - Unauthorized
+    return "Error: Invalid Token", 401
+
+
+@app.errorhandler(jwt.ExpiredSignatureError)
+def expired_signature():
+    # 406 - Not Acceptable
+    return "Error: Expired Signature", 406
+
+
 @app.route('/receive', methods=['GET', 'POST'])
 def receive():
 
@@ -25,16 +39,28 @@ def receive():
     dkim_flag = False
 
     try:
-        for key, val in request.json.items():
+        decoded_payload = jwt.decode(
+            request.headers["Authorization"],
+            os.getenv('SUPER_SECRET_SALT'),
+            algorithm=['HS256']
+        )
+
+        for key, val in decoded_payload.items():
             if key is 'dkim':
                 dkim_flag = val
-            else:
+            elif key is 'scan_id' or key is "domain":
                 payload[key] = val
 
         dispatch(payload, dkim_flag)
 
+    except jwt.ExpiredSignatureError as e:
+        logging.error('Failed (ExpiredSignatureError): %s\n' % str(e))
+    except jwt.InvalidTokenError as e:
+        logging.error('Failed (InvalidTokenError): %s\n' % str(e))
     except Exception as e:
         logging.error('Failed: %s\n' % str(e))
+
+
 
 
 def dispatch(payload, dkim_flag):
