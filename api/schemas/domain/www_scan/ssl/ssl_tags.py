@@ -19,7 +19,7 @@ class SSLTags(SQLAlchemyObjectType):
         def resolve_value(self: Ssl_scans, info):
             tags = {}
 
-            if self.ssl_scan["ssl"]["missing"]:
+            if 'missing' in self.ssl_scan["ssl"]:
                 return tags.update({"ssl2": "SSL-missing"})
 
             if self.ssl_scan["ssl"]["rc4"]:
