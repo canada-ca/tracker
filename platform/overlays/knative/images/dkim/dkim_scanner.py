@@ -107,7 +107,12 @@ def scan(scan_id, domain):
         elif keysize == 1024:
             record["p_1024"] = True
 
-        record["txt_record"] = pub
+        txt_record = {}
+
+        for key, val in pub.items():
+            txt_record[key.decode('ascii')] = val.decode('ascii')
+
+        record["txt_record"] = txt_record
         record["public_key_value"] = key_val
         record["key_size"] = keysize
         record["key_type"] = ktag.decode('ascii')
@@ -118,7 +123,7 @@ def scan(scan_id, domain):
         logging.error("(SCAN: %s) - Failed to perform DomainKeys Identified Mail scan on given domain: %s" % (scan_id, e))
         return None
 
-    return record
+    return json.dumps(record)
 
 if __name__ == "__main__":
     # Port number defaults to 8080, can be configured as an ENV
