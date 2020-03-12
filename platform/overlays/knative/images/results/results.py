@@ -41,21 +41,21 @@ def process_results(results, scan_type):
 
         if scan_type is "dmarc":
             if results is not None:
-                report = {'dmarc': results['dmarc']}
+                report = {"dmarc": results["dmarc"]}
             else:
-                report = {'dmarc': {"missing": True}}
+                report = {"dmarc": {"missing": True}}
 
         elif scan_type is "dkim":
             if results is not None:
-                report = {'dkim': results}
+                report = {"dkim": results}
             else:
-                report = {'dkim': {"missing": True}}
+                report = {"dkim": {"missing": True}}
 
         elif scan_type is "https":
             if results is not None:
-                report = {'https': {}}
+                report = {"https": {}}
             else:
-                report = {'https': {"missing": True}}
+                report = {"https": {"missing": True}}
 
             # Assumes that HTTPS would be technically present, with or without issues
             if boolean_for(results["Downgrades HTTPS"]):
@@ -164,9 +164,9 @@ def process_results(results, scan_type):
 
         elif scan_type is "ssl":
             if results is not None:
-                report = {'ssl': {}}
+                report = {"ssl": {}}
             else:
-                report = {'ssl': {"missing": True}}
+                report = {"ssl": {"missing": True}}
 
             # Get cipher/protocol data via sslyze for a host.
 
