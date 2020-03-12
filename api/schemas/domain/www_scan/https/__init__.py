@@ -28,18 +28,18 @@ class HTTPS(SQLAlchemyObjectType):
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
     implementation = graphene.String()
-    enforced = graphene.Boolean(
+    enforced = graphene.String(
         description="Is HTTPS being enforced on this domain."
     )
-    hsts = graphene.Boolean(
+    hsts = graphene.String(
         description="Is HTTP Strict Transport Security being used on this "
                     "domain."
     )
-    hsts_age = graphene.String(
+    hsts_age = graphene.Int(
         description="The time, in seconds, that the browser should remember "
                     "that a site is only to be accessed using HTTPS."
     )
-    preloaded = graphene.Boolean(
+    preloaded = graphene.String(
         description="Is HSTS Preloading enabled on this domain"
     )
     https_guidance_tags = graphene.List(
@@ -58,16 +58,16 @@ class HTTPS(SQLAlchemyObjectType):
             return self.https_scan["https"]["implementation"]
 
         def resolve_enforced(self: Https_scans, info):
-            return self.https_scan["https"]["Domain Enforces HTTPS"]
+            return self.https_scan["https"]["enforced"]
 
         def resolve_hsts(self: Https_scans, info):
-            return self.https_scan["https"]["HSTS"]
+            return self.https_scan["https"]["hsts"]
 
         def resolve_hsts_age(self: Https_scans, info):
-            return self.https_scan["https"]["HSTS Max Age"]
+            return self.https_scan["https"]["hsts_age"]
 
         def resolve_preloaded(self: Https_scans, info):
-            return self.https_scan["https"]["HSTS Preloaded"]
+            return self.https_scan["https"]["preload_status"]
 
         def resolve_https_guidance_tags(self: Https_scans, info):
             return HTTPSTags.get_query(info).all()
