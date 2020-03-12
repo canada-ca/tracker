@@ -14,7 +14,7 @@ import {
   Link,
 } from '@chakra-ui/core'
 import { Link as RouteLink, Redirect } from 'react-router-dom'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Formik, Field } from 'formik'
 import { LandingPage } from './LandingPage'
@@ -22,6 +22,8 @@ import { LandingPage } from './LandingPage'
 export function SignInPage() {
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
+
+  const client = useApolloClient()
 
   const [signIn, { loading, error, data }] = useMutation(gql`
     mutation SignIn($userName: EmailAddress!, $password: String!) {
@@ -44,6 +46,9 @@ export function SignInPage() {
     }
     // Get the authToken from the api response and save in local storage
     window.localStorage.setItem('jwt', data.signIn.authToken)
+    // Write JWT to apollo client data store
+    client.writeData({ data: { jwt: data.signIn.authToken } })
+
     return (
       <Redirect
         push
@@ -70,14 +75,16 @@ export function SignInPage() {
 
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={async(values, actions) => {
+        
+        onSubmit={(values, actions) => {
           setTimeout(async () => {
             await signIn({
               variables: { userName: values.email, password: values.password },
             })
 
-            actions.setSubmitting(false)
           }, 500)
+          actions.setSubmitting(false)
+
         }}
       >
         {props => (
