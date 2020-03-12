@@ -62,9 +62,9 @@ def get_server_info(scan_id, domain):
         server_info = server_tester.perform()
         logging.info("(SCAN: %s) - Server Info %s\n" % (scan_id, server_info))
 
-        for _port in ServerConnectivityTester.TLS_DEFAULT_PORTS:
-            if get_server_info_starttls(scan_id, domain, _port) is not None:
-                return server_info, True
+        # TLS connection succeeded. Try establishing upgraded TLS connection on port 25 (SMTP)
+        if get_server_info_starttls(scan_id, domain, TlsWrappedProtocolEnum.STARTTLS_SMTP) is not None:
+            return server_info, True
 
         return server_info, False
 

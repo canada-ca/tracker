@@ -59,7 +59,10 @@ def scan(scan_id, domain):
         logging.error("(SCAN: %s) - Failed to check the given domains for DMARC/SPF records: %s" % (scan_id, e))
         return None
 
-    return scan_result
+    if scan_result["record"] is "null":
+        return None
+    else:
+        return scan_result
 
 if __name__ == "__main__":
     # Port number defaults to 8080, can be configured as an ENV

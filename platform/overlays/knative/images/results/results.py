@@ -34,18 +34,29 @@ def receive():
     except Exception as e:
         logging.error('Failed: %s\n' % str(e))
 
+
 def process_results(results, scan_type):
 
     try:
 
         if scan_type is "dmarc":
-            report = {'dmarc': results['dmarc']}
+            if results is not None:
+                report = {'dmarc': results['dmarc']}
+            else:
+                report = {'dmarc': {"missing": True}}
 
         elif scan_type is "dkim":
-            report = {'dkim': results}
+            if results is not None:
+                report = {'dkim': results}
+            else:
+                report = {'dkim': {"missing": True}}
 
         elif scan_type is "https":
-            report = {"https": {}}
+            if results is not None:
+                report = {'https': {}}
+            else:
+                report = {'https': {"missing": True}}
+
             # Assumes that HTTPS would be technically present, with or without issues
             if boolean_for(results["Downgrades HTTPS"]):
                 https = "Downgrades HTTPS"  # No
@@ -69,7 +80,7 @@ def process_results(results, scan_type):
 
             else:
 
-                # "Yes (Strict)" means HTTP immediately redirects to HTTPS,
+                # "Strict" means HTTP immediately redirects to HTTPS,
                 # *and* that HTTP eventually redirects to HTTPS.
                 #
                 # Since a pure redirector domain can't "default" to HTTPS
@@ -83,7 +94,7 @@ def process_results(results, scan_type):
                 ):
                     behavior = "Strict"  # Yes (Strict)
 
-                # "Yes" means HTTP eventually redirects to HTTPS.
+                # "Moderate" means HTTP eventually redirects to HTTPS.
                 elif (
                     not boolean_for(results["Strictly Forces HTTPS"])
                     and boolean_for(results["Defaults to HTTPS"])
@@ -117,7 +128,7 @@ def process_results(results, scan_type):
 
                     # Say No for too-short max-age's, and note in the extended details.
                     if hsts_age >= MIN_HSTS_AGE:
-                        hsts = "HSTS Implemented"  # Yes, directly
+                        hsts = "HSTS Fully Implemented"  # Yes, directly
                     else:
                         hsts = "HSTS Max Age Too Short"  # No
                 else:
@@ -134,14 +145,49 @@ def process_results(results, scan_type):
             else:
                 preloaded = "HSTS Not Preloaded"  # No
 
+            # Certificate info
+            if boolean_for(results["HTTPS Expired Cert"]):
+                expired = True
+            else:
+                expired = False
+
+            if boolean_for(results["HTTPS Self-Signed Cert"]):
+                self_signed = True
+            else:
+                self_signed = False
+
             report["https"]["hsts"] = hsts
             report["https"]["hsts_age"] = hsts_age
-            report["https"]["preloaded"] = preloaded
+            report["https"]["preload_status"] = preloaded
+            report["https"]["expired_cert"] = expired
+            report["https"]["self_signed_cert"] = self_signed
 
         elif scan_type is "ssl":
-            report = {"ssl": {}}
+            if results is not None:
+                report = {'ssl': {}}
+            else:
+                report = {'ssl': {"missing": True}}
 
             # Get cipher/protocol data via sslyze for a host.
+
+            if results is None:
+                report["ssl"]["sslv2"] = False
+                report["ssl"]["sslv3"] = False
+                report["ssl"]["tlsv1_0"] = False
+                report["ssl"]["tlsv1_1"] = False
+                report["ssl"]["tlsv1_2"] = False
+                report["ssl"]["tlsv1_3"] = False
+                report["ssl"]["bod_crypto"] = False
+                report["ssl"]["rc4"] = False
+                report["ssl"]["3des"] = False
+                report["ssl"]["used_ciphers"] = []
+                report["ssl"]["good_cert"] = False
+                report["ssl"]["signature_algorithm"] = None
+                report["ssl"]["starttls"] = False
+                report["ssl"]["heartbleed"] = False
+                report["ssl"]["openssl_ccs_injection"] = False
+                return results
+
 
             ###
             # BOD 18-01 (cyber.dhs.gov) cares about SSLv2, SSLv3, RC4, and 3DES.
@@ -149,17 +195,8 @@ def process_results(results, scan_type):
 
             any_3des = results["3des"]
 
-            sslv2 = "SSLV2" in results.keys()
-            sslv3 = "SSLV3" in results.keys()
-
             ###
             # ITPIN cares about usage of TLS 1.0/1.1/1.2
-            tlsv10 = "TLSV1" in results.keys()
-            tlsv11 = "TLSV1_1" in results.keys()
-            tlsv12 = "TLSV1_2" in results.keys()
-
-            tlsv13 = "TLSV1_3" in results.keys()
-
             highest_ssl_version_supported = None
 
             for version in ["SSLV2", "SSLV3", "TLSV1", "TLSV1_1", "TLSV1_2", "TLSV1_3"]:
@@ -172,7 +209,7 @@ def process_results(results, scan_type):
             used_ciphers = {cipher for cipher in results[highest_ssl_version_supported].accepted_cipher_list}
             signature_algorithm = results["signature_algorithm"]
 
-            if any([any_rc4, any_3des, sslv2, sslv3, tlsv10, tlsv11]):
+            if any([any_rc4, any_3des, report["ssl"]["SSLV2"], report["ssl"]["SSLV3"], report["ssl"]["TLSV1"], report["ssl"]["TLSV1_1"]]):
                 bod_crypto = False
             else:
                 bod_crypto = True
@@ -190,14 +227,8 @@ def process_results(results, scan_type):
             report["ssl"]["bod_crypto"] = bod_crypto
             report["ssl"]["rc4"] = any_rc4
             report["ssl"]["3des"] = any_3des
-            report["ssl"]["sslv2"] = sslv2
-            report["ssl"]["sslv3"] = sslv3
-            report["ssl"]["tlsv1_0"] = tlsv10
-            report["ssl"]["tlsv1_1"] = tlsv11
-            report["ssl"]["tlsv1_2"] = tlsv12
-            report["ssl"]["tlsv1_3"] = tlsv13
             report["ssl"]["used_ciphers"] = used_ciphers
-            report["ssl"]["good_cert"] = good_cert
+            report["ssl"]["acceptable_certificate"] = good_cert
             report["ssl"]["signature_algorithm"] = signature_algorithm
             report["ssl"]["starttls"] = starttls
 
