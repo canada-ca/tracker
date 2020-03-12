@@ -22,7 +22,7 @@ class DmarcTags(SQLAlchemyObjectType):
         def resolve_value(self: Dmarc_scans, info):
             tags = {}
 
-            if self.dmarc_scan["dmarc"]["missing"]:
+            if 'missing' in self.dmarc_scan["dmarc"]:
                 return tags.update({"dmarc2": "missing"})
 
             # Check PCT Tag
