@@ -4,9 +4,10 @@ from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
 
 from app import app
-from models import Domains, Scans
+from models import Domains, Scans, Organizations
 from scalars.url import URL
 
+from schemas.organizations import Organization
 from schemas.domain.email_scan import EmailScan
 from schemas.domain.www_scan import WWWScan
 
@@ -33,7 +34,9 @@ class Domain(SQLAlchemyObjectType):
         WWWScan._meta.connection,
         description="HTTPS, and SSL scan results"
     )
-    organization = ORMField(model_attr='organization')
+    organization = graphene.ConnectionField(
+        Organization._meta.connection
+    )
 
     with app.app_context():
         def resolve_url(self: Domains, info):
@@ -50,6 +53,13 @@ class Domain(SQLAlchemyObjectType):
             query = WWWScan.get_query(info)
             query = query.filter(
                 Scans.domain_id == self.id
+            )
+            return query.all()
+
+        def resolve_organization(self: Domains, info):
+            query = Organization.get_query(info)
+            query = query.filter(
+                Organizations.id == self.organization_id
             )
             return query.all()
 
