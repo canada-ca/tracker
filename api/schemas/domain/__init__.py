@@ -4,7 +4,7 @@ from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
 
 from app import app
-from models import Domains
+from models import Domains, Scans
 from scalars.url import URL
 
 from schemas.domain.email_scan import EmailScan
@@ -39,12 +39,18 @@ class Domain(SQLAlchemyObjectType):
         def resolve_url(self: Domains, info):
             return self.domain
 
-        def resolve_email(self, info):
+        def resolve_email(self: Domains, info):
             query = EmailScan.get_query(info)
+            query = query.filter(
+                Scans.domain_id == self.id
+            )
             return query.all()
 
-        def resolve_www(self, info):
+        def resolve_www(self: Domains, info):
             query = WWWScan.get_query(info)
+            query = query.filter(
+                Scans.domain_id == self.id
+            )
             return query.all()
 
 
