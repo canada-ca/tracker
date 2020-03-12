@@ -48,34 +48,3 @@ class DkimTags(SQLAlchemyObjectType):
             if "t" in self.dkim_scan["dkim"]:
                 tags.update({"dkim13": "T-enabled"})
 
-            # Get Current Scan Timestamp
-            current_scan = db.session.query(Scans).filter(
-                Scans.id == self.id
-            ).first()
-
-            # Get One Year Difference
-            curr_date_time = datetime.datetime.fromtimestamp(
-                current_scan.scan_date)
-            pre_date_time = curr_date_time - relativedelta(years=1)
-
-            # Get all scans in one year range
-            scans = db.session.query(Scans).filter(
-                Scans.scan_date < curr_date_time
-            ).filter(
-                Scans.scan_date >= pre_date_time
-            ).all()
-
-            # Get the current modulus for checking and assign bool check
-            curr_modulus = self.dkim_scan["dkim"]["modulus"]
-            needs_rotation = True
-
-            # Loop through all the scans and compare their modulus
-            for scan in scans:
-                check_modulus = db.session.query(Dkim_scans).filter(
-                    Dkim_scans.id == scan.id
-                ).first()
-                if curr_modulus != check_modulus.dkim_scan["dkim"]["modulus"]:
-                    needs_rotation = False
-
-            if needs_rotation:
-                tags.update({"dkim10": "P-update-recommended"})
