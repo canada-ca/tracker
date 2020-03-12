@@ -55,10 +55,18 @@ from resolvers.domains import (
     resolve_domains
 )
 
+from schemas.organizations import Organization
+
+
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
     users = SQLAlchemyConnectionField(UserObject._meta.connection, sort=None)
+
+    organizations = SQLAlchemyConnectionField(
+        Organization._meta.connection,
+        sort=None
+    )
 
     domain = SQLAlchemyConnectionField(
         Domain._meta.connection,

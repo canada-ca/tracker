@@ -23,7 +23,7 @@ class Organizations(db.Model):
     __tablename__ = 'organizations'
 
     id = Column(Integer, primary_key=True)
-    organization = Column(String)
+    acronym = Column(String)
     org_tags = Column(JSONB)
     domains = relationship("Domains", back_populates="organization", cascade="all, delete")
     users = relationship("User_affiliations", back_populates="user_organization", cascade="all, delete")
