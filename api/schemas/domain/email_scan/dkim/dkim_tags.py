@@ -50,7 +50,8 @@ class DkimTags(SQLAlchemyObjectType):
             ).first()
 
             # Get One Year Difference
-            curr_date_time = datetime.datetime.fromtimestamp(current_scan.scan_date)
+            curr_date_time = datetime.datetime.fromtimestamp(
+                current_scan.scan_date)
             pre_date_time = curr_date_time - relativedelta(years=1)
 
             # Get all scans in one year range
@@ -61,7 +62,7 @@ class DkimTags(SQLAlchemyObjectType):
             ).all()
 
             # Get the current modulus for checking and assign bool check
-            curr_modulus = self.dkim_scan["dkim"]["something"]
+            curr_modulus = self.dkim_scan["dkim"]["modulus"]
             needs_rotation = True
 
             # Loop through all the scans and compare their modulus
@@ -69,7 +70,7 @@ class DkimTags(SQLAlchemyObjectType):
                 check_modulus = db.session.query(Dkim_scans).filter(
                     Dkim_scans.id == scan.id
                 ).first()
-                if curr_modulus != check_modulus.dkim_scan["dkim"]["something"]:
+                if curr_modulus != check_modulus.dkim_scan["dkim"]["modulus"]:
                     needs_rotation = False
 
             if needs_rotation:
