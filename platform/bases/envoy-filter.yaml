@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: gateway-gzip
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  filters:
+  - listenerMatch:
+      listenerType: GATEWAY
+      listenerProtocol: HTTP
+    filterName: envoy.gzip
+    filterType: HTTP
+    filterConfig:
+      inlineCode: |
+        compression_level: BEST
