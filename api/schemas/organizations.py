@@ -3,7 +3,6 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from app import app
-from db import db
 from schemas.domain import Domain as DomainsSchema
 from models import Domains as DomainsModel
 from models import Organizations as OrgModel

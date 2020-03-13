@@ -25,6 +25,9 @@ def decode_auth_token(request):
             os.getenv('SUPER_SECRET_SALT'),
             algorithms=['HS256']
         )
+        print("\n")
+        print(payload)
+        print("\n")
         return payload['roles']
     except jwt.ExpiredSignatureError:
         raise GraphQLError('Signature expired, please login again')
