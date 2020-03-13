@@ -5,8 +5,8 @@ import { Global, css } from '@emotion/core'
 import { PageNotFound } from './PageNotFound'
 import { LandingPage } from './LandingPage'
 import { DomainsPage } from './DomainsPage'
-import { SignInPage } from "./SignInPage"
-import { CreateUserPage } from "./CreateUserPage"
+import { SignInPage } from './SignInPage'
+import { CreateUserPage } from './CreateUserPage'
 import { QRcodePage } from './QRcodePage'
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
@@ -16,6 +16,7 @@ import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
+import { TwoFactorNotificationPage } from './TwoFactorNotificationPage'
 
 export default function App() {
   const { i18n } = useLingui()
@@ -49,25 +50,26 @@ export default function App() {
             <Trans>Sign In</Trans>
           </Link>
         </Navigation>
+        <TwoFactorNotificationPage />
         <Main>
           <Route exact path="/">
             <LandingPage />
           </Route>
 
           <Route path="/domains">
-            <DomainsPage/>
+            <DomainsPage />
           </Route>
 
           <Route path="/sign-in">
-            <SignInPage/>
+            <SignInPage />
           </Route>
 
           <Route path="/create-user">
-            <CreateUserPage/>
+            <CreateUserPage />
           </Route>
 
           <Route path="/two-factor-code">
-            <QRcodePage userName={""}/>
+            <QRcodePage userName={''} />
           </Route>
 
           <Route>
