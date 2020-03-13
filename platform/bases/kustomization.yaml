@@ -13,3 +13,4 @@ resources:
 - tracker-frontend-virtual-service.yaml
 - istio-authentication-policy.yaml
 - istio.yaml
+- envoy-filter.yaml
