@@ -17,3 +17,4 @@ patchesStrategicMerge:
 - tracker-api-virtual-service.yaml
 - tracker-frontend-virtual-service.yaml
 - istio.yaml
+- envoy-filter.yaml
