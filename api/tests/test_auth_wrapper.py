@@ -64,7 +64,7 @@ def user_role_test_db_init():
         db.session.add(test_super_admin)
         org = Organizations(
             id=1,
-            organization='ORG1',
+            acronym='ORG1',
             org_tags={
                 "description": 'Organization 1'
             }

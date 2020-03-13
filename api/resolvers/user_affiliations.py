@@ -25,7 +25,7 @@ def resolve_test_user_claims(self, info, **kwargs):
     org = kwargs.get('org')
 
     org_orm = db.session.query(Orgs).filter(
-        Orgs.organization == org
+        Orgs.acronym == org
     ).first()
     org_id = org_orm.id
 

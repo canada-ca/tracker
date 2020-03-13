@@ -107,4 +107,6 @@ def resolve_organizations(self, info, **kwargs):
                     Organizations.id == org_id
                 ).first()
                 query_rtr.append(tmp_query)
+        if not query_rtr:
+            raise GraphQLError("Error, no organizations to display")
         return query_rtr
