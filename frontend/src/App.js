@@ -18,8 +18,12 @@ import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
+<<<<<<< HEAD
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+=======
+import { TwoFactorNotificationPage } from './TwoFactorNotificationPage'
+>>>>>>> Add TFA notification bar component.
 
 export default function App() {
   const { i18n } = useLingui()
@@ -91,6 +95,7 @@ export default function App() {
             </Link>
           )}
         </Navigation>
+        <TwoFactorNotificationPage />
         <Main>
           <Route exact path="/">
             <LandingPage />
