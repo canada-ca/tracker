@@ -61,6 +61,8 @@ def resolve_domain(self: Domain, info, **kwargs):
         if is_user_read(user_role, org_id):
             query_rtn = query.filter(
                 Domains.domain == url
+            ).filter(
+                Domains.organization_id == org_id
             ).all()
         else:
             raise GraphQLError("Error, you do not have permission to view that domain")
