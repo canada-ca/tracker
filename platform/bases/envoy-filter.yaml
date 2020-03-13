@@ -8,6 +8,7 @@ spec:
     labels:
       istio: ingressgateway
   filters:
+  # Add gzip compression
   - listenerMatch:
       listenerType: GATEWAY
       listenerProtocol: HTTP
@@ -16,3 +17,15 @@ spec:
     filterConfig:
       inlineCode: |
         compression_level: BEST
+  # Deny framing to prevent clickjacking.
+  - listenerMatch:
+      listenerType: GATEWAY
+    filterType: HTTP
+    filterName: envoy.lua
+    filterConfig:
+      inlineCode: |
+        function envoy_on_response(response_handle)
+          if not response_handle:headers():get("X-Frame-Options") then
+            response_handle:headers():add("X-Frame-Options", "deny");
+          end
+        end
