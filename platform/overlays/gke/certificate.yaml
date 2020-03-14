@@ -4,6 +4,9 @@ metadata:
   name: ingress-cert
   namespace: istio-system
 spec:
+  keySize: 521
+  keyAlgorithm: ecdsa
+  keyEncoding: pkcs8
   secretName: tracker-credential
   issuerRef:
     name: letsencrypt
