@@ -7,18 +7,11 @@ import logging
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, Scans
+from database import *
 from datetime import datetime
 from cipher_conversion import TLS_OPENSSL_TO_RFC_NAMES_MAPPING, SSLV2_OPENSSL_TO_RFC_NAMES_MAPPING
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
-db = SQLAlchemy()
-
-DB_USER = os.getenv('DB_USER')
-DB_PASS = os.getenv('DB_PASS')
-DB_HOST = os.getenv('DB_HOST')
-DB_PORT = os.getenv('DB_PORT')
-DB_NAME = os.getenv('DB_NAME')
 
 app = Flask(__name__)
 
@@ -37,7 +30,7 @@ def receive():
         scan_type = request.json["scan_type"]
         scan_id = request.json["scan_id"]
 
-        res = process_results(result_dict, scan_type)
+        res = process_results(result_dict, scan_type, scan_id)
 
         # Succeeded
         if res[1] is True:
