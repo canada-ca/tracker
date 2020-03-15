@@ -23,7 +23,12 @@ def receive():
 
     try:
         scan_id = request.json['scan_id']
-        domain = request.json['domain']
+
+        if "._domainkey" in request.json['domain']:
+            domain = request.json['domain'].split("._domainkey")[1]
+        else:
+            domain = request.json['domain']
+
         res = scan(scan_id, domain)
         if res is not None:
             payload = json.dumps({"results": str(res), "scan_type": "dmarc", "scan_id": scan_id})

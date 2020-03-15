@@ -5,12 +5,26 @@ import subprocess
 import json
 import logging
 from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
+from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, Scans
 from datetime import datetime
 from cipher_conversion import TLS_OPENSSL_TO_RFC_NAMES_MAPPING, SSLV2_OPENSSL_TO_RFC_NAMES_MAPPING
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+db = SQLAlchemy()
+
+DB_USER = os.getenv('DB_USER')
+DB_PASS = os.getenv('DB_PASS')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
+DB_NAME = os.getenv('DB_NAME')
+
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 MIN_HSTS_AGE = 31536000 # one year
 
@@ -21,6 +35,7 @@ def receive():
     try:
         result_dict = request.json["results"]
         scan_type = request.json["scan_type"]
+        scan_id = request.json["scan_id"]
 
         res = process_results(result_dict, scan_type)
 
@@ -35,7 +50,7 @@ def receive():
         logging.error('Failed: %s\n' % str(e))
 
 
-def process_results(results, scan_type):
+def process_results(results, scan_type, scan_id):
 
     try:
 
@@ -238,7 +253,33 @@ def process_results(results, scan_type):
     except Exception as e:
         return str(e), False
 
+    insert(report, scan_type, scan_id)
+
     return "Finished", True
+
+
+def insert(report, scan_type, scan_id):
+
+    scan = Scans.query.filter(Scans.id == scan_id).first()
+
+    scan_result = {"https": [Https_scans, Https_scans.https_scan, Https_scans.https_flagged_scan],
+                   "ssl": [Ssl_scans, Ssl_scans.ssl_scan, Ssl_scans.ssl_flagged_scan],
+                   "dmarc": [Dmarc_scans, Dmarc_scans.dmarc_scan, Dmarc_scans.dmarc_flagged_scan],
+                   "dkim": [Dkim_scans, Dkim_scans.dkim_scan, Dkim_scans.dkim_flagged_scan]
+                   }
+
+    result_obj = scan_result[scan_type][0]()
+
+    result_obj.scan_result[scan_type][1] = report
+    result_obj.scan_result[scan_type][2] = scan
+
+    db.session.add(result_obj)
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        db.session.flush()
+        logging.error('Failed database insertion: %s\n' % str(e))
 
 
 def boolean_for(string):

@@ -13,11 +13,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = Flask(__name__)
 
-scanner_hosts = ['https-scanner.tracker.example.com',
-                 'ssl-scanner.tracker.example.com',
-                 'dmarc-scanner.tracker.example.com']
+hosts = ['https-scanner.tracker.example.com',
+         'ssl-scanner.tracker.example.com',
+         'dmarc-scanner.tracker.example.com']
 
-dkim_host = 'dkim-scanner.tracker.example.com'
+dkim_flagged_hosts = ['dkim-scanner.tracker.example.com,'
+                      'dmarc-scanner.tracker.example.com']
 
 
 @app.errorhandler(jwt.InvalidTokenError)
@@ -53,14 +54,8 @@ def receive():
 
         dispatch(payload, dkim_flag)
 
-    except jwt.ExpiredSignatureError as e:
-        logging.error('Failed (ExpiredSignatureError): %s\n' % str(e))
-    except jwt.InvalidTokenError as e:
-        logging.error('Failed (InvalidTokenError): %s\n' % str(e))
     except Exception as e:
         logging.error('Failed: %s\n' % str(e))
-
-
 
 
 def dispatch(payload, dkim_flag):
@@ -70,10 +65,11 @@ def dispatch(payload, dkim_flag):
     }
 
     if dkim_flag:
-        headers['Host'] = dkim_host
-        requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+        for host in dkim_flagged_hosts:
+            headers['Host'] = host
+            requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
     else:
-        for host in scanner_hosts:
+        for host in hosts:
             headers['Host'] = host
             try:
                 requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
