@@ -3,7 +3,7 @@ from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
-from db import db
+from database import db
 
 
 class Domains(db.Model):
