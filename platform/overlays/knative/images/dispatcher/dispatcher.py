@@ -40,9 +40,10 @@ def receive():
     dkim_flag = False
 
     try:
+        #TODO Replace secret
         decoded_payload = jwt.decode(
             request.headers["Authorization"],
-            os.getenv('SUPER_SECRET_SALT'),
+            "test_jwt",
             algorithm=['HS256']
         )
 
