@@ -55,12 +55,6 @@ export function CreateUserPage() {
         isClosable: true,
       })
     }
-
-    /* Check that a user's 2fa needs validation before this redirection.
-    return <Redirect to={{
-      pathname: '/two-factor-code',
-      state: {userName: data.createUser.userName},
-    }}/> */
   }
 
   /* A function for the Formik to validate fields in the form */
