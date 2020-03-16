@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex, Text, Box, Link } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
 
-export function TwoFactorNotificationPage() {
+export function TwoFactorNotificationBar() {
   return (
     <Box bg="tomato" p={2}>
       <Flex
