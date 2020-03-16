@@ -6,7 +6,7 @@ import json
 import logging
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, Scans
+from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, Mx_scans, Spf_scans, Scans
 from database import *
 from datetime import datetime
 from cipher_conversion import TLS_OPENSSL_TO_RFC_NAMES_MAPPING, SSLV2_OPENSSL_TO_RFC_NAMES_MAPPING
@@ -46,7 +46,7 @@ def receive():
 def process_results(results, scan_type, scan_id):
 
     try:
-
+        #TODO Split up MX and SPF
         if scan_type is "dmarc":
             if results is not None:
                 report = {"dmarc": results["dmarc"]}
@@ -255,18 +255,23 @@ def insert(report, scan_type, scan_id):
 
     scan = Scans.query.filter(Scans.id == scan_id).first()
 
-    scan_result = {"https": [Https_scans, Https_scans.https_scan, Https_scans.https_flagged_scan],
-                   "ssl": [Ssl_scans, Ssl_scans.ssl_scan, Ssl_scans.ssl_flagged_scan],
-                   "dmarc": [Dmarc_scans, Dmarc_scans.dmarc_scan, Dmarc_scans.dmarc_flagged_scan],
-                   "dkim": [Dkim_scans, Dkim_scans.dkim_scan, Dkim_scans.dkim_flagged_scan]
-                   }
+    if scan_type is "https":
+        result_obj = Https_scans(https_scan=report, https_flagged_scan=scan)
+        db.session.add(result_obj)
+    elif scan_type is "ssl":
+        result_obj = Ssl_scans(ssl_scan=report, ssl_flagged_scan=scan)
+        db.session.add(result_obj)
+    elif scan_type is "dmarc":
+        dmarc_obj = Dmarc_scans(dmarc_scan=report, dmarc_flagged_scan=scan)
+        mx_obj = Mx_scans(mx_scan=report, mx_flagged_scan=scan)
+        spf_obj = Spf_scans(spf_scan=report, spf_flagged_scan=scan)
+        db.session.add(dmarc_obj)
+        db.session.add(mx_obj)
+        db.session.add(spf_obj)
+    elif scan_type is "dkim":
+        result_obj = Dkim_scans(dkim_scan=report, dkim_flagged_scan=scan)
+        db.session.add(result_obj)
 
-    result_obj = scan_result[scan_type][0]()
-
-    result_obj.scan_result[scan_type][1] = report
-    result_obj.scan_result[scan_type][2] = scan
-
-    db.session.add(result_obj)
     try:
         db.session.commit()
     except Exception as e:
