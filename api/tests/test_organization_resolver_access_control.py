@@ -28,7 +28,7 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 @pytest.fixture(scope='class')
-def domain_test_db_init():
+def org_perm_test_db_init():
     db.init_app(app)
     bcrypt = Bcrypt(app)
 
@@ -87,42 +87,24 @@ def domain_test_db_init():
             permission='super_admin'
         )
         db.session.add(test_admin_role)
-
-        domain = Domains(
-            id=1,
-            domain='somecooldomain.ca',
-            organization_id=1
-        )
-        db.session.add(domain)
-        domain = Domains(
-            id=2,
-            domain='anothercooldomain.ca',
-            organization_id=1
-        )
-        db.session.add(domain)
-        domain = Domains(
-            id=3,
-            domain='somelamedomain.ca',
-            organization_id=2
-        )
-        db.session.add(domain)
         db.session.commit()
 
     yield
 
     with app.app_context():
-        Domains.query.delete()
         User_affiliations.query.delete()
         Organizations.query.delete()
         Users.query.delete()
         db.session.commit()
 
 
-@pytest.mark.usefixtures('domain_test_db_init')
-class TestDomainsResolver(TestCase):
+@pytest.mark.usefixtures('org_perm_test_db_init')
+class TestOrgResolverWithOrgs(TestCase):
     # Super Admin Tests
-    def test_get_domain_resolvers_by_url_super_admin_single_node(self):
-        """Test domain resolver by url as a super admin, single node return"""
+    def test_get_org_resolvers_by_org_super_admin_single_node(self):
+        """
+        Test org resolver by organization as a super admin, single node return
+        """
         with app.app_context():
             backend = SecurityAnalysisBackend()
             client = Client(schema)
@@ -147,10 +129,10 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domain(url: "somelamedomain.ca") {
+                    organization(org: ORG1) {
                         edges {
                             node {
-                                url
+                                acronym
                             }
                         }
                     }
@@ -158,11 +140,11 @@ class TestDomainsResolver(TestCase):
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
+                    "organization": {
                         "edges": [
                             {
                                 "node": {
-                                    "url": "somelamedomain.ca"
+                                    "acronym": "ORG1"
                                 }
                             }
                         ]
@@ -171,62 +153,9 @@ class TestDomainsResolver(TestCase):
             }
             self.assertDictEqual(result_refr, executed)
 
-    def test_get_domain_resolvers_by_org_super_admin_single_node(self):
+    def test_get_org_resolvers_super_admin_multi_node(self):
         """
-        Test domain resolver by organization as a super admin, single node
-        return
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                '''
-                mutation{
-                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                '''
-                {
-                    domains(organization: ORG2) {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                ''', context_value=request_headers, backend=backend)
-            result_refr = {
-                "data": {
-                    "domains": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "somelamedomain.ca"
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-            self.assertDictEqual(result_refr, executed)
-
-    def test_get_domain_resolvers_by_org_super_admin_multi_node(self):
-        """
-        Test domain resolver by organization as a super admin, multi node return
+        Test organization resolver as a super admin, multi node return
         """
         with app.app_context():
             backend = SecurityAnalysisBackend()
@@ -252,10 +181,10 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domains(organization: ORG1) {
+                    organizations {
                         edges {
                             node {
-                                url
+                                acronym
                             }
                         }
                     }
@@ -263,16 +192,21 @@ class TestDomainsResolver(TestCase):
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domains": {
+                    "organizations": {
                         "edges": [
                             {
                                 "node": {
-                                    "url": "somecooldomain.ca"
+                                    "acronym": "ORG1"
                                 }
                             },
                             {
                                 "node": {
-                                    "url": "anothercooldomain.ca"
+                                    "acronym": "ORG2"
+                                }
+                            },
+                            {
+                                "node": {
+                                    "acronym": "ORG3"
                                 }
                             }
                         ]
@@ -281,92 +215,10 @@ class TestDomainsResolver(TestCase):
             }
             self.assertDictEqual(result_refr, executed)
 
-    def test_get_domain_resolvers_by_url_super_admin_invalid_domain(self):
-        """
-        Test domain resolver by url as a super admin, invalid domain
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                '''
-                mutation{
-                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                '''
-                {
-                    domain(url: "google.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                ''', context_value=request_headers, backend=backend)
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, domain does not exist"
-
-    def test_get_domain_resolvers_by_org_super_admin_org_no_domains(self):
-        """
-        Test domain resolver by org as a super admin, org has no domains
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                '''
-                mutation{
-                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                '''
-                {
-                    domains(organization: ORG3) {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                ''', context_value=request_headers, backend=backend)
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, no domains associated with that organization"
-
     # User read tests
-    def test_get_domain_resolvers_by_url_user_read_single_node(self):
+    def test_get_org_resolvers_by_org_user_read_single_node(self):
         """
-        Test domain resolver get domain by url as user read, return as
+        Test orgnization resolver by org as user read, return as
         single node
         """
         with app.app_context():
@@ -393,10 +245,10 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domain(url: "somecooldomain.ca") {
+                    organization(org: ORG1) {
                         edges {
                             node {
-                                url
+                                acronym
                             }
                         }
                     }
@@ -404,11 +256,11 @@ class TestDomainsResolver(TestCase):
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
+                    "organization": {
                         "edges": [
                             {
                                 "node": {
-                                    "url": "somecooldomain.ca"
+                                    "acronym": "ORG1"
                                 }
                             }
                         ]
@@ -417,7 +269,7 @@ class TestDomainsResolver(TestCase):
             }
             self.assertDictEqual(result_refr, executed)
 
-    def test_get_domain_resolvers_by_org_user_read_multi_node(self):
+    def test_get_org_resolvers_by_org_user_read_multi_node(self):
         """
         Test domain resolver get domain by org as user read, return as
         multi node
@@ -446,10 +298,10 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domains(organization: ORG1) {
+                    organizations {
                         edges {
                             node {
-                                url
+                                acronym
                             }
                         }
                     }
@@ -457,16 +309,11 @@ class TestDomainsResolver(TestCase):
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domains": {
+                    "organizations": {
                         "edges": [
                             {
                                 "node": {
-                                    "url": "somecooldomain.ca"
-                                }
-                            },
-                            {
-                                "node": {
-                                    "url": "anothercooldomain.ca"
+                                    "acronym": "ORG1"
                                 }
                             }
                         ]
@@ -475,7 +322,7 @@ class TestDomainsResolver(TestCase):
             }
             self.assertDictEqual(result_refr, executed)
 
-    def test_get_domain_resolvers_by_url_user_read_no_access(self):
+    def test_get_org_resolvers_by_org_user_read_no_access(self):
         """
         Test domain resolver get domain by url as user read, user has no rights
         to view domains related to that org
@@ -504,52 +351,10 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domain(url: "somelamedomain.ca") {
+                    organization(org: ORG2) {
                         edges {
                             node {
-                                url
-                            }
-                        }
-                    }
-                }
-                ''', context_value=request_headers, backend=backend)
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to view that domain"
-
-    def test_get_domain_resolvers_by_org_user_read_no_access(self):
-        """
-        Test domain resolver get domain by org as user read, user has no rights
-        to view domains related to that org
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                '''
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                '''
-                {
-                    domains(organization: ORG2) {
-                        edges {
-                            node {
-                                url
+                                acronym
                             }
                         }
                     }
@@ -559,10 +364,42 @@ class TestDomainsResolver(TestCase):
             assert executed['errors'][0]
             assert executed['errors'][0]['message'] == "Error, you do not have permission to view that organization"
 
-    def test_get_domain_resolvers_by_url_user_read_invalid_domain(self):
+
+@pytest.fixture(scope='class')
+def org_no_perm_test_db_init():
+    db.init_app(app)
+    bcrypt = Bcrypt(app)
+
+    with app.app_context():
+        test_super_admin = Users(
+            id=2,
+            display_name="testsuperadmin",
+            user_name="testsuperadmin@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8")
+        )
+        db.session.add(test_super_admin)
+        test_admin_role = User_affiliations(
+            user_id=2,
+            permission='super_admin'
+        )
+        db.session.add(test_admin_role)
+        db.session.commit()
+
+    yield
+
+    with app.app_context():
+        User_affiliations.query.delete()
+        Users.query.delete()
+        db.session.commit()
+
+
+@pytest.mark.usefixtures('org_no_perm_test_db_init')
+class TestOrgResolverWithoutOrgs(TestCase):
+
+    def test_get_org_resolvers_super_admin_no_orgs(self):
         """
-        Test domain resolver get domain by url as user read, url does not
-        exist
+        Test org resolver by organization as a super admin, no orgs exist
         """
         with app.app_context():
             backend = SecurityAnalysisBackend()
@@ -570,7 +407,7 @@ class TestDomainsResolver(TestCase):
             get_token = client.execute(
                 '''
                 mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
+                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
@@ -588,10 +425,10 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domain(url: "google.ca") {
+                    organizations {
                         edges {
                             node {
-                                url
+                                acronym
                             }
                         }
                     }
@@ -599,12 +436,11 @@ class TestDomainsResolver(TestCase):
                 ''', context_value=request_headers, backend=backend)
             assert executed['errors']
             assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, domain does not exist"
+            assert executed['errors'][0]['message'] == "Error, no organizations to view"
 
-    def test_get_domain_resolvers_by_org_user_read_org_no_domains(self):
+    def test_get_org_resolvers_by_org_super_admin_no_orgs(self):
         """
-        Test domain resolver get domain by org as user read, org has no related
-        domains
+        Test org resolver by organization as a super admin, no orgs exist
         """
         with app.app_context():
             backend = SecurityAnalysisBackend()
@@ -612,7 +448,7 @@ class TestDomainsResolver(TestCase):
             get_token = client.execute(
                 '''
                 mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
+                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
@@ -630,10 +466,10 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domains(organization: ORG3) {
+                    organization(org: ORG3){
                         edges {
                             node {
-                                url
+                                acronym
                             }
                         }
                     }
@@ -641,4 +477,4 @@ class TestDomainsResolver(TestCase):
                 ''', context_value=request_headers, backend=backend)
             assert executed['errors']
             assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to view that organization"
+            assert executed['errors'][0]['message'] == "Error, organization does not exist"

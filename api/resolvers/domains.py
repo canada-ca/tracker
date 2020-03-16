@@ -61,6 +61,8 @@ def resolve_domain(self: Domain, info, **kwargs):
         if is_user_read(user_role, org_id):
             query_rtn = query.filter(
                 Domains.domain == url
+            ).filter(
+                Domains.organization_id == org_id
             ).all()
         else:
             raise GraphQLError("Error, you do not have permission to view that domain")
@@ -98,7 +100,7 @@ def resolve_domains(self, info, **kwargs):
         # Retrieve org id from organization enum
         with app.app_context():
             org_orm = db.session.query(Organizations).filter(
-                Organizations.organization == organization
+                Organizations.acronym == organization
             ).options(load_only('id'))
 
         # Check if org exists
@@ -145,5 +147,7 @@ def resolve_domains(self, info, **kwargs):
                         Domains.organization_id == org_id
                     ).first()
                     query_rtr.append(tmp_query)
+            if not query_rtr:
+                raise GraphQLError("Error, no domains to display")
             return query_rtr
 
