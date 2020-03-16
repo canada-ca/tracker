@@ -8,26 +8,13 @@ from model_enums.organiztions import OrganizationsEnum
 
 from model_enums.roles import RoleEnums
 
-from schemas.user import (
-    UserConnection,
-    CreateUser,
-    SignInUser,
-    UpdateUserPassword,
-    ValidateTwoFactor
-)
-
 from schemas.user_affiliations import (
     UpdateUserRole
 )
 
-
 from resolvers.notification_emails import (
     resolve_send_password_reset,
     resolve_send_validation_email
-)
-
-from resolvers.users import (
-   resolve_generate_otp_url
 )
 
 from resolvers.user_affiliations import (
@@ -61,12 +48,14 @@ from resolvers.organizations import (
     resolve_organizations
 )
 
+from schemas.user_affiliations import UserAffClass
+
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
     users = SQLAlchemyConnectionField(UserObject._meta.connection, sort=None)
-
+    user_aff = SQLAlchemyConnectionField(UserAffClass._meta.connection, sort=None)
     # --- Start Organization Queries ---
     organization = SQLAlchemyConnectionField(
         Organization._meta.connection,
