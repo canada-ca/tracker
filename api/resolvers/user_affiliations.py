@@ -12,6 +12,9 @@ from functions.auth_functions import (
     is_user_read
 )
 
+# @require_token
+# def resolve_user_aff(self, info, **kwargs):
+
 
 @require_token
 def resolve_test_user_claims(self, info, **kwargs):

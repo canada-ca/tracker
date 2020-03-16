@@ -56,6 +56,12 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
     users = SQLAlchemyConnectionField(UserObject._meta.connection, sort=None)
     user_aff = SQLAlchemyConnectionField(UserAffClass._meta.connection, sort=None)
+
+    user = graphene.List(
+        lambda: UserObject,
+        user_email=graphene.Argument(EmailAddress, required=False)
+    )
+
     # --- Start Organization Queries ---
     organization = SQLAlchemyConnectionField(
         Organization._meta.connection,
