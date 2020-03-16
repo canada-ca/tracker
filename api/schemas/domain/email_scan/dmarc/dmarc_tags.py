@@ -43,6 +43,8 @@ class DmarcTags(SQLAlchemyObjectType):
             for value in self.dmarc_scan["dmarc"]["tags"]["rua"]["value"]:
                 if value["address"] == "dmarc@cyber.gc.ca":
                     tags.update({"dmarc10": "RUA-CCCS"})
+                elif value["address"] is not None:
+                    tags.update({"dmarc22": "CNAME-DMARC"})
             if not self.dmarc_scan["dmarc"]["tags"]["rua"]["value"]:
                 tags.update({"dmarc12": "RUA-none"})
 
@@ -50,6 +52,8 @@ class DmarcTags(SQLAlchemyObjectType):
             for value in self.dmarc_scan["dmarc"]["tags"]["ruf"]["value"]:
                 if value["address"] == "dmarc@cyber.gc.ca":
                     tags.update({"dmarc11": "RUF-CCCS"})
+                elif value["address"] is not None and "dmarc22" not in tags:
+                    tags.update({"dmarc22": "CNAME-DMARC"})
             if not self.dmarc_scan["dmarc"]["tags"]["ruf"]["value"]:
                 tags.update({"dmarc13": "RUF-none"})
 
