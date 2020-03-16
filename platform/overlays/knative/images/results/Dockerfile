@@ -8,7 +8,6 @@ COPY . ./
 # Install production dependencies.
 RUN pip3 install Flask gunicorn
 RUN pip3 install Flask-SQLAlchemy
-RUN pip3 install jwt
 RUN pip3 install graphene
 
 # Run the web service on container startup. Here we use the gunicorn
