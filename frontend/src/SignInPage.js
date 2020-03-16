@@ -13,18 +13,17 @@ import {
   Button,
   Link,
 } from '@chakra-ui/core'
-import { Link as RouteLink, Redirect, useHistory } from 'react-router-dom'
+import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Formik, Field } from 'formik'
-import { LandingPage } from './LandingPage'
 
 export function SignInPage() {
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
 
-  const client = useApolloClient();
-  const history = useHistory();
+  const client = useApolloClient()
+  const history = useHistory()
 
   const [signIn, { loading, error, data }] = useMutation(gql`
     mutation SignIn($userName: EmailAddress!, $password: String!) {
@@ -45,7 +44,7 @@ export function SignInPage() {
     if (data.error) {
       console.log(error)
     }
-    
+
     // Write JWT to apollo client data store
     client.writeData({ data: { jwt: data.signIn.authToken } })
 
