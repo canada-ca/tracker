@@ -35,6 +35,10 @@ from schemas.user import (
     UpdateUserPassword,
     ValidateTwoFactor,
     )
+from resolvers.users import (
+    resolve_user,
+    resolve_users
+)
 
 from schemas.domain import Domain
 from resolvers.domains import (
@@ -54,13 +58,28 @@ from schemas.user_affiliations import UserAffClass
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
-    users = SQLAlchemyConnectionField(UserObject._meta.connection, sort=None)
-    user_aff = SQLAlchemyConnectionField(UserAffClass._meta.connection, sort=None)
+    # --- Start User Queries ---
+    users = SQLAlchemyConnectionField(
+        UserObject._meta.connection,
+        org=graphene.Argument(OrganizationsEnum, required=True),
+        sort=None
+    )
+    with app.app_context():
+        def resolve_users(self, info, **kwargs):
+            return resolve_users(self, info, **kwargs)
 
     user = graphene.List(
         lambda: UserObject,
-        user_email=graphene.Argument(EmailAddress, required=False)
+        user_name=graphene.Argument(EmailAddress, required=False)
     )
+    with app.app_context():
+        def resolve_user(self, info, **kwargs):
+            return resolve_user(self, info, **kwargs)
+    # --- End User Queries
+
+    # --- Start User Affiliations ---
+    user_aff = SQLAlchemyConnectionField(UserAffClass._meta.connection, sort=None)
+    # --- End User Affiliations ---
 
     # --- Start Organization Queries ---
     organization = SQLAlchemyConnectionField(

@@ -1,13 +1,20 @@
 import pyotp
 import os
 
+from sqlalchemy.orm import load_only
+
+from graphql import GraphQLError
+
 from app import app
 from db import db
 
-from models import Users
+from models import (
+    Users,
+    User_affiliations,
+    Organizations
+)
 
 from schemas.user import UserObject as UserSchema
-
 
 from functions.auth_wrappers import require_token
 from functions.auth_functions import (
@@ -31,7 +38,7 @@ def resolve_user(self, info, **kwargs):
     # Get information from kwargs
     user_id = kwargs.get('user_id')
     user_roles = kwargs.get('user_roles')
-    user_email = kwargs.get('user_email', None)
+    user_name = kwargs.get('user_name', None)
 
     # Generate user Org ID list
     org_id_list = []
@@ -41,9 +48,74 @@ def resolve_user(self, info, **kwargs):
     # Get initial query
     query = UserSchema.get_query(info)
 
-    if user_email is not None:
+    if user_name is not None:
+        req_user_id = db.session.query(Users).filter(
+            Users.user_name == user_name
+        ).options(load_only('id')).first().id
+        req_org_orm = db.session.query(User_affiliations).filter(
+            User_affiliations.user_id == req_user_id
+        ).options(load_only('organization_id')).first()
+
+        if req_org_orm is None:
+            raise GraphQLError("Error, user does not belong to any organization")
+        else:
+            req_org_id = req_org_orm.organization_id
+
+        if req_org_id in org_id_list:
+            if is_admin(user_role=user_roles, org_id=req_org_id):
+                return query.filter(Users.id == req_user_id)
+            else:
+                raise GraphQLError(
+                    "Error, you do not have permission to view this users"
+                    " information"
+                )
+    else:
+        return query.filter(Users.id == user_id)
 
 
+@require_token
+def resolve_users(self, info, **kwargs):
+    """
+
+    :param self:
+    :param info:
+    :param kwargs:
+    :return:
+    """
+
+    # Get information from kwargs
+    user_roles = kwargs.get('user_roles')
+    org = kwargs.get('org', None)
+
+    # Generate user Org ID list
+    org_id_list = []
+    for role in user_roles:
+        org_id_list.append(role["org_id"])
+
+    # Get initial query
+    query = UserSchema.get_query(info)
+
+    org_orm = db.session.query(Organizations).filter(
+        Organizations.acronym == org
+    ).first()
+
+    if org_orm is None:
+        raise GraphQLError("Error, no organization related to that enum")
+    else:
+        org_id = org_orm.id
+
+    if is_admin(user_role=user_roles, org_id=org_id):
+        user_id_list = db.session.query(User_affiliations).filter(
+            User_affiliations.organization_id == org_id
+        ).options(load_only("user_id")).subquery()
+        query = query.filter(
+            Users.id == user_id_list.c.user_id
+        )
+        return query.all()
+    else:
+        raise GraphQLError(
+            "Error, you do not have access to view this organization"
+        )
 
 
 def resolve_generate_otp_url(self, info, email):
