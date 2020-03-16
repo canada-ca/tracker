@@ -7,10 +7,11 @@ import {
   Input,
   Stack,
   Text,
+  useToast,
 } from '@chakra-ui/core'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
-import { Link as RouteLink } from 'react-router-dom'
+import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { Field, Formik } from 'formik'
 
 export function CreateUserPage() {
@@ -34,6 +35,10 @@ export function CreateUserPage() {
     }
   `)
 
+  const history = useHistory()
+  const toast = useToast();
+
+
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
 
@@ -41,26 +46,14 @@ export function CreateUserPage() {
     if (data.error) {
       // Switch statement to handle the errors that we expect could come back from the API.
     } else {
-      return (
-        <Stack spacing={8} mx="auto" alignItems="center">
-          <Text fontSize="2xl">
-            Create an account by entering an email and password.
-          </Text>
-          <Text fontSize="md">
-            Your account has been successfuly created, you may now sign into
-            your account!
-          </Text>
-
-          <Stack spacing={8} isInline>
-            <Button as={RouteLink} to="/sign-in" variantColor="teal">
-              Sign in
-            </Button>
-            <Button as={RouteLink} to="/" variantColor="teal" variant="link">
-              Home
-            </Button>
-          </Stack>
-        </Stack>
-      )
+      history.push('/')
+      toast({
+        title: "Account created.",
+        description: "We've created your account for you, please sign in!",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      })
     }
 
     /* Check that a user's 2fa needs validation before this redirection.
