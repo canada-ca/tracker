@@ -72,4 +72,4 @@ class UpdateUserRole(graphene.Mutation):
     @require_token
     def mutate(self, info, **kwargs):
         user = update_user_role(**kwargs)
-        return UpdateUserRole(user=user, status="Update Successful")
+        return UpdateUserRole(status="Update Successful")

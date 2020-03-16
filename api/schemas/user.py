@@ -32,7 +32,7 @@ class UserObject(SQLAlchemyObjectType):
             "user_affiliation",
             "user_password",
         )
-    user_name = EmailAddress(description="Email that the user signed up with"),
+    user_name = EmailAddress(description="Email that the user signed up with")
     display_name = graphene.String(description="Name displayed to other users")
     lang = graphene.String(description="Users preferred language")
     tfa = graphene.Boolean(
