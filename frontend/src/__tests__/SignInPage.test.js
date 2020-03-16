@@ -152,6 +152,7 @@ describe('<SignInPage />', () => {
                 user {
                   userName
                   failedLoginAttempts
+                  tfaValidated
                 }
                 authToken
               }
@@ -168,6 +169,7 @@ describe('<SignInPage />', () => {
               user: {
                 userName: 'Thalia.Rosenbaum@gmail.com',
                 failedLoginAttempts: 4,
+                tfaValidated: false,
               },
               authToken: 'test123stringJWT',
             },
@@ -227,7 +229,5 @@ describe('<SignInPage />', () => {
     )
 
     expect(signOutBtn.innerHTML).toMatch(/Sign Out/i)
-
-
   })
 })

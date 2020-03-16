@@ -23,26 +23,25 @@ import gql from 'graphql-tag'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 
 export default function App() {
-  const { i18n } = useLingui()
-
-  const location = useLocation()
-  const refreshComponent = React.useState()
-
+  // Hooks to be used with this functional component
   const GET_JWT_TOKEN = gql`
     {
       jwt @client
+      tfa @client
     }
   `
-
+  const { i18n } = useLingui()
+  const location = useLocation()
+  const refreshComponent = React.useState()
   const { data } = useQuery(GET_JWT_TOKEN)
-
-  if (data) {
-    console.log(data.jwt)
-  }
   const client = useApolloClient()
 
+  // Set default local client data, this should be in 'defaults' object of Apollo Client but that does not work.
+  if (data === undefined) {
+    client.writeData({ data: { jwt: null, tfa: false } })
+  }
+
   useEffect(() => {
-    // If the homepage is clicked, refresh the state.
     if (location.pathname === '/') {
       refreshComponent // TODO: Ask mike about unused expression.
     }
@@ -75,7 +74,7 @@ export default function App() {
           </Link>
 
           {// Dynamically decide if the link should be sign in or sign out.
-          data && data.jwt == null ? (
+          (data && data.jwt === null) || data === undefined ? (
             <Link to="/sign-in">
               <Trans>Sign In</Trans>
             </Link>
@@ -91,7 +90,8 @@ export default function App() {
             </Link>
           )}
         </Navigation>
-        <TwoFactorNotificationBar />
+        {// Dynamically show the TwoFactorNotification bar
+        data && !data.tfa && <TwoFactorNotificationBar />}
         <Main>
           <Route exact path="/">
             <LandingPage />
