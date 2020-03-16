@@ -1,12 +1,14 @@
-import React from 'react'
-import { Route } from 'react-router-dom'
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-expressions */
+import React, { useEffect } from 'react'
+import { Route, useLocation } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { Global, css } from '@emotion/core'
 import { PageNotFound } from './PageNotFound'
 import { LandingPage } from './LandingPage'
 import { DomainsPage } from './DomainsPage'
-import { SignInPage } from "./SignInPage"
-import { CreateUserPage } from "./CreateUserPage"
+import { SignInPage } from './SignInPage'
+import { CreateUserPage } from './CreateUserPage'
 import { QRcodePage } from './QRcodePage'
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
@@ -16,9 +18,35 @@ import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
+import { useQuery, useApolloClient } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 
 export default function App() {
   const { i18n } = useLingui()
+
+  const location = useLocation()
+  const refreshComponent = React.useState()
+
+  const GET_JWT_TOKEN = gql`
+    {
+      jwt @client
+    }
+  `
+
+  const { data } = useQuery(GET_JWT_TOKEN)
+
+  if(data){
+    console.log(data.jwt)
+  }
+  const client = useApolloClient()
+
+  useEffect(() => {
+
+    // If the homepage is clicked, refresh the state.
+    if (location.pathname === '/') {
+      refreshComponent // TODO: Ask mike about unused expression.
+    }
+  })
 
   return (
     <>
@@ -45,9 +73,23 @@ export default function App() {
           <Link to="/domains">
             <Trans>Domains</Trans>
           </Link>
-          <Link to="/sign-in">
-            <Trans>Sign In</Trans>
-          </Link>
+
+          {// Dynamically decide if the link should be sign in or sign out.
+          (data && data.jwt == null) ? (
+            <Link to="/sign-in">
+              <Trans>Sign In</Trans>
+            </Link>
+          ) : (
+            <Link
+              to="/"
+              onClick={() => {
+                // This clears the JWT, essentially logging the user out in one go
+                client.writeData({ data: {jwt: null} }) // How is this done?
+              }}
+            >
+              <Trans>Sign Out</Trans>
+            </Link>
+          )}
         </Navigation>
         <Main>
           <Route exact path="/">
@@ -55,19 +97,19 @@ export default function App() {
           </Route>
 
           <Route path="/domains">
-            <DomainsPage/>
+            <DomainsPage />
           </Route>
 
           <Route path="/sign-in">
-            <SignInPage/>
+            <SignInPage />
           </Route>
 
           <Route path="/create-user">
-            <CreateUserPage/>
+            <CreateUserPage />
           </Route>
 
           <Route path="/two-factor-code">
-            <QRcodePage userName={""}/>
+            <QRcodePage userName={''} />
           </Route>
 
           <Route>

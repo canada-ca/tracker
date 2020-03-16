@@ -13,14 +13,17 @@ import {
   Button,
   Link,
 } from '@chakra-ui/core'
-import { Link as RouteLink } from 'react-router-dom'
-import { useMutation } from '@apollo/react-hooks'
+import { Link as RouteLink, useHistory } from 'react-router-dom'
+import { useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Formik, Field } from 'formik'
 
 export function SignInPage() {
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
+
+  const client = useApolloClient()
+  const history = useHistory()
 
   const [signIn, { loading, error, data }] = useMutation(gql`
     mutation SignIn($userName: EmailAddress!, $password: String!) {
@@ -41,8 +44,11 @@ export function SignInPage() {
     if (data.error) {
       console.log(error)
     }
-    console.log(data.signIn)
-    // Do something with the data.  Ie: Redirect if no error?
+
+    // Write JWT to apollo client data store
+    client.writeData({ data: { jwt: data.signIn.authToken } })
+
+    history.push('/')
   }
 
   function validateField(value) {
@@ -60,17 +66,16 @@ export function SignInPage() {
       <Formik
         initialValues={{ email: '', password: '' }}
         onSubmit={(values, actions) => {
-          setTimeout(() => {
-            signIn({
+          setTimeout(async () => {
+            await signIn({
               variables: { userName: values.email, password: values.password },
             })
-
-            actions.setSubmitting(false)
           }, 500)
+          actions.setSubmitting(false)
         }}
       >
         {props => (
-          <form onSubmit={props.handleSubmit}>
+          <form id="form" onSubmit={props.handleSubmit}>
             <Field name="email" validate={validateField}>
               {({ field, form }) => (
                 <FormControl
@@ -120,7 +125,9 @@ export function SignInPage() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  <FormErrorMessage>Password{form.errors.password}</FormErrorMessage>
+                  <FormErrorMessage>
+                    Password{form.errors.password}
+                  </FormErrorMessage>
                 </FormControl>
               )}
             </Field>
