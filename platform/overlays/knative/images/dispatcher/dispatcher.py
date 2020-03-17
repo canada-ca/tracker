@@ -55,10 +55,11 @@ def receive():
 
         dispatch(payload, dkim_flag)
 
+        return 'Domain dispatched to designated scanner(s)'
+
     except Exception as e:
         logging.error('Failed: %s\n' % str(e))
-
-    return 'Domain dispatched to designated scanner(s)'
+        return 'Failed to dispatch domain to designated scanner(s)'
 
 
 def dispatch(payload, dkim_flag):
