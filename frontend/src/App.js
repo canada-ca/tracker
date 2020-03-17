@@ -16,7 +16,7 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Flex, Link, CSSReset } from '@chakra-ui/core'
+import { Flex, Link, CSSReset, useToast } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
@@ -33,15 +33,17 @@ export default function App() {
   const { i18n } = useLingui()
   const location = useLocation()
   const refreshComponent = React.useState()
-  const { data } = useQuery(GET_JWT_TOKEN)
+  const toast = useToast()
   const client = useApolloClient()
-
+  const { data } = useQuery(GET_JWT_TOKEN)
+  
   // Set default local client data, this should be in 'defaults' object of Apollo Client but that does not work.
   if (data === undefined) {
     client.writeData({ data: { jwt: null, tfa: false } })
   }
 
   useEffect(() => {
+    // If the homepage is clicked, refresh the state.
     if (location.pathname === '/') {
       refreshComponent // TODO: Ask mike about unused expression.
     }
@@ -75,6 +77,7 @@ export default function App() {
 
           {// Dynamically decide if the link should be sign in or sign out.
           (data && data.jwt === null) || data === undefined ? (
+
             <Link to="/sign-in">
               <Trans>Sign In</Trans>
             </Link>
@@ -84,6 +87,13 @@ export default function App() {
               onClick={() => {
                 // This clears the JWT, essentially logging the user out in one go
                 client.writeData({ data: { jwt: null } }) // How is this done?
+                toast({
+                  title: 'Sign Out.',
+                  description: 'You have successfully been signed out.',
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                })
               }}
             >
               <Trans>Sign Out</Trans>

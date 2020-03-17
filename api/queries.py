@@ -55,11 +55,42 @@ from resolvers.domains import (
     resolve_domains
 )
 
+from schemas.organizations import Organization
+from resolvers.organizations import (
+    resolve_organization,
+    resolve_organizations
+)
+
+
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
     users = SQLAlchemyConnectionField(UserObject._meta.connection, sort=None)
 
+    # --- Start Organization Queries ---
+    organization = SQLAlchemyConnectionField(
+        Organization._meta.connection,
+        org=graphene.Argument(OrganizationsEnum, required=True),
+        sort=None,
+        description="Select all information on a selected organization that a "
+                    "user has access to "
+    )
+    with app.app_context():
+        def resolve_organization(self, info, **kwargs):
+            return resolve_organization(self, info, **kwargs)
+
+    organizations = SQLAlchemyConnectionField(
+        Organization._meta.connection,
+        sort=None,
+        description="Select all information on all organizations that a user "
+                    "has access to "
+    )
+    with app.app_context():
+        def resolve_organizations(self, info, **kwargs):
+            return resolve_organizations(self, info, **kwargs)
+    # --- End Organization Queries ---
+
+    # --- Start Domain Queries ---
     domain = SQLAlchemyConnectionField(
         Domain._meta.connection,
         url=graphene.Argument(URL, required=True),
@@ -80,6 +111,7 @@ class Query(graphene.ObjectType):
     with app.app_context():
         def resolve_domains(self, info, **kwargs):
             return resolve_domains(self, info, **kwargs)
+    # --- End Domain Queries ---
 
     generate_otp_url = graphene.String(
         email=graphene.Argument(EmailAddress, required=True),

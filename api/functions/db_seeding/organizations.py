@@ -4,7 +4,7 @@ from models import Organizations
 def seed_org(db, app):
     org = Organizations(
         id=1,
-        organization='ORG1',
+        acronym='ORG1',
         org_tags={
             "description": 'Organization 1'
         }
@@ -14,7 +14,7 @@ def seed_org(db, app):
 
     org = Organizations(
         id=2,
-        organization='ORG2',
+        acronym='ORG2',
         org_tags={
             "description": 'Organization 2'
         }
@@ -24,7 +24,7 @@ def seed_org(db, app):
 
     org = Organizations(
         id=3,
-        organization='ORG3',
+        acronym='ORG3',
         org_tags={
             "description": 'Organization 3'
         }

@@ -28,7 +28,7 @@ def update_user_role(**kwargs):
         user = User.query.filter(User.user_name == user_name).all()
         user = orm_to_dict(user)
 
-        org_orm = Orgs.query.filter(Orgs.organization == org).first()
+        org_orm = Orgs.query.filter(Orgs.acronym == org).first()
         org_id = org_orm.id
 
     if user is None:
