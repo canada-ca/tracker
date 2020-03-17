@@ -46,24 +46,23 @@ def receive():
 def process_results(results, scan_type, scan_id):
 
     try:
-        #TODO Split up MX and SPF
         if scan_type is "dmarc":
             if results is not None:
-                report = {"dmarc": results["dmarc"]}
+                report = {"dmarc": results["dmarc"], "spf": results["spf"], "mx": results["mx"]}
             else:
-                report = {"dmarc": {"missing": True}}
+                report = {"dmarc": {"missing": True}, "spf": {"missing": True},  "mx": {"missing": True}}
 
         elif scan_type is "dkim":
             if results is not None:
-                report = {"dkim": results}
+                report = results
             else:
-                report = {"dkim": {"missing": True}}
+                report = {"missing": True}
 
         elif scan_type is "https":
             if results is not None:
-                report = {"https": {}}
+                report = {}
             else:
-                report = {"https": {"missing": True}}
+                report = {"missing": True}
 
             # Assumes that HTTPS would be technically present, with or without issues
             if boolean_for(results["Downgrades HTTPS"]):
@@ -79,7 +78,7 @@ def process_results(results, scan_type, scan_id):
                 else:
                     https = "Bad Hostname"  # No
 
-            report["https"]["implementation"] = https
+            report["implementation"] = https
 
             # Is HTTPS enforced?
 
@@ -115,7 +114,7 @@ def process_results(results, scan_type, scan_id):
                 else:
                     behavior = "Weak"  # Present (considered 'No')
 
-            report["https"]["enforced"] = behavior
+            report["enforced"] = behavior
 
             ###
             # Characterize the presence and completeness of HSTS.
@@ -164,36 +163,36 @@ def process_results(results, scan_type, scan_id):
             else:
                 self_signed = False
 
-            report["https"]["hsts"] = hsts
-            report["https"]["hsts_age"] = hsts_age
-            report["https"]["preload_status"] = preloaded
-            report["https"]["expired_cert"] = expired
-            report["https"]["self_signed_cert"] = self_signed
+            report["hsts"] = hsts
+            report["hsts_age"] = hsts_age
+            report["preload_status"] = preloaded
+            report["expired_cert"] = expired
+            report["self_signed_cert"] = self_signed
 
         elif scan_type is "ssl":
             if results is not None:
-                report = {"ssl": {}}
+                report = {}
             else:
-                report = {"ssl": {"missing": True}}
+                report = {"missing": True}
 
             # Get cipher/protocol data via sslyze for a host.
 
             if results is None:
-                report["ssl"]["sslv2"] = False
-                report["ssl"]["sslv3"] = False
-                report["ssl"]["tlsv1_0"] = False
-                report["ssl"]["tlsv1_1"] = False
-                report["ssl"]["tlsv1_2"] = False
-                report["ssl"]["tlsv1_3"] = False
-                report["ssl"]["bod_crypto"] = False
-                report["ssl"]["rc4"] = False
-                report["ssl"]["3des"] = False
-                report["ssl"]["used_ciphers"] = []
-                report["ssl"]["good_cert"] = False
-                report["ssl"]["signature_algorithm"] = None
-                report["ssl"]["starttls"] = False
-                report["ssl"]["heartbleed"] = False
-                report["ssl"]["openssl_ccs_injection"] = False
+                report["sslv2"] = False
+                report["sslv3"] = False
+                report["tlsv1_0"] = False
+                report["tlsv1_1"] = False
+                report["tlsv1_2"] = False
+                report["tlsv1_3"] = False
+                report["bod_crypto"] = False
+                report["rc4"] = False
+                report["3des"] = False
+                report["used_ciphers"] = []
+                report["good_cert"] = False
+                report["signature_algorithm"] = None
+                report["starttls"] = False
+                report["heartbleed"] = False
+                report["openssl_ccs_injection"] = False
                 return results
 
 
@@ -209,15 +208,15 @@ def process_results(results, scan_type, scan_id):
 
             for version in ["SSLV2", "SSLV3", "TLSV1", "TLSV1_1", "TLSV1_2", "TLSV1_3"]:
                 if version in results.keys():
-                    report["ssl"][version] = True
+                    report[version] = True
                     highest_ssl_version_supported = version
                 else:
-                    report["ssl"][version] = False
+                    report[version] = False
 
             used_ciphers = {cipher for cipher in results[highest_ssl_version_supported].accepted_cipher_list}
             signature_algorithm = results["signature_algorithm"]
 
-            if any([any_rc4, any_3des, report["ssl"]["SSLV2"], report["ssl"]["SSLV3"], report["ssl"]["TLSV1"], report["ssl"]["TLSV1_1"]]):
+            if any([any_rc4, any_3des, report["SSLV2"], report["SSLV3"], report["TLSV1"], report["TLSV1_1"]]):
                 bod_crypto = False
             else:
                 bod_crypto = True
@@ -232,16 +231,16 @@ def process_results(results, scan_type, scan_id):
             else:
                 good_cert = False
 
-            report["ssl"]["bod_crypto"] = bod_crypto
-            report["ssl"]["rc4"] = any_rc4
-            report["ssl"]["3des"] = any_3des
-            report["ssl"]["used_ciphers"] = used_ciphers
-            report["ssl"]["acceptable_certificate"] = good_cert
-            report["ssl"]["signature_algorithm"] = signature_algorithm
-            report["ssl"]["starttls"] = starttls
+            report["bod_crypto"] = bod_crypto
+            report["rc4"] = any_rc4
+            report["3des"] = any_3des
+            report["used_ciphers"] = used_ciphers
+            report["acceptable_certificate"] = good_cert
+            report["signature_algorithm"] = signature_algorithm
+            report["starttls"] = starttls
 
-            report["ssl"]["heartbleed"] = heartbleed
-            report["ssl"]["openssl_ccs_injection"] = ccs_injection
+            report["heartbleed"] = heartbleed
+            report["openssl_ccs_injection"] = ccs_injection
 
     except Exception as e:
         return str(e), False
@@ -256,20 +255,20 @@ def insert(report, scan_type, scan_id):
     scan = Scans.query.filter(Scans.id == scan_id).first()
 
     if scan_type is "https":
-        result_obj = Https_scans(https_scan=report, https_flagged_scan=scan)
+        result_obj = Https_scans(https_scan={"https": report}, https_flagged_scan=scan)
         db.session.add(result_obj)
     elif scan_type is "ssl":
-        result_obj = Ssl_scans(ssl_scan=report, ssl_flagged_scan=scan)
+        result_obj = Ssl_scans(ssl_scan={"ssl": report}, ssl_flagged_scan=scan)
         db.session.add(result_obj)
     elif scan_type is "dmarc":
-        dmarc_obj = Dmarc_scans(dmarc_scan=report, dmarc_flagged_scan=scan)
-        mx_obj = Mx_scans(mx_scan=report, mx_flagged_scan=scan)
-        spf_obj = Spf_scans(spf_scan=report, spf_flagged_scan=scan)
+        dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": report["dmarc"]}, dmarc_flagged_scan=scan)
+        mx_obj = Mx_scans(mx_scan={"mx": report["mx"]}, mx_flagged_scan=scan)
+        spf_obj = Spf_scans(spf_scan={"spf": report["spf"]}, spf_flagged_scan=scan)
         db.session.add(dmarc_obj)
         db.session.add(mx_obj)
         db.session.add(spf_obj)
     elif scan_type is "dkim":
-        result_obj = Dkim_scans(dkim_scan=report, dkim_flagged_scan=scan)
+        result_obj = Dkim_scans(dkim_scan={"dkim": report}, dkim_flagged_scan=scan)
         db.session.add(result_obj)
 
     try:
