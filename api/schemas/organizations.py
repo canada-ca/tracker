@@ -6,9 +6,11 @@ from graphene_sqlalchemy.types import ORMField
 from app import app
 
 from schemas.domain import Domain as DomainsSchema
+from schemas.user_affiliations import UserAffClass
 
 from models import Domains as DomainsModel
 from models import Organizations as OrgModel
+from models import User_affiliations as UserAffModel
 
 from functions.auth_functions import is_admin
 from functions.auth_wrappers import require_token
@@ -34,7 +36,9 @@ class Organization(SQLAlchemyObjectType):
     domains = graphene.ConnectionField(
         DomainsSchema._meta.connection
     )
-    users = ORMField(model_attr='users')
+    affiliated_users = graphene.ConnectionField(
+        UserAffClass._meta.connection
+    )
 
     with app.app_context():
         def resolve_acronym(self: OrgModel, info):
@@ -60,6 +64,13 @@ class Organization(SQLAlchemyObjectType):
             return query.filter(
                 DomainsModel.organization_id == self.id
             ).all()
+
+        def resolve_affiliated_users(self: OrgModel, info):
+            query = UserAffClass.get_query(info)
+            query = query.filter(
+                UserAffModel.organization_id == self.id
+            ).all()
+            return query
 
 
 class OrganizationConnection(relay.Connection):

@@ -11,15 +11,15 @@ from app import app
 
 from schemas.user_affiliations import UserAffClass
 
-from models import Users as User
+from models import Users as UserModel
 from models import User_affiliations
 
 from scalars.email_address import EmailAddress
 
 
-class UserObject(SQLAlchemyObjectType):
+class User(SQLAlchemyObjectType):
     class Meta:
-        model = User
+        model = UserModel
         interfaces = (relay.Node,)
         exclude_fields = (
             "id",
@@ -44,19 +44,19 @@ class UserObject(SQLAlchemyObjectType):
     )
 
     with app.app_context():
-        def resolve_user_name(self: User, info):
+        def resolve_user_name(self: UserModel, info):
             return self.user_name
 
-        def resolve_display_name(self: User, info):
+        def resolve_display_name(self: UserModel, info):
             return self.display_name
 
-        def resolve_lang(self: User, info):
+        def resolve_lang(self: UserModel, info):
             return self.preferred_lang
 
-        def resolve_tfa(self: User, info):
+        def resolve_tfa(self: UserModel, info):
             return self.tfa_validated
 
-        def resolve_affiliations(self: User, info):
+        def resolve_affiliations(self: UserModel, info):
             query = UserAffClass.get_query(info)
             query = query.filter(User_affiliations.user_id == self.id)
             return query.all()
@@ -64,7 +64,7 @@ class UserObject(SQLAlchemyObjectType):
 
 class UserConnection(relay.Connection):
     class Meta:
-        node = UserObject
+        node = User
 
 
 class CreateUser(graphene.Mutation):
@@ -74,7 +74,7 @@ class CreateUser(graphene.Mutation):
         confirm_password = graphene.String(required=True)
         user_name = EmailAddress(required=True)
 
-    user = graphene.Field(lambda: UserObject)
+    user = graphene.Field(lambda: User)
 
     @staticmethod
     def mutate(self, info, display_name, password, confirm_password, user_name):
@@ -88,7 +88,7 @@ class SignInUser(graphene.Mutation):
         password = graphene.String(required=True,
                                    description="Users's password")
 
-    user = graphene.Field(lambda: UserObject)
+    user = graphene.Field(lambda: User)
     auth_token = graphene.String(description="Token returned to user")
 
     @classmethod
@@ -106,7 +106,7 @@ class UpdateUserPassword(graphene.Mutation):
         confirm_password = graphene.String(required=True)
         user_name = EmailAddress(required=True)
 
-    user = graphene.Field(lambda: UserObject)
+    user = graphene.Field(lambda: User)
 
     @staticmethod
     def mutate(self, info, password, confirm_password, user_name):
@@ -120,7 +120,7 @@ class ValidateTwoFactor(graphene.Mutation):
         user_name = EmailAddress(required=True)
         otp_code = graphene.String(required=True)
 
-    user = graphene.Field(lambda: UserObject)
+    user = graphene.Field(lambda: User)
 
     @staticmethod
     def mutate(self, info, user_name, otp_code):

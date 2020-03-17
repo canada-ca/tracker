@@ -12,10 +12,6 @@ from model_enums.roles import RoleEnums
 from scalars.email_address import EmailAddress
 
 from models import User_affiliations as UserAff
-from models import Organizations
-
-# from schemas.user import UserObject
-from schemas.organizations import Organization
 
 from functions.auth_wrappers import require_token
 
@@ -37,10 +33,7 @@ class UserAffClass(SQLAlchemyObjectType):
     permission = RoleEnums(
         description="User's level of access to a given organization"
     )
-    organization = graphene.List(
-        lambda: Organization,
-        description="Organization's information"
-    )
+    organization = ORMField(model_attr='user_organization')
 
     with app.app_context():
         def resolve_user_id(self: UserAff, info):
@@ -48,11 +41,6 @@ class UserAffClass(SQLAlchemyObjectType):
 
         def resolve_permission(self: UserAff, info):
             return self.permission
-
-        def resolve_organization(self: UserAff, info):
-            query = Organization.get_query(info)
-            query = query.filter(self.organization_id == Organizations.id)
-            return query.all()
 
 
 class UserAffConnection(relay.Connection):

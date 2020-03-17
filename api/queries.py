@@ -20,7 +20,7 @@ from resolvers.notification_emails import (
 from resolvers.user_affiliations import (
     resolve_test_user_claims
 )
-from resolvers.users import (
+from resolvers.user import (
     resolve_generate_otp_url,
 )
 from scalars.email_address import EmailAddress
@@ -29,16 +29,14 @@ from schemas.notification_email import (NotificationEmail)
 
 
 from schemas.user import (
-    UserObject,
+    User,
     CreateUser,
     SignInUser,
     UpdateUserPassword,
     ValidateTwoFactor,
-    )
-from resolvers.users import (
-    resolve_user,
-    resolve_users
 )
+from resolvers.user import resolve_user
+
 
 from schemas.domain import Domain
 from resolvers.domains import (
@@ -52,7 +50,8 @@ from resolvers.organizations import (
     resolve_organizations
 )
 
-from schemas.user_affiliations import UserAffClass
+from schemas.users import Users
+from resolvers.users import resolve_users
 
 
 class Query(graphene.ObjectType):
@@ -60,7 +59,7 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
     # --- Start User Queries ---
     users = SQLAlchemyConnectionField(
-        UserObject._meta.connection,
+        Users._meta.connection,
         org=graphene.Argument(OrganizationsEnum, required=True),
         sort=None
     )
@@ -69,17 +68,13 @@ class Query(graphene.ObjectType):
             return resolve_users(self, info, **kwargs)
 
     user = graphene.List(
-        lambda: UserObject,
+        lambda: User,
         user_name=graphene.Argument(EmailAddress, required=False)
     )
     with app.app_context():
         def resolve_user(self, info, **kwargs):
             return resolve_user(self, info, **kwargs)
     # --- End User Queries
-
-    # --- Start User Affiliations ---
-    user_aff = SQLAlchemyConnectionField(UserAffClass._meta.connection, sort=None)
-    # --- End User Affiliations ---
 
     # --- Start Organization Queries ---
     organization = SQLAlchemyConnectionField(
