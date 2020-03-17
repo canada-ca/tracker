@@ -13,7 +13,6 @@ import {
 } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { CreateUserPage } from '../CreateUserPage'
-import gql from 'graphql-tag'
 
 i18n.load('en', { en: {} })
 i18n.activate('en')
@@ -121,108 +120,5 @@ describe('<CreateUserPage />', () => {
     )
 
     expect(errorElement.innerHTML).toMatch(/Confirm Password can not be empty/i)
-  })
-
-  test('successful creation of a new user results in proper message being displayed', async () => {
-    const values = {
-      email: 'testuser@testemail.ca',
-      password: 'testuserpassword',
-      confirmPassword: 'testuserpassword',
-    }
-
-    const mocks = [
-      {
-        request: {
-          query: gql`
-            mutation CreateUser(
-              $displayName: String!
-              $userName: EmailAddress!
-              $password: String!
-              $confirmPassword: String!
-            ) {
-              createUser(
-                displayName: $displayName
-                userName: $userName
-                password: $password
-                confirmPassword: $confirmPassword
-              ) {
-                user {
-                  userName
-                }
-              }
-            }
-          `,
-          variables: {
-            userName: values.email,
-            password: values.password,
-            confirmPassword: values.confirmPassword,
-            displayName: values.email,
-          },
-        },
-        result: {
-          data: {
-            createUser: {
-              user: {
-                userName: 'Thalia.Rosenbaum@gmail.com',
-              },
-            },
-          },
-        },
-      },
-    ]
-    const { container } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <CreateUserPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
-    expect(render).toBeTruthy()
-
-    const email = container.querySelector('#email')
-    const password = container.querySelector('#password')
-    const confirmPassword = container.querySelector('#confirmPassword')
-    const form = container.querySelector('#form')
-
-    await wait(() => {
-      fireEvent.change(email, {
-        target: {
-          value: values.email,
-        },
-      })
-    })
-
-    await wait(() => {
-      fireEvent.change(password, {
-        target: {
-          value: values.password,
-        },
-      })
-    })
-
-    await wait(() => {
-      fireEvent.change(confirmPassword, {
-        target: {
-          value: values.confirmPassword,
-        },
-      })
-    })
-
-    await wait(() => {
-      fireEvent.submit(form)
-    })
-
-    const successMsg = await waitForElement(
-      () => getByText(container, /Your account has been successfuly created/i),
-      { container },
-    )
-
-    expect(successMsg.innerHTML).toMatch(
-      /Your account has been successfuly created, you may now sign into your account!/i,
-    )
   })
 })
