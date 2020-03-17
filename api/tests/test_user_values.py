@@ -275,6 +275,3 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
                 }
             }
             self.assertDictEqual(result_refr, executed)
-
-
-
