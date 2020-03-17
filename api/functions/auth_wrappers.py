@@ -42,8 +42,7 @@ def check_user_claims(user_claims):
     """
     user_roles = []
     if user_claims[0] == 'none':
-        raise GraphQLError('Error, please contact your administrator for '
-                           'organization access.')
+        return {}
     elif user_claims:
         user_id = user_claims[0]['user_id']
         with app.app_context():
