@@ -1066,7 +1066,7 @@ type UserObject implements Node {
   preferredLang: String
   failedLoginAttempts: Int
   failedLoginAttemptTime: Float
-  tfaValidated: Boolean
+  tfaValidated: Boolean @examples(values: [false])
   userRole: String
 }
 

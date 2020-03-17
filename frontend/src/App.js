@@ -20,27 +20,27 @@ import { Flex, Link, CSSReset, useToast } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 
 export default function App() {
-  const { i18n } = useLingui()
-
-  const location = useLocation()
-  const refreshComponent = React.useState()
-
-  const toast = useToast()
-
+  // Hooks to be used with this functional component
   const GET_JWT_TOKEN = gql`
     {
       jwt @client
+      tfa @client
     }
   `
-
-  const { data } = useQuery(GET_JWT_TOKEN)
-
-  if (data) {
-    console.log(data.jwt)
-  }
+  const { i18n } = useLingui()
+  const location = useLocation()
+  const refreshComponent = React.useState()
+  const toast = useToast()
   const client = useApolloClient()
+  const { data } = useQuery(GET_JWT_TOKEN)
+  
+  // Set default local client data, this should be in 'defaults' object of Apollo Client but that does not work.
+  if (data === undefined) {
+    client.writeData({ data: { jwt: null, tfa: false } })
+  }
 
   useEffect(() => {
     // If the homepage is clicked, refresh the state.
@@ -76,7 +76,8 @@ export default function App() {
           </Link>
 
           {// Dynamically decide if the link should be sign in or sign out.
-          data && data.jwt == null ? (
+          (data && data.jwt === null) || data === undefined ? (
+
             <Link to="/sign-in">
               <Trans>Sign In</Trans>
             </Link>
@@ -99,6 +100,8 @@ export default function App() {
             </Link>
           )}
         </Navigation>
+        {// Dynamically show the TwoFactorNotification bar
+        data && !data.tfa && <TwoFactorNotificationBar />}
         <Main>
           <Route exact path="/">
             <LandingPage />

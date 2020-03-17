@@ -31,6 +31,7 @@ export function SignInPage() {
         user {
           userName
           failedLoginAttempts
+          tfaValidated
         }
         authToken
       }
@@ -46,7 +47,9 @@ export function SignInPage() {
     }
 
     // Write JWT to apollo client data store
-    client.writeData({ data: { jwt: data.signIn.authToken } })
+    client.writeData({
+      data: { jwt: data.signIn.authToken, tfa: data.signIn.user.tfaValidated },
+    })
 
     history.push('/')
   }
