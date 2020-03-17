@@ -26,7 +26,7 @@ export function SignInPage() {
   const client = useApolloClient()
   const history = useHistory()
 
-  const toast = useToast();
+  const toast = useToast()
 
   const [signIn, { loading, error, data }] = useMutation(gql`
     mutation SignIn($userName: EmailAddress!, $password: String!) {
@@ -45,18 +45,26 @@ export function SignInPage() {
 
   if (data) {
     if (data.error) {
-      console.log(error)
+      // If there is an error, the user is not signed in so display a toast.
+      toast({
+        title: 'An error occurred.',
+        description: 'Unable to sign in to your account, please try again.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
     }
 
     // Write JWT to apollo client data store
     client.writeData({ data: { jwt: data.signIn.authToken } })
 
+    // Redirect to home page and display a toast stating that sign in was successful
     history.push('/')
-
+    
     toast({
-      title: "Sign In.",
-      description: "Welcome, you are successfully signed in!",
-      status: "success",
+      title: 'Sign In.',
+      description: 'Welcome, you are successfully signed in!',
+      status: 'success',
       duration: 9000,
       isClosable: true,
     })
