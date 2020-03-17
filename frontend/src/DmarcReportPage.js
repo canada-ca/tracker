@@ -10,6 +10,8 @@ import {
   Divider,
 } from '@chakra-ui/core'
 
+import PieChart from 'react-minimal-pie-chart'
+
 export function DmarcReportPage() {
   return (
     <Box>
@@ -20,7 +22,12 @@ export function DmarcReportPage() {
         veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
         commodo consequat.
       </Text>
-      <SimpleGrid columns={{ sm: 1, md: 1, lg: 2, xl: 3 }} spacing="60px">
+      <SimpleGrid
+        columns={{ sm: 1, md: 1, lg: 2, xl: 2 }}
+        spacing="50px"
+        spacingY="100px"
+        mb="105px"
+      >
         <Stack>
           <Flex align="center">
             <Text fontSize="2xl" fontWeight="bold">
@@ -28,8 +35,27 @@ export function DmarcReportPage() {
             </Text>
             <Icon ml={2} name="check-circle" size="26px" color="green.500" />
           </Flex>
-
-          <Stack isInline>
+          <Flex
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box w={'40%'} mt="50px">
+              <PieChart
+                animate={true}
+                data={[
+                  { title: 'Passed Dmarc', value: 30, color: '#2D8133' },
+                  { title: 'Failed Dmarc', value: 15, color: '#e53e3e' },
+                ]}
+              />
+            </Box>
+            <Text fontSize="lg" mt={5}>
+              Result Breakdown
+            </Text>
+          </Flex>
+        </Stack>
+        <Stack>
+          <Stack isInline mt="100px">
             <Text fontSize="xl" fontWeight="semibold">
               IP address:
             </Text>
@@ -45,13 +71,24 @@ export function DmarcReportPage() {
 
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
-              Report ID:
+              Country:
             </Text>
-            <Text fontSize="xl">13414630431650365708</Text>
+            <Text fontSize="xl">Canada</Text>
           </Stack>
-          <Box width={'65%'} display="flex" justifyContent="center" alignItems="center">
-            
-          </Box>
+
+          <Stack isInline>
+            <Text fontSize="xl" fontWeight="semibold">
+              Reverse DNS:
+            </Text>
+            <Text fontSize="xl">null</Text>
+          </Stack>
+
+          <Stack isInline>
+            <Text fontSize="xl" fontWeight="semibold">
+              Base domain:
+            </Text>
+            <Text fontSize="xl">null</Text>
+          </Stack>
         </Stack>
 
         <Stack>
