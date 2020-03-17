@@ -39,8 +39,11 @@ def receive():
 
         dispatch(payload)
 
+        return 'Scan sent to result-handling service'
+
     except Exception as e:
         logging.error(str(e)+'\n')
+        return 'Failed to send scan to result-handling service'
 
 
 def dispatch(payload):
