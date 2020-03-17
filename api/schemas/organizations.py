@@ -65,12 +65,17 @@ class Organization(SQLAlchemyObjectType):
                 DomainsModel.organization_id == self.id
             ).all()
 
-        def resolve_affiliated_users(self: OrgModel, info):
-            query = UserAffClass.get_query(info)
-            query = query.filter(
-                UserAffModel.organization_id == self.id
-            ).all()
-            return query
+        @require_token
+        def resolve_affiliated_users(self: OrgModel, info, **kwargs):
+            user_roles = kwargs.get('user_roles')
+            if is_admin(user_role=user_roles, org_id=self.id):
+                query = UserAffClass.get_query(info)
+                query = query.filter(
+                    UserAffModel.organization_id == self.id
+                ).all()
+                return query
+            else:
+                return []
 
 
 class OrganizationConnection(relay.Connection):

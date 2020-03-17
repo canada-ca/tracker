@@ -52,10 +52,12 @@ def resolve_user(self, info, **kwargs):
         req_user_orm = db.session.query(Users).filter(
             Users.user_name == user_name
         ).options(load_only('id')).first()
+
         if req_user_orm is None:
             raise GraphQLError('Error, user cannot be found')
         else:
             req_user_id = req_user_orm.id
+
         req_org_orm = db.session.query(User_affiliations).filter(
             User_affiliations.user_id == req_user_id
         ).options(load_only('organization_id')).first()
@@ -65,16 +67,21 @@ def resolve_user(self, info, **kwargs):
         else:
             req_org_id = req_org_orm.organization_id
 
+        if is_super_admin(user_role=user_roles):
+            return query.filter(Users.id == req_user_id)
+
         if req_org_id in org_id_list:
-            if is_super_admin(user_role=user_roles):
-                return query.filter(Users.id == req_user_id)
-            elif is_admin(user_role=user_roles, org_id=req_org_id):
+            if is_admin(user_role=user_roles, org_id=req_org_id):
                 return query.filter(Users.id == req_user_id)
             else:
                 raise GraphQLError(
                     "Error, you do not have permission to view this users"
                     " information"
                 )
+        else:
+            raise GraphQLError(
+                "Error, user does not belong to any of your organizations"
+            )
     else:
         return query.filter(Users.id == user_id)
 
