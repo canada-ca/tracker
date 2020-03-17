@@ -33,7 +33,7 @@ def receive():
         domain = request.json['domain']
         res = scan(scan_id, domain)
         if res is not None:
-            payload = json.dumps({"results": str(res), "scan_type": "ssl", "scan_id": scan_id})
+            payload = json.loads(json.dumps({"results": str(res), "scan_type": "ssl", "scan_id": scan_id}))
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to establish SSL connection" % scan_id)
 
@@ -119,22 +119,22 @@ def scan(scan_id, domain):
     concurrent_scanner.queue_scan_command(server_info, HeartbleedScanCommand())
     concurrent_scanner.queue_scan_command(server_info, CertificateInfoScanCommand())
 
-    if tls_supported is "SSLV2":
+    if tls_supported == 'SSLV2':
         concurrent_scanner.queue_scan_command(server_info, Sslv20ScanCommand())
-    elif tls_supported is "SSLV3":
+    elif tls_supported == 'SSLV3':
         concurrent_scanner.queue_scan_command(server_info, Sslv30ScanCommand())
-    elif tls_supported is "TLSV1":
+    elif tls_supported == 'TLSV1':
         concurrent_scanner.queue_scan_command(server_info, Tlsv10ScanCommand())
-    elif tls_supported is "TLSV1_1":
+    elif tls_supported == 'TLSV1_1':
         concurrent_scanner.queue_scan_command(server_info, Tlsv11ScanCommand())
-    elif tls_supported is "TLSV1_2":
+    elif tls_supported == 'TLSV1_2':
         concurrent_scanner.queue_scan_command(server_info, Tlsv12ScanCommand())
-    elif tls_supported is "TLSV1_3":
+    elif tls_supported == 'TLSV1_3':
         concurrent_scanner.queue_scan_command(server_info, Tlsv13ScanCommand())
 
     scan_results = concurrent_scanner.get_results()
 
-    res = {"starttls": starttls}
+    res = {"starttls": starttls, tls_supported: {}}
     for result in scan_results:
         if result.__class__.__name__ is "CipherSuiteScanResult":
             res[tls_supported] = {"accepted_cipher_list": result.accepted_cipher_list,
@@ -153,7 +153,7 @@ def scan(scan_id, domain):
 
     rc4 = False
     triple_des = False
-    for cipher in res["tls_supported"]["accepted_cipher_list"]:
+    for cipher in res[tls_supported]["accepted_cipher_list"]:
         if "RC4" in cipher.name:
             rc4 = True
         if "3DES" in cipher.name:

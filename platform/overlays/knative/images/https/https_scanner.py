@@ -26,7 +26,7 @@ def receive():
         domain = request.json['domain']
         res = scan(scan_id, domain)
         if res is not None:
-            payload = json.dumps({"results": str(res), "scan_type": "https", "scan_id": scan_id})
+            payload = json.loads(json.dumps({"results": str(res), "scan_type": "https", "scan_id": scan_id}))
             logging.info(str(res)+'\n')
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting pshtt scan" % scan_id)
