@@ -21,6 +21,7 @@ import { SkipLink } from './SkipLink'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
+import { DmarcReportPage } from './DmarcReportPage'
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -36,7 +37,7 @@ export default function App() {
   const toast = useToast()
   const client = useApolloClient()
   const { data } = useQuery(GET_JWT_TOKEN)
-  
+
   // Set default local client data, this should be in 'defaults' object of Apollo Client but that does not work.
   if (data === undefined) {
     client.writeData({ data: { jwt: null, tfa: false } })
@@ -77,7 +78,6 @@ export default function App() {
 
           {// Dynamically decide if the link should be sign in or sign out.
           (data && data.jwt === null) || data === undefined ? (
-
             <Link to="/sign-in">
               <Trans>Sign In</Trans>
             </Link>
@@ -99,6 +99,10 @@ export default function App() {
               <Trans>Sign Out</Trans>
             </Link>
           )}
+
+          <Link to="/dmarc-report">
+            <Trans>DMARC</Trans>
+          </Link>
         </Navigation>
         {// Dynamically show the TwoFactorNotification bar
         data && !data.tfa && <TwoFactorNotificationBar />}
@@ -121,6 +125,10 @@ export default function App() {
 
           <Route path="/two-factor-code">
             <QRcodePage userName={''} />
+          </Route>
+
+          <Route path="/dmarc-report">
+            <DmarcReportPage />
           </Route>
 
           <Route>
