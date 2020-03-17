@@ -161,6 +161,54 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
             }
             self.assertDictEqual(result_refr, executed)
 
+    def test_get_another_users_information_user_does_not_exist(self):
+        """
+        Test to see that error message appears when user does not exist
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+
+            executed = client.execute(
+                '''
+                {
+                    user(userName: "IdontThinkSo@testemail.ca") {
+                        userName
+                        displayName
+                        lang
+                        tfa
+                        affiliations {
+                            edges {
+                                node {
+                                    userId
+                                }
+                            }
+                        }
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, user cannot be " \
+                                                       "found"
+
     # User read tests
     def test_get_own_user_information(self):
         """
