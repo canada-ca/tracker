@@ -76,7 +76,7 @@ def resolve_user(self, info, **kwargs):
                 req_user_org_id_list.append(org_id.organization_id)
 
         # Check to see if the requested user is a super admin and if true return
-        if is_super_admin(user_role=user_roles):
+        if is_super_admin(user_id=user_id):
             return query.filter(Users.id == req_user_id)
 
         # Declare return list, and check

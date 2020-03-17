@@ -24,6 +24,7 @@ def resolve_domain(self: Domain, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in via kwargs
+    user_id = kwargs.get('user_id')
     url = kwargs.get('url')
     user_role = kwargs.get('user_roles')
 
@@ -36,7 +37,7 @@ def resolve_domain(self: Domain, info, **kwargs):
     query = Domain.get_query(info)
 
     # Check to see if the user is a super admin, if true return all information
-    if is_super_admin(user_role=user_role):
+    if is_super_admin(user_id=user_id):
         query_rtn = query.filter(
             Domains.domain == url
         ).all()
@@ -84,6 +85,7 @@ def resolve_domains(self, info, **kwargs):
     # Get Information passed in from kwargs
     organization = kwargs.get('organization')
     user_role = kwargs.get('user_roles')
+    user_id = kwargs.get('user_id')
 
     # Generate list of org's the user has access to
     org_id_list = []
@@ -112,7 +114,7 @@ def resolve_domains(self, info, **kwargs):
 
         # Check if user is super admin, and if true return all domains belonging to
         # that domain
-        if is_super_admin(user_role=user_role):
+        if is_super_admin(user_id=user_id):
             query_rtn = query.filter(
                 Domains.organization_id == org_id
             ).all()

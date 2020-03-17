@@ -20,6 +20,7 @@ def resolve_test_user_claims(self, info, **kwargs):
     It requires that a JWT token be active, and that the user have an admin role
     :returns: Returns the user_claims if user is an admin, raises error message if not.
     """
+    user_id = kwargs.get('user_id')
     roles = kwargs.get('user_roles')
     test_role = kwargs.get('role')
     org = kwargs.get('org')
@@ -30,7 +31,7 @@ def resolve_test_user_claims(self, info, **kwargs):
     org_id = org_orm.id
 
     if test_role == 'super_admin':
-        if is_super_admin(roles):
+        if is_super_admin(user_id=user_id):
             return 'User Passed Super Admin Claim'
         else:
             raise GraphQLError('Error, user is not a super admin')
