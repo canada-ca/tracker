@@ -183,21 +183,21 @@ class TestAuthFunctions:
         assert not is_admin(user_role, org_id)
 
     def test_super_admin_check_perm_user_read(self):
-        user_role = [{'user_id': 1, 'org_id': 1, 'permission': 'user_read'}]
-        assert not is_super_admin(user_role)
+        user_id = 1
+        assert not is_super_admin(user_id)
 
     def test_super_admin_check_perm_user_write(self):
-        user_role = [{'user_id': 2, 'org_id': 1, 'permission': 'user_write'}]
-        assert not is_super_admin(user_role)
+        user_id = 2
+        assert not is_super_admin(user_id)
 
     def test_super_admin_check_perm_user_admin(self):
-        user_role = [{'user_id': 3, 'org_id': 1, 'permission': 'admin'}]
-        assert not is_super_admin(user_role)
+        user_id = 3
+        assert not is_super_admin(user_id)
 
     def test_super_admin_check_perm_super_admin(self):
-        user_role = [{'user_id': 4, 'org_id': 1, 'permission': 'super_admin'}]
-        assert is_super_admin(user_role)
+        user_id = 4
+        assert is_super_admin(user_id)
 
     def test_super_admin_check_invalid(self):
-        user_role = [{'user_id': 1, 'org_id': 1, 'permission': ''}]
-        assert not is_super_admin(user_role)
+        user_id = 1
+        assert not is_super_admin(user_id)
