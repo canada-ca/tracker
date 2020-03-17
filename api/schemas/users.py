@@ -34,13 +34,13 @@ class Users(SQLAlchemyObjectType):
     with app.app_context():
         def resolve_user_name(self: User_affiliations, info):
             query = User.get_query(info)
-            query.filter(Organizations.id == self.organization_id)
+            query =query.filter(Organizations.id == self.organization_id)
             query = query.filter(UserModel.id == self.user_id).first()
             return query.user_name
 
         def resolve_display_name(self: User_affiliations, info):
             query = User.get_query(info)
-            query.filter(Organizations.id == self.organization_id)
+            query = query.filter(Organizations.id == self.organization_id)
             query = query.filter(UserModel.id == self.user_id).first()
             return query.display_name
 
@@ -49,7 +49,7 @@ class Users(SQLAlchemyObjectType):
 
         def resolve_affiliations(self: User_affiliations, info):
             query = Organization.get_query(info)
-            query.filter(Organizations.users.user_id == self.id)
+            query =query.filter(Organizations.users.user_id == self.id)
             return query.all()
 
 
