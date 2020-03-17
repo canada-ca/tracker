@@ -47,11 +47,8 @@ def receive():
             algorithm=['HS256']
         )
 
-        for key, val in decoded_payload.items():
-            if key is 'dkim':
-                dkim_flag = val
-            elif key is 'scan_id' or key is "domain":
-                payload[key] = val
+        payload = json.dumps({'scan_id': decoded_payload['scan_id'], 'domain': decoded_payload['domain']})
+        dkim_flag = decoded_payload['dkim']
 
         dispatch(payload, dkim_flag)
 

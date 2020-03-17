@@ -39,8 +39,11 @@ def receive():
         else:
             raise Exception(res[0])
 
+        return "Results processed successfully"
+
     except Exception as e:
         logging.error('Failed: %s\n' % str(e))
+        return "Failed to process results"
 
 
 def process_results(results, scan_type, scan_id):
