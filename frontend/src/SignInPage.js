@@ -12,6 +12,7 @@ import {
   Stack,
   Button,
   Link,
+  useToast,
 } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation, useApolloClient } from '@apollo/react-hooks'
@@ -24,6 +25,8 @@ export function SignInPage() {
 
   const client = useApolloClient()
   const history = useHistory()
+
+  const toast = useToast();
 
   const [signIn, { loading, error, data }] = useMutation(gql`
     mutation SignIn($userName: EmailAddress!, $password: String!) {
@@ -49,6 +52,14 @@ export function SignInPage() {
     client.writeData({ data: { jwt: data.signIn.authToken } })
 
     history.push('/')
+
+    toast({
+      title: "Sign In.",
+      description: "Welcome, you are successfully signed in!",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    })
   }
 
   function validateField(value) {
