@@ -22,6 +22,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 MIN_HSTS_AGE = 31536000 # one year
 
 
+@app.errorhandler(400)
+def bad_request(e):
+    # 400 - Bad request
+    logging.error("Error (%s): Could not process results for the following request - %s" % (str(e), str(request)))
+
+
 @app.route('/receive', methods=['GET', 'POST'])
 def receive():
 
@@ -49,6 +55,8 @@ def receive():
 def process_results(results, scan_type, scan_id):
 
     try:
+        report = {}
+
         if scan_type is "dmarc":
             if results is not None:
                 report = {"dmarc": results["dmarc"], "spf": results["spf"], "mx": results["mx"]}
@@ -62,125 +70,123 @@ def process_results(results, scan_type, scan_id):
                 report = {"missing": True}
 
         elif scan_type is "https":
-            if results is not None:
-                report = {}
-            else:
+            if results is None:
                 report = {"missing": True}
 
-            # Assumes that HTTPS would be technically present, with or without issues
-            if boolean_for(results["Downgrades HTTPS"]):
-                https = "Downgrades HTTPS"  # No
             else:
-                if boolean_for(results["Valid HTTPS"]):
-                    https = "Valid HTTPS"  # Yes
-                elif (
-                    boolean_for(results["HTTPS Bad Chain"])
-                    and not boolean_for(results["HTTPS Bad Hostname"])
-                ):
-                    https = "Bad Chain"  # Yes
+
+                # Assumes that HTTPS would be technically present, with or without issues
+                if boolean_for(results["Downgrades HTTPS"]):
+                    https = "Downgrades HTTPS"  # No
                 else:
-                    https = "Bad Hostname"  # No
-
-            report["implementation"] = https
-
-            # Is HTTPS enforced?
-
-            if https is "Downgrades HTTPS" or "Bad Hostname":
-                behavior = "Not Enforced"  # N/A
-
-            else:
-
-                # "Strict" means HTTP immediately redirects to HTTPS,
-                # *and* that HTTP eventually redirects to HTTPS.
-                #
-                # Since a pure redirector domain can't "default" to HTTPS
-                # for itself, we'll say it "Enforces HTTPS" if it immediately
-                # redirects to an HTTPS URL.
-                if (
-                    boolean_for(results["Strictly Forces HTTPS"])
-                    and (
-                    boolean_for(results["Defaults to HTTPS"]) or boolean_for(results["Redirect"])
-                )
-                ):
-                    behavior = "Strict"  # Yes (Strict)
-
-                # "Moderate" means HTTP eventually redirects to HTTPS.
-                elif (
-                    not boolean_for(results["Strictly Forces HTTPS"])
-                    and boolean_for(results["Defaults to HTTPS"])
-                ):
-                    behavior = "Moderate"  # Yes
-
-                # Either both are False, or just 'Strict Force' is True,
-                # which doesn't matter on its own.
-                # A "present" is better than a downgrade.
-                else:
-                    behavior = "Weak"  # Present (considered 'No')
-
-            report["enforced"] = behavior
-
-            ###
-            # Characterize the presence and completeness of HSTS.
-
-            if results["HSTS Max Age"]:
-                hsts_age = int(results["HSTS Max Age"])
-            else:
-                hsts_age = None
-
-            # Otherwise, without HTTPS there can be no HSTS for the domain directly.
-            if https is "Downgrades HTTPS" or "Bad Hostname":
-                hsts = "No HSTS"  # N/A (considered 'No')
-
-            else:
-
-                # HSTS is present for the canonical endpoint.
-                if boolean_for(results["HSTS"]) and hsts_age:
-
-                    # Say No for too-short max-age's, and note in the extended details.
-                    if hsts_age >= MIN_HSTS_AGE:
-                        hsts = "HSTS Fully Implemented"  # Yes, directly
+                    if boolean_for(results["Valid HTTPS"]):
+                        https = "Valid HTTPS"  # Yes
+                    elif (
+                        boolean_for(results["HTTPS Bad Chain"])
+                        and not boolean_for(results["HTTPS Bad Hostname"])
+                    ):
+                        https = "Bad Chain"  # Yes
                     else:
-                        hsts = "HSTS Max Age Too Short"  # No
+                        https = "Bad Hostname"  # No
+
+                report["implementation"] = https
+
+                # Is HTTPS enforced?
+
+                if https is "Downgrades HTTPS" or "Bad Hostname":
+                    behavior = "Not Enforced"  # N/A
+
                 else:
-                    hsts = "No HSTS"  # No
 
-            # Separate preload status from HSTS status:
-            #
-            # * Domains can be preloaded through manual overrides.
-            # * Confusing to mix an endpoint-level decision with a domain-level decision.
-            if boolean_for(results["HSTS Preloaded"]):
-                preloaded = "HSTS Preloaded"  # Yes
-            elif boolean_for(results["HSTS Preload Ready"]):
-                preloaded = "HSTS Preload Ready"  # Ready for submission
-            else:
-                preloaded = "HSTS Not Preloaded"  # No
+                    # "Strict" means HTTP immediately redirects to HTTPS,
+                    # *and* that HTTP eventually redirects to HTTPS.
+                    #
+                    # Since a pure redirector domain can't "default" to HTTPS
+                    # for itself, we'll say it "Enforces HTTPS" if it immediately
+                    # redirects to an HTTPS URL.
+                    if (
+                        boolean_for(results["Strictly Forces HTTPS"])
+                        and (
+                        boolean_for(results["Defaults to HTTPS"]) or boolean_for(results["Redirect"])
+                    )
+                    ):
+                        behavior = "Strict"  # Yes (Strict)
 
-            # Certificate info
-            if boolean_for(results["HTTPS Expired Cert"]):
-                expired = True
-            else:
-                expired = False
+                    # "Moderate" means HTTP eventually redirects to HTTPS.
+                    elif (
+                        not boolean_for(results["Strictly Forces HTTPS"])
+                        and boolean_for(results["Defaults to HTTPS"])
+                    ):
+                        behavior = "Moderate"  # Yes
 
-            if boolean_for(results["HTTPS Self-Signed Cert"]):
-                self_signed = True
-            else:
-                self_signed = False
+                    # Either both are False, or just 'Strict Force' is True,
+                    # which doesn't matter on its own.
+                    # A "present" is better than a downgrade.
+                    else:
+                        behavior = "Weak"  # Present (considered 'No')
 
-            report["hsts"] = hsts
-            report["hsts_age"] = hsts_age
-            report["preload_status"] = preloaded
-            report["expired_cert"] = expired
-            report["self_signed_cert"] = self_signed
+                report["enforced"] = behavior
+
+                ###
+                # Characterize the presence and completeness of HSTS.
+
+                if results["HSTS Max Age"]:
+                    hsts_age = int(results["HSTS Max Age"])
+                else:
+                    hsts_age = None
+
+                # Otherwise, without HTTPS there can be no HSTS for the domain directly.
+                if https is "Downgrades HTTPS" or "Bad Hostname":
+                    hsts = "No HSTS"  # N/A (considered 'No')
+
+                else:
+
+                    # HSTS is present for the canonical endpoint.
+                    if boolean_for(results["HSTS"]) and hsts_age:
+
+                        # Say No for too-short max-age's, and note in the extended details.
+                        if hsts_age >= MIN_HSTS_AGE:
+                            hsts = "HSTS Fully Implemented"  # Yes, directly
+                        else:
+                            hsts = "HSTS Max Age Too Short"  # No
+                    else:
+                        hsts = "No HSTS"  # No
+
+                # Separate preload status from HSTS status:
+                #
+                # * Domains can be preloaded through manual overrides.
+                # * Confusing to mix an endpoint-level decision with a domain-level decision.
+                if boolean_for(results["HSTS Preloaded"]):
+                    preloaded = "HSTS Preloaded"  # Yes
+                elif boolean_for(results["HSTS Preload Ready"]):
+                    preloaded = "HSTS Preload Ready"  # Ready for submission
+                else:
+                    preloaded = "HSTS Not Preloaded"  # No
+
+                # Certificate info
+                if boolean_for(results["HTTPS Expired Cert"]):
+                    expired = True
+                else:
+                    expired = False
+
+                if boolean_for(results["HTTPS Self-Signed Cert"]):
+                    self_signed = True
+                else:
+                    self_signed = False
+
+                report["hsts"] = hsts
+                report["hsts_age"] = hsts_age
+                report["preload_status"] = preloaded
+                report["expired_cert"] = expired
+                report["self_signed_cert"] = self_signed
 
         elif scan_type is "ssl":
-            if results is not None:
-                report = {}
-            else:
-                report = {"missing": True}
 
             # Get cipher/protocol data via sslyze for a host.
 
             if results is None:
+                report = {"missing": True}
+
                 report["sslv2"] = False
                 report["sslv3"] = False
                 report["tlsv1_0"] = False
@@ -196,54 +202,53 @@ def process_results(results, scan_type, scan_id):
                 report["starttls"] = False
                 report["heartbleed"] = False
                 report["openssl_ccs_injection"] = False
-                return results
 
+            else:
+                ###
+                # BOD 18-01 (cyber.dhs.gov) cares about SSLv2, SSLv3, RC4, and 3DES.
+                any_rc4 = results["rc4"]
 
-            ###
-            # BOD 18-01 (cyber.dhs.gov) cares about SSLv2, SSLv3, RC4, and 3DES.
-            any_rc4 = results["rc4"]
+                any_3des = results["3des"]
 
-            any_3des = results["3des"]
+                ###
+                # ITPIN cares about usage of TLS 1.0/1.1/1.2
+                highest_ssl_version_supported = None
 
-            ###
-            # ITPIN cares about usage of TLS 1.0/1.1/1.2
-            highest_ssl_version_supported = None
+                for version in ["SSLV2", "SSLV3", "TLSV1", "TLSV1_1", "TLSV1_2", "TLSV1_3"]:
+                    if version in results.keys():
+                        report[version] = True
+                        highest_ssl_version_supported = version
+                    else:
+                        report[version] = False
 
-            for version in ["SSLV2", "SSLV3", "TLSV1", "TLSV1_1", "TLSV1_2", "TLSV1_3"]:
-                if version in results.keys():
-                    report[version] = True
-                    highest_ssl_version_supported = version
+                used_ciphers = {cipher for cipher in results[highest_ssl_version_supported].accepted_cipher_list}
+                signature_algorithm = results["signature_algorithm"]
+
+                if any([any_rc4, any_3des, report["SSLV2"], report["SSLV3"], report["TLSV1"], report["TLSV1_1"]]):
+                    bod_crypto = False
                 else:
-                    report[version] = False
+                    bod_crypto = True
 
-            used_ciphers = {cipher for cipher in results[highest_ssl_version_supported].accepted_cipher_list}
-            signature_algorithm = results["signature_algorithm"]
+                starttls = results["starttls"]
 
-            if any([any_rc4, any_3des, report["SSLV2"], report["SSLV3"], report["TLSV1"], report["TLSV1_1"]]):
-                bod_crypto = False
-            else:
-                bod_crypto = True
+                heartbleed = results["is_vulnerable_to_heartbleed"]
+                ccs_injection = results["is_vulnerable_to_ccs_injection"]
 
-            starttls = results["starttls"]
+                if results["signature_algorithm"] is "SHA256" or "SHA384" or "AEAD":
+                    good_cert = True
+                else:
+                    good_cert = False
 
-            heartbleed = results["is_vulnerable_to_heartbleed"]
-            ccs_injection = results["is_vulnerable_to_ccs_injection"]
+                report["bod_crypto"] = bod_crypto
+                report["rc4"] = any_rc4
+                report["3des"] = any_3des
+                report["used_ciphers"] = used_ciphers
+                report["acceptable_certificate"] = good_cert
+                report["signature_algorithm"] = signature_algorithm
+                report["starttls"] = starttls
 
-            if results["signature_algorithm"] is "SHA256" or "SHA384" or "AEAD":
-                good_cert = True
-            else:
-                good_cert = False
-
-            report["bod_crypto"] = bod_crypto
-            report["rc4"] = any_rc4
-            report["3des"] = any_3des
-            report["used_ciphers"] = used_ciphers
-            report["acceptable_certificate"] = good_cert
-            report["signature_algorithm"] = signature_algorithm
-            report["starttls"] = starttls
-
-            report["heartbleed"] = heartbleed
-            report["openssl_ccs_injection"] = ccs_injection
+                report["heartbleed"] = heartbleed
+                report["openssl_ccs_injection"] = ccs_injection
 
     except Exception as e:
         return str(e), False
