@@ -3,6 +3,7 @@ import sys
 import requests
 import logging
 import json
+import multithreaded_tests
 from checkdmarc import *
 from flask import Flask, request
 
@@ -14,6 +15,9 @@ headers = {
 }
 
 app = Flask(__name__)
+
+test_tls = multithreaded_tests.test_tls
+test_starttls = multithreaded_tests.test_starttls
 
 
 @app.route('/receive', methods=['GET', 'POST'])
@@ -62,12 +66,12 @@ def scan(scan_id, domain):
     domain_list.append(domain)
 
     try:
-        scan_result = json.loads(json.dumps(check_domains(domain_list)))
+        scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True)))
     except (DNSException, SPFError, DMARCError) as e:
         logging.error("(SCAN: %s) - Failed to check the given domains for DMARC/SPF records: %s" % (scan_id, e))
         return None
 
-    if scan_result["record"] is "null":
+    if scan_result["dmarc"]["record"] is "null":
         return None
     else:
         return scan_result
