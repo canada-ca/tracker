@@ -53,6 +53,8 @@ from resolvers.organizations import (
 from schemas.users import Users
 from resolvers.users import resolve_users
 
+from schemas.organizations_mutations import CreateOrganization
+
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
@@ -161,6 +163,7 @@ class Mutation(graphene.ObjectType):
     update_password = UpdateUserPassword.Field()
     authenticate_two_factor = ValidateTwoFactor.Field()
     update_user_role = UpdateUserRole.Field()
+    create_organization = CreateOrganization.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

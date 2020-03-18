@@ -14,12 +14,12 @@ from models import Organizations
 
 class CreateOrganization(graphene.Mutation):
     class Arguments:
-        acronym = graphene.String()
-        description = graphene.String()
-        zone = graphene.String()
-        sector = graphene.String()
-        province = graphene.String()
-        city = graphene.String()
+        acronym = graphene.String(required=True)
+        description = graphene.String(required=True)
+        zone = graphene.String(required=True)
+        sector = graphene.String(required=True)
+        province = graphene.String(required=True)
+        city = graphene.String(required=True)
 
     status = graphene.Boolean()
 
