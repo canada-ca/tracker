@@ -35,7 +35,7 @@ def receive():
 
         res = scan(scan_id, domain)
         if res is not None:
-            payload = json.dumps({"results": str(res), "scan_type": "dmarc", "scan_id": scan_id})
+            payload = json.loads(json.dumps({"results": str(res), "scan_type": "dmarc", "scan_id": scan_id}))
 
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to perform checkdmarc scan" % scan_id)
