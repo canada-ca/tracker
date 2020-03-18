@@ -53,7 +53,7 @@ from resolvers.organizations import (
 from schemas.users import Users
 from resolvers.users import resolve_users
 
-from schemas.organizations_mutations import CreateOrganization
+from schemas.organizations_mutations import CreateOrganization, UpdateOrganization
 
 
 class Query(graphene.ObjectType):
@@ -163,7 +163,14 @@ class Mutation(graphene.ObjectType):
     update_password = UpdateUserPassword.Field()
     authenticate_two_factor = ValidateTwoFactor.Field()
     update_user_role = UpdateUserRole.Field()
-    create_organization = CreateOrganization.Field()
+    create_organization = CreateOrganization.Field(
+        description="Allows the creation of an organization inside the "
+                    "database.",
+    )
+    update_organization = UpdateOrganization.Field(
+        description="Allows modification of an organization inside the "
+                    "database."
+    )
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
