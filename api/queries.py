@@ -57,11 +57,13 @@ from resolvers.users import resolve_users
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
+
     # --- Start User Queries ---
     users = SQLAlchemyConnectionField(
         Users._meta.connection,
         org=graphene.Argument(OrganizationsEnum, required=True),
-        sort=None
+        sort=None,
+        description="Select list of users belonging to an organization."
     )
     with app.app_context():
         def resolve_users(self, info, **kwargs):
@@ -69,7 +71,9 @@ class Query(graphene.ObjectType):
 
     user = graphene.List(
         lambda: User,
-        user_name=graphene.Argument(EmailAddress, required=False)
+        user_name=graphene.Argument(EmailAddress, required=False),
+        description="Query the currently logged in user if no user name is"
+                    "given, or query a specific user by user name."
     )
     with app.app_context():
         def resolve_user(self, info, **kwargs):
@@ -82,7 +86,7 @@ class Query(graphene.ObjectType):
         org=graphene.Argument(OrganizationsEnum, required=True),
         sort=None,
         description="Select all information on a selected organization that a "
-                    "user has access to "
+                    "user has access to."
     )
     with app.app_context():
         def resolve_organization(self, info, **kwargs):
@@ -92,7 +96,7 @@ class Query(graphene.ObjectType):
         Organization._meta.connection,
         sort=None,
         description="Select all information on all organizations that a user "
-                    "has access to "
+                    "has access to."
     )
     with app.app_context():
         def resolve_organizations(self, info, **kwargs):
@@ -115,7 +119,7 @@ class Query(graphene.ObjectType):
         organization=graphene.Argument(OrganizationsEnum, required=False),
         sort=None,
         description="Select information on an organizations domains, or all "
-                    "domains a user has access to. "
+                    "domains a user has access to."
     )
     with app.app_context():
         def resolve_domains(self, info, **kwargs):

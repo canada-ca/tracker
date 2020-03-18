@@ -33,7 +33,10 @@ class UserAffClass(SQLAlchemyObjectType):
     permission = RoleEnums(
         description="User's level of access to a given organization"
     )
-    organization = ORMField(model_attr='user_organization')
+    organization = ORMField(
+        model_attr='user_organization',
+        description="The organization this affiliation belongs to"
+    )
 
     with app.app_context():
         def resolve_user_id(self: UserAff, info):

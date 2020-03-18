@@ -27,17 +27,31 @@ class Organization(SQLAlchemyObjectType):
             "domains",
             "users"
         )
-    acronym = graphene.String()
-    description = graphene.String()
-    zone = graphene.String()
-    sector = graphene.String()
-    province = graphene.String()
-    city = graphene.String()
+    acronym = graphene.String(
+        description="The acronym of the organization."
+    )
+    description = graphene.String(
+        description="The full name of the organization."
+    )
+    zone = graphene.String(
+        description="The zone which the organization belongs to."
+    )
+    sector = graphene.String(
+        description="The sector which the organizaion belongs to."
+    )
+    province = graphene.String(
+        description="The province in which the organization resides."
+    )
+    city = graphene.String(
+        description="The city in which the organization resides."
+    )
     domains = graphene.ConnectionField(
-        DomainsSchema._meta.connection
+        DomainsSchema._meta.connection,
+        description="The domains which belong to this organization."
     )
     affiliated_users = graphene.ConnectionField(
-        UserAffClass._meta.connection
+        UserAffClass._meta.connection,
+        description="The users that have an affiliation with the organization."
     )
 
     with app.app_context():

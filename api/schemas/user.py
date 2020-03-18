@@ -18,6 +18,11 @@ from scalars.email_address import EmailAddress
 
 
 class User(SQLAlchemyObjectType):
+    """
+    This object can be queried to retrieve the current logged in users
+    information or if the user is an org or super admin they can query a user
+    by their user name
+    """
     class Meta:
         model = UserModel
         interfaces = (relay.Node,)

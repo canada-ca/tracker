@@ -15,7 +15,12 @@ from scalars.email_address import EmailAddress
 
 from model_enums.roles import RoleEnums
 
+
 class Users(SQLAlchemyObjectType):
+    """
+    This object is used to return a list of users with their user name, display
+    name and their permission for the requested organization
+    """
     class Meta:
         model = User_affiliations
         interfaces = (relay.Node,)
@@ -29,7 +34,10 @@ class Users(SQLAlchemyObjectType):
         )
     user_name = EmailAddress(description="Email that the user signed up with")
     display_name = graphene.String(description="Name displayed to other users")
-    permission = RoleEnums()
+    permission = RoleEnums(
+        description="The level of access this user has to the requested "
+                    "organization"
+    )
 
     with app.app_context():
         def resolve_user_name(self: User_affiliations, info):
