@@ -55,7 +55,7 @@ export function TwoFactorPage() {
       <Text fontSize="2xl">Validate your Two-Factor Code</Text>
 
       <Formik
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ email: '', password: '', otpCode: '' }}
         onSubmit={(values, actions) => {
           setTimeout(() => {
             console.log(values) // TODO: Remove when testing is done
@@ -76,11 +76,7 @@ export function TwoFactorPage() {
                   isInvalid={form.errors.otpCode && form.touched.otpCode}
                 >
                   <InputGroup>
-                    {/* eslint-disable-next-line react/no-children-prop */}
-                    <InputLeftElement
-                      color="gray.300"
-                      fontSize="1.2em"
-                    >
+                    <InputLeftElement color="gray.300" fontSize="1.2em">
                       <Icon name="lock" color="gray.300" />
                     </InputLeftElement>
                     <Input
