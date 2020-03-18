@@ -131,7 +131,7 @@ def users_resolver_test_db_init():
         db.session.commit()
 
 
-@pytest.mark.usefixtures('org_perm_test_db_init')
+@pytest.mark.usefixtures('users_resolver_test_db_init')
 class TestUsersResolverAccessControl(TestCase):
     # Super Admin Tests
     def test_get_users_as_super_admin(self):
