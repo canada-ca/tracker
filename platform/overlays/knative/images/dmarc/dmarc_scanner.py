@@ -35,12 +35,12 @@ def receive():
 
         res = scan(scan_id, domain)
         if res is not None:
-            payload = json.loads(json.dumps({"results": str(res), "scan_type": "dmarc", "scan_id": scan_id}))
+            payload = json.dumps({"results": str(res), "scan_type": "dmarc", "scan_id": scan_id})
 
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to perform checkdmarc scan" % scan_id)
 
-        dispatch(payload)
+        dispatch(payload, scan_id)
 
         return 'Scan sent to result-handling service'
 
@@ -49,14 +49,14 @@ def receive():
         return 'Failed to send scan to result-handling service'
 
 
-def dispatch(payload):
+def dispatch(payload, id):
     try:
         response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
-        logging.info("Scan %s completed. Results queued for processing...\n" % payload["scan_id"])
+        logging.info("Scan %s completed. Results queued for processing...\n" % id)
         logging.info(str(response.text))
         return str(response.text)
     except Exception as e:
-        logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (payload["scan_id"], e))
+        logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (id, e))
 
 
 def scan(scan_id, domain):
