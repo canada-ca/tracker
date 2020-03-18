@@ -33,14 +33,14 @@ def org_perm_test_db_init():
     bcrypt = Bcrypt(app)
 
     with app.app_context():
-        test_user = Users(
+        test_read = Users(
             id=1,
             display_name="testuserread",
             user_name="testuserread@testemail.ca",
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
         )
-        db.session.add(test_user)
+        db.session.add(test_read)
         test_super_admin = Users(
             id=2,
             display_name="testsuperadmin",
@@ -65,6 +65,14 @@ def org_perm_test_db_init():
                 password="testpassword123").decode("UTF-8")
         )
         db.session.add(test_admin)
+        test_write = Users(
+            id=5,
+            display_name="testuserwrite",
+            user_name="testuserwrite@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8")
+        )
+        db.session.add(test_write)
 
         org = Organizations(
             id=1,
@@ -82,18 +90,18 @@ def org_perm_test_db_init():
         )
         db.session.add(org)
 
-        test_admin_role = User_affiliations(
+        test_user_read_role = User_affiliations(
             user_id=1,
             organization_id=1,
             permission='user_read'
         )
-        db.session.add(test_admin_role)
-        test_admin_role = User_affiliations(
+        db.session.add(test_user_read_role)
+        test_super_admin_role = User_affiliations(
             user_id=2,
             organization_id=2,
             permission='super_admin'
         )
-        db.session.add(test_admin_role)
+        db.session.add(test_super_admin_role)
         test_admin_role = User_affiliations(
             user_id=3,
             organization_id=1,
@@ -106,6 +114,12 @@ def org_perm_test_db_init():
             permission='admin'
         )
         db.session.add(test_admin_role)
+        test_user_write_role = User_affiliations(
+            user_id=5,
+            organization_id=1,
+            permission='user_write'
+        )
+        db.session.add(test_user_write_role)
         db.session.commit()
 
     yield
@@ -123,7 +137,7 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
     def test_get_user_as_super_admin(self):
         """
         Test to see if user resolver access control allows super admin to
-        request users outside of organization
+        request users inside and outside of their organization
         """
         with app.app_context():
             backend = SecurityAnalysisBackend()
@@ -168,7 +182,8 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
     # Admin Same Org
     def test_get_user_from_same_org(self):
         """
-
+        Test to see if user resolver access control allows admin to
+        request users inside and not outside of their organization
         """
         with app.app_context():
             backend = SecurityAnalysisBackend()
@@ -213,7 +228,8 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
     # Admin different org
     def test_get_user_admin_from_different_org(self):
         """
-
+        Test to see if user resolver access control does not  allow  admin
+        from another organization to select them
         """
         with app.app_context():
             backend = SecurityAnalysisBackend()
@@ -250,11 +266,50 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
                                                        "belong to any of your" \
                                                        " organizations"
 
+    # User write tests
+    def test_get_user_user_write(self):
+        """
+        Test to see if user resolver access control to ensure users with user
+        write access cannot access this query
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserwrite@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+
+            executed = client.execute(
+                '''
+                {
+                    user(userName: "testuserread@testemail.ca") {
+                        displayName
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to view this users information"
+
     # User read tests
     def test_get_user_user_read(self):
         """
-        Test org resolver with an org as a user read, multi node return with
-        all values
+        Test to see if user resolver access control to ensure users with user
+        write access cannot access this query
         """
         with app.app_context():
             backend = SecurityAnalysisBackend()
