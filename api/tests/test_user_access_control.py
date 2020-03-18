@@ -28,7 +28,7 @@ sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 @pytest.fixture(scope='class')
-def org_perm_test_db_init():
+def user_resolver_ac_test_db_init():
     db.init_app(app)
     bcrypt = Bcrypt(app)
 
@@ -131,8 +131,8 @@ def org_perm_test_db_init():
         db.session.commit()
 
 
-@pytest.mark.usefixtures('org_perm_test_db_init')
-class TestOrgResolverWithOrgsAndValues(TestCase):
+@pytest.mark.usefixtures('user_resolver_ac_test_db_init')
+class TestUserResolverAccessControl(TestCase):
     # Super Admin Tests
     def test_get_user_as_super_admin(self):
         """
