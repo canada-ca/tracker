@@ -8,32 +8,19 @@ from model_enums.organiztions import OrganizationsEnum
 
 from model_enums.roles import RoleEnums
 
-from schemas.user import (
-    UserConnection,
-    CreateUser,
-    SignInUser,
-    UpdateUserPassword,
-    ValidateTwoFactor
-)
-
 from schemas.user_affiliations import (
     UpdateUserRole
 )
-
 
 from resolvers.notification_emails import (
     resolve_send_password_reset,
     resolve_send_validation_email
 )
 
-from resolvers.users import (
-   resolve_generate_otp_url
-)
-
 from resolvers.user_affiliations import (
     resolve_test_user_claims
 )
-from resolvers.users import (
+from resolvers.user import (
     resolve_generate_otp_url,
 )
 from scalars.email_address import EmailAddress
@@ -42,12 +29,14 @@ from schemas.notification_email import (NotificationEmail)
 
 
 from schemas.user import (
-    UserObject,
+    User,
     CreateUser,
     SignInUser,
     UpdateUserPassword,
     ValidateTwoFactor,
-    )
+)
+from resolvers.user import resolve_user
+
 
 from schemas.domain import Domain
 from resolvers.domains import (
@@ -61,11 +50,35 @@ from resolvers.organizations import (
     resolve_organizations
 )
 
+from schemas.users import Users
+from resolvers.users import resolve_users
+
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
-    users = SQLAlchemyConnectionField(UserObject._meta.connection, sort=None)
+
+    # --- Start User Queries ---
+    users = SQLAlchemyConnectionField(
+        Users._meta.connection,
+        org=graphene.Argument(OrganizationsEnum, required=True),
+        sort=None,
+        description="Select list of users belonging to an organization."
+    )
+    with app.app_context():
+        def resolve_users(self, info, **kwargs):
+            return resolve_users(self, info, **kwargs)
+
+    user = graphene.List(
+        lambda: User,
+        user_name=graphene.Argument(EmailAddress, required=False),
+        description="Query the currently logged in user if no user name is"
+                    "given, or query a specific user by user name."
+    )
+    with app.app_context():
+        def resolve_user(self, info, **kwargs):
+            return resolve_user(self, info, **kwargs)
+    # --- End User Queries
 
     # --- Start Organization Queries ---
     organization = SQLAlchemyConnectionField(
@@ -73,7 +86,7 @@ class Query(graphene.ObjectType):
         org=graphene.Argument(OrganizationsEnum, required=True),
         sort=None,
         description="Select all information on a selected organization that a "
-                    "user has access to "
+                    "user has access to."
     )
     with app.app_context():
         def resolve_organization(self, info, **kwargs):
@@ -83,7 +96,7 @@ class Query(graphene.ObjectType):
         Organization._meta.connection,
         sort=None,
         description="Select all information on all organizations that a user "
-                    "has access to "
+                    "has access to."
     )
     with app.app_context():
         def resolve_organizations(self, info, **kwargs):
@@ -106,7 +119,7 @@ class Query(graphene.ObjectType):
         organization=graphene.Argument(OrganizationsEnum, required=False),
         sort=None,
         description="Select information on an organizations domains, or all "
-                    "domains a user has access to. "
+                    "domains a user has access to."
     )
     with app.app_context():
         def resolve_domains(self, info, **kwargs):

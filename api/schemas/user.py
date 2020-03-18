@@ -7,20 +7,69 @@ from functions.sign_in_user import sign_in_user
 from functions.update_user_password import update_password
 from functions.validate_two_factor import validate_two_factor
 
-from models import Users as User
-from scalars.email_address import *
+from app import app
+
+from schemas.user_affiliations import UserAffClass
+
+from models import Users as UserModel
+from models import User_affiliations
+
+from scalars.email_address import EmailAddress
 
 
-class UserObject(SQLAlchemyObjectType):
+class User(SQLAlchemyObjectType):
+    """
+    This object can be queried to retrieve the current logged in users
+    information or if the user is an org or super admin they can query a user
+    by their user name
+    """
     class Meta:
-        model = User
+        model = UserModel
         interfaces = (relay.Node,)
-        exclude_fields = ("user_password",)
+        exclude_fields = (
+            "id",
+            "user_name",
+            "display_name",
+            "preferred_lang",
+            "failed_login_attempts",
+            "failed_login_attempt_time",
+            "tfa_validated",
+            "user_affiliation",
+            "user_password",
+        )
+    user_name = EmailAddress(description="Email that the user signed up with")
+    display_name = graphene.String(description="Name displayed to other users")
+    lang = graphene.String(description="Users preferred language")
+    tfa = graphene.Boolean(
+        description="Has the user completed two factor authentication"
+    )
+    affiliations = graphene.ConnectionField(
+        UserAffClass._meta.connection,
+        description="Users access to organizations"
+    )
+
+    with app.app_context():
+        def resolve_user_name(self: UserModel, info):
+            return self.user_name
+
+        def resolve_display_name(self: UserModel, info):
+            return self.display_name
+
+        def resolve_lang(self: UserModel, info):
+            return self.preferred_lang
+
+        def resolve_tfa(self: UserModel, info):
+            return self.tfa_validated
+
+        def resolve_affiliations(self: UserModel, info):
+            query = UserAffClass.get_query(info)
+            query = query.filter(User_affiliations.user_id == self.id)
+            return query.all()
 
 
 class UserConnection(relay.Connection):
     class Meta:
-        node = UserObject
+        node = User
 
 
 class CreateUser(graphene.Mutation):
@@ -30,7 +79,7 @@ class CreateUser(graphene.Mutation):
         confirm_password = graphene.String(required=True)
         user_name = EmailAddress(required=True)
 
-    user = graphene.Field(lambda: UserObject)
+    user = graphene.Field(lambda: User)
 
     @staticmethod
     def mutate(self, info, display_name, password, confirm_password, user_name):
@@ -44,7 +93,7 @@ class SignInUser(graphene.Mutation):
         password = graphene.String(required=True,
                                    description="Users's password")
 
-    user = graphene.Field(lambda: UserObject)
+    user = graphene.Field(lambda: User)
     auth_token = graphene.String(description="Token returned to user")
 
     @classmethod
@@ -62,7 +111,7 @@ class UpdateUserPassword(graphene.Mutation):
         confirm_password = graphene.String(required=True)
         user_name = EmailAddress(required=True)
 
-    user = graphene.Field(lambda: UserObject)
+    user = graphene.Field(lambda: User)
 
     @staticmethod
     def mutate(self, info, password, confirm_password, user_name):
@@ -76,7 +125,7 @@ class ValidateTwoFactor(graphene.Mutation):
         user_name = EmailAddress(required=True)
         otp_code = graphene.String(required=True)
 
-    user = graphene.Field(lambda: UserObject)
+    user = graphene.Field(lambda: User)
 
     @staticmethod
     def mutate(self, info, user_name, otp_code):

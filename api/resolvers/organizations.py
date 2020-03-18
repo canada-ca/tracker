@@ -27,6 +27,7 @@ def resolve_organization(self: Organization, info, **kwargs):
     # Get Information from kwargs
     org = kwargs.get('org')
     user_roles = kwargs.get('user_roles')
+    user_id = kwargs.get('user_id')
 
     # Generate user Org ID list
     org_id_list = []
@@ -37,7 +38,7 @@ def resolve_organization(self: Organization, info, **kwargs):
     query = Organization.get_query(info)
 
     # Check to see if user has a super admin claim
-    if is_super_admin(user_role=user_roles):
+    if is_super_admin(user_id=user_id):
         query_rtn = query.filter(
             Organizations.acronym == org
         ).all()
@@ -79,6 +80,7 @@ def resolve_organizations(self, info, **kwargs):
     :return: Filtered Organization SQLAlchemyObject Type
     """
     # Get Information from kwargs
+    user_id = kwargs.get('user_id')
     org = kwargs.get('org')
     user_roles = kwargs.get('user_roles')
 
@@ -91,7 +93,7 @@ def resolve_organizations(self, info, **kwargs):
     query = Organization.get_query(info)
 
     # Check to see if user has a super admin claim
-    if is_super_admin(user_role=user_roles):
+    if is_super_admin(user_id=user_id):
         query_rtn = query.all()
         # If no org can be matched
         if not len(query_rtn):

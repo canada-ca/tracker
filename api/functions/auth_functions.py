@@ -8,12 +8,11 @@ user_write_perms = ['super_admin', 'admin', 'user_write']
 user_read_perms = ['super_admin', 'admin', 'user_write', 'user_read']
 
 
-def is_super_admin(user_role):
+def is_super_admin(user_id):
     """
-    :param user_role: list of dicts containing user roles
+    :param user_id: users id
     :return: Returns true or false based on if this user is the given role
     """
-    user_id = user_role[0]['user_id']
     with app.app_context():
         user_is_super_admin = User_affiliations.query \
             .filter(User_affiliations.user_id == user_id) \
