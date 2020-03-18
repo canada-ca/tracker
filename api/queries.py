@@ -53,6 +53,7 @@ from resolvers.organizations import (
 
 from schemas.users import Users
 from resolvers.users import resolve_users
+from schemas.scans_mutation import RequestScan
 
 from schemas.organizations_mutations import (
     CreateOrganization,
@@ -193,6 +194,7 @@ class Mutation(graphene.ObjectType):
     remove_domain = RemoveDomain.Field(
         description="Allows the removal of a given domain"
     )
+    request_scan = RequestScan.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
