@@ -115,6 +115,7 @@ class RequestScan(graphene.Mutation):
 
                 # Return status information to user
                 return RequestScan(status=status)
+
             # If user doesn't have rights error out
             else:
                 raise GraphQLError(
