@@ -12,7 +12,7 @@ import { TwoFactorNotificationBar } from '../TwoFactorNotificationBar'
 i18n.load('en', { en: {} })
 i18n.activate('en')
 
-describe('<SignInPage />', () => {
+describe('<TwoFactorNotificationBar />', () => {
   afterEach(cleanup)
 
   it('successfully renders the component on its own.', () => {
