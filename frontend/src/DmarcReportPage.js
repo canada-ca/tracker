@@ -8,6 +8,7 @@ import {
   Icon,
   Flex,
   Divider,
+  Button,
 } from '@chakra-ui/core'
 
 import PieChart from 'react-minimal-pie-chart'
@@ -40,7 +41,7 @@ export function DmarcReportPage() {
             justifyContent="center"
             alignItems="center"
           >
-            <Box w={'40%'} mt="50px">
+            <Box w={'40%'} mt="30px">
               <PieChart
                 animate={true}
                 data={[
@@ -55,7 +56,7 @@ export function DmarcReportPage() {
           </Flex>
         </Stack>
         <Stack>
-          <Stack isInline mt="100px">
+          <Stack isInline mt="50px">
             <Text fontSize="xl" fontWeight="semibold">
               IP address:
             </Text>
@@ -88,6 +89,18 @@ export function DmarcReportPage() {
               Base domain:
             </Text>
             <Text fontSize="xl">null</Text>
+          </Stack>
+          <Stack isInline>
+            <Text fontSize="xl" fontWeight="semibold">
+              Count:
+            </Text>
+            <Text fontSize="xl">1</Text>
+          </Stack>
+          <Stack isInline>
+            <Text fontSize="xl" fontWeight="semibold">
+              Header from:
+            </Text>
+            <Text fontSize="xl">kaeblesecurity.net</Text>
           </Stack>
         </Stack>
 
@@ -141,6 +154,14 @@ export function DmarcReportPage() {
             </Text>
             <Text fontSize="xl">Pass</Text>
           </Stack>
+          <Button
+            mt={'10px'}
+            variantColor="teal"
+            variant="link"
+            justifyContent="start"
+          >
+            Show all DKIM scans
+          </Button>
         </Stack>
         <Stack>
           <Flex align="center">
@@ -170,6 +191,14 @@ export function DmarcReportPage() {
             </Text>
             <Text fontSize="xl">Pass</Text>
           </Stack>
+          <Button
+            mt={'10px'}
+            variantColor="teal"
+            variant="link"
+            justifyContent="start"
+          >
+            Show all SPF scans
+          </Button>
         </Stack>
       </SimpleGrid>
     </Box>
