@@ -170,14 +170,17 @@ export function DmarcReportPage() {
             <Box w={'40%'} mt="30px">
               <PieChart
                 animate={true}
-                data={[
-                  { title: 'Passed Dmarc', value: 30, color: '#2D8133' },
-                  { title: 'Failed Dmarc', value: 15, color: '#e53e3e' },
-                ]}
+                data={[{ title: 'Passed Dmarc', value: 30, color: '#2D8133' }]}
               />
             </Box>
-            <Text fontSize="lg" mt={5}>
+            <Text fontSize="lg" fontWeight="semibold" mt={5}>
               Result Breakdown
+            </Text>
+            <Text fontSize="lg">
+              Pass: 100%
+            </Text>
+            <Text fontSize="lg">
+              Fail: 0%
             </Text>
           </Flex>
         </Stack>
@@ -264,7 +267,7 @@ export function DmarcReportPage() {
             variant="link"
             justifyContent="start"
             onClick={() => {
-              alert('function coming soon')
+              window.alert('function coming soon')
             }}
           >
             Show all DKIM scans
@@ -291,7 +294,7 @@ export function DmarcReportPage() {
             variant="link"
             justifyContent="start"
             onClick={() => {
-              alert('function coming soon')
+              window.alert('function coming soon')
             }}
           >
             Show all SPF scans
