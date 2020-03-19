@@ -3,6 +3,7 @@ import sys
 import requests
 import logging
 import json
+import threading
 from sslyze.ssl_settings import TlsWrappedProtocolEnum
 from sslyze.server_connectivity_tester import ServerConnectivityError, ServerConnectivityTester
 from sslyze.plugins.openssl_cipher_suites_plugin import Tlsv12ScanCommand, Tlsv10ScanCommand, \
@@ -37,7 +38,8 @@ def receive():
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to establish SSL connection" % scan_id)
 
-        dispatch(payload, scan_id)
+        th = threading.Thread(target=dispatch, args=[payload, scan_id])
+        th.start()
 
         return 'Scan sent to result-handling service'
 
@@ -48,7 +50,7 @@ def receive():
 
 def dispatch(payload, id):
     try:
-        response = requests.post('http://34.67.57.19/dispatch', headers=headers, data=payload)
+        response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
         logging.info("Scan %s completed. Results queued for processing...\n" % id)
         logging.info(str(response.text))
         return str(response.text)
@@ -137,10 +139,16 @@ def scan(scan_id, domain):
     res = {"starttls": starttls, tls_supported: {}}
     for result in scan_results:
         if result.__class__.__name__ is "CipherSuiteScanResult":
-            res[tls_supported] = {"accepted_cipher_list": result.accepted_cipher_list,
-                              "errored_cipher_list": result.errored_cipher_list,
-                              "preferred_cipher": result.preferred_cipher,
-                              "rejected_cipher_list": result.rejected_cipher_list}
+
+            res[tls_supported] = {"accepted_cipher_list": [],
+                                  "errored_cipher_list": [],
+                                  "preferred_cipher": None,
+                                  "rejected_cipher_list": []}
+
+            res[tls_supported]["accepted_cipher_list"] = [c.name for c in result.accepted_cipher_list]
+            res[tls_supported]["errored_cipher_list"] = [c.name for c in result.errored_cipher_list]
+            res[tls_supported]["rejected_cipher_list"] = [c.name for c in result.rejected_cipher_list]
+            res[tls_supported]["preferred_cipher"] = result.preferred_cipher.name
 
         elif result.__class__.__name__ is "OpenSslCcsInjectionScanResult":
             res["is_vulnerable_to_ccs_injection"] = result.is_vulnerable_to_ccs_injection
