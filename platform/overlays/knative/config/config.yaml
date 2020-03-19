@@ -163,6 +163,62 @@ spec:
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
+  name: ssl-scanner-manual
+  namespace: tracker
+spec:
+  template:
+    spec:
+      containers:
+        - name: ssl-scanner
+          image: gcr.io/track-compliance/ssl # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: dmarc-scanner-manual
+  namespace: tracker
+spec:
+  template:
+    spec:
+      containers:
+        - name: dmarc-scanner
+          image: gcr.io/track-compliance/dmarc # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: dkim-scanner-manual
+  namespace: tracker
+spec:
+  template:
+    spec:
+      containers:
+        - name: dkim-scanner
+          image: gcr.io/track-compliance/dkim # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: https-scanner-manual
+  namespace: tracker
+spec:
+  template:
+    spec:
+      containers:
+        - name: https-scanner
+          image: gcr.io/track-compliance/https # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
   name: dispatcher
   namespace: tracker
 spec:

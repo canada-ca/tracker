@@ -4,6 +4,7 @@ import requests
 import logging
 import json
 import dkim
+import threading
 from dkim import dnsplug, crypto
 from dkim.crypto import *
 from flask import Flask, request
@@ -33,7 +34,8 @@ def receive():
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to perform dkim scan" % scan_id)
 
-        dispatch(payload, scan_id)
+        th = threading.Thread(target=dispatch, args=[payload, scan_id])
+        th.start()
 
         return 'Scan sent to result-handling service'
 

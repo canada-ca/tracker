@@ -3,7 +3,7 @@ import sys
 import requests
 import logging
 import json
-import multithreaded_tests
+import threading
 from checkdmarc import *
 from flask import Flask, request
 
@@ -40,7 +40,8 @@ def receive():
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to perform checkdmarc scan" % scan_id)
 
-        dispatch(payload, scan_id)
+        th = threading.Thread(target=dispatch, args=[payload, scan_id])
+        th.start()
 
         return 'Scan sent to result-handling service'
 
