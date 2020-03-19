@@ -13,13 +13,15 @@ from model_enums.organiztions import OrganizationsEnum
 
 from models import Organizations
 
+from scalars.organization_acronym import Acronym
+
 
 class CreateOrganization(graphene.Mutation):
     """
     Mutation allows the creation of an organization inside the database.
     """
     class Arguments:
-        acronym = graphene.String(
+        acronym = Acronym(
             description="Acronym of organization.",
             required=True
         )
@@ -64,7 +66,7 @@ class CreateOrganization(graphene.Mutation):
                     "province": province,
                     "city": city
                 }
-
+                # TODO Add check to see if org already exists
                 new_org = Organizations(
                     acronym=acronym,
                     org_tags=org_tags
@@ -86,7 +88,7 @@ class CreateOrganization(graphene.Mutation):
 
 class UpdateOrganization(graphene.Mutation):
     class Arguments:
-        acronym = OrganizationsEnum(
+        acronym = Acronym(
             description="Organization that will be updated.",
             required=True
         )

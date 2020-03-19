@@ -200,7 +200,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domains(organization: ORG2) {
+                    domains(organization: "ORG2") {
                         edges {
                             node {
                                 url
@@ -252,7 +252,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domains(organization: ORG1) {
+                    domains(organization: "ORG1") {
                         edges {
                             node {
                                 url
@@ -350,7 +350,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domains(organization: ORG3) {
+                    domains(organization: "ORG3") {
                         edges {
                             node {
                                 url
@@ -446,7 +446,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domains(organization: ORG1) {
+                    domains(organization: "ORG1") {
                         edges {
                             node {
                                 url
@@ -546,7 +546,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domains(organization: ORG2) {
+                    domains(organization: "ORG2") {
                         edges {
                             node {
                                 url
@@ -630,7 +630,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domains(organization: ORG3) {
+                    domains(organization: "ORG3") {
                         edges {
                             node {
                                 url

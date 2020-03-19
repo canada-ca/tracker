@@ -162,7 +162,7 @@ class TestUsersResolverValues(TestCase):
             executed = client.execute(
                 '''
                 {
-                    users(org: ORG1) {
+                    users(org: "ORG1") {
                         edges {
                             node {
                                 userName
@@ -233,7 +233,7 @@ class TestUsersResolverValues(TestCase):
             executed = client.execute(
                 '''
                 {
-                    users(org: ORG1) {
+                    users(org: "ORG1") {
                         edges {
                             node {
                                 userName

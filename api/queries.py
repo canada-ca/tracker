@@ -4,7 +4,9 @@ from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
 
 from app import app
 
-from model_enums.organiztions import OrganizationsEnum
+from scalars.email_address import EmailAddress
+from scalars.organization_acronym import Acronym
+from scalars.url import URL
 
 from model_enums.roles import RoleEnums
 
@@ -23,8 +25,7 @@ from resolvers.user_affiliations import (
 from resolvers.user import (
     resolve_generate_otp_url,
 )
-from scalars.email_address import EmailAddress
-from scalars.url import URL
+
 from schemas.notification_email import (NotificationEmail)
 
 
@@ -63,7 +64,7 @@ class Query(graphene.ObjectType):
     # --- Start User Queries ---
     users = SQLAlchemyConnectionField(
         Users._meta.connection,
-        org=graphene.Argument(OrganizationsEnum, required=True),
+        org=graphene.Argument(Acronym, required=True),
         sort=None,
         description="Select list of users belonging to an organization."
     )
@@ -85,7 +86,7 @@ class Query(graphene.ObjectType):
     # --- Start Organization Queries ---
     organization = SQLAlchemyConnectionField(
         Organization._meta.connection,
-        org=graphene.Argument(OrganizationsEnum, required=True),
+        org=graphene.Argument(Acronym, required=True),
         sort=None,
         description="Select all information on a selected organization that a "
                     "user has access to."
@@ -118,7 +119,7 @@ class Query(graphene.ObjectType):
 
     domains = SQLAlchemyConnectionField(
         Domain._meta.connection,
-        organization=graphene.Argument(OrganizationsEnum, required=False),
+        organization=graphene.Argument(Acronym, required=False),
         sort=None,
         description="Select information on an organizations domains, or all "
                     "domains a user has access to."
@@ -135,7 +136,7 @@ class Query(graphene.ObjectType):
     )
 
     test_user_claims = graphene.String(
-        org=graphene.Argument(OrganizationsEnum, required=True),
+        org=graphene.Argument(Acronym, required=True),
         role=graphene.Argument(RoleEnums, required=True),
         resolver=resolve_test_user_claims,
         description="An api endpoint to view a current user's claims -- Requires an active JWT."
