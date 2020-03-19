@@ -44,6 +44,7 @@ class CreateOrganization(graphene.Mutation):
             required=True
         )
 
+    # If the update passed or failed
     status = graphene.Boolean()
 
     with app.app_context():
@@ -110,6 +111,7 @@ class UpdateOrganization(graphene.Mutation):
             required=False
         )
 
+    # If the update passed or failed
     status = graphene.Boolean()
 
     with app.app_context():
