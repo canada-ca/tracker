@@ -97,6 +97,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: https-scanner
@@ -111,6 +120,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: result-processor
@@ -125,6 +143,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: ssl-scanner
@@ -139,6 +166,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: dmarc-scanner
@@ -153,6 +189,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: dkim-scanner
@@ -167,6 +212,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: ssl-scanner
@@ -181,6 +235,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: dmarc-scanner
@@ -195,6 +258,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: dkim-scanner
@@ -209,6 +281,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: https-scanner
@@ -223,6 +304,15 @@ metadata:
   namespace: tracker
 spec:
   template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
         - name: dispatcher
