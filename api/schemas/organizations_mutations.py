@@ -60,18 +60,31 @@ class CreateOrganization(graphene.Mutation):
             city = cleanse_input(kwargs.get('city'))
 
             if is_super_admin(user_id):
+                # Check to see if organization already exists
+                org_orm = db.session.query(Organizations).filter(
+                    Organizations.acronym == acronym
+                ).first()
+
+                if org_orm is not None:
+                    raise GraphQLError("Error, Organization alredy exists")
+
+                # Generate org tags
                 org_tags = {
                     "description": description,
                     "zone": zone,
                     "province": province,
                     "city": city
                 }
-                # TODO Add check to see if org already exists
+
+                # Create new org entry in db
                 new_org = Organizations(
                     acronym=acronym,
                     org_tags=org_tags
                 )
+
+                # Add new org entry into the session
                 db.session.add(new_org)
+
                 # Push update to db and return status
                 try:
                     db.session.commit()
