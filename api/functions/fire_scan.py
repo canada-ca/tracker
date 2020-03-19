@@ -10,16 +10,19 @@ from db import db
 
 from models import Scans
 
-def fire_scan(user_id: int, url: str, dkim: bool):
+
+def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool):
     """
     Functionality to send request to scanners and request a domain to get scanned
     :param user_id: The id of the requesting user
+    :param domain_id: The id of the domain
     :param url: URL passed in through the request
     :param dkim: Bool to see if url needs to be put through the dkim scanner
     :return: Status code returned from request
     """
     # Create Scan Object
     new_scan = Scans(
+        domain_id=domain_id,
         scan_date=datetime.datetime.utcnow(),
         initiated_by=user_id
     )
@@ -50,12 +53,13 @@ def fire_scan(user_id: int, url: str, dkim: bool):
     headers = {
         'Content-Type': 'application/json',
         'Host': 'dispatcher.tracker.example.com',
+        'Data': encoded_payload
     }
 
     status = requests.post(
-        "http://34.67.57.19/dispatch",
+        "http://34.67.57.19/receive",
         headers=headers,
-        data=encoded_payload
+        # data=encoded_payload
     )
 
-    return status
+    return str(status.text)

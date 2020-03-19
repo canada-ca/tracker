@@ -54,9 +54,15 @@ class RequestScan(graphene.Mutation):
 
             # Check to ensure user has admin rights
             org_id = domain_orm.organization_id
+            domain_id = domain_orm.id
             if is_admin(user_role=user_roles, org_id=org_id):
                 # Fire scan and get status from request
-                status = fire_scan(user_id=user_id, url=url, dkim=dkim)
+                status = fire_scan(
+                    user_id=user_id,
+                    domain_id=domain_id,
+                    url=url,
+                    dkim=dkim
+                )
 
                 # Return status information to user
                 return RequestScan(status=status)
