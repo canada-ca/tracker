@@ -58,8 +58,7 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool):
 
     status = requests.post(
         "http://34.67.57.19/receive",
-        headers=headers,
-        # data=encoded_payload
+        headers=headers
     )
 
     return str(status.text)
