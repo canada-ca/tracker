@@ -13,8 +13,8 @@ from flask import Flask, request
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 headers = {
-    'Content-Type': 'application/json',
-    'Host': 'result-processor.tracker.example.com'
+    "Content-Type": "application/json",
+    "Host": "result-processor.tracker.example.com"
 }
 
 app = Flask(__name__)
@@ -33,8 +33,8 @@ def receive():
             algorithm=['HS256']
         )
 
-        scan_id = decoded_payload['scan_id']
-        domain = decoded_payload['domain']
+        scan_id = decoded_payload["scan_id"]
+        domain = decoded_payload["domain"]
         res = scan(scan_id, domain)
         if res is not None:
             payload = {"results": str(res), "scan_type": "dkim", "scan_id": scan_id}
@@ -45,7 +45,7 @@ def receive():
         # TODO Replace secret
         encoded_payload = jwt.encode(
             payload,
-            'test_jwt',
+            "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
