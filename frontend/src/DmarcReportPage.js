@@ -11,130 +11,48 @@ import {
   Button,
 } from '@chakra-ui/core'
 
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+
 import PieChart from 'react-minimal-pie-chart'
 
-const testData = {
-  xml_schema: 'draft',
-  report_metadata: {
-    org_name: 'google.com',
-    org_email: 'noreply-dmarc-support@google.com',
-    org_extra_contact_info: 'https://support.google.com/a/answer/2466580',
-    report_id: '1627703331531660819',
-    begin_date: '2019-02-09 19:00:00',
-    end_date: '2019-02-10 18:59:59',
-    errors: [],
-  },
-  policy_published: {
-    domain: 'twlnet.com',
-    adkim: 's',
-    aspf: 's',
-    p: 'reject',
-    sp: 'reject',
-    pct: '100',
-    fo: '0',
-  },
-  records: [
-    {
-      source: {
-        ip_address: '87.106.127.28',
-        country: 'DE',
-        reverse_dns: null,
-        base_domain: null,
-      },
-      count: 1,
-      alignment: {
-        spf: true,
-        dkim: true,
-        dmarc: true,
-      },
-      policy_evaluated: {
-        disposition: 'none',
-        dkim: 'pass',
-        spf: 'pass',
-        policy_override_reasons: [],
-      },
-      identifiers: {
-        header_from: 'twlnet.com',
-        envelope_from: 'twlnet.com',
-        envelope_to: null,
-      },
-      auth_results: {
-        dkim: [
-          {
-            domain: 'twlnet.com',
-            selector: '201810',
-            result: 'pass',
-          },
-        ],
-        spf: [
-          {
-            domain: 'twlnet.com',
-            scope: 'mfrom',
-            result: 'pass',
-          },
-        ],
-      },
-    },
-  ],
-}
-
-const spfItems = testData.records[0].auth_results.spf.map(spf => {
-  return (
-    <Box key={spf.domain}>
-      <Stack isInline>
-        <Text fontSize="xl" fontWeight="semibold">
-          Domain:
-        </Text>
-        <Text fontSize="xl">{spf.domain}</Text>
-      </Stack>
-
-      <Stack isInline>
-        <Text fontSize="xl" fontWeight="semibold">
-          Scope:
-        </Text>
-        <Text fontSize="xl">{spf.scope}</Text>
-      </Stack>
-
-      <Stack isInline>
-        <Text fontSize="xl" fontWeight="semibold">
-          Result:
-        </Text>
-        <Text fontSize="xl">{spf.result}</Text>
-      </Stack>
-      <Divider />
-    </Box>
-  )
-})
-
-const dkimItems = testData.records[0].auth_results.dkim.map(dkim => {
-  return (
-    <Box key={dkim.domain}>
-      <Stack isInline>
-        <Text fontSize="xl" fontWeight="semibold">
-          Domain:
-        </Text>
-        <Text fontSize="xl">{dkim.domain}</Text>
-      </Stack>
-
-      <Stack isInline>
-        <Text fontSize="xl" fontWeight="semibold">
-          Selector:
-        </Text>
-        <Text fontSize="xl">{dkim.selector}</Text>
-      </Stack>
-
-      <Stack isInline>
-        <Text fontSize="xl" fontWeight="semibold">
-          Result:
-        </Text>
-        <Text fontSize="xl">{dkim.result}</Text>
-      </Stack>
-      <Divider />
-    </Box>
-  )
-})
-
 export function DmarcReportPage() {
+  const { loading, error, data } = useQuery(gql`
+    {
+      dmarcReport {
+        reportId
+        orgName
+        endDate
+        dmarcResult
+        dkimResult
+        spfResult
+        passPercentage
+        count
+        dkim {
+          domain
+          selector
+          result
+        }
+        spf {
+          domain
+          scope
+          result
+        }
+        source {
+          ipAddress
+          country
+          reverseDns
+          baseDomain
+        }
+        identifiers {
+          headerFrom
+        }
+      }
+    }
+  `)
+
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error :(</p>
   return (
     <Box>
       <Heading mb={4}>DMARC Report</Heading>
@@ -155,8 +73,7 @@ export function DmarcReportPage() {
             <Text fontSize="2xl" fontWeight="bold">
               DMARC
             </Text>
-            {testData.records[0].policy_evaluated.dkim === 'pass' ||
-            testData.records[0].policy_evaluated.spf === 'pass' ? (
+            {data.dmarcReport.dmarcResult === 'pass' ? (
               <Icon ml={2} name="check-circle" size="26px" color="green.500" />
             ) : (
               <Icon ml={2} name="warning" size="26px" color="red.500" />
@@ -170,17 +87,30 @@ export function DmarcReportPage() {
             <Box w={'40%'} mt="30px">
               <PieChart
                 animate={true}
-                data={[{ title: 'Passed Dmarc', value: 30, color: '#2D8133' }]}
+                data={[
+                  {
+                    title: 'Passed Dmarc',
+                    value: data.dmarcReport.passPercentage,
+                    color: '#2D8133',
+                  },
+                  {
+                    title: 'Failed Dmarc',
+                    value: 100 - data.dmarcReport.passPercentage,
+                    color: '#e53e3e',
+                  },
+                ]}
               />
             </Box>
             <Text fontSize="lg" fontWeight="semibold" mt={5}>
               Result Breakdown
             </Text>
-            {
-              // TODO: Update these to dynamically calculate data
-            }
-            <Text fontSize="lg">Pass: 100%</Text>
-            <Text fontSize="lg">Fail: 0%</Text>
+
+            <Text fontSize="lg">
+              Pass: {data.dmarcReport.passPercentage}%
+            </Text>
+            <Text fontSize="lg">
+              Fail: {100 - data.dmarcReport.passPercentage}%
+            </Text>
           </Flex>
         </Stack>
         <Stack>
@@ -188,9 +118,7 @@ export function DmarcReportPage() {
             <Text fontSize="xl" fontWeight="semibold">
               Orginization name:
             </Text>
-            <Text fontSize="xl">
-              {testData.report_metadata.org_name || 'null'}
-            </Text>
+            <Text fontSize="xl">{data.dmarcReport.orgName || 'null'}</Text>
           </Stack>
 
           <Stack isInline>
@@ -198,7 +126,7 @@ export function DmarcReportPage() {
               IP address:
             </Text>
             <Text fontSize="xl">
-              {testData.records[0].source.ip_address || 'null'}
+              {data.dmarcReport.source.ip_address || 'null'}
             </Text>
           </Stack>
 
@@ -206,18 +134,14 @@ export function DmarcReportPage() {
             <Text fontSize="xl" fontWeight="semibold">
               Date:
             </Text>
-            <Text fontSize="xl">
-              {testData.report_metadata.end_date || 'null'}
-            </Text>
+            <Text fontSize="xl">{data.dmarcReport.endDate || 'null'}</Text>
           </Stack>
 
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Report ID:
             </Text>
-            <Text fontSize="xl">
-              {testData.report_metadata.report_id || 'null'}
-            </Text>
+            <Text fontSize="xl">{data.dmarcReport.reportId || 'null'}</Text>
           </Stack>
 
           <Stack isInline>
@@ -225,7 +149,7 @@ export function DmarcReportPage() {
               Country:
             </Text>
             <Text fontSize="xl">
-              {testData.records[0].source.country || 'null'}
+              {data.dmarcReport.source.country || 'null'}
             </Text>
           </Stack>
 
@@ -234,7 +158,7 @@ export function DmarcReportPage() {
               Reverse DNS:
             </Text>
             <Text fontSize="xl">
-              {testData.records[0].source.reverse_dns || 'null'}
+              {data.dmarcReport.source.reverse_dns || 'null'}
             </Text>
           </Stack>
 
@@ -243,21 +167,21 @@ export function DmarcReportPage() {
               Base domain:
             </Text>
             <Text fontSize="xl">
-              {testData.records[0].source.base_domain || 'null'}
+              {data.dmarcReport.source.base_domain || 'null'}
             </Text>
           </Stack>
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Count:
             </Text>
-            <Text fontSize="xl">{testData.records[0].count || 'null'}</Text>
+            <Text fontSize="xl">{data.dmarcReport.count || 'null'}</Text>
           </Stack>
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Header from:
             </Text>
             <Text fontSize="xl">
-              {testData.records[0].identifiers.header_from || 'null'}
+              {data.dmarcReport.identifiers.header_from || 'null'}
             </Text>
           </Stack>
         </Stack>
@@ -267,14 +191,40 @@ export function DmarcReportPage() {
             <Text fontSize="2xl" fontWeight="bold">
               DKIM
             </Text>
-            {testData.records[0].policy_evaluated.dkim === 'pass' ? (
+            {data.dmarcReport.dkimResult === 'pass' ? (
               <Icon ml={2} name="check-circle" size="26px" color="green.500" />
             ) : (
               <Icon ml={2} name="warning" size="26px" color="red.500" />
             )}
           </Flex>
 
-          {dkimItems}
+          {data.dmarcReport.dkim.map(dkim => {
+            return (
+              <Box key={dkim.domain}>
+                <Stack isInline>
+                  <Text fontSize="xl" fontWeight="semibold">
+                    Domain:
+                  </Text>
+                  <Text fontSize="xl">{dkim.domain}</Text>
+                </Stack>
+
+                <Stack isInline>
+                  <Text fontSize="xl" fontWeight="semibold">
+                    Selector:
+                  </Text>
+                  <Text fontSize="xl">{dkim.selector}</Text>
+                </Stack>
+
+                <Stack isInline>
+                  <Text fontSize="xl" fontWeight="semibold">
+                    Result:
+                  </Text>
+                  <Text fontSize="xl">{dkim.result}</Text>
+                </Stack>
+                <Divider />
+              </Box>
+            )
+          })}
 
           <Button
             mt={'5px'}
@@ -294,15 +244,40 @@ export function DmarcReportPage() {
             <Text fontSize="2xl" fontWeight="bold">
               SPF
             </Text>
-            {testData.records[0].policy_evaluated.spf === 'pass' ? (
+            {data.dmarcReport.spfResult === 'pass' ? (
               <Icon ml={2} name="check-circle" size="26px" color="green.500" />
             ) : (
               <Icon ml={2} name="warning" size="26px" color="red.500" />
             )}
           </Flex>
 
-          {spfItems}
+          {data.dmarcReport.spf.map(spf => {
+            return (
+              <Box key={spf.domain}>
+                <Stack isInline>
+                  <Text fontSize="xl" fontWeight="semibold">
+                    Domain:
+                  </Text>
+                  <Text fontSize="xl">{spf.domain}</Text>
+                </Stack>
 
+                <Stack isInline>
+                  <Text fontSize="xl" fontWeight="semibold">
+                    Scope:
+                  </Text>
+                  <Text fontSize="xl">{spf.scope}</Text>
+                </Stack>
+
+                <Stack isInline>
+                  <Text fontSize="xl" fontWeight="semibold">
+                    Result:
+                  </Text>
+                  <Text fontSize="xl">{spf.result}</Text>
+                </Stack>
+                <Divider />
+              </Box>
+            )
+          })}
           <Button
             mt={'5px'}
             variantColor="teal"

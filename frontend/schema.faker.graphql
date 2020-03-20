@@ -1096,30 +1096,30 @@ enum ZoneEnums {
 type DmarcReport implements Node{
 	id: ID!
   reportId: String
-  orgName: String 
+  orgName: String @fake(type: firstName)
   endDate: DateTime
   
   """
   Calculated value = dkimResult || spfResult
   """
-  dmarcResult: String
+  dmarcResult: String @examples(values: ["pass", "fail"])
   
   """
   Calculated value of wether or not dkim passes or fails amongst all records
   """
-  dkimResult: String
+  dkimResult: String @examples(values: ["pass", "fail"])
   
   """
   Calculated value of wether or not spf passes or fails amongst all records
   """
-  spfResult: String
+  spfResult: String @examples(values: ["pass", "fail"])
   
   count: Int
   
   """
   Calculated value of DMARC passes amongst all records
   """
-  passPercentage: Int
+  passPercentage: Int @examples(values: [60,80,95,73])
   
   dkim: [DkimResult!]
   spf: [SpfResult!]
@@ -1128,20 +1128,20 @@ type DmarcReport implements Node{
 }
 
 type DkimResult{
-  domain: String
-  selector: String
-  result: String
+  domain: String @fake(type: domainName)
+  selector: String @examples(values: ["test-selector"])
+  result: String @examples(values: ["pass", "fail"])
 }
 
 type SpfResult{
-  domain: String
-  scope: String
-  result: String
+  domain: String @fake(type: domainName)
+  scope: String @examples(values: ["test-scope"])
+  result: String @examples(values: ["pass", "fail"])
 }
 
 
 type Identifiers{
-  headerFrom: String
+  headerFrom: String @fake(type: domainName)
   envelopeFrom: String
   envelopeTo: String
 }
@@ -1153,8 +1153,8 @@ type Alignment{
 }
 
 type Source{
-  ipAddress: String
-  country: String
+  ipAddress: String @examples(values: ["127.0.0.1"])
+  country: String @examples(values: ["Canada","United States of America"])
   reverseDns: String
-  baseDomain: String
+  baseDomain: String @fake(type: domainName)
 }
