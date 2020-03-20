@@ -172,7 +172,7 @@ def process_results(results, scan_type, scan_id):
                 else:
                     expired = False
 
-                if boolean_for(results["HTTPS Self-Signed Cert"]):
+                if boolean_for(results["HTTPS Self Signed Cert"]):
                     self_signed = True
                 else:
                     self_signed = False
