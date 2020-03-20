@@ -177,5 +177,5 @@ class RemoveDomain(graphene.Mutation):
                     return RemoveDomain(status=False)
             else:
                 raise GraphQLError(
-                    "Error, you do not have permission to remove domains"
+                    "Error, you do not have permission to remove domains."
                 )
