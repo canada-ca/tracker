@@ -1,7 +1,5 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-expressions */
-import React, { useEffect } from 'react'
-import { Route, useLocation } from 'react-router-dom'
+import React from 'react'
+import { Route } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { Global, css } from '@emotion/core'
 import { PageNotFound } from './PageNotFound'
