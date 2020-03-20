@@ -43,15 +43,15 @@ def receive():
             algorithm=['HS256']
         )
 
-        payload = {'scan_id': decoded_payload['scan_id'], 'domain': decoded_payload['domain']}
-        dkim_flag = decoded_payload['dkim']
-        user_initialized = decoded_payload['user_init']
-        scan_id = decoded_payload['scan_id']
+        payload = {"scan_id": decoded_payload["scan_id"], "domain": decoded_payload["domain"]}
+        dkim_flag = decoded_payload["dkim"]
+        user_initialized = decoded_payload["user_init"]
+        scan_id = decoded_payload["scan_id"]
 
         # TODO Replace secret
         encoded_payload = jwt.encode(
             payload,
-            'test_jwt',
+            "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
@@ -75,15 +75,15 @@ def receive():
 
 def dispatch(payload, dkim_flag, manual, scan_id):
     headers = {
-        'Content-Type': 'application/json',
-        'Host': None
+        "Content-Type": "application/json",
+        "Host": None
     }
 
     if not manual:
 
         if dkim_flag:
             for host in dkim_flagged_hosts:
-                headers['Host'] = host
+                headers["Host"] = host
                 try:
                     requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
                     logging.info("Scan %s dispatched...\n" % scan_id)
@@ -102,7 +102,7 @@ def dispatch(payload, dkim_flag, manual, scan_id):
 
         if dkim_flag:
             for host in manual_scan_dkim_flagged_hosts:
-                headers['Host'] = host
+                headers["Host"] = host
                 try:
                     requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
                     logging.info("Scan %s dispatched...\n" % scan_id)
@@ -110,7 +110,7 @@ def dispatch(payload, dkim_flag, manual, scan_id):
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
         else:
             for host in manual_scan_hosts:
-                headers['Host'] = host
+                headers["Host"] = host
                 try:
                     requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
                     logging.info("Scan %s dispatched...\n" % scan_id)

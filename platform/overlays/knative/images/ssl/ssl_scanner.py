@@ -38,8 +38,8 @@ def receive():
             algorithm=['HS256']
         )
 
-        scan_id = decoded_payload['scan_id']
-        domain = decoded_payload['domain']
+        scan_id = decoded_payload["scan_id"]
+        domain = decoded_payload["domain"]
         res = scan(scan_id, domain)
         if res is not None:
             payload = {"results": str(res), "scan_type": "ssl", "scan_id": scan_id}
@@ -49,7 +49,7 @@ def receive():
         # TODO Replace secret
         encoded_payload = jwt.encode(
             payload,
-            'test_jwt',
+            "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
