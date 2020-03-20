@@ -55,6 +55,7 @@ from schemas.users import Users
 from resolvers.users import resolve_users
 
 from schemas.organizations_mutations import CreateOrganization, UpdateOrganization
+from schemas.domains_mutations import CreateDomain, UpdateDomain, RemoveDomain
 
 
 class Query(graphene.ObjectType):
@@ -171,6 +172,15 @@ class Mutation(graphene.ObjectType):
     update_organization = UpdateOrganization.Field(
         description="Allows modification of an organization inside the "
                     "database."
+    )
+    create_domain = CreateDomain.Field(
+        description="Allows the creation of domains for a given organization"
+    )
+    update_domain = UpdateDomain.Field(
+        description="Allows the modification of domains"
+    )
+    remove_domain = RemoveDomain.Field(
+        description="Allows the removal of a given domain"
     )
 
 

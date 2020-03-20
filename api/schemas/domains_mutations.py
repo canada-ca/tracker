@@ -37,19 +37,20 @@ class CreateDomain(graphene.Mutation):
         def mutate(self, info, **kwargs):
             user_id = kwargs.get('user_id')
             user_roles = kwargs.get('user_roles')
-            acronym = cleanse_input(kwargs.get('acronym'))
+            acronym = cleanse_input(kwargs.get('org'))
             domain = cleanse_input(kwargs.get('url'))
 
             # Check to see if org exists
-            org_orm = Organizations.query.filter(
+            org_orm = db.session.query(Organizations).filter(
                 Organizations.acronym == acronym
             ).first()
 
             if org_orm is None:
                 raise GraphQLError("Error, Organization does not exist.")
+            org_id = org_orm.id
 
             # Check to see if domain exists
-            domain_orm = Domains.query.filter(
+            domain_orm = db.session.query(Domains).filter(
                 Domains.domain == domain
             ).first()
 
@@ -57,10 +58,10 @@ class CreateDomain(graphene.Mutation):
                 raise GraphQLError("Error, Domain already exists.")
 
             if is_super_admin(user_id=user_id) \
-                or is_admin(user_role=user_roles, org_id=org_orm.id):
+                or is_admin(user_role=user_roles, org_id=org_id):
                 new_domain = Domains(
                     domain=domain,
-                    organization_id=org_orm.id
+                    organization_id=org_id
                 )
                 try:
                     db.session.add(new_domain)
@@ -114,7 +115,9 @@ class UpdateDomain(graphene.Mutation):
 
             if is_admin(user_role=user_roles, org_id=domain_orm.organization_id) \
                 or is_super_admin(user_id=user_id):
-                domain_orm.update({'domain': updated_domain})
+                Domains.query.filter(
+                    Domains.domain == current_domain
+                ).update({'domain': updated_domain})
 
                 try:
                     db.session.commit()
@@ -137,7 +140,7 @@ class RemoveDomain(graphene.Mutation):
     class Arguments:
         url = URL(
             description="URL of domain that is being removed",
-            requried=True
+            required=True
         )
 
     status = graphene.Boolean()
