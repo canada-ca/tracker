@@ -18,6 +18,7 @@ class CreateDomain(graphene.Mutation):
     """
     Mutation used to create a new domain for an organization
     """
+
     class Arguments:
         org = Acronym(
             description="Organizations acronym that you would like to connect "
@@ -80,6 +81,7 @@ class UpdateDomain(graphene.Mutation):
     Mutation allows the modification of domains if domain is updated through
     out its life-cycle
     """
+
     class Arguments:
         current_url = URL(
             description="The current domain that is being requested to be "
@@ -112,7 +114,7 @@ class UpdateDomain(graphene.Mutation):
 
             if is_admin(user_role=user_roles, org_id=domain_orm.organization_id) \
                 or is_super_admin(user_id=user_id):
-                domain_orm.update({'domain': current_domain})
+                domain_orm.update({'domain': updated_domain})
 
                 try:
                     db.session.commit()
@@ -121,3 +123,56 @@ class UpdateDomain(graphene.Mutation):
                     db.session.rollback()
                     db.session.flush()
                     return UpdateDomain(status=False)
+            else:
+                raise GraphQLError(
+                    "Error, you do not have permission to edit domains"
+                )
+
+
+class RemoveDomain(graphene.Mutation):
+    """
+    This mutation allows the removal of unused domains
+    """
+
+    class Arguments:
+        url = URL(
+            description="URL of domain that is being removed",
+            requried=True
+        )
+
+    status = graphene.Boolean()
+
+    with app.app_context():
+        @require_token
+        def mutate(self, info, **kwargs):
+            user_id = kwargs.get('user_id')
+            user_roles = kwargs.get('user_roles')
+            domain = cleanse_input(kwargs.get('url'))
+
+            # Check to see if domain exists
+            domain_orm = Domains.query.filter(
+                Domains.domain == domain
+            ).first()
+
+            # Check to see if domain exists
+            if domain_orm is None:
+                raise GraphQLError("Error, domain does not exist.")
+
+            # Check permissions
+            if is_admin(user_role=user_roles, org_id=domain_orm.organization_id) \
+                or is_super_admin(user_id):
+                # Delete domain
+                try:
+                    Domains.query.filter(
+                        Domains.domain == domain
+                    ).delete()
+                    db.session.commit()
+                    return RemoveDomain(status=True)
+                except Exception as e:
+                    db.session.rollback()
+                    db.session.flush()
+                    return RemoveDomain(status=False)
+            else:
+                raise GraphQLError(
+                    "Error, you do not have permission to remove domains"
+                )
