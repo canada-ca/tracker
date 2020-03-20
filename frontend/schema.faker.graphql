@@ -866,6 +866,8 @@ type Query {
   An api endpoint to view a current user's claims -- Requires an active JWT.
   """
   testUserClaims(token: String!): String
+  
+  dmarcReport: DmarcReport
 }
 
 enum SectorEnums {
@@ -1092,6 +1094,7 @@ enum ZoneEnums {
 }
 
 type DmarcReport implements Node{
+	id: ID!
   reportId: String
   orgName: String 
   endDate: DateTime
