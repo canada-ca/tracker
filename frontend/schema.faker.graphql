@@ -1091,3 +1091,67 @@ enum ZoneEnums {
   TEST
 }
 
+type DmarcReport implements Node{
+  reportId: String
+  orgName: String 
+  endDate: DateTime
+  
+  """
+  Calculated value = dkimResult || spfResult
+  """
+  dmarcResult: String
+  
+  """
+  Calculated value of wether or not dkim passes or fails amongst all records
+  """
+  dkimResult: String
+  
+  """
+  Calculated value of wether or not spf passes or fails amongst all records
+  """
+  spfResult: String
+  
+  count: Int
+  
+  """
+  Calculated value of DMARC passes amongst all records
+  """
+  passPercentage: Int
+  
+  dkim: [DkimResult!]
+  spf: [SpfResult!]
+  source: Source
+  identifiers: Identifiers
+}
+
+type DkimResult{
+  domain: String
+  selector: String
+  result: String
+}
+
+type SpfResult{
+  domain: String
+  scope: String
+  result: String
+}
+
+
+type Identifiers{
+  headerFrom: String
+  envelopeFrom: String
+  envelopeTo: String
+}
+
+type Alignment{
+  spf: Boolean
+  dkim: Boolean
+  dmarc: Boolean
+}
+
+type Source{
+  ipAddress: String
+  country: String
+  reverseDns: String
+  baseDomain: String
+}
