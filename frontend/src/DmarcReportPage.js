@@ -176,12 +176,11 @@ export function DmarcReportPage() {
             <Text fontSize="lg" fontWeight="semibold" mt={5}>
               Result Breakdown
             </Text>
-            <Text fontSize="lg">
-              Pass: 100%
-            </Text>
-            <Text fontSize="lg">
-              Fail: 0%
-            </Text>
+            {
+              // TODO: Update these to dynamically calculate data
+            }
+            <Text fontSize="lg">Pass: 100%</Text>
+            <Text fontSize="lg">Fail: 0%</Text>
           </Flex>
         </Stack>
         <Stack>
@@ -189,61 +188,77 @@ export function DmarcReportPage() {
             <Text fontSize="xl" fontWeight="semibold">
               Orginization name:
             </Text>
-            <Text fontSize="xl">{testData.report_metadata.org_name}</Text>
+            <Text fontSize="xl">
+              {testData.report_metadata.org_name || 'null'}
+            </Text>
           </Stack>
 
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               IP address:
             </Text>
-            <Text fontSize="xl">{testData.records[0].source.ip_address}</Text>
+            <Text fontSize="xl">
+              {testData.records[0].source.ip_address || 'null'}
+            </Text>
           </Stack>
 
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Date:
             </Text>
-            <Text fontSize="xl">{testData.report_metadata.end_date}</Text>
+            <Text fontSize="xl">
+              {testData.report_metadata.end_date || 'null'}
+            </Text>
           </Stack>
 
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Report ID:
             </Text>
-            <Text fontSize="xl">{testData.report_metadata.report_id}</Text>
+            <Text fontSize="xl">
+              {testData.report_metadata.report_id || 'null'}
+            </Text>
           </Stack>
 
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Country:
             </Text>
-            <Text fontSize="xl">{testData.records[0].source.country}</Text>
+            <Text fontSize="xl">
+              {testData.records[0].source.country || 'null'}
+            </Text>
           </Stack>
 
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Reverse DNS:
             </Text>
-            <Text fontSize="xl">{testData.records[0].source.reverse_dns}</Text>
+            <Text fontSize="xl">
+              {testData.records[0].source.reverse_dns || 'null'}
+            </Text>
           </Stack>
 
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Base domain:
             </Text>
-            <Text fontSize="xl">{testData.records[0].source.base_domain}</Text>
+            <Text fontSize="xl">
+              {testData.records[0].source.base_domain || 'null'}
+            </Text>
           </Stack>
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Count:
             </Text>
-            <Text fontSize="xl">{testData.records[0].count}</Text>
+            <Text fontSize="xl">{testData.records[0].count || 'null'}</Text>
           </Stack>
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Header from:
             </Text>
-            <Text fontSize="xl">kaeblesecurity.net</Text>
+            <Text fontSize="xl">
+              {testData.records[0].identifiers.header_from || 'null'}
+            </Text>
           </Stack>
         </Stack>
 
