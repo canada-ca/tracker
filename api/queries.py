@@ -60,6 +60,12 @@ from schemas.organizations_mutations import (
     RemoveOrganization
 )
 
+from schemas.domains_mutations import (
+    CreateDomain,
+    UpdateDomain,
+    RemoveDomain
+)
+
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
@@ -178,6 +184,15 @@ class Mutation(graphene.ObjectType):
     )
     remove_organization = RemoveOrganization.Field(
         description="Allows the removal of an organization inside the database"
+    )
+    create_domain = CreateDomain.Field(
+        description="Allows the creation of domains for a given organization"
+    )
+    update_domain = UpdateDomain.Field(
+        description="Allows the modification of domains"
+    )
+    remove_domain = RemoveDomain.Field(
+        description="Allows the removal of a given domain"
     )
 
 
