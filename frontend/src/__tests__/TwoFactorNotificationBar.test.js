@@ -12,6 +12,13 @@ import { TwoFactorNotificationBar } from '../TwoFactorNotificationBar'
 i18n.load('en', { en: {} })
 i18n.activate('en')
 
+const resolvers = {
+  Query: {
+    jwt: () => null,
+    tfa: () => null,
+  },
+}
+
 describe('<TwoFactorNotificationBar />', () => {
   afterEach(cleanup)
 
@@ -20,7 +27,7 @@ describe('<TwoFactorNotificationBar />', () => {
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider>
+            <MockedProvider resolvers={resolvers}>
               <TwoFactorNotificationBar />
             </MockedProvider>
           </MemoryRouter>
@@ -54,7 +61,7 @@ describe('<TwoFactorNotificationBar />', () => {
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks}>
+            <MockedProvider mocks={mocks} resolvers={resolvers}>
               <App />
             </MockedProvider>
           </MemoryRouter>
@@ -94,7 +101,7 @@ describe('<TwoFactorNotificationBar />', () => {
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks}>
+            <MockedProvider mocks={mocks} resolvers={resolvers}>
               <App />
             </MockedProvider>
           </MemoryRouter>

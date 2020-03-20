@@ -1,7 +1,8 @@
 import React from 'react'
+import { createMemoryHistory } from 'history'
 import { SignInPage } from '../SignInPage'
 import { i18n } from '@lingui/core'
-import { MemoryRouter } from 'react-router-dom'
+import { Router, MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import {
@@ -19,215 +20,186 @@ import App from '../App'
 i18n.load('en', { en: {} })
 i18n.activate('en')
 
+const resolvers = {
+  Query: {
+    jwt: () => null,
+    tfa: () => null,
+  },
+}
+
+const mocks = [
+  {
+    request: {
+      query: gql`
+        {
+          domains(organization: BOC) {
+            url
+          }
+        }
+      `,
+      variables: {},
+    },
+    result: {
+      data: {
+        domains: [
+          {
+            url: 'canada.ca',
+          },
+          {
+            url: 'alpha.canada.ca',
+          },
+        ],
+      },
+    },
+  },
+]
+
 describe('<SignInPage />', () => {
   afterEach(cleanup)
 
-  it('successfully renders the component', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider>
-              <SignInPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
-    expect(render).toBeTruthy()
-  })
+  describe('when the email field is empty', () => {
+    it('displays an error message', async () => {
+      const { container, getByText } = render(
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider resolvers={resolvers} mocks={mocks}>
+                <SignInPage />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>,
+      )
 
-  test('an empty input for email field displays an error message', async () => {
-    const { container } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider>
-              <SignInPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
+      const email = container.querySelector('#email')
 
-    expect(render).toBeTruthy()
+      await wait(() => {
+        fireEvent.blur(email)
+      })
 
-    const email = container.querySelector('#email')
+      const errorElement = getByText(/Email cannot be empty/i)
 
-    await wait(() => {
-      fireEvent.blur(email)
+      expect(errorElement.innerHTML).toMatch(/Email cannot be empty/i)
     })
-
-    const errorElement = await waitForElement(
-      () => getByText(container, /Email can not be empty/i),
-      { container },
-    )
-
-    expect(errorElement.innerHTML).toMatch(/Email can not be empty/i)
   })
 
-  test('an empty input for password field displays an error message', async () => {
-    const { container } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider>
-              <SignInPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
+  describe('when the password field is empty', () => {
+    it('displays an error message', async () => {
+      const { container } = render(
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider
+                resolvers={resolvers}
+                mocks={mocks}
+                addTypename={false}
+              >
+                <SignInPage />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>,
+      )
 
-    expect(render).toBeTruthy()
+      const password = container.querySelector('#password')
 
-    const password = container.querySelector('#password')
-
-    await wait(() => {
       fireEvent.blur(password)
+
+      const errorElement = await waitForElement(
+        () => getByText(container, /Password cannot be empty/i),
+        { container },
+      )
+
+      expect(errorElement.innerHTML).toMatch(/Password cannot be empty/i)
     })
-
-    const errorElement = await waitForElement(
-      () => getByText(container, /Password can not be empty/i),
-      { container },
-    )
-
-    expect(errorElement.innerHTML).toMatch(/Password can not be empty/i)
   })
 
-  test('Show/Hide password button toggles properly', async () => {
-    const { container } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider>
-              <SignInPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
+  describe('when sign-in succeeds', () => {
+    it('redirects to home page', async () => {
+      const values = {
+        email: 'testuser@testemail.ca',
+        password: 'testuserpassword',
+      }
 
-    expect(render).toBeTruthy()
-
-    // Get elements that are required for these tests
-    const password = container.querySelector('#password')
-    const showButton = container.querySelector('#showButton')
-
-    // Assert that inital state is type password & button text is Show
-    expect(password).toHaveAttribute('type', 'password')
-    expect(showButton.innerHTML).toBe('Show')
-
-    // Click the Show button
-    await wait(() => {
-      fireEvent.click(showButton)
-    })
-
-    // Assert that state after the button press is type text & button text is Hide
-    expect(password).toHaveAttribute('type', 'text')
-    expect(showButton.innerHTML).toBe('Hide')
-
-    // Click the Hide button
-    await wait(() => {
-      fireEvent.click(showButton)
-    })
-
-    // Assert that third state is type password & button text is Show
-    expect(password).toHaveAttribute('type', 'password')
-    expect(showButton.innerHTML).toBe('Show')
-  })
-
-  test('successful sign-in redirects to home page and displays sign out button', async () => {
-    const values = {
-      email: 'testuser@testemail.ca',
-      password: 'testuserpassword',
-    }
-
-    const mocks = [
-      {
-        request: {
-          query: gql`
-            mutation SignIn($userName: EmailAddress!, $password: String!) {
-              signIn(userName: $userName, password: $password) {
-                user {
-                  userName
-                  failedLoginAttempts
-                  tfaValidated
+      const mocks = [
+        {
+          request: {
+            query: gql`
+              mutation SignIn($userName: EmailAddress!, $password: String!) {
+                signIn(userName: $userName, password: $password) {
+                  user {
+                    userName
+                    failedLoginAttempts
+                    tfaValidated
+                  }
+                  authToken
                 }
-                authToken
               }
-            }
-          `,
-          variables: {
-            userName: values.email,
-            password: values.password,
+            `,
+            variables: {
+              userName: values.email,
+              password: values.password,
+            },
           },
-        },
-        result: {
-          data: {
-            signIn: {
-              user: {
-                userName: 'Thalia.Rosenbaum@gmail.com',
-                failedLoginAttempts: 4,
-                tfaValidated: false,
+          result: {
+            data: {
+              signIn: {
+                user: {
+                  userName: 'Thalia.Rosenbaum@gmail.com',
+                  failedLoginAttempts: 4,
+                  tfaValidated: false,
+                },
+                authToken: 'test123stringJWT',
               },
-              authToken: 'test123stringJWT',
             },
           },
         },
-      },
-    ]
+      ]
 
-    const { container } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter initialEntries={['/sign-in']} initialIndex={0}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <App />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
+      // create a history object and inject it so we can inspect it afterwards
+      // for the side effects of our form submission (a redirect to /!).
+      const history = createMemoryHistory({
+        initialEntries: ['/sign-in'],
+        initialIndex: 0,
+      })
 
-    expect(render).toBeTruthy()
+      const { container, getByRole } = render(
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <Router history={history}>
+              <MockedProvider
+                resolvers={resolvers}
+                mocks={mocks}
+                addTypename={false}
+              >
+                <App />
+              </MockedProvider>
+            </Router>
+          </I18nProvider>
+        </ThemeProvider>,
+      )
 
-    const email = container.querySelector('#email')
-    const password = container.querySelector('#password')
-    const form = container.querySelector('#form')
+      const email = container.querySelector('#email')
+      const password = container.querySelector('#password')
+      const form = getByRole('form')
 
-    await wait(() => {
       fireEvent.change(email, {
         target: {
           value: values.email,
         },
       })
-    })
 
-    await wait(() => {
       fireEvent.change(password, {
         target: {
           value: values.password,
         },
       })
-    })
 
-    await wait(() => {
       fireEvent.submit(form)
+
+      await wait(() => {
+        expect(history.location.pathname).toEqual('/')
+      })
     })
-
-    const homeHeading = await waitForElement(
-      () => getByText(container, /Track web security compliance/i),
-      { container },
-    )
-
-    expect(homeHeading.innerHTML).toMatch(/Track web security compliance/i)
-
-    const signOutBtn = await waitForElement(
-      () => getByText(container, /Sign Out/i),
-      { container },
-    )
-
-    expect(signOutBtn.innerHTML).toMatch(/Sign Out/i)
   })
 })

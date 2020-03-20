@@ -16,7 +16,12 @@ import fetch from 'isomorphic-unfetch'
 const client = new ApolloClient({
   link: createHttpLink({ fetch }),
   cache: new InMemoryCache(),
-  resolvers: {},
+  resolvers: {
+    Query: {
+      jwt: () => null,
+      tfa: () => null,
+    },
+  },
 })
 
 ReactDOM.render(

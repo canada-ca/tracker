@@ -17,32 +17,49 @@ msgstr ""
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre des services en ligne sécurisés. Un nouvel avis de politique vise à assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en matière de sécurité Web. Voyez comment les sites gouvernementaux deviennent plus sécuritaires."
 
-#: src/App.js:43
+#: src/SignInPage.js:147
+msgid "Create Account"
+msgstr "Créer un compte"
+
+#: src/App.js:61
 #: src/DomainsPage.js:24
 msgid "Domains"
 msgstr "Domaines"
 
-#: src/App.js:40
+#: src/SignInPage.js:129
+msgid "Forgot your password?"
+msgstr "Oublié votre mot de passe?"
+
+#: src/App.js:58
 msgid "Home"
 msgstr "Accueil"
-
-#: src/App.js:52
-#~ msgid "Organisations"
-#~ msgstr "Organisations"
 
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: src/App.js:33
+#: src/App.js:51
 msgid "Pre-Alpha"
 msgstr "préalpha"
 
-#: src/App.js:67
+#: src/App.js:123
 msgid "Privacy"
 msgstr "Confidentialité"
 
-#: src/App.js:31
+#: src/App.js:67
+#: src/SignInPage.js:138
+msgid "Sign In"
+msgstr "Se connecter"
+
+#: src/App.js:84
+msgid "Sign Out"
+msgstr "Déconnexion"
+
+#: src/SignInPage.js:93
+msgid "Sign in with your username and password."
+msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
+
+#: src/App.js:49
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -50,11 +67,7 @@ msgstr "Passer au contenu principal"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Désolé, la page que vous essayiez de consulter n'existe pas."
 
-#: src/TopBanner.js:25
-msgid "Symbol of the Government of Canada"
-msgstr "Symbole du Gouvernement du Canada"
-
-#: src/App.js:77
+#: src/App.js:133
 msgid "Terms & conditions"
 msgstr "Avis"
 
@@ -62,7 +75,7 @@ msgstr "Avis"
 msgid "This is the full list of domains"
 msgstr "Voici la liste complète des domaines"
 
-#: src/App.js:34
+#: src/App.js:52
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
