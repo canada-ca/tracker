@@ -11,20 +11,16 @@ from unittest import TestCase
 
 from werkzeug.test import create_environ
 
-from manage import seed, remove_seed
+# This is the only way I could get imports to work for unit testing.
+PACKAGE_PARENT = '..'
+SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
+sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-seed()
 from app import app
 from db import db
 from models import Organizations, Domains, Users, User_affiliations
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
-remove_seed()
-
-# This is the only way I could get imports to work for unit testing.
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
-sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 @pytest.fixture(scope='class')

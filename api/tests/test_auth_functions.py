@@ -10,8 +10,6 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from manage import seed, remove_seed
-seed()
 from app import app
 from db import db
 from models import Users, User_affiliations, Organizations
@@ -21,7 +19,6 @@ from functions.auth_functions import (
     is_user_write,
     is_user_read
 )
-remove_seed()
 
 
 @pytest.fixture(scope='class')

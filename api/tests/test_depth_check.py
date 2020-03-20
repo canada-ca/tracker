@@ -16,14 +16,11 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from manage import seed, remove_seed
-seed()
 from app import app
 from db import db
 from queries import schema
 from models import Users
 from backend.security_check import SecurityAnalysisBackend
-remove_seed()
 
 
 @pytest.fixture(scope='class')
