@@ -4,6 +4,7 @@ import requests
 import logging
 import json
 import threading
+import jwt
 from checkdmarc import *
 from flask import Flask, request
 
@@ -11,13 +12,10 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 headers = {
     'Content-Type': 'application/json',
-    'Host': 'result-processor.tracker.example.com',
+    'Host': 'result-processor.tracker.example.com'
 }
 
 app = Flask(__name__)
-
-test_tls = multithreaded_tests.test_tls
-test_starttls = multithreaded_tests.test_starttls
 
 
 @app.route('/receive', methods=['GET', 'POST'])
@@ -26,21 +24,35 @@ def receive():
     logging.info("Event received\n")
 
     try:
-        scan_id = request.json['scan_id']
+        # TODO Replace secret
+        decoded_payload = jwt.decode(
+            request.get_data(),
+            "test_jwt",
+            algorithm=['HS256']
+        )
 
-        if "._domainkey" in request.json['domain']:
-            domain = request.json['domain'].split("._domainkey")[1]
+        scan_id = decoded_payload['scan_id']
+
+        if "._domainkey" in decoded_payload['domain']:
+            domain = decoded_payload['domain'].split("._domainkey")[1]
         else:
-            domain = request.json['domain']
+            domain = decoded_payload['domain']
 
         res = scan(scan_id, domain)
         if res is not None:
-            payload = json.dumps({"results": str(res), "scan_type": "dmarc", "scan_id": scan_id})
+            payload = {"results": str(res), "scan_type": "dmarc", "scan_id": scan_id}
 
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to perform checkdmarc scan" % scan_id)
 
-        th = threading.Thread(target=dispatch, args=[payload, scan_id])
+        # TODO Replace secret
+        encoded_payload = jwt.encode(
+            payload,
+            'test_jwt',
+            algorithm='HS256'
+        ).decode('utf-8')
+
+        th = threading.Thread(target=dispatch, args=[encoded_payload, scan_id])
         th.start()
 
         return 'Scan sent to result-handling service'

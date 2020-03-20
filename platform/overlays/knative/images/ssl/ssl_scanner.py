@@ -4,6 +4,7 @@ import requests
 import logging
 import json
 import threading
+import jwt
 from sslyze.ssl_settings import TlsWrappedProtocolEnum
 from sslyze.server_connectivity_tester import ServerConnectivityError, ServerConnectivityTester
 from sslyze.plugins.openssl_cipher_suites_plugin import Tlsv12ScanCommand, Tlsv10ScanCommand, \
@@ -18,7 +19,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 headers = {
     'Content-Type': 'application/json',
-    'Host': 'result-processor.tracker.example.com',
+    'Host': 'result-processor.tracker.example.com'
 }
 
 app = Flask(__name__)
@@ -30,15 +31,29 @@ def receive():
     logging.info("Event received\n")
 
     try:
-        scan_id = request.json['scan_id']
-        domain = request.json['domain']
+        # TODO Replace secret
+        decoded_payload = jwt.decode(
+            request.get_data(),
+            "test_jwt",
+            algorithm=['HS256']
+        )
+
+        scan_id = decoded_payload['scan_id']
+        domain = decoded_payload['domain']
         res = scan(scan_id, domain)
         if res is not None:
-            payload = json.dumps({"results": str(res), "scan_type": "ssl", "scan_id": scan_id})
+            payload = {"results": str(res), "scan_type": "ssl", "scan_id": scan_id}
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to establish SSL connection" % scan_id)
 
-        th = threading.Thread(target=dispatch, args=[payload, scan_id])
+        # TODO Replace secret
+        encoded_payload = jwt.encode(
+            payload,
+            'test_jwt',
+            algorithm='HS256'
+        ).decode('utf-8')
+
+        th = threading.Thread(target=dispatch, args=[encoded_payload, scan_id])
         th.start()
 
         return 'Scan sent to result-handling service'
@@ -68,8 +83,8 @@ def get_server_info(scan_id, domain):
         logging.info("(SCAN: %s) - Server Info %s\n" % (scan_id, server_info))
 
         # TLS connection succeeded. Try establishing upgraded TLS connection on port 25 (SMTP)
-        if get_server_info_starttls(scan_id, domain, TlsWrappedProtocolEnum.STARTTLS_SMTP) is not None:
-            return server_info, True
+        #if get_server_info_starttls(scan_id, domain, TlsWrappedProtocolEnum.STARTTLS_SMTP) is not None:
+        #    return server_info, True
 
         return server_info, False
 
@@ -162,9 +177,9 @@ def scan(scan_id, domain):
     rc4 = False
     triple_des = False
     for cipher in res[tls_supported]["accepted_cipher_list"]:
-        if "RC4" in cipher.name:
+        if "RC4" in cipher:
             rc4 = True
-        if "3DES" in cipher.name:
+        if "3DES" in cipher:
             triple_des = True
 
     res["rc4"] = rc4
