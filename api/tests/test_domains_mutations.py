@@ -176,6 +176,16 @@ def domain_test_db_init():
             organization_id=1
         )
         db.session.add(user_write_domain_2)
+        user_read_update_domain = Domains(
+            domain="user.read.update.domain.ca",
+            organization_id=1
+        )
+        db.session.add(user_read_update_domain)
+        user_read_domain = Domains(
+            domain="user.read.remove.domain.ca",
+            organization_id=1
+        )
+        db.session.add(user_read_domain)
         db.session.commit()
 
     yield
@@ -246,7 +256,7 @@ class TestDomainMutationAccessControl(TestCase):
                         "edges": [
                             {
                                 "node": {
-                                    "url": "somecooldomain.ca"
+                                    "url": "sa.create.domain.ca"
                                 }
                             }
                         ]
@@ -499,7 +509,7 @@ class TestDomainMutationAccessControl(TestCase):
                         "edges": [
                             {
                                 "node": {
-                                    "url": "updatedadminupdatedomain.ca"
+                                    "url": "updated.admin.update.domain.ca"
                                 }
                             }
                         ]
@@ -675,7 +685,7 @@ class TestDomainMutationAccessControl(TestCase):
 
             assert executed['errors']
             assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to create a domain for that organization"
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to remove domains."
 
     # User Write Tests
     def test_domain_creation_user_write(self):
@@ -800,7 +810,7 @@ class TestDomainMutationAccessControl(TestCase):
                         "edges": [
                             {
                                 "node": {
-                                    "url": "updatedadminupdatedomain.ca"
+                                    "url": "updated.user.write.update.domain.ca"
                                 }
                             }
                         ]
@@ -976,4 +986,119 @@ class TestDomainMutationAccessControl(TestCase):
 
             assert executed['errors']
             assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to remove domains."
+
+    # Different Org User Read
+    def test_domain_creation_org_user_read(self):
+        """
+        Test to see if user read can create domain
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    createDomain(org: "ORG1", url: "user.read.create.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
             assert executed['errors'][0]['message'] == "Error, you do not have permission to create a domain for that organization"
+
+    def test_domain_modification_org_user_read(self):
+        """
+        Test to see if user read can modify domain
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    updateDomain(
+                        currentUrl: "user.read.update.domain.ca",
+                        updatedUrl: "updated.user.read.update.domain.ca"
+                    ) {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to edit domains belonging to another organization"
+
+    def test_domain_removal_org_user_read(self):
+        """
+        Test to see if user read can remove domain
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    removeDomain(url: "user.read.remove.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to remove domains."
