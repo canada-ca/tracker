@@ -14,7 +14,7 @@ import { ApolloProvider } from '@apollo/react-hooks'
 i18n.load('en', { en: {} })
 i18n.activate('en')
 
-describe('<SignInPage />', () => {
+describe('<QRcodePage />', () => {
   afterEach(cleanup)
 
   const client = new ApolloClient({
