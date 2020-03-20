@@ -4,6 +4,7 @@ import re
 import subprocess
 import json
 import logging
+import jwt
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, Mx_scans, Spf_scans, Scans
@@ -22,19 +23,21 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 MIN_HSTS_AGE = 31536000 # one year
 
 
-@app.errorhandler(400)
-def bad_request(e):
-    # 400 - Bad request
-    logging.error("Error (%s): Could not process results for the following request - %s" % (str(e), str(request)))
-
-
 @app.route('/receive', methods=['GET', 'POST'])
 def receive():
 
     try:
-        result_dict = request.json["results"]
-        scan_type = request.json["scan_type"]
-        scan_id = request.json["scan_id"]
+
+        # TODO Replace secret
+        decoded_payload = jwt.decode(
+            request.get_data(),
+            "test_jwt",
+            algorithm=['HS256']
+        )
+
+        result_dict = decoded_payload["results"]
+        scan_type = decoded_payload["scan_type"]
+        scan_id = decoded_payload["scan_id"]
 
         res = process_results(result_dict, scan_type, scan_id)
 
@@ -57,19 +60,19 @@ def process_results(results, scan_type, scan_id):
     try:
         report = {}
 
-        if scan_type is "dmarc":
+        if scan_type == "dmarc":
             if results is not None:
                 report = {"dmarc": results["dmarc"], "spf": results["spf"], "mx": results["mx"]}
             else:
                 report = {"dmarc": {"missing": True}, "spf": {"missing": True},  "mx": {"missing": True}}
 
-        elif scan_type is "dkim":
+        elif scan_type == "dkim":
             if results is not None:
                 report = results
             else:
                 report = {"missing": True}
 
-        elif scan_type is "https":
+        elif scan_type == "https":
             if results is None:
                 report = {"missing": True}
 
@@ -180,7 +183,7 @@ def process_results(results, scan_type, scan_id):
                 report["expired_cert"] = expired
                 report["self_signed_cert"] = self_signed
 
-        elif scan_type is "ssl":
+        elif scan_type == "ssl":
 
             # Get cipher/protocol data via sslyze for a host.
 

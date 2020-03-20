@@ -9,6 +9,7 @@ RUN pip3 install Flask gunicorn
 
 RUN pip3 install sslyze
 RUN pip3 install requests
+RUN pip3 install PyJWT
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.

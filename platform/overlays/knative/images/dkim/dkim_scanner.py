@@ -5,6 +5,7 @@ import logging
 import json
 import dkim
 import threading
+import jwt
 from dkim import dnsplug, crypto
 from dkim.crypto import *
 from flask import Flask, request
@@ -13,7 +14,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 headers = {
     'Content-Type': 'application/json',
-    'Host': 'result-processor.tracker.example.com',
+    'Host': 'result-processor.tracker.example.com'
 }
 
 app = Flask(__name__)
@@ -25,16 +26,30 @@ def receive():
     logging.info("Event received\n")
 
     try:
-        scan_id = request.json['scan_id']
-        domain = request.json['domain']
+        # TODO Replace secret
+        decoded_payload = jwt.decode(
+            request.get_data(),
+            "test_jwt",
+            algorithm=['HS256']
+        )
+
+        scan_id = decoded_payload['scan_id']
+        domain = decoded_payload['domain']
         res = scan(scan_id, domain)
         if res is not None:
-            payload = json.dumps({"results": str(res), "scan_type": "dkim", "scan_id": scan_id})
+            payload = {"results": str(res), "scan_type": "dkim", "scan_id": scan_id}
 
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to perform dkim scan" % scan_id)
 
-        th = threading.Thread(target=dispatch, args=[payload, scan_id])
+        # TODO Replace secret
+        encoded_payload = jwt.encode(
+            payload,
+            'test_jwt',
+            algorithm='HS256'
+        ).decode('utf-8')
+
+        th = threading.Thread(target=dispatch, args=[encoded_payload, scan_id])
         th.start()
 
         return 'Scan sent to result-handling service'

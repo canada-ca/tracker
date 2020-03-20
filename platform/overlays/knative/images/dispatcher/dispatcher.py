@@ -43,11 +43,19 @@ def receive():
             algorithm=['HS256']
         )
 
-        payload = json.dumps({'scan_id': decoded_payload['scan_id'], 'domain': decoded_payload['domain']})
+        payload = {'scan_id': decoded_payload['scan_id'], 'domain': decoded_payload['domain']}
         dkim_flag = decoded_payload['dkim']
         user_initialized = decoded_payload['user_init']
+        scan_id = decoded_payload['scan_id']
 
-        th = threading.Thread(target=dispatch, args=[payload, dkim_flag, user_initialized])
+        # TODO Replace secret
+        encoded_payload = jwt.encode(
+            payload,
+            'test_jwt',
+            algorithm='HS256'
+        ).decode('utf-8')
+
+        th = threading.Thread(target=dispatch, args=[encoded_payload, dkim_flag, user_initialized, scan_id])
         th.start()
 
         return 'Domain dispatched to designated scanner(s)'
@@ -65,10 +73,10 @@ def receive():
         return 'Failed to dispatch domain to designated scanner(s)'
 
 
-def dispatch(payload, dkim_flag, manual):
+def dispatch(payload, dkim_flag, manual, scan_id):
     headers = {
         'Content-Type': 'application/json',
-        'Host': None,
+        'Host': None
     }
 
     if not manual:
@@ -76,30 +84,38 @@ def dispatch(payload, dkim_flag, manual):
         if dkim_flag:
             for host in dkim_flagged_hosts:
                 headers['Host'] = host
-                requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                try:
+                    requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    logging.info("Scan %s dispatched...\n" % scan_id)
+                except Exception as e:
+                    logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
         else:
             for host in hosts:
                 headers['Host'] = host
                 try:
                     requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
-                    logging.info("Scan %s dispatched...\n" % payload["scan_id"])
+                    logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
-                    logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (payload["scan_id"], e))
+                    logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
 
     else:
 
         if dkim_flag:
             for host in manual_scan_dkim_flagged_hosts:
                 headers['Host'] = host
-                requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                try:
+                    requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    logging.info("Scan %s dispatched...\n" % scan_id)
+                except Exception as e:
+                    logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
         else:
             for host in manual_scan_hosts:
                 headers['Host'] = host
                 try:
                     requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
-                    logging.info("Scan %s dispatched...\n" % payload["scan_id"])
+                    logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
-                    logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (payload["scan_id"], e))
+                    logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
 
 
 if __name__ == "__main__":
