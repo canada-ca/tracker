@@ -35,7 +35,6 @@ export function SignInPage() {
         signIn(userName: $userName, password: $password) {
           user {
             userName
-            failedLoginAttempts
             tfaValidated
           }
           authToken
