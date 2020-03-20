@@ -69,6 +69,14 @@ def domain_test_db_init():
                 password="testpassword123").decode("UTF-8")
         )
         db.session.add(test_write)
+        test_write2 = Users(
+            id=6,
+            display_name="testuserwrite2",
+            user_name="testuserwrite2@testemail.ca",
+            user_password=bcrypt.generate_password_hash(
+                password="testpassword123").decode("UTF-8")
+        )
+        db.session.add(test_write2)
 
         org = Organizations(
             id=1,
@@ -80,6 +88,7 @@ def domain_test_db_init():
             acronym='ORG2'
         )
         db.session.add(org)
+
         test_user_read_role = User_affiliations(
             user_id=1,
             organization_id=1,
@@ -110,17 +119,63 @@ def domain_test_db_init():
             permission='user_write'
         )
         db.session.add(test_user_write_role)
+        test_user_write_role_2 = User_affiliations(
+            user_id=6,
+            organization_id=2,
+            permission='user_write'
+        )
+        db.session.add(test_user_write_role_2)
 
         sa_update_domain = Domains(
-            domain="anothercooldomain.ca",
+            domain="sa.update.domain.ca",
             organization_id=1
         )
         db.session.add(sa_update_domain)
         sa_remove_domain = Domains(
-            domain="somelamedomain.ca",
+            domain="sa.remove.domain.ca",
             organization_id=1
         )
         db.session.add(sa_remove_domain)
+        org_admin_update_domain = Domains(
+            domain="admin.update.domain.ca",
+            organization_id=1
+        )
+        db.session.add(org_admin_update_domain)
+        org_admin_domain = Domains(
+            domain="admin.remove.domain.ca",
+            organization_id=1
+        )
+        db.session.add(org_admin_domain)
+        org_admin_update_domain2 = Domains(
+            domain="admin2.update.domain.ca",
+            organization_id=1
+        )
+        db.session.add(org_admin_update_domain2)
+        org_admin_domain2 = Domains(
+            domain="admin2.remove.domain.ca",
+            organization_id=1
+        )
+        db.session.add(org_admin_domain2)
+        user_write_update_domain = Domains(
+            domain="user.write.update.domain.ca",
+            organization_id=1
+        )
+        db.session.add(user_write_update_domain)
+        user_write_domain = Domains(
+            domain="user.write.remove.domain.ca",
+            organization_id=1
+        )
+        db.session.add(user_write_domain)
+        user_write_update_domain_2 = Domains(
+            domain="user2.write.update.domain.ca",
+            organization_id=1
+        )
+        db.session.add(user_write_update_domain_2)
+        user_write_domain_2 = Domains(
+            domain="user2.write.remove.domain.ca",
+            organization_id=1
+        )
+        db.session.add(user_write_domain_2)
         db.session.commit()
 
     yield
@@ -163,7 +218,7 @@ class TestDomainMutationAccessControl(TestCase):
             executed = client.execute(
                 '''
                 mutation{
-                    createDomain(org: "ORG1", url: "somecooldomain.ca") {
+                    createDomain(org: "ORG1", url: "sa.create.domain.ca") {
                         status
                     }
                 }
@@ -176,7 +231,7 @@ class TestDomainMutationAccessControl(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domain(url: "somecooldomain.ca") {
+                    domain(url: "sa.create.domain.ca") {
                         edges {
                             node {
                                 url
@@ -228,8 +283,8 @@ class TestDomainMutationAccessControl(TestCase):
                 '''
                 mutation{
                     updateDomain(
-                        currentUrl: "somecooldomain.ca",
-                        updatedUrl: "thisisprettycool.ca"
+                        currentUrl: "sa.update.domain.ca",
+                        updatedUrl: "updated.sa.update.domain.ca"
                     ) {
                         status
                     }
@@ -243,7 +298,7 @@ class TestDomainMutationAccessControl(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domain(url: "thisisprettycool.ca") {
+                    domain(url: "updated.sa.update.domain.ca") {
                         edges {
                             node {
                                 url
@@ -258,7 +313,7 @@ class TestDomainMutationAccessControl(TestCase):
                         "edges": [
                             {
                                 "node": {
-                                    "url": "thisisprettycool.ca"
+                                    "url": "updated.sa.update.domain.ca"
                                 }
                             }
                         ]
@@ -294,7 +349,7 @@ class TestDomainMutationAccessControl(TestCase):
             executed = client.execute(
                 '''
                 mutation{
-                    removeDomain(url: "somelamedomain.ca") {
+                    removeDomain(url: "sa.remove.domain.ca") {
                         status
                     }
                 }
@@ -307,7 +362,7 @@ class TestDomainMutationAccessControl(TestCase):
             executed = client.execute(
                 '''
                 {
-                    domain(url: "somelamedomain.ca") {
+                    domain(url: "sa.remove.domain.ca") {
                         edges {
                             node {
                                 url
@@ -320,3 +375,605 @@ class TestDomainMutationAccessControl(TestCase):
             assert executed['errors']
             assert executed['errors'][0]
             assert executed['errors'][0]['message'] == "Error, domain does not exist"
+
+    # Org Admin Tests
+    def test_domain_creation_org_admin(self):
+        """
+        Test to see if org admin can create domains
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testadmin@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    createDomain(org: "ORG1", url: "admin.create.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['data']
+            assert executed['data']['createDomain']
+            assert executed['data']['createDomain']['status']
+
+            executed = client.execute(
+                '''
+                {
+                    domain(url: "admin.create.domain.ca") {
+                        edges {
+                            node {
+                                url
+                            }
+                        }
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+            result_refr = {
+                "data": {
+                    "domain": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "url": "admin.create.domain.ca"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+            self.assertDictEqual(result_refr, executed)
+
+    def test_domain_modification_org_admin(self):
+        """
+        Test to see if org admin can modify domains
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testadmin@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    updateDomain(
+                        currentUrl: "admin.update.domain.ca",
+                        updatedUrl: "updated.admin.update.domain.ca"
+                    ) {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['data']
+            assert executed['data']['updateDomain']
+            assert executed['data']['updateDomain']['status']
+
+            executed = client.execute(
+                '''
+                {
+                    domain(url: "updated.admin.update.domain.ca") {
+                        edges {
+                            node {
+                                url
+                            }
+                        }
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+            result_refr = {
+                "data": {
+                    "domain": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "url": "updatedadminupdatedomain.ca"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+            self.assertDictEqual(result_refr, executed)
+
+    def test_domain_removal_org_admin(self):
+        """
+        Test to see if org admins can remove domains
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testadmin@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    removeDomain(url: "admin.remove.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['data']
+            assert executed['data']['removeDomain']
+            assert executed['data']['removeDomain']['status']
+
+            executed = client.execute(
+                '''
+                {
+                    domain(url: "admin.remove.domain.ca") {
+                        edges {
+                            node {
+                                url
+                            }
+                        }
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, domain does not exist"
+
+    # Different Org Admin
+    def test_domain_creation_diff_org_admin(self):
+        """
+        Test to see if org admin can create domains
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testadmin2@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    createDomain(org: "ORG1", url: "admin2.create.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to create a domain for that organization"
+
+    def test_domain_modification_diff_org_admin(self):
+        """
+        Test to see if org admin can modify domains
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testadmin2@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    updateDomain(
+                        currentUrl: "admin2.update.domain.ca",
+                        updatedUrl: "updated.admin.update.domain.ca"
+                    ) {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to edit domains belonging to another organization"
+
+    def test_domain_removal_diff_org_admin(self):
+        """
+        Test to see if org admins can remove domains
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testadmin2@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    removeDomain(url: "admin2.remove.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to create a domain for that organization"
+
+    # User Write Tests
+    def test_domain_creation_user_write(self):
+        """
+        Test to see if org user write can create domains
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserwrite@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    createDomain(org: "ORG1", url: "user.write.create.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['data']
+            assert executed['data']['createDomain']
+            assert executed['data']['createDomain']['status']
+
+            executed = client.execute(
+                '''
+                {
+                    domain(url: "user.write.create.domain.ca") {
+                        edges {
+                            node {
+                                url
+                            }
+                        }
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+            result_refr = {
+                "data": {
+                    "domain": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "url": "user.write.create.domain.ca"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+            self.assertDictEqual(result_refr, executed)
+
+    def test_domain_modification_user_write(self):
+        """
+        Test to see if user write can modify domains
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserwrite@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    updateDomain(
+                        currentUrl: "user.write.update.domain.ca",
+                        updatedUrl: "updated.user.write.update.domain.ca"
+                    ) {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['data']
+            assert executed['data']['updateDomain']
+            assert executed['data']['updateDomain']['status']
+
+            executed = client.execute(
+                '''
+                {
+                    domain(url: "updated.user.write.update.domain.ca") {
+                        edges {
+                            node {
+                                url
+                            }
+                        }
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+            result_refr = {
+                "data": {
+                    "domain": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "url": "updatedadminupdatedomain.ca"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+            self.assertDictEqual(result_refr, executed)
+
+    def test_domain_removal_user_write(self):
+        """
+        Test to see if user write can remove domains
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserwrite@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    removeDomain(url: "user.write.remove.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['data']
+            assert executed['data']['removeDomain']
+            assert executed['data']['removeDomain']['status']
+
+            executed = client.execute(
+                '''
+                {
+                    domain(url: "user.write.remove.domain.ca") {
+                        edges {
+                            node {
+                                url
+                            }
+                        }
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, domain does not exist"
+
+    # Different Org User Write
+    def test_domain_creation_diff_org_user_write(self):
+        """
+        Test to see if user write from different org can create domain
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserwrite2@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    createDomain(org: "ORG1", url: "admin2.create.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to create a domain for that organization"
+
+    def test_domain_modification_diff_org_user_write(self):
+        """
+        Test to see if user write from different org can update domain
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserwrite2@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    updateDomain(
+                        currentUrl: "user2.write.update.domain.ca",
+                        updatedUrl: "updated.user.write.update.domain.ca"
+                    ) {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to edit domains belonging to another organization"
+
+    def test_domain_removal_diff_org_user_write(self):
+        """
+        Test to see if user write from different org can remove domain
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testuserwrite2@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    removeDomain(url: "user2.write.remove.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == "Error, you do not have permission to create a domain for that organization"

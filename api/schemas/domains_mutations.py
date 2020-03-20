@@ -5,7 +5,7 @@ from app import app
 from db import db
 
 from functions.auth_wrappers import require_token
-from functions.auth_functions import is_admin, is_super_admin
+from functions.auth_functions import is_user_write, is_super_admin
 from functions.input_validators import cleanse_input
 
 from models import Organizations, Domains
@@ -58,7 +58,7 @@ class CreateDomain(graphene.Mutation):
                 raise GraphQLError("Error, Domain already exists.")
 
             if is_super_admin(user_id=user_id) \
-                or is_admin(user_role=user_roles, org_id=org_id):
+                or is_user_write(user_role=user_roles, org_id=org_id):
                 new_domain = Domains(
                     domain=domain,
                     organization_id=org_id
@@ -73,7 +73,8 @@ class CreateDomain(graphene.Mutation):
                     return CreateDomain(status=False)
             else:
                 raise GraphQLError(
-                    "Error, you do not have permission to create a domain,"
+                    "Error, you do not have permission to create a domain for "
+                    "that organization"
                 )
 
 
@@ -113,7 +114,7 @@ class UpdateDomain(graphene.Mutation):
             if domain_orm is None:
                 raise GraphQLError("Error, domain does not exist.")
 
-            if is_admin(user_role=user_roles, org_id=domain_orm.organization_id) \
+            if is_user_write(user_role=user_roles, org_id=domain_orm.organization_id) \
                 or is_super_admin(user_id=user_id):
                 Domains.query.filter(
                     Domains.domain == current_domain
@@ -128,7 +129,7 @@ class UpdateDomain(graphene.Mutation):
                     return UpdateDomain(status=False)
             else:
                 raise GraphQLError(
-                    "Error, you do not have permission to edit domains"
+                    "Error, you do not have permission to edit domains belonging to another organization"
                 )
 
 
@@ -162,7 +163,7 @@ class RemoveDomain(graphene.Mutation):
                 raise GraphQLError("Error, domain does not exist.")
 
             # Check permissions
-            if is_admin(user_role=user_roles, org_id=domain_orm.organization_id) \
+            if is_user_write(user_role=user_roles, org_id=domain_orm.organization_id) \
                 or is_super_admin(user_id):
                 # Delete domain
                 try:
