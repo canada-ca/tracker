@@ -11,7 +11,19 @@ from functions.input_validators import cleanse_input
 
 from model_enums.organiztions import OrganizationsEnum
 
-from models import Organizations
+from models import (
+    Organizations,
+    User_affiliations,
+    Domains,
+    Scans,
+    Ssl_scans,
+    Spf_scans,
+    Https_scans,
+    Dkim_scans,
+    Dmarc_scans,
+    Mx_scans,
+
+)
 
 from scalars.organization_acronym import Acronym
 
@@ -177,4 +189,49 @@ class UpdateOrganization(graphene.Mutation):
             else:
                 raise GraphQLError(
                     "Error, you do not have permission to create organizations"
+                )
+
+
+class RemoveOrganization(graphene.Mutation):
+    """
+    Mutation allows the removal of an organization inside the database.
+    """
+    class Arguments:
+        acronym = Acronym(
+            description="The organization you wish to remove"
+        )
+
+    status = graphene.Boolean()
+
+    with app.app_context():
+        @require_token
+        def mutate(self, info, **kwargs):
+            # Get arguments from mutation
+            user_id = kwargs.get('user_id')
+            acronym = kwargs.get('acronym')
+
+            # Check to see if org exists
+            org_orm = db.session.query(Organizations).filter(
+                acronym == acronym
+            ).first()
+
+            if org_orm is None:
+                raise GraphQLError("Error, organization does not exist")
+
+            # Check Permissions
+            if is_super_admin(user_id=user_id):
+                try:
+                    # TODO remove all related fields
+                    Organizations.query.filter(
+                        Organizations.acronym == acronym
+                    ).delete()
+                    db.session.commit()
+                    return RemoveOrganization(status=True)
+                except Exception as e:
+                    db.session.rollback()
+                    db.session.flush()
+                    return RemoveOrganization(status=False)
+            else:
+                raise GraphQLError(
+                    "Error, you do not have permission to remove organizations."
                 )

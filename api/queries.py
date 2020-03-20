@@ -54,7 +54,11 @@ from resolvers.organizations import (
 from schemas.users import Users
 from resolvers.users import resolve_users
 
-from schemas.organizations_mutations import CreateOrganization, UpdateOrganization
+from schemas.organizations_mutations import (
+    CreateOrganization,
+    UpdateOrganization,
+    RemoveOrganization
+)
 
 
 class Query(graphene.ObjectType):
@@ -171,6 +175,9 @@ class Mutation(graphene.ObjectType):
     update_organization = UpdateOrganization.Field(
         description="Allows modification of an organization inside the "
                     "database."
+    )
+    remove_organization = RemoveOrganization.Field(
+        description="Allows the removal of an organization inside the database"
     )
 
 
