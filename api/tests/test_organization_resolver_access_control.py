@@ -129,7 +129,7 @@ class TestOrgResolverWithOrgs(TestCase):
             executed = client.execute(
                 '''
                 {
-                    organization(org: ORG1) {
+                    organization(org: "ORG1") {
                         edges {
                             node {
                                 acronym
@@ -245,7 +245,7 @@ class TestOrgResolverWithOrgs(TestCase):
             executed = client.execute(
                 '''
                 {
-                    organization(org: ORG1) {
+                    organization(org: "ORG1") {
                         edges {
                             node {
                                 acronym
@@ -351,7 +351,7 @@ class TestOrgResolverWithOrgs(TestCase):
             executed = client.execute(
                 '''
                 {
-                    organization(org: ORG2) {
+                    organization(org: "ORG2") {
                         edges {
                             node {
                                 acronym
@@ -466,7 +466,7 @@ class TestOrgResolverWithoutOrgs(TestCase):
             executed = client.execute(
                 '''
                 {
-                    organization(org: ORG3){
+                    organization(org: "ORG3"){
                         edges {
                             node {
                                 acronym

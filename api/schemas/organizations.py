@@ -8,6 +8,8 @@ from app import app
 from schemas.domain import Domain as DomainsSchema
 from schemas.user_affiliations import UserAffClass
 
+from scalars.organization_acronym import Acronym
+
 from models import Domains as DomainsModel
 from models import Organizations as OrgModel
 from models import User_affiliations as UserAffModel
@@ -27,7 +29,7 @@ class Organization(SQLAlchemyObjectType):
             "domains",
             "users"
         )
-    acronym = graphene.String(
+    acronym = Acronym(
         description="The acronym of the organization."
     )
     description = graphene.String(

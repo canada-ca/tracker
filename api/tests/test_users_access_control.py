@@ -163,7 +163,7 @@ class TestUsersResolverAccessControl(TestCase):
             executed = client.execute(
                 '''
                 {
-                    users(org: ORG1) {
+                    users(org: "ORG1") {
                         edges {
                             node {
                                 displayName
@@ -227,7 +227,7 @@ class TestUsersResolverAccessControl(TestCase):
             executed = client.execute(
                 '''
                 {
-                    users(org: ORG1) {
+                    users(org: "ORG1") {
                         edges {
                             node {
                                 displayName
@@ -291,7 +291,7 @@ class TestUsersResolverAccessControl(TestCase):
             executed = client.execute(
                 '''
                 {
-                    users(org: ORG1) {
+                    users(org: "ORG1") {
                         edges {
                             node {
                                 displayName
@@ -333,7 +333,7 @@ class TestUsersResolverAccessControl(TestCase):
             executed = client.execute(
                 '''
                 {
-                    users(org: ORG1) {
+                    users(org: "ORG1") {
                         edges {
                             node {
                                 displayName
@@ -375,7 +375,7 @@ class TestUsersResolverAccessControl(TestCase):
             executed = client.execute(
                 '''
                 {
-                    users(org: ORG1) {
+                    users(org: "ORG1") {
                         edges {
                             node {
                                 displayName

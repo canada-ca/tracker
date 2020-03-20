@@ -105,7 +105,7 @@ class TestUserUpdateWriteRole(TestCase):
             executed = client.execute(
                 '''
                 mutation{
-                    updateUserRole(org: ORG1, role: USER_WRITE, userName:"testuserread@testemail.ca"){
+                    updateUserRole(org: "ORG1", role: USER_WRITE, userName:"testuserread@testemail.ca"){
                         status
                     }
                 }
@@ -136,7 +136,7 @@ class TestUserUpdateWriteRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(org: ORG1, role: USER_WRITE)
+                    testUserClaims(org: "ORG1", role: USER_WRITE)
                 }
                 ''', context_value=request_headers, backend=backend)
             assert executed['data']
@@ -171,7 +171,7 @@ class TestUserUpdateAdminRole(TestCase):
             executed = client.execute(
                 '''
                 mutation{
-                    updateUserRole(org: ORG1, role: ADMIN, userName:"testuserread@testemail.ca"){
+                    updateUserRole(org: "ORG1", role: ADMIN, userName:"testuserread@testemail.ca"){
                         status
                     }
                 }
@@ -202,7 +202,7 @@ class TestUserUpdateAdminRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(org: ORG1, role: ADMIN)
+                    testUserClaims(org: "ORG1", role: ADMIN)
                 }
                 ''', context_value=request_headers, backend=backend)
             assert executed['data']
@@ -237,7 +237,7 @@ class TestUserUpdateSuperAdminRole(TestCase):
             executed = client.execute(
                 '''
                 mutation{
-                    updateUserRole(org: ORG1, role: SUPER_ADMIN, userName:"testuserread@testemail.ca"){
+                    updateUserRole(org: "ORG1", role: SUPER_ADMIN, userName:"testuserread@testemail.ca"){
                         status
                     }
                 }
@@ -268,7 +268,7 @@ class TestUserUpdateSuperAdminRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(org: ORG1, role: SUPER_ADMIN)
+                    testUserClaims(org: "ORG1", role: SUPER_ADMIN)
                 }
                 ''', context_value=request_headers, backend=backend)
             assert executed['data']
@@ -303,7 +303,7 @@ class TestUserUpdateAdminRoleInvalid(TestCase):
             executed = client.execute(
                 '''
                 mutation{
-                    updateUserRole(org: ORG1, role: ADMIN, userName:"testsuperadmin@testemail.ca"){
+                    updateUserRole(org: "ORG1", role: ADMIN, userName:"testsuperadmin@testemail.ca"){
                         status
                     }
                 }

@@ -162,7 +162,7 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
             executed = client.execute(
                 '''
                 {
-                    organization(org: ORG1) {
+                    organization(org: "ORG1") {
                         edges {
                             node {
                                 acronym
@@ -425,7 +425,7 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
             executed = client.execute(
                 '''
                 {
-                    organization(org: ORG1) {
+                    organization(org: "ORG1") {
                         edges {
                             node {
                                 acronym
