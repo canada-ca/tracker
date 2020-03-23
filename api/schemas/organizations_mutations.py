@@ -68,6 +68,7 @@ class CreateOrganization(graphene.Mutation):
             acronym = cleanse_input(kwargs.get('acronym'))
             description = cleanse_input(kwargs.get('description'))
             zone = cleanse_input(kwargs.get('zone'))
+            sector = cleanse_input(kwargs.get('sector'))
             province = cleanse_input(kwargs.get('province'))
             city = cleanse_input(kwargs.get('city'))
 
@@ -84,6 +85,7 @@ class CreateOrganization(graphene.Mutation):
                 org_tags = {
                     "description": description,
                     "zone": zone,
+                    "sector": sector,
                     "province": province,
                     "city": city
                 }
