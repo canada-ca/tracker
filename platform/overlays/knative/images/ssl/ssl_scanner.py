@@ -151,19 +151,20 @@ def scan(scan_id, domain):
 
     scan_results = concurrent_scanner.get_results()
 
-    res = {"starttls": starttls, tls_supported: {}}
+    res = {"starttls": starttls, "TLS": {}}
     for result in scan_results:
         if result.__class__.__name__ is "CipherSuiteScanResult":
 
-            res[tls_supported] = {"accepted_cipher_list": [],
-                                  "errored_cipher_list": [],
-                                  "preferred_cipher": None,
-                                  "rejected_cipher_list": []}
+            res["TLS"] = {"supported": tls_supported,
+                          "accepted_cipher_list": [],
+                          "errored_cipher_list": [],
+                          "preferred_cipher": None,
+                          "rejected_cipher_list": []}
 
-            res[tls_supported]["accepted_cipher_list"] = [c.name for c in result.accepted_cipher_list]
-            res[tls_supported]["errored_cipher_list"] = [c.name for c in result.errored_cipher_list]
-            res[tls_supported]["rejected_cipher_list"] = [c.name for c in result.rejected_cipher_list]
-            res[tls_supported]["preferred_cipher"] = result.preferred_cipher.name
+            res["TLS"]["accepted_cipher_list"] = [c.name for c in result.accepted_cipher_list]
+            res["TLS"]["errored_cipher_list"] = [c.name for c in result.errored_cipher_list]
+            res["TLS"]["rejected_cipher_list"] = [c.name for c in result.rejected_cipher_list]
+            res["TLS"]["preferred_cipher"] = result.preferred_cipher.name
 
         elif result.__class__.__name__ is "OpenSslCcsInjectionScanResult":
             res["is_vulnerable_to_ccs_injection"] = result.is_vulnerable_to_ccs_injection
@@ -176,7 +177,7 @@ def scan(scan_id, domain):
 
     rc4 = False
     triple_des = False
-    for cipher in res[tls_supported]["accepted_cipher_list"]:
+    for cipher in res["TLS"]["accepted_cipher_list"]:
         if "RC4" in cipher:
             rc4 = True
         if "3DES" in cipher:

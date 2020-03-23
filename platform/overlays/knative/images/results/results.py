@@ -1,7 +1,5 @@
 import os
 import sys
-import re
-import subprocess
 import json
 import logging
 import jwt
@@ -9,6 +7,7 @@ from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, Mx_scans, Spf_scans, Scans
 from database import *
+from utils import *
 from datetime import datetime
 from cipher_conversion import TLS_OPENSSL_TO_RFC_NAMES_MAPPING, SSLV2_OPENSSL_TO_RFC_NAMES_MAPPING
 
@@ -35,20 +34,14 @@ def receive():
             algorithm=['HS256']
         )
 
-        result_dict = decoded_payload["results"]
+        result_dict = formatted_dictionary(decoded_payload["results"])
         scan_type = decoded_payload["scan_type"]
         scan_id = decoded_payload["scan_id"]
 
         res = process_results(result_dict, scan_type, scan_id)
 
-        # Succeeded
-        if res[1] is True:
-            logging.info('Succeeded\n')
-        # Failed
-        else:
-            raise Exception(res[0])
-
-        return "Results processed successfully"
+        logging.info(res["info"])
+        return res["info"]
 
     except Exception as e:
         logging.error('Failed: %s\n' % str(e))
@@ -254,11 +247,13 @@ def process_results(results, scan_type, scan_id):
                 report["openssl_ccs_injection"] = ccs_injection
 
     except Exception as e:
-        return str(e), False
+        return {"status": False, "info": str(e)}
 
-    insert(report, scan_type, scan_id)
+    finalized_report = json.JSONEncoder().encode(str(report))
 
-    return "Finished", True
+    insert(finalized_report, scan_type, scan_id)
+
+    return {"status": True, "info": "Results processed successfully"}
 
 
 def insert(report, scan_type, scan_id):
@@ -289,13 +284,6 @@ def insert(report, scan_type, scan_id):
         db.session.flush()
         logging.error('Failed database insertion: %s\n' % str(e))
 
-
-def boolean_for(string):
-    if string == "false":
-        return False
-    elif string == "true":
-        return True
-    return None
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ import logging
 import json
 import threading
 import jwt
+import tldextract
 from checkdmarc import *
 from flask import Flask, request
 
@@ -33,10 +34,9 @@ def receive():
 
         scan_id = decoded_payload["scan_id"]
 
-        if "._domainkey" in decoded_payload["domain"]:
-            domain = decoded_payload["domain"].split("._domainkey")[1]
-        else:
-            domain = decoded_payload["domain"]
+        ext = tldextract.extract(decoded_payload["domain"])
+
+        domain = ext.registered_domain
 
         res = scan(scan_id, domain)
         if res is not None:
