@@ -65,7 +65,7 @@ class CreateOrganization(graphene.Mutation):
         @require_token
         def mutate(self, info, **kwargs):
             user_id = kwargs.get('user_id')
-            acronym = cleanse_input(kwargs.get('acronym'))
+            acronym = cleanse_input(kwargs.get('acronym', ''))
             description = cleanse_input(kwargs.get('description'))
             zone = cleanse_input(kwargs.get('zone'))
             sector = cleanse_input(kwargs.get('sector'))
@@ -119,6 +119,10 @@ class UpdateOrganization(graphene.Mutation):
             description="Organization that will be updated.",
             required=True
         )
+        updated_acronym = Acronym(
+            description="Organization Acronym you would like updated",
+            required=False
+        )
         description = graphene.String(
             description="Full name of organization.",
             required=False
@@ -148,9 +152,11 @@ class UpdateOrganization(graphene.Mutation):
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
             user_id = kwargs.get('user_id')
-            acronym = kwargs.get('acronym')
+            acronym = cleanse_input(kwargs.get('acronym', ''))
+            updated_acronym = cleanse_input(kwargs.get('updated_acronym', ''))
             description = cleanse_input(kwargs.get('description', ""))
             zone = cleanse_input(kwargs.get('zone', ""))
+            sector = cleanse_input(kwargs.get('sector'))
             province = cleanse_input(kwargs.get('province', ""))
             city = cleanse_input(kwargs.get('city', ""))
 
@@ -165,20 +171,32 @@ class UpdateOrganization(graphene.Mutation):
                 if org_orm is None:
                     raise GraphQLError("Error, organization does not exist.")
 
+                # Check to see if organization acronym already in use
+                update_org_orm = db.session.query(Organizations).filter(
+                    Organizations.acronym == updated_acronym
+                ).first()
+
+                if update_org_orm is not None:
+                    raise GraphQLError("Error, acronym already in use.")
+
                 # Generate org tags
                 org_tags = {
                     "description": description,
                     "zone": zone,
+                    "sector": sector,
                     "province": province,
                     "city": city
                 }
-
-                # Update orm
-                Organizations.query.filter(
-                    Organizations.acronym == acronym
-                ).update(
-                    {'org_tags': org_tags}
-                )
+                if updated_acronym is not acronym:
+                    # Update orm
+                    Organizations.query.filter(
+                        Organizations.acronym == acronym
+                    ).update(
+                        {
+                            'acronym': updated_acronym,
+                            'org_tags': org_tags
+                        }
+                    )
 
                 # Push update to db and return status
                 try:
@@ -190,7 +208,7 @@ class UpdateOrganization(graphene.Mutation):
                     return UpdateOrganization(status=False)
             else:
                 raise GraphQLError(
-                    "Error, you do not have permission to create organizations"
+                    "Error, you do not have permission to update organizations"
                 )
 
 
@@ -200,7 +218,8 @@ class RemoveOrganization(graphene.Mutation):
     """
     class Arguments:
         acronym = Acronym(
-            description="The organization you wish to remove"
+            description="The organization you wish to remove",
+            required=True
         )
 
     status = graphene.Boolean()
@@ -210,7 +229,7 @@ class RemoveOrganization(graphene.Mutation):
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
             user_id = kwargs.get('user_id')
-            acronym = kwargs.get('acronym')
+            acronym = cleanse_input(kwargs.get('acronym', ''))
 
             # Restrict the deletion of SA Org
             if acronym == "SA":
@@ -218,7 +237,7 @@ class RemoveOrganization(graphene.Mutation):
 
             # Check to see if org exists
             org_orm = db.session.query(Organizations).filter(
-                acronym == acronym
+                Organizations.acronym == acronym
             ).first()
 
             if org_orm is None:
