@@ -209,6 +209,10 @@ class RemoveOrganization(graphene.Mutation):
             # Get arguments from mutation
             user_id = kwargs.get('user_id')
             acronym = kwargs.get('acronym')
+            
+            # Restrict the deletion of SA Org
+            if acronym == "SA":
+                raise GraphQLError("Error, you cannot remove this organization")
 
             # Check to see if org exists
             org_orm = db.session.query(Organizations).filter(
@@ -221,13 +225,74 @@ class RemoveOrganization(graphene.Mutation):
             # Check Permissions
             if is_super_admin(user_id=user_id):
                 try:
-                    # TODO remove all related fields
+                    # Get Org ID
+                    org_orm = Organizations.query.filter(
+                        Organizations.acronym == acronym
+                    ).first()
+
+                    # Get All Domains
+                    domain_orm = Domains.query.filter(
+                        Domains.organization_id == org_orm.id
+                    ).all()
+
+                    # Loop Through All Domains
+                    for domain in domain_orm:
+                        # Get All Scans
+                        scan_orm = Scans.query.filter(
+                            Scans.domain_id == domain.id
+                        ).all()
+                        # Delete All Related Scans
+                        for scan in scan_orm:
+                            try:
+                                Dkim_scans.query.filter(
+                                    Dkim_scans.id == scan.id
+                                ).delete()
+                                Dmarc_scans.query.filter(
+                                    Dmarc_scans.id == scan.id
+                                ).delete()
+                                Https_scans.query.filter(
+                                    Https_scans.id == scan.id
+                                ).delete()
+                                Mx_scans.query.filter(
+                                    Mx_scans.id == scan.id
+                                ).delete()
+                                Spf_scans.query.filter(
+                                    Spf_scans.id == scan.id
+                                ).delete()
+                                Ssl_scans.query.filter(
+                                    Ssl_scans.id == scan.id
+                                ).delete()
+                                Scans.query.filter(
+                                    Scans.id == scan.id
+                                ).delete()
+                            except Exception as e:
+                                print("Scans: " + e)
+                                return RemoveOrganization(status=False)
+                        # Delete Domains
+                        try:
+                            Domains.query.filter(
+                                Domains.id == domain.id
+                            ).delete()
+                        except Exception as e:
+                            print("Domain: " + str(e))
+                            return RemoveOrganization(status=False)
+
+                    try:
+                        # Get all user aff
+                        User_affiliations.query.filter(
+                            User_affiliations.organization_id == org_orm.id
+                        ).delete()
+                    except Exception as e:
+                        print("user_aff: " + str(e))
+                        return RemoveOrganization(status=False)
+
                     Organizations.query.filter(
                         Organizations.acronym == acronym
                     ).delete()
                     db.session.commit()
                     return RemoveOrganization(status=True)
                 except Exception as e:
+                    print("organization: " + str(e))
                     db.session.rollback()
                     db.session.flush()
                     return RemoveOrganization(status=False)
