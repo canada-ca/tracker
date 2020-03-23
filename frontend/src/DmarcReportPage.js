@@ -69,14 +69,14 @@ export function DmarcReportPage() {
         mb="105px"
       >
         <Stack>
-          <Flex align="center">
+          <Flex align="center" role="dmarcHeader">
             <Text fontSize="2xl" fontWeight="bold">
               DMARC
             </Text>
             {data.dmarcReport.dmarcResult === 'pass' ? (
-              <Icon ml={2} name="check-circle" size="26px" color="green.500" />
+              <Icon ml={2} name="check-circle" size="26px" color="green.500" role="passIcon" />
             ) : (
-              <Icon ml={2} name="warning" size="26px" color="red.500" />
+              <Icon ml={2} name="warning" size="26px" color="red.500" role="failIcon"/>
             )}
           </Flex>
           <Flex
@@ -187,14 +187,14 @@ export function DmarcReportPage() {
         </Stack>
 
         <Stack>
-          <Flex align="center">
+          <Flex align="center" role="dkimHeader">
             <Text fontSize="2xl" fontWeight="bold">
               DKIM
             </Text>
             {data.dmarcReport.dkimResult === 'pass' ? (
-              <Icon ml={2} name="check-circle" size="26px" color="green.500" />
+              <Icon ml={2} name="check-circle" size="26px" color="green.500" role="passIcon"/>
             ) : (
-              <Icon ml={2} name="warning" size="26px" color="red.500" />
+              <Icon ml={2} name="warning" size="26px" color="red.500" role="failIcon"/>
             )}
           </Flex>
 
@@ -240,14 +240,14 @@ export function DmarcReportPage() {
         </Stack>
 
         <Stack>
-          <Flex align="center">
+          <Flex align="center" role="spfHeader">
             <Text fontSize="2xl" fontWeight="bold">
               SPF
             </Text>
             {data.dmarcReport.spfResult === 'pass' ? (
-              <Icon ml={2} name="check-circle" size="26px" color="green.500" />
+              <Icon ml={2} name="check-circle" size="26px" color="green.500" role="passIcon"/>
             ) : (
-              <Icon ml={2} name="warning" size="26px" color="red.500" />
+              <Icon ml={2} name="warning" size="26px" color="red.500" role="failIcon"/>
             )}
           </Flex>
 

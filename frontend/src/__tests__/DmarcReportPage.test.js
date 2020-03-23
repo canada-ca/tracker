@@ -3,7 +3,12 @@ import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import { render, cleanup } from '@testing-library/react'
+import {
+  render,
+  cleanup,
+  waitForElement,
+  getByText,
+} from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { DmarcReportPage } from '../DmarcReportPage'
 import gql from 'graphql-tag'
@@ -112,7 +117,7 @@ describe('<DmarcReportPage />', () => {
       },
     ]
 
-    const { container } = render(
+    const { container, getByRole } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -126,7 +131,22 @@ describe('<DmarcReportPage />', () => {
     expect(render).toBeTruthy()
     expect(container).toBeTruthy()
 
+    await waitForElement(() => getByText(container, /DMARC Report/i), {
+      container,
+    })
 
-    // TODO: Get by role and check icon values.
+    const dmarcHeader = getByRole('dmarcHeader')
+    const dkimHeader = getByRole('dkimHeader')
+    const spfHeader = getByRole('spfHeader')
+
+    expect(dmarcHeader).toBeTruthy()
+    expect(dkimHeader).toBeTruthy()
+    expect(spfHeader).toBeTruthy()
+
+    expect(dmarcHeader.children[1]).toHaveAttribute('role', 'passIcon')
+    expect(dkimHeader.children[1]).toHaveAttribute('role', 'passIcon')
+    expect(spfHeader.children[1]).toHaveAttribute('role', 'passIcon')
+
+
   })
 })
