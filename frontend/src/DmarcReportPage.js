@@ -7,9 +7,11 @@ import {
   SimpleGrid,
   Icon,
   Flex,
-  Divider,
   Button,
 } from '@chakra-ui/core'
+
+import DkimEntry from './DkimEntry'
+import SpfEntry from './SpfEntry'
 
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
@@ -74,9 +76,21 @@ export function DmarcReportPage() {
               DMARC
             </Text>
             {data.dmarcReport.dmarcResult === 'pass' ? (
-              <Icon ml={2} name="check-circle" size="26px" color="green.500" role="passIcon" />
+              <Icon
+                ml={2}
+                name="check-circle"
+                size="26px"
+                color="green.500"
+                role="passIcon"
+              />
             ) : (
-              <Icon ml={2} name="warning" size="26px" color="red.500" role="failIcon"/>
+              <Icon
+                ml={2}
+                name="warning"
+                size="26px"
+                color="red.500"
+                role="failIcon"
+              />
             )}
           </Flex>
           <Flex
@@ -105,9 +119,7 @@ export function DmarcReportPage() {
               Result Breakdown
             </Text>
 
-            <Text fontSize="lg">
-              Pass: {data.dmarcReport.passPercentage}%
-            </Text>
+            <Text fontSize="lg">Pass: {data.dmarcReport.passPercentage}%</Text>
             <Text fontSize="lg">
               Fail: {100 - data.dmarcReport.passPercentage}%
             </Text>
@@ -192,37 +204,32 @@ export function DmarcReportPage() {
               DKIM
             </Text>
             {data.dmarcReport.dkimResult === 'pass' ? (
-              <Icon ml={2} name="check-circle" size="26px" color="green.500" role="passIcon"/>
+              <Icon
+                ml={2}
+                name="check-circle"
+                size="26px"
+                color="green.500"
+                role="passIcon"
+              />
             ) : (
-              <Icon ml={2} name="warning" size="26px" color="red.500" role="failIcon"/>
+              <Icon
+                ml={2}
+                name="warning"
+                size="26px"
+                color="red.500"
+                role="failIcon"
+              />
             )}
           </Flex>
 
           {data.dmarcReport.dkim.map(dkim => {
             return (
-              <Box key={dkim.domain}>
-                <Stack isInline>
-                  <Text fontSize="xl" fontWeight="semibold">
-                    Domain:
-                  </Text>
-                  <Text fontSize="xl">{dkim.domain}</Text>
-                </Stack>
-
-                <Stack isInline>
-                  <Text fontSize="xl" fontWeight="semibold">
-                    Selector:
-                  </Text>
-                  <Text fontSize="xl">{dkim.selector}</Text>
-                </Stack>
-
-                <Stack isInline>
-                  <Text fontSize="xl" fontWeight="semibold">
-                    Result:
-                  </Text>
-                  <Text fontSize="xl">{dkim.result}</Text>
-                </Stack>
-                <Divider />
-              </Box>
+              <DkimEntry
+                key={dkim.domain}
+                domain={dkim.domain}
+                selector={dkim.selector}
+                result={dkim.result}
+              />
             )
           })}
 
@@ -245,37 +252,32 @@ export function DmarcReportPage() {
               SPF
             </Text>
             {data.dmarcReport.spfResult === 'pass' ? (
-              <Icon ml={2} name="check-circle" size="26px" color="green.500" role="passIcon"/>
+              <Icon
+                ml={2}
+                name="check-circle"
+                size="26px"
+                color="green.500"
+                role="passIcon"
+              />
             ) : (
-              <Icon ml={2} name="warning" size="26px" color="red.500" role="failIcon"/>
+              <Icon
+                ml={2}
+                name="warning"
+                size="26px"
+                color="red.500"
+                role="failIcon"
+              />
             )}
           </Flex>
 
           {data.dmarcReport.spf.map(spf => {
             return (
-              <Box key={spf.domain}>
-                <Stack isInline>
-                  <Text fontSize="xl" fontWeight="semibold">
-                    Domain:
-                  </Text>
-                  <Text fontSize="xl">{spf.domain}</Text>
-                </Stack>
-
-                <Stack isInline>
-                  <Text fontSize="xl" fontWeight="semibold">
-                    Scope:
-                  </Text>
-                  <Text fontSize="xl">{spf.scope}</Text>
-                </Stack>
-
-                <Stack isInline>
-                  <Text fontSize="xl" fontWeight="semibold">
-                    Result:
-                  </Text>
-                  <Text fontSize="xl">{spf.result}</Text>
-                </Stack>
-                <Divider />
-              </Box>
+              <SpfEntry
+                key={spf.domain}
+                domain={spf.domain}
+                scope={spf.scope}
+                result={spf.result}
+              />
             )
           })}
           <Button

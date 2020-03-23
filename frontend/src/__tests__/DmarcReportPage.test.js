@@ -260,7 +260,5 @@ describe('<DmarcReportPage />', () => {
     expect(dmarcHeader.children[1]).toHaveAttribute('role', 'failIcon')
     expect(dkimHeader.children[1]).toHaveAttribute('role', 'failIcon')
     expect(spfHeader.children[1]).toHaveAttribute('role', 'failIcon')
-
-
   })
 })
