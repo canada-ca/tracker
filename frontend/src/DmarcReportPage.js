@@ -138,7 +138,7 @@ export function DmarcReportPage() {
               IP address:
             </Text>
             <Text fontSize="xl">
-              {data.dmarcReport.source.ip_address || 'null'}
+              {data.dmarcReport.source.ipAddress || 'null'}
             </Text>
           </Stack>
 
