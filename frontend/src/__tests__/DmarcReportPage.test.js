@@ -202,7 +202,6 @@ describe('<DmarcReportPage />', () => {
                   domain: 'geovanni.name',
                   selector: 'test-selector',
                   result: 'pass',
-                  __typename: 'DkimResult',
                 },
               ],
               spf: [
@@ -210,7 +209,6 @@ describe('<DmarcReportPage />', () => {
                   domain: 'deonte.org',
                   scope: 'test-scope',
                   result: 'pass',
-                  __typename: 'SpfResult',
                 },
               ],
               source: {
@@ -218,13 +216,10 @@ describe('<DmarcReportPage />', () => {
                 country: 'Canada',
                 reverseDns: 'string',
                 baseDomain: 'werner.biz',
-                __typename: 'Source',
               },
               identifiers: {
                 headerFrom: 'dortha.biz',
-                __typename: 'Identifiers',
               },
-              __typename: 'DmarcReport',
             },
           },
         },
@@ -235,7 +230,7 @@ describe('<DmarcReportPage />', () => {
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks}>
+            <MockedProvider mocks={mocks} addTypename={false}>
               <DmarcReportPage />
             </MockedProvider>
           </MemoryRouter>
