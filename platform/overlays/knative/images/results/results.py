@@ -72,14 +72,12 @@ def process_results(results, scan_type, scan_id):
             else:
 
                 # Assumes that HTTPS would be technically present, with or without issues
-                if boolean_for(results["Downgrades HTTPS"]):
+                if results["Downgrades HTTPS"]:
                     https = "Downgrades HTTPS"  # No
                 else:
-                    if boolean_for(results["Valid HTTPS"]):
+                    if results["Valid HTTPS"]:
                         https = "Valid HTTPS"  # Yes
-                    elif (
-                        boolean_for(results["HTTPS Bad Chain"])
-                        and not boolean_for(results["HTTPS Bad Hostname"])
+                    elif (results["HTTPS Bad Chain"] and not results["HTTPS Bad Hostname"]
                     ):
                         https = "Bad Chain"  # Yes
                     else:
@@ -89,7 +87,7 @@ def process_results(results, scan_type, scan_id):
 
                 # Is HTTPS enforced?
 
-                if https is "Downgrades HTTPS" or "Bad Hostname":
+                if https == ("Downgrades HTTPS" or "Bad Hostname"):
                     behavior = "Not Enforced"  # N/A
 
                 else:
@@ -100,19 +98,11 @@ def process_results(results, scan_type, scan_id):
                     # Since a pure redirector domain can't "default" to HTTPS
                     # for itself, we'll say it "Enforces HTTPS" if it immediately
                     # redirects to an HTTPS URL.
-                    if (
-                        boolean_for(results["Strictly Forces HTTPS"])
-                        and (
-                        boolean_for(results["Defaults to HTTPS"]) or boolean_for(results["Redirect"])
-                    )
-                    ):
+                    if results["Strictly Forces HTTPS"] and (results["Defaults to HTTPS"] or results["Redirect"]):
                         behavior = "Strict"  # Yes (Strict)
 
                     # "Moderate" means HTTP eventually redirects to HTTPS.
-                    elif (
-                        not boolean_for(results["Strictly Forces HTTPS"])
-                        and boolean_for(results["Defaults to HTTPS"])
-                    ):
+                    elif not results["Strictly Forces HTTPS"] and results["Defaults to HTTPS"]:
                         behavior = "Moderate"  # Yes
 
                     # Either both are False, or just 'Strict Force' is True,
@@ -138,7 +128,7 @@ def process_results(results, scan_type, scan_id):
                 else:
 
                     # HSTS is present for the canonical endpoint.
-                    if boolean_for(results["HSTS"]) and hsts_age:
+                    if results["HSTS"] and hsts_age is not None:
 
                         # Say No for too-short max-age's, and note in the extended details.
                         if hsts_age >= MIN_HSTS_AGE:
@@ -152,20 +142,20 @@ def process_results(results, scan_type, scan_id):
                 #
                 # * Domains can be preloaded through manual overrides.
                 # * Confusing to mix an endpoint-level decision with a domain-level decision.
-                if boolean_for(results["HSTS Preloaded"]):
+                if results["HSTS Preloaded"]:
                     preloaded = "HSTS Preloaded"  # Yes
-                elif boolean_for(results["HSTS Preload Ready"]):
+                elif results["HSTS Preload Ready"]:
                     preloaded = "HSTS Preload Ready"  # Ready for submission
                 else:
                     preloaded = "HSTS Not Preloaded"  # No
 
                 # Certificate info
-                if boolean_for(results["HTTPS Expired Cert"]):
+                if results["HTTPS Expired Cert"]:
                     expired = True
                 else:
                     expired = False
 
-                if boolean_for(results["HTTPS Self Signed Cert"]):
+                if results["HTTPS Self Signed Cert"]:
                     self_signed = True
                 else:
                     self_signed = False
@@ -217,7 +207,7 @@ def process_results(results, scan_type, scan_id):
                     else:
                         report[version] = False
 
-                used_ciphers = {cipher for cipher in results[highest_ssl_version_supported].accepted_cipher_list}
+                used_ciphers = {cipher for cipher in results["TLS"]["accepted_cipher_list"]}
                 signature_algorithm = results["signature_algorithm"]
 
                 if any([any_rc4, any_3des, report["SSLV2"], report["SSLV3"], report["TLSV1"], report["TLSV1_1"]]):
@@ -283,7 +273,6 @@ def insert(report, scan_type, scan_id):
         db.session.rollback()
         db.session.flush()
         logging.error('Failed database insertion: %s\n' % str(e))
-
 
 
 if __name__ == "__main__":
