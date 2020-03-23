@@ -6,6 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, cleanup } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { DmarcReportPage } from '../DmarcReportPage'
+import gql from 'graphql-tag'
 
 i18n.load('en', { en: {} })
 i18n.activate('en')
@@ -26,5 +27,106 @@ describe('<DmarcReportPage />', () => {
       </ThemeProvider>,
     )
     expect(render).toBeTruthy()
+  })
+
+  it('renders pass icons in headers correctly', async () => {
+    const mocks = [
+      {
+        request: {
+          query: gql`
+            {
+              dmarcReport {
+                reportId
+                orgName
+                endDate
+                dmarcResult
+                dkimResult
+                spfResult
+                passPercentage
+                count
+                dkim {
+                  domain
+                  selector
+                  result
+                }
+                spf {
+                  domain
+                  scope
+                  result
+                }
+                source {
+                  ipAddress
+                  country
+                  reverseDns
+                  baseDomain
+                }
+                identifiers {
+                  headerFrom
+                }
+              }
+            }
+          `,
+        },
+        result: {
+          data: {
+            dmarcReport: {
+              reportId: 'string',
+              orgName: 'Margot',
+              endDate: '<DateTime>',
+              dmarcResult: 'pass',
+              dkimResult: 'pass',
+              spfResult: 'pass',
+              passPercentage: 95,
+              count: 47832,
+              dkim: [
+                {
+                  domain: 'geovanni.name',
+                  selector: 'test-selector',
+                  result: 'pass',
+                  __typename: 'DkimResult',
+                },
+              ],
+              spf: [
+                {
+                  domain: 'deonte.org',
+                  scope: 'test-scope',
+                  result: 'pass',
+                  __typename: 'SpfResult',
+                },
+              ],
+              source: {
+                ipAddress: '127.0.0.1',
+                country: 'Canada',
+                reverseDns: 'string',
+                baseDomain: 'werner.biz',
+                __typename: 'Source',
+              },
+              identifiers: {
+                headerFrom: 'dortha.biz',
+                __typename: 'Identifiers',
+              },
+              __typename: 'DmarcReport',
+            },
+          },
+        },
+      },
+    ]
+
+    const { container } = render(
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider mocks={mocks}>
+              <DmarcReportPage />
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
+    )
+    expect(render).toBeTruthy()
+    expect(container).toBeTruthy()
+
+
+    // TODO: Get by role and check icon values.
   })
 })
