@@ -57,7 +57,7 @@ def org_perm_test_db_init():
                 "description": "Organization 1",
                 "zone": "Prov",
                 "sector": "Banking",
-                "prov": "Alberta",
+                "province": "Alberta",
                 "city": "Calgary"
             }
         )
@@ -69,7 +69,7 @@ def org_perm_test_db_init():
                 "description": "Organization 2",
                 "zone": "Muni",
                 "sector": "Transportation",
-                "prov": "NS",
+                "province": "NS",
                 "city": "Halifax"
             }
         )
@@ -81,7 +81,7 @@ def org_perm_test_db_init():
                 "description": "Organization 3",
                 "zone": "Federal",
                 "sector": "Arts",
-                "prov": "Ontario",
+                "province": "Ontario",
                 "city": "Toronto"
             }
         )
