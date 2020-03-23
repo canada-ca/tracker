@@ -209,7 +209,7 @@ class RemoveOrganization(graphene.Mutation):
             # Get arguments from mutation
             user_id = kwargs.get('user_id')
             acronym = kwargs.get('acronym')
-            
+
             # Restrict the deletion of SA Org
             if acronym == "SA":
                 raise GraphQLError("Error, you cannot remove this organization")
