@@ -6,7 +6,7 @@ from graphql import GraphQLError
 
 import unittest
 
-# This is the only way I could get imports to work for unit testing.  TODO: See if there is a better way!
+# This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(
     os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
