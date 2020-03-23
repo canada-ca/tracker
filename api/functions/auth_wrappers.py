@@ -25,7 +25,7 @@ def decode_auth_token(request):
             os.getenv('SUPER_SECRET_SALT'),
             algorithms=['HS256']
         )
-        return payload['roles']
+        return payload
     except jwt.ExpiredSignatureError:
         raise GraphQLError('Signature expired, please login again')
     except jwt.InvalidTokenError:
@@ -42,8 +42,7 @@ def check_user_claims(user_claims):
     """
     user_roles = []
     if user_claims[0] == 'none':
-        raise GraphQLError('Error, please contact your administrator for '
-                           'organization access.')
+        return {}
     elif user_claims:
         user_id = user_claims[0]['user_id']
         with app.app_context():
@@ -75,8 +74,10 @@ def check_user_claims(user_claims):
 def require_token(method):
     def wrapper(self, *args, **kwargs):
         auth_resp = decode_auth_token(args[0].context)
-        if isinstance(auth_resp, list):
-            user_claims = check_user_claims(auth_resp)
+        if isinstance(auth_resp, dict):
+            kwargs['user_id'] = auth_resp['user_id']
+
+            user_claims = check_user_claims(auth_resp['roles'])
             kwargs['user_roles'] = user_claims
             return method(self, *args, **kwargs)
         raise GraphQLError(auth_resp)

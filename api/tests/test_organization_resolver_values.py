@@ -99,6 +99,7 @@ def org_perm_test_db_init():
             permission='super_admin'
         )
         db.session.add(test_admin_role)
+
         domain = Domains(
             id=1,
             domain='somecooldomain.ca',
@@ -161,7 +162,7 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
             executed = client.execute(
                 '''
                 {
-                    organization(org: ORG1) {
+                    organization(org: "ORG1") {
                         edges {
                             node {
                                 acronym
@@ -174,6 +175,16 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
                                     edges {
                                         node {
                                             url
+                                        }
+                                    }
+                                }
+                                affiliatedUsers {
+                                    edges {
+                                        node {
+                                            user {
+                                                displayName
+                                            }
+                                            permission
                                         }
                                     }
                                 }
@@ -199,6 +210,26 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
                                             {
                                                 "node": {
                                                     "url": "somecooldomain.ca"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "affiliatedUsers": {
+                                        "edges": [
+                                            {
+                                                "node": {
+                                                    "user": {
+                                                        "displayName": "testuserread"
+                                                    },
+                                                    "permission": "USER_READ"
+                                                }
+                                            },
+                                            {
+                                                "node": {
+                                                    "user": {
+                                                        "displayName": "testsuperadmin"
+                                                    },
+                                                    "permission": "SUPER_ADMIN"
                                                 }
                                             }
                                         ]
@@ -256,76 +287,112 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
                                         }
                                     }
                                 }
+                                affiliatedUsers {
+                                    edges {
+                                        node {
+                                            user {
+                                                displayName
+                                            }
+                                            permission
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
-                "data": {
-                    "organizations": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "acronym": "ORG1",
-                                    "description": "Organization 1",
-                                    "zone": "Prov",
-                                    "sector": "Banking",
-                                    "province": "Alberta",
-                                    "city": "Calgary",
-                                    "domains": {
-                                        "edges": [
-                                            {
-                                                "node": {
-                                                    "url": "somecooldomain.ca"
+                    "data": {
+                        "organizations": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "acronym": "ORG1",
+                                        "description": "Organization 1",
+                                        "zone": "Prov",
+                                        "sector": "Banking",
+                                        "province": "Alberta",
+                                        "city": "Calgary",
+                                        "domains": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "url": "somecooldomain.ca"
+                                                    }
                                                 }
-                                            }
-                                        ]
+                                            ]
+                                        },
+                                        "affiliatedUsers": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "user": {
+                                                            "displayName": "testuserread"
+                                                        },
+                                                        "permission": "USER_READ"
+                                                    }
+                                                },
+                                                {
+                                                    "node": {
+                                                        "user": {
+                                                            "displayName": "testsuperadmin"
+                                                        },
+                                                        "permission": "SUPER_ADMIN"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "node": {
+                                        "acronym": "ORG2",
+                                        "description": "Organization 2",
+                                        "zone": "Muni",
+                                        "sector": "Transportation",
+                                        "province": "NS",
+                                        "city": "Halifax",
+                                        "domains": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "url": "anothercooldomain.ca"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "affiliatedUsers": {
+                                            "edges": []
+                                        }
+                                    }
+                                },
+                                {
+                                    "node": {
+                                        "acronym": "ORG3",
+                                        "description": "Organization 3",
+                                        "zone": "Federal",
+                                        "sector": "Arts",
+                                        "province": "Ontario",
+                                        "city": "Toronto",
+                                        "domains": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "url": "somelamedomain.ca"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "affiliatedUsers": {
+                                            "edges": []
+                                        }
                                     }
                                 }
-                            },
-                            {
-                                "node": {
-                                    "acronym": "ORG2",
-                                    "description": "Organization 2",
-                                    "zone": "Muni",
-                                    "sector": "Transportation",
-                                    "province": "NS",
-                                    "city": "Halifax",
-                                    "domains": {
-                                        "edges": [
-                                            {
-                                                "node": {
-                                                    "url": "anothercooldomain.ca"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                "node": {
-                                    "acronym": "ORG3",
-                                    "description": "Organization 3",
-                                    "zone": "Federal",
-                                    "sector": "Arts",
-                                    "province": "Ontario",
-                                    "city": "Toronto",
-                                    "domains": {
-                                        "edges": [
-                                            {
-                                                "node": {
-                                                    "url": "somelamedomain.ca"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        ]
+                            ]
+                        }
                     }
                 }
-            }
             self.assertDictEqual(result_refr, executed)
 
     # User read tests
@@ -358,7 +425,7 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
             executed = client.execute(
                 '''
                 {
-                    organization(org: ORG1) {
+                    organization(org: "ORG1") {
                         edges {
                             node {
                                 acronym
@@ -371,6 +438,16 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
                                     edges {
                                         node {
                                             url
+                                        }
+                                    }
+                                }
+                                affiliatedUsers {
+                                    edges {
+                                        node {
+                                            user {
+                                                displayName
+                                            }
+                                            permission
                                         }
                                     }
                                 }
@@ -399,6 +476,9 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
                                                 }
                                             }
                                         ]
+                                    },
+                                    "affiliatedUsers": {
+                                        "edges": []
                                     }
                                 }
                             }
@@ -453,6 +533,16 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
                                         }
                                     }
                                 }
+                                affiliatedUsers {
+                                    edges {
+                                        node {
+                                            user {
+                                                displayName
+                                            }
+                                            permission
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -478,6 +568,9 @@ class TestOrgResolverWithOrgsAndValues(TestCase):
                                                 }
                                             }
                                         ]
+                                    },
+                                    "affiliatedUsers": {
+                                        "edges": []
                                     }
                                 }
                             }

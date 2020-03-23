@@ -91,8 +91,6 @@ class TestSignInUser:
                             password:"testpassword123"){
                         user{
                             userName
-                            failedLoginAttempts
-                            failedLoginAttemptTime
                         }
                     }
                 }
@@ -102,11 +100,6 @@ class TestSignInUser:
             assert executed['data']['signIn']['user']
             assert executed['data']['signIn']['user']['userName'] \
                    == "testuser@testemail.ca"
-
-            assert executed['data']['signIn']['user'][
-                       'failedLoginAttempts'] == 0
-            assert executed['data']['signIn']['user'][
-                       'failedLoginAttemptTime'] == 0
 
     def test_invalid_credentials(self):
         """
@@ -121,8 +114,7 @@ class TestSignInUser:
                     signIn(userName:"testuser@testemail.ca",
                             password:"testpassword1234"){
                         user{
-                            failedLoginAttempts
-                            failedLoginAttemptTime
+                            userName
                         }
                     }
                 }
@@ -153,8 +145,7 @@ class TestSignInUser:
                     signIn(userName:"test_already_failed_user@testemail.ca",
                      password:"testpassword123"){
                         user{
-                            failedLoginAttempts
-                            failedLoginAttemptTime
+                            userName
                         }
                     }
                 }
@@ -170,8 +161,7 @@ class TestSignInUser:
 
             assert executed['data']
             assert executed['data']['signIn']
-            assert executed['data']['signIn']['user']['failedLoginAttempts'] == 0
-            assert executed['data']['signIn']['user']['failedLoginAttemptTime'] == 0
+            assert executed['data']['signIn']['user']['userName'] == "test_already_failed_user@testemail.ca"
 
     def test_too_many_failed_attempts(self):
         """Test that ensures a user can be signed in"""

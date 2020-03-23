@@ -132,7 +132,7 @@ class TestUserRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(org: ORG1, role: USER_READ)
+                    testUserClaims(org: "ORG1", role: USER_READ)
                 }
                 ''', context_value=request_headers, backend=backend)
             assert executed['data']
@@ -164,7 +164,7 @@ class TestUserRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(org: ORG1, role: USER_WRITE)
+                    testUserClaims(org: "ORG1", role: USER_WRITE)
                 }
                 ''', context_value=request_headers, backend=backend)
             assert executed['data']
@@ -196,7 +196,7 @@ class TestUserRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(org: ORG1, role: ADMIN)
+                    testUserClaims(org: "ORG1", role: ADMIN)
                 }
                 ''', context_value=request_headers, backend=backend)
             assert executed['data']
@@ -228,7 +228,7 @@ class TestUserRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(org: ORG1, role: SUPER_ADMIN)
+                    testUserClaims(org: "ORG1", role: SUPER_ADMIN)
                 }
                 ''', context_value=request_headers, backend=backend)
             assert executed['data']
@@ -260,7 +260,7 @@ class TestUserRole(TestCase):
             executed = client.execute(
                 '''
                 {
-                    testUserClaims(org: ORG1, role: ADMIN)
+                    testUserClaims(org: "ORG1", role: ADMIN)
                 }
                 ''', context_value=request_headers, backend=backend)
             assert executed['errors']

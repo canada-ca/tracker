@@ -1,7 +1,5 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-expressions */
-import React, { useEffect } from 'react'
-import { Route, useLocation } from 'react-router-dom'
+import React from 'react'
+import { Route } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { Global, css } from '@emotion/core'
 import { PageNotFound } from './PageNotFound'
@@ -32,23 +30,9 @@ export default function App() {
     }
   `
   const { i18n } = useLingui()
-  const location = useLocation()
-  const refreshComponent = React.useState()
   const toast = useToast()
   const client = useApolloClient()
   const { data } = useQuery(GET_JWT_TOKEN)
-
-  // Set default local client data, this should be in 'defaults' object of Apollo Client but that does not work.
-  if (data === undefined) {
-    client.writeData({ data: { jwt: null, tfa: false } })
-  }
-
-  useEffect(() => {
-    // If the homepage is clicked, refresh the state.
-    if (location.pathname === '/') {
-      refreshComponent // TODO: Ask mike about unused expression.
-    }
-  })
 
   return (
     <>

@@ -23,6 +23,7 @@ def update_user_role(**kwargs):
     org = kwargs.get('org')
     new_role = kwargs.get('role')
     user_roles = kwargs.get('user_roles')
+    user_id = kwargs.get('user_id')
 
     with app.app_context():
         user = User.query.filter(User.user_name == user_name).all()
@@ -44,7 +45,7 @@ def update_user_role(**kwargs):
             db.session.commit()
 
     if new_role == 'admin' or new_role == 'super_admin':
-        if is_super_admin(user_roles):
+        if is_super_admin(user_id):
             update_user_role_db()
         else:
             raise GraphQLError(error_not_an_admin())

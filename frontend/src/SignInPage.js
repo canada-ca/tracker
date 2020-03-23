@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
+import { Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { PasswordField } from './PasswordField'
+import { object, string } from 'yup'
 import {
   Text,
   Input,
   InputGroup,
-  InputRightElement,
   InputLeftElement,
   Icon,
   FormErrorMessage,
@@ -15,90 +18,92 @@ import {
   useToast,
 } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
-import { useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { Formik, Field } from 'formik'
 
 export function SignInPage() {
-  const [show, setShow] = React.useState(false)
-  const handleClick = () => setShow(!show)
-
-  const client = useApolloClient()
   const history = useHistory()
 
   const toast = useToast()
 
-  const [signIn, { loading, error, data }] = useMutation(gql`
-    mutation SignIn($userName: EmailAddress!, $password: String!) {
-      signIn(userName: $userName, password: $password) {
-        user {
-          userName
-          failedLoginAttempts
-          tfaValidated
+  const { i18n } = useLingui()
+
+  const [signIn, { loading, error }] = useMutation(
+    gql`
+      mutation SignIn($userName: EmailAddress!, $password: String!) {
+        signIn(userName: $userName, password: $password) {
+          user {
+            userName
+            tfaValidated
+          }
+          authToken
         }
-        authToken
       }
-    }
-  `)
+    `,
+    {
+      update(cache, { data: { signIn } }) {
+        // write the users token to the cache
+        cache.writeData({
+          data: {
+            jwt: signIn.authToken,
+            tfa: signIn.user.tfaValidated,
+          },
+        })
+      },
+      onError(e) {
+        console.log('Error!', e)
+        toast({
+          title: i18n._('An error occurred.'),
+          description: i18n._(
+            'Unable to sign in to your account, please try again.',
+          ),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      },
+      onCompleted() {
+        // redirect to the home page.
+        history.push('/')
+        // Display a welcome message
+        toast({
+          title: i18n._('Sign In.'),
+          description: i18n._('Welcome, you are successfully signed in!'),
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+      },
+    },
+  )
+
+  const validationSchema = object().shape({
+    password: string().required(i18n._('Password cannot be empty')),
+    email: string().required(i18n._('Email cannot be empty')),
+  })
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
 
-  if (data) {
-    if (data.error) {
-      // If there is an error, the user is not signed in so display a toast.
-      toast({
-        title: 'An error occurred.',
-        description: 'Unable to sign in to your account, please try again.',
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-      })
-    }
-
-    // Write JWT to apollo client data store
-    client.writeData({
-      data: { jwt: data.signIn.authToken, tfa: data.signIn.user.tfaValidated },
-    })
-
-    // Redirect to home page and display a toast stating that sign in was successful
-    history.push('/')
-    
-    toast({
-      title: 'Sign In.',
-      description: 'Welcome, you are successfully signed in!',
-      status: 'success',
-      duration: 9000,
-      isClosable: true,
-    })
-  }
-
-  function validateField(value) {
-    let error
-    if (!value || value === '') {
-      error = ' can not be empty'
-    }
-    return error
-  }
-
   return (
     <Stack spacing={4} mx="auto">
-      <Text fontSize="2xl">Sign in with your username and password.</Text>
+      <Text fontSize="2xl">
+        <Trans>Sign in with your username and password.</Trans>
+      </Text>
 
       <Formik
+        validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}
-        onSubmit={(values, actions) => {
-          setTimeout(async () => {
-            await signIn({
-              variables: { userName: values.email, password: values.password },
-            })
-          }, 500)
-          actions.setSubmitting(false)
+        onSubmit={async (values, _actions) => {
+          await signIn({
+            variables: { userName: values.email, password: values.password },
+          })
         }}
       >
         {props => (
-          <form id="form" onSubmit={props.handleSubmit}>
-            <Field name="email" validate={validateField}>
+          <form onSubmit={props.handleSubmit}>
+            <Field name="email">
               {({ field, form }) => (
                 <FormControl
                   mt={4}
@@ -117,44 +122,10 @@ export function SignInPage() {
               )}
             </Field>
 
-            <Field name="password" validate={validateField}>
-              {({ field, form }) => (
-                <FormControl
-                  mb={2}
-                  isInvalid={form.errors.password && form.touched.password}
-                  isRequired
-                >
-                  <InputGroup size="md">
-                    <InputLeftElement>
-                      <Icon name="lock" color="gray.300" />
-                    </InputLeftElement>
+            <PasswordField name="password" />
 
-                    <Input
-                      {...field}
-                      pr="4.5rem"
-                      type={show ? 'text' : 'password'}
-                      placeholder="Password"
-                      id="password"
-                    />
-                    <InputRightElement width="4.5rem">
-                      <Button
-                        id="showButton"
-                        h="1.75rem"
-                        size="sm"
-                        onClick={handleClick}
-                      >
-                        {show ? 'Hide' : 'Show'}
-                      </Button>
-                    </InputRightElement>
-                  </InputGroup>
-                  <FormErrorMessage>
-                    Password{form.errors.password}
-                  </FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
             <Link as={RouteLink} to="/forgot-password">
-              Forgot your password?
+              <Trans>Forgot your password?</Trans>
             </Link>
 
             <Stack mt={6} spacing={4} isInline>
@@ -163,7 +134,7 @@ export function SignInPage() {
                 isLoading={props.isSubmitting}
                 type="submit"
               >
-                Sign In
+                <Trans>Sign In</Trans>
               </Button>
 
               <Button
@@ -172,7 +143,7 @@ export function SignInPage() {
                 variantColor="teal"
                 variant="outline"
               >
-                Create Account
+                <Trans>Create Account</Trans>
               </Button>
             </Stack>
           </form>
