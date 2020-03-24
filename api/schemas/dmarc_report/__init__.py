@@ -12,6 +12,9 @@ from schemas.dmarc_report.records import Record
 
 
 class DmarcReport(SQLAlchemyObjectType):
+    """
+    Generated Dmarc Report Object
+    """
     class Meta:
         model = Dmarc_Reports
         interfaces = (relay.Node, )
@@ -21,13 +24,29 @@ class DmarcReport(SQLAlchemyObjectType):
             'end_date',
             'report'
         )
-    report_id = graphene.String()
-    org_name = graphene.String()
-    org_email = graphene.String()
-    start_date = graphene.DateTime()
-    end_date = graphene.DateTime()
-    errors = graphene.List(lambda: graphene.String)
-    records = graphene.List(lambda: Record)
+    report_id = graphene.String(
+        description="ID of the report."
+    )
+    org_name = graphene.String(
+        description="The organization name the report was generated from."
+    )
+    org_email = graphene.String(
+        description="The organization email name the report was generated from."
+    )
+    start_date = graphene.DateTime(
+        description=""
+    )
+    end_date = graphene.DateTime(
+        description=""
+    )
+    errors = graphene.List(
+        lambda: graphene.String,
+        description="Errors that occurred during the report generation"
+    )
+    records = graphene.List(
+        lambda: Record,
+        description=""
+    )
 
     with app.app_context():
         def resolve_report_id(self: Dmarc_Reports, info):
@@ -60,6 +79,7 @@ class DmarcReport(SQLAlchemyObjectType):
                     record['auth_results']
                 ))
             return rtr_list
+
 
 class DmarcReportConnection(relay.Connection):
     class Meta:
