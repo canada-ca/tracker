@@ -66,10 +66,17 @@ from schemas.domains_mutations import (
     RemoveDomain
 )
 
+from schemas.dmarc_report import DmarcReport
+
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
+
+    dmarc_report = SQLAlchemyConnectionField(
+        DmarcReport._meta.connection,
+        sort=None
+    )
 
     # --- Start User Queries ---
     users = SQLAlchemyConnectionField(
