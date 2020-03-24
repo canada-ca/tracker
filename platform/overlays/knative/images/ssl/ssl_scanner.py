@@ -6,7 +6,6 @@ import json
 import threading
 import jwt
 from sslyze.ssl_settings import TlsWrappedProtocolEnum
-from sslyze.connection_helpers.opportunistic_tls_helpers import ProtocolWithOpportunisticTlsEnum
 from sslyze.server_connectivity_tester import ServerConnectivityError, ServerConnectivityTester
 from sslyze.plugins.openssl_cipher_suites_plugin import Tlsv12ScanCommand, Tlsv10ScanCommand, \
     Tlsv11ScanCommand, Tlsv13ScanCommand, Sslv20ScanCommand, Sslv30ScanCommand
