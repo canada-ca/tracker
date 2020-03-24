@@ -15,7 +15,7 @@ from schemas.dmarc_report import DmarcReport
 @require_token
 def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
     """
-    
+
     :param self:
     :param info:
     :param kwargs:
