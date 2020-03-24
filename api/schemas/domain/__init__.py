@@ -36,7 +36,7 @@ class Domain(SQLAlchemyObjectType):
         description="HTTPS, and SSL scan results"
     )
     dmarc_report = graphene.ConnectionField(
-        DmarcReport._meta.conntion,
+        DmarcReport._meta.connection,
         description="DMARC aggregate report"
     )
 

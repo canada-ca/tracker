@@ -67,16 +67,12 @@ from schemas.domains_mutations import (
 )
 
 from schemas.dmarc_report import DmarcReport
+from resolvers.dmarc_report import resolve_dmarc_reports
 
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
     node = relay.Node.Field()
-
-    dmarc_report = SQLAlchemyConnectionField(
-        DmarcReport._meta.connection,
-        sort=None
-    )
 
     # --- Start User Queries ---
     users = SQLAlchemyConnectionField(
@@ -145,6 +141,19 @@ class Query(graphene.ObjectType):
         def resolve_domains(self, info, **kwargs):
             return resolve_domains(self, info, **kwargs)
     # --- End Domain Queries ---
+
+    # --- Start DMARC Report Queries ---
+    dmarc_reports = SQLAlchemyConnectionField(
+        DmarcReport._meta.connection,
+        domain=graphene.Argument(URL, required=True),
+        start_date=graphene.Argument(graphene.Date, required=False),
+        end_date=graphene.Argument(graphene.Date, required=False),
+        sort=None
+    )
+    with app.app_context():
+        def resolve_dmarc_reports(self, info, **kwargs):
+            return resolve_dmarc_reports(self, info, **kwargs)
+    # --- End DMARC Report Queries ---
 
     generate_otp_url = graphene.String(
         email=graphene.Argument(EmailAddress, required=True),
