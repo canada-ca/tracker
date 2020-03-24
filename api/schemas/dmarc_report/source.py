@@ -3,7 +3,7 @@ import graphene
 
 class Source(graphene.ObjectType):
     """
-
+    Domain information
     """
     ip_address = graphene.String()
     country = graphene.String()

@@ -13,7 +13,7 @@ from schemas.dmarc_report.records import Record
 
 class DmarcReport(SQLAlchemyObjectType):
     """
-    Generated Dmarc Report Object
+    Generated DMARC Aggregated Report Object
     """
     class Meta:
         model = Dmarc_Reports
@@ -34,10 +34,10 @@ class DmarcReport(SQLAlchemyObjectType):
         description="The organization email name the report was generated from."
     )
     start_date = graphene.DateTime(
-        description=""
+        description="Start date & time of aggregate report"
     )
     end_date = graphene.DateTime(
-        description=""
+        description="End date & time of aggregate report"
     )
     errors = graphene.List(
         lambda: graphene.String,
@@ -45,7 +45,7 @@ class DmarcReport(SQLAlchemyObjectType):
     )
     records = graphene.List(
         lambda: Record,
-        description=""
+        description="Aggregate report records"
     )
 
     with app.app_context():

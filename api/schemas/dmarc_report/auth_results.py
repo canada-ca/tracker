@@ -6,10 +6,16 @@ from schemas.dmarc_report.spf_report import SpfReport
 
 class AuthResults(graphene.ObjectType):
     """
-
+    DKIM and SPF domain results
     """
-    dkim = graphene.List(lambda: DkimReport)
-    spf = graphene.List(lambda: SpfReport)
+    dkim = graphene.List(
+        lambda: DkimReport,
+        description="DKIM domain results"
+    )
+    spf = graphene.List(
+        lambda: SpfReport,
+        description='SPF domain results'
+    )
 
     def resolve_dkim(self: dict, info):
         rtr_list = []

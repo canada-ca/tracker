@@ -11,13 +11,30 @@ from schemas.dmarc_report.auth_results import AuthResults
 
 class Record(graphene.ObjectType):
     """
-
+    DMARC aggregate report record
     """
 
-    count = graphene.Int()
-    source = graphene.Field(lambda: Source)
-    alignment = graphene.Field(lambda: Alignment)
-    policy_evaluated = graphene.Field(lambda: PolicyEvaluated)
-    identifiers = graphene.Field(lambda: Identifiers)
-    auth_results = graphene.Field(lambda: AuthResults)
+    count = graphene.Int(
+        description=''
+    )
+    source = graphene.Field(
+        lambda: Source,
+        description=''
+    )
+    alignment = graphene.Field(
+        lambda: Alignment,
+        description=''
+    )
+    policy_evaluated = graphene.Field(
+        lambda: PolicyEvaluated,
+        description=''
+    )
+    identifiers = graphene.Field(
+        lambda: Identifiers,
+        description=''
+    )
+    auth_results = graphene.Field(
+        lambda: AuthResults,
+        description=''
+    )
 
