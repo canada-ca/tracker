@@ -526,6 +526,43 @@ class TestDomainMutationAccessControl(TestCase):
                 Spf_scans.id == 1
             ).all()
 
+    def test_domain_creation_super_admin_acronym_sa(self):
+        """
+        Test to see if super admins cant create domain belonging to SA org
+        """
+        with app.app_context():
+            backend = SecurityAnalysisBackend()
+            client = Client(schema)
+            get_token = client.execute(
+                '''
+                mutation{
+                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
+                        authToken
+                    }
+                }
+                ''', backend=backend)
+            assert get_token['data']['signIn']['authToken'] is not None
+            token = get_token['data']['signIn']['authToken']
+            assert token is not None
+
+            environ = create_environ()
+            environ.update(
+                HTTP_AUTHORIZATION=token
+            )
+            request_headers = Request(environ)
+            executed = client.execute(
+                '''
+                mutation{
+                    createDomain(org: "SA", url: "sa.create.domain.ca") {
+                        status
+                    }
+                }
+                ''', context_value=request_headers, backend=backend)
+
+            assert executed['errors']
+            assert executed['errors'][0]
+            assert executed['errors'][0]['message'] == 'Error, you cannot add a domain to this organization.'
+
     # Org Admin Tests
     def test_domain_creation_org_admin(self):
         """
