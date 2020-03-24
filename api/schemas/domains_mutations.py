@@ -8,7 +8,18 @@ from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_write, is_super_admin
 from functions.input_validators import cleanse_input
 
-from models import Organizations, Domains
+from models import (
+    Organizations,
+    Domains,
+    Scans,
+    Dkim_scans,
+    Dmarc_scans,
+    Https_scans,
+    Mx_scans,
+    Spf_scans,
+    Ssl_scans
+
+)
 
 from scalars.organization_acronym import Acronym
 from scalars.url import URL
@@ -165,13 +176,50 @@ class RemoveDomain(graphene.Mutation):
             # Check permissions
             if is_user_write(user_role=user_roles, org_id=domain_orm.organization_id) \
                 or is_super_admin(user_id):
-                # Delete domain
                 try:
+                    # Get Domain Id
+                    domain_id = Domains.query.filter(
+                        Domains.domain == domain
+                    ).first().id
+
+                    # Get All Scans
+                    scans = db.session.query(Scans).filter(
+                        Scans.domain_id == domain_id
+                    ).all()
+
+                    # Remove all related scans
+                    for scan in scans:
+                        try:
+                            Dkim_scans.query.filter(
+                                Dkim_scans.id == scan.id
+                            ).delete()
+                            Dmarc_scans.query.filter(
+                                Dmarc_scans.id == scan.id
+                            ).delete()
+                            Https_scans.query.filter(
+                                Https_scans.id == scan.id
+                            ).delete()
+                            Mx_scans.query.filter(
+                                Mx_scans.id == scan.id
+                            ).delete()
+                            Spf_scans.query.filter(
+                                Spf_scans.id == scan.id
+                            ).delete()
+                            Ssl_scans.query.filter(
+                                Ssl_scans.id == scan.id
+                            ).delete()
+                            Scans.query.filter(
+                                Scans.id == scan.id
+                            ).delete()
+                        except Exception as e:
+                            return RemoveDomain(status=False)
+
                     Domains.query.filter(
                         Domains.domain == domain
                     ).delete()
                     db.session.commit()
                     return RemoveDomain(status=True)
+
                 except Exception as e:
                     db.session.rollback()
                     db.session.flush()
