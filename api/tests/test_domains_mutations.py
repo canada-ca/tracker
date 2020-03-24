@@ -11,16 +11,29 @@ from unittest import TestCase
 
 from werkzeug.test import create_environ
 
-from app import app
-from db import db
-from models import Organizations, Domains, Users, User_affiliations
-from queries import schema
-from backend.security_check import SecurityAnalysisBackend
-
 # This is the only way I could get imports to work for unit testing.
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
+
+from app import app
+from db import db
+from models import (
+    Organizations,
+    Domains,
+    Users,
+    User_affiliations,
+    Scans,
+    Dkim_scans,
+    Dmarc_scans,
+    Https_scans,
+    Mx_scans,
+    Spf_scans,
+    Ssl_scans
+)
+
+from queries import schema
+from backend.security_check import SecurityAnalysisBackend
 
 
 @pytest.fixture(scope='class')
@@ -188,9 +201,112 @@ def domain_test_db_init():
         db.session.add(user_read_domain)
         db.session.commit()
 
+        # Super Admin Scans
+        domain_id = db.session.query(Domains).filter(
+            Domains.domain == 'sa.remove.domain.ca'
+        ).first().id
+        sa_scan = Scans(
+            id=1,
+            domain_id=domain_id
+        )
+        db.session.add(sa_scan)
+        db.session.commit()
+        sa_dkim = Dkim_scans(
+            id=1
+        )
+        db.session.add(sa_dkim)
+        sa_dmarc = Dmarc_scans(
+            id=1
+        )
+        db.session.add(sa_dmarc)
+        sa_https = Https_scans(
+            id=1
+        )
+        db.session.add(sa_https)
+        sa_ssl = Ssl_scans(
+            id=1
+        )
+        db.session.add(sa_ssl)
+        sa_spf = Spf_scans(
+            id=1
+        )
+        db.session.add(sa_spf)
+        db.session.commit()
+
+        # Admin Scans
+        domain_id = db.session.query(Domains).filter(
+            Domains.domain == 'admin.remove.domain.ca'
+        ).first().id
+        admin_scan = Scans(
+            id=2,
+            domain_id=domain_id
+        )
+        db.session.add(admin_scan)
+        db.session.commit()
+        admin_dkim = Dkim_scans(
+            id=2
+        )
+        db.session.add(admin_dkim)
+        admin_dmarc = Dmarc_scans(
+            id=2
+        )
+        db.session.add(admin_dmarc)
+        admin_https = Https_scans(
+            id=2
+        )
+        db.session.add(admin_https)
+        admin_ssl = Ssl_scans(
+            id=2
+        )
+        db.session.add(admin_ssl)
+        admin_spf = Spf_scans(
+            id=2
+        )
+        db.session.add(admin_spf)
+        db.session.commit()
+
+        # User Write Scans
+        domain_id = db.session.query(Domains).filter(
+            Domains.domain == 'user.write.remove.domain.ca'
+        ).first().id
+        user_w_scan = Scans(
+            id=3,
+            domain_id=domain_id
+        )
+        db.session.add(user_w_scan)
+        db.session.commit()
+        user_w_dkim = Dkim_scans(
+            id=3
+        )
+        db.session.add(user_w_dkim)
+        user_w_dmarc = Dmarc_scans(
+            id=3
+        )
+        db.session.add(user_w_dmarc)
+        user_w_https = Https_scans(
+            id=3
+        )
+        db.session.add(user_w_https)
+        user_w_ssl = Ssl_scans(
+            id=3
+        )
+        db.session.add(user_w_ssl)
+        user_w_spf = Spf_scans(
+            id=3
+        )
+        db.session.add(user_w_spf)
+        db.session.commit()
+
     yield
 
     with app.app_context():
+        Ssl_scans.query.delete()
+        Spf_scans.query.delete()
+        Mx_scans.query.delete()
+        Https_scans.query.delete()
+        Dmarc_scans.query.delete()
+        Dkim_scans.query.delete()
+        Scans.query.delete()
         Domains.query.delete()
         User_affiliations.query.delete()
         Organizations.query.delete()
@@ -369,22 +485,46 @@ class TestDomainMutationAccessControl(TestCase):
             assert executed['data']['removeDomain']
             assert executed['data']['removeDomain']['status']
 
-            executed = client.execute(
-                '''
-                {
-                    domain(url: "sa.remove.domain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                ''', context_value=request_headers, backend=backend)
-
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, domain does not exist"
+            assert not db.session.query(
+                Domains
+            ).filter(
+                Domains.domain == 'sa.remove.domain.ca'
+            ).all()
+            assert not db.session.query(
+                Scans
+            ).filter(
+                Scans.id == 1
+            ).all()
+            assert not db.session.query(
+                Dkim_scans
+            ).filter(
+                Dkim_scans.id == 1
+            ).all()
+            assert not db.session.query(
+                Dmarc_scans
+            ).filter(
+                Dmarc_scans.id == 1
+            ).all()
+            assert not db.session.query(
+                Https_scans
+            ).filter(
+                Https_scans.id == 1
+            ).all()
+            assert not db.session.query(
+                Mx_scans
+            ).filter(
+                Mx_scans.id == 1
+            ).all()
+            assert not db.session.query(
+                Ssl_scans
+            ).filter(
+                Ssl_scans.id == 1
+            ).all()
+            assert not db.session.query(
+                Spf_scans
+            ).filter(
+                Spf_scans.id == 1
+            ).all()
 
     # Org Admin Tests
     def test_domain_creation_org_admin(self):
@@ -555,22 +695,46 @@ class TestDomainMutationAccessControl(TestCase):
             assert executed['data']['removeDomain']
             assert executed['data']['removeDomain']['status']
 
-            executed = client.execute(
-                '''
-                {
-                    domain(url: "admin.remove.domain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                ''', context_value=request_headers, backend=backend)
-
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, domain does not exist"
+            assert not db.session.query(
+                Domains
+            ).filter(
+                Domains.domain == 'admin.remove.domain.ca'
+            ).all()
+            assert not db.session.query(
+                Scans
+            ).filter(
+                Scans.id == 2
+            ).all()
+            assert not db.session.query(
+                Dkim_scans
+            ).filter(
+                Dkim_scans.id == 2
+            ).all()
+            assert not db.session.query(
+                Dmarc_scans
+            ).filter(
+                Dmarc_scans.id == 2
+            ).all()
+            assert not db.session.query(
+                Https_scans
+            ).filter(
+                Https_scans.id == 2
+            ).all()
+            assert not db.session.query(
+                Mx_scans
+            ).filter(
+                Mx_scans.id == 2
+            ).all()
+            assert not db.session.query(
+                Ssl_scans
+            ).filter(
+                Ssl_scans.id == 2
+            ).all()
+            assert not db.session.query(
+                Spf_scans
+            ).filter(
+                Spf_scans.id == 2
+            ).all()
 
     # Different Org Admin
     def test_domain_creation_diff_org_admin(self):
@@ -872,6 +1036,47 @@ class TestDomainMutationAccessControl(TestCase):
             assert executed['errors']
             assert executed['errors'][0]
             assert executed['errors'][0]['message'] == "Error, domain does not exist"
+
+            assert not db.session.query(
+                Domains
+            ).filter(
+                Domains.domain == 'user.write.remove.domain.ca'
+            ).all()
+            assert not db.session.query(
+                Scans
+            ).filter(
+                Scans.id == 3
+            ).all()
+            assert not db.session.query(
+                Dkim_scans
+            ).filter(
+                Dkim_scans.id == 3
+            ).all()
+            assert not db.session.query(
+                Dmarc_scans
+            ).filter(
+                Dmarc_scans.id == 3
+            ).all()
+            assert not db.session.query(
+                Https_scans
+            ).filter(
+                Https_scans.id == 3
+            ).all()
+            assert not db.session.query(
+                Mx_scans
+            ).filter(
+                Mx_scans.id == 3
+            ).all()
+            assert not db.session.query(
+                Ssl_scans
+            ).filter(
+                Ssl_scans.id == 3
+            ).all()
+            assert not db.session.query(
+                Spf_scans
+            ).filter(
+                Spf_scans.id == 3
+            ).all()
 
     # Different Org User Write
     def test_domain_creation_diff_org_user_write(self):
