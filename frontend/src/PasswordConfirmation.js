@@ -12,18 +12,38 @@ import {
 import { Field } from 'formik'
 
 export function PasswordConfirmation() {
+  const [icon, setIcon] = React.useState('lock')
+  const [confirmIcon, setConfirmIcon] = React.useState('lock')
+
   /* A function for the Formik to validate fields in the form */
-  function validateField(value) {
-    let error
+  function validatePassword(value) {
     if (!value || value === '') {
-      error = ' can not be empty'
+      setIcon('close')
+      return ' can not be empty'
+    } else {
+      console.log('valid')
+      setIcon('check')
     }
+  }
+
+  /* A function for the Formik to validate fields in the form */
+  function validateConfirmPassword(value) {
+    let error
+
+    if (!value || value === '' || value !== document.getElementById('password').value) {
+      error = ' can not be empty'
+      setConfirmIcon('close')
+    } else {
+      console.log('valid')
+      setConfirmIcon('check')
+    }
+
     return error
   }
 
   return (
     <>
-      <Field name="password" validate={validateField}>
+      <Field name="password" validate={validatePassword}>
         {({ field, form }) => (
           <FormControl
             mt={4}
@@ -33,7 +53,16 @@ export function PasswordConfirmation() {
           >
             <InputGroup>
               <InputLeftElement>
-                <Icon name="lock" color="gray.300" />
+                <Icon
+                  name={icon}
+                  color={
+                    icon === 'lock'
+                      ? 'gray.300'
+                      : icon === 'check'
+                      ? 'green.500'
+                      : 'red.500'
+                  }
+                />
               </InputLeftElement>
               <Input {...field} id="password" placeholder="Password" />
             </InputGroup>
@@ -42,7 +71,7 @@ export function PasswordConfirmation() {
         )}
       </Field>
 
-      <Field name="confirmPassword" validate={validateField}>
+      <Field name="confirmPassword" validate={validateConfirmPassword}>
         {({ field, form }) => (
           <FormControl
             mt={4}
@@ -54,7 +83,16 @@ export function PasswordConfirmation() {
           >
             <InputGroup>
               <InputLeftElement>
-                <Icon name="lock" color="gray.300" />
+                <Icon
+                  name={confirmIcon}
+                  color={
+                    confirmIcon === 'lock'
+                      ? 'gray.300'
+                      : confirmIcon === 'check'
+                      ? 'green.500'
+                      : 'red.500'
+                  }
+                />
               </InputLeftElement>
               <Input
                 {...field}
