@@ -8,6 +8,8 @@ from db import db
 
 from models import Dmarc_Reports
 
+from schemas.dmarc_report.records import Record
+
 
 class DmarcReport(SQLAlchemyObjectType):
     class Meta:
@@ -25,6 +27,7 @@ class DmarcReport(SQLAlchemyObjectType):
     start_date = graphene.DateTime()
     end_date = graphene.DateTime()
     errors = graphene.List(lambda: graphene.String)
+    records = graphene.List(lambda: Record)
 
     with app.app_context():
         def resolve_report_id(self: Dmarc_Reports, info):
@@ -45,6 +48,18 @@ class DmarcReport(SQLAlchemyObjectType):
         def resolve_errors(self: Dmarc_Reports, info):
             return self.report['report_metadata']['errors']
 
+        def resolve_records(self: Dmarc_Reports, info):
+            rtr_list = []
+            for record in self.report['records']:
+                rtr_list.append(Record(
+                    record['count'],
+                    record['source'],
+                    record['alignment'],
+                    record['policy_evaluated'],
+                    record['identifiers'],
+                    record['auth_results']
+                ))
+            return rtr_list
 
 class DmarcReportConnection(relay.Connection):
     class Meta:
