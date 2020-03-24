@@ -30,8 +30,11 @@ export function PasswordConfirmation() {
   function validateConfirmPassword(value) {
     let error
 
-    if (!value || value === '' || value !== document.getElementById('password').value) {
+    if (!value || value === '') {
       error = ' can not be empty'
+      setConfirmIcon('close')
+    } else if (value !== document.getElementById('password').value) {
+      error = ' must match password'
       setConfirmIcon('close')
     } else {
       console.log('valid')
