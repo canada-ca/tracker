@@ -54,6 +54,15 @@ class User_affiliations(db.Model):
     user_organization = relationship("Organizations", back_populates="users", cascade="all, delete")
 
 
+class Dmarc_Reports(db.Model):
+    __tablename__ = 'dmarc_reports'
+
+    id = Column(Integer, ForeignKey('domains.id'), primary_key=True)
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
+    report = Column(JSONB)
+
+
 class Scans(db.Model):
     __tablename__ = 'scans'
 
