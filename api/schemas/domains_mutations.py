@@ -51,6 +51,10 @@ class CreateDomain(graphene.Mutation):
             acronym = cleanse_input(kwargs.get('org'))
             domain = cleanse_input(kwargs.get('url'))
 
+            # Check to see if org acronym is SA Org
+            if acronym == 'SA':
+                raise GraphQLError('Error, you cannot add a domain to this organization.')
+
             # Check to see if org exists
             org_orm = db.session.query(Organizations).filter(
                 Organizations.acronym == acronym
