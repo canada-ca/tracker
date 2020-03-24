@@ -5,9 +5,12 @@ import {
   FormControl,
   FormErrorMessage,
   Input,
+  InputLeftElement,
+  InputGroup,
   Stack,
   Text,
   useToast,
+  Icon,
 } from '@chakra-ui/core'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
@@ -36,8 +39,7 @@ export function CreateUserPage() {
   `)
 
   const history = useHistory()
-  const toast = useToast();
-
+  const toast = useToast()
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
@@ -48,9 +50,9 @@ export function CreateUserPage() {
     } else {
       history.push('/')
       toast({
-        title: "Account created.",
+        title: 'Account created.',
         description: "We've created your account for you, please sign in!",
-        status: "success",
+        status: 'success',
         duration: 9000,
         isClosable: true,
       })
@@ -97,7 +99,13 @@ export function CreateUserPage() {
                   isInvalid={form.errors.email && form.touched.email}
                   isRequired
                 >
-                  <Input {...field} id="email" placeholder="Email" />
+                  <InputGroup>
+                    <InputLeftElement>
+                      <Icon name="email" color="gray.300" />
+                    </InputLeftElement>
+                    <Input {...field} id="email" placeholder="Email" />
+                  </InputGroup>
+
                   <FormErrorMessage>Email{form.errors.email}</FormErrorMessage>
                 </FormControl>
               )}
@@ -111,7 +119,12 @@ export function CreateUserPage() {
                   isInvalid={form.errors.password && form.touched.password}
                   isRequired
                 >
-                  <Input {...field} id="password" placeholder="Password" />
+                  <InputGroup>
+                    <InputLeftElement>
+                      <Icon name="lock" color="gray.300" />
+                    </InputLeftElement>
+                    <Input {...field} id="password" placeholder="Password" />
+                  </InputGroup>
                   <FormErrorMessage>
                     Password{form.errors.password}
                   </FormErrorMessage>
@@ -129,11 +142,17 @@ export function CreateUserPage() {
                   }
                   isRequired
                 >
-                  <Input
-                    {...field}
-                    id="confirmPassword"
-                    placeholder="Confirm password"
-                  />
+                  <InputGroup>
+                    <InputLeftElement>
+                      <Icon name="lock" color="gray.300" />
+                    </InputLeftElement>
+                    <Input
+                      {...field}
+                      id="confirmPassword"
+                      placeholder="Confirm password"
+                    />
+                  </InputGroup>
+
                   <FormErrorMessage>
                     Confirm Password{form.errors.confirmPassword}
                   </FormErrorMessage>
