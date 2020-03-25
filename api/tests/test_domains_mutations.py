@@ -358,25 +358,17 @@ class TestDomainMutationAccessControl(TestCase):
                 '''
                 {
                     domain(url: "sa.create.domain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "sa.create.domain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "sa.create.domain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -425,25 +417,17 @@ class TestDomainMutationAccessControl(TestCase):
                 '''
                 {
                     domain(url: "updated.sa.update.domain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "updated.sa.update.domain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "updated.sa.update.domain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -605,25 +589,17 @@ class TestDomainMutationAccessControl(TestCase):
                 '''
                 {
                     domain(url: "admin.create.domain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "admin.create.domain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "admin.create.domain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -672,25 +648,17 @@ class TestDomainMutationAccessControl(TestCase):
                 '''
                 {
                     domain(url: "updated.admin.update.domain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "updated.admin.update.domain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "updated.admin.update.domain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -930,25 +898,17 @@ class TestDomainMutationAccessControl(TestCase):
                 '''
                 {
                     domain(url: "user.write.create.domain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "user.write.create.domain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "user.write.create.domain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -997,25 +957,17 @@ class TestDomainMutationAccessControl(TestCase):
                 '''
                 {
                     domain(url: "updated.user.write.update.domain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "updated.user.write.update.domain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "updated.user.write.update.domain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -1061,11 +1013,7 @@ class TestDomainMutationAccessControl(TestCase):
                 '''
                 {
                     domain(url: "user.write.remove.domain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
