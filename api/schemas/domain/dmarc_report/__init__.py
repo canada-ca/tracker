@@ -7,7 +7,7 @@ from app import app
 
 from models import Dmarc_Reports
 
-from schemas.domain.dmarc_report import Record
+from schemas.domain.dmarc_report.records import Record
 
 
 class DmarcReport(SQLAlchemyObjectType):

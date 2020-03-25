@@ -1,10 +1,10 @@
 import graphene
 
-from schemas.domain.dmarc_report import Source
+from schemas.domain.dmarc_report.source import Source
 from schemas.domain.dmarc_report.alignment import Alignment
 from schemas.domain.dmarc_report.policy_evaluated import PolicyEvaluated
 from schemas.domain.dmarc_report.identifiers import Identifiers
-from schemas.domain.dmarc_report import AuthResults
+from schemas.domain.dmarc_report.auth_results import AuthResults
 
 
 class Record(graphene.ObjectType):
