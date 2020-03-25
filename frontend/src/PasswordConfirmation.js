@@ -17,31 +17,28 @@ export function PasswordConfirmation() {
 
   /* A function for the Formik to validate fields in the form */
   function validatePassword(value) {
-    if (!value || value === '') {
+    if (value === '') {
       setIcon('close')
       return ' can not be empty'
+    } else if (String(value).length < 11) {
+      setIcon('close')
+      return ' must be 12 chars long'
     } else {
-      console.log('valid')
       setIcon('check')
     }
   }
 
   /* A function for the Formik to validate fields in the form */
   function validateConfirmPassword(value) {
-    let error
-
-    if (!value || value === '') {
-      error = ' can not be empty'
+    if (value === '') {
       setConfirmIcon('close')
+      return ' can not be empty'
     } else if (value !== document.getElementById('password').value) {
-      error = ' must match password'
       setConfirmIcon('close')
+      return ' must match password'
     } else {
-      console.log('valid')
       setConfirmIcon('check')
     }
-
-    return error
   }
 
   return (
