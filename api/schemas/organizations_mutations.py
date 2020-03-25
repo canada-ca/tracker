@@ -65,7 +65,7 @@ class CreateOrganization(graphene.Mutation):
         @require_token
         def mutate(self, info, **kwargs):
             user_id = kwargs.get('user_id')
-            acronym = cleanse_input(kwargs.get('acronym', ''))
+            acronym = cleanse_input(kwargs.get('acronym'))
             description = cleanse_input(kwargs.get('description'))
             zone = cleanse_input(kwargs.get('zone'))
             sector = cleanse_input(kwargs.get('sector'))
@@ -152,13 +152,13 @@ class UpdateOrganization(graphene.Mutation):
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
             user_id = kwargs.get('user_id')
-            acronym = cleanse_input(kwargs.get('acronym', ''))
-            updated_acronym = cleanse_input(kwargs.get('updated_acronym', ''))
-            description = cleanse_input(kwargs.get('description', ""))
-            zone = cleanse_input(kwargs.get('zone', ""))
+            acronym = cleanse_input(kwargs.get('acronym'))
+            updated_acronym = cleanse_input(kwargs.get('updated_acronym'))
+            description = cleanse_input(kwargs.get('description'))
+            zone = cleanse_input(kwargs.get('zone'))
             sector = cleanse_input(kwargs.get('sector'))
-            province = cleanse_input(kwargs.get('province', ""))
-            city = cleanse_input(kwargs.get('city', ""))
+            province = cleanse_input(kwargs.get('province'))
+            city = cleanse_input(kwargs.get('city'))
 
             if is_super_admin(user_id):
 
@@ -229,7 +229,7 @@ class RemoveOrganization(graphene.Mutation):
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
             user_id = kwargs.get('user_id')
-            acronym = cleanse_input(kwargs.get('acronym', ''))
+            acronym = cleanse_input(kwargs.get('acronym'))
 
             # Restrict the deletion of SA Org
             if acronym == "SA":
