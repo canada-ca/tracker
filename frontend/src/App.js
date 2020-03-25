@@ -19,6 +19,7 @@ import { SkipLink } from './SkipLink'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
+import { UserPage } from './UserPage'
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -82,6 +83,9 @@ export default function App() {
               <Trans>Sign Out</Trans>
             </Link>
           )}
+          <Link to="/user">
+            <Trans>User Profile</Trans>
+          </Link>
         </Navigation>
         {// Dynamically show the TwoFactorNotification bar
         data && !data.tfa && <TwoFactorNotificationBar />}
@@ -92,6 +96,10 @@ export default function App() {
 
           <Route path="/domains">
             <DomainsPage />
+          </Route>
+
+          <Route path="/user">
+            <UserPage />
           </Route>
 
           <Route path="/sign-in">
