@@ -54,7 +54,7 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
         )
 
         # Check Permissions
-        if is_super_admin(user_id=user_id) or is_user_read(user_role=user_roles, org_id=org_id):
+        if is_user_read(user_role=user_roles, org_id=org_id):
             query = query.filter(
                 Dmarc_Reports.domain_id == domain_id
             )
@@ -79,7 +79,7 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
         query = DmarcReport.get_query(info)
 
         # Check Permissions
-        if is_super_admin(user_id=user_id) or is_user_read(user_role=user_roles, org_id=org_id):
+        if is_user_read(user_role=user_roles, org_id=org_id):
             query = query.filter(
                 Dmarc_Reports.domain_id == domain_id
             )
