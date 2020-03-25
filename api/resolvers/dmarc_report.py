@@ -1,7 +1,5 @@
 from graphql import GraphQLError
-from sqlalchemy.orm import load_only
 
-from app import app
 from db import db
 
 from functions.input_validators import cleanse_input
@@ -10,7 +8,7 @@ from functions.auth_functions import is_super_admin, is_user_read
 
 from models import Domains, Dmarc_Reports
 
-from schemas.dmarc_report import DmarcReport
+from schemas.domain.dmarc_report import DmarcReport
 
 
 @require_token

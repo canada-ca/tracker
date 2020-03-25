@@ -4,14 +4,14 @@ from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
 
 from app import app
-from models import Domains, Scans, Dmarc_Reports
+from models import Domains, Scans
 from scalars.url import URL
 
 from resolvers.dmarc_report import resolve_dmarc_reports
 
 from schemas.domain.email_scan import EmailScan
 from schemas.domain.www_scan import WWWScan
-from schemas.dmarc_report import DmarcReport
+from schemas.domain.dmarc_report import DmarcReport
 
 
 class Domain(SQLAlchemyObjectType):

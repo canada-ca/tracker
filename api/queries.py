@@ -1,6 +1,6 @@
 import graphene
 from graphene import relay
-from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
+from graphene_sqlalchemy import SQLAlchemyConnectionField
 
 from app import app
 
@@ -65,9 +65,6 @@ from schemas.domains_mutations import (
     UpdateDomain,
     RemoveDomain
 )
-
-from schemas.dmarc_report import DmarcReport
-from resolvers.dmarc_report import resolve_dmarc_reports
 
 
 class Query(graphene.ObjectType):

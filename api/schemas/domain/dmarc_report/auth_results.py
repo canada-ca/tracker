@@ -1,7 +1,7 @@
 import graphene
 
-from schemas.dmarc_report.dkim_report import DkimReport
-from schemas.dmarc_report.spf_report import SpfReport
+from schemas.domain.dmarc_report import DkimReport
+from schemas.domain.dmarc_report import SpfReport
 
 
 class AuthResults(graphene.ObjectType):

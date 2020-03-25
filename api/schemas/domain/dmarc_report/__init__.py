@@ -4,11 +4,10 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from app import app
-from db import db
 
 from models import Dmarc_Reports
 
-from schemas.dmarc_report.records import Record
+from schemas.domain.dmarc_report import Record
 
 
 class DmarcReport(SQLAlchemyObjectType):
