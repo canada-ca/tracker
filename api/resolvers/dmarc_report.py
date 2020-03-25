@@ -46,6 +46,14 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
         # Get initial query
         query = DmarcReport.get_query(info)
 
+        # Filter query for given domain
+        query = query.filter(
+            Dmarc_Reports.domain_id == domain_id
+        )
+
+        if not query.all():
+            raise GraphQLError('Error, no reports for that domain.')
+
         # Filter Based on dates
         query = query.filter(
             Dmarc_Reports.start_date.between(start_date, end_date)
@@ -53,14 +61,18 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
             Dmarc_Reports.start_date.between(start_date, end_date)
         )
 
+        if not query.all():
+            raise GraphQLError(
+                'Error, no reports for that domain in that date range.'
+            )
+
         # Check Permissions
         if is_user_read(user_role=user_roles, org_id=org_id):
-            query = query.filter(
-                Dmarc_Reports.domain_id == domain_id
-            )
             return query.all()
         else:
-            raise GraphQLError('Error, you do not have access to view this organization.')
+            raise GraphQLError(
+                'Error, you do not have access to view this organization.'
+            )
 
     else:
         # Get Domain ORM
@@ -83,6 +95,8 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
             query = query.filter(
                 Dmarc_Reports.domain_id == domain_id
             )
+            if not query.all():
+                raise GraphQLError('Error, no reports for that domain.')
             return query.all()
         else:
             raise GraphQLError('Error, you do not have access to view this organization.')
