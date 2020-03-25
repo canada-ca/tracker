@@ -62,7 +62,7 @@ class CreateOrganization(graphene.Mutation):
     with app.app_context():
         @require_token
         def mutate(self, info, **kwargs):
-            user_id = kwargs.get('user_id')
+            user_roles = kwargs.get('user_roles')
             acronym = cleanse_input(kwargs.get('acronym'))
             description = cleanse_input(kwargs.get('description'))
             zone = cleanse_input(kwargs.get('zone'))
@@ -70,7 +70,7 @@ class CreateOrganization(graphene.Mutation):
             province = cleanse_input(kwargs.get('province'))
             city = cleanse_input(kwargs.get('city'))
 
-            if is_super_admin(user_id):
+            if is_super_admin(user_role=user_roles):
                 # Check to see if organization already exists
                 org_orm = db.session.query(Organizations).filter(
                     Organizations.acronym == acronym
@@ -149,7 +149,7 @@ class UpdateOrganization(graphene.Mutation):
         @require_token
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
-            user_id = kwargs.get('user_id')
+            user_roles = kwargs.get('user_roles')
             acronym = cleanse_input(kwargs.get('acronym'))
             updated_acronym = cleanse_input(kwargs.get('updated_acronym'))
             description = cleanse_input(kwargs.get('description'))
@@ -158,7 +158,7 @@ class UpdateOrganization(graphene.Mutation):
             province = cleanse_input(kwargs.get('province'))
             city = cleanse_input(kwargs.get('city'))
 
-            if is_super_admin(user_id):
+            if is_super_admin(user_role=user_roles):
 
                 # Get requested org orm
                 org_orm = db.session.query(Organizations).filter(
@@ -226,7 +226,7 @@ class RemoveOrganization(graphene.Mutation):
         @require_token
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
-            user_id = kwargs.get('user_id')
+            user_roles = kwargs.get('user_roles')
             acronym = cleanse_input(kwargs.get('acronym'))
 
             # Restrict the deletion of SA Org
@@ -242,7 +242,7 @@ class RemoveOrganization(graphene.Mutation):
                 raise GraphQLError("Error, organization does not exist")
 
             # Check Permissions
-            if is_super_admin(user_id=user_id):
+            if is_super_admin(user_role=user_roles):
                 try:
                     # Get Org ID
                     org_orm = Organizations.query.filter(

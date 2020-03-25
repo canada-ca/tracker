@@ -60,7 +60,7 @@ def resolve_users(self, info, **kwargs):
         org_id = org_orm.id
 
     # Check to see if user has super admin access, and return all users
-    if is_super_admin(user_id=user_id):
+    if is_super_admin(user_role=user_roles):
         # Sub query to retrieve all users in the requested organization
         user_id_list = db.session.query(User_affiliations).filter(
             User_affiliations.organization_id == org_id

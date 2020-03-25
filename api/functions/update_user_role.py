@@ -45,7 +45,7 @@ def update_user_role(**kwargs):
             db.session.commit()
 
     if new_role == 'admin' or new_role == 'super_admin':
-        if is_super_admin(user_id):
+        if is_super_admin(user_role=user_roles):
             update_user_role_db()
         else:
             raise GraphQLError(error_not_an_admin())

@@ -72,8 +72,7 @@ class CreateDomain(graphene.Mutation):
             if domain_orm is not None:
                 raise GraphQLError("Error, Domain already exists.")
 
-            if is_super_admin(user_id=user_id) \
-                or is_user_write(user_role=user_roles, org_id=org_id):
+            if is_user_write(user_role=user_roles, org_id=org_id):
                 new_domain = Domains(
                     domain=domain,
                     organization_id=org_id
@@ -129,8 +128,7 @@ class UpdateDomain(graphene.Mutation):
             if domain_orm is None:
                 raise GraphQLError("Error, domain does not exist.")
 
-            if is_user_write(user_role=user_roles, org_id=domain_orm.organization_id) \
-                or is_super_admin(user_id=user_id):
+            if is_user_write(user_role=user_roles, org_id=domain_orm.organization_id):
                 Domains.query.filter(
                     Domains.domain == current_domain
                 ).update({'domain': updated_domain})
@@ -178,8 +176,7 @@ class RemoveDomain(graphene.Mutation):
                 raise GraphQLError("Error, domain does not exist.")
 
             # Check permissions
-            if is_user_write(user_role=user_roles, org_id=domain_orm.organization_id) \
-                or is_super_admin(user_id):
+            if is_user_write(user_role=user_roles, org_id=domain_orm.organization_id):
                 try:
                     # Get Domain Id
                     domain_id = Domains.query.filter(

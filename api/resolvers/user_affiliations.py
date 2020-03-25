@@ -31,7 +31,7 @@ def resolve_test_user_claims(self, info, **kwargs):
     org_id = org_orm.id
 
     if test_role == 'super_admin':
-        if is_super_admin(user_id=user_id):
+        if is_super_admin(user_role=roles):
             return 'User Passed Super Admin Claim'
         else:
             raise GraphQLError('Error, user is not a super admin')
