@@ -7,6 +7,7 @@ import {
   InputLeftElement,
   InputGroup,
   Icon,
+  Spinner,
 } from '@chakra-ui/core'
 
 import { Field } from 'formik'
@@ -17,28 +18,44 @@ export function PasswordConfirmation() {
 
   /* A function for the Formik to validate fields in the form */
   function validatePassword(value) {
-    if (value === '') {
-      setIcon('close')
-      return ' can not be empty'
-    } else if (String(value).length < 11) {
-      setIcon('close')
-      return ' must be 12 chars long'
-    } else {
-      setIcon('check')
-    }
+    setIcon('spinner')
+    setTimeout(() => {
+      if (value === '') {
+        setIcon('close')
+        return ' can not be empty'
+      } else if (String(value).length < 11) {
+        setIcon('close')
+        return ' must be 12 chars long'
+      } else {
+        setIcon('check')
+      }
+    }, 700)
+     if (value === '') {
+        return ' can not be empty'
+      } else if (String(value).length < 11) {
+        return ' must be 12 chars long'
+      } 
   }
 
   /* A function for the Formik to validate fields in the form */
   function validateConfirmPassword(value) {
+    setConfirmIcon('spinner')
+    setTimeout(() => {
+      if (value === '') {
+        setConfirmIcon('close')
+        return ' can not be empty'
+      } else if (value !== document.getElementById('password').value) {
+        setConfirmIcon('close')
+        return ' must match password'
+      } else {
+        setConfirmIcon('check')
+      }
+    }, 700)
     if (value === '') {
-      setConfirmIcon('close')
-      return ' can not be empty'
-    } else if (value !== document.getElementById('password').value) {
-      setConfirmIcon('close')
-      return ' must match password'
-    } else {
-      setConfirmIcon('check')
-    }
+        return ' can not be empty'
+      } else if (value !== document.getElementById('password').value) {
+        return ' must match password'
+      }
   }
 
   return (
@@ -53,17 +70,21 @@ export function PasswordConfirmation() {
           >
             <InputGroup>
               <InputLeftElement>
-                <Icon
-                  role="passwordIcon"
-                  name={icon}
-                  color={
-                    icon === 'lock'
-                      ? 'gray.300'
-                      : icon === 'check'
-                      ? 'green.500'
-                      : 'red.500'
-                  }
-                />
+                {icon === 'spinner' ? (
+                  <Spinner size="sm" color="gray.300" />
+                ) : (
+                  <Icon
+                    role="passwordIcon"
+                    name={icon}
+                    color={
+                      icon === 'lock'
+                        ? 'gray.300'
+                        : icon === 'check'
+                        ? 'green.500'
+                        : 'red.500'
+                    }
+                  />
+                )}
               </InputLeftElement>
               <Input {...field} id="password" placeholder="Password" />
             </InputGroup>
@@ -84,17 +105,21 @@ export function PasswordConfirmation() {
           >
             <InputGroup>
               <InputLeftElement>
-                <Icon
-                  role="confirmPasswordIcon"
-                  name={confirmIcon}
-                  color={
-                    confirmIcon === 'lock'
-                      ? 'gray.300'
-                      : confirmIcon === 'check'
-                      ? 'green.500'
-                      : 'red.500'
-                  }
-                />
+                {confirmIcon === 'spinner' ? (
+                  <Spinner size="sm" color="gray.300" />
+                ) : (
+                  <Icon
+                    role="confirmPasswordIcon"
+                    name={confirmIcon}
+                    color={
+                      confirmIcon === 'lock'
+                        ? 'gray.300'
+                        : confirmIcon === 'check'
+                        ? 'green.500'
+                        : 'red.500'
+                    }
+                  />
+                )}
               </InputLeftElement>
               <Input
                 {...field}
