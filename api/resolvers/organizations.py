@@ -37,33 +37,23 @@ def resolve_organization(self: Organization, info, **kwargs):
     # Gather Initial Organization Query Object
     query = Organization.get_query(info)
 
-    # Check to see if user has a super admin claim
-    if is_super_admin(user_role=user_roles):
+    # Get org orm to gather its id
+    org_orm = db.session.query(Organizations).filter(
+        Organizations.acronym == org
+    ).first()
+
+    # if org cannot be found
+    if not org_orm:
+        raise GraphQLError("Error, organization does not exist")
+    org_id = org_orm.id
+
+    # Check to ensure user has access to given org
+    if is_user_read(user_role=user_roles, org_id=org_id):
         query_rtn = query.filter(
             Organizations.acronym == org
         ).all()
-        # If no org can be matched
-        if not len(query_rtn):
-            raise GraphQLError("Error, organization does not exist")
-    # If user fails super admin check
     else:
-        # Get org orm to gather its id
-        org_orm = db.session.query(Organizations).filter(
-            Organizations.acronym == org
-        ).first()
-
-        # if org cannot be found
-        if not org_orm:
-            raise GraphQLError("Error, organization does not exist")
-        org_id = org_orm.id
-
-        # Check to ensure user has access to given org
-        if is_user_read(user_role=user_roles, org_id=org_id):
-            query_rtn = query.filter(
-                Organizations.acronym == org
-            ).all()
-        else:
-            raise GraphQLError("Error, you do not have permission to view that organization")
+        raise GraphQLError("Error, you do not have permission to view that organization")
 
     return query_rtn
 
