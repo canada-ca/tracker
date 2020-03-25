@@ -5,7 +5,7 @@ import { useFormik } from 'formik'
 import { Stack, SimpleGrid, Button, Text, Select, Input } from '@chakra-ui/core'
 
 export function UserPage() {
-  const formik = useFormik({
+  const userDetailsFormik = useFormik({
     initialValues: {
       email: 'steve@email.gc.ca',
       lang: 'select option',
@@ -17,7 +17,7 @@ export function UserPage() {
   })
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="40px" width="100%">
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={userDetailsFormik.handleSubmit}>
         <Stack p={10} spacing={6}>
           <Text fontSize="2xl" fontWeight="bold" textAlign="center">
             User Profile
@@ -30,8 +30,8 @@ export function UserPage() {
               id="displayName"
               name="displayName"
               type="text"
-              onChange={formik.handleChange}
-              value={formik.values.displayName}
+              onChange={userDetailsFormik.handleChange}
+              value={userDetailsFormik.values.displayName}
             />
           </Stack>
 
@@ -42,8 +42,8 @@ export function UserPage() {
               id="email"
               name="email"
               type="email"
-              onChange={formik.handleChange}
-              value={formik.values.email}
+              onChange={userDetailsFormik.handleChange}
+              value={userDetailsFormik.values.email}
             />
           </Stack>
 
@@ -55,8 +55,8 @@ export function UserPage() {
               name="lang"
               type="text"
               placeholder="Select option"
-              onChange={formik.handleChange}
-              value={formik.values.lang}
+              onChange={userDetailsFormik.handleChange}
+              value={userDetailsFormik.values.lang}
             >
               <option value="en">English</option>
               <option value="fr">French</option>
@@ -66,7 +66,10 @@ export function UserPage() {
         </Stack>
       </form>
 
-      <Stack bg="tomato" height="80px"></Stack>
+      <Stack Stack p={10} spacing={6} bg="tomato">
+      <Text fontSize="2xl" fontWeight="bold" textAlign="center">Account Details</Text>
+
+      </Stack>
       <Stack bg="tomato" height="80px"></Stack>
     </SimpleGrid>
   )
