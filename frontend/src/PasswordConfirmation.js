@@ -22,19 +22,17 @@ export function PasswordConfirmation() {
     setTimeout(() => {
       if (value === '') {
         setIcon('close')
-        return ' can not be empty'
       } else if (String(value).length < 11) {
         setIcon('close')
-        return ' must be 12 chars long'
       } else {
         setIcon('check')
       }
-    }, 700)
-     if (value === '') {
-        return ' can not be empty'
-      } else if (String(value).length < 11) {
-        return ' must be 12 chars long'
-      } 
+    }, 600)
+    if (value === '') {
+      return ' can not be empty'
+    } else if (String(value).length < 11) {
+      return ' must be 12 chars long'
+    }
   }
 
   /* A function for the Formik to validate fields in the form */
@@ -43,19 +41,17 @@ export function PasswordConfirmation() {
     setTimeout(() => {
       if (value === '') {
         setConfirmIcon('close')
-        return ' can not be empty'
       } else if (value !== document.getElementById('password').value) {
         setConfirmIcon('close')
-        return ' must match password'
       } else {
         setConfirmIcon('check')
       }
-    }, 700)
+    }, 600)
     if (value === '') {
-        return ' can not be empty'
-      } else if (value !== document.getElementById('password').value) {
-        return ' must match password'
-      }
+      return ' can not be empty'
+    } else if (value !== document.getElementById('password').value) {
+      return ' must match password'
+    }
   }
 
   return (
