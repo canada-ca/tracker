@@ -26,18 +26,18 @@ def resolve_domain(self: Domain, info, **kwargs):
     # Get Information passed in via kwargs
     user_id = kwargs.get('user_id')
     url = kwargs.get('url')
-    user_role = kwargs.get('user_roles')
+    user_roles = kwargs.get('user_roles')
 
     # Generate list of org's the user has access to
     org_id_list = []
-    for role in user_role:
+    for role in user_roles:
         org_id_list.append(role["org_id"])
 
     # Get initial Domain Query Object
     query = Domain.get_query(info)
 
     # Check to see if the user is a super admin, if true return all information
-    if is_super_admin(user_id=user_id):
+    if is_super_admin(user_role=user_roles):
         query_rtn = query.filter(
             Domains.domain == url
         ).all()
@@ -59,7 +59,7 @@ def resolve_domain(self: Domain, info, **kwargs):
         org_id = org_orm.id
 
         # Check if user has read access or higher to the requested organization
-        if is_user_read(user_role, org_id):
+        if is_user_read(user_roles, org_id):
             query_rtn = query.filter(
                 Domains.domain == url
             ).filter(
@@ -114,7 +114,7 @@ def resolve_domains(self, info, **kwargs):
 
         # Check if user is super admin, and if true return all domains belonging to
         # that domain
-        if is_super_admin(user_id=user_id):
+        if is_super_admin(user_role=user_role):
             query_rtn = query.filter(
                 Domains.organization_id == org_id
             ).all()

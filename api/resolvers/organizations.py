@@ -38,7 +38,7 @@ def resolve_organization(self: Organization, info, **kwargs):
     query = Organization.get_query(info)
 
     # Check to see if user has a super admin claim
-    if is_super_admin(user_id=user_id):
+    if is_super_admin(user_role=user_roles):
         query_rtn = query.filter(
             Organizations.acronym == org
         ).all()
@@ -93,7 +93,7 @@ def resolve_organizations(self, info, **kwargs):
     query = Organization.get_query(info)
 
     # Check to see if user has a super admin claim
-    if is_super_admin(user_id=user_id):
+    if is_super_admin(user_role=user_roles):
         query_rtn = query.all()
         # If no org can be matched
         if not len(query_rtn):

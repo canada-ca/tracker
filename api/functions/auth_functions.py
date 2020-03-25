@@ -8,18 +8,15 @@ user_write_perms = ['super_admin', 'admin', 'user_write']
 user_read_perms = ['super_admin', 'admin', 'user_write', 'user_read']
 
 
-def is_super_admin(user_id):
+def is_super_admin(user_role):
     """
-    :param user_id: users id
+    :param user_role: users roles
     :return: Returns true or false based on if this user is the given role
     """
     with app.app_context():
-        user_is_super_admin = User_affiliations.query \
-            .filter(User_affiliations.user_id == user_id) \
-            .filter(User_affiliations.permission == 'super_admin') \
-            .first()
-    if user_is_super_admin:
-        return True
+        for role in user_role:
+            if role['permission'] == "super_admin":
+                return True
     return False
 
 
@@ -31,7 +28,10 @@ def is_admin(user_role, org_id):
     """
     with app.app_context():
         for role in user_role:
-            if role['org_id'] == org_id and role['permission'] in admin_perms:
+            if (
+                role['org_id'] == org_id and
+                role['permission'] in admin_perms
+            ) or role['permission'] == 'super_admin':
                 return True
     return False
 
@@ -44,7 +44,10 @@ def is_user_write(user_role, org_id):
     """
     with app.app_context():
         for role in user_role:
-            if role['org_id'] == org_id and role['permission'] in user_write_perms:
+            if (
+                role['org_id'] == org_id and
+                role['permission'] in user_write_perms
+            ) or role['permission'] == 'super_admin':
                 return True
     return False
 
@@ -57,6 +60,9 @@ def is_user_read(user_role, org_id):
     """
     with app.app_context():
         for role in user_role:
-            if role['org_id'] == org_id and role['permission'] in user_read_perms:
+            if (
+                role['org_id'] == org_id and
+                role['permission'] in user_read_perms
+            ) or role['permission'] == 'super_admin':
                 return True
     return False
