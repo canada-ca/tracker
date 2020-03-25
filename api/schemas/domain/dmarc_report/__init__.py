@@ -21,7 +21,9 @@ class DmarcReport(SQLAlchemyObjectType):
             'id',
             'start_date',
             'end_date',
-            'report'
+            'report',
+            'domain_id',
+            'domain'
         )
     report_id = graphene.String(
         description="ID of the report."
