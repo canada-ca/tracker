@@ -30,7 +30,6 @@ class AuthResults(graphene.ObjectType):
     def resolve_spf(self: dict, info):
         rtr_list = []
         for spf_record in self['spf']:
-            print(spf_record)
             rtr_list.append(SpfReport(
                 spf_record['domain'],
                 spf_record['scope'],
