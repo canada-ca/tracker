@@ -9,8 +9,6 @@ from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin
 from functions.input_validators import cleanse_input
 
-from model_enums.organiztions import OrganizationsEnum
-
 from models import (
     Organizations,
     User_affiliations,
