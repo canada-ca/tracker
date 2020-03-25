@@ -10,6 +10,7 @@ import {
   waitForElement,
   fireEvent,
   getByText,
+  getByRole,
 } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { CreateUserPage } from '../CreateUserPage'
@@ -120,5 +121,25 @@ describe('<CreateUserPage />', () => {
     )
 
     expect(errorElement.innerHTML).toMatch(/Confirm Password can not be empty/i)
+  })
+
+  test('an empty input for password field displays an error icon', async () => {
+    const { container } = render(
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <MockedProvider>
+              <CreateUserPage />
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
+    )
+
+    expect(render).toBeTruthy()
+
+    const icon = getByRole(container, "passwordIcon")
+    expect(icon).toBeTruthy()
+   console.log(icon)
   })
 })

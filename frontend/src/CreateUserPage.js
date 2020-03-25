@@ -61,7 +61,7 @@ export function CreateUserPage() {
   }
 
   /* A function for the Formik to validate fields in the form */
-  function validateField(value) {
+  function validateEmail(value) {
     let error
     if (!value || value === '') {
       error = ' can not be empty'
@@ -92,7 +92,7 @@ export function CreateUserPage() {
       >
         {props => (
           <form id="form" onSubmit={props.handleSubmit}>
-            <Field name="email" validate={validateField}>
+            <Field name="email" validate={validateEmail}>
               {({ field, form }) => (
                 <FormControl
                   mt={4}

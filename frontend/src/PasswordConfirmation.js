@@ -57,6 +57,7 @@ export function PasswordConfirmation() {
             <InputGroup>
               <InputLeftElement>
                 <Icon
+                  role="passwordIcon"
                   name={icon}
                   color={
                     icon === 'lock'
@@ -87,6 +88,7 @@ export function PasswordConfirmation() {
             <InputGroup>
               <InputLeftElement>
                 <Icon
+                  role="confirmPasswordIcon"
                   name={confirmIcon}
                   color={
                     confirmIcon === 'lock'
