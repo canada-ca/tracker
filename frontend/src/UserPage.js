@@ -1,10 +1,32 @@
 import React from 'react'
 
 import { useFormik } from 'formik'
+import { useHistory } from 'react-router-dom'
 
-import { Stack, SimpleGrid, Button, Text, Select, Input } from '@chakra-ui/core'
+import {
+  Stack,
+  SimpleGrid,
+  Button,
+  Text,
+  Select,
+  Input,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Divider,
+  Checkbox,
+  CheckboxGroup,
+  useToast,
+} from '@chakra-ui/core'
+import { useApolloClient } from '@apollo/react-hooks'
 
 export function UserPage() {
+  const client = useApolloClient()
+  const toast = useToast()
+  const history = useHistory()
+
   const userDetailsFormik = useFormik({
     initialValues: {
       email: 'steve@email.gc.ca',
@@ -16,17 +38,16 @@ export function UserPage() {
     },
   })
   return (
-    <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="40px" width="100%">
+    <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <form onSubmit={userDetailsFormik.handleSubmit}>
-        <Stack p={10} spacing={6}>
+        <Stack p={25} spacing={4}>
           <Text fontSize="2xl" fontWeight="bold" textAlign="center">
             User Profile
           </Text>
 
-          <Stack>
+          <Stack mt="20px">
             <Text fontSize="xl">Display Name:</Text>
             <Input
-              width="60%"
               id="displayName"
               name="displayName"
               type="text"
@@ -38,7 +59,6 @@ export function UserPage() {
           <Stack>
             <Text fontSize="xl">Email:</Text>
             <Input
-              width="60%"
               id="email"
               name="email"
               type="email"
@@ -50,7 +70,6 @@ export function UserPage() {
           <Stack>
             <Text fontSize="xl">Language:</Text>
             <Select
-              width="60%"
               id="lang"
               name="lang"
               type="text"
@@ -62,15 +81,90 @@ export function UserPage() {
               <option value="fr">French</option>
             </Select>
           </Stack>
-          <Button type="submit">Save Changes</Button>
+          <Button type="submit" variantColor="teal" w={'50%'} mt={5}>
+            Save Changes
+          </Button>
         </Stack>
       </form>
 
-      <Stack Stack p={10} spacing={6} bg="tomato">
-      <Text fontSize="2xl" fontWeight="bold" textAlign="center">Account Details</Text>
-
+      <Stack Stack p={25} spacing={4}>
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+          Account Details
+        </Text>
+        <CheckboxGroup
+          mt="20px"
+          variantColor="teal"
+          defaultValue={['admin', 'active']}
+        >
+          <Checkbox value="admin">Administrative Account</Checkbox>
+          <Checkbox value="active">Account Active</Checkbox>
+        </CheckboxGroup>
+        <Stack>
+          <Text fontSize="xl">API Quota:</Text>
+          <NumberInput
+            id="apiQuota"
+            name="apiQuota"
+            defaultValue={15}
+            min={10}
+            max={20}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </Stack>
+        <Stack>
+          <Text fontSize="xl">Submission Quota:</Text>
+          <NumberInput
+            id="submissionQuota"
+            name="submissionQuota"
+            defaultValue={15}
+            min={10}
+            max={20}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </Stack>
+        <Divider />
+        <Stack isInline>
+          <Button leftIcon="lock" variantColor="blue"  onClick={() => {history.push('/two-factor-code')}}>
+            Enable 2FA
+          </Button>
+          <Button leftIcon="edit" variantColor="teal" onClick={() => {window.alert("coming soon")}}>
+            Manage API keys
+          </Button>
+        </Stack>
+        <Button
+          variantColor="teal"
+          w={'50%'}
+          onClick={() => {
+            // This clears the JWT, essentially logging the user out in one go
+            client.writeData({ data: { jwt: null } }) // How is this done?
+            history.push('/')
+            toast({
+              title: 'Sign Out.',
+              description: 'You have successfully been signed out.',
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
+          }}
+        >
+          Sign Out
+        </Button>
       </Stack>
-      <Stack bg="tomato" height="80px"></Stack>
+      <Stack p={25} spacing={4}>
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+          Change Password
+        </Text>
+        <p>PasswordConfirm componenet goes here.</p>
+      </Stack>
     </SimpleGrid>
   )
 }
