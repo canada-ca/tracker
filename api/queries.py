@@ -142,19 +142,6 @@ class Query(graphene.ObjectType):
             return resolve_domains(self, info, **kwargs)
     # --- End Domain Queries ---
 
-    # --- Start DMARC Report Queries ---
-    dmarc_reports = SQLAlchemyConnectionField(
-        DmarcReport._meta.connection,
-        domain=graphene.Argument(URL, required=True),
-        start_date=graphene.Argument(graphene.Date, required=False),
-        end_date=graphene.Argument(graphene.Date, required=False),
-        sort=None
-    )
-    with app.app_context():
-        def resolve_dmarc_reports(self, info, **kwargs):
-            return resolve_dmarc_reports(self, info, **kwargs)
-    # --- End DMARC Report Queries ---
-
     generate_otp_url = graphene.String(
         email=graphene.Argument(EmailAddress, required=True),
         resolver=resolve_generate_otp_url,

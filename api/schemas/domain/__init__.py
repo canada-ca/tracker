@@ -7,6 +7,8 @@ from app import app
 from models import Domains, Scans, Dmarc_Reports
 from scalars.url import URL
 
+from resolvers.dmarc_report import resolve_dmarc_reports
+
 from schemas.domain.email_scan import EmailScan
 from schemas.domain.www_scan import WWWScan
 from schemas.dmarc_report import DmarcReport
@@ -37,6 +39,8 @@ class Domain(SQLAlchemyObjectType):
     )
     dmarc_report = graphene.ConnectionField(
         DmarcReport._meta.connection,
+        start_date=graphene.Argument(graphene.Date, required=False),
+        end_date=graphene.Argument(graphene.Date, required=False),
         description="DMARC aggregate report"
     )
 
@@ -58,12 +62,9 @@ class Domain(SQLAlchemyObjectType):
             )
             return query.all()
 
-        def resolve_dmarc_report(self: Domains, info):
-            query = DmarcReport.get_query(info)
-            query = query.filter(
-                Dmarc_Reports.id == self.id
-            )
-            return query.all()
+        def resolve_dmarc_report(self: Domains, info, **kwargs):
+            kwargs['domain'] = self.domain
+            return resolve_dmarc_reports(self, info, **kwargs)
 
 
 class DomainConnection(relay.Connection):
