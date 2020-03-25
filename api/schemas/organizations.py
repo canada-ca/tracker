@@ -70,7 +70,7 @@ class Organization(SQLAlchemyObjectType):
             return self.org_tags["sector"]
 
         def resolve_province(self: OrgModel, info):
-            return self.org_tags["prov"]
+            return self.org_tags["province"]
 
         def resolve_city(self: OrgModel, info):
             return self.org_tags["city"]
