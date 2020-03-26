@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.8.2-alpine
 
 # Python, don't write bytecode!
 ENV PYTHONDONTWRITEBYTECODE 1
