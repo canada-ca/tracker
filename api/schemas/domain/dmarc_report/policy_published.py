@@ -3,7 +3,7 @@ import graphene
 from scalars.url import URL
 
 
-class PolicyPbulished(graphene.ObjectType):
+class PolicyPublished(graphene.ObjectType):
     """
     Domains published policy
     """

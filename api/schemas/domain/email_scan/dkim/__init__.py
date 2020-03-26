@@ -32,7 +32,7 @@ class DKIM(SQLAlchemyObjectType):
         description="DKIM record retrieved during the scan of the "
                     "given domain "
     )
-    key_length = graphene.Int(
+    key_length = graphene.String(
         description="Length of DKIM public key"
     )
     dkim_guidance_tags = graphene.List(

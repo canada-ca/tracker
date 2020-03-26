@@ -7,7 +7,7 @@ from app import app
 
 from models import Dmarc_Reports
 
-from schemas.domain.dmarc_report.policy_published import PolicyPbulished
+from schemas.domain.dmarc_report.policy_published import PolicyPublished
 from schemas.domain.dmarc_report.records import Record
 
 
@@ -46,7 +46,7 @@ class DmarcReport(SQLAlchemyObjectType):
         description="Errors that occurred during the report generation"
     )
     policy_published = graphene.Field(
-        lambda: PolicyPbulished,
+        lambda: PolicyPublished,
         description='DMARC published policies'
     )
     records = graphene.List(
@@ -74,7 +74,7 @@ class DmarcReport(SQLAlchemyObjectType):
             return self.report['report_metadata']['errors']
 
         def resolve_policy_published(self: Dmarc_Reports, info):
-            return PolicyPbulished(
+            return PolicyPublished(
                 self.report['policy_published']['domain'],
                 self.report['policy_published']['adkim'],
                 self.report['policy_published']['aspf'],
