@@ -54,6 +54,6 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: build
     dir: api
-    args: ['build', '-t','gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA', '.']
+    args: ['build', '-t','gcr.io/$PROJECT_ID/api/$BRANCH_NAME-$SHORT_SHA', '.']
 
-images: ['gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA']
+images: ['gcr.io/$PROJECT_ID/api/$BRANCH_NAME-$SHORT_SHA']
