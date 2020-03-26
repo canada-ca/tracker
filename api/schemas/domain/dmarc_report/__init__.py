@@ -47,7 +47,7 @@ class DmarcReport(SQLAlchemyObjectType):
     )
     policy_published = graphene.Field(
         lambda: PolicyPbulished,
-        description=''
+        description='DMARC published policies'
     )
     records = graphene.List(
         lambda: Record,

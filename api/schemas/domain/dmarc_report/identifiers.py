@@ -5,6 +5,12 @@ class Identifiers(graphene.ObjectType):
     """
 
     """
-    header_from = graphene.String()
-    envelope_from = graphene.String()
-    envelope_to = graphene.String()
+    header_from = graphene.String(
+        description=''
+    )
+    envelope_from = graphene.String(
+        description=''
+    )
+    envelope_to = graphene.String(
+        description=''
+    )

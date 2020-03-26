@@ -13,12 +13,12 @@ class Alignment(graphene.ObjectType):
     """
 
     spf = graphene.Boolean(
-        description='SPF is "aligned"'
+        description='Is SPF aligned'
     )
     dkim = graphene.Boolean(
-        description='DKIM is "aligned"'
+        description='Is DKIM aligned'
     )
     dmarc = graphene.Boolean(
-        description='DMARC is "aligned"'
+        description='Is DMARC aligned'
     )
 

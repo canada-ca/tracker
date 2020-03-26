@@ -10,11 +10,11 @@ class AuthResults(graphene.ObjectType):
     """
     dkim = graphene.List(
         lambda: DkimReport,
-        description="DKIM domain results"
+        description="DKIM domain raw results"
     )
     spf = graphene.List(
         lambda: SpfReport,
-        description='SPF domain results'
+        description='SPF domain raw results'
     )
 
     def resolve_dkim(self: dict, info):

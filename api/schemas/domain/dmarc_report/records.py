@@ -17,22 +17,22 @@ class Record(graphene.ObjectType):
     )
     source = graphene.Field(
         lambda: Source,
-        description=''
+        description='DMARC source information'
     )
     alignment = graphene.Field(
         lambda: Alignment,
-        description=''
+        description='DMARC alignment\'s'
     )
     policy_evaluated = graphene.Field(
         lambda: PolicyEvaluated,
-        description=''
+        description='DMARC policy evaluation'
     )
     identifiers = graphene.Field(
         lambda: Identifiers,
-        description=''
+        description='Identifiers Object'
     )
     auth_results = graphene.Field(
         lambda: AuthResults,
-        description=''
+        description='Raw DKIM, and SPF results'
     )
 
