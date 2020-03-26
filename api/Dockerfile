@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.8.2-alpine
 LABEL maintainer="mike.williamson@tbs-sct.gc.ca"
 
 ENV PYTHONUNBUFFERED=TRUE
