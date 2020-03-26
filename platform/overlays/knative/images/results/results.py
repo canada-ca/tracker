@@ -198,12 +198,10 @@ def process_results(results, scan_type, scan_id):
 
                 ###
                 # ITPIN cares about usage of TLS 1.0/1.1/1.2
-                highest_ssl_version_supported = None
 
                 for version in ["SSLV2", "SSLV3", "TLSV1", "TLSV1_1", "TLSV1_2", "TLSV1_3"]:
-                    if version in results.keys():
+                    if version == results["TLS"]["supported"]:
                         report[version] = True
-                        highest_ssl_version_supported = version
                     else:
                         report[version] = False
 
@@ -250,25 +248,27 @@ def insert(report, scan_type, scan_id):
 
     scan = Scans.query.filter(Scans.id == scan_id).first()
 
-    if scan_type is "https":
-        result_obj = Https_scans(https_scan={"https": report}, https_flagged_scan=scan)
-        db.session.add(result_obj)
-    elif scan_type is "ssl":
-        result_obj = Ssl_scans(ssl_scan={"ssl": report}, ssl_flagged_scan=scan)
-        db.session.add(result_obj)
-    elif scan_type is "dmarc":
-        dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": report["dmarc"]}, dmarc_flagged_scan=scan)
-        mx_obj = Mx_scans(mx_scan={"mx": report["mx"]}, mx_flagged_scan=scan)
-        spf_obj = Spf_scans(spf_scan={"spf": report["spf"]}, spf_flagged_scan=scan)
-        db.session.add(dmarc_obj)
-        db.session.add(mx_obj)
-        db.session.add(spf_obj)
-    elif scan_type is "dkim":
-        result_obj = Dkim_scans(dkim_scan={"dkim": report}, dkim_flagged_scan=scan)
-        db.session.add(result_obj)
-
     try:
-        db.session.commit()
+
+        if scan_type is "https":
+            result_obj = Https_scans(https_scan={"https": report}, https_flagged_scan=scan)
+            db.session.add(result_obj)
+        elif scan_type is "ssl":
+            result_obj = Ssl_scans(ssl_scan={"ssl": report}, ssl_flagged_scan=scan)
+            db.session.add(result_obj)
+        elif scan_type is "dmarc":
+            dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": report["dmarc"]}, dmarc_flagged_scan=scan)
+            mx_obj = Mx_scans(mx_scan={"mx": report["mx"]}, mx_flagged_scan=scan)
+            spf_obj = Spf_scans(spf_scan={"spf": report["spf"]}, spf_flagged_scan=scan)
+            db.session.add(dmarc_obj)
+            db.session.add(mx_obj)
+            db.session.add(spf_obj)
+        elif scan_type is "dkim":
+            result_obj = Dkim_scans(dkim_scan={"dkim": report}, dkim_flagged_scan=scan)
+            db.session.add(result_obj)
+
+            db.session.commit()
+
     except Exception as e:
         db.session.rollback()
         db.session.flush()
