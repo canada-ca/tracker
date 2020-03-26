@@ -311,6 +311,8 @@ spec:
         autoscaling.knative.dev/metric: concurrency
         # Target 10 requests in-flight per pod.
         autoscaling.knative.dev/target: "10"
+        # Disable scaling to zero
+        autoscaling.knative.dev/minScale: "1"
         # Limit scaling to 10 pods.
         autoscaling.knative.dev/maxScale: "10"
     spec:
