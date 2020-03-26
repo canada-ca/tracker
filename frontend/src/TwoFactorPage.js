@@ -13,18 +13,12 @@ import {
 } from '@chakra-ui/core'
 import { Formik, Field } from 'formik'
 import { useMutation } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import VALIDATE_TWO_FACTOR from './graphql/mutations/validateTwoFactor'
 
 export function TwoFactorPage() {
-  const [validateOTP, { loading, error, data }] = useMutation(gql`
-    mutation ValidateTwoFactor($userName: EmailAddress!, $otpCode: String!) {
-      authenticateTwoFactor(userName: $userName, otpCode: $otpCode) {
-        user {
-          userName
-        }
-      }
-    }
-  `)
+  const [validateOTP, { loading, error, data }] = useMutation(
+    VALIDATE_TWO_FACTOR,
+  )
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
