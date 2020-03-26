@@ -21,11 +21,11 @@ class Record(graphene.ObjectType):
     )
     alignment = graphene.Field(
         lambda: Alignment,
-        description='DMARC alignment\'s'
+        description='DMARC alignment object'
     )
     policy_evaluated = graphene.Field(
         lambda: PolicyEvaluated,
-        description='DMARC policy evaluation'
+        description='DMARC policy evaluation object'
     )
     identifiers = graphene.Field(
         lambda: Identifiers,

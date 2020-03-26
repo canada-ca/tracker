@@ -6,14 +6,14 @@ class Source(graphene.ObjectType):
     Domain information
     """
     ip_address = graphene.String(
-        description=''
+        description='Source IP Address'
     )
     country = graphene.String(
-        description=''
+        description='Source Country'
     )
     reverse_dns = graphene.String(
-        description=''
+        description='Reverse DNS (also known as rDNS) uses PTR records to associate IP addresses with domain names'
     )
     base_domain = graphene.String(
-        description=''
+        description='DMARC base domain'
     )

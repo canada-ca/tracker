@@ -13,7 +13,7 @@ from schemas.domain.dmarc_report.records import Record
 
 class DmarcReport(SQLAlchemyObjectType):
     """
-    Generated DMARC Aggregated Report Object
+    Generated DMARC Aggregated Report's
     """
     class Meta:
         model = Dmarc_Reports

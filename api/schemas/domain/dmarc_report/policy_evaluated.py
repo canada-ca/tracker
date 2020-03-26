@@ -6,13 +6,13 @@ class PolicyEvaluated(graphene.ObjectType):
     Policies evaluated
     """
     disposition = graphene.String(
-        description=''
+        description='Tells mail receivers what do do with messages that do not pass your rules'
     )
     dkim = graphene.String(
-        description=''
+        description='DKIM pass/fail'
     )
     spf = graphene.String(
-        description=''
+        description='SPF pass/fail'
     )
     policy_override_reasons = graphene.List(
         lambda: graphene.String,
