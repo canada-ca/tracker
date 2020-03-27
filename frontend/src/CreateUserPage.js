@@ -12,32 +12,14 @@ import {
   useToast,
   Icon,
 } from '@chakra-ui/core'
-import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { Field, Formik } from 'formik'
+import CREATE_USER from './graphql/mutations/createUser'
 import { PasswordConfirmation } from './PasswordConfirmation'
 
 export function CreateUserPage() {
-  const [createUser, { loading, error, data }] = useMutation(gql`
-    mutation CreateUser(
-      $displayName: String!
-      $userName: EmailAddress!
-      $password: String!
-      $confirmPassword: String!
-    ) {
-      createUser(
-        displayName: $displayName
-        userName: $userName
-        password: $password
-        confirmPassword: $confirmPassword
-      ) {
-        user {
-          userName
-        }
-      }
-    }
-  `)
+  const [createUser, { loading, error, data }] = useMutation(CREATE_USER)
 
   const history = useHistory()
   const toast = useToast()

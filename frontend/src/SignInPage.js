@@ -19,8 +19,9 @@ import {
 } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import { Formik, Field } from 'formik'
+
+import SIGN_IN from './graphql/mutations/signIn'
 
 export function SignInPage() {
   const history = useHistory()
@@ -29,54 +30,41 @@ export function SignInPage() {
 
   const { i18n } = useLingui()
 
-  const [signIn, { loading, error }] = useMutation(
-    gql`
-      mutation SignIn($userName: EmailAddress!, $password: String!) {
-        signIn(userName: $userName, password: $password) {
-          user {
-            userName
-            tfaValidated
-          }
-          authToken
-        }
-      }
-    `,
-    {
-      update(cache, { data: { signIn } }) {
-        // write the users token to the cache
-        cache.writeData({
-          data: {
-            jwt: signIn.authToken,
-            tfa: signIn.user.tfaValidated,
-          },
-        })
-      },
-      onError(e) {
-        console.log('Error!', e)
-        toast({
-          title: i18n._('An error occurred.'),
-          description: i18n._(
-            'Unable to sign in to your account, please try again.',
-          ),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      },
-      onCompleted() {
-        // redirect to the home page.
-        history.push('/')
-        // Display a welcome message
-        toast({
-          title: i18n._('Sign In.'),
-          description: i18n._('Welcome, you are successfully signed in!'),
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-        })
-      },
+  const [signIn, { loading, error }] = useMutation(SIGN_IN, {
+    update(cache, { data: { signIn } }) {
+      // write the users token to the cache
+      cache.writeData({
+        data: {
+          jwt: signIn.authToken,
+          tfa: signIn.user.tfaValidated,
+        },
+      })
     },
-  )
+    onError(e) {
+      console.log('Error!', e)
+      toast({
+        title: i18n._('An error occurred.'),
+        description: i18n._(
+          'Unable to sign in to your account, please try again.',
+        ),
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+    onCompleted() {
+      // redirect to the home page.
+      history.push('/')
+      // Display a welcome message
+      toast({
+        title: i18n._('Sign In.'),
+        description: i18n._('Welcome, you are successfully signed in!'),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+  })
 
   const validationSchema = object().shape({
     password: string().required(i18n._('Password cannot be empty')),
