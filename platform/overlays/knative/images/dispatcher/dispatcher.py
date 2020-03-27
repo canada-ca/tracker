@@ -49,13 +49,12 @@ def receive():
         scan_id = decoded_payload["scan_id"]
 
         # TODO Replace secret
-        encoded_payload = jwt.encode(
-            payload,
+        header_token = jwt.encode(
             "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
-        th = threading.Thread(target=dispatch, args=[encoded_payload, dkim_flag, user_initialized, scan_id])
+        th = threading.Thread(target=dispatch, args=[payload, dkim_flag, user_initialized, scan_id, header_token])
         th.start()
 
         return 'Domain dispatched to designated scanner(s)'
@@ -73,10 +72,11 @@ def receive():
         return 'Failed to dispatch domain to designated scanner(s)'
 
 
-def dispatch(payload, dkim_flag, manual, scan_id):
+def dispatch(payload, dkim_flag, manual, scan_id, header_token):
     headers = {
         "Content-Type": "application/json",
-        "Host": None
+        "Host": None,
+        "Token": header_token
     }
 
     if not manual:

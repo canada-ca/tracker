@@ -55,13 +55,12 @@ def receive():
             raise Exception("(SCAN: %s) - An error occurred while attempting to establish SSL connection" % scan_id)
 
         # TODO Replace secret
-        encoded_payload = jwt.encode(
-            payload,
+        headers["Token"] = jwt.encode(
             "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
-        th = threading.Thread(target=dispatch, args=[encoded_payload, scan_id])
+        th = threading.Thread(target=dispatch, args=[payload, scan_id])
         th.start()
 
         return 'Scan sent to result-handling service'
@@ -71,14 +70,14 @@ def receive():
         return 'Failed to send scan to result-handling service'
 
 
-def dispatch(payload, id):
+def dispatch(payload, scan_id):
     try:
         response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
-        logging.info("Scan %s completed. Results queued for processing...\n" % id)
+        logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
         return str(response.text)
     except Exception as e:
-        logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (id, e))
+        logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
 
 
 def get_server_info(scan_id, domain):
