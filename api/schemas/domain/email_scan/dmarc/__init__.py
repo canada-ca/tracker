@@ -35,8 +35,8 @@ class DMARC(SQLAlchemyObjectType):
     )
     p_policy = graphene.String(
         description="The requested policy you wish mailbox providers to apply "
-                    "when your email fails DMARC authentication and alignment"
-                    " checks. "
+                    "when your email fails DMARC authentication and alignment "
+                    "checks. "
     )
     sp_policy = graphene.String(
         description="This tag is used to indicate a requested policy for all "
