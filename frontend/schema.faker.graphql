@@ -740,7 +740,7 @@ type Query {
 """DMARC aggregate report record"""
 type Record {
   count: Int
-    @exmaples(
+    @examples(
       values: [
         1
       ]
