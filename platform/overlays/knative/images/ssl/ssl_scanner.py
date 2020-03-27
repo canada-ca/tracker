@@ -24,14 +24,6 @@ headers = {
 
 app = Flask(__name__)
 
-STARTTLS_PORTS = {
-    587: TlsWrappedProtocolEnum.STARTTLS_SMTP,
-    25: TlsWrappedProtocolEnum.STARTTLS_SMTP,
-    110: TlsWrappedProtocolEnum.STARTTLS_POP3,
-    143: TlsWrappedProtocolEnum.STARTTLS_IMAP,
-    220: TlsWrappedProtocolEnum.STARTTLS_IMAP
-}
-
 
 @app.route('/receive', methods=['GET', 'POST'])
 def receive():
@@ -41,7 +33,7 @@ def receive():
     try:
         # TODO Replace secret
         decoded_payload = jwt.decode(
-            request.get_data(),
+            request.headers.get("Token"),
             "test_jwt",
             algorithm=['HS256']
         )
@@ -89,53 +81,21 @@ def get_server_info(scan_id, domain):
         server_info = server_tester.perform()
         logging.info("(SCAN: %s) - Server Info %s\n" % (scan_id, server_info))
 
-        # TLS connection succeeded. Try establishing upgraded TLS connection via Opportunistic TLS
-        for port, protocol in STARTTLS_PORTS.items():
-            if server_info is None:
-                server_info = get_server_info_starttls(scan_id, domain, port, protocol)
-            if server_info is not None:
-                return server_info, True
-
-        return server_info, False
+        return server_info
 
     except ServerConnectivityError as e:
 
         server_info = None
         # Could not establish a TLS connection to the server
-        logging.error("(SCAN: %s) - Could not establish TLS connection to %s: %s.... Attempting to establish StartTLS connection" % (scan_id, e.server_info.hostname, e.error_message))
-
-        # TLS connection failed... try to upgrade connection using StartTLS
-        for port, protocol in STARTTLS_PORTS.items():
-            if server_info is None:
-                server_info = get_server_info_starttls(scan_id, domain, port, protocol)
-
-        if server_info is not None:
-            return server_info, True
-        else:
-            # Could not establish a StartTLS connection to the server
-            logging.error("(SCAN: %s) - Could not establish secure connection to %s using StartTLS: %s" % (
-            scan_id, e.server_info.hostname, e.error_message))
-            return None, False
-
-
-def get_server_info_starttls(scan_id, domain, port, protocol):
-    try:
-        server_tester = ServerConnectivityTester(hostname=domain, port=port, tls_wrapped_protocol=protocol)
-        logging.info("\n(SCAN: %s) - Testing connectivity with %s:%s..." % (
-            scan_id, server_tester.hostname, server_tester.port))
-        server_info = server_tester.perform()
-        logging.info("(SCAN: %s) - Server Info %s\n" % (scan_id, server_info))
         return server_info
 
-    except ServerConnectivityError as e:
-        return None
 
 
 def scan(scan_id, domain):
 
-    server_info, starttls = get_server_info(scan_id, domain)
+    server_info = get_server_info(scan_id, domain)
 
-    if not server_info:
+    if server_info is None:
         return None
     else:
         tls_supported = str(server_info.highest_ssl_version_supported).split('.')[1]
@@ -161,7 +121,7 @@ def scan(scan_id, domain):
 
     scan_results = concurrent_scanner.get_results()
 
-    res = {"starttls": starttls, "TLS": {}}
+    res = {"TLS": {}}
     for result in scan_results:
         if result.__class__.__name__ is "CipherSuiteScanResult":
 

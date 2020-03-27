@@ -27,7 +27,7 @@ def receive():
     try:
         # TODO Replace secret
         decoded_payload = jwt.decode(
-            request.get_data(),
+            request.headers.get("Token"),
             "test_jwt",
             algorithm=['HS256']
         )
