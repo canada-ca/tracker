@@ -1,6 +1,6 @@
 import graphene
 from graphene import relay
-from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
+from graphene_sqlalchemy import SQLAlchemyConnectionField
 
 from app import app
 
@@ -117,10 +117,9 @@ class Query(graphene.ObjectType):
     # --- End Organization Queries ---
 
     # --- Start Domain Queries ---
-    domain = SQLAlchemyConnectionField(
-        Domain._meta.connection,
+    domain = graphene.List(
+        lambda: Domain,
         url=graphene.Argument(URL, required=True),
-        sort=None,
         description="Select information on a specific domain."
     )
     with app.app_context():

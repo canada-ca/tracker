@@ -31,7 +31,7 @@ class SPF(SQLAlchemyObjectType):
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
-    lookups = graphene.String(
+    lookups = graphene.Int(
         description="The current amount of DNS lookups"
     )
     record = graphene.String(
