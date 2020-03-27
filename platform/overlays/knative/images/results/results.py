@@ -215,8 +215,8 @@ def process_results(results, scan_type, scan_id):
 
                 starttls = results["starttls"]
 
-                heartbleed = results["is_vulnerable_to_heartbleed"]
-                ccs_injection = results["is_vulnerable_to_ccs_injection"]
+                heartbleed = results.get("is_vulnerable_to_heartbleed", False)
+                ccs_injection = results.get("is_vulnerable_to_ccs_injection", False)
 
                 if results["signature_algorithm"] is "SHA256" or "SHA384" or "AEAD":
                     good_cert = True
