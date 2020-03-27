@@ -28,7 +28,10 @@ class WWWScan(SQLAlchemyObjectType):
         )
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
-    https = graphene.List(lambda: HTTPS)
+    https = graphene.List(
+        lambda: HTTPS,
+        description="Hyper Text Transfer Protocol Secure scan results"
+    )
     ssl = graphene.List(lambda: SSL)
 
     with app.app_context():
