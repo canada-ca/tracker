@@ -22,6 +22,9 @@ class SSLTags(SQLAlchemyObjectType):
             if 'missing' in self.ssl_scan["ssl"]:
                 return tags.update({"ssl2": "SSL-missing"})
 
+            if self.ssl_scan["ssl"]["bod_crypto"]:
+                tags.update({"ssl3": "SSL-bod-crypto"})
+
             if self.ssl_scan["ssl"]["rc4"]:
                 tags.update({"ssl4": "SSL-rc4"})
 
