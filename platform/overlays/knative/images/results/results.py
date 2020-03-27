@@ -264,6 +264,20 @@ def insert(report, scan_type, scan_id):
             db.session.add(mx_obj)
             db.session.add(spf_obj)
         elif scan_type is "dkim":
+
+            previous_scans = Scans.query.filter(
+                Scans.domain_id == scan.domain_id
+            )
+
+            update_recommended = False
+
+            for previous_scan in previous_scans:
+                if (scan.scan_date - previous_scan.scan_date).TotalDays >= 365:
+                    historical_dkim = Dkim_scans.query.filter(Dkim_scans.id == previous_scan.id)
+                    if report["public_key_modulus"] == historical_dkim.dkim_scan["dkim"]["public_key_modulus"]:
+                        update_recommended = True
+
+            report["update-recommended"] = update_recommended
             result_obj = Dkim_scans(dkim_scan={"dkim": report}, dkim_flagged_scan=scan)
             db.session.add(result_obj)
 
