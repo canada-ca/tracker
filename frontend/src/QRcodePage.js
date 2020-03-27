@@ -4,9 +4,7 @@ import { Box, Stack, Text, Button } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 import GENERATE_OTP_URL from './graphql/queries/generateOtpUrl'
-import gql from 'graphql-tag'
-
-var QRCode = require('qrcode.react')
+import QRCode from 'qrcode.react'
 
 export function QRcodePage({ userName }) {
   // This function generates the URL when the page loads

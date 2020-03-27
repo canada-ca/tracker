@@ -8,7 +8,6 @@ import {
   cleanup,
   waitFor,
   fireEvent,
-  getByText,
 } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { CreateUserPage } from '../CreateUserPage'
