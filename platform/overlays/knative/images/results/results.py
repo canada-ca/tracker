@@ -29,7 +29,7 @@ def receive():
 
         # TODO Replace secret
         decoded_payload = jwt.decode(
-            request.get_data(),
+            request.headers.get("Token"),
             "test_jwt",
             algorithm=['HS256']
         )
@@ -185,7 +185,6 @@ def process_results(results, scan_type, scan_id):
                 report["used_ciphers"] = []
                 report["good_cert"] = False
                 report["signature_algorithm"] = None
-                report["starttls"] = False
                 report["heartbleed"] = False
                 report["openssl_ccs_injection"] = False
 
@@ -213,8 +212,6 @@ def process_results(results, scan_type, scan_id):
                 else:
                     bod_crypto = True
 
-                starttls = results["starttls"]
-
                 heartbleed = results.get("is_vulnerable_to_heartbleed", False)
                 ccs_injection = results.get("is_vulnerable_to_ccs_injection", False)
 
@@ -229,7 +226,6 @@ def process_results(results, scan_type, scan_id):
                 report["used_ciphers"] = used_ciphers
                 report["acceptable_certificate"] = good_cert
                 report["signature_algorithm"] = signature_algorithm
-                report["starttls"] = starttls
 
                 report["heartbleed"] = heartbleed
                 report["openssl_ccs_injection"] = ccs_injection
