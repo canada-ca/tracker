@@ -30,30 +30,44 @@ class DmarcTags(SQLAlchemyObjectType):
             if "pct" in self.dmarc_scan["dmarc"]["tags"]:
                 if self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] == 100:
                     tags.update({"dmarc7": "PCT-100"})
+
                 elif 100 > self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] > 0:
-                    pct_string = "PCT-" + str(
-                        self.dmarc_scan["dmarc"]["tags"]["pct"]["value"])
+                    pct_string = "PCT-" + str(self.dmarc_scan["dmarc"]["tags"]["pct"]["value"])
                     tags.update({"dmarc8": pct_string})
+
                 elif self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] == 0:
                     tags.update({"dmarc21": "PCT-0"})
+
                 else:
                     tags.update({"dmarc9": "PCT-invalid"})
 
             # Check RUA Tag
+            out_source_rua = False
             for value in self.dmarc_scan["dmarc"]["tags"]["rua"]["value"]:
                 if value["address"] == "dmarc@cyber.gc.ca":
                     tags.update({"dmarc10": "RUA-CCCS"})
+
                 elif value["address"] is not None:
-                    tags.update({"dmarc22": "CNAME-DMARC"})
+                    out_source_rua = True
+
+            if out_source_rua:
+                tags.update({"dmarc22": "CNAME-DMARC"})
+
             if not self.dmarc_scan["dmarc"]["tags"]["rua"]["value"]:
                 tags.update({"dmarc12": "RUA-none"})
 
             # Check RUF Tag
+            out_source_ruf = False
             for value in self.dmarc_scan["dmarc"]["tags"]["ruf"]["value"]:
                 if value["address"] == "dmarc@cyber.gc.ca":
                     tags.update({"dmarc11": "RUF-CCCS"})
+
                 elif value["address"] is not None and "dmarc22" not in tags:
-                    tags.update({"dmarc22": "CNAME-DMARC"})
+                    out_source_ruf = True
+
+            if out_source_ruf:
+                tags.update({"dmarc22": "CNAME-DMARC"})
+
             if not self.dmarc_scan["dmarc"]["tags"]["ruf"]["value"]:
                 tags.update({"dmarc13": "RUF-none"})
 
@@ -73,7 +87,7 @@ class DmarcTags(SQLAlchemyObjectType):
 
                 if self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "none" \
                     and ("pct" not in self.dmarc_scan["dmarc"]["tags"]
-                         or self.dmarc_scan["dmarc"]["tags"]["pct"] != 100):
+                         or self.dmarc_scan["dmarc"]["tags"]["pct"] == 100):
                     tags.update({"dmarc20": "PCT-none-exists"})
 
             elif "p" not in self.dmarc_scan["dmarc"]["tags"]:
