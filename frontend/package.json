@@ -53,7 +53,7 @@
     "@lingui/cli": "^3.0.0-7",
     "@lingui/loader": "^3.0.0-7",
     "@lingui/macro": "^3.0.0-7",
-    "@testing-library/jest-dom": "^5.1.1",
+    "@testing-library/jest-dom": "^5.3.0",
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^10.0.0",
     "acorn": "^7.1.1",
