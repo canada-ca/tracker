@@ -47,4 +47,3 @@ class DkimTags(SQLAlchemyObjectType):
             # Check If T Enabled
             if "t" in self.dkim_scan["dkim"]:
                 tags.update({"dkim13": "T-enabled"})
-
