@@ -16,6 +16,7 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { Field, Formik } from 'formik'
+import { PasswordConfirmation } from './PasswordConfirmation'
 
 export function CreateUserPage() {
   const [createUser, { loading, error, data }] = useMutation(gql`
@@ -60,7 +61,7 @@ export function CreateUserPage() {
   }
 
   /* A function for the Formik to validate fields in the form */
-  function validateField(value) {
+  function validateEmail(value) {
     let error
     if (!value || value === '') {
       error = ' can not be empty'
@@ -91,7 +92,7 @@ export function CreateUserPage() {
       >
         {props => (
           <form id="form" onSubmit={props.handleSubmit}>
-            <Field name="email" validate={validateField}>
+            <Field name="email" validate={validateEmail}>
               {({ field, form }) => (
                 <FormControl
                   mt={4}
@@ -111,54 +112,7 @@ export function CreateUserPage() {
               )}
             </Field>
 
-            <Field name="password" validate={validateField}>
-              {({ field, form }) => (
-                <FormControl
-                  mt={4}
-                  mb={4}
-                  isInvalid={form.errors.password && form.touched.password}
-                  isRequired
-                >
-                  <InputGroup>
-                    <InputLeftElement>
-                      <Icon name="lock" color="gray.300" />
-                    </InputLeftElement>
-                    <Input {...field} id="password" placeholder="Password" />
-                  </InputGroup>
-                  <FormErrorMessage>
-                    Password{form.errors.password}
-                  </FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
-
-            <Field name="confirmPassword" validate={validateField}>
-              {({ field, form }) => (
-                <FormControl
-                  mt={4}
-                  mb={4}
-                  isInvalid={
-                    form.errors.confirmPassword && form.touched.confirmPassword
-                  }
-                  isRequired
-                >
-                  <InputGroup>
-                    <InputLeftElement>
-                      <Icon name="lock" color="gray.300" />
-                    </InputLeftElement>
-                    <Input
-                      {...field}
-                      id="confirmPassword"
-                      placeholder="Confirm password"
-                    />
-                  </InputGroup>
-
-                  <FormErrorMessage>
-                    Confirm Password{form.errors.confirmPassword}
-                  </FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+            <PasswordConfirmation />
 
             <Stack mt={6} spacing={4} isInline>
               <Button
