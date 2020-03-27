@@ -117,7 +117,7 @@ def resolve_domains(self, info, **kwargs):
 
         return query_rtn
     else:
-        if is_super_admin(user_role=user_role):
+        if is_super_admin(user_id=user_id):
             query_rtn = query.all()
             if not query_rtn:
                 raise GraphQLError("Error, no domains to view")

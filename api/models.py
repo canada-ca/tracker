@@ -17,6 +17,7 @@ class Domains(db.Model):
     organization_id = Column(Integer, ForeignKey('organizations.id'))
     organization = relationship("Organizations", back_populates="domains", cascade="all, delete")
     scans = relationship("Scans", back_populates="domain", cascade="all, delete")
+    dmarc_reports = relationship("Dmarc_Reports", back_populates="domain", cascade="all, delete")
 
 
 class Organizations(db.Model):
@@ -52,6 +53,17 @@ class User_affiliations(db.Model):
     permission = Column(String)
     user = relationship("Users", back_populates="user_affiliation", cascade="all, delete")
     user_organization = relationship("Organizations", back_populates="users", cascade="all, delete")
+
+
+class Dmarc_Reports(db.Model):
+    __tablename__ = 'dmarc_reports'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    domain_id = Column(Integer, ForeignKey('domains.id'))
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
+    report = Column(JSONB)
+    domain = relationship("Domains", back_populates="dmarc_reports", cascade="all, delete")
 
 
 class Scans(db.Model):

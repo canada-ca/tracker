@@ -1,4 +1,152 @@
-type DmarcRecord {
+"""
+A field whose value is an upper case letter or an under score that has a
+length between 1 and 10
+"""
+scalar Acronym
+
+"""
+DMARC operates by checking that the domain in the message's From: field
+(also called "5322.From") is "aligned" with other authenticated domain
+names. If either SPF or DKIM alignment checks pass, then the DMARC alignment
+test passes.
+"""
+type Alignment {
+  """Is SPF aligned"""
+  spf: Boolean
+
+  """Is DKIM aligned"""
+  dkim: Boolean
+
+  """Is DMARC aligned"""
+  dmarc: Boolean
+}
+
+"""DKIM and SPF domain results"""
+type AuthResults {
+  """DKIM domain raw results"""
+  dkim: [DkimReport]
+
+  """SPF domain raw results"""
+  spf: [SpfReport]
+}
+
+"""This class handles the inner nested dict given by key: 'content'. """
+type Content {
+  body: String
+  fromEmail: String
+  subject: String
+}
+
+"""Mutation used to create a new domain for an organization"""
+type CreateDomain {
+  status: Boolean
+}
+
+"""Mutation allows the creation of an organization inside the database."""
+type CreateOrganization {
+  status: Boolean
+}
+
+type CreateUser {
+  user: User
+}
+
+"""
+The `Date` scalar type represents a Date
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar Date
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+"""
+DomainKeys Identified Mail (DKIM) permits a person, role, or
+organization that owns the signing domain to claim some
+responsibility for a message by associating the domain with the
+message.  This can be an author's organization, an operational relay,
+or one of their agents.
+"""
+type DKIM {
+  """ID of the object"""
+  id: ID
+
+  """The domain the scan was run on"""
+  domain: URL @fake(type: domainName)
+
+  """Time when scan was initiated"""
+  timestamp: DateTime @fake(type: pastDate)
+
+  """DKIM record retrieved during the scan of the given domain """
+  record: String
+    @examples(
+      values: [
+        "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3rvAQg9bl72tae1RFu4zdx1ZE4E8VUbQfxDcm;"
+      ]
+    )
+
+  """Length of DKIM public key"""
+  keyLength: String
+    @examples(
+      values: [
+        "sub1024", "1024", "2048", "2048plus"
+      ]
+    )
+
+  """Key tags found during scan"""
+  dkimGuidanceTags: [DkimTags]
+    @examples(
+      values: [
+        "DKIM-GC"
+        "DKIM-missing"
+        "P-1024"
+        "P-2048"
+        "P-invalid"
+        "T-enabled"
+      ]
+    )
+}
+
+"""DKIM report results"""
+type DkimReport {
+  """DKIM domain"""
+  domain: String
+
+  """Selector used for DKIM authentication"""
+  selector: String
+
+  """DKIM raw result"""
+  result: String
+}
+
+type DkimTags {
+  """Key tags found during scan"""
+  value: String
+}
+
+"""
+Domain-based Message Authentication, Reporting, and Conformance
+(DMARC) is a scalable mechanism by which a mail-originating
+organization can express domain-level policies and preferences for
+message validation, disposition, and reporting, that a mail-receiving
+organization can use to improve mail handling.
+"""
+type DMARC {
+  """ID of the object"""
+  id: ID
+
+  """The domain the scan was run on"""
+  domain: URL @fake(type: domainName)
+
+  """Time when scan was initiated"""
+  timestamp: DateTime @fake(type: pastDate)
+
+  """DMARC record retrieved during the scan of the given domain """
   record: String
     @examples(
       values: [
@@ -6,21 +154,128 @@ type DmarcRecord {
         "v=DMARC1; p=none; sp=none; rua=mailto:dmarc@cyber.gc.ca"
       ]
     )
+
+  """
+  The requested policy you wish mailbox providers to apply when your email fails DMARC authentication and alignment checks.
+  """
+  pPolicy: String
+    @examples(
+      values: [
+        "none",
+        "missing",
+        "quarantine",
+        "reject"
+      ]
+    )
+
+  """
+  This tag is used to indicate a requested policy for all subdomains where mail
+  is failing the DMARC authentication and alignment checks.
+  """
+  spPolicy: String
+    @examples(
+      values: [
+        "none",
+        "missing",
+        "quarantine",
+        "reject"
+      ]
+    )
+
+  """
+  The percentage of messages to which the DMARC policy is to be applied.
+  """
+  pct: Int
+    @examples(
+      values: [
+        0,
+        20,
+        60,
+        70,
+        90,
+        100
+      ]
+    )
+
+  """Key tags found during DMARC Scan"""
+  dmarcGuidanceTags: [DmarcTags]
 }
 
-type PPolicy {
-  value: String @examples(values: ["none", "missing", "quarantine", "reject"])
+"""Generated DMARC Aggregated Report's"""
+type DmarcReport implements Node {
+  """The ID of the object."""
+  id: ID!
+
+  """ID of the report."""
+  reportId: String
+    @examples(
+      values: [
+        "example.com:1538463741"
+      ]
+    )
+
+  """The organization name the report was generated from."""
+  orgName: String
+    @examples(
+      values: [
+        "accurateplastics.com"
+      ]
+    )
+
+  """The organization email name the report was generated from."""
+  orgEmail: String
+    @examples(
+      values: [
+        "administrator@accurateplastics.com"
+      ]
+    )
+
+  """Start date & time of aggregate report"""
+  startDate: DateTime
+    @examples(
+      values: [
+        "2018-10-01 13:07:12"
+      ]
+    )
+
+  """End date & time of aggregate report"""
+  endDate: DateTime
+    @examples(
+      values: [
+        "2018-10-01 13:07:12"
+      ]
+    )
+
+  """Errors that occurred during the report generation"""
+  errors: [String]
+
+  """DMARC published policies"""
+  policyPublished: PolicyPublished
+
+  """Aggregate report records"""
+  records: [Record]
 }
 
-type SpPolicy {
-  value: String @examples(values: ["none", "missing", "quarantine", "reject"])
+type DmarcReportConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [DmarcReportEdge]!
 }
 
-type Pct {
-  value: Int @examples(values: [0, 20, 60, 70, 90, 100])
+"""A Relay edge containing a `DmarcReport` and its cursor."""
+type DmarcReportEdge {
+  """The item at the end of the edge"""
+  node: DmarcReport
+
+  """A cursor for use in pagination"""
+  cursor: String!
 }
 
+"""    """
 type DmarcTags {
+  """Important tags retrieved during scan"""
   value: String
     @examples(
       values: [
@@ -35,11 +290,576 @@ type DmarcTags {
     )
 }
 
-type SpfLookups {
-  value: Int @examples(values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+type Domain implements Node {
+  organization: Organization
+  dmarcReports(before: String, after: String, first: Int, last: Int): DmarcReportConnection
+
+  """The ID of the object."""
+  id: ID!
+
+  """The domain the scan was run on"""
+  url: URL @fake(type: domainName)
+
+  """DKIM, DMARC, and SPF scan results"""
+  email(before: String, after: String, first: Int, last: Int): EmailScanConnection
+
+  """HTTPS, and SSL scan results"""
+  www(before: String, after: String, first: Int, last: Int): WWWScanConnection
+
+  """DMARC aggregate report"""
+  dmarcReport(startDate: Date, endDate: Date, before: String, after: String, first: Int, last: Int): DmarcReportConnection
 }
 
-type SpfRecord {
+type DomainConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [DomainEdge]!
+}
+
+"""A Relay edge containing a `Domain` and its cursor."""
+type DomainEdge {
+  """The item at the end of the edge"""
+  node: Domain
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""
+A field whose value conforms to the standard internet email address format as specified in RFC822:
+https://www.w3.org/Protocols/rfc822/.
+"""
+scalar EmailAddress
+
+"""Results of DKIM, DMARC, and SPF scans, on domains"""
+type EmailScan implements Node {
+  """The domain the scan was run on"""
+  domain: URL @fake(type: domainName)
+
+  """The ID of the object."""
+  id: ID!
+
+  """The time the scan was initiated"""
+  timestamp: DateTime @fake(type: pastDate)
+
+  """
+  Domain-based Message Authentication, Reporting, and Conformance (DMARC)
+  """
+  dmarc: [DMARC]
+
+  """Sender Policy Framework (SPF) for Authorizing Use of Domains in Email """
+  spf: [SPF]
+
+  """DomainKeys Identified Mail (DKIM) Signatures"""
+  dkim: [DKIM]
+}
+
+type EmailScanConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [EmailScanEdge]!
+}
+
+"""A Relay edge containing a `EmailScan` and its cursor."""
+type EmailScanEdge {
+  """The item at the end of the edge"""
+  node: EmailScan
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type HTTPS {
+  """The ID of the object"""
+  id: ID
+
+  """The domain the scan was run on"""
+  domain: URL
+
+  """The time the scan was initiated"""
+  timestamp: DateTime
+  implementation: String
+  enforced: String
+  hsts: String
+  hstsAge: String
+  preloaded: String
+  httpsGuidanceTags: [HTTPSTags]
+}
+
+type HTTPSTags {
+  value: String
+}
+
+"""Identifiers identify a domain name to be authenticated"""
+type Identifiers {
+  """the domain DMARC uses to check alignment with SPF/DKIM"""
+  headerFrom: String
+    @examples(
+      values: [
+        "example.com"
+      ]
+    )
+
+  """SPF domain used to check alignment"""
+  envelopeFrom: String
+      @examples(
+      values: [
+        "example.com"
+      ]
+    )
+
+
+  """"Envelope Recipient" in the email header"""
+  envelopeTo: String
+    @examples(
+      values: [
+        "fastmail.fm"
+      ]
+    )
+}
+
+"""The central gathering point for all of the GraphQL mutations."""
+type Mutation {
+  createUser(confirmPassword: String!, displayName: String!, password: String!, userName: EmailAddress!): CreateUser
+  signIn(
+    """Users's password"""
+    password: String!
+
+    """User's email"""
+    userName: EmailAddress!
+  ): SignInUser
+  updatePassword(confirmPassword: String!, password: String!, userName: EmailAddress!): UpdateUserPassword
+  authenticateTwoFactor(otpCode: String!, userName: EmailAddress!): ValidateTwoFactor
+  updateUserRole(org: Acronym!, role: RoleEnums!, userName: EmailAddress!): UpdateUserRole
+
+  """Allows the creation of an organization inside the database."""
+  createOrganization(
+    """Acronym of organization."""
+    acronym: Acronym!
+
+    """The city in which the organization is located in."""
+    city: String!
+
+    """Full name of organization."""
+    description: String!
+
+    """The province in which the organization is located in."""
+    province: String!
+
+    """The sector which the organization belongs to."""
+    sector: String!
+
+    """The zone which the organization belongs to."""
+    zone: String!
+  ): CreateOrganization
+
+  """Allows modification of an organization inside the database."""
+  updateOrganization(
+    """Organization that will be updated."""
+    acronym: Acronym!
+
+    """The city in which the organization is located in."""
+    city: String
+
+    """Full name of organization."""
+    description: String
+
+    """The province in which the organization is located in."""
+    province: String
+
+    """The sector which the organization belongs to."""
+    sector: String
+
+    """Organization Acronym you would like updated"""
+    updatedAcronym: Acronym
+
+    """The zone which the organization belongs to."""
+    zone: String
+  ): UpdateOrganization
+
+  """Allows the removal of an organization inside the database"""
+  removeOrganization(
+    """The organization you wish to remove"""
+    acronym: Acronym!
+  ): RemoveOrganization
+
+  """Allows the creation of domains for a given organization"""
+  createDomain(
+    """Organizations acronym that you would like to connect this domain to."""
+    org: Acronym!
+
+    """URL that you would like to be added to database."""
+    url: URL!
+  ): CreateDomain
+
+  """Allows the modification of domains"""
+  updateDomain(
+    """The current domain that is being requested to be updated."""
+    currentUrl: URL!
+
+    """The new domain you wish to update the current domain to be."""
+    updatedUrl: URL!
+  ): UpdateDomain
+
+  """Allows the removal of a given domain"""
+  removeDomain(
+    """URL of domain that is being removed"""
+    url: URL!
+  ): RemoveDomain
+}
+
+"""An object with an ID"""
+interface Node {
+  """The ID of the object."""
+  id: ID!
+}
+
+"""
+This class contains all of the fields for the entire dict given
+as a response to the Notify client sending it's email
+"""
+type NotificationEmail {
+  content: Content
+  id: String
+  reference: String
+  scheduledFor: String
+  template: Template
+  uri: String
+}
+
+type Organization implements Node {
+  """The ID of the object."""
+  id: ID!
+
+  """The acronym of the organization."""
+  acronym: Acronym
+
+  """The full name of the organization."""
+  description: String
+
+  """The zone which the organization belongs to."""
+  zone: String
+
+  """The sector which the organizaion belongs to."""
+  sector: String
+
+  """The province in which the organization resides."""
+  province: String
+
+  """The city in which the organization resides."""
+  city: String
+
+  """The domains which belong to this organization."""
+  domains(before: String, after: String, first: Int, last: Int): DomainConnection
+
+  """The users that have an affiliation with the organization."""
+  affiliatedUsers(before: String, after: String, first: Int, last: Int): UserAffClassConnection
+}
+
+type OrganizationConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [OrganizationEdge]!
+}
+
+"""A Relay edge containing a `Organization` and its cursor."""
+type OrganizationEdge {
+  """The item at the end of the edge"""
+  node: Organization
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""
+The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
+"""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+"""Policies evaluated"""
+type PolicyEvaluated {
+  """
+  Tells mail receivers what do do with messages that do not pass your rules
+  """
+  disposition: String
+    @examples(
+      values: [
+        "none"
+      ]
+    )
+
+  """DKIM pass/fail"""
+  dkim: String
+    @examples(
+      values: [
+        "fail"
+      ]
+    )
+
+  """SPF pass/fail"""
+  spf: String
+    @examples(
+      values: [
+        "fail"
+      ]
+    )
+
+  """List of policy override reasons"""
+  policyOverrideReasons: [String]
+}
+
+"""Domains published policy"""
+type PolicyPublished {
+  """Domain report was generated from"""
+  domain: URL
+    @examples(
+      values: [
+        "example.com"
+      ]
+    )
+
+  """DKIM alignment mode"""
+  adkim: String
+    @examples(
+      values: [
+        "r"
+      ]
+    )
+
+  """SPF alignment mode"""
+  aspf: String
+    @examples(
+      values: [
+        "r"
+      ]
+    )
+
+  """P Policy"""
+  p: String
+    @examples(
+      values: [
+        "none"
+      ]
+    )
+
+  """SP Policy"""
+  sp: String
+    @examples(
+      values: [
+        "none"
+      ]
+    )
+
+  """DMARC Percentage"""
+  pct: Int
+    @examples(
+      values: [
+        0, 10, 20, 50, 100
+      ]
+    )
+
+  """
+  Lets mailbox providers knows if you want sample messages that failed either SPF or DKIM
+  """
+  fo: Int
+    @examples(
+      values: [
+        0
+      ]
+    )
+}
+
+"""The central gathering point for all of the GraphQL queries."""
+type Query {
+  """The ID of the object"""
+  node(id: ID!): Node
+
+  """Select list of users belonging to an organization."""
+  users(org: Acronym!, before: String, after: String, first: Int, last: Int): UsersConnection
+
+  """
+  Query the currently logged in user if no user name isgiven, or query a specific user by user name.
+  """
+  user(userName: EmailAddress): [User]
+
+  """
+  Select all information on a selected organization that a user has access to.
+  """
+  organization(org: Acronym!, before: String, after: String, first: Int, last: Int): OrganizationConnection
+
+  """Select all information on all organizations that a user has access to."""
+  organizations(before: String, after: String, first: Int, last: Int): OrganizationConnection
+
+  """Select information on a specific domain."""
+  domain(url: URL!): [Domain]
+
+  """
+  Select information on an organizations domains, or all domains a user has access to.
+  """
+  domains(organization: Acronym, before: String, after: String, first: Int, last: Int): DomainConnection
+
+  """
+  An api endpoint used to generate a OTP url used for two factor authentication.
+  """
+  generateOtpUrl(email: EmailAddress!): String @examples(values: ["otpauth://totp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App"])
+
+  """
+  An api endpoint to view a current user's claims -- Requires an active JWT.
+  """
+  testUserClaims(org: Acronym!, role: RoleEnums!): String
+
+  """
+  An api endpoint that will send an email to a given email address so a user can reset their password for the web app.
+  """
+  sendPasswordReset(email: EmailAddress!): NotificationEmail
+
+  """
+  An api endpoint that will send a verification email to a given email address.
+  """
+  sendValidationEmail(email: EmailAddress!): NotificationEmail
+}
+
+"""DMARC aggregate report record"""
+type Record {
+  count: Int
+    @exmaples(
+      values: [
+        1
+      ]
+    )
+
+  """DMARC source information"""
+  source: Source
+
+  """DMARC alignment object"""
+  alignment: Alignment
+
+  """DMARC policy evaluation object"""
+  policyEvaluated: PolicyEvaluated
+
+  """Identifiers Object"""
+  identifiers: Identifiers
+
+  """Raw DKIM, and SPF results"""
+  authResults: AuthResults
+}
+
+"""This mutation allows the removal of unused domains"""
+type RemoveDomain {
+  status: Boolean
+}
+
+"""Mutation allows the removal of an organization inside the database."""
+type RemoveOrganization {
+  status: Boolean
+}
+
+enum RoleEnums {
+  """A user who has been given access to view results"""
+  USER_READ
+
+  """A user who has been given access to run scans, and manage domains"""
+  USER_WRITE
+
+  """
+  A user who has the same access as a user write account, but can define new user write accounts
+  """
+  ADMIN
+
+  """A user who has the same access as an admin, but can define new admins"""
+  SUPER_ADMIN
+}
+
+type SignInUser {
+  user: User
+
+  """Token returned to user"""
+  authToken: String
+}
+
+"""Domain information"""
+type Source {
+  """Source IP Address"""
+  ipAddress: String
+    @examples(
+      values: [
+        "104.195.80.20"
+      ]
+    )
+
+  """Source Country"""
+  country: String
+    @examples(
+      values: [
+        "US"
+      ]
+    )
+
+  """
+  Reverse DNS (also known as rDNS) uses PTR records to associate IP addresses with domain names
+  """
+  reverseDns: String
+    @examples(
+      values: [
+        null
+      ]
+    )
+
+  """DMARC base domain"""
+  baseDomain: String
+      @examples(
+      values: [
+        null
+      ]
+    )
+}
+
+"""
+Email on the Internet can be forged in a number of ways.  In
+particular, existing protocols place no restriction on what a sending
+host can use as the "MAIL FROM" of a message or the domain given on
+the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
+protocol is where ADministrative Management Domains (ADMDs) can explicitly
+authorize the hosts that are allowed to use their domain names, and a
+receiving host can check such authorization.
+"""
+type SPF {
+  """ID of the object"""
+  id: ID
+
+  """The domain the scan was run on"""
+  domain: URL @fake(type: domainName)
+
+  """The time the scan was initiated"""
+  timestamp: DateTime @fake(type: pastDate)
+
+  """The current amount of DNS lookups"""
+  lookups: Int
+    @examples(
+      values: [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+      ]
+    )
+
+  """SPF record retrieved during the scan of the given domain """
   record: String
     @examples(
       values: [
@@ -47,13 +867,51 @@ type SpfRecord {
         "v=spf1 ip4:198.103.111.114/31 ip4:205.193.224.70 ip4:205.193.224.90 ip4:216.13.57.101 ip4:216.13.57.102 ip4:209.82.9.21 ip4:209.82.9.23 ip4:198.103.112.150/31 ip4:205.192.34.113 ip4:205.192.34.56 ip4:205.192.34.58 -all"
       ]
     )
+
+  """
+  Instruction of what a recipient should do if there is not a match to your SPF record.
+  """
+  spfDefault: String
+    @examples(
+      values: [
+        "neutral", "softfail", "include", "fail"
+      ]
+    )
+
+  """Key tags found during SPF scan"""
+  spfGuidanceTags: [SPFTags]
 }
 
-type SpfDefault {
-  record: String @examples(values: ["neutral", "softfail", "include", "fail"])
+"""SPF report results"""
+type SpfReport {
+  """SPF domain"""
+  domain: String
+    @examples(
+      values: [
+        "example.com"
+      ]
+    )
+
+  """SPF domain scope (“HELP/EHLO” or “MFROM”)"""
+  scope: String
+    @examples(
+      values: [
+        "mfrom"
+      ]
+    )
+
+  """SPF raw result"""
+  result: String
+    @examples(
+      values: [
+        "softfail"
+      ]
+    )
 }
 
-type SpfTags {
+"""Current settings of the currently configured SPF"""
+type SPFTags {
+  """Important tags retrieved during scan"""
   value: String
     @examples(
       values: [
@@ -66,961 +924,37 @@ type SpfTags {
     )
 }
 
-type DkimType {
-  value: String @examples(values: ["rsa", "ed25519"])
-}
-
-type DkimRecord {
-  record: String
-    @examples(
-      values: [
-        "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3rvAQg9bl72tae1RFu4zdx1ZE4E8VUbQfxDcm;"
-      ]
-    )
-}
-
-type DkimKeyLength {
-  value: String @examples(values: ["sub1024", "1024", "2048", "2048plus"])
-}
-
-type DkimTags {
-  value: String
-    @examples(
-      values: [
-        "DKIM-GC"
-        "DKIM-missing"
-        "P-1024"
-        "P-2048"
-        "P-invalid"
-        "T-enabled"
-      ]
-    )
-}
-
-type EmailScan implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  domain: String @fake(type: domainName)
+type SSL {
+  id: ID
+  domain: URL @fake(type: domainName)
   timestamp: DateTime @fake(type: pastDate)
-  dmarc: DMARC
-  spf: SPF
-  dkim: DKIM
-}
-type DMARC {
-  id: ID!
-  domain: String @fake(type: domainName)
-  timestamp: DateTime @fake(type: pastDate)
-  record: [DmarcRecord]
-  p_policy: [PPolicy]
-  sp_policy: [SpPolicy]
-  pct: [Pct]
-  dmarcGuidanceTags: [DmarcTags]
-}
-type SPF {
-  id: ID!
-  domain: String @fake(type: domainName)
-  timestamp: DateTime @fake(type: pastDate)
-  lookups: [SpfLookups]
-  record: [SpfRecord]
-  spf_default: [SpfDefault]
-  spfGuidanceTags: [SpfTags]
 }
 
-type DKIM {
-  id: ID!
-  domain: String @fake(type: domainName)
-  timestamp: DateTime @fake(type: pastDate)
-  record: [DkimRecord]
-  key_length: [DkimKeyLength]
-  dkimGuidanceTags: [DkimTags]
-}
-
-type CreateUser {
-  user: UserObject
+"""This class handles the inner nested dict given by key: 'template'. """
+type Template {
+  id: String
+  uri: String
+  version: Int
 }
 
 """
-The `DateTime` scalar type represents a DateTime
-value as specified by
-[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+Mutation allows the modification of domains if domain is updated through
+out its life-cycle
 """
-scalar DateTime
-
-type Cipher {
-  name: String
-    @examples(
-      values: [
-        "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"
-        "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305"
-        "TLS_RSA_WITH_3DES_EDE_CBC_SHA"
-        "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"
-        "TLS_RSA_WITH_AES_128_GCM_SHA256"
-      ]
-    )
+type UpdateDomain {
+  status: Boolean
 }
 
-type TLSVersion {
-  version: Float @examples(values: [1.1, 1.2, 1.3])
-}
-
-type TLSScan implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  domain: String @fake(type: domainName)
-  timestamp: DateTime @fake(type: pastDate)
-  ciphers: [Cipher]
-  supportedVersions: [TLSVersion]
-}
-
-type DMARCScan implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  domain: String @fake(type: domainName)
-  timestamp: DateTime @fake(type: pastDate)
-  ciphers: [Cipher]
-  supportedVersions: [TLSVersion]
-}
-
-type DNS implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  """
-  Host address
-  """
-  a: String @fake(type: domainName)
-  """
-  IPv6 host address
-  """
-  aaaa: String @fake(type: ipv6Address)
-  """
-  Auto resolved alias
-  """
-  alias: String
-  """
-  Canonical name for an alias
-  """
-  cname: String
-  """
-  Mail eXchange
-  """
-  mx: String
-  """
-  Name Server
-  """
-  ns: String
-  """
-  Pointer
-  """
-  ptr: String
-  """
-  Start Of Authority
-  """
-  soa: String
-}
-
-type WWWScan {
-  tls: [TLSScan]
-}
-
-type Domain implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  dns: DNS
-  url: String @fake(type: domainName)
-  www: [WWWScan]
-  email: [EmailScan]
-  organization: Organization
-}
-
-type DomainsConnection {
-  """
-  Pagination data for this connection.
-  """
-  pageInfo: PageInfo!
-
-  """
-  Contains the nodes in this connection.
-  """
-  edges: [DomainsEdge]!
-}
-
-"""
-A Relay edge containing a `Domains` and its cursor.
-"""
-type DomainsEdge {
-  """
-  The item at the end of the edge
-  """
-  node: Domain
-
-  """
-  A cursor for use in pagination
-  """
-  cursor: String!
-}
-
-"""
-A field whose value conforms to the standard internet email address format as specified in RFC822:
-https://www.w3.org/Protocols/rfc822/.
-"""
-scalar EmailAddress
-
-enum GroupEnums {
-  """
-  Arts
-  """
-  GC_A
-
-  """
-  Banking and Finance
-  """
-  GC_BF
-
-  """
-  Border Services and Immigration
-  """
-  GC_BSI
-
-  """
-  Government Administration
-  """
-  GC_GA
-
-  """
-  Health
-  """
-  GC_H
-
-  """
-  Industry and Business Development
-  """
-  GC_IBD
-
-  """
-  International Affairs Trade & Development
-  """
-  GC_IATD
-
-  """
-  Legal
-  """
-  GC_L
-
-  """
-  Natural Resources Energy & Environment
-  """
-  GC_NRED
-
-  """
-  Security Intelligence and Defence
-  """
-  GC_SID
-
-  """
-  Transportation
-  """
-  GC_T
-
-  """
-  Social and Cultural Development
-  """
-  GC_SCD
-
-  """
-  Government of Canada Future
-  """
-  GC_F
-
-  """
-  Government (Provincial/Territorial)
-  """
-  CI_PT
-
-  """
-  British Columbia
-  """
-  CI_PT_BC
-
-  """
-  Alberta
-  """
-  CI_PT_AB
-
-  """
-  Saskatchewan
-  """
-  CI_PT_SK
-
-  """
-  Manitoba
-  """
-  CI_PT_MB
-
-  """
-  Ontario
-  """
-  CI_PT_ON
-
-  """
-  Quebec
-  """
-  CI_PT_QC
-
-  """
-  New Brunswick
-  """
-  CI_PT_NB
-
-  """
-  Nova Scotia
-  """
-  CI_PT_NS
-
-  """
-  Prince Edward Island
-  """
-  CI_PT_PEI
-
-  """
-  Newfoundland and Labrador
-  """
-  CI_PT_NL
-
-  """
-  Yukon
-  """
-  CI_PT_YT
-
-  """
-  Nunavut
-  """
-  CI_PT_NU
-
-  """
-  Northwest Territories
-  """
-  CI_PT_NT
-
-  """
-  Government (Municipal)
-  """
-  CI_MUNIC
-
-  """
-  British Columbia
-  """
-  CI_MUNIC_BC
-
-  """
-  Alberta
-  """
-  CI_MUNIC_AB
-
-  """
-  Saskatchewan
-  """
-  CI_MUNIC_SK
-
-  """
-  Manitoba
-  """
-  CI_MUNIC_MB
-
-  """
-  Ontario
-  """
-  CI_MUNIC_ON
-
-  """
-  Quebec
-  """
-  CI_MUNIC_QC
-
-  """
-  New Brunswick
-  """
-  CI_MUNIC_NB
-
-  """
-  Nova Scotia
-  """
-  CI_MUNIC_NS
-
-  """
-  Prince Edward Island
-  """
-  CI_MUNIC_PEI
-
-  """
-  Newfoundland and Labrador
-  """
-  CI_MUNIC_NL
-
-  """
-  Yukon
-  """
-  CI_MUNIC_YT
-
-  """
-  Nunavut
-  """
-  CI_MUNIC_NU
-
-  """
-  Northwest Territories
-  """
-  CI_MUNIC_NT
-
-  """
-  Information and Communication Technology
-  """
-  CI_ICT
-
-  """
-  Finance
-  """
-  CI_FIN
-
-  """
-  Energy and Utilities
-  """
-  CI_UTIL
-
-  """
-  Electricity
-  """
-  CI_UTIL_ELECT
-
-  """
-  Oil and Gas
-  """
-  CI_UTIL_OIL
-
-  """
-  Nuclear
-  """
-  CI_UTIL_NCLR
-
-  """
-  Mines and Minerals
-  """
-  CI_UTIL_MINE
-
-  """
-  Transportation
-  """
-  CI_TRANS
-
-  """
-  Air
-  """
-  CI_TRANS_AIR
-
-  """
-  Marine
-  """
-  CI_TRANS_SEA
-
-  """
-  Rail
-  """
-  CI_TRANS_RAIL
-
-  """
-  Road
-  """
-  CI_TRANS_ROAD
-
-  """
-  Manufacturing
-  """
-  CI_MANUF
-
-  """
-  Health
-  """
-  CI_HEALTH
-
-  """
-  Food
-  """
-  CI_FOOD
-
-  """
-  Water
-  """
-  CI_WATER
-
-  """
-  Safety
-  """
-  CI_SAFETY
-
-  """
-  Other
-  """
-  CI_OTHER
-
-  """
-  Industrial Control Systems
-  """
-  CI_SCADA
-
-  """
-  Cyber Security
-  """
-  CI_CYBER
-
-  """
-  Academia
-  """
-  CI_EDU
-
-  """
-  Non-Critical
-  """
-  CI_NCSI
-
-  """
-  Assess
-  """
-  S1
-
-  """
-  Deploy
-  """
-  S2
-
-  """
-  Enforce
-  """
-  S3
-
-  """
-  Maintain
-  """
-  S4
-}
-
-type Group implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  description: String
-  sectorId: Int
-  organizations(
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): OrganizationsConnection
-  groupSector: Sector
-}
-
-type GroupsConnection {
-  """
-  Pagination data for this connection.
-  """
-  pageInfo: PageInfo!
-
-  """
-  Contains the nodes in this connection.
-  """
-  edges: [GroupsEdge]!
-}
-
-"""
-A Relay edge containing a `Groups` and its cursor.
-"""
-type GroupsEdge {
-  """
-  The item at the end of the edge
-  """
-  node: Group
-
-  """
-  A cursor for use in pagination
-  """
-  cursor: String!
-}
-
-"""
-The central gathering point for all of the GraphQL mutations.
-"""
-type Mutation {
-  createUser(
-    confirmPassword: String!
-    userName: EmailAddress!
-    password: String!
-    displayName: String!
-  ): CreateUser
-  signIn(
-    """
-    User's email
-    """
-    userName: EmailAddress!
-
-    """
-    Users's password
-    """
-    password: String!
-  ): SignInUser
-  updatePassword(
-    confirmPassword: String!
-    userName: EmailAddress!
-    password: String!
-  ): UpdateUserPassword
-  authenticateTwoFactor(
-    userName: EmailAddress!
-    otpCode: String!
-  ): ValidateTwoFactor
-  updateUserRole(
-    userName: EmailAddress!
-    role: String!
-    token: String!
-  ): UpdateUserRole
-}
-
-"""
-An object with an ID
-"""
-interface Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-}
-
-type Organization implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  name: String
-  description: String
-  group: Group
-  domains(
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): DomainsConnection
-}
-
-type OrganizationsConnection {
-  """
-  Pagination data for this connection.
-  """
-  pageInfo: PageInfo!
-
-  """
-  Contains the nodes in this connection.
-  """
-  edges: [OrganizationsEdge]!
-}
-
-"""
-A Relay edge containing a `Organizations` and its cursor.
-"""
-type OrganizationsEdge {
-  """
-  The item at the end of the edge
-  """
-  node: Organization
-
-  """
-  A cursor for use in pagination
-  """
-  cursor: String!
-}
-
-"""
-An enumeration.
-"""
-enum OrganizationsEnum {
-  """
-  Arts
-  """
-  Arts
-
-  """
-  BOC - Bank of Canada
-  """
-  BOC
-}
-
-"""
-The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
-"""
-type PageInfo {
-  """
-  When paginating forwards, are there more items?
-  """
-  hasNextPage: Boolean!
-
-  """
-  When paginating backwards, are there more items?
-  """
-  hasPreviousPage: Boolean!
-
-  """
-  When paginating backwards, the cursor to continue.
-  """
-  startCursor: String
-
-  """
-  When paginating forwards, the cursor to continue.
-  """
-  endCursor: String
-}
-
-"""
-The central gathering point for all of the GraphQL queries.
-"""
-type Query {
-  """
-  The ID of the object
-  """
-  node(id: ID!): Node
-  allUsers(before: String, after: String, first: Int, last: Int): UserConnection
-
-  """
-  Allows selection of a sector from a given sector ID
-  """
-  getSectorById(id: Int!): [Sector]
-
-  sector(name: SectorEnums!): Sector
-
-  """
-  Allows selection of sector information from a given sector enum
-  """
-  getSectorsBySector(sector: SectorEnums!): [Sector]
-
-  """
-  Allows selection of all sectors from a given zone enum
-  """
-  getSectorByZone(zone: ZoneEnums!): [Sector]
-
-  """
-  Allows selection of a group from a given group ID
-  """
-  getGroupById(id: Int!): [Group]
-
-  """
-  Allows the selection of group information from a given group enum
-  """
-  getGroupByGroup(group: GroupEnums!): [Group]
-
-  """
-  Allows selection of groups from a given sector enum
-  """
-  getGroupBySector(sector: SectorEnums!): [Group]
-
-  """
-  Allows the selection of an organization from a given ID
-  """
-  getOrgById(id: Int!): [Organization]
-
-  """
-  Allows the selection of an organization from its given organization code
-  """
-  organization(name: OrganizationsEnum!): Organization
-
-  """
-  Allows the selection of organizations from a given group
-  """
-  getOrgByGroup(group: GroupEnums!): [Organization]
-
-  """
-  Allows the selection of a domain from a given ID
-  """
-  getDomainById(id: Int!): [Domain]
-
-  """
-  Allows the selection of a domain from a given domain
-  """
-  domain(url: URL!): Domain
-
-  """
-  Allows the selection of domains under an organization
-  """
-  domains(organization: OrganizationsEnum!): [Domain]
-
-  """
-  An api endpoint used to generate a OTP url used for two factor authentication.
-  """
-  generateOtpUrl(userName: EmailAddress!): String @examples(values: ["otpauth://totp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App"])
-
-  """
-  An api endpoint to view a current user's claims -- Requires an active JWT.
-  """
-  testUserClaims(token: String!): String
-}
-
-enum SectorEnums {
-  """
-  Arts
-  """
-  GC_A
-
-  """
-  Banking and Finance
-  """
-  GC_BF
-
-  """
-  Border Services and Immigration
-  """
-  GC_BSI
-
-  """
-  Government Administration
-  """
-  GC_GA
-
-  """
-  Health
-  """
-  GC_H
-
-  """
-  Industry and Business Development
-  """
-  GC_IBD
-
-  """
-  International Affairs Trade & Development
-  """
-  GC_IATD
-
-  """
-  Legal
-  """
-  GC_L
-
-  """
-  Natural Resources Energy & Environment
-  """
-  GC_NRED
-
-  """
-  Security Intelligence and Defence
-  """
-  GC_SID
-
-  """
-  Transportation
-  """
-  GC_T
-
-  """
-  Social and Cultural Development
-  """
-  GC_SCD
-
-  """
-  Future Government of Canada
-  """
-  GC_F
-
-  """
-  Government (Provincial/Territorial/Municipal)
-  """
-  CI_PTM
-
-  """
-  Information and Communication Technology
-  """
-  CI_ICT
-
-  """
-  Finance
-  """
-  CI_FIN
-
-  """
-  Energy and Utilities
-  """
-  CI_UTIL
-
-  """
-  Transportation
-  """
-  CI_TRANS
-
-  """
-  Manufacturing
-  """
-  CI_MANUF
-
-  """
-  Health
-  """
-  CI_HEALTH
-
-  """
-  Food
-  """
-  CI_FOOD
-
-  """
-  Water
-  """
-  CI_WATER
-
-  """
-  Safety
-  """
-  CI_SAFETY
-
-  """
-  Other
-  """
-  CI_OTHER
-
-  """
-  Development test cases
-  """
-  TEST_DEV
-}
-
-type Sector implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  name: String
-  zone: String
-  description: String
-  groups(before: String, after: String, first: Int, last: Int): GroupsConnection
-}
-
-type SignInUser {
-  user: UserObject
-
-  """
-  Token returned to user
-  """
-  authToken: String
+type UpdateOrganization {
+  status: Boolean
 }
 
 type UpdateUserPassword {
-  user: UserObject
+  user: User
 }
 
 type UpdateUserRole {
-  user: UserObject
+  status: String
 }
 
 """
@@ -1029,65 +963,131 @@ https://www.ietf.org/rfc/rfc3986.txt.
 """
 scalar URL
 
-type UserConnection {
-  """
-  Pagination data for this connection.
-  """
-  pageInfo: PageInfo!
+"""
+This object can be queried to retrieve the current logged in users
+information or if the user is an org or super admin they can query a user
+by their user name
+"""
+type User implements Node {
+  """The ID of the object."""
+  id: ID!
 
-  """
-  Contains the nodes in this connection.
-  """
-  edges: [UserEdge]!
+  """Email that the user signed up with"""
+  userName: EmailAddress @fake(type: email)
+
+  """Name displayed to other users"""
+  displayName: String
+
+  """Users preferred language"""
+  lang: String
+
+  """Has the user completed two factor authentication"""
+  tfa: Boolean @examples(values: [false])
+
+  """Users access to organizations"""
+  affiliations(before: String, after: String, first: Int, last: Int): UserAffClassConnection
 }
 
-"""
-A Relay edge containing a `User` and its cursor.
-"""
-type UserEdge {
-  """
-  The item at the end of the edge
-  """
-  node: UserObject
+type UserAffClass implements Node {
+  user: User
 
-  """
-  A cursor for use in pagination
-  """
+  """The organization this affiliation belongs to"""
+  organization: Organization
+
+  """The ID of the object."""
+  id: ID!
+
+  """User's ID"""
+  userId: Int
+
+  """User's level of access to a given organization"""
+  permission: RoleEnums
+}
+
+type UserAffClassConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [UserAffClassEdge]!
+}
+
+"""A Relay edge containing a `UserAffClass` and its cursor."""
+type UserAffClassEdge {
+  """The item at the end of the edge"""
+  node: UserAffClass
+
+  """A cursor for use in pagination"""
   cursor: String!
 }
 
-type UserObject implements Node {
-  """
-  The ID of the object.
-  """
+"""
+This object is used to return a list of users with their user name, display
+name and their permission for the requested organization
+"""
+type Users implements Node {
+  """The ID of the object."""
   id: ID!
-  userName: String @fake(type: email)
+
+  """Email that the user signed up with"""
+  userName: EmailAddress
+
+  """Name displayed to other users"""
   displayName: String
-  preferredLang: String
-  failedLoginAttempts: Int
-  failedLoginAttemptTime: Float
-  tfaValidated: Boolean @examples(values: [false])
-  userRole: String
+
+  """The level of access this user has to the requested organization"""
+  permission: RoleEnums
+}
+
+type UsersConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [UsersEdge]!
+}
+
+"""A Relay edge containing a `Users` and its cursor."""
+type UsersEdge {
+  """The item at the end of the edge"""
+  node: Users
+
+  """A cursor for use in pagination"""
+  cursor: String!
 }
 
 type ValidateTwoFactor {
-  user: UserObject
+  user: User
 }
 
-enum ZoneEnums {
-  """
-  Government of Canada
-  """
-  GC
+"""Results of HTTPS and SSL scans on domain"""
+type WWWScan implements Node {
+  """The domain the scan was run on"""
+  domain: URL
 
-  """
-  Critical Infrastructure
-  """
-  CI
+  """The ID of the object."""
+  id: ID!
 
-  """
-  Development Test Case
-  """
-  TEST
+  """The time the scan was initiated"""
+  timestamp: DateTime
+  https: [HTTPS]
+  ssl: [SSL]
+}
+
+type WWWScanConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [WWWScanEdge]!
+}
+
+"""A Relay edge containing a `WWWScan` and its cursor."""
+type WWWScanEdge {
+  """The item at the end of the edge"""
+  node: WWWScan
+
+  """A cursor for use in pagination"""
+  cursor: String!
 }
 

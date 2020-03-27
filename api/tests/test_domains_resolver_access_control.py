@@ -144,25 +144,17 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "somelamedomain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "somelamedomain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "somelamedomain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -306,11 +298,7 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "google.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
@@ -390,25 +378,17 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "somecooldomain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "somecooldomain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "somecooldomain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -501,11 +481,7 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "somelamedomain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
@@ -585,11 +561,7 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "google.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
