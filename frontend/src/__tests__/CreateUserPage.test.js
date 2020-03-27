@@ -6,8 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import {
   render,
   cleanup,
-  wait,
-  waitForElement,
+  waitFor,
   fireEvent,
   getByText,
 } from '@testing-library/react'
@@ -20,8 +19,8 @@ i18n.activate('en')
 describe('<CreateUserPage />', () => {
   afterEach(cleanup)
 
-  it('successfully renders the component', () => {
-    render(
+  it('an empty input for email field displays an error message', async () => {
+    const { container, queryByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -32,40 +31,20 @@ describe('<CreateUserPage />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-    expect(render).toBeTruthy()
-  })
-
-  test('an empty input for email field displays an error message', async () => {
-    const { container } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider>
-              <CreateUserPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
-
-    expect(render).toBeTruthy()
 
     const email = container.querySelector('#email')
 
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.blur(email)
     })
 
-    const errorElement = await waitForElement(
-      () => getByText(container, /Email can not be empty/i),
-      { container },
+    await waitFor(() =>
+      expect(queryByText(/Email cannot be empty/i)).toBeInTheDocument(),
     )
-
-    expect(errorElement.innerHTML).toMatch(/Email can not be empty/i)
   })
 
-  test('an empty input for password field displays an error message', async () => {
-    const { container } = render(
+  it('an empty input for password field displays an error message', async () => {
+    const { container, queryByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -76,25 +55,20 @@ describe('<CreateUserPage />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-
-    expect(render).toBeTruthy()
 
     const password = container.querySelector('#password')
 
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.blur(password)
     })
 
-    const errorElement = await waitForElement(
-      () => getByText(container, /Password can not be empty/i),
-      { container },
+    await waitFor(() =>
+      expect(queryByText(/Password cannot be empty/i)).toBeInTheDocument(),
     )
-
-    expect(errorElement.innerHTML).toMatch(/Password can not be empty/i)
   })
 
-  test('an empty input for confirm password field displays an error message', async () => {
-    const { container } = render(
+  it('an empty input for confirm password field displays an error message', async () => {
+    const { container, queryByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -106,19 +80,14 @@ describe('<CreateUserPage />', () => {
       </ThemeProvider>,
     )
 
-    expect(render).toBeTruthy()
-
     const confirmPassword = container.querySelector('#confirmPassword')
 
-    await wait(() => {
-      fireEvent.blur(confirmPassword)
-    })
+    await waitFor(() => fireEvent.blur(confirmPassword))
 
-    const errorElement = await waitForElement(
-      () => getByText(container, /Confirm Password can not be empty/i),
-      { container },
+    await waitFor(() =>
+      expect(
+        queryByText(/Confirm Password cannot be empty/i),
+      ).toBeInTheDocument(),
     )
-
-    expect(errorElement.innerHTML).toMatch(/Confirm Password can not be empty/i)
   })
 })

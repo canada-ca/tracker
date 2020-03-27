@@ -46,7 +46,7 @@ export function CreateUserPage() {
   function validateEmail(value) {
     let error
     if (!value || value === '') {
-      error = ' can not be empty'
+      error = ' cannot be empty'
     }
     return error
   }

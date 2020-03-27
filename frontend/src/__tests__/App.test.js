@@ -3,7 +3,7 @@ import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import { wait, render, cleanup } from '@testing-library/react'
+import { waitFor, render, cleanup } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import gql from 'graphql-tag'
 import App from '../App'
@@ -62,7 +62,7 @@ describe('<App/>', () => {
             </I18nProvider>
           </ThemeProvider>,
         )
-        await wait(() =>
+        await waitFor(() =>
           expect(getByRole('heading')).toHaveTextContent(/track web/i),
         )
       })
@@ -86,7 +86,7 @@ describe('<App/>', () => {
           </ThemeProvider>,
         )
 
-        await wait(() =>
+        await waitFor(() =>
           expect(getByRole('heading')).toHaveTextContent(/Domains/i),
         )
       })

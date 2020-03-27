@@ -89,8 +89,8 @@ export function SignInPage() {
           })
         }}
       >
-        {props => (
-          <form onSubmit={props.handleSubmit}>
+        {(props) => (
+          <form onSubmit={props.handleSubmit} role="form">
             <Field name="email">
               {({ field, form }) => (
                 <FormControl
