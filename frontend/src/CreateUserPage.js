@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react'
 import {
   Button,
@@ -58,22 +57,19 @@ export function CreateUserPage() {
       </Text>
       <Formik
         initialValues={{ email: '', password: '', confirmPassword: '' }}
-        onSubmit={(values, actions) => {
-          setTimeout(() => {
-            createUser({
-              variables: {
-                userName: values.email,
-                password: values.password,
-                confirmPassword: values.confirmPassword,
-                displayName: values.email,
-              },
-            })
-            actions.setSubmitting(false)
-          }, 500)
+        onSubmit={async (values) => {
+          createUser({
+            variables: {
+              userName: values.email,
+              password: values.password,
+              confirmPassword: values.confirmPassword,
+              displayName: values.email,
+            },
+          })
         }}
       >
-        {props => (
-          <form id="form" onSubmit={props.handleSubmit}>
+        {({ handleSubmit, isSubmitting }) => (
+          <form id="form" onSubmit={handleSubmit}>
             <Field name="email" validate={validateEmail}>
               {({ field, form }) => (
                 <FormControl
@@ -99,7 +95,7 @@ export function CreateUserPage() {
             <Stack mt={6} spacing={4} isInline>
               <Button
                 variantColor="teal"
-                isLoading={props.isSubmitting}
+                isLoading={isSubmitting}
                 type="submit"
                 id="submitBtn"
               >
