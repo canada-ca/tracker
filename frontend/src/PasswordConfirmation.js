@@ -29,7 +29,7 @@ export function PasswordConfirmation() {
       }
     }, 600)
     if (value === '') {
-      return ' can not be empty'
+      return ' cannot be empty'
     } else if (String(value).length < 11) {
       return ' must be 12 chars long'
     }
@@ -48,7 +48,7 @@ export function PasswordConfirmation() {
       }
     }, 600)
     if (value === '') {
-      return ' can not be empty'
+      return ' cannot be empty'
     } else if (value !== document.getElementById('password').value) {
       return ' must match password'
     }
@@ -105,7 +105,7 @@ export function PasswordConfirmation() {
                   <Spinner size="sm" color="gray.300" />
                 ) : (
                   <Icon
-                    role="confirmPasswordIcon"
+                    role="img"
                     name={confirmIcon}
                     color={
                       confirmIcon === 'lock'

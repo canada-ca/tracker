@@ -5,14 +5,7 @@ import { i18n } from '@lingui/core'
 import { Router, MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
-import {
-  render,
-  cleanup,
-  wait,
-  waitForElement,
-  fireEvent,
-  getByText,
-} from '@testing-library/react'
+import { render, waitFor, fireEvent, getByText } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import gql from 'graphql-tag'
 import App from '../App'
@@ -55,8 +48,6 @@ const mocks = [
 ]
 
 describe('<SignInPage />', () => {
-  afterEach(cleanup)
-
   describe('when the email field is empty', () => {
     it('displays an error message', async () => {
       const { container, getByText } = render(
@@ -73,7 +64,7 @@ describe('<SignInPage />', () => {
 
       const email = container.querySelector('#email')
 
-      await wait(() => {
+      await waitFor(() => {
         fireEvent.blur(email)
       })
 
@@ -105,7 +96,7 @@ describe('<SignInPage />', () => {
 
       fireEvent.blur(password)
 
-      const errorElement = await waitForElement(
+      const errorElement = await waitFor(
         () => getByText(container, /Password cannot be empty/i),
         { container },
       )
@@ -196,7 +187,7 @@ describe('<SignInPage />', () => {
 
       fireEvent.submit(form)
 
-      await wait(() => {
+      await waitFor(() => {
         expect(history.location.pathname).toEqual('/')
       })
     })
