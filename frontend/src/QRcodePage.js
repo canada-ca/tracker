@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Box, Stack, Text, Button } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
-import GENERATE_OTP_URL from './graphql/queries/generateOtpUrl'
+import { GENERATE_OTP_URL } from './graphql/queries'
 import QRCode from 'qrcode.react'
 
 export function QRcodePage({ userName }) {
