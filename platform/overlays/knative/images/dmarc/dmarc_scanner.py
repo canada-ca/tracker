@@ -32,13 +32,16 @@ def receive():
             algorithm=['HS256']
         )
 
+        test_flag = request.headers.get("Test")
         scan_id = decoded_payload["scan_id"]
 
         ext = tldextract.extract(decoded_payload["domain"])
-
         domain = ext.registered_domain
-
         res = scan(scan_id, domain)
+
+        if test_flag:
+            return str(res)
+
         if res is not None:
             payload = {"results": str(res), "scan_type": "dmarc", "scan_id": scan_id}
 
