@@ -42,7 +42,7 @@ class Users(SQLAlchemyObjectType):
     with app.app_context():
         def resolve_user_name(self: User_affiliations, info):
             query = User.get_query(info)
-            query =query.filter(Organizations.id == self.organization_id)
+            query = query.filter(Organizations.id == self.organization_id)
             query = query.filter(UserModel.id == self.user_id).first()
             return query.user_name
 
