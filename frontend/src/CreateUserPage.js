@@ -14,7 +14,7 @@ import {
 import { useMutation } from '@apollo/react-hooks'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { Field, Formik } from 'formik'
-import CREATE_USER from './graphql/mutations/createUser'
+import { CREATE_USER } from './graphql/mutations'
 import { PasswordConfirmation } from './PasswordConfirmation'
 
 export function CreateUserPage() {

@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { CreateUserPage } from '../CreateUserPage'
-import CREATE_USER from '../graphql/mutations/createUser'
+import { CREATE_USER } from '../graphql/mutations'
 
 i18n.load('en', { en: {} })
 i18n.activate('en')

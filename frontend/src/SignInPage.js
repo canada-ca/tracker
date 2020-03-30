@@ -21,7 +21,7 @@ import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
 import { Formik, Field } from 'formik'
 
-import SIGN_IN from './graphql/mutations/signIn'
+import { SIGN_IN } from './graphql/mutations'
 
 export function SignInPage() {
   const history = useHistory()
