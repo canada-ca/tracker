@@ -26,8 +26,9 @@ except ImportError:
     from urllib2 import URLError
 
 import sslyze
-from sslyze.server_connectivity_tester import ServerConnectivityTester, ServerConnectivityError
-import sslyze.synchronous_scanner
+from sslyze.server_connectivity import ServerConnectivityTester
+from sslyze.errors import ConnectionToServerFailed
+from sslyze.scanner import Scanner
 
 # We're going to be making requests with certificate validation
 # disabled.  Commented next line due to pylint warning that urllib3 is
@@ -574,7 +575,7 @@ def https_check(endpoint):
         if server_info.client_auth_requirement.name == 'REQUIRED':
             endpoint.https_client_auth_required = True
             logging.warning("{}: Client Authentication REQUIRED".format(endpoint.url))
-    except ServerConnectivityError as err:
+    except ConnectionToServerFailed as err:
         endpoint.live = False
         endpoint.https_valid = False
         logging.exception("{}: Error in sslyze server connectivity check when connecting to {}".format(endpoint.url, err.server_info.hostname))
@@ -588,14 +589,16 @@ def https_check(endpoint):
 
     try:
         cert_plugin_result = None
-        command = sslyze.plugins.certificate_info_plugin.CertificateInfoScanCommand(ca_file=CA_FILE)
-        scanner = sslyze.synchronous_scanner.SynchronousScanner()
-        cert_plugin_result = scanner.run_scan_command(server_info, command)
+        command = sslyze.plugins.certificate_info.implementation.CertificateInfoScanImplementation(ca_file=CA_FILE)
+        scanner = Scanner()
+        scanner.queue_scan_command(server_info, command)
+        cert_plugin_result = scanner.get_results()
     except Exception as err:
         try:
             if "timed out" in str(err):
                 logging.exception("{}: Retrying sslyze scanner certificate plugin.".format(endpoint.url))
-                cert_plugin_result = scanner.run_scan_command(server_info, command)
+                scanner.queue_scan_command(server_info, command)
+                cert_plugin_result = scanner.get_results()
             else:
                 logging.exception("{}: Unknown exception in sslyze scanner certificate plugin.".format(endpoint.url))
                 utils.debug("{}: {}".format(endpoint.url, err))

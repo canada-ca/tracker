@@ -26,7 +26,7 @@ def receive():
     try:
         # TODO Replace secret
         decoded_payload = jwt.decode(
-            request.headers.get("Token"),
+            request.headers.get("Data"),
             "test_jwt",
             algorithm=['HS256']
         )
@@ -34,11 +34,15 @@ def receive():
         test_flag = request.headers.get("Test")
         scan_id = decoded_payload["scan_id"]
         domain = decoded_payload["domain"]
+
+        # Perform scan
         res = scan(scan_id, domain)
 
+        # If this was a test scan, return results
         if test_flag:
             return str(res)
 
+        # Construct request payload for result-processor
         if res is not None:
             payload = {"results": str(res), "scan_type": "https", "scan_id": scan_id}
             logging.info(str(res)+'\n')
@@ -47,11 +51,13 @@ def receive():
 
         # TODO Replace secret
         headers["Token"] = jwt.encode(
+            payload,
             "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
-        th = threading.Thread(target=dispatch, args=[payload, scan_id])
+        # Dispatch results to result-processor asynchronously
+        th = threading.Thread(target=dispatch, args=[scan_id])
         th.start()
 
         return 'Scan sent to result-handling service'
@@ -61,9 +67,9 @@ def receive():
         return 'Failed to send scan to result-handling service'
 
 
-def dispatch(payload, scan_id):
+def dispatch(scan_id):
     try:
-        response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+        response = requests.post('http://34.67.57.19/receive', headers=headers)
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
         return str(response.text)

@@ -51,16 +51,17 @@ def receive():
         scan_id = decoded_payload["scan_id"]
 
         # TODO Replace secret
-        header_token = jwt.encode(
+        encrypted_payload = jwt.encode(
+            payload,
             "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
         if test_flag == "true":
-            return dispatch(payload, dkim_flag, user_initialized, scan_id, header_token, test_flag)
+            return dispatch(encrypted_payload, dkim_flag, user_initialized, scan_id, test_flag)
         else:
             th = threading.Thread(target=dispatch,
-                                  args=[payload, dkim_flag, user_initialized, scan_id, header_token, test_flag])
+                                  args=[encrypted_payload, dkim_flag, user_initialized, scan_id, test_flag])
             th.start()
 
         return 'Domain dispatched to designated scanner(s)'
@@ -78,11 +79,11 @@ def receive():
         return 'Failed to dispatch domain to designated scanner(s)'
 
 
-def dispatch(payload, dkim_flag, manual, scan_id, header_token, test_flag):
+def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
     headers = {
         "Content-Type": "application/json",
         "Host": None,
-        "Token": header_token,
+        "Data": encrypted_payload,
         "Test": test_flag
     }
 
@@ -94,7 +95,7 @@ def dispatch(payload, dkim_flag, manual, scan_id, header_token, test_flag):
             for host in dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
-                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -102,7 +103,7 @@ def dispatch(payload, dkim_flag, manual, scan_id, header_token, test_flag):
             for host in hosts:
                 headers['Host'] = host
                 try:
-                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -113,7 +114,7 @@ def dispatch(payload, dkim_flag, manual, scan_id, header_token, test_flag):
             for host in manual_scan_dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
-                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -121,14 +122,14 @@ def dispatch(payload, dkim_flag, manual, scan_id, header_token, test_flag):
             for host in manual_scan_hosts:
                 headers["Host"] = host
                 try:
-                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
 
     if test_flag == "true":
         results = {}
-        for key, req in dispatched:
+        for key, req in dispatched.items():
             results[key] = str(req.text)
 
         return results

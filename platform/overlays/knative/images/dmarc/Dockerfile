@@ -1,7 +1,7 @@
 FROM python:3.7-slim
 
 # Copy local code to the container image.
-ENV SCANNER_HOME /ssl
+ENV SCANNER_HOME /dmarc
 WORKDIR $SCANNER_HOME
 COPY . ./
 
