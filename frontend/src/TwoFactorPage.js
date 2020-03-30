@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/core'
 import { Formik, Field } from 'formik'
 import { useMutation } from '@apollo/react-hooks'
-import VALIDATE_TWO_FACTOR from './graphql/mutations/validateTwoFactor'
+import { VALIDATE_TWO_FACTOR } from './graphql/mutations'
 
 export function TwoFactorPage() {
   const [validateOTP, { loading, error, data }] = useMutation(
@@ -60,7 +60,7 @@ export function TwoFactorPage() {
           }, 500)
         }}
       >
-        {props => (
+        {(props) => (
           <form onSubmit={props.handleSubmit}>
             <Field name="otpCode" validate={validateCode}>
               {({ field, form }) => (
