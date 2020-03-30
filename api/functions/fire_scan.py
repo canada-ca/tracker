@@ -8,7 +8,7 @@ from flask import request
 from app import app
 from db import db
 
-from models import Scans
+from models import Scans, Domains
 
 
 def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool):
@@ -20,13 +20,22 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool):
     :param dkim: Bool to see if url needs to be put through the dkim scanner
     :return: Status code returned from request
     """
+    # Get Time
+    scan_datetime = datetime.datetime.utcnow()
+
     # Create Scan Object
     new_scan = Scans(
         domain_id=domain_id,
-        scan_date=datetime.datetime.utcnow(),
+        scan_date=scan_datetime,
         initiated_by=user_id
     )
     db.session.add(new_scan)
+
+    # Update Domain Tables Last Run
+    Domains.query.filter(
+        Domains.id == domain_id
+    ).update({'last_run': scan_datetime})
+
     db.session.commit()
 
     # Get latest scan entry
