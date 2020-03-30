@@ -5,14 +5,17 @@ import logging
 import json
 import threading
 import jwt
-from sslyze.ssl_settings import TlsWrappedProtocolEnum
-from sslyze.server_connectivity_tester import ServerConnectivityError, ServerConnectivityTester
-from sslyze.plugins.openssl_cipher_suites_plugin import Tlsv12ScanCommand, Tlsv10ScanCommand, \
-    Tlsv11ScanCommand, Tlsv13ScanCommand, Sslv20ScanCommand, Sslv30ScanCommand
-from sslyze.plugins.certificate_info_plugin import CertificateInfoScanCommand
-from sslyze.plugins.heartbleed_plugin import HeartbleedScanCommand
-from sslyze.plugins.openssl_ccs_injection_plugin import OpenSslCcsInjectionScanCommand
-from sslyze.concurrent_scanner import ConcurrentScanner
+from sslyze.server_connectivity import ServerConnectivityTester
+from sslyze.errors import ConnectionToServerFailed
+from sslyze.plugins.plugin_base import ScanCommandImplementation
+from sslyze.plugins.openssl_cipher_suites.implementation import \
+    Tlsv12ScanImplementation, Tlsv10ScanImplementation, \
+    Tlsv11ScanImplementation, Tlsv13ScanImplementation, \
+    Sslv20ScanImplementation, Sslv30ScanImplementation
+from sslyze.plugins.certificate_info.implementation import CertificateInfoImplementation
+from sslyze.plugins.heartbleed_plugin import HeartbleedImplementation
+from sslyze.plugins.openssl_ccs_injection_plugin import OpenSslCcsInjectionImplementation
+from sslyze.scanner import Scanner
 from flask import Flask, request
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -33,7 +36,7 @@ def receive():
     try:
         # TODO Replace secret
         decoded_payload = jwt.decode(
-            request.headers.get("Token"),
+            request.headers.get("Data"),
             "test_jwt",
             algorithm=['HS256']
         )
@@ -41,23 +44,29 @@ def receive():
         test_flag = request.headers.get("Test")
         scan_id = decoded_payload["scan_id"]
         domain = decoded_payload["domain"]
+
+        # Perform scan
         res = scan(scan_id, domain)
 
+        # If this was a test scan, return results
         if test_flag:
             return str(res)
 
+        # Construct request payload for result-processor
         if res is not None:
             payload = {"results": str(res), "scan_type": "ssl", "scan_id": scan_id}
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to establish SSL connection" % scan_id)
 
         # TODO Replace secret
-        headers["Token"] = jwt.encode(
+        headers["Data"] = jwt.encode(
+            payload,
             "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
-        th = threading.Thread(target=dispatch, args=[payload, scan_id])
+        # Dispatch results to result-processor asynchronously
+        th = threading.Thread(target=dispatch, args=[scan_id])
         th.start()
 
         return 'Scan sent to result-handling service'
@@ -67,9 +76,9 @@ def receive():
         return 'Failed to send scan to result-handling service'
 
 
-def dispatch(payload, scan_id):
+def dispatch(scan_id):
     try:
-        response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+        response = requests.post('http://34.67.57.19/receive', headers=headers)
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
         return str(response.text)
@@ -88,7 +97,7 @@ def get_server_info(scan_id, domain):
 
         return server_info
 
-    except ServerConnectivityError as e:
+    except ConnectionToServerFailed as e:
 
         server_info = None
         # Could not establish a TLS connection to the server
@@ -104,26 +113,26 @@ def scan(scan_id, domain):
     else:
         tls_supported = str(server_info.highest_ssl_version_supported).split('.')[1]
 
-    concurrent_scanner = ConcurrentScanner()
+    scanner = Scanner()
 
-    concurrent_scanner.queue_scan_command(server_info, OpenSslCcsInjectionScanCommand())
-    concurrent_scanner.queue_scan_command(server_info, HeartbleedScanCommand())
-    concurrent_scanner.queue_scan_command(server_info, CertificateInfoScanCommand())
+    scanner.queue_scan_command(server_info, OpenSslCcsInjectionImplementation())
+    scanner.queue_scan_command(server_info, HeartbleedImplementation())
+    scanner.queue_scan_command(server_info, CertificateInfoImplementation())
 
     if tls_supported == 'SSLV2':
-        concurrent_scanner.queue_scan_command(server_info, Sslv20ScanCommand())
+        scanner.queue_scan_command(server_info, Sslv20ScanImplementation())
     elif tls_supported == 'SSLV3':
-        concurrent_scanner.queue_scan_command(server_info, Sslv30ScanCommand())
+        scanner.queue_scan_command(server_info, Sslv30ScanImplementation())
     elif tls_supported == 'TLSV1':
-        concurrent_scanner.queue_scan_command(server_info, Tlsv10ScanCommand())
+        scanner.queue_scan_command(server_info, Tlsv10ScanImplementation())
     elif tls_supported == 'TLSV1_1':
-        concurrent_scanner.queue_scan_command(server_info, Tlsv11ScanCommand())
+        scanner.queue_scan_command(server_info, Tlsv11ScanImplementation())
     elif tls_supported == 'TLSV1_2':
-        concurrent_scanner.queue_scan_command(server_info, Tlsv12ScanCommand())
+        scanner.queue_scan_command(server_info, Tlsv12ScanImplementation())
     elif tls_supported == 'TLSV1_3':
-        concurrent_scanner.queue_scan_command(server_info, Tlsv13ScanCommand())
+        scanner.queue_scan_command(server_info, Tlsv13ScanImplementation())
 
-    scan_results = concurrent_scanner.get_results()
+    scan_results = scanner.get_results()
 
     res = {"TLS": {}}
     for result in scan_results:

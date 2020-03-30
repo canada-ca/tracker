@@ -37,11 +37,15 @@ def receive():
 
         ext = tldextract.extract(decoded_payload["domain"])
         domain = ext.registered_domain
+
+        # Perform scan
         res = scan(scan_id, domain)
 
+        # If this was a test scan, return results
         if test_flag:
             return str(res)
 
+        # Construct request payload for result-processor
         if res is not None:
             payload = {"results": str(res), "scan_type": "dmarc", "scan_id": scan_id}
 
@@ -50,11 +54,13 @@ def receive():
 
         # TODO Replace secret
         headers["Token"] = jwt.encode(
+            payload,
             "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
-        th = threading.Thread(target=dispatch, args=[payload, scan_id])
+        # Dispatch results to result-processor asynchronously
+        th = threading.Thread(target=dispatch, args=[scan_id])
         th.start()
 
         return 'Scan sent to result-handling service'
@@ -64,9 +70,9 @@ def receive():
         return 'Failed to send scan to result-handling service'
 
 
-def dispatch(payload, scan_id):
+def dispatch(scan_id):
     try:
-        response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+        response = requests.post('http://34.67.57.19/receive', headers=headers)
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
         return str(response.text)
