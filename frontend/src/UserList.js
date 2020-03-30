@@ -76,7 +76,6 @@ export function UserList() {
 
         {data
           ? data.users.edges.map(edge => {
-              console.log(edge.node.permission)
               return (
                 <Box key={edge.node.id}>
                   <Box
@@ -137,6 +136,10 @@ export function UserList() {
             onClick={() => {
               window.alert('previous page')
             }}
+            isDisabled={
+              // Determine if the previous button should be disabled
+              !data.users.pageInfo.hasPreviousPage
+            }
           />
           <IconButton
             variantColor="blue"
@@ -145,6 +148,10 @@ export function UserList() {
             onClick={() => {
               window.alert('next page')
             }}
+            isDisabled={
+              // Determine if the next button should be disabled
+              !data.users.pageInfo.hasNextPage
+            }
           />
         </Stack>
       </Stack>
