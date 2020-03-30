@@ -2,7 +2,8 @@ import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from app import app
-from models import Dmarc_scans
+from db import db
+from models import Dmarc_scans, Scans, Domains
 
 from scalars.url import URL
 
@@ -29,6 +30,9 @@ class DMARC(SQLAlchemyObjectType):
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="Time when scan was initiated")
+    dmarc_phase = graphene.Int(
+        description="DMARC Phase found when running scan"
+    )
     record = graphene.String(
         description="DMARC record retrieved during the scan of the "
                     "given domain "
@@ -58,6 +62,9 @@ class DMARC(SQLAlchemyObjectType):
 
         def resolve_timestamp(self: Dmarc_scans, info):
             return get_timestamp(self, info)
+
+        def resolve_dmarc_phase(self: Dmarc_scans, info):
+            return self.dmarc_phase
 
         def resolve_record(self: Dmarc_scans, info):
             return self.dmarc_scan["dmarc"]["record"]
