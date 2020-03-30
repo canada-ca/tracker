@@ -15,7 +15,36 @@ import {
   Input,
 } from '@chakra-ui/core'
 
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
+
 export function UserList() {
+  // This function generates the URL when the page loads
+  const { loading, error, data } = useQuery(
+    gql`
+      query Users($org: Acronym!) {
+        users(org: $org) {
+          edges {
+            node {
+              userName
+              permission
+            }
+          }
+        }
+      }
+    `,
+    { variables: { org: '' } },
+  )
+  if (loading) {
+    return <p>Loading...</p>
+  }
+  if (error) {
+    console.log(error)
+  }
+  if (data) {
+    console.log(data)
+  }
+
   return (
     <Stack mx="auto" mb={6}>
       <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
