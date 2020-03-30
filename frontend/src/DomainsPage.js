@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { Heading, Text, Stack, List, ListItem } from '@chakra-ui/core'
-import DOMAINS from './graphql/queries/domains'
+import { DOMAINS } from './graphql/queries'
 
 export function DomainsPage() {
   const { loading, error, data } = useQuery(DOMAINS)
