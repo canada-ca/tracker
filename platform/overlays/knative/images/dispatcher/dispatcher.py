@@ -43,6 +43,8 @@ def receive():
             algorithm=['HS256']
         )
 
+        test_flag = request.headers.get("Test")
+
         payload = {"scan_id": decoded_payload["scan_id"], "domain": decoded_payload["domain"]}
         dkim_flag = decoded_payload["dkim"]
         user_initialized = decoded_payload["user_init"]
@@ -54,8 +56,12 @@ def receive():
             algorithm='HS256'
         ).decode('utf-8')
 
-        th = threading.Thread(target=dispatch, args=[payload, dkim_flag, user_initialized, scan_id, header_token])
-        th.start()
+        if test_flag == "true":
+            return dispatch(payload, dkim_flag, user_initialized, scan_id, header_token, test_flag)
+        else:
+            th = threading.Thread(target=dispatch,
+                                  args=[payload, dkim_flag, user_initialized, scan_id, header_token, test_flag])
+            th.start()
 
         return 'Domain dispatched to designated scanner(s)'
 
@@ -72,12 +78,15 @@ def receive():
         return 'Failed to dispatch domain to designated scanner(s)'
 
 
-def dispatch(payload, dkim_flag, manual, scan_id, header_token):
+def dispatch(payload, dkim_flag, manual, scan_id, header_token, test_flag):
     headers = {
         "Content-Type": "application/json",
         "Host": None,
-        "Token": header_token
+        "Token": header_token,
+        "Test": test_flag
     }
+
+    dispatched = {}
 
     if not manual:
 
@@ -85,7 +94,7 @@ def dispatch(payload, dkim_flag, manual, scan_id, header_token):
             for host in dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
-                    requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -93,7 +102,7 @@ def dispatch(payload, dkim_flag, manual, scan_id, header_token):
             for host in hosts:
                 headers['Host'] = host
                 try:
-                    requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -104,7 +113,7 @@ def dispatch(payload, dkim_flag, manual, scan_id, header_token):
             for host in manual_scan_dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
-                    requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -112,10 +121,17 @@ def dispatch(payload, dkim_flag, manual, scan_id, header_token):
             for host in manual_scan_hosts:
                 headers["Host"] = host
                 try:
-                    requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
+
+    if test_flag == "true":
+        results = {}
+        for key, req in dispatched:
+            results[key] = str(req.text)
+
+        return results
 
 
 if __name__ == "__main__":

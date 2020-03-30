@@ -31,9 +31,14 @@ def receive():
             algorithm=['HS256']
         )
 
+        test_flag = request.headers.get("Test")
         scan_id = decoded_payload["scan_id"]
         domain = decoded_payload["domain"]
         res = scan(scan_id, domain)
+
+        if test_flag:
+            return str(res)
+
         if res is not None:
             payload = {"results": str(res), "scan_type": "https", "scan_id": scan_id}
             logging.info(str(res)+'\n')

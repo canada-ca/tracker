@@ -38,9 +38,14 @@ def receive():
             algorithm=['HS256']
         )
 
+        test_flag = request.headers.get("Test")
         scan_id = decoded_payload["scan_id"]
         domain = decoded_payload["domain"]
         res = scan(scan_id, domain)
+
+        if test_flag:
+            return str(res)
+
         if res is not None:
             payload = {"results": str(res), "scan_type": "ssl", "scan_id": scan_id}
         else:
@@ -88,7 +93,6 @@ def get_server_info(scan_id, domain):
         server_info = None
         # Could not establish a TLS connection to the server
         return server_info
-
 
 
 def scan(scan_id, domain):
