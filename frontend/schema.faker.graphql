@@ -982,7 +982,7 @@ type User implements Node {
   lang: String
 
   """Has the user completed two factor authentication"""
-  tfa: Boolean @examples(values: [false])
+  tfa: Boolean @examples(values: [false, true])
 
   """Users access to organizations"""
   affiliations(before: String, after: String, first: Int, last: Int): UserAffClassConnection

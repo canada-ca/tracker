@@ -65,6 +65,5 @@ describe('<PasswordConfirmation />', () => {
 
     const icon = getByRole(container, 'passwordIcon')
     expect(icon).toBeTruthy()
-    console.log(icon)
   })
 })
