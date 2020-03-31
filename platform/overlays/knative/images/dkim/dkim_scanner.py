@@ -46,20 +46,21 @@ def receive():
 
         # Construct request payload for result-processor
         if res is not None:
-            payload = {"results": str(res), "scan_type": "dkim", "scan_id": scan_id}
-
+            payload = {"results": str(res)}
+            token = {"scan_type": "dkim", "scan_id": scan_id}
+            logging.info(str(res) + '\n')
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to perform dkim scan" % scan_id)
 
         # TODO Replace secret
         headers["Token"] = jwt.encode(
-            payload,
+            token,
             "test_jwt",
             algorithm='HS256'
         ).decode('utf-8')
 
         # Dispatch results to result-processor asynchronously
-        th = threading.Thread(target=dispatch, args=[scan_id])
+        th = threading.Thread(target=dispatch, args=[scan_id, payload])
         th.start()
 
         return 'Scan sent to result-handling service'
@@ -69,9 +70,9 @@ def receive():
         return 'Failed to send scan to result-handling service'
 
 
-def dispatch(scan_id):
+def dispatch(scan_id, payload):
     try:
-        response = requests.post('http://34.67.57.19/receive', headers=headers)
+        response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
         return str(response.text)
