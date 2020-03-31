@@ -67,7 +67,7 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
     }
 
     if test:
-        headers['True'] = True
+        headers['True'] = 'true'
 
     status = requests.post(
         "http://34.67.57.19/receive",
