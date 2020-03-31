@@ -8,6 +8,7 @@ from db import db
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_admin
 from functions.fire_scan import fire_scan
+from functions.input_validators import cleanse_input
 
 from models import Domains
 
@@ -25,6 +26,9 @@ class RequestScan(graphene.Mutation):
         dkim = graphene.Boolean(
             description="If this is a DKIM scan please set to true."
         )
+        test = graphene.Boolean(
+            description="If this scan if for testing purposes set to true."
+        )
 
     status = graphene.String()
 
@@ -40,8 +44,9 @@ class RequestScan(graphene.Mutation):
             # Get variables from kwargs
             user_id = kwargs.get('user_id')
             user_roles = kwargs.get('user_roles')
-            url = kwargs.get('url')
+            url = cleanse_input(kwargs.get('url'))
             dkim = kwargs.get('dkim')
+            test = kwargs.get('test', False)
 
             # Get Domain ORM related to requested domain
             domain_orm = db.session.query(Domains).filter(
@@ -61,7 +66,8 @@ class RequestScan(graphene.Mutation):
                     user_id=user_id,
                     domain_id=domain_id,
                     url=url,
-                    dkim=dkim
+                    dkim=dkim,
+                    test=test
                 )
 
                 # Return status information to user
