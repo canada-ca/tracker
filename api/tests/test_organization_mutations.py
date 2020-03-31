@@ -17,7 +17,7 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from app import app
-from db import db
+from db import db_session
 from models import (
     Organizations,
     Domains,
@@ -34,9 +34,9 @@ from models import (
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
 
+
 @pytest.fixture(scope='class')
 def organization_mutation_db_init():
-    db.init_app(app)
     bcrypt = Bcrypt(app)
 
     with app.app_context():
@@ -47,7 +47,7 @@ def organization_mutation_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8")
         )
-        db.session.add(test_super_admin)
+        db_session.add(test_super_admin)
         test_admin = Users(
             id=2,
             display_name="testadmin",
@@ -55,7 +55,7 @@ def organization_mutation_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8")
         )
-        db.session.add(test_admin)
+        db_session.add(test_admin)
         test_write = Users(
             id=3,
             display_name="testuserwrite",
@@ -63,7 +63,7 @@ def organization_mutation_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8")
         )
-        db.session.add(test_write)
+        db_session.add(test_write)
         test_read = Users(
             id=4,
             display_name="testuserread",
@@ -71,15 +71,15 @@ def organization_mutation_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
         )
-        db.session.add(test_read)
+        db_session.add(test_read)
 
         # Super Admin Test Values
         sa_org = Organizations(
             acronym='SA'
         )
-        db.session.add(sa_org)
-        db.session.commit()
-        org_orm = db.session.query(Organizations).filter(
+        db_session.add(sa_org)
+        db_session.commit()
+        org_orm = db_session.query(Organizations).filter(
             Organizations.acronym == 'SA'
         ).first()
         sa_user_aff = User_affiliations(
@@ -87,68 +87,68 @@ def organization_mutation_db_init():
             user_id=1,
             permission='super_admin'
         )
-        db.session.add(sa_user_aff)
-        db.session.commit()
+        db_session.add(sa_user_aff)
+        db_session.commit()
         sa_check_org = Organizations(
             acronym="SA_CHECK"
         )
-        db.session.add(sa_check_org)
+        db_session.add(sa_check_org)
         sa_update_org = Organizations(
             acronym="SA_UPDATE"
         )
-        db.session.add(sa_update_org)
+        db_session.add(sa_update_org)
         sa_delete_org = Organizations(
             acronym="SA_DELETE"
         )
-        db.session.add(sa_delete_org)
-        db.session.commit()
-        org_orm = db.session.query(Organizations).filter(
+        db_session.add(sa_delete_org)
+        db_session.commit()
+        org_orm = db_session.query(Organizations).filter(
             Organizations.acronym == 'SA_DELETE'
         ).first()
         sa_domain = Domains(
             id=1,
             organization_id=org_orm.id
         )
-        db.session.add(sa_domain)
+        db_session.add(sa_domain)
         sa_scan = Scans(
             id=1,
             domain_id=1
         )
-        db.session.add(sa_scan)
-        db.session.commit()
+        db_session.add(sa_scan)
+        db_session.commit()
         sa_dkim = Dkim_scans(
             id=1
         )
-        db.session.add(sa_dkim)
+        db_session.add(sa_dkim)
         sa_dmarc = Dmarc_scans(
             id=1
         )
-        db.session.add(sa_dmarc)
+        db_session.add(sa_dmarc)
         sa_https = Https_scans(
             id=1
         )
-        db.session.add(sa_https)
+        db_session.add(sa_https)
         sa_mx = Mx_scans(
             id=1
         )
-        db.session.add(sa_mx)
+        db_session.add(sa_mx)
         sa_spf = Spf_scans(
             id=1
         )
-        db.session.add(sa_spf)
+        db_session.add(sa_spf)
         sa_ssl = Ssl_scans(
             id=1
         )
-        db.session.add(sa_ssl)
-        db.session.commit()
+        db_session.add(sa_ssl)
+        db_session.commit()
 
         # Admin Db Inserts
         admin_org = Organizations(
             acronym="ADMIN_ORG"
         )
-        db.session.add(admin_org)
-        db.session.commit()
-        org_orm = db.session.query(Organizations).filter(
+        db_session.add(admin_org)
+        db_session.commit()
+        org_orm = db_session.query(Organizations).filter(
             Organizations.acronym == 'ADMIN_ORG'
         ).first()
         admin_aff = User_affiliations(
@@ -156,15 +156,15 @@ def organization_mutation_db_init():
             user_id=2,
             permission='admin'
         )
-        db.session.add(admin_aff)
+        db_session.add(admin_aff)
 
         # User Write Db Inserts
         user_write_org = Organizations(
             acronym="USER_W_ORG"
         )
-        db.session.add(user_write_org)
-        db.session.commit()
-        org_orm = db.session.query(Organizations).filter(
+        db_session.add(user_write_org)
+        db_session.commit()
+        org_orm = db_session.query(Organizations).filter(
             Organizations.acronym == 'USER_W_ORG'
         ).first()
         user_write_aff = User_affiliations(
@@ -172,15 +172,15 @@ def organization_mutation_db_init():
             user_id=3,
             permission='user_write'
         )
-        db.session.add(user_write_aff)
+        db_session.add(user_write_aff)
 
         # User Read Db Inserts
         user_read_org = Organizations(
             acronym="USER_R_ORG"
         )
-        db.session.add(user_read_org)
-        db.session.commit()
-        org_orm = db.session.query(Organizations).filter(
+        db_session.add(user_read_org)
+        db_session.commit()
+        org_orm = db_session.query(Organizations).filter(
             Organizations.acronym == 'USER_R_ORG'
         ).first()
         user_read_aff = User_affiliations(
@@ -188,8 +188,8 @@ def organization_mutation_db_init():
             user_id=4,
             permission='user_read'
         )
-        db.session.add(user_read_aff)
-        db.session.commit()
+        db_session.add(user_read_aff)
+        db_session.commit()
 
     yield
 
@@ -205,7 +205,7 @@ def organization_mutation_db_init():
         User_affiliations.query.delete()
         Organizations.query.delete()
         Users.query.delete()
-        db.session.commit()
+        db_session.commit()
 
 
 @pytest.mark.usefixtures('organization_mutation_db_init')
@@ -538,7 +538,7 @@ class TestOrganizationMutations(TestCase):
             )
             request_headers = Request(environ)
 
-            org_id = db.session.query(Organizations).filter(
+            org_id = db_session.query(Organizations).filter(
                 Organizations.acronym == 'SA_DELETE'
             ).first().id
 
@@ -557,24 +557,24 @@ class TestOrganizationMutations(TestCase):
             assert executed['data']['removeOrganization']
             assert executed['data']['removeOrganization']['status']
 
-            check_org_orm = db.session.query(Organizations).filter(
+            check_org_orm = db_session.query(Organizations).filter(
                 Organizations.acronym == 'SA_DELETE'
             ).first()
             assert check_org_orm is None
 
-            check_user_aff = db.session.query(User_affiliations).filter(
+            check_user_aff = db_session.query(User_affiliations).filter(
                 User_affiliations.organization_id == org_id
             ).all()
             assert not check_user_aff
 
-            assert not db.session.query(Domains).all()
-            assert not db.session.query(Scans).all()
-            assert not db.session.query(Ssl_scans).all()
-            assert not db.session.query(Spf_scans).all()
-            assert not db.session.query(Mx_scans).all()
-            assert not db.session.query(Https_scans).all()
-            assert not db.session.query(Dmarc_scans).all()
-            assert not db.session.query(Dkim_scans).all()
+            assert not db_session.query(Domains).all()
+            assert not db_session.query(Scans).all()
+            assert not db_session.query(Ssl_scans).all()
+            assert not db_session.query(Spf_scans).all()
+            assert not db_session.query(Mx_scans).all()
+            assert not db_session.query(Https_scans).all()
+            assert not db_session.query(Dmarc_scans).all()
+            assert not db_session.query(Dkim_scans).all()
 
     def test_sa_org_mutation_remove_org_sa_org(self):
         """
