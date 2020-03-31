@@ -3,7 +3,7 @@ import { i18n } from '@lingui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
-import { render, cleanup, queryByText } from '@testing-library/react'
+import { waitFor, render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import gql from 'graphql-tag'
 import App from '../App'
@@ -20,8 +20,6 @@ const resolvers = {
 }
 
 describe('<TwoFactorNotificationBar />', () => {
-  afterEach(cleanup)
-
   it('successfully renders the component on its own.', () => {
     render(
       <ThemeProvider theme={theme}>
@@ -57,7 +55,7 @@ describe('<TwoFactorNotificationBar />', () => {
       },
     ]
 
-    const { container } = render(
+    const { queryByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -68,11 +66,9 @@ describe('<TwoFactorNotificationBar />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-    expect(render).toBeTruthy()
 
-    const tfaBar = queryByText(
-      container,
-      /You have not enabled Two Factor Authentication./i,
+    const tfaBar = await waitFor(() =>
+      queryByText(/You have not enabled Two Factor Authentication./i),
     )
     expect(tfaBar).toBeDefined()
   })
@@ -97,7 +93,7 @@ describe('<TwoFactorNotificationBar />', () => {
       },
     ]
 
-    const { container } = render(
+    const { queryByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -108,11 +104,9 @@ describe('<TwoFactorNotificationBar />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-    expect(render).toBeTruthy()
 
-    const tfaBar = queryByText(
-      container,
-      /You have not enabled Two Factor Authentication./i,
+    const tfaBar = await waitFor(() =>
+      queryByText(/You have not enabled Two Factor Authentication./i),
     )
     expect(tfaBar).toBe(null)
   })

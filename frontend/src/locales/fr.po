@@ -46,6 +46,10 @@ msgstr "Accueil"
 msgid "Language: {0}"
 msgstr ""
 
+#: src/QRcodePage.js:19
+msgid "Loading..."
+msgstr "Chargement..."
+
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page non trouvée"
@@ -83,7 +87,7 @@ msgstr "Désolé, la page que vous essayiez de consulter n'existe pas."
 msgid "Terms & conditions"
 msgstr "Avis"
 
-#: src/DomainsPage.js:29
+#: src/DomainsPage.js:23
 msgid "This is the full list of domains"
 msgstr "Voici la liste complète des domaines"
 
@@ -102,3 +106,8 @@ msgstr ""
 #: src/App.js:87
 msgid "User List"
 msgstr ""
+
+#: src/QRcodePage.js:43
+msgid "Your 2FA app will then have a valid code that you can use when you sign in."
+msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez."
+

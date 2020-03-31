@@ -1,18 +1,12 @@
 import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { Heading, Text, Stack, List, ListItem } from '@chakra-ui/core'
+import { DOMAINS } from './graphql/queries'
 
 export function DomainsPage() {
-  const { loading, error, data } = useQuery(gql`
-    {
-      domains(organization: BOC) {
-        url
-      }
-    }
-  `)
+  const { loading, error, data } = useQuery(DOMAINS)
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error :(</p>

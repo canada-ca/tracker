@@ -2,9 +2,8 @@ import React from 'react'
 import { i18n } from '@lingui/core'
 import { object, string } from 'yup'
 import {
-  wait,
+  waitFor,
   render,
-  cleanup,
   fireEvent,
 } from '@testing-library/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
@@ -15,7 +14,6 @@ i18n.load('en', { en: {} })
 i18n.activate('en')
 
 describe('<PasswordField />', () => {
-  afterEach(cleanup)
 
   describe('when validation fails', () => {
     it('displays an error message', async () => {
@@ -40,7 +38,7 @@ describe('<PasswordField />', () => {
       const input = getByTestId('pwfield')
       fireEvent.blur(input)
 
-      await wait(() => {
+      await waitFor(() => {
         expect(getByText('sadness')).toBeInTheDocument()
       })
     })
@@ -64,7 +62,7 @@ describe('<PasswordField />', () => {
 
       const input = getByTestId('pwfield')
 
-      await wait(() => {
+      await waitFor(() => {
         expect(input.type).toEqual('password')
       })
     })
@@ -92,7 +90,7 @@ describe('<PasswordField />', () => {
 
       const input = getByRole('textbox')
 
-      await wait(() => {
+      await waitFor(() => {
         expect(input.type).toEqual('text')
       })
     })

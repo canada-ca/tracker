@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react'
 import {
   Button,
@@ -12,32 +11,14 @@ import {
   useToast,
   Icon,
 } from '@chakra-ui/core'
-import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { Field, Formik } from 'formik'
+import { CREATE_USER } from './graphql/mutations'
 import { PasswordConfirmation } from './PasswordConfirmation'
 
 export function CreateUserPage() {
-  const [createUser, { loading, error, data }] = useMutation(gql`
-    mutation CreateUser(
-      $displayName: String!
-      $userName: EmailAddress!
-      $password: String!
-      $confirmPassword: String!
-    ) {
-      createUser(
-        displayName: $displayName
-        userName: $userName
-        password: $password
-        confirmPassword: $confirmPassword
-      ) {
-        user {
-          userName
-        }
-      }
-    }
-  `)
+  const [createUser, { loading, error, data }] = useMutation(CREATE_USER)
 
   const history = useHistory()
   const toast = useToast()
@@ -64,7 +45,7 @@ export function CreateUserPage() {
   function validateEmail(value) {
     let error
     if (!value || value === '') {
-      error = ' can not be empty'
+      error = ' cannot be empty'
     }
     return error
   }
@@ -76,22 +57,19 @@ export function CreateUserPage() {
       </Text>
       <Formik
         initialValues={{ email: '', password: '', confirmPassword: '' }}
-        onSubmit={(values, actions) => {
-          setTimeout(() => {
-            createUser({
-              variables: {
-                userName: values.email,
-                password: values.password,
-                confirmPassword: values.confirmPassword,
-                displayName: values.email,
-              },
-            })
-            actions.setSubmitting(false)
-          }, 500)
+        onSubmit={async (values) => {
+          createUser({
+            variables: {
+              userName: values.email,
+              password: values.password,
+              confirmPassword: values.confirmPassword,
+              displayName: values.email,
+            },
+          })
         }}
       >
-        {props => (
-          <form id="form" onSubmit={props.handleSubmit}>
+        {({ handleSubmit, isSubmitting }) => (
+          <form id="form" onSubmit={handleSubmit}>
             <Field name="email" validate={validateEmail}>
               {({ field, form }) => (
                 <FormControl
@@ -117,7 +95,7 @@ export function CreateUserPage() {
             <Stack mt={6} spacing={4} isInline>
               <Button
                 variantColor="teal"
-                isLoading={props.isSubmitting}
+                isLoading={isSubmitting}
                 type="submit"
                 id="submitBtn"
               >
