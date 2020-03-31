@@ -9,7 +9,6 @@ from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, M
 from database import *
 from utils import *
 from datetime import datetime
-from cipher_conversion import TLS_OPENSSL_TO_RFC_NAMES_MAPPING, SSLV2_OPENSSL_TO_RFC_NAMES_MAPPING
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -174,12 +173,12 @@ def process_results(results, scan_type, scan_id):
             if results is None:
                 report = {"missing": True}
 
-                report["sslv2"] = False
-                report["sslv3"] = False
-                report["tlsv1_0"] = False
-                report["tlsv1_1"] = False
-                report["tlsv1_2"] = False
-                report["tlsv1_3"] = False
+                report["SSL_2_0"] = False
+                report["SSL_3_0"] = False
+                report["TLS_1_0"] = False
+                report["TLS_1_1"] = False
+                report["TLS_1_2"] = False
+                report["TLS_1_3"] = False
                 report["bod_crypto"] = False
                 report["rc4"] = False
                 report["3des"] = False
@@ -199,7 +198,7 @@ def process_results(results, scan_type, scan_id):
                 ###
                 # ITPIN cares about usage of TLS 1.0/1.1/1.2
 
-                for version in ["SSLV2", "SSLV3", "TLSV1", "TLSV1_1", "TLSV1_2", "TLSV1_3"]:
+                for version in ["SSL_2_0", "SSL_3_0", "TLS_1_0", "TLS_1_1", "TLS_1_2", "TLS_1_3"]:
                     if version == results["TLS"]["supported"]:
                         report[version] = True
                     else:
