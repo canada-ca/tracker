@@ -1,4 +1,5 @@
 import React from 'react'
+import { Trans } from '@lingui/macro'
 import PropTypes from 'prop-types'
 import { Box, Stack, Text, Button } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
@@ -12,14 +13,21 @@ export function QRcodePage({ userName }) {
     variables: { userName: userName },
   })
 
-  if (loading) return <p>Loading...</p>
+  if (loading)
+    return (
+      <p>
+        <Trans>Loading...</Trans>
+      </p>
+    )
   if (error) return <p>Error: {error.message} </p>
 
   if (data)
     return (
       <Stack spacing={4} mx="auto" alignItems="center">
         <Text alignItems="center" mx="auto" fontSize="2xl">
-          Scan this QR code with a 2FA app like Authy or Google Authenticator
+          <Trans>
+            Scan this QR code with a 2FA app like Authy or Google Authenticator
+          </Trans>
         </Text>
 
         <Box mt={6} mx="auto">
@@ -32,8 +40,10 @@ export function QRcodePage({ userName }) {
         </Box>
 
         <Text mt={6} alignItems="center" mx="auto" fontSize="lg">
-          Your 2FA app will then have a valid code that you can use when you
-          sign in.
+          <Trans>
+            Your 2FA app will then have a valid code that you can use when you
+            sign in.
+          </Trans>
         </Text>
 
         <Stack spacing={4} isInline>
@@ -43,7 +53,7 @@ export function QRcodePage({ userName }) {
             to="/sign-in"
             variantColor="teal"
           >
-            Sign In
+            <Trans>Sign In</Trans>
           </Button>
           <Button
             width={{ md: 40 }}
@@ -52,7 +62,7 @@ export function QRcodePage({ userName }) {
             variantColor="teal"
             variant="outline"
           >
-            Home
+            <Trans>Home</Trans>
           </Button>
         </Stack>
       </Stack>
