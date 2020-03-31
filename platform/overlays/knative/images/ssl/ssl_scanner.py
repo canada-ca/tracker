@@ -7,7 +7,7 @@ import threading
 import jwt
 from sslyze.server_connectivity import ServerConnectivityTester
 from sslyze.errors import ConnectionToServerFailed
-from sslyze.plugins.plugin_base import ScanCommandImplementation
+from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.plugins.openssl_cipher_suites.implementation import \
     Tlsv12ScanImplementation, Tlsv10ScanImplementation, \
     Tlsv11ScanImplementation, Tlsv13ScanImplementation, \
@@ -15,7 +15,8 @@ from sslyze.plugins.openssl_cipher_suites.implementation import \
 from sslyze.plugins.certificate_info.implementation import CertificateInfoImplementation
 from sslyze.plugins.heartbleed_plugin import HeartbleedImplementation
 from sslyze.plugins.openssl_ccs_injection_plugin import OpenSslCcsInjectionImplementation
-from sslyze.scanner import Scanner
+from sslyze.scanner import Scanner, ServerScanRequest
+from sslyze.server_setting import ServerNetworkLocation, ServerNetworkLocationViaDirectConnection
 from flask import Flask, request
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -91,10 +92,11 @@ def dispatch(scan_id, payload):
 def get_server_info(scan_id, domain):
 
     try:
-        server_tester = ServerConnectivityTester(hostname=domain)
+        server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(domain, 443)
+        server_tester = ServerConnectivityTester()
 
-        logging.info("\n(SCAN: %s) - Testing connectivity with %s:%s..." % (scan_id, server_tester.hostname, server_tester.port))
-        server_info = server_tester.perform()
+        logging.info("\n(SCAN: %s) - Testing connectivity with %s:%s..." % (scan_id, server_location.hostname, server_location.port))
+        server_info = server_tester.perform(server_location)
         logging.info("(SCAN: %s) - Server Info %s\n" % (scan_id, server_info))
 
         return server_info
@@ -113,26 +115,31 @@ def scan(scan_id, domain):
     if server_info is None:
         return None
     else:
-        tls_supported = str(server_info.highest_ssl_version_supported).split('.')[1]
+        tls_supported = str(server_info.tls_probing_result.highest_tls_version_supported).split('.')[1]
 
     scanner = Scanner()
 
-    scanner.queue_scan_command(server_info, OpenSslCcsInjectionImplementation())
-    scanner.queue_scan_command(server_info, HeartbleedImplementation())
-    scanner.queue_scan_command(server_info, CertificateInfoImplementation())
+    designated_scans = set()
+    designated_scans.add(ScanCommand.OPENSSL_CCS_INJECTION)
+    designated_scans.add(ScanCommand.HEARTBLEED)
+    designated_scans.add(ScanCommand.CERTIFICATE_INFO)
 
-    if tls_supported == 'SSLV2':
-        scanner.queue_scan_command(server_info, Sslv20ScanImplementation())
-    elif tls_supported == 'SSLV3':
-        scanner.queue_scan_command(server_info, Sslv30ScanImplementation())
-    elif tls_supported == 'TLSV1':
-        scanner.queue_scan_command(server_info, Tlsv10ScanImplementation())
-    elif tls_supported == 'TLSV1_1':
-        scanner.queue_scan_command(server_info, Tlsv11ScanImplementation())
-    elif tls_supported == 'TLSV1_2':
-        scanner.queue_scan_command(server_info, Tlsv12ScanImplementation())
-    elif tls_supported == 'TLSV1_3':
-        scanner.queue_scan_command(server_info, Tlsv13ScanImplementation())
+    if tls_supported == 'SSL_2_0':
+        designated_scans.add(ScanCommand.SSL_2_0_CIPHER_SUITES)
+    elif tls_supported == 'SSL_3_0':
+        designated_scans.add(ScanCommand.SSL_3_0_CIPHER_SUITES)
+    elif tls_supported == 'TLS_1_0':
+        designated_scans.add(ScanCommand.TLS_1_0_CIPHER_SUITES)
+    elif tls_supported == 'TLS_1_1':
+        designated_scans.add(ScanCommand.TLS_1_1_CIPHER_SUITES)
+    elif tls_supported == 'TLS_1_2':
+        designated_scans.add(ScanCommand.TLS_1_2_CIPHER_SUITES)
+    elif tls_supported == 'TLS_1_3':
+        designated_scans.add(ScanCommand.TLS_1_3_CIPHER_SUITES)
+
+    scan_request = ServerScanRequest(server_info=server_info, scan_commands=designated_scans)
+
+    scanner.queue_scan(scan_request)
 
     scan_results = scanner.get_results()
 
