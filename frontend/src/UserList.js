@@ -8,7 +8,6 @@ import {
   Box,
   Text,
   Button,
-  IconButton,
   Icon,
   InputGroup,
   InputLeftElement,
@@ -138,7 +137,8 @@ export function UserList() {
                       </Box>
                       <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }}>
                         <Box mt={2} color="gray.500">
-                        Orgs: {// Populate the user-orgs list.
+                          Orgs:
+                          {// Populate the user-orgs list.
                           edge.node.user.affiliations.edges.map(
                             (edge, i, arr) => {
                               if (arr.length - 1 === i) {
