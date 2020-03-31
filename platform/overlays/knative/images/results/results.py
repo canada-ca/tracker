@@ -28,15 +28,16 @@ def receive():
     try:
 
         # TODO Replace secret
-        decoded_payload = jwt.decode(
-            request.headers.get("Data"),
+        decoded_token = jwt.decode(
+            request.headers.get("Token"),
             "test_jwt",
             algorithm=['HS256']
         )
 
-        result_dict = formatted_dictionary(decoded_payload["results"])
-        scan_type = decoded_payload["scan_type"]
-        scan_id = decoded_payload["scan_id"]
+        payload = request.get_data()
+        result_dict = formatted_dictionary(payload["results"])
+        scan_type = decoded_token["scan_type"]
+        scan_id = decoded_token["scan_id"]
 
         res = process_results(result_dict, scan_type, scan_id)
 
