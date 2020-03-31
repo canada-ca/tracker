@@ -698,7 +698,7 @@ type Query {
   """
   Query the currently logged in user if no user name isgiven, or query a specific user by user name.
   """
-  user(userName: EmailAddress): [User]
+  user(userName: EmailAddress): User
 
   """
   Select all information on a selected organization that a user has access to.

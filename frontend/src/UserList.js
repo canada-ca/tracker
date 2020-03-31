@@ -38,6 +38,7 @@ export function UserList() {
                     }
                     edges {
                       node {
+                        id
                         user {
                           userName
                           displayName
@@ -46,6 +47,7 @@ export function UserList() {
                           affiliations {
                             edges {
                               node {
+                                id
                                 organization {
                                   acronym
                                 }
@@ -99,7 +101,7 @@ export function UserList() {
         <Divider />
 
         {data
-          ? data.user[0].affiliations.edges[0].node.organization.affiliatedUsers.edges.map(
+          ? data.user.affiliations.edges[0].node.organization.affiliatedUsers.edges.map(
               edge => {
                 return (
                   <Box key={edge.node.id}>
@@ -134,12 +136,25 @@ export function UserList() {
                         </Badge>
                       </Box>
                       <Box flexShrink="0" ml={{ md: 6 }} mr={{ md: 6 }}>
-                        <Text mt={2} color="gray.500">
-                          {edge.node.user.affiliations.edges.map(edge => {
-                            // TODO: Figure out how to remove the trailing | symbol
-                            return edge.node.organization.acronym + ' | '
-                          })}
-                        </Text>
+                        <Box mt={2} color="gray.500">
+                          {// Populate the user-orgs list.
+                          edge.node.user.affiliations.edges.map(
+                            (edge, i, arr) => {
+                              if (arr.length - 1 === i) {
+                                return (
+                                  <Text display="inline" key={edge.node.id + i}>
+                                    {edge.node.organization.acronym}
+                                  </Text>
+                                )
+                              }
+                              return (
+                                <Text display="inline" key={edge.node.id + i}>
+                                  {edge.node.organization.acronym + ' | '}
+                                </Text>
+                              )
+                            },
+                          )}
+                        </Box>
                       </Box>
                       <Box flexShrink="0" ml={{ md: 6 }} mr={{ md: 6 }}>
                         <Text mt={2} color="gray.500">
@@ -171,7 +186,7 @@ export function UserList() {
             }}
             isDisabled={
               // Determine if the previous button should be disabled
-              !data.user[0].affiliations.edges[0].node.organization
+              !data.user.affiliations.edges[0].node.organization
                 .affiliatedUsers.pageInfo.hasPreviousPage
             }
           />
@@ -185,7 +200,7 @@ export function UserList() {
             }}
             isDisabled={
               // Determine if the next button should be disabled
-              !data.user[0].affiliations.edges[0].node.organization
+              !data.user.affiliations.edges[0].node.organization
                 .affiliatedUsers.pageInfo.hasNextPage
             }
           />
