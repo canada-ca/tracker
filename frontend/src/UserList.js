@@ -137,7 +137,7 @@ export function UserList() {
                       </Box>
                       <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }}>
                         <Box mt={2} color="gray.500">
-                          Orgs:
+                          Orgs:&nbsp;
                           {// Populate the user-orgs list.
                           edge.node.user.affiliations.edges.map(
                             (edge, i, arr) => {
