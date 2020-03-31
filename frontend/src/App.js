@@ -68,6 +68,9 @@ export default function App() {
               <Trans>User Profile</Trans>
             </Link>
           )}
+          <Link to="/user">
+            <Trans>UserPage</Trans>
+          </Link>
         </Navigation>
         {// Dynamically show the TwoFactorNotification bar
         data && !data.tfa && <TwoFactorNotificationBar />}

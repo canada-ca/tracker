@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useFormik } from 'formik'
+import { useFormik, Formik } from 'formik'
 import { useHistory } from 'react-router-dom'
 
 import {
@@ -21,6 +21,7 @@ import {
   useToast,
 } from '@chakra-ui/core'
 import { useApolloClient } from '@apollo/react-hooks'
+import { PasswordConfirmation } from './PasswordConfirmation'
 
 export function UserPage() {
   const client = useApolloClient()
@@ -133,10 +134,22 @@ export function UserPage() {
         </Stack>
         <Divider />
         <Stack isInline>
-          <Button leftIcon="lock" variantColor="blue"  onClick={() => {history.push('/two-factor-code')}}>
+          <Button
+            leftIcon="lock"
+            variantColor="blue"
+            onClick={() => {
+              history.push('/two-factor-code')
+            }}
+          >
             Enable 2FA
           </Button>
-          <Button leftIcon="edit" variantColor="teal" onClick={() => {window.alert("coming soon")}}>
+          <Button
+            leftIcon="edit"
+            variantColor="teal"
+            onClick={() => {
+              window.alert('coming soon')
+            }}
+          >
             Manage API keys
           </Button>
         </Stack>
@@ -163,7 +176,34 @@ export function UserPage() {
         <Text fontSize="2xl" fontWeight="bold" textAlign="center">
           Change Password
         </Text>
-        <p>PasswordConfirm componenet goes here.</p>
+        <Text>
+          Change your password below by entering and confirming a new password.
+        </Text>
+
+        <Formik
+          initialValues={{password: '', confirmPassword: '' }}
+          onSubmit={async values => {
+            console.log(values)
+            window.alert("Change password submitted.  TODO: Implement GQL call")
+          }}
+        >
+          {({ handleSubmit, isSubmitting }) => (
+            <form id="form" onSubmit={handleSubmit}>
+              <PasswordConfirmation />
+
+              <Stack mt={6} spacing={4} isInline>
+                <Button
+                  variantColor="teal"
+                  isLoading={isSubmitting}
+                  type="submit"
+                  id="submitBtn"
+                >
+                  Change Password
+                </Button>
+              </Stack>
+            </form>
+          )}
+        </Formik>
       </Stack>
     </SimpleGrid>
   )
