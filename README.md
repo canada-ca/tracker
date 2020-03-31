@@ -12,14 +12,11 @@ This project is organized in the [monorepo](https://en.wikipedia.org/wiki/Monore
 ├── ci
 ├── frontend
 ├── platform
-├── scanner
 └── README.md
 ```
 
 The [ci](ci/README.md) folder contains an image used in the CI process, but the main event is the next three folders:
 The [frontend](frontend/README.md), and [api](api/README.md) folders containing the two main parts parts of the applicationand the [platform](platform/README.md) folder which contains the Kubernetes configuration needed to deploy the tracker on the cloud provider of your choice.
-
-The [scanner](scanner/README.md) folder contains everything related to the old `scanner` service, which is no longer in use and is currently hanging around for reference purposes.
 
 ## Application structure
 
