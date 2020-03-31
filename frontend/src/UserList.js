@@ -44,17 +44,6 @@ export function UserList() {
                           displayName
                           tfa
                           lang
-                          affiliations {
-                            edges {
-                              node {
-                                id
-                                organization {
-                                  acronym
-                                }
-                                permission
-                              }
-                            }
-                          }
                         }
                       }
                     }
@@ -113,15 +102,25 @@ export function UserList() {
                         window.alert('clicked box')
                       }}
                     >
-                      <Box flexShrink="0" mr={{ md: 4 }}>
+                      <Box flexShrink="0" mr={{ md: 4 }} minW="13%">
                         <Text mt={1} fontSize="lg" fontWeight="semibold">
                           {edge.node.user.displayName}
                         </Text>
                       </Box>
-                      <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }}>
+                      <Box
+                        flexShrink="0"
+                        ml={{ md: 4 }}
+                        mr={{ md: 4 }}
+                        minW="35%"
+                      >
                         <Text fontSize="lg">{edge.node.user.userName}</Text>
                       </Box>
-                      <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }}>
+                      <Box
+                        flexShrink="0"
+                        ml={{ md: 4 }}
+                        mr={{ md: 4 }}
+                        minW="15%"
+                      >
                         <Badge variantColor="green">Active</Badge>
                         <Badge
                           variantColor={
@@ -135,34 +134,23 @@ export function UserList() {
                           Admin
                         </Badge>
                       </Box>
-                      <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }}>
-                        <Box mt={2} color="gray.500">
-                          Orgs:&nbsp;
-                          {// Populate the user-orgs list.
-                          edge.node.user.affiliations.edges.map(
-                            (edge, i, arr) => {
-                              if (arr.length - 1 === i) {
-                                return (
-                                  <Text display="inline" key={edge.node.id + i}>
-                                    {edge.node.organization.acronym}
-                                  </Text>
-                                )
-                              }
-                              return (
-                                <Text display="inline" key={edge.node.id + i}>
-                                  {edge.node.organization.acronym + ' | '}
-                                </Text>
-                              )
-                            },
-                          )}
-                        </Box>
-                      </Box>
-                      <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }}>
+                      <Box
+                        flexShrink="0"
+                        ml={{ md: 4 }}
+                        mr={{ md: 4 }}
+                        minW="15%"
+                      >
                         <Text mt={2} color="gray.500">
-                          Preferred Language: {edge.node.user.lang}
+                          Language: {edge.node.user.lang}
                         </Text>
                       </Box>
-                      <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} mt={2}>
+                      <Box
+                        flexShrink="0"
+                        ml={{ md: 4 }}
+                        mr={{ md: 4 }}
+                        mt={2}
+                        minW="15%"
+                      >
                         <Badge
                           variantColor={edge.node.user.tfa ? 'green' : 'red'}
                         >
