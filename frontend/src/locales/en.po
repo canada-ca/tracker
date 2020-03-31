@@ -13,53 +13,65 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/UserList.js:144
+msgid "Admin"
+msgstr "Admin"
+
 #: src/LandingPage.js:16
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 
-#: src/SignInPage.js:147
+#: src/SignInPage.js:146
 msgid "Create Account"
 msgstr "Create Account"
 
-#: src/App.js:61
+#: src/UserList.js:88
+msgid "Create User"
+msgstr "Create User"
+
+#: src/App.js:60
 #: src/DomainsPage.js:24
 msgid "Domains"
 msgstr "Domains"
 
-#: src/SignInPage.js:129
+#: src/SignInPage.js:128
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
-#: src/App.js:58
+#: src/App.js:57
 msgid "Home"
 msgstr "Home"
+
+#: src/UserList.js:154
+msgid "Language: {0}"
+msgstr "Language: {0}"
 
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page not found"
 
-#: src/App.js:51
+#: src/App.js:50
 msgid "Pre-Alpha"
 msgstr "Pre-Alpha"
 
-#: src/App.js:123
+#: src/App.js:129
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/App.js:67
-#: src/SignInPage.js:138
+#: src/App.js:66
+#: src/SignInPage.js:137
 msgid "Sign In"
 msgstr "Sign In"
 
-#: src/App.js:84
+#: src/App.js:83
 msgid "Sign Out"
 msgstr "Sign Out"
 
-#: src/SignInPage.js:93
+#: src/SignInPage.js:92
 msgid "Sign in with your username and password."
 msgstr "Sign in with your username and password."
 
-#: src/App.js:49
+#: src/App.js:48
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -67,7 +79,7 @@ msgstr "Skip to main content"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Sorry, the page you were trying to view does not exist."
 
-#: src/App.js:133
+#: src/App.js:139
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -75,10 +87,18 @@ msgstr "Terms & conditions"
 msgid "This is the full list of domains"
 msgstr "This is the full list of domains"
 
-#: src/App.js:52
+#: src/App.js:51
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
 #: src/LandingPage.js:11
 msgid "Track web security compliance"
 msgstr "Track web security compliance"
+
+#: src/UserList.js:132
+msgid "TwoFactor"
+msgstr "TwoFactor"
+
+#: src/App.js:87
+msgid "User List"
+msgstr "User List"

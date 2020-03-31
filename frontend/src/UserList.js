@@ -15,6 +15,7 @@ import {
   PseudoBox,
 } from '@chakra-ui/core'
 
+import { Trans } from '@lingui/macro'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import { PaginationButtons } from './PaginationButtons'
@@ -44,7 +45,17 @@ export function UserList() {
                           userName
                           displayName
                           tfa
-                          lang
+                          affiliations {
+                            edges {
+                              node {
+                                id
+                                organization {
+                                  acronym
+                                }
+                                permission
+                              }
+                            }
+                          }
                         }
                       }
                     }
@@ -84,7 +95,7 @@ export function UserList() {
             window.alert('create user')
           }}
         >
-          Create User
+          <Trans>Create User</Trans>
         </Button>
       </SimpleGrid>
       <Divider />
@@ -114,9 +125,36 @@ export function UserList() {
                       mr={{ md: 4 }}
                       minW="35%"
                     >
-                      <Text fontSize="lg" minW="18%">
+                      <Text fontSize="lg" minW="10%">
                         {edge.node.user.userName}
                       </Text>
+                    </Box>
+                    <Box
+                      flexShrink="0"
+                      ml={{ md: 4 }}
+                      mr={{ md: 4 }}
+                      minW="25%"
+                    >
+                      <Box mt={2} color="gray.500">
+                        Orgs:&nbsp;
+                        {// Populate the user-orgs list.
+                        edge.node.user.affiliations.edges.map(
+                          (edge, i, arr) => {
+                            if (arr.length - 1 === i) {
+                              return (
+                                <Text display="inline" key={edge.node.id + i}>
+                                  {edge.node.organization.acronym}
+                                </Text>
+                              )
+                            }
+                            return (
+                              <Text display="inline" key={edge.node.id + i}>
+                                {edge.node.organization.acronym + ' | '}
+                              </Text>
+                            )
+                          },
+                        )}
+                      </Box>
                     </Box>
                     <Box
                       flexShrink="0"
@@ -128,7 +166,7 @@ export function UserList() {
                         variantColor={edge.node.user.tfa ? 'green' : 'red'}
                         minW="15%"
                       >
-                        TwoFactor
+                        <Trans>TwoFactor</Trans>
                       </Badge>
                       <Badge
                         variantColor={
@@ -140,18 +178,8 @@ export function UserList() {
                         ml="10px"
                         mr={{ md: 4 }}
                       >
-                        Admin
+                        <Trans>Admin</Trans>
                       </Badge>
-                    </Box>
-                    <Box
-                      flexShrink="0"
-                      ml={{ md: 4 }}
-                      mr={{ md: 4 }}
-                      minW="15%"
-                    >
-                      <Text mt={2} color="gray.500">
-                        Language: {edge.node.user.lang}
-                      </Text>
                     </Box>
                     <Box
                       flexShrink="0"
