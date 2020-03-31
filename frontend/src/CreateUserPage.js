@@ -1,21 +1,18 @@
 import React from 'react'
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  Input,
-  InputLeftElement,
-  InputGroup,
-  Stack,
-  Text,
-  useToast,
-  Icon,
-} from '@chakra-ui/core'
+import { Button, Stack, Text, useToast } from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
+import { object, string } from 'yup'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
-import { Field, Formik } from 'formik'
+import { Formik } from 'formik'
 import { CREATE_USER } from './graphql/mutations'
+import { EmailField } from './EmailField'
 import { PasswordConfirmation } from './PasswordConfirmation'
+
+const validationSchema = object().shape({
+  email: string().required('cannot be empty'),
+  password: string().required('cannot be empty'),
+  confirmPassword: string().required('cannot be empty'),
+})
 
 export function CreateUserPage() {
   const [createUser, { loading, error, data }] = useMutation(CREATE_USER)
@@ -41,23 +38,16 @@ export function CreateUserPage() {
     }
   }
 
-  /* A function for the Formik to validate fields in the form */
-  function validateEmail(value) {
-    let error
-    if (!value || value === '') {
-      error = ' cannot be empty'
-    }
-    return error
-  }
-
   return (
     <Stack spacing={2} mx="auto">
       <Text mb={4} fontSize="2xl">
         Create an account by entering an email and password.
       </Text>
       <Formik
+        validationSchema={validationSchema}
         initialValues={{ email: '', password: '', confirmPassword: '' }}
         onSubmit={async (values) => {
+          console.log('values', values)
           createUser({
             variables: {
               userName: values.email,
@@ -70,25 +60,7 @@ export function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Field name="email" validate={validateEmail}>
-              {({ field, form }) => (
-                <FormControl
-                  mt={4}
-                  mb={4}
-                  isInvalid={form.errors.email && form.touched.email}
-                  isRequired
-                >
-                  <InputGroup>
-                    <InputLeftElement>
-                      <Icon name="email" color="gray.300" />
-                    </InputLeftElement>
-                    <Input {...field} id="email" placeholder="Email" />
-                  </InputGroup>
-
-                  <FormErrorMessage>Email{form.errors.email}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+            <EmailField name="email" />
 
             <PasswordConfirmation />
 

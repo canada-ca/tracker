@@ -26,6 +26,10 @@ msgstr "Create Account"
 msgid "Domains"
 msgstr "Domains"
 
+#: src/EmailField.js:31
+msgid "Email {0}"
+msgstr "Email {0}"
+
 #: src/SignInPage.js:116
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
