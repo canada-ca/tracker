@@ -18,7 +18,6 @@ export function PaginationButtons({previous, next}) {
         }
       />
       <IconButton
-        role="nextPageButton"
         variantColor="blue"
         aria-label="Next page"
         icon="arrow-forward"
