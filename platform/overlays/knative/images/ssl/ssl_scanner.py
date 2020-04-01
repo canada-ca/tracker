@@ -81,6 +81,8 @@ def receive():
 
 def dispatch(scan_id, payload):
     try:
+        # Post request to result-handling service
+        # TODO: Pull values from env
         response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
@@ -92,10 +94,12 @@ def dispatch(scan_id, payload):
 def get_server_info(scan_id, domain):
 
     try:
+        # Retrieve server information, look-up IP address
         server_location = ServerNetworkLocationViaDirectConnection.with_ip_address_lookup(domain, 443)
         server_tester = ServerConnectivityTester()
 
         logging.info("\n(SCAN: %s) - Testing connectivity with %s:%s..." % (scan_id, server_location.hostname, server_location.port))
+        # Test connection to server and retrieve info
         server_info = server_tester.perform(server_location)
         logging.info("(SCAN: %s) - Server Info %s\n" % (scan_id, server_info))
 
@@ -115,15 +119,19 @@ def scan(scan_id, domain):
     if server_info is None:
         return None
     else:
+        # Retrieve highest TLS supported from retrieved server info
         tls_supported = str(server_info.tls_probing_result.highest_tls_version_supported).split('.')[1]
 
     scanner = Scanner()
 
     designated_scans = set()
+
+    # Scan for common vulnerabilities and certificate info
     designated_scans.add(ScanCommand.OPENSSL_CCS_INJECTION)
     designated_scans.add(ScanCommand.HEARTBLEED)
     designated_scans.add(ScanCommand.CERTIFICATE_INFO)
 
+    # Test supported SSL/TLS
     if tls_supported == 'SSL_2_0':
         designated_scans.add(ScanCommand.SSL_2_0_CIPHER_SUITES)
     elif tls_supported == 'SSL_3_0':
@@ -141,9 +149,12 @@ def scan(scan_id, domain):
 
     scanner.queue_scan(scan_request)
 
+    # Wait for asynnchronous scans to complete
     scan_results = scanner.get_results()
 
     res = {"TLS": {}}
+
+    # Parse scan results for required info
     for result in scan_results:
         if result.__class__.__name__ is "CipherSuiteScanResult":
 
@@ -169,6 +180,8 @@ def scan(scan_id, domain):
 
     rc4 = False
     triple_des = False
+
+    # Check for RC4/3DES ciphers
     for cipher in res["TLS"]["accepted_cipher_list"]:
         if "RC4" in cipher:
             rc4 = True
