@@ -232,9 +232,10 @@ If the object is being implemented as a `Node` we want to use the `SQLAlchemyCon
 type with the `._meta.connection`. This will allow you to query this as a `relay.Node`. If you
 want to a single object type, it follows the same method as if you were adding it to another
 class via the `graphene.List(lambda: Object)` with a resolver querying the `Object.get_query(info)`.
+
 ---
 
-### Writing Parent SQLAlchemy Object
+### Writing a Parent SQLAlchemy Object
 ```python
 # some_object/__init__.py
 import graphene
