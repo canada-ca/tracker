@@ -29,7 +29,7 @@ class Acronym(Scalar):
             raise GraphQLError(scalar_error_type('String', value))
 
         if not ACRONYM_REGEX.search(value):
-            raise GraphQLError(scalar_error_type("String", value))
+            raise GraphQLError(scalar_error_type("Acronym", value))
         return value
 
     @staticmethod

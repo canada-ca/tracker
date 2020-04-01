@@ -14,9 +14,7 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from manage import seed, remove_seed
-seed()
-from db import *
+from db import db
 from app import app
 from queries import schema
 from models import Users
@@ -26,7 +24,6 @@ from functions.error_messages import(
     error_too_many_failed_login_attempts,
     error_user_does_not_exist
 )
-remove_seed()
 
 
 @pytest.fixture(scope='class')

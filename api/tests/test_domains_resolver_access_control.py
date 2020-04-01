@@ -11,20 +11,16 @@ from unittest import TestCase
 
 from werkzeug.test import create_environ
 
-from manage import seed, remove_seed
+# This is the only way I could get imports to work for unit testing.
+PACKAGE_PARENT = '..'
+SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
+sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-seed()
 from app import app
 from db import db
 from models import Organizations, Domains, Users, User_affiliations
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
-remove_seed()
-
-# This is the only way I could get imports to work for unit testing.
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
-sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 @pytest.fixture(scope='class')
@@ -148,25 +144,17 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "somelamedomain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "somelamedomain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "somelamedomain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -310,11 +298,7 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "google.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
@@ -394,25 +378,17 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "somecooldomain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
             result_refr = {
                 "data": {
-                    "domain": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "url": "somecooldomain.ca"
-                                }
-                            }
-                        ]
-                    }
+                    "domain": [
+                        {
+                            "url": "somecooldomain.ca"
+                        }
+                    ]
                 }
             }
             self.assertDictEqual(result_refr, executed)
@@ -505,11 +481,7 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "somelamedomain.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)
@@ -589,11 +561,7 @@ class TestDomainsResolver(TestCase):
                 '''
                 {
                     domain(url: "google.ca") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+                        url
                     }
                 }
                 ''', context_value=request_headers, backend=backend)

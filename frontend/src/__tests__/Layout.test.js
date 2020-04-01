@@ -1,10 +1,9 @@
 import React from 'react'
-import { render, cleanup } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { Layout } from '../Layout'
 
 describe('<Layout />', () => {
   beforeEach(() => (global.scrollTo = jest.fn()))
-  afterEach(cleanup)
 
   it('renders', () => {
     render(<Layout />)

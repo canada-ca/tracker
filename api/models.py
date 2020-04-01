@@ -13,10 +13,10 @@ class Domains(db.Model):
     id = Column(Integer, primary_key=True)
     domain = Column(String)
     last_run = Column(DateTime)
-    dmarc_phase = Column(Integer)
     organization_id = Column(Integer, ForeignKey('organizations.id'))
     organization = relationship("Organizations", back_populates="domains", cascade="all, delete")
     scans = relationship("Scans", back_populates="domain", cascade="all, delete")
+    dmarc_reports = relationship("Dmarc_Reports", back_populates="domain", cascade="all, delete")
 
 
 class Organizations(db.Model):
@@ -54,6 +54,17 @@ class User_affiliations(db.Model):
     user_organization = relationship("Organizations", back_populates="users", cascade="all, delete")
 
 
+class Dmarc_Reports(db.Model):
+    __tablename__ = 'dmarc_reports'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    domain_id = Column(Integer, ForeignKey('domains.id'))
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
+    report = Column(JSONB)
+    domain = relationship("Domains", back_populates="dmarc_reports", cascade="all, delete")
+
+
 class Scans(db.Model):
     __tablename__ = 'scans'
 
@@ -68,6 +79,7 @@ class Dmarc_scans(db.Model):
     __tablename__ = 'dmarc_scans'
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
+    dmarc_phase = Column(Integer)
     dmarc_scan = Column(JSONB)
 
 

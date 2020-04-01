@@ -17,49 +17,63 @@ msgstr ""
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre des services en ligne sécurisés. Un nouvel avis de politique vise à assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en matière de sécurité Web. Voyez comment les sites gouvernementaux deviennent plus sécuritaires."
 
-#: src/SignInPage.js:147
+#: src/SignInPage.js:134
 msgid "Create Account"
 msgstr "Créer un compte"
 
-#: src/App.js:61
-#: src/DomainsPage.js:24
+#: src/App.js:59
+#: src/DomainsPage.js:18
 msgid "Domains"
 msgstr "Domaines"
 
-#: src/SignInPage.js:129
+#: src/EmailField.js:31
+msgid "Email {0}"
+msgstr "Courriel {0}"
+
+#: src/SignInPage.js:116
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
-#: src/App.js:58
+#: src/App.js:56
+#: src/QRcodePage.js:65
 msgid "Home"
 msgstr "Accueil"
+
+#: src/QRcodePage.js:19
+msgid "Loading..."
+msgstr "Chargement..."
 
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: src/App.js:51
+#: src/App.js:49
 msgid "Pre-Alpha"
 msgstr "préalpha"
 
-#: src/App.js:123
+#: src/App.js:121
 msgid "Privacy"
 msgstr "Confidentialité"
 
-#: src/App.js:67
-#: src/SignInPage.js:138
+#: src/QRcodePage.js:28
+msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
+msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
+
+#: src/App.js:65
+#: src/QRcodePage.js:56
+#: src/SignInPage.js:125
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: src/App.js:84
+#: src/App.js:82
 msgid "Sign Out"
 msgstr "Déconnexion"
 
-#: src/SignInPage.js:93
+#: src/SignInPage.js:80
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/App.js:49
+#: src/App.js:47
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -67,18 +81,22 @@ msgstr "Passer au contenu principal"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Désolé, la page que vous essayiez de consulter n'existe pas."
 
-#: src/App.js:133
+#: src/App.js:131
 msgid "Terms & conditions"
 msgstr "Avis"
 
-#: src/DomainsPage.js:29
+#: src/DomainsPage.js:23
 msgid "This is the full list of domains"
 msgstr "Voici la liste complète des domaines"
 
-#: src/App.js:52
+#: src/App.js:50
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
 #: src/LandingPage.js:11
 msgid "Track web security compliance"
 msgstr "Suivre la conformité en matière de sécurité Web"
+
+#: src/QRcodePage.js:43
+msgid "Your 2FA app will then have a valid code that you can use when you sign in."
+msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez."

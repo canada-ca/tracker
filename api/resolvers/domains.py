@@ -26,47 +26,37 @@ def resolve_domain(self: Domain, info, **kwargs):
     # Get Information passed in via kwargs
     user_id = kwargs.get('user_id')
     url = kwargs.get('url')
-    user_role = kwargs.get('user_roles')
+    user_roles = kwargs.get('user_roles')
 
     # Generate list of org's the user has access to
     org_id_list = []
-    for role in user_role:
+    for role in user_roles:
         org_id_list.append(role["org_id"])
 
     # Get initial Domain Query Object
     query = Domain.get_query(info)
 
-    # Check to see if the user is a super admin, if true return all information
-    if is_super_admin(user_id=user_id):
+    # Get org id that is related to the domain
+    org_orm = db.session.query(Organizations).filter(
+        Organizations.id == Domains.organization_id
+    ).filter(
+        Domains.domain == url
+    ).first()
+
+    # If org cannot be found
+    if not org_orm:
+        raise GraphQLError("Error, domain does not exist")
+    org_id = org_orm.id
+
+    # Check if user has read access or higher to the requested organization
+    if is_user_read(user_roles, org_id):
         query_rtn = query.filter(
             Domains.domain == url
-        ).all()
-        # If url cannot be found, raise error
-        if not len(query_rtn):
-            raise GraphQLError("Error, domain does not exist")
-    # If user fails super user test
-    else:
-        # Get org id that is related to the domain
-        org_orm = db.session.query(Organizations).filter(
-            Organizations.id == Domains.organization_id
         ).filter(
-            Domains.domain == url
-        ).first()
-
-        # If org cannot be found
-        if not org_orm:
-            raise GraphQLError("Error, domain does not exist")
-        org_id = org_orm.id
-
-        # Check if user has read access or higher to the requested organization
-        if is_user_read(user_role, org_id):
-            query_rtn = query.filter(
-                Domains.domain == url
-            ).filter(
-                Domains.organization_id == org_id
-            ).all()
-        else:
-            raise GraphQLError("Error, you do not have permission to view that domain")
+            Domains.organization_id == org_id
+        ).all()
+    else:
+        raise GraphQLError("Error, you do not have permission to view that domain")
 
     return query_rtn
 
@@ -112,31 +102,22 @@ def resolve_domains(self, info, **kwargs):
         # Convert to int id
         org_id = org_orm.first().id
 
-        # Check if user is super admin, and if true return all domains belonging to
-        # that domain
-        if is_super_admin(user_id=user_id):
+        # Check if user has permission to view org
+        if is_user_read(user_role, org_id):
             query_rtn = query.filter(
                 Domains.organization_id == org_id
             ).all()
 
             # If org has no domains related to it
             if not len(query_rtn):
-                raise GraphQLError(
-                    "Error, no domains associated with that organization")
-        # If user fails super admin test
+                raise GraphQLError("Error, no domains associated with that organization")
         else:
-            # Check if user has permission to view org
-            if is_user_read(user_role, org_id):
-                query_rtn = query.filter(
-                    Domains.organization_id == org_id
-                ).all()
-            else:
-                raise GraphQLError(
-                    "Error, you do not have permission to view that organization")
+            raise GraphQLError(
+                "Error, you do not have permission to view that organization")
 
         return query_rtn
     else:
-        if is_super_admin(user_role=user_role):
+        if is_super_admin(user_id=user_id):
             query_rtn = query.all()
             if not query_rtn:
                 raise GraphQLError("Error, no domains to view")

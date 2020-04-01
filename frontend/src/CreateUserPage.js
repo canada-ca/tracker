@@ -1,43 +1,24 @@
-/* eslint-disable react/prop-types */
 import React from 'react'
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  Input,
-  Stack,
-  Text,
-  useToast,
-} from '@chakra-ui/core'
-import gql from 'graphql-tag'
+import { Button, Stack, Text, useToast } from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
+import { object, string } from 'yup'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
-import { Field, Formik } from 'formik'
+import { Formik } from 'formik'
+import { CREATE_USER } from './graphql/mutations'
+import { EmailField } from './EmailField'
+import { PasswordConfirmation } from './PasswordConfirmation'
+
+const validationSchema = object().shape({
+  email: string().required('cannot be empty'),
+  password: string().required('cannot be empty'),
+  confirmPassword: string().required('cannot be empty'),
+})
 
 export function CreateUserPage() {
-  const [createUser, { loading, error, data }] = useMutation(gql`
-    mutation CreateUser(
-      $displayName: String!
-      $userName: EmailAddress!
-      $password: String!
-      $confirmPassword: String!
-    ) {
-      createUser(
-        displayName: $displayName
-        userName: $userName
-        password: $password
-        confirmPassword: $confirmPassword
-      ) {
-        user {
-          userName
-        }
-      }
-    }
-  `)
+  const [createUser, { loading, error, data }] = useMutation(CREATE_USER)
 
   const history = useHistory()
-  const toast = useToast();
-
+  const toast = useToast()
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
@@ -48,22 +29,13 @@ export function CreateUserPage() {
     } else {
       history.push('/')
       toast({
-        title: "Account created.",
+        title: 'Account created.',
         description: "We've created your account for you, please sign in!",
-        status: "success",
+        status: 'success',
         duration: 9000,
         isClosable: true,
       })
     }
-  }
-
-  /* A function for the Formik to validate fields in the form */
-  function validateField(value) {
-    let error
-    if (!value || value === '') {
-      error = ' can not be empty'
-    }
-    return error
   }
 
   return (
@@ -72,79 +44,30 @@ export function CreateUserPage() {
         Create an account by entering an email and password.
       </Text>
       <Formik
+        validationSchema={validationSchema}
         initialValues={{ email: '', password: '', confirmPassword: '' }}
-        onSubmit={(values, actions) => {
-          setTimeout(() => {
-            createUser({
-              variables: {
-                userName: values.email,
-                password: values.password,
-                confirmPassword: values.confirmPassword,
-                displayName: values.email,
-              },
-            })
-            actions.setSubmitting(false)
-          }, 500)
+        onSubmit={async (values) => {
+          console.log('values', values)
+          createUser({
+            variables: {
+              userName: values.email,
+              password: values.password,
+              confirmPassword: values.confirmPassword,
+              displayName: values.email,
+            },
+          })
         }}
       >
-        {props => (
-          <form id="form" onSubmit={props.handleSubmit}>
-            <Field name="email" validate={validateField}>
-              {({ field, form }) => (
-                <FormControl
-                  mt={4}
-                  mb={4}
-                  isInvalid={form.errors.email && form.touched.email}
-                  isRequired
-                >
-                  <Input {...field} id="email" placeholder="Email" />
-                  <FormErrorMessage>Email{form.errors.email}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+        {({ handleSubmit, isSubmitting }) => (
+          <form id="form" onSubmit={handleSubmit}>
+            <EmailField name="email" />
 
-            <Field name="password" validate={validateField}>
-              {({ field, form }) => (
-                <FormControl
-                  mt={4}
-                  mb={4}
-                  isInvalid={form.errors.password && form.touched.password}
-                  isRequired
-                >
-                  <Input {...field} id="password" placeholder="Password" />
-                  <FormErrorMessage>
-                    Password{form.errors.password}
-                  </FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
-
-            <Field name="confirmPassword" validate={validateField}>
-              {({ field, form }) => (
-                <FormControl
-                  mt={4}
-                  mb={4}
-                  isInvalid={
-                    form.errors.confirmPassword && form.touched.confirmPassword
-                  }
-                  isRequired
-                >
-                  <Input
-                    {...field}
-                    id="confirmPassword"
-                    placeholder="Confirm password"
-                  />
-                  <FormErrorMessage>
-                    Confirm Password{form.errors.confirmPassword}
-                  </FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+            <PasswordConfirmation />
 
             <Stack mt={6} spacing={4} isInline>
               <Button
                 variantColor="teal"
-                isLoading={props.isSubmitting}
+                isLoading={isSubmitting}
                 type="submit"
                 id="submitBtn"
               >

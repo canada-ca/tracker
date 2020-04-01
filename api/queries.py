@@ -1,6 +1,6 @@
 import graphene
 from graphene import relay
-from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
+from graphene_sqlalchemy import SQLAlchemyConnectionField
 
 from app import app
 
@@ -54,7 +54,17 @@ from resolvers.organizations import (
 from schemas.users import Users
 from resolvers.users import resolve_users
 
-from schemas.organizations_mutations import CreateOrganization, UpdateOrganization
+from schemas.organizations_mutations import (
+    CreateOrganization,
+    UpdateOrganization,
+    RemoveOrganization
+)
+
+from schemas.domains_mutations import (
+    CreateDomain,
+    UpdateDomain,
+    RemoveDomain
+)
 
 
 class Query(graphene.ObjectType):
@@ -107,10 +117,9 @@ class Query(graphene.ObjectType):
     # --- End Organization Queries ---
 
     # --- Start Domain Queries ---
-    domain = SQLAlchemyConnectionField(
-        Domain._meta.connection,
+    domain = graphene.List(
+        lambda: Domain,
         url=graphene.Argument(URL, required=True),
-        sort=None,
         description="Select information on a specific domain."
     )
     with app.app_context():
@@ -171,6 +180,18 @@ class Mutation(graphene.ObjectType):
     update_organization = UpdateOrganization.Field(
         description="Allows modification of an organization inside the "
                     "database."
+    )
+    remove_organization = RemoveOrganization.Field(
+        description="Allows the removal of an organization inside the database"
+    )
+    create_domain = CreateDomain.Field(
+        description="Allows the creation of domains for a given organization"
+    )
+    update_domain = UpdateDomain.Field(
+        description="Allows the modification of domains"
+    )
+    remove_domain = RemoveDomain.Field(
+        description="Allows the removal of a given domain"
     )
 
 
