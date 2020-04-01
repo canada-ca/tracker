@@ -28,6 +28,9 @@ class Domain(SQLAlchemyObjectType):
             "scans"
         )
     url = URL(description="The domain the scan was run on")
+    last_ran = graphene.DateTime(
+        description="The last time that a scan was ran on this domain"
+    )
     organization = ORMField(model_attr="organization")
     email = graphene.ConnectionField(
         EmailScan._meta.connection,
@@ -47,6 +50,9 @@ class Domain(SQLAlchemyObjectType):
     with app.app_context():
         def resolve_url(self: Domains, info):
             return self.domain
+
+        def resolve_last_ran(self: Domains, info):
+            return self.last_run
 
         def resolve_email(self: Domains, info):
             query = EmailScan.get_query(info)
