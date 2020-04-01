@@ -13,6 +13,7 @@ services:
       - "3000:3000"
       - "3001:3001"
   frontend:
+    stdin_open: true
     image: node:alpine
     working_dir: /app
     command: npm start
