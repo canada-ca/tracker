@@ -235,7 +235,7 @@ class via the `graphene.List(lambda: Object)` with a resolver querying the `Obje
 
 ---
 
-### Writing a Parent SQLAlchemy Object
+### Writing a Parent SQLAlchemy Object, With None Graphene-Sqlalchemy Children
 ```python
 # some_object/__init__.py
 import graphene
