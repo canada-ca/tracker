@@ -9,7 +9,7 @@ RUN npm run extract
 RUN npm run compile
 RUN npm run build
 
-FROM gcr.io/distroless/nodejs
+FROM node:13-alpine
 LABEL maintainer="mike.williamson@cds-snc.ca"
 
 ENV HOST 0.0.0.0
@@ -19,7 +19,7 @@ ENV NODE_ENV production
 COPY --from=build-env /app /app
 WORKDIR /app
 
-USER nonroot
+USER node
 EXPOSE 3000
 
 CMD ["index.js"]
