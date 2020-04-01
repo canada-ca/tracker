@@ -575,7 +575,7 @@ def https_check(endpoint):
         else:
             if endpoint.ip != ip:
                 utils.debug("{}: Endpoint IP is already {}, but requests IP is {}.".format(endpoint.url, endpoint.ip, ip))
-        if server_info.client_auth_requirement.name == 'REQUIRED':
+        if server_info.tls_probing_result.client_auth_requirement.name == 'REQUIRED':
             endpoint.https_client_auth_required = True
             logging.warning("{}: Client Authentication REQUIRED".format(endpoint.url))
     except ConnectionToServerFailed as err:

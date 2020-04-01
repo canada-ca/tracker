@@ -8,13 +8,6 @@ import jwt
 from sslyze.server_connectivity import ServerConnectivityTester
 from sslyze.errors import ConnectionToServerFailed
 from sslyze.plugins.scan_commands import ScanCommand
-from sslyze.plugins.openssl_cipher_suites.implementation import \
-    Tlsv12ScanImplementation, Tlsv10ScanImplementation, \
-    Tlsv11ScanImplementation, Tlsv13ScanImplementation, \
-    Sslv20ScanImplementation, Sslv30ScanImplementation
-from sslyze.plugins.certificate_info.implementation import CertificateInfoImplementation
-from sslyze.plugins.heartbleed_plugin import HeartbleedImplementation
-from sslyze.plugins.openssl_ccs_injection_plugin import OpenSslCcsInjectionImplementation
 from sslyze.scanner import Scanner, ServerScanRequest
 from sslyze.server_setting import ServerNetworkLocation, ServerNetworkLocationViaDirectConnection
 from flask import Flask, request
@@ -149,34 +142,35 @@ def scan(scan_id, domain):
 
     scanner.queue_scan(scan_request)
 
-    # Wait for asynnchronous scans to complete
-    scan_results = scanner.get_results()
+    # Wait for asynchronous scans to complete
+    # get_results() returns a generator with a single "ServerScanResult". We only want that object
+    scan_results = [x for x in scanner.get_results()][0]
 
     res = {"TLS": {}}
 
     # Parse scan results for required info
-    for result in scan_results:
-        if result.__class__.__name__ is "CipherSuiteScanResult":
+    for name, result in scan_results.scan_commands_results.items():
+
+        # If CipherSuitesScanResults
+        if name.endswith("suites"):
 
             res["TLS"] = {"supported": tls_supported,
                           "accepted_cipher_list": [],
-                          "errored_cipher_list": [],
                           "preferred_cipher": None,
                           "rejected_cipher_list": []}
 
-            res["TLS"]["accepted_cipher_list"] = [c.name for c in result.accepted_cipher_list]
-            res["TLS"]["errored_cipher_list"] = [c.name for c in result.errored_cipher_list]
-            res["TLS"]["rejected_cipher_list"] = [c.name for c in result.rejected_cipher_list]
-            res["TLS"]["preferred_cipher"] = result.preferred_cipher.name
+            res["TLS"]["accepted_cipher_list"] = [c.cipher_suite.name for c in result.accepted_cipher_suites]
+            res["TLS"]["rejected_cipher_list"] = [c.cipher_suite.name for c in result.rejected_cipher_suites]
+            res["TLS"]["preferred_cipher"] = result.cipher_suite_preferred_by_server.cipher_suite.name
 
-        elif result.__class__.__name__ is "OpenSslCcsInjectionScanResult":
+        elif name is "openssl_ccs_injection":
             res["is_vulnerable_to_ccs_injection"] = result.is_vulnerable_to_ccs_injection
 
-        elif result.__class__.__name__ is "HeartbleedScanResult":
+        elif name is "heartbleed":
             res["is_vulnerable_to_heartbleed"] = result.is_vulnerable_to_heartbleed
 
-        elif result.__class__.__name__ is "CertificateInfoScanResult":
-            res["signature_algorithm"] = result.verified_certificate_chain[0].signature_hash_algorithm.__class__.__name__
+        elif name is "certificate_info":
+            res["signature_algorithm"] = result.certificate_deployments[0].verified_certificate_chain[0].signature_hash_algorithm.__class__.__name__
 
     rc4 = False
     triple_des = False
