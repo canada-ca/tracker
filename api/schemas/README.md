@@ -232,3 +232,82 @@ If the object is being implemented as a `Node` we want to use the `SQLAlchemyCon
 type with the `._meta.connection`. This will allow you to query this as a `relay.Node`. If you
 want to a single object type, it follows the same method as if you were adding it to another
 class via the `graphene.List(lambda: Object)` with a resolver querying the `Object.get_query(info)`.
+---
+
+### Writing Parent SQLAlchemy Object
+```python
+# some_object/__init__.py
+import graphene
+from graphene import relay
+from graphene_sqlalchemy import SQLAlchemyObjectType
+
+from app import app
+from models import SomeModel
+
+from some_object.child_object_1 import ChildObject1
+from some_object.child_object_2 import ChildObject2
+
+class ParentObject(SQLAlchemyObjectType):
+    """
+    Description
+    """
+    class Meta:
+        model = SomeModel
+        interfaces = (relay.Node, )
+        exclude_fields(
+            'id',
+            'field_1'
+            'field_2'
+        )
+    child_object_1 = graphene.List(
+        lambda: ChildObject1
+    )
+
+    child_object_2 = graphene.Field(
+        lambda: ChildObject2
+    )
+
+    with app.app_context():
+        def resolve_child_object_1(self: SomeModel, info):
+            rtr_list = []
+            for item in self.field_1['list']:
+                rtr_list.append(ChildObject1(
+                    item['Key1'],
+                    item['Key2']
+                ))
+            return rtr_list
+
+        def resolve_child_object_2(self: SomeModel, info):
+            return ChildObject2(
+                self.field_2
+            )
+
+class ParentObjectConnection(relay.Connection):
+    class Meta:
+        node = ParentObject
+```
+
+```python
+# some_object/child_object_1.py
+import graphene
+
+class ChildObject1(SQLAlchemyObjectType):
+    """
+    Description
+    """
+    key_1 = graphene.String()
+
+    key_2 = graphene.Int()
+```
+
+```python
+# some_object/child_object_2.py
+import graphene
+
+class ChildObject2(SQLAlchemyObjectType):
+    """
+    Description
+    """
+    field_2 = graphene.String()
+```
+Using Graphene and Graphene-SQLAlchemy you are able to create these parent objects that gather the information from the database which then can be used to spread to multiple child objects. This is a really powerful tool if you are using JSONB fields in a Postgres database, because it would allow you to build custom objects for the child dicts inside your JSON. This is accomplished inside a resolver, by creating a new instance of your child class, you can match the order of the elements of the child object with the data you are passing to it from the parent and those data fields will be filled in with that information, See above example.
