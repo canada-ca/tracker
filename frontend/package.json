@@ -1,21 +1,17 @@
 {
-  "name": "gaap-frontend",
-  "version": "1.0.0",
-  "description": "an example frontend",
-  "main": "index.js",
+  "name": "tracker-frontend",
+  "version": "0.1.0",
   "scripts": {
-    "build": "webpack --env.mode=production --config webpack.config.js",
-    "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand",
-    "dev": "webpack-dev-server --hot --env.mode=development",
-    "start": "node index.js",
-    "test": "jest",
-    "lint": "eslint src",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "lint": "react-scripts lint",
+    "test": "react-scripts test --watchAll=false --env=jest-environment-jsdom-sixteen --verbose=true",
+    "dbg": "react-scripts --inspect-brk test --runInBand --no-cache",
     "extract": "lingui extract",
-    "compile": "lingui compile"
+    "compile": "lingui compile",
+    "serve": "node index.js",
+    "eject": "react-scripts eject"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
     "@babel/runtime": "^7.9.2",
@@ -42,7 +38,8 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-test-renderer": "^16.13.1",
-    "yup": "^0.28.3"
+    "yup": "^0.28.3",
+    "react-scripts": "3.4.1"
   },
   "devDependencies": {
     "@apollo/react-testing": "^3.1.3",
@@ -62,38 +59,33 @@
     "babel-loader": "^8.1.0",
     "babel-plugin-macros": "^2.8.0",
     "clean-webpack-plugin": "^3.0.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-jest": "^23.8.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^3.0.0",
-    "eslint-plugin-standard": "^4.0.1",
     "file-loader": "^6.0.0",
     "fs-extra": "^9.0.0",
-    "html-webpack-inline-svg-plugin": "^1.3.0",
-    "html-webpack-root-plugin": "^0.10.0",
-    "html-webpack-plugin": "3.2.0",
-    "jest": "^25.2.4",
+    "jest": "^24.9.0",
     "jest-emotion": "^10.0.32",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
     "prettier": "^2.0.2",
     "react-hot-loader": "^4.12.20",
-    "supertest": "^4.0.2",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-config-utils": "^2.3.1",
-    "webpack-dev-server": "^3.10.3"
+    "supertest": "^4.0.2"
   },
   "jest": {
-    "verbose": true,
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|svg)$": "<rootDir>/__mocks__/fileMock.js"
-    },
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
+    }
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   }
 }
