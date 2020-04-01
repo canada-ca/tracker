@@ -1,11 +1,11 @@
-const path = require('path')
+const { join, resolve } = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 
 function Server() {
   const server = express()
   server.use(bodyParser.json())
-  server.use(express.static('./dist'))
+  server.use(express.static(resolve(join('build'))))
   server.disable('x-powered-by')
 
   server.get('/alive', (_req, res) => {
@@ -17,8 +17,7 @@ function Server() {
   })
 
   server.get('/*', (_req, res) => {
-    const indexFile = path.resolve('./dist/index.html')
-    res.sendFile(indexFile)
+    res.sendFile(resolve(join('build', 'index.html')))
   })
   return server
 }

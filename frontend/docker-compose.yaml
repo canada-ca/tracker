@@ -15,7 +15,7 @@ services:
   frontend:
     image: node:alpine
     working_dir: /app
-    command: npm run dev
+    command: npm start
     volumes:
       - ./:/app
     expose:

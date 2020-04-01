@@ -7,12 +7,6 @@ steps:
     args: ['ci']
 
   - name: node:13-alpine
-    id: lint
-    dir: frontend
-    entrypoint: npm
-    args: ['run', 'lint']
-
-  - name: node:13-alpine
     id: test
     dir: frontend
     entrypoint: npm
