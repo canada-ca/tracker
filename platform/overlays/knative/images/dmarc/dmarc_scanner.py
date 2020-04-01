@@ -73,6 +73,8 @@ def receive():
 
 def dispatch(scan_id, payload):
     try:
+        # Post request to result-handling service
+        # TODO: Pull values from env
         response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
@@ -88,6 +90,7 @@ def scan(scan_id, domain):
     domain_list.append(domain)
 
     try:
+        # Perform "checkdmarc" scan on provided domain
         scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True)))
     except (DNSException, SPFError, DMARCError) as e:
         logging.error("(SCAN: %s) - Failed to check the given domains for DMARC/SPF records: %s" % (scan_id, e))
