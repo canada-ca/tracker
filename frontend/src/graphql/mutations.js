@@ -41,3 +41,5 @@ export const VALIDATE_TWO_FACTOR = gql`
     }
   }
 `
+
+export default ''

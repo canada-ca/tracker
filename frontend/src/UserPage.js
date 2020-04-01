@@ -20,13 +20,45 @@ import {
   CheckboxGroup,
   useToast,
 } from '@chakra-ui/core'
-import { useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient, useMutation } from '@apollo/react-hooks'
 import { PasswordConfirmation } from './PasswordConfirmation'
+import gql from 'graphql-tag'
 
 export function UserPage() {
+  // TODO: Move to mutations folder
+  const UPDATE_PASSWORD = gql`
+    mutation UpdatePassword(
+      $userName: EmailAddress!
+      $password: String!
+      $confirmPassword: String!
+    ) {
+      updatePassword(
+        userName: $userName
+        password: $password
+        confirmPassword: $confirmPassword
+      ) {
+        user {
+          userName
+        }
+      }
+    }
+  `
+
   const client = useApolloClient()
   const toast = useToast()
   const history = useHistory()
+
+  const [updatePassword, { loading, error, data }] = useMutation(
+    UPDATE_PASSWORD,
+  )
+
+  if (data) {
+    console.log(data)
+  }
+
+  if (loading) {
+    console.log('loading')
+  }
 
   const userDetailsFormik = useFormik({
     initialValues: {
@@ -181,10 +213,27 @@ export function UserPage() {
         </Text>
 
         <Formik
-          initialValues={{password: '', confirmPassword: '' }}
+          initialValues={{ password: '', confirmPassword: '' }}
           onSubmit={async values => {
+            // Submit GraphQL mutation
             console.log(values)
-            window.alert("Change password submitted.  TODO: Implement GQL call")
+            await updatePassword({
+              variables: {
+                userName: 'testuser@test.ca', // This needs to be retreived from a seperate GQL query or props that will populate this entire page with data.
+                password: values.password,
+                confirmPassword: values.confirmPassword,
+              },
+            })
+
+            if (!error) {
+              toast({
+                title: 'Password Updated.',
+                description: 'You have successfully changed your password.',
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+              })
+            }
           }}
         >
           {({ handleSubmit, isSubmitting }) => (

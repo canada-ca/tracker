@@ -57,7 +57,7 @@ export function CreateUserPage() {
       </Text>
       <Formik
         initialValues={{ email: '', password: '', confirmPassword: '' }}
-        onSubmit={async (values) => {
+        onSubmit={async values => {
           createUser({
             variables: {
               userName: values.email,
