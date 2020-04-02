@@ -168,7 +168,9 @@ describe('<SignInPage />', () => {
         </ThemeProvider>,
       )
       await waitFor(() => {
-        expect(queryByText(/Sign in with your username and password./i)).toBeInTheDocument()
+        expect(
+          queryByText(/Sign in with your username and password./i),
+        ).toBeInTheDocument()
       })
 
       const email = container.querySelector('#email')
