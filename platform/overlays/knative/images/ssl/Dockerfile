@@ -1,23 +1,15 @@
-FROM python:3-slim AS prep-image
+FROM python:3.7-slim
 
-# Copy local code.
-WORKDIR /ssl
+# Copy local code to the container image.
+ENV SCANNER_HOME /ssl
+WORKDIR $SCANNER_HOME
 COPY . ./
 
-# Install dependancies.
-RUN pip3 install --user Flask waitress
+RUN pip3 install Flask gunicorn
 
-RUN pip3 install --user sslyze
-RUN pip3 install --user requests
-RUN pip3 install --user PyJWT
-
-FROM scratch as runtime-image
-
-COPY --from=prep-image /root/.local /root/.local
-COPY --from=prep-image /ssl .
-
-# Install python.
-RUN apt-get install python3
+RUN pip3 install sslyze
+RUN pip3 install requests
+RUN pip3 install PyJWT
 
 # Run the web service on container startup. Using waitress, in this case.
-CMD exec waitress-serve ssl_scanner:app
+CMD exec waitress-serve ssl:app

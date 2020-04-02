@@ -1,21 +1,14 @@
-FROM python:3-slim AS prep-image
+FROM python:3.7-slim
 
-# Copy local code.
-WORKDIR /dispatcher
+# Copy local code to the container image.
+ENV HOME /dispatcher
+WORKDIR $HOME
 COPY . ./
 
-# Install dependancies.
-RUN pip3 install --user Flask waitress
-RUN pip3 install --user requests
-RUN pip3 install --user PyJWT
-
-FROM scratch as runtime-image
-
-COPY --from=prep-image /root/.local /root/.local
-COPY --from=prep-image /dispatcher .
-
-# Install python.
-RUN apt-get install python3
+# Install production dependencies.
+RUN pip3 install Flask gunicorn
+RUN pip3 install requests
+RUN pip3 install PyJWT
 
 # Run the web service on container startup. Using waitress, in this case.
 CMD exec waitress-serve dispatcher:app

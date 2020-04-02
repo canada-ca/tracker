@@ -1,23 +1,15 @@
-FROM python:3-slim AS prep-image
+FROM python:3.7-slim
 
-# Copy local code.
-WORKDIR /results
+# Copy local code to the container image.
+ENV HOME /results
+WORKDIR $HOME
 COPY . ./
 
-# Install dependancies.
-RUN pip3 install --user Flask waitress
-
-RUN pip3 install --user Flask-SQLAlchemy
-RUN pip3 install --user graphene
-RUN pip3 install --user PyJWT
-
-FROM scratch as runtime-image
-
-COPY --from=prep-image /root/.local /root/.local
-COPY --from=prep-image /results .
-
-# Install python.
-RUN apt-get install python3
+# Install production dependencies.
+RUN pip3 install Flask gunicorn
+RUN pip3 install Flask-SQLAlchemy
+RUN pip3 install graphene
+RUN pip3 install PyJWT
 
 # Run the web service on container startup. Using waitress, in this case.
 CMD exec waitress-serve results:app
