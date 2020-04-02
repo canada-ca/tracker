@@ -12,7 +12,7 @@ from functions.orm_to_dict import orm_to_dict
 
 from models import Users
 from models import User_affiliations
-from db import db
+from db import db_session
 
 
 def sign_in_user(user_name, password):
@@ -81,7 +81,7 @@ def sign_in_user(user_name, password):
             'failed_login_attempts': 0,
             'failed_login_attempt_time': 0
         })
-        db.session.commit()
+        db_session.commit()
 
         return temp_dict
     else:
@@ -94,6 +94,6 @@ def sign_in_user(user_name, password):
                 'failed_login_attempts': Users.failed_login_attempts + 1,
                 'failed_login_attempt_time': time_stamp
              })
-        db.session.commit()
+        db_session.commit()
 
         raise GraphQLError(error_invalid_credentials())

@@ -4,8 +4,8 @@ from sqlalchemy.orm import load_only
 from functions.auth_functions import is_admin, is_super_admin
 from functions.error_messages import (error_user_does_not_exist, error_not_an_admin, error_role_not_updated)
 from functions.orm_to_dict import orm_to_dict
-from db import db
 from app import app
+from db import db_session
 from models import Users as User
 from models import Organizations as Orgs
 from models import User_affiliations as User_aff
@@ -42,7 +42,7 @@ def update_user_role(**kwargs):
                 .filter(User_aff.organization_id == org_id) \
                 .filter(User_aff.user_id == user[0]['id']) \
                 .update({'permission': new_role})
-            db.session.commit()
+            db_session.commit()
 
     if new_role == 'admin' or new_role == 'super_admin':
         if is_super_admin(user_role=user_roles):

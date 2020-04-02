@@ -1,7 +1,8 @@
-.env
-.git
-**/*.swp
-**/*.swn
-**/*.swo
-**/*.swx
-**/*.js~
+*
+!build
+!lingui.config.js
+!package.json
+!package-lock.json
+!public
+!src
+!index.js

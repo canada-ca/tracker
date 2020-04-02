@@ -2,6 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
+from graphql import ResolveInfo
 
 from app import app
 

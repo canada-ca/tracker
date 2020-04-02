@@ -91,6 +91,8 @@ export function SignInPage() {
         }}
       >
         {(props) => (
+          // Needed for testing library
+          // eslint-disable-next-line jsx-a11y/no-redundant-roles
           <form onSubmit={props.handleSubmit} role="form" aria-label="form" name="form">
             <Field name="email">
               {({ field, form }) => (

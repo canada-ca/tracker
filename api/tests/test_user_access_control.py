@@ -17,7 +17,7 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from app import app
-from db import db
+from db import db_session
 from models import Organizations, Users, User_affiliations
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
@@ -25,7 +25,6 @@ from backend.security_check import SecurityAnalysisBackend
 
 @pytest.fixture(scope='class')
 def user_resolver_ac_test_db_init():
-    db.init_app(app)
     bcrypt = Bcrypt(app)
 
     with app.app_context():
@@ -36,7 +35,7 @@ def user_resolver_ac_test_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
         )
-        db.session.add(test_read)
+        db_session.add(test_read)
         test_super_admin = Users(
             id=2,
             display_name="testsuperadmin",
@@ -44,7 +43,7 @@ def user_resolver_ac_test_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8")
         )
-        db.session.add(test_super_admin)
+        db_session.add(test_super_admin)
         test_admin = Users(
             id=3,
             display_name="testadmin",
@@ -52,7 +51,7 @@ def user_resolver_ac_test_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8")
         )
-        db.session.add(test_admin)
+        db_session.add(test_admin)
         test_admin = Users(
             id=4,
             display_name="testadmin2",
@@ -60,7 +59,7 @@ def user_resolver_ac_test_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8")
         )
-        db.session.add(test_admin)
+        db_session.add(test_admin)
         test_write = Users(
             id=5,
             display_name="testuserwrite",
@@ -68,55 +67,55 @@ def user_resolver_ac_test_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8")
         )
-        db.session.add(test_write)
+        db_session.add(test_write)
 
         org = Organizations(
             id=1,
             acronym='ORG1'
         )
-        db.session.add(org)
+        db_session.add(org)
         org = Organizations(
             id=2,
             acronym='ORG2'
         )
-        db.session.add(org)
+        db_session.add(org)
         org = Organizations(
             id=3,
             acronym='ORG3'
         )
-        db.session.add(org)
+        db_session.add(org)
 
         test_user_read_role = User_affiliations(
             user_id=1,
             organization_id=1,
             permission='user_read'
         )
-        db.session.add(test_user_read_role)
+        db_session.add(test_user_read_role)
         test_super_admin_role = User_affiliations(
             user_id=2,
             organization_id=2,
             permission='super_admin'
         )
-        db.session.add(test_super_admin_role)
+        db_session.add(test_super_admin_role)
         test_admin_role = User_affiliations(
             user_id=3,
             organization_id=1,
             permission='admin'
         )
-        db.session.add(test_admin_role)
+        db_session.add(test_admin_role)
         test_admin_role = User_affiliations(
             user_id=4,
             organization_id=2,
             permission='admin'
         )
-        db.session.add(test_admin_role)
+        db_session.add(test_admin_role)
         test_user_write_role = User_affiliations(
             user_id=5,
             organization_id=1,
             permission='user_write'
         )
-        db.session.add(test_user_write_role)
-        db.session.commit()
+        db_session.add(test_user_write_role)
+        db_session.commit()
 
     yield
 
@@ -124,7 +123,7 @@ def user_resolver_ac_test_db_init():
         User_affiliations.query.delete()
         Organizations.query.delete()
         Users.query.delete()
-        db.session.commit()
+        db_session.commit()
 
 
 @pytest.mark.usefixtures('user_resolver_ac_test_db_init')

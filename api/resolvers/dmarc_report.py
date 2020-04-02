@@ -1,6 +1,6 @@
 from graphql import GraphQLError
 
-from db import db
+from db import db_session
 
 from functions.input_validators import cleanse_input
 from functions.auth_wrappers import require_token
@@ -32,7 +32,7 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
 
     if (start_date and end_date) is not None:
         # Get Domain ORM
-        domain_orm = db.session.query(Domains).filter(
+        domain_orm = db_session.query(Domains).filter(
             Domains.domain == domain
         ).first()
 
@@ -76,7 +76,7 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
 
     else:
         # Get Domain ORM
-        domain_orm = db.session.query(Domains).filter(
+        domain_orm = db_session.query(Domains).filter(
             Domains.domain == domain
         ).first()
 

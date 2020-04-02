@@ -20,6 +20,7 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { UserPage } from './UserPage'
+import { DmarcReportPage } from './DmarcReportPage'
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -73,6 +74,10 @@ export default function App() {
               <Trans>User Profile</Trans>
             </Link>
           )}
+
+          <Link to="/dmarc-report">
+            <Trans>DMARC</Trans>
+          </Link>
         </Navigation>
         {// Dynamically show the TwoFactorNotification bar
         data && !data.tfa && <TwoFactorNotificationBar />}
@@ -99,6 +104,10 @@ export default function App() {
 
           <Route path="/two-factor-code">
             <QRcodePage userName={''} />
+          </Route>
+
+          <Route path="/dmarc-report">
+            <DmarcReportPage />
           </Route>
 
           <Route>

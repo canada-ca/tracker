@@ -6,7 +6,7 @@ from functions.input_validators import *
 from functions.error_messages import *
 
 from models import Users as User
-from db import db
+from db import db_session
 
 
 def create_user(display_name, password, confirm_password, user_name):
@@ -43,13 +43,13 @@ def create_user(display_name, password, confirm_password, user_name):
                 password=password).decode('UTF-8')  # Hash the password
         )
 
-        db.session.add(user)
+        db_session.add(user)
         try:
-            db.session.commit()
+            db_session.commit()
             return user
         except Exception as e:
-            db.session.rollback()
-            db.session.flush()
+            db_session.rollback()
+            db_session.flush()
             raise GraphQLError(error_creating_account())
     else:
         # Ensure that users have unique email addresses

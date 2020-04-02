@@ -1,7 +1,7 @@
 from graphql import GraphQLError
 
 from app import app
-from db import db
+from db import db_session
 from models import Organizations as Orgs
 from functions.error_messages import error_not_an_admin
 from functions.auth_wrappers import require_token
@@ -25,7 +25,7 @@ def resolve_test_user_claims(self, info, **kwargs):
     test_role = kwargs.get('role')
     org = kwargs.get('org')
 
-    org_orm = db.session.query(Orgs).filter(
+    org_orm = db_session.query(Orgs).filter(
         Orgs.acronym == org
     ).first()
     org_id = org_orm.id

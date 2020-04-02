@@ -6,7 +6,7 @@ from sqlalchemy.orm import load_only
 from graphql import GraphQLError
 
 from app import app
-from db import db
+from db import db_session
 
 from models import (
     Users,
@@ -51,7 +51,7 @@ def resolve_user(self, info, **kwargs):
     # Check to see if user is requesting a specific user
     if user_name is not None:
         # Get the requested user
-        req_user_orm = db.session.query(Users).filter(
+        req_user_orm = db_session.query(Users).filter(
             Users.user_name == user_name
         ).options(load_only('id')).first()
 
@@ -62,7 +62,7 @@ def resolve_user(self, info, **kwargs):
             req_user_id = req_user_orm.id
 
         # Get org id's that the user belongs to
-        req_org_orm = db.session.query(User_affiliations).filter(
+        req_org_orm = db_session.query(User_affiliations).filter(
             User_affiliations.user_id == req_user_id
         ).options(load_only('organization_id')).all()
 

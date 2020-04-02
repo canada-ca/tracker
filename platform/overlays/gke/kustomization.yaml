@@ -8,9 +8,9 @@ resources:
 - publicgateway.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-1bb3d02
+  newTag: master-5c2775d
 - name: gcr.io/track-compliance/frontend
-  newTag: master-d22bdf9
+  newTag: master-0aab527
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
