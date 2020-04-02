@@ -2,7 +2,7 @@
 A field whose value is an upper case letter or an under score that has a
 length between 1 and 10
 """
-scalar Acronym
+scalar Acronym @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
 
 """
 DMARC operates by checking that the domain in the message's From: field
@@ -582,10 +582,10 @@ The Relay compliant `PageInfo` type, containing data necessary to paginate this 
 """
 type PageInfo {
   """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
+  hasNextPage: Boolean! @examples(values: [true, false])
 
   """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
+  hasPreviousPage: Boolean! @examples(values: [true, false])
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
@@ -987,10 +987,10 @@ type User implements Node {
   displayName: String @fake(type: firstName)
 
   """Users preferred language"""
-  lang: String
+  lang: String @examples(values: ["English", "French", "Spanish"])
 
   """Has the user completed two factor authentication"""
-  tfa: Boolean @examples(values: [false])
+  tfa: Boolean @examples(values: [false, true])
 
   """Users access to organizations"""
   affiliations(before: String, after: String, first: Int, last: Int): UserAffClassConnection
@@ -1038,10 +1038,10 @@ type Users implements Node {
   id: ID!
 
   """Email that the user signed up with"""
-  userName: EmailAddress
+  userName: EmailAddress @fake(type: email)
 
   """Name displayed to other users"""
-  displayName: String
+  displayName: String @fake(type: firstName)
 
   """The level of access this user has to the requested organization"""
   permission: RoleEnums

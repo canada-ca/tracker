@@ -59,7 +59,6 @@ describe('<PasswordConfirmation />', () => {
           </ThemeProvider>
         </I18nProvider>,
       )
-
       await waitFor(() => expect(getByRole('img')).toBeInTheDocument())
     })
   })
