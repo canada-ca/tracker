@@ -2,7 +2,7 @@ import graphene
 from graphql import GraphQLError
 
 from app import app
-from db import db
+from db import db_session
 
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_write, is_super_admin
@@ -56,7 +56,7 @@ class CreateDomain(graphene.Mutation):
                 raise GraphQLError('Error, you cannot add a domain to this organization.')
 
             # Check to see if org exists
-            org_orm = db.session.query(Organizations).filter(
+            org_orm = db_session.query(Organizations).filter(
                 Organizations.acronym == acronym
             ).first()
 
@@ -65,7 +65,7 @@ class CreateDomain(graphene.Mutation):
             org_id = org_orm.id
 
             # Check to see if domain exists
-            domain_orm = db.session.query(Domains).filter(
+            domain_orm = db_session.query(Domains).filter(
                 Domains.domain == domain
             ).first()
 
@@ -78,12 +78,12 @@ class CreateDomain(graphene.Mutation):
                     organization_id=org_id
                 )
                 try:
-                    db.session.add(new_domain)
-                    db.session.commit()
+                    db_session.add(new_domain)
+                    db_session.commit()
                     return CreateDomain(status=True)
                 except Exception as e:
-                    db.session.rollback()
-                    db.session.flush()
+                    db_session.rollback()
+                    db_session.flush()
                     return CreateDomain(status=False)
             else:
                 raise GraphQLError(
@@ -134,11 +134,11 @@ class UpdateDomain(graphene.Mutation):
                 ).update({'domain': updated_domain})
 
                 try:
-                    db.session.commit()
+                    db_session.commit()
                     return UpdateDomain(status=True)
                 except Exception as e:
-                    db.session.rollback()
-                    db.session.flush()
+                    db_session.rollback()
+                    db_session.flush()
                     return UpdateDomain(status=False)
             else:
                 raise GraphQLError(
@@ -184,7 +184,7 @@ class RemoveDomain(graphene.Mutation):
                     ).first().id
 
                     # Get All Scans
-                    scans = db.session.query(Scans).filter(
+                    scans = db_session.query(Scans).filter(
                         Scans.domain_id == domain_id
                     ).all()
 
@@ -218,12 +218,12 @@ class RemoveDomain(graphene.Mutation):
                     Domains.query.filter(
                         Domains.domain == domain
                     ).delete()
-                    db.session.commit()
+                    db_session.commit()
                     return RemoveDomain(status=True)
 
                 except Exception as e:
-                    db.session.rollback()
-                    db.session.flush()
+                    db_session.rollback()
+                    db_session.flush()
                     return RemoveDomain(status=False)
             else:
                 raise GraphQLError(

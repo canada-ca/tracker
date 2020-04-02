@@ -2,7 +2,7 @@ import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from app import app
-from db import db
+from db import db_session
 from models import Dmarc_scans, Scans, Domains
 
 from scalars.url import URL

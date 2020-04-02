@@ -6,6 +6,8 @@ from functions.create_user import create_user
 from functions.sign_in_user import sign_in_user
 from functions.update_user_password import update_password
 from functions.validate_two_factor import validate_two_factor
+from functions.auth_functions import is_user_read
+from functions.auth_wrappers import require_token
 
 from app import app
 
@@ -61,10 +63,18 @@ class User(SQLAlchemyObjectType):
         def resolve_tfa(self: UserModel, info):
             return self.tfa_validated
 
-        def resolve_affiliations(self: UserModel, info):
-            query = UserAffClass.get_query(info)
-            query = query.filter(User_affiliations.user_id == self.id)
-            return query.all()
+        @require_token
+        def resolve_affiliations(self: UserModel, info, **kwargs):
+            user_roles = kwargs.get('user_roles')
+            rtr_list = []
+
+            for role in user_roles:
+                if is_user_read(user_role=user_roles, org_id=role['org_id']):
+                    query = UserAffClass.get_query(info)
+                    query = query.filter(User_affiliations.organization_id == role['org_id']) \
+                        .filter(User_affiliations.user_id == self.id)
+                    rtr_list.append(query.first())
+            return rtr_list
 
 
 class UserConnection(relay.Connection):

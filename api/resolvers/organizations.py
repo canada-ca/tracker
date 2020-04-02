@@ -2,7 +2,7 @@ from graphql import GraphQLError
 from sqlalchemy.orm import load_only
 
 from app import app
-from db import db
+from db import db_session
 
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read
@@ -38,7 +38,7 @@ def resolve_organization(self: Organization, info, **kwargs):
     query = Organization.get_query(info)
 
     # Get org orm to gather its id
-    org_orm = db.session.query(Organizations).filter(
+    org_orm = db_session.query(Organizations).filter(
         Organizations.acronym == org
     ).first()
 

@@ -2,7 +2,7 @@ from graphql import GraphQLError
 from sqlalchemy.orm import load_only
 
 from app import app
-from db import db
+from db import db_session
 
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read
@@ -37,7 +37,7 @@ def resolve_domain(self: Domain, info, **kwargs):
     query = Domain.get_query(info)
 
     # Get org id that is related to the domain
-    org_orm = db.session.query(Organizations).filter(
+    org_orm = db_session.query(Organizations).filter(
         Organizations.id == Domains.organization_id
     ).filter(
         Domains.domain == url
@@ -91,7 +91,7 @@ def resolve_domains(self, info, **kwargs):
     if organization:
         # Retrieve org id from organization enum
         with app.app_context():
-            org_orm = db.session.query(Organizations).filter(
+            org_orm = db_session.query(Organizations).filter(
                 Organizations.acronym == organization
             ).options(load_only('id'))
 

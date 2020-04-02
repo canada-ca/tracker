@@ -14,7 +14,7 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from db import db
+from db import db_session
 from app import app
 from queries import schema
 from models import Users
@@ -28,7 +28,6 @@ from functions.error_messages import(
 
 @pytest.fixture(scope='class')
 def user_schema_test_db_init():
-    db.init_app(app)
     bcrypt = Bcrypt(app)
 
     with app.app_context():
@@ -39,7 +38,7 @@ def user_schema_test_db_init():
                 password="testpassword123").decode("UTF-8"),
             failed_login_attempt_time=datetime.datetime.now().timestamp() + 1920, # This mocks that the user is accessing the service 32 mins after their last failed login attempt
         )
-        db.session.add(test_user)
+        db_session.add(test_user)
 
         test_already_failed_user = Users(
             display_name="test_failed_user",
@@ -49,7 +48,7 @@ def user_schema_test_db_init():
             failed_login_attempts=3,
             failed_login_attempt_time=datetime.datetime.now().timestamp() + 1920, # This mocks that the user is accessing the service 32 mins after their last failed login attempt
         )
-        db.session.add(test_already_failed_user)
+        db_session.add(test_already_failed_user)
 
         test_too_many_failed_user = Users(
             display_name="test_too_many_fails_user",
@@ -59,15 +58,15 @@ def user_schema_test_db_init():
             failed_login_attempts=30,
             failed_login_attempt_time=0,
         )
-        db.session.add(test_too_many_failed_user)
+        db_session.add(test_too_many_failed_user)
 
-        db.session.commit()
+        db_session.commit()
 
     yield
 
     with app.app_context():
         Users.query.delete()
-        db.session.commit()
+        db_session.commit()
 
 
 ##

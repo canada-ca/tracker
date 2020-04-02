@@ -17,7 +17,7 @@ SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from app import app
-from db import db
+from db import db_session
 from models import (
     Organizations,
     Domains,
@@ -38,7 +38,6 @@ from backend.security_check import SecurityAnalysisBackend
 
 @pytest.fixture(scope='class')
 def domain_test_db_init():
-    db.init_app(app)
     bcrypt = Bcrypt(app)
 
     with app.app_context():
@@ -49,7 +48,7 @@ def domain_test_db_init():
             user_password=bcrypt.generate_password_hash(
                 password="testpassword123").decode("UTF-8"),
         )
-        db.session.add(test_user)
+        db_session.add(test_user)
 
         org = Organizations(
             id=1,
@@ -58,27 +57,27 @@ def domain_test_db_init():
                 "description": 'Organization 1'
             }
         )
-        db.session.add(org)
+        db_session.add(org)
 
         test_user_read_role = User_affiliations(
             user_id=1,
             organization_id=1,
             permission='user_read'
         )
-        db.session.add(test_user_read_role)
+        db_session.add(test_user_read_role)
 
         domain = Domains(
             id=1,
             domain='accurateplastics.com',
             organization_id=1
         )
-        db.session.add(domain)
+        db_session.add(domain)
         domain = Domains(
             id=2,
             domain='addisonfoods.com',
             organization_id=1
         )
-        db.session.add(domain)
+        db_session.add(domain)
 
         test_dmarc_report = Dmarc_Reports(
             id=1,
@@ -154,8 +153,8 @@ def domain_test_db_init():
                 ]
             }
         )
-        db.session.add(test_dmarc_report)
-        db.session.commit()
+        db_session.add(test_dmarc_report)
+        db_session.commit()
 
     yield
 
@@ -172,7 +171,7 @@ def domain_test_db_init():
         User_affiliations.query.delete()
         Organizations.query.delete()
         Users.query.delete()
-        db.session.commit()
+        db_session.commit()
 
 
 @pytest.mark.usefixtures('domain_test_db_init')

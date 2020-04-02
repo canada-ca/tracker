@@ -3,7 +3,7 @@ import graphene
 from graphql import GraphQLError
 
 from app import app
-from db import db
+from db import db_session
 
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin
@@ -72,7 +72,7 @@ class CreateOrganization(graphene.Mutation):
 
             if is_super_admin(user_role=user_roles):
                 # Check to see if organization already exists
-                org_orm = db.session.query(Organizations).filter(
+                org_orm = db_session.query(Organizations).filter(
                     Organizations.acronym == acronym
                 ).first()
 
@@ -95,15 +95,15 @@ class CreateOrganization(graphene.Mutation):
                 )
 
                 # Add new org entry into the session
-                db.session.add(new_org)
+                db_session.add(new_org)
 
                 # Push update to db and return status
                 try:
-                    db.session.commit()
+                    db_session.commit()
                     return CreateOrganization(status=True)
                 except Exception as e:
-                    db.session.rollback()
-                    db.session.flush()
+                    db_session.rollback()
+                    db_session.flush()
                     return CreateOrganization(status=False)
             else:
                 raise GraphQLError(
@@ -161,7 +161,7 @@ class UpdateOrganization(graphene.Mutation):
             if is_super_admin(user_role=user_roles):
 
                 # Get requested org orm
-                org_orm = db.session.query(Organizations).filter(
+                org_orm = db_session.query(Organizations).filter(
                     Organizations.acronym == acronym
                 ).first()
 
@@ -170,7 +170,7 @@ class UpdateOrganization(graphene.Mutation):
                     raise GraphQLError("Error, organization does not exist.")
 
                 # Check to see if organization acronym already in use
-                update_org_orm = db.session.query(Organizations).filter(
+                update_org_orm = db_session.query(Organizations).filter(
                     Organizations.acronym == updated_acronym
                 ).first()
 
@@ -198,11 +198,11 @@ class UpdateOrganization(graphene.Mutation):
 
                 # Push update to db and return status
                 try:
-                    db.session.commit()
+                    db_session.commit()
                     return UpdateOrganization(status=True)
                 except Exception as e:
-                    db.session.rollback()
-                    db.session.flush()
+                    db_session.rollback()
+                    db_session.flush()
                     return UpdateOrganization(status=False)
             else:
                 raise GraphQLError(
@@ -234,7 +234,7 @@ class RemoveOrganization(graphene.Mutation):
                 raise GraphQLError("Error, you cannot remove this organization")
 
             # Check to see if org exists
-            org_orm = db.session.query(Organizations).filter(
+            org_orm = db_session.query(Organizations).filter(
                 Organizations.acronym == acronym
             ).first()
 
@@ -308,12 +308,12 @@ class RemoveOrganization(graphene.Mutation):
                     Organizations.query.filter(
                         Organizations.acronym == acronym
                     ).delete()
-                    db.session.commit()
+                    db_session.commit()
                     return RemoveOrganization(status=True)
                 except Exception as e:
                     print("organization: " + str(e))
-                    db.session.rollback()
-                    db.session.flush()
+                    db_session.rollback()
+                    db_session.flush()
                     return RemoveOrganization(status=False)
             else:
                 raise GraphQLError(

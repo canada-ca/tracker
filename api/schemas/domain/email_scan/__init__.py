@@ -1,17 +1,15 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from graphql import ResolveInfo
 
 from app import app
+from functions.get_domain import get_domain
+from functions.get_timestamp import get_timestamp
 from models import Scans, Dmarc_scans, Spf_scans, Dkim_scans
 from scalars.url import URL
-
 from schemas.domain.email_scan.dkim import DKIM
 from schemas.domain.email_scan.dmarc import DMARC
 from schemas.domain.email_scan.spf import SPF
-from functions.get_domain import get_domain
-from functions.get_timestamp import get_timestamp
 
 
 class EmailScan(SQLAlchemyObjectType):

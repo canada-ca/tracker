@@ -73,13 +73,13 @@ def check_user_claims(user_claims):
 
 def require_token(method):
     def wrapper(self, *args, **kwargs):
-        auth_resp = decode_auth_token(args[0].context)
-        if isinstance(auth_resp, dict):
-            kwargs['user_id'] = auth_resp['user_id']
+        with app.app_context():
+            auth_resp = decode_auth_token(args[0].context)
+            if isinstance(auth_resp, dict):
+                kwargs['user_id'] = auth_resp['user_id']
 
-            user_claims = check_user_claims(auth_resp['roles'])
-            kwargs['user_roles'] = user_claims
-            return method(self, *args, **kwargs)
-        raise GraphQLError(auth_resp)
-
+                user_claims = check_user_claims(auth_resp['roles'])
+                kwargs['user_roles'] = user_claims
+                return method(self, *args, **kwargs)
+            raise GraphQLError(auth_resp)
     return wrapper

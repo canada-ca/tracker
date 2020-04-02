@@ -8,7 +8,7 @@ from functions.error_messages import *
 
 from models import Users as User
 from app import app
-from db import db
+from db import db_session
 
 
 def update_password(user_name, password, confirm_password):
@@ -43,7 +43,7 @@ def update_password(user_name, password, confirm_password):
             'failed_login_attempt_time': 0
         })
 
-    db.session.commit()
+    db_session.commit()
 
     if not user:
         raise GraphQLError(error_password_not_updated())
