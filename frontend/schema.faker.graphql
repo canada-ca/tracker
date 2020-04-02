@@ -976,7 +976,7 @@ type User implements Node {
   userName: EmailAddress @fake(type: email)
 
   """Name displayed to other users"""
-  displayName: String
+  displayName: String @fake(type: firstName)
 
   """Users preferred language"""
   lang: String

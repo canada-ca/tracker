@@ -42,7 +42,7 @@ export function UserPage() {
 
   const QUERY_USER = gql`
     query User($userName: EmailAddress!) {
-      user(userName: $username) {
+      user(userName: $userName) {
         userName
         displayName
         lang
@@ -67,27 +67,25 @@ export function UserPage() {
     loading: queryUserLoading,
     error: queryUserError,
     data: queryUserData,
-  } = useQuery(QUERY_USER)
-
-  if (updatePasswordData || queryUserData) {
-    console.log(updatePasswordData)
-  }
+  } = useQuery(QUERY_USER, {
+    variables: { userName: 'testuser@testemail.ca' },
+  })
 
   if (updatePasswordLoading || queryUserLoading) {
-    console.log('loading')
+    return <p>Loading...</p>
   }
 
-  if(queryUserError){
-    console.log(queryUserError)
+  if (queryUserError || updatePasswordError) {
+    return <p>Error</p>
   }
 
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Formik
         initialValues={{
-          email: '',
-          lang: '',
-          displayName: '',
+          email: queryUserData.user.userName,
+          lang: queryUserData.user.lang,
+          displayName: queryUserData.user.displayName,
         }}
         onSubmit={(values, actions) => {
           setTimeout(() => {
@@ -221,6 +219,7 @@ export function UserPage() {
             })
 
             if (!updatePasswordError) {
+              console.log(updatePasswordData)
               toast({
                 title: 'Password Updated.',
                 description: 'You have successfully changed your password.',
