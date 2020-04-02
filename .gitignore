@@ -8,8 +8,6 @@ api/schema.json
 
 *.log
 
-.editorconfig
-
 # virtualenv
 **/.Python
 **/bin

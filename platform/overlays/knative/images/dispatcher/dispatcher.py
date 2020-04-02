@@ -14,6 +14,9 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = Flask(__name__)
 
+ISTIO_INGRESS = os.getenv("ISTIO_INGRESS")
+TOKEN_KEY = os.getenv("TOKEN_KEY")
+
 hosts = ['https-scanner.tracker.example.com',
          'ssl-scanner.tracker.example.com',
          'dmarc-scanner.tracker.example.com']
@@ -36,10 +39,9 @@ def receive():
     dkim_flag = False
 
     try:
-        #TODO Replace secret
         decoded_payload = jwt.decode(
             request.headers.get('Data'),
-            "test_jwt",
+            TOKEN_KEY,
             algorithm=['HS256']
         )
 
@@ -50,10 +52,9 @@ def receive():
         user_initialized = decoded_payload["user_init"]
         scan_id = decoded_payload["scan_id"]
 
-        # TODO Replace secret
         encrypted_payload = jwt.encode(
             payload,
-            "test_jwt",
+            TOKEN_KEY,
             algorithm='HS256'
         ).decode('utf-8')
 
@@ -95,7 +96,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
             for host in dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
-                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers)
+                    dispatched[scan_id] = requests.post(ISTIO_INGRESS, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -103,7 +104,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
             for host in hosts:
                 headers['Host'] = host
                 try:
-                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers)
+                    dispatched[scan_id] = requests.post(ISTIO_INGRESS, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -114,7 +115,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
             for host in manual_scan_dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
-                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers)
+                    dispatched[scan_id] = requests.post(ISTIO_INGRESS, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -122,7 +123,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
             for host in manual_scan_hosts:
                 headers["Host"] = host
                 try:
-                    dispatched[scan_id] = requests.post('http://34.67.57.19/receive', headers=headers)
+                    dispatched[scan_id] = requests.post(ISTIO_INGRESS, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))

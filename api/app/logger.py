@@ -62,5 +62,4 @@ logger_dict = {
 
 logging.config.dictConfig(logger_dict)
 logger = logging.getLogger('custom')
-# logging.error('Error message')
 

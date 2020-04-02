@@ -20,16 +20,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 MIN_HSTS_AGE = 31536000 # one year
 
+TOKEN_KEY = os.getenv("TOKEN_KEY")
+
 
 @app.route('/receive', methods=['GET', 'POST'])
 def receive():
 
     try:
-
-        # TODO Replace secret
         decoded_token = jwt.decode(
             request.headers.get("Token"),
-            "test_jwt",
+            TOKEN_KEY,
             algorithm=['HS256']
         )
 

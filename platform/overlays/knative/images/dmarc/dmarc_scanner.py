@@ -18,6 +18,9 @@ headers = {
 
 app = Flask(__name__)
 
+ISTIO_INGRESS = os.getenv("ISTIO_INGRESS")
+TOKEN_KEY = os.getenv("TOKEN_KEY")
+
 
 @app.route('/receive', methods=['GET', 'POST'])
 def receive():
@@ -25,10 +28,9 @@ def receive():
     logging.info("Event received\n")
 
     try:
-        # TODO Replace secret
         decoded_payload = jwt.decode(
             request.headers.get("Token"),
-            "test_jwt",
+            TOKEN_KEY,
             algorithm=['HS256']
         )
 
@@ -53,10 +55,9 @@ def receive():
         else:
             raise Exception("(SCAN: %s) - An error occurred while attempting to perform checkdmarc scan" % scan_id)
 
-        # TODO Replace secret
         headers["Token"] = jwt.encode(
             token,
-            "test_jwt",
+            TOKEN_KEY,
             algorithm='HS256'
         ).decode('utf-8')
 
@@ -74,8 +75,7 @@ def receive():
 def dispatch(scan_id, payload):
     try:
         # Post request to result-handling service
-        # TODO: Pull values from env
-        response = requests.post('http://34.67.57.19/receive', headers=headers, data=payload)
+        response = requests.post(ISTIO_INGRESS, headers=headers, data=payload)
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
         return str(response.text)
