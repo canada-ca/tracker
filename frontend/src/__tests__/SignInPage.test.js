@@ -120,7 +120,7 @@ describe('<SignInPage />', () => {
                 signIn(userName: $userName, password: $password) {
                   user {
                     userName
-                    tfaValidated
+                    tfa
                   }
                   authToken
                 }
@@ -136,8 +136,7 @@ describe('<SignInPage />', () => {
               signIn: {
                 user: {
                   userName: 'Thalia.Rosenbaum@gmail.com',
-                  failedLoginAttempts: 4,
-                  tfaValidated: false,
+                  tfa: false,
                 },
                 authToken: 'test123stringJWT',
               },
@@ -153,7 +152,7 @@ describe('<SignInPage />', () => {
         initialIndex: 0,
       })
 
-      const { container, getByRole } = render(
+      const { container, getByRole, queryByText } = render(
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <Router history={history}>
@@ -168,6 +167,9 @@ describe('<SignInPage />', () => {
           </I18nProvider>
         </ThemeProvider>,
       )
+      await waitFor(() => {
+        expect(queryByText(/Sign in with your username and password./i)).toBeInTheDocument()
+      })
 
       const email = container.querySelector('#email')
       const password = container.querySelector('#password')
