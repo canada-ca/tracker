@@ -36,7 +36,8 @@ export function SignInPage() {
       cache.writeData({
         data: {
           jwt: signIn.authToken,
-          tfa: signIn.user.tfaValidated,
+          tfa: signIn.user.tfa,
+          userName: signIn.user.userName,
         },
       })
     },
@@ -90,7 +91,7 @@ export function SignInPage() {
         }}
       >
         {(props) => (
-          <form onSubmit={props.handleSubmit} role="form">
+          <form onSubmit={props.handleSubmit} role="form" aria-label="form" name="form">
             <Field name="email">
               {({ field, form }) => (
                 <FormControl

@@ -27,10 +27,15 @@ export default function App() {
     {
       jwt @client
       tfa @client
+      userName @client
     }
   `
   const { i18n } = useLingui()
-  const { data } = useQuery(GET_JWT_TOKEN)
+  const { data, loading } = useQuery(GET_JWT_TOKEN)
+
+  if (loading) {
+    return <p>Loading...</p>
+  }
 
   return (
     <>
@@ -68,9 +73,6 @@ export default function App() {
               <Trans>User Profile</Trans>
             </Link>
           )}
-          <Link to="/user">
-            <Trans>UserPage</Trans>
-          </Link>
         </Navigation>
         {// Dynamically show the TwoFactorNotification bar
         data && !data.tfa && <TwoFactorNotificationBar />}
@@ -84,7 +86,7 @@ export default function App() {
           </Route>
 
           <Route path="/user">
-            <UserPage />
+            <UserPage userName={data && data.userName ? data.userName : null} />
           </Route>
 
           <Route path="/sign-in">

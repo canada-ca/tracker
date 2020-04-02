@@ -4,6 +4,8 @@ import React from 'react'
 import { Formik } from 'formik'
 import { useHistory } from 'react-router-dom'
 
+import { string } from 'prop-types'
+
 import {
   Stack,
   SimpleGrid,
@@ -20,7 +22,7 @@ import { useApolloClient, useMutation, useQuery } from '@apollo/react-hooks'
 import { PasswordConfirmation } from './PasswordConfirmation'
 import gql from 'graphql-tag'
 
-export function UserPage() {
+export function UserPage({ userName }) {
   // TODO: Move to mutations folder
   const UPDATE_PASSWORD = gql`
     mutation UpdatePassword(
@@ -68,7 +70,7 @@ export function UserPage() {
     error: queryUserError,
     data: queryUserData,
   } = useQuery(QUERY_USER, {
-    variables: { userName: 'testuser@testemail.ca' },
+    variables: { userName: userName },
   })
 
   if (updatePasswordLoading || queryUserLoading) {
@@ -83,7 +85,7 @@ export function UserPage() {
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Formik
         initialValues={{
-          email: queryUserData.user.userName,
+          email: userName, // Taken from prop or query, does not matter.
           lang: queryUserData.user.lang,
           displayName: queryUserData.user.displayName,
         }}
@@ -183,7 +185,7 @@ export function UserPage() {
           w={'50%'}
           onClick={() => {
             // This clears the JWT, essentially logging the user out in one go
-            client.writeData({ data: { jwt: null } }) // How is this done?
+            client.writeData({ data: { jwt: null, tfa: null, userName: null } }) // How is this done?
             history.push('/')
             toast({
               title: 'Sign Out.',
@@ -251,3 +253,5 @@ export function UserPage() {
     </SimpleGrid>
   )
 }
+
+UserPage.propTypes = { userName: string.isRequired }
