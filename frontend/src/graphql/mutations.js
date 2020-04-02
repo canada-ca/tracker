@@ -25,7 +25,7 @@ export const SIGN_IN = gql`
     signIn(userName: $userName, password: $password) {
       user {
         userName
-        tfaValidated
+        tfa
       }
       authToken
     }
@@ -41,3 +41,5 @@ export const VALIDATE_TWO_FACTOR = gql`
     }
   }
 `
+
+export default ''

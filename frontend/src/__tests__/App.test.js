@@ -24,7 +24,11 @@ const mocks = [
       query: gql`
         {
           domains(organization: BOC) {
-            url
+            edges {
+              node {
+                url
+              }
+            }
           }
         }
       `,
@@ -32,14 +36,20 @@ const mocks = [
     },
     result: {
       data: {
-        domains: [
-          {
-            url: 'canada.ca',
-          },
-          {
-            url: 'alpha.canada.ca',
-          },
-        ],
+        domains: {
+          edges: [
+            {
+              node: {
+                url: 'canada.ca',
+              },
+            },
+            {
+              node: {
+                url: 'alpha.canada.ca',
+              },
+            },
+          ],
+        },
       },
     },
   },

@@ -3,7 +3,11 @@ import gql from 'graphql-tag'
 export const DOMAINS = gql`
   {
     domains(organization: BOC) {
-      url
+      edges {
+        node {
+          url
+        }
+      }
     }
   }
 `

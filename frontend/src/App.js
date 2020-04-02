@@ -14,11 +14,12 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Flex, Link, CSSReset, useToast } from '@chakra-ui/core'
+import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
-import { useQuery, useApolloClient } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
+import { UserPage } from './UserPage'
 import { UserList } from './UserList'
 import { DmarcReportPage } from './DmarcReportPage'
 
@@ -29,12 +30,15 @@ export default function App() {
     {
       jwt @client
       tfa @client
+      userName @client
     }
   `
   const { i18n } = useLingui()
-  const toast = useToast()
-  const client = useApolloClient()
-  const { data } = useQuery(GET_JWT_TOKEN)
+  const { data, loading } = useQuery(GET_JWT_TOKEN)
+
+  if (loading) {
+    return <p>Loading...</p>
+  }
 
   return (
     <>
@@ -68,21 +72,8 @@ export default function App() {
               <Trans>Sign In</Trans>
             </Link>
           ) : (
-            <Link
-              to="/"
-              onClick={() => {
-                // This clears the JWT, essentially logging the user out in one go
-                client.writeData({ data: { jwt: null } }) // How is this done?
-                toast({
-                  title: 'Sign Out.',
-                  description: 'You have successfully been signed out.',
-                  status: 'success',
-                  duration: 9000,
-                  isClosable: true,
-                })
-              }}
-            >
-              <Trans>Sign Out</Trans>
+            <Link to="/user">
+              <Trans>User Profile</Trans>
             </Link>
           )}
           <Link to="/user-list">
@@ -101,6 +92,10 @@ export default function App() {
 
           <Route path="/domains">
             <DomainsPage />
+          </Route>
+
+          <Route path="/user">
+            <UserPage userName={data && data.userName ? data.userName : null} />
           </Route>
 
           <Route path="/sign-in">
