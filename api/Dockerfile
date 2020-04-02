@@ -8,17 +8,15 @@ RUN set -ex \
 	\
 	&& savedAptMark="$(apt-mark showmanual)" \
 	&& apt-get update && apt-get install -y --no-install-recommends \
-    openssl-dev \
+    openssl \
     libffi-dev \
-    build-base \
-    postgresql-libs \
-    postgresql-dev \
+    postgresql-11\
     musl-dev \
     python3 \
     python3-dev
 
-RUN addgroup -g 1000 -S trackerapi && \
-	    adduser -u 1000 -S trackerapi -G trackerapi
+RUN addgroup -gid 1000 -system trackerapi && \
+	    adduser -u 1000 -system trackerapi -gecos trackerapi
 
 RUN pip install pipenv --no-cache-dir
 
