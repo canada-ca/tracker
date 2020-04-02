@@ -23,10 +23,10 @@ export function DomainsPage() {
               <Trans>This is the full list of domains</Trans>
             </Text>
             <List>
-              {data.domains.map((domain, i) => {
+              {data.domains.edges.map((edge, i) => {
                 return (
-                  <ListItem key={domain.url + i}>
-                    <Text>{domain.url}</Text>
+                  <ListItem key={edge.node.url + i}>
+                    <Text>{edge.node.url}</Text>
                   </ListItem>
                 )
               })}
