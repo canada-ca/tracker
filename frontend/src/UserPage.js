@@ -90,12 +90,8 @@ export function UserPage({ userName }) {
           displayName: queryUserData.user.displayName,
         }}
         onSubmit={(values, actions) => {
-          window.alert('coming soon')
-          /*setTimeout(() => {
-            window.alert(JSON.stringify(values, null, 2))
-            actions.setSubmitting(false)
-          }, 1000)
-        */
+          window.alert('coming soon!!\n' + JSON.stringify(values, null, 2))
+          actions.setSubmitting(false)
         }}
       >
         {(props) => (
