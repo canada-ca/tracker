@@ -19,7 +19,9 @@ import { SkipLink } from './SkipLink'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
+import { UserList } from './UserList'
 import { DmarcReportPage } from './DmarcReportPage'
+
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -83,7 +85,9 @@ export default function App() {
               <Trans>Sign Out</Trans>
             </Link>
           )}
-
+          <Link to="/user-list">
+            <Trans>User List</Trans>
+          </Link>
           <Link to="/dmarc-report">
             <Trans>DMARC</Trans>
           </Link>
@@ -111,8 +115,12 @@ export default function App() {
             <QRcodePage userName={''} />
           </Route>
 
+          <Route path="/user-list">
+            <UserList />
+          </Route>
           <Route path="/dmarc-report">
             <DmarcReportPage />
+
           </Route>
 
           <Route>
