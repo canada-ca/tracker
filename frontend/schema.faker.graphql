@@ -752,6 +752,14 @@ type Record {
   """DMARC alignment object"""
   alignment: Alignment
 
+  """
+  An api endpoint to view a current user's claims -- Requires an active JWT.
+  """
+  testUserClaims(token: String!): String
+  
+  dmarcReport: DmarcReport
+}
+
   """DMARC policy evaluation object"""
   policyEvaluated: PolicyEvaluated
 
@@ -1091,3 +1099,68 @@ type WWWScanEdge {
   cursor: String!
 }
 
+type DmarcReport implements Node{
+	id: ID!
+  reportId: String
+  orgName: String @fake(type: firstName)
+  endDate: DateTime
+  
+  """
+  Calculated value = dkimResult || spfResult
+  """
+  dmarcResult: String @examples(values: ["pass", "fail"])
+  
+  """
+  Calculated value of wether or not dkim passes or fails amongst all records
+  """
+  dkimResult: String @examples(values: ["pass", "fail"])
+  
+  """
+  Calculated value of wether or not spf passes or fails amongst all records
+  """
+  spfResult: String @examples(values: ["pass", "fail"])
+  
+  count: Int
+  
+  """
+  Calculated value of DMARC passes amongst all records
+  """
+  passPercentage: Int @examples(values: [60,80,95,73])
+  
+  dkim: [DkimResult!]
+  spf: [SpfResult!]
+  source: Source
+  identifiers: Identifiers
+}
+
+type DkimResult{
+  domain: String @fake(type: domainName)
+  selector: String @examples(values: ["test-selector"])
+  result: String @examples(values: ["pass", "fail"])
+}
+
+type SpfResult{
+  domain: String @fake(type: domainName)
+  scope: String @examples(values: ["test-scope"])
+  result: String @examples(values: ["pass", "fail"])
+}
+
+
+type Identifiers{
+  headerFrom: String @fake(type: domainName)
+  envelopeFrom: String
+  envelopeTo: String
+}
+
+type Alignment{
+  spf: Boolean
+  dkim: Boolean
+  dmarc: Boolean
+}
+
+type Source{
+  ipAddress: String @examples(values: ["127.0.0.1"])
+  country: String @examples(values: ["Canada","United States of America"])
+  reverseDns: String
+  baseDomain: String @fake(type: domainName)
+}

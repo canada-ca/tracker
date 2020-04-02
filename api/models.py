@@ -13,7 +13,6 @@ class Domains(db.Model):
     id = Column(Integer, primary_key=True)
     domain = Column(String)
     last_run = Column(DateTime)
-    dmarc_phase = Column(Integer)
     organization_id = Column(Integer, ForeignKey('organizations.id'))
     organization = relationship("Organizations", back_populates="domains", cascade="all, delete")
     scans = relationship("Scans", back_populates="domain", cascade="all, delete")
@@ -80,6 +79,7 @@ class Dmarc_scans(db.Model):
     __tablename__ = 'dmarc_scans'
 
     id = Column(Integer, ForeignKey('scans.id'), primary_key=True)
+    dmarc_phase = Column(Integer)
     dmarc_scan = Column(JSONB)
 
 
