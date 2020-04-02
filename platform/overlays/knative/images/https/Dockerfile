@@ -1,17 +1,22 @@
-FROM python:3.7-slim
+FROM python:3-slim AS prep-image
 
-# Copy local code to the container image.
-ENV SCANNER_HOME /https
-WORKDIR $SCANNER_HOME
+# Copy local code.
+WORKDIR /https
 COPY . ./
 
-RUN pip3 install Flask gunicorn
+# Install dependancies.
+RUN pip3 install --user Flask waitress
 
-RUN pip3 install pshtt
-RUN pip3 install PyJWT
+RUN pip3 install --user pshtt
+RUN pip3 install --user PyJWT
 
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 https_scanner:app
+FROM scratch as runtime-image
+
+COPY --from=prep-image /root/.local /root/.local
+COPY --from=prep-image /https .
+
+# Install python.
+RUN apt-get install python3
+
+# Run the web service on container startup. Using waitress, in this case.
+CMD exec waitress-serve https_scanner:app

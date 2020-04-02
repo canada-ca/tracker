@@ -1,18 +1,23 @@
-FROM python:3.7-slim
+FROM python:3-slim AS prep-image
 
-# Copy local code to the container image.
-ENV HOME /results
-WORKDIR $HOME
+# Copy local code.
+WORKDIR /results
 COPY . ./
 
-# Install production dependencies.
-RUN pip3 install Flask gunicorn
-RUN pip3 install Flask-SQLAlchemy
-RUN pip3 install graphene
-RUN pip3 install PyJWT
+# Install dependancies.
+RUN pip3 install --user Flask waitress
 
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 results:app
+RUN pip3 install --user Flask-SQLAlchemy
+RUN pip3 install --user graphene
+RUN pip3 install --user PyJWT
+
+FROM scratch as runtime-image
+
+COPY --from=prep-image /root/.local /root/.local
+COPY --from=prep-image /results .
+
+# Install python.
+RUN apt-get install python3
+
+# Run the web service on container startup. Using waitress, in this case.
+CMD exec waitress-serve results:app

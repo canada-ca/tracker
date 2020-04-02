@@ -91,5 +91,4 @@ def scan(scan_id, domain):
 
 
 if __name__ == "__main__":
-    # Port number defaults to 8080, can be configured as an ENV
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+    app.run(debug=True, host='0.0.0.0', port=8080)
