@@ -29,7 +29,7 @@ def receive():
 
     try:
         decoded_payload = jwt.decode(
-            request.headers.get("Token"),
+            request.headers.get("Data"),
             TOKEN_KEY,
             algorithm=['HS256']
         )
