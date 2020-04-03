@@ -1,10 +1,11 @@
-FROM python:3.7-slim
+FROM ubuntu:20.04
 
 # Copy local code to the container image.
 ENV SCANNER_HOME /ssl
 WORKDIR $SCANNER_HOME
 COPY . ./
 
+RUN apt-get install python3-pip
 RUN pip3 install Flask gunicorn
 
 RUN pip3 install sslyze
