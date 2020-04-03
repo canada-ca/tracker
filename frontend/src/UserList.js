@@ -19,8 +19,10 @@ import { Trans } from '@lingui/macro'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import { PaginationButtons } from './PaginationButtons'
+import { useHistory } from 'react-router-dom'
 
 export function UserList() {
+  const history = useHistory()
   // This function generates the URL when the page loads
   const { loading, error, data } = useQuery(
     gql`
@@ -102,14 +104,17 @@ export function UserList() {
 
       {data
         ? data.user.affiliations.edges[0].node.organization.affiliatedUsers.edges.map(
-            edge => {
+            (edge) => {
               return (
                 <Box key={edge.node.id} width="100%">
                   <PseudoBox
                     display={{ md: 'flex' }}
                     alignItems="center"
                     onClick={() => {
-                      window.alert('clicked box')
+                      history.push({
+                        pathname: '/user',
+                        state: { detail: edge.node.user.userName },
+                      })
                     }}
                     _hover={{ borderColor: 'gray.200', bg: 'gray.200' }}
                     p="30px"

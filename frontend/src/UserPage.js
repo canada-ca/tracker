@@ -21,6 +21,10 @@ import {
 import { useApolloClient, useMutation, useQuery } from '@apollo/react-hooks'
 import { PasswordConfirmation } from './PasswordConfirmation'
 import gql from 'graphql-tag'
+import { useLocation } from 'react-router-dom'
+
+export function UserPage(props) {
+  const location = useLocation()
 
 export function UserPage() {
   const userName = 'mike@korora.ca'
@@ -71,7 +75,9 @@ export function UserPage() {
     error: queryUserError,
     data: queryUserData,
   } = useQuery(QUERY_USER, {
-    variables: { userName: userName },
+    variables: {
+      userName: location.state ? location.state.detail : props.userName,
+    },
   })
 
   if (updatePasswordLoading || queryUserLoading) {
@@ -86,7 +92,7 @@ export function UserPage() {
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Formik
         initialValues={{
-          email: userName, // Taken from prop or query, does not matter.
+          email: location.state ? location.state.detail : props.userName, // This value is taken from either the userName prop or the location.state prop passed from userList
           lang: queryUserData.user.lang,
           displayName: queryUserData.user.displayName,
         }}
@@ -252,3 +258,5 @@ export function UserPage() {
     </SimpleGrid>
   )
 }
+
+UserPage.propTypes = { userName: string }
