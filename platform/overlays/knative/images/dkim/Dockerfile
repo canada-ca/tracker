@@ -6,7 +6,7 @@ WORKDIR $SCANNER_HOME
 COPY . ./
 
 RUN apt-get install python3-pip
-RUN pip3 install Flask gunicorn
+RUN pip3 install Flask waitress
 
 RUN pip3 install dkimpy
 RUN pip3 install requests

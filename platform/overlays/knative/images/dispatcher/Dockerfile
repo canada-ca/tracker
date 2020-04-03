@@ -8,7 +8,7 @@ COPY . ./
 RUN apt-get install python3-pip
 
 # Install dependencies.
-RUN pip3 install Flask gunicorn
+RUN pip3 install Flask waitress
 RUN pip3 install requests
 RUN pip3 install PyJWT
 
