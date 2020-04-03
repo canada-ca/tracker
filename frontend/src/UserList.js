@@ -18,6 +18,7 @@ import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
 
 export function UserList() {
+  const history = useHistory()
   // This function generates the URL when the page loads
   const { loading, error, data } = useQuery(QUERY_USERLIST)
   if (loading) {
