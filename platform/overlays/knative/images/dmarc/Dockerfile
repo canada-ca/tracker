@@ -5,13 +5,12 @@ ENV SCANNER_HOME /dmarc
 WORKDIR $SCANNER_HOME
 COPY . ./
 
-RUN apt-get install python3-pip
-RUN pip3 install Flask waitress
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends apt-utils
+RUN apt-get install -y --no-install-recommends python3 python3-pip
+RUN apt-get install -y --no-install-recommends python3-setuptools python3-wheel
 
-RUN pip3 install checkdmarc
-RUN pip3 install requests
-RUN pip3 install PyJWT
-RUN pip3 install tldextract
+RUN python3 -m pip install -r requirements.txt
 
 # Run the web service on container startup. Using waitress, in this case.
 CMD exec waitress-serve dmarc_scanner:app
