@@ -20,43 +20,13 @@ import {
 } from '@chakra-ui/core'
 import { useApolloClient, useMutation, useQuery } from '@apollo/react-hooks'
 import { PasswordConfirmation } from './PasswordConfirmation'
-import gql from 'graphql-tag'
 import { useLocation } from 'react-router-dom'
+
+import { QUERY_USER } from './graphql/queries'
+import { UPDATE_PASSWORD } from './graphql/mutations'
 
 export function UserPage(props) {
   const location = useLocation()
-
-export function UserPage() {
-  const userName = 'mike@korora.ca'
-
-  // TODO: Move to mutations folder
-  const UPDATE_PASSWORD = gql`
-    mutation UpdatePassword(
-      $userName: EmailAddress!
-      $password: String!
-      $confirmPassword: String!
-    ) {
-      updatePassword(
-        userName: $userName
-        password: $password
-        confirmPassword: $confirmPassword
-      ) {
-        user {
-          userName
-        }
-      }
-    }
-  `
-
-  const QUERY_USER = gql`
-    query User($userName: EmailAddress!) {
-      user(userName: $userName) {
-        displayName
-        lang
-      }
-    }
-  `
-
   const client = useApolloClient()
   const toast = useToast()
   const history = useHistory()

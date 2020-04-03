@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/core'
 
 import { Trans } from '@lingui/macro'
-import gql from 'graphql-tag'
+import { QUERY_USERLIST } from './graphql/queries'
 import { useQuery } from '@apollo/react-hooks'
 import { PaginationButtons } from './PaginationButtons'
 import { useHistory } from 'react-router-dom'
@@ -24,52 +24,7 @@ import { useHistory } from 'react-router-dom'
 export function UserList() {
   const history = useHistory()
   // This function generates the URL when the page loads
-  const { loading, error, data } = useQuery(
-    gql`
-      {
-        user {
-          affiliations {
-            edges {
-              node {
-                organization {
-                  acronym
-                  affiliatedUsers {
-                    pageInfo {
-                      hasNextPage
-                      hasPreviousPage
-                      startCursor
-                      endCursor
-                    }
-                    edges {
-                      node {
-                        id
-                        user {
-                          userName
-                          displayName
-                          tfa
-                          affiliations {
-                            edges {
-                              node {
-                                id
-                                organization {
-                                  acronym
-                                }
-                                permission
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    `,
-  )
+  const { loading, error, data } = useQuery(QUERY_USERLIST)
   if (loading) {
     return <p>Loading...</p>
   }
