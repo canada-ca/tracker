@@ -53,3 +53,58 @@ export const QUERY_USER = gql`
     }
   }
 `
+
+export const QUERY_USERLIST = gql`
+  {
+    user {
+      affiliations {
+        edges {
+          node {
+            organization {
+              acronym
+              affiliatedUsers {
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  node {
+                    id
+                    user {
+                      userName
+                      displayName
+                      tfa
+                      affiliations {
+                        edges {
+                          node {
+                            id
+                            organization {
+                              acronym
+                            }
+                            permission
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const QUERY_USER = gql`
+  query User($userName: EmailAddress!) {
+    user(userName: $userName) {
+      userName
+      displayName
+      lang
+    }
+  }
+`
