@@ -6,4 +6,4 @@ COPY . .
 
 RUN npm i
 
-ENTRYPOINT ["node", "./cli.js"]
+ENTRYPOINT ["node", "/home/node/differ/cli.js"]
