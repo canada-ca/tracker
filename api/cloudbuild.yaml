@@ -35,7 +35,7 @@ steps:
       - DB_USER=$_DB_NAME
 
   - name: 'gcr.io/track-compliance/ci'
-    id: dbInit
+    id: schema_export
     dir: api
     entrypoint: pipenv
     args: ['run', 'schema-export']
