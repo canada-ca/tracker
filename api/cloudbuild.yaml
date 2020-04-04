@@ -1,4 +1,5 @@
 steps:
+
   # Passing POSTGRES_USER here creates a database of the same name
   - name: 'gcr.io/cloud-builders/docker'
     id: start_postgres
@@ -32,6 +33,24 @@ steps:
       - DB_PASS=$_DB_PASS
       - DB_PORT=$_DB_PORT
       - DB_USER=$_DB_NAME
+
+  - name: 'gcr.io/track-compliance/ci'
+    id: dbInit
+    dir: api
+    entrypoint: pipenv
+    args: ['run', 'schema-export']
+    env:
+      - DB_HOST=$_DB_HOST
+      - DB_NAME=$_DB_NAME
+      - DB_PASS=$_DB_PASS
+      - DB_PORT=$_DB_PORT
+      - DB_USER=$_DB_NAME
+
+  - name: gcr.io/track-compliance/schema-differ
+    id: diff_schema_against_production
+    args:
+      - '/workspace/api/schema.json'
+      - 'https://istio.actually.works/graphql'
 
   - name: 'gcr.io/track-compliance/ci'
     id: test

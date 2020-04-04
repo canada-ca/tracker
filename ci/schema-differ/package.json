@@ -1,0 +1,25 @@
+{
+  "name": "schema-differ",
+  "version": "1.0.0",
+  "description": "a diff tool for graphql schemas",
+  "main": "index.js",
+  "bin": {
+    "diff-schemas": "./cli.js"
+  },
+  "keywords": [
+    "graphql"
+  ],
+  "author": "Mike Williamson",
+  "license": "MIT",
+  "dependencies": {
+    "@graphql-toolkit/core": "^0.10.2",
+    "@graphql-toolkit/graphql-file-loader": "^0.10.2",
+    "@graphql-toolkit/json-file-loader": "^0.10.2",
+    "@graphql-toolkit/url-loader": "^0.10.2",
+    "graphql": "^15.0.0",
+    "meow": "^6.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.0.2"
+  }
+}
