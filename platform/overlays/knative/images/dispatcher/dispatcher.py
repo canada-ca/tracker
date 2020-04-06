@@ -59,7 +59,8 @@ def receive():
         ).decode('utf-8')
 
         if test_flag == "true":
-            return dispatch(encrypted_payload, dkim_flag, user_initialized, scan_id, test_flag)
+            res = dispatch(encrypted_payload, dkim_flag, user_initialized, scan_id, test_flag)
+            return str(res)
         else:
             th = threading.Thread(target=dispatch,
                                   args=[encrypted_payload, dkim_flag, user_initialized, scan_id, test_flag])
@@ -88,7 +89,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
         "Test": test_flag
     }
 
-    dispatched = {}
+    dispatched = {scan_id: {}}
 
     if not manual:
 
@@ -96,7 +97,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
             for host in dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
-                    dispatched[scan_id] = requests.post(ISTIO_INGRESS, headers=headers)
+                    dispatched[scan_id][host] = requests.post(ISTIO_INGRESS, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -104,7 +105,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
             for host in hosts:
                 headers['Host'] = host
                 try:
-                    dispatched[scan_id] = requests.post(ISTIO_INGRESS, headers=headers)
+                    dispatched[scan_id][host] = requests.post(ISTIO_INGRESS, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -115,7 +116,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
             for host in manual_scan_dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
-                    dispatched[scan_id] = requests.post(ISTIO_INGRESS, headers=headers)
+                    dispatched[scan_id][host] = requests.post(ISTIO_INGRESS, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -123,15 +124,16 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
             for host in manual_scan_hosts:
                 headers["Host"] = host
                 try:
-                    dispatched[scan_id] = requests.post(ISTIO_INGRESS, headers=headers)
+                    dispatched[scan_id][host] = requests.post(ISTIO_INGRESS, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
 
     if test_flag == "true":
         results = {}
-        for key, req in dispatched.items():
+        for key, req in dispatched[scan_id].items():
             results[key] = str(req.text)
+            logging.info("Scan %s results for %s: %s\n" % (scan_id, key, req.text))
 
         return results
 

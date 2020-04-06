@@ -597,13 +597,17 @@ def https_check(endpoint):
         scan_request = ServerScanRequest(server_info=server_info, scan_commands=[command],
                                          scan_commands_extra_arguments={ScanCommand.CERTIFICATE_INFO: CA_FILE})
         scanner.queue_scan(scan_request)
-        cert_plugin_result = scanner.get_results()
+        # Retrieve results from generator object
+        scan_result = [x for x in scanner.get_results()][0]
+        cert_plugin_result = scan_result.scan_commands_results['certificate_info']
     except Exception as err:
         try:
             if "timed out" in str(err):
                 logging.exception("{}: Retrying sslyze scanner certificate plugin.".format(endpoint.url))
-                scanner.queue_scan(server_info, scan_request)
-                cert_plugin_result = scanner.get_results()
+                scanner.queue_scan(scan_request)
+                # Retrieve results from generator object
+                scan_result = [x for x in scanner.get_results()][0]
+                cert_plugin_result = scan_result.scan_commands_results['certificate_info']
             else:
                 logging.exception("{}: Unknown exception in sslyze scanner certificate plugin.".format(endpoint.url))
                 utils.debug("{}: {}".format(endpoint.url, err))
@@ -625,7 +629,7 @@ def https_check(endpoint):
         public_trust = True
         custom_trust = True
         public_not_trusted_string = ""
-        validation_results = cert_plugin_result.path_validation_result_list
+        validation_results = cert_plugin_result.certificate_deployments[0].path_validation_results
         for result in validation_results:
             if result.was_validation_successful:
                 # We're assuming that it is trusted to start with
@@ -657,7 +661,7 @@ def https_check(endpoint):
         utils.debug("{}: Unknown exception examining trust: {}".format(endpoint.url, err))
 
     try:
-        cert_response = cert_plugin_result.as_text()
+        cert_response = cert_plugin_result.certificate_deployments[0].ocsp_response
     except AttributeError:
         logging.exception("{}: Known error in sslyze 1.X with EC public keys. See https://github.com/nabla-c0d3/sslyze/issues/215".format(endpoint.url))
         return None
