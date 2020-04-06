@@ -13,12 +13,19 @@ steps:
     id: wait
     args: ['postgres:5432']
 
+#  - name: 'gcr.io/track-compliance/ci'
+#    id: install
+#    dir: api
+#    entrypoint: pipenv
+#    args: ['sync', '-d', '--bare']
+#    env:
+#      - PIPENV_NOSPIN=TRUE
+
   - name: 'gcr.io/track-compliance/ci'
     id: install
     dir: api
-    entrypoint: pipenv
-#    args: ['sync', '-d', '--bare']
-    args: ['install', '-r', 'requirements.txt']
+    entrypoint: python3
+    args: ['-m', 'pip', 'install', '-r', 'requirements.txt']
     env:
       - PIPENV_NOSPIN=TRUE
 
