@@ -55,6 +55,7 @@ describe('<UserPage />', () => {
         },
       },
     ]
+
     const { container } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
