@@ -64,7 +64,7 @@
     "jest": "^24.9.0",
     "jest-emotion": "^10.0.32",
     "jest-environment-jsdom-sixteen": "^1.0.3",
-    "prettier": "^2.0.2",
+    "prettier": "^2.0.3",
     "react-hot-loader": "^4.12.20",
     "supertest": "^4.0.2"
   },
