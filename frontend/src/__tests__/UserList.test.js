@@ -253,4 +253,185 @@ describe('<UserList />', () => {
       expect(history.location.pathname).toEqual('/user')
     })
   })
+
+  it('badges are green when TwoFactor and Admin values are true', async () => {
+    const mocks = [
+      {
+        request: {
+          query: QUERY_USERLIST,
+        },
+        result: {
+          data: {
+            user: {
+              affiliations: {
+                edges: [
+                  {
+                    node: {
+                      organization: {
+                        acronym: 'TEST',
+                        affiliatedUsers: {
+                          pageInfo: {
+                            hasNextPage: true,
+                            hasPreviousPage: true,
+                            startCursor: 'string',
+                            endCursor: 'string',
+                          },
+                          edges: [
+                            {
+                              node: {
+                                id: 'NzYzMzQ1MzQ1Ng==',
+                                user: {
+                                  userName: 'testuser@testemail.ca',
+                                  displayName: 'Test User',
+                                  tfa: true,
+                                  affiliations: {
+                                    edges: [
+                                      {
+                                        node: {
+                                          id: 'ODAyOTY1MDMyMQ==',
+                                          organization: {
+                                            acronym: 'GC',
+                                          },
+                                          permission: 'SUPER_ADMIN',
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    ]
+
+    const { container, queryAllByRole, getByText } = render(
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <UserList />
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
+    )
+    expect(container).toBeDefined()
+
+    expect(getByText('Loading...')).toBeInTheDocument()
+    const loadingElement = getByText('Loading...')
+
+    await waitForElementToBeRemoved(loadingElement)
+
+    // Get all of the mocked user cards, and expect there to be only one entry.
+    const userCards = queryAllByRole('userCard')
+    expect(userCards).toHaveLength(1)
+
+    const tfaBadge = getByText(/TwoFactor/i)
+    const adminBadge = getByText(/Admin/i)
+
+    expect(tfaBadge).toBeDefined()
+    expect(adminBadge).toBeDefined()
+
+    expect(tfaBadge).toHaveStyle('background-color: rgb(198, 246, 213)')
+    expect(adminBadge).toHaveStyle('background-color: rgb(198, 246, 213)')
+  })
+  it('badges are red when TwoFactor and Admin values are false', async () => {
+    const mocks = [
+      {
+        request: {
+          query: QUERY_USERLIST,
+        },
+        result: {
+          data: {
+            user: {
+              affiliations: {
+                edges: [
+                  {
+                    node: {
+                      organization: {
+                        acronym: 'TEST',
+                        affiliatedUsers: {
+                          pageInfo: {
+                            hasNextPage: true,
+                            hasPreviousPage: true,
+                            startCursor: 'string',
+                            endCursor: 'string',
+                          },
+                          edges: [
+                            {
+                              node: {
+                                id: 'NzYzMzQ1MzQ1Ng==',
+                                user: {
+                                  userName: 'testuser@testemail.ca',
+                                  displayName: 'Test User',
+                                  tfa: false,
+                                  affiliations: {
+                                    edges: [
+                                      {
+                                        node: {
+                                          id: 'ODAyOTY1MDMyMQ==',
+                                          organization: {
+                                            acronym: 'GC',
+                                          },
+                                          permission: 'USER_READ',
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    ]
+
+    const { container, queryAllByRole, getByText } = render(
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <UserList />
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
+    )
+    expect(container).toBeDefined()
+
+    expect(getByText('Loading...')).toBeInTheDocument()
+    const loadingElement = getByText('Loading...')
+
+    await waitForElementToBeRemoved(loadingElement)
+
+    // Get all of the mocked user cards, and expect there to be only one entry.
+    const userCards = queryAllByRole('userCard')
+    expect(userCards).toHaveLength(1)
+
+    const tfaBadge = getByText(/TwoFactor/i)
+    const adminBadge = getByText(/Admin/i)
+
+    expect(tfaBadge).toBeDefined()
+    expect(adminBadge).toBeDefined()
+
+    expect(tfaBadge).toHaveStyle('background-color: rgb(254, 215, 215)')
+    expect(adminBadge).toHaveStyle('background-color: rgb(254, 215, 215)')
+  })
 })

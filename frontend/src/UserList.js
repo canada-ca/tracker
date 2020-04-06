@@ -112,8 +112,8 @@ export function UserList() {
                     </Badge>
                     <Badge
                       variantColor={
-                        edge.node.permission === 'ADMIN' ||
-                        edge.node.permission === 'SUPER_ADMIN'
+                        edge.node.user.affiliations.edges[0].node.permission === 'ADMIN' ||
+                        edge.node.user.affiliations.edges[0].node.permission === 'SUPER_ADMIN'
                           ? 'green'
                           : 'red'
                       }
