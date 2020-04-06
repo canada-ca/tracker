@@ -50,11 +50,19 @@ export function UserPage(props) {
     },
   })
 
-  if (updatePasswordLoading || queryUserLoading) {
+  if (queryUserLoading) {
     return <p>Loading...</p>
   }
 
-  if (queryUserError || updatePasswordError) {
+  if (queryUserError) {
+    return <p>Error</p>
+  }
+
+  if (updatePasswordLoading) {
+    return <p>Loading...</p>
+  }
+
+  if (updatePasswordError) {
     return <p>Error</p>
   }
 
