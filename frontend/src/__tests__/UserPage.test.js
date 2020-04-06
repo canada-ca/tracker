@@ -1,11 +1,7 @@
 import React from 'react'
 import { UserPage } from '../UserPage'
 import { i18n } from '@lingui/core'
-import {
-  render,
-  cleanup,
-  waitForElementToBeRemoved,
-} from '@testing-library/react'
+import { render, cleanup } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
@@ -59,7 +55,7 @@ describe('<UserPage />', () => {
         },
       },
     ]
-    const { container, getByText } = render(
+    const { container } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']}>
