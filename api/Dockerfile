@@ -33,7 +33,8 @@ ENV PYTHONPATH=/app
 
 WORKDIR /app
 USER trackerapi
-RUN pipenv sync --bare
+# RUN pipenv sync --bare
+RUN pipenv -r requirements.txt
 
 EXPOSE 5000
 CMD pipenv run server
