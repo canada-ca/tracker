@@ -29,6 +29,8 @@ RUN python3 -m pip install pipenv --no-cache-dir
 
 COPY . /app/
 
+ENV PYTHONPATH=/app
+
 WORKDIR /app
 USER trackerapi
 RUN pipenv sync --bare
