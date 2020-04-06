@@ -130,9 +130,7 @@ describe('<UserList />', () => {
     expect(getByText('Loading...')).toBeInTheDocument()
     const loadingElement = getByText('Loading...')
 
-    await waitForElementToBeRemoved(loadingElement).then(() =>
-      console.log('Element no longer in DOM'),
-    )
+    await waitForElementToBeRemoved(loadingElement)
 
     // Get all of the mocked user cards, and expect there to be only one entry.
     const userCards = queryAllByRole('userCard')
@@ -240,9 +238,7 @@ describe('<UserList />', () => {
     expect(getByText('Loading...')).toBeInTheDocument()
     const loadingElement = getByText('Loading...')
 
-    await waitForElementToBeRemoved(loadingElement).then(() =>
-      console.log('Element no longer in DOM'),
-    )
+    await waitForElementToBeRemoved(loadingElement)
 
     // Get all of the mocked user cards, and expect there to be only one entry.
     const userCards = queryAllByRole('userCard')
