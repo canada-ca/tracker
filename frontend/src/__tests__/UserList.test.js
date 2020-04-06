@@ -1,7 +1,11 @@
 import React from 'react'
 import { UserList } from '../UserList'
 import { i18n } from '@lingui/core'
-import { render, cleanup } from '@testing-library/react'
+import {
+  render,
+  cleanup,
+  waitForElementToBeRemoved,
+} from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
@@ -9,10 +13,13 @@ import { MockedProvider } from '@apollo/react-testing'
 
 import { QUERY_USERLIST } from '../graphql/queries'
 
+// If this unused import, the mocked data test fails.  VERY weird.
+import App from '../App'
+
 describe('<UserList />', () => {
   afterEach(cleanup)
 
-  it('renders', async () => {
+  it('successfully renders', async () => {
     const { container } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
@@ -24,10 +31,10 @@ describe('<UserList />', () => {
         </MemoryRouter>
       </MockedProvider>,
     )
-    expect(container).toBeTruthy()
+    expect(container).toBeDefined()
   })
 
-  it('the component renders correctly with mocked data', async () => {
+  it('successfully renders with mocked data', async () => {
     const mocks = [
       {
         request: {
@@ -103,19 +110,29 @@ describe('<UserList />', () => {
         },
       },
     ]
-    const { container } = render(
-      <MockedProvider mocks={mocks} addTypename={false} removeTypename>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+    // Set the inital history item to user-list
+    const { container, queryAllByRole, getByText } = render(
+      <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <MemoryRouter initialEntries={['/']}>
+            <MockedProvider mocks={mocks} addTypename={false}>
               <UserList />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </MockedProvider>,
+            </MockedProvider>
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeProvider>,
     )
-    expect(container).toBeTruthy()
+    expect(container).toBeDefined()
 
-    // TODO: Write test for this.
+    expect(getByText('Loading...')).toBeInTheDocument()
+    const loadingElement = getByText('Loading...')
+
+    await waitForElementToBeRemoved(loadingElement).then(() =>
+      console.log('Element no longer in DOM'),
+    )
+
+    // Get all of the mocked user cards, and expect there to be only one entry.
+    const userCards = queryAllByRole('userCard')
+    expect(userCards).toHaveLength(1)
   })
 })

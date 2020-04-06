@@ -31,9 +31,6 @@ export function UserList() {
   if (error) {
     return <p>Error :(</p>
   }
-  if (data) {
-    console.log(data)
-  }
 
   return (
     <Stack mb={6} w="100%">
