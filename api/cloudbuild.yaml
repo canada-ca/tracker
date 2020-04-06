@@ -18,7 +18,7 @@ steps:
     dir: api
     entrypoint: pipenv
 #    args: ['sync', '-d', '--bare']
-    args: ['-r', 'requirements.txt']
+    args: ['install', '-r', 'requirements.txt']
     env:
       - PIPENV_NOSPIN=TRUE
 
