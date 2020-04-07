@@ -1,112 +1,59 @@
-#!/usr/bin/env python
-
-from . import utils
-from .models import Domain, Endpoint
-from publicsuffix import PublicSuffixList
-from publicsuffix import fetch
-
-import requests
+import sslyze
 import re
-import base64
-import json
-import os
+import datetime
+import requests
 import logging
 import sys
-import codecs
 import OpenSSL
-
-try:
-    from urllib import parse as urlparse  # Python 3
-except ImportError:
-    import urlparse  # Python 2
-
-try:
-    from urllib.error import URLError
-except ImportError:
-    from urllib2 import URLError
-
-import sslyze
+import json
+import base64
+import urllib
+import publicsuffix2 as publicsuffix
 from sslyze.server_connectivity import ServerConnectivityTester
 from sslyze.errors import ConnectionToServerFailed
 from sslyze.scanner import Scanner, ServerScanRequest, ScanCommandExtraArgumentsDict
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.server_setting import ServerNetworkLocation, ServerNetworkLocationViaDirectConnection
+from sslyze.plugins.certificate_info._certificate_utils import extract_dns_subject_alternative_names
+from models import Domain, Endpoint
 
-# We're going to be making requests with certificate validation
-# disabled.  Commented next line due to pylint warning that urllib3 is
-# not in requests.packages
-# requests.packages.urllib3.disable_warnings()
-import urllib3
-urllib3.disable_warnings()
+logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 
-# Default, overrideable via --user-agent
-USER_AGENT = "pshtt, https scanning"
-
-# Defaults to 5 second, overrideable via --timeout
-TIMEOUT = 5
-
-# The fields we're collecting, will be keys in JSON and
-# column headers in CSV.
-HEADERS = [
-    "Domain", "Base Domain", "Canonical URL", "Live",
-    "HTTPS Live", "HTTPS Full Connection", "HTTPS Client Auth Required",
-    "Redirect", "Redirect To",
-    "Valid HTTPS", "HTTPS Publicly Trusted", "HTTPS Custom Truststore Trusted",
-    "Defaults to HTTPS", "Downgrades HTTPS", "Strictly Forces HTTPS",
-    "HTTPS Bad Chain", "HTTPS Bad Hostname", "HTTPS Expired Cert",
-    "HTTPS Self Signed Cert",
-    "HSTS", "HSTS Header", "HSTS Max Age", "HSTS Entire Domain",
-    "HSTS Preload Ready", "HSTS Preload Pending", "HSTS Preloaded",
-    "Base Domain HSTS Preloaded", "Domain Supports HTTPS",
-    "Domain Enforces HTTPS", "Domain Uses Strong HSTS", "IP",
-    "Server Header", "Server Version", "HTTPS Cert Chain Length",
-    "HTTPS Probably Missing Intermediate Cert", "Notes", "Unknown Error",
-]
-
-# Used for caching the HSTS preload list from Chromium's source.
-cache_preload_list_default = "preloaded.json"
-preload_list = None
-
-# Used for caching the HSTS pending preload list from hstspreload.org.
-cache_preload_pending_default = "preload-pending.json"
-preload_pending = None
-
-# Used for determining base domain via Mozilla's public suffix list.
-cache_suffix_list_default = "public-suffix-list.txt"
 suffix_list = None
-
-# Directory to cache all third party responses, if set by user.
-THIRD_PARTIES_CACHE = None
-
-# Set if user wants to use a custom CA bundle
-CA_FILE = None
+preload_pending = None
+preload_list = None
 STORE = "Mozilla"
-PT_INT_CA_FILE = None
 
 
-def inspect(base_domain):
-    domain = Domain(base_domain)
-    domain.http = Endpoint("http", "root", base_domain)
-    domain.httpwww = Endpoint("http", "www", base_domain)
-    domain.https = Endpoint("https", "root", base_domain)
-    domain.httpswww = Endpoint("https", "www", base_domain)
+def run(domains):
+    results = {}
 
-    # Analyze HTTP endpoint responsiveness and behavior.
-    basic_check(domain.http)
-    basic_check(domain.httpwww)
-    basic_check(domain.https)
-    basic_check(domain.httpswww)
+    initialize_external_data()
 
-    # Analyze HSTS header, if present, on each HTTPS endpoint.
-    hsts_check(domain.https)
-    hsts_check(domain.httpswww)
+    for base_domain in domains:
 
-    return result_for(domain)
+        domain = Domain(base_domain)
+        domain.http = Endpoint("http", "root", base_domain)
+        domain.httpwww = Endpoint("http", "www", base_domain)
+        domain.https = Endpoint("https", "root", base_domain)
+        domain.httpswww = Endpoint("https", "www", base_domain)
+
+        # Analyze HTTP endpoint responsiveness and behavior.
+        basic_check(domain.http)
+        basic_check(domain.httpwww)
+        basic_check(domain.https)
+        basic_check(domain.httpswww)
+
+        # Analyze HSTS header, if present, on each HTTPS endpoint.
+        hsts_check(domain.https)
+        hsts_check(domain.httpswww)
+
+        results[base_domain] = result_for(domain)
+
+        return results
 
 
 def result_for(domain):
-
-    # print(utils.json_for(domain.to_object()))
 
     # Because it will inform many other judgments, first identify
     # an acceptable "canonical" URL for the domain.
@@ -159,97 +106,12 @@ def result_for(domain):
         'Unknown Error': did_domain_error(domain),
     }
 
-    # But also capture the extended data for those who want it.
-    result['endpoints'] = domain.to_object()
-
-    # This bit is complicated because of the continue statements,
-    # perhaps overly so.  For instance, the continue statement
-    # following the "if header in ..." statement after "if not
-    # result['HTTPS Full Connection]" means that the final if
-    # statement that sets None values to False does not apply to those
-    # fields.  This code should be rewritten to more clear, or at
-    # least commented so that it is clearer what is happening to the
-    # various fields.  There is some implied logic due to the continue
-    # statements that is tricky, at least at first glance.
-    #
-    # Also, the comment before "for header in HEADERS" is not accurate
-    # for the same reason.
-    #
-    # - jsf9k
-
-    # Convert Header fields from None to False, except for:
-    # - "HSTS Header"
-    # - "HSTS Max Age"
-    # - "Redirect To"
-    for header in HEADERS:
-        if header in ("HSTS Header", "HSTS Max Age", "Redirect To"):
-            continue
-
-        if not result['HTTPS Full Connection']:
-            if header in ('HSTS', 'HSTS Header', 'HSTS Max Age', 'HSTS Entire Domain', 'HSTS Preload Ready', 'Domain Uses Strong HSTS'):
-                continue
-
-        if header in ('IP', 'Server Header', 'Server Version', 'HTTPS Cert Chain Length') and result[header] is None:
-            continue
-
-        if header in ('Valid HTTPS', 'HTTPS Publicly Trusted', 'HTTPS Custom Truststore Trusted'):
-            if not result['HTTPS Live']:
-                result[header] = False
-            continue
-
-        if result[header] is None:
-            result[header] = False
-
     return result
 
 
 def ping(url, allow_redirects=False, verify=True):
-    """
-    If there is a custom CA file and we want to verify
-    use that instead when pinging with requests
-    By changing the verify param from a boolean to a .pem file, the
-    requests module will use the .pem to validate HTTPS connections.
-    Note that we are using the streaming variant of the
-    python-requests library here and we are not actually reading the
-    content of the request.  As a result, the close() method MUST be
-    called on the Request object returned by this method.  That is the
-    ONLY way the connection can be closed and released back into the
-    pool.  One way to ensure this happens is to use the "with" Python
-    construct.
-    If we ever begin reading response bodies, they will need to be
-    explicitly read from Response.content, and we will also want to
-    use conditional logic to read from response bodies where they
-    exist and are useful. We'll also need to watch for Content-Type
-    values like multipart/x-mixed-replace;boundary=ffserver that
-    indicate that the response body will stream indefinitely.
-    """
-    if CA_FILE and verify:
-        verify = CA_FILE
 
-    return requests.get(
-        url,
-
-        allow_redirects=allow_redirects,
-
-        # Validate certificates.
-        verify=verify,
-
-        # Setting this to true delays the retrieval of the content
-        # until we access Response.content.  Since we aren't
-        # interested in the actual content of the request, this will
-        # save us time and bandwidth.
-        #
-        # This will also stop pshtt from hanging on URLs that stream
-        # neverending data, like webcams.  See issue #138:
-        # https://github.com/dhs-ncats/pshtt/issues/138
-        stream=True,
-
-        # set by --user_agent
-        headers={'User-Agent': USER_AGENT},
-
-        # set by --timeout
-        timeout=TIMEOUT
-    )
+    return requests.get(url, allow_redirects=allow_redirects, verify=verify, stream=True)
 
 
 def basic_check(endpoint):
@@ -261,8 +123,6 @@ def basic_check(endpoint):
       the original endpoint.
     * Validate certificates. (Will figure out error if necessary.)
     """
-
-    utils.debug("Pinging %s..." % endpoint.url, divider=True)
 
     req = None
 
@@ -282,7 +142,6 @@ def basic_check(endpoint):
                 )
         ):
             logging.exception("{}: Error completing TLS handshake usually due to required client authentication.".format(endpoint.url))
-            utils.debug("{}: {}".format(endpoint.url, err))
             endpoint.live = True
             if endpoint.protocol == "https":
                 # The https can still be valid with a handshake error,
@@ -292,7 +151,6 @@ def basic_check(endpoint):
 
         else:
             logging.exception("{}: Error connecting over SSL/TLS or validating certificate.".format(endpoint.url))
-            utils.debug("{}: {}".format(endpoint.url, err))
             # Retry with certificate validation disabled.
             try:
                 with ping(endpoint.url, verify=False) as req:
@@ -310,22 +168,18 @@ def basic_check(endpoint):
                     # HTTPS may still be valid, sslyze will double-check later
                     endpoint.https_valid = True
                 logging.exception("{}: Unexpected SSL protocol (or other) error during retry.".format(endpoint.url))
-                utils.debug("{}: {}".format(endpoint.url, err))
                 # continue on to SSLyze to check the connection
             except requests.exceptions.RequestException as err:
                 endpoint.live = False
                 logging.exception("{}: Unexpected requests exception during retry.".format(endpoint.url))
-                utils.debug("{}: {}".format(endpoint.url, err))
                 return
             except OpenSSL.SSL.Error as err:
                 endpoint.live = False
                 logging.exception("{}: Unexpected OpenSSL exception during retry.".format(endpoint.url))
-                utils.debug("{}: {}".format(endpoint.url, err))
                 return
             except Exception as err:
                 endpoint.unknown_error = True
                 logging.exception("{}: Unexpected other unknown exception during requests retry.".format(endpoint.url))
-                utils.debug("{}: {}".format(endpoint.url, err))
                 return
 
         # If it was a certificate error of any kind, it's live,
@@ -342,7 +196,6 @@ def basic_check(endpoint):
         else:
             endpoint.live = False
         logging.exception("{}: Error connecting.".format(endpoint.url))
-        utils.debug("{}: {}".format(endpoint.url, err))
 
     # And this is the parent of ConnectionError and other things.
     # For example, "too many redirects".
@@ -350,13 +203,11 @@ def basic_check(endpoint):
     except requests.exceptions.RequestException as err:
         endpoint.live = False
         logging.exception("{}: Unexpected other requests exception.".format(endpoint.url))
-        utils.debug("{}: {}".format(endpoint.url, err))
         return
 
     except Exception as err:
         endpoint.unknown_error = True
         logging.exception("{}: Unexpected other unknown exception during initial request.".format(endpoint.url))
-        utils.debug("{}: {}".format(endpoint.url, err))
         return
 
     # Run SSLyze to see if there are any errors
@@ -388,7 +239,7 @@ def basic_check(endpoint):
                 endpoint.ip = ip
             else:
                 if endpoint.ip != ip:
-                    utils.debug("{}: Endpoint IP is already {}, but requests IP is {}.".format(endpoint.url, endpoint.ip, ip))
+                    logging.info("{}: Endpoint IP is already {}, but requests IP is {}.".format(endpoint.url, endpoint.ip, ip))
     except Exception:
         # if the socket has already closed, it will throw an exception, but this is just best effort, so ignore it
         logging.exception("Error closing socket")
@@ -416,14 +267,13 @@ def basic_check(endpoint):
             # Relative redirects (e.g. "Location: /Index.aspx").
             # Construct absolute URI, relative to original request.
             else:
-                immediate = urlparse.urljoin(endpoint.url, location_header)
+                immediate = urllib.parse.urljoin(endpoint.url, location_header)
 
             # Chase down the ultimate destination, ignoring any certificate warnings.
             ultimate_req = None
         except Exception as err:
             endpoint.unknown_error = True
             logging.exception("{}: Unexpected other unknown exception when handling Requests Header.".format(endpoint.url))
-            utils.debug("{} {}".format(endpoint.url, err))
 
         try:
             with ping(endpoint.url, allow_redirects=True, verify=False) as ultimate_req:
@@ -434,7 +284,6 @@ def basic_check(endpoint):
         except Exception as err:
             endpoint.unknown_error = True
             logging.exception("{}: Unexpected other unknown exception when handling redirect.".format(endpoint.url))
-            utils.debug("{}: {}".format(endpoint.url, err))
             return
 
         try:
@@ -444,13 +293,13 @@ def basic_check(endpoint):
             # * external (on some other parent domain)
 
             # The hostname of the endpoint (e.g. "www.agency.gov")
-            subdomain_original = urlparse.urlparse(endpoint.url).hostname
+            subdomain_original = urllib.parse.urlparse(endpoint.url).hostname
             # The parent domain of the endpoint (e.g. "agency.gov")
             base_original = parent_domain_for(subdomain_original)
 
             # The hostname of the immediate redirect.
             # The parent domain of the immediate redirect.
-            subdomain_immediate = urlparse.urlparse(immediate).hostname
+            subdomain_immediate = urllib.parse.urlparse(immediate).hostname
             base_immediate = parent_domain_for(subdomain_immediate)
 
             endpoint.redirect_immediately_to = immediate
@@ -476,7 +325,7 @@ def basic_check(endpoint):
 
                 # The hostname of the eventual destination.
                 # The parent domain of the eventual destination.
-                subdomain_eventual = urlparse.urlparse(eventual).hostname
+                subdomain_eventual = urllib.parse.urlparse(eventual).hostname
                 base_eventual = parent_domain_for(subdomain_eventual)
 
                 endpoint.redirect_eventually_to = eventual
@@ -503,7 +352,6 @@ def basic_check(endpoint):
         except Exception as err:
             endpoint.unknown_error = True
             logging.exception("{}: Unexpected other unknown exception when establishing redirects.".format(endpoint.url))
-            utils.debug("{}: {}".format(endpoint.url, err))
 
 
 def hsts_check(endpoint):
@@ -552,7 +400,6 @@ def hsts_check(endpoint):
     except Exception as err:
         endpoint.unknown_error = True
         logging.exception("{}: Unknown exception when handling HSTS check.".format(endpoint.url))
-        utils.debug("{}: {}".format(endpoint.url, err))
         return
 
 
@@ -560,7 +407,6 @@ def https_check(endpoint):
     """
     Uses sslyze to figure out the reason the endpoint wouldn't verify.
     """
-    utils.debug("sslyzing {}...".format(endpoint.url))
 
     # remove the https:// from prefix for sslyze
     try:
@@ -574,7 +420,7 @@ def https_check(endpoint):
             endpoint.ip = ip
         else:
             if endpoint.ip != ip:
-                utils.debug("{}: Endpoint IP is already {}, but requests IP is {}.".format(endpoint.url, endpoint.ip, ip))
+                logging.info("{}: Endpoint IP is already {}, but requests IP is {}.".format(endpoint.url, endpoint.ip, ip))
         if server_info.tls_probing_result.client_auth_requirement.name == 'REQUIRED':
             endpoint.https_client_auth_required = True
             logging.warning("{}: Client Authentication REQUIRED".format(endpoint.url))
@@ -582,20 +428,17 @@ def https_check(endpoint):
         endpoint.live = False
         endpoint.https_valid = False
         logging.exception("{}: Error in sslyze server connectivity check when connecting to {}".format(endpoint.url, err.server_info.hostname))
-        utils.debug("{}: {}".format(endpoint.url, err))
         return
     except Exception as err:
         endpoint.unknown_error = True
         logging.exception("{}: Unknown exception in sslyze server connectivity check.".format(endpoint.url))
-        utils.debug("{}: {}".format(endpoint.url, err))
         return
 
     try:
         cert_plugin_result = None
         command = ScanCommand.CERTIFICATE_INFO
         scanner = Scanner()
-        scan_request = ServerScanRequest(server_info=server_info, scan_commands=[command],
-                                         scan_commands_extra_arguments={ScanCommand.CERTIFICATE_INFO: CA_FILE})
+        scan_request = ServerScanRequest(server_info=server_info, scan_commands=[command])
         scanner.queue_scan(scan_request)
         # Retrieve results from generator object
         scan_result = [x for x in scanner.get_results()][0]
@@ -610,7 +453,6 @@ def https_check(endpoint):
                 cert_plugin_result = scan_result.scan_commands_results['certificate_info']
             else:
                 logging.exception("{}: Unknown exception in sslyze scanner certificate plugin.".format(endpoint.url))
-                utils.debug("{}: {}".format(endpoint.url, err))
                 endpoint.unknown_error = True
                 # We could make this False, but there was an error so
                 # we don't know
@@ -618,7 +460,6 @@ def https_check(endpoint):
                 return
         except Exception:
             logging.exception("{}: Unknown exception in sslyze scanner certificate plugin.".format(endpoint.url))
-            utils.debug("{}: {}".format(endpoint.url, err))
             endpoint.unknown_error = True
             # We could make this False, but there was an error so we
             # don't know
@@ -646,34 +487,12 @@ def https_check(endpoint):
             logging.warning("{}: Publicly trusted by common trust stores.".format(endpoint.url))
         else:
             logging.warning("{}: Not publicly trusted - not trusted by {}.".format(endpoint.url, public_not_trusted_string))
-        if CA_FILE is not None:
-            if custom_trust:
-                logging.warning("{}: Trusted by custom trust store.".format(endpoint.url))
-            else:
-                logging.warning("{}: Not trusted by custom trust store.".format(endpoint.url))
-        else:
-            custom_trust = None
+        custom_trust = None
         endpoint.https_public_trusted = public_trust
         endpoint.https_custom_trusted = custom_trust
     except Exception as err:
         # Ignore exception
         logging.exception("{}: Unknown exception examining trust.".format(endpoint.url))
-        utils.debug("{}: Unknown exception examining trust: {}".format(endpoint.url, err))
-
-    try:
-        cert_response = cert_plugin_result.certificate_deployments[0].ocsp_response
-    except AttributeError:
-        logging.exception("{}: Known error in sslyze 1.X with EC public keys. See https://github.com/nabla-c0d3/sslyze/issues/215".format(endpoint.url))
-        return None
-    except Exception as err:
-        endpoint.unknown_error = True
-        logging.exception("{}: Unknown exception in cert plugin.".format(endpoint.url))
-        utils.debug("{}: {}".format(endpoint.url, err))
-        return
-
-    # Debugging
-    # for msg in cert_response:
-    #     print(msg)
 
     # Default endpoint assessments to False until proven True.
     endpoint.https_expired_cert = False
@@ -681,87 +500,50 @@ def https_check(endpoint):
     endpoint.https_bad_chain = False
     endpoint.https_bad_hostname = False
 
-    # STORE will be either "Mozilla" or "Custom"
-    # depending on what the user chose.
+    cert_chain = cert_plugin_result.certificate_deployments[0].received_certificate_chain
 
-    # A certificate can have multiple issues.
-    for msg in cert_response:
+    # Check for missing SAN (Leaf certificate)
+    leaf_cert = cert_chain[0]
+    # Extract Subject Alternative Names
+    san_list = extract_dns_subject_alternative_names(leaf_cert)
+    # If an empty list was return, SAN(s) are missing. Bad hostname
+    if isinstance(san_list, list) and len(san_list) == 0:
+        endpoint.https_bad_hostname = True
 
-        # Check for missing SAN.
-        if (
-            (("DNS Subject Alternative Names") in msg) and
-            (("[]") in msg)
-        ):
-            endpoint.https_bad_hostname = True
+    # If leaf certificate subject does NOT match hostname, bad hostname
+    if not cert_plugin_result.certificate_deployments[0].leaf_certificate_subject_matches_hostname:
+        endpoint.https_bad_hostname = True
 
-        # Check for certificate expiration.
-        if (
-            (STORE in msg) and
-            (("FAILED") in msg) and
-            (("certificate has expired") in msg)
-        ):
-            endpoint.https_expired_cert = True
+    # Check for leaf certificate expiration/self-signature.
+    if leaf_cert.not_valid_after < datetime.datetime.now():
+        endpoint.https_expired_cert = True
 
-        # Check to see if the cert is self-signed
-        if (
-            (STORE in msg) and
-            (("FAILED") in msg) and
-            (("self signed certificate") in msg)
-        ):
-            endpoint.https_self_signed_cert = True
+    # Check to see if the cert is self-signed
+    if leaf_cert.issuer is leaf_cert.subject:
+        endpoint.https_self_signed_cert = True
 
-        # Check to see if there is a bad chain
-
-        # NOTE: If this is the only flag that's set, it's probably
-        # an incomplete chain
-        # If this isnt the only flag that is set, it's might be
-        # because there is another error. More debugging would
-        # need to be done at this point, but not through sslyze
-        # because sslyze doesn't have enough granularity
-
-        if (
-            (STORE in msg) and
-            (("FAILED") in msg) and
-            (
-                (("unable to get local issuer certificate") in msg) or
-                (("self signed certificate") in msg)
-            )
-        ):
+    # Check certificate chain
+    for cert in cert_chain[1:]:
+        # Check for certificate expiration
+        if cert.not_valid_after < datetime.datetime.now():
             endpoint.https_bad_chain = True
 
-        # Check for whether the hostname validates.
-        if (
-            (("Hostname Validation") in msg) and
-            (("FAILED") in msg) and
-            (("Certificate does NOT match") in msg)
-        ):
-            endpoint.https_bad_hostname = True
+        # Check to see if the cert is self-signed
+        if cert.issuer is (cert.subject or None):
+            endpoint.https_bad_chain = True
 
     try:
-        endpoint.https_cert_chain_len = len(cert_plugin_result.received_certificate_chain)
+        endpoint.https_cert_chain_len = len(cert_plugin_result.certificate_deployments[0].received_certificate_chain)
         if (
                 endpoint.https_self_signed_cert is False and (
-                    len(cert_plugin_result.received_certificate_chain) < 2
+                    len(cert_plugin_result.certificate_deployments[0].received_certificate_chain) < 2
                 )
         ):
             # *** TODO check that it is not a bad hostname and that the root cert is trusted before suggesting that it is an intermediate cert issue.
             endpoint.https_missing_intermediate_cert = True
             if(cert_plugin_result.verified_certificate_chain is None):
                 logging.warning("{}: Untrusted certificate chain, probably due to missing intermediate certificate.".format(endpoint.url))
-                utils.debug("{}: Only {} certificates in certificate chain received.".format(endpoint.url, cert_plugin_result.received_certificate_chain.__len__()))
-            elif(custom_trust is True and public_trust is False):
-                # recheck public trust using custom public trust store with manually added intermediate certificates
-                if(PT_INT_CA_FILE is not None):
-                    try:
-                        cert_plugin_result = None
-                        command = sslyze.plugins.certificate_info_plugin.CertificateInfoScanCommand(ca_file=PT_INT_CA_FILE)
-                        cert_plugin_result = scanner.run_scan_command(server_info, command)
-                        if(cert_plugin_result.verified_certificate_chain is not None):
-                            public_trust = True
-                            endpoint.https_public_trusted = public_trust
-                            logging.warning("{}: Trusted by special public trust store with intermediate certificates.".format(endpoint.url))
-                    except Exception:
-                        logging.exception("Error while rechecking public trust")
+                logging.info("{}: Only {} certificates in certificate chain received.".format(endpoint.url, cert_plugin_result.received_certificate_chain.__len__()))
         else:
             endpoint.https_missing_intermediate_cert = False
     except Exception:
@@ -775,6 +557,126 @@ def https_check(endpoint):
         endpoint.https_bad_hostname
     ):
         endpoint.https_valid = False
+
+
+def parent_domain_for(hostname):
+    """
+    For "x.y.domain.gov", return "domain.gov".
+    If suffix_list is None, the caches have not been initialized, so do that.
+    """
+    if suffix_list is None:
+        logging.error('`suffix_list` has not yet been initialized!')
+        raise RuntimeError(
+            '`initialize_external_data()` must be called explicitly before '
+            'using this function'
+        )
+
+    return suffix_list.get_public_suffix(hostname)
+
+
+def initialize_external_data():
+    """
+    This function serves to load all of third party external data.
+    This can be called explicitly by a library, as part of the setup needed
+    before calling other library functions, or called as part of running
+    inspect_domains() or CLI operation.
+    If values are passed in to this function, they will be assigned to
+    be the cached values. This allows a caller of the Python API to manage
+    cached data in a customized way.
+    It also potentially allows clients to pass in subsets of these lists,
+    for testing or novel performance reasons.
+    Otherwise, if the --cache-third-parties=[DIR] flag specifies a directory,
+    all downloaded third party data will be cached in a directory, and
+    used from cache on the next pshtt run instead of hitting the network.
+    If no values are passed in, and no --cache-third-parties flag is used,
+    then no cached third party data will be created or used, and pshtt will
+    download the latest data from those third party sources.
+    """
+    global preload_list, preload_pending, suffix_list
+
+    preload_list = load_preload_list()
+
+    preload_pending = load_preload_pending()
+
+    suffix_list, raw_content = load_suffix_list()
+
+
+def load_preload_list():
+    preload_json = None
+
+    # Downloads the chromium preloaded domain list and sets it to a global set
+    file_url = 'https://chromium.googlesource.com/chromium/src/net/+/master/http/transport_security_state_static.json?format=TEXT'
+
+    try:
+        request = requests.get(file_url)
+    except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as err:
+        logging.exception('Failed to fetch preload list: {}'.format(file_url))
+        logging.debug('{}'.format(err))
+        return []
+
+    raw = request.content
+
+    # To avoid parsing the contents of the file out of the source tree viewer's
+    # HTML, we download it as a raw file. googlesource.com Base64-encodes the
+    # file to avoid potential content injection issues, so we need to decode it
+    # before using it. https://code.google.com/p/gitiles/issues/detail?id=7
+    raw = base64.b64decode(raw).decode('utf-8')
+
+    # The .json file contains '//' comments, which are not actually valid JSON,
+    # and confuse Python's JSON decoder. Begone, foul comments!
+    raw = ''.join([re.sub(r'^\s*//.*$', '', line)
+                   for line in raw.splitlines()])
+
+    preload_json = json.loads(raw)
+
+    # For our purposes, we only care about entries that includeSubDomains
+    fully_preloaded = []
+    for entry in preload_json['entries']:
+        if entry.get('include_subdomains', False) is True:
+            fully_preloaded.append(entry['name'])
+
+    return fully_preloaded
+
+
+def load_preload_pending():
+    """
+    Fetch the Chrome preload pending list.
+    """
+    pending_url = "https://hstspreload.org/api/v2/pending"
+
+    try:
+        request = requests.get(pending_url)
+    except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as err:
+        logging.exception('Failed to fetch pending preload list: {}'.format(pending_url))
+        logging.debug('{}'.format(err))
+        return []
+
+    # TODO: abstract Py 2/3 check out to utils
+    if sys.version_info[0] < 3:
+        raw = request.content
+    else:
+        raw = str(request.content, 'utf-8')
+
+    pending_json = json.loads(raw)
+
+    pending = []
+    for entry in pending_json:
+        if entry.get('include_subdomains', False) is True:
+            pending.append(entry['name'])
+
+    return pending
+
+
+def load_suffix_list():
+    # File does not exist, download current list and cache it at given location.
+    try:
+        cache_file = publicsuffix.fetch()
+    except urllib.error.URLError as err:
+        logging.exception("Unable to download the Public Suffix List...")
+        return []
+    content = cache_file.readlines()
+    suffixes = publicsuffix.PublicSuffixList(content)
+    return suffixes, content
 
 
 def canonical_endpoint(http, httpwww, https, httpswww):
@@ -886,12 +788,6 @@ def canonical_endpoint(http, httpwww, https, httpswww):
         return https
     elif (not is_www) and (not is_https):
         return http
-
-
-##
-# Judgment calls based on observed endpoint data.
-##
-
 
 def is_live(domain):
     """
@@ -1427,204 +1323,3 @@ def did_domain_error(domain):
         https.unknown_error or httpswww.unknown_error
     )
 
-
-def load_preload_pending():
-    """
-    Fetch the Chrome preload pending list.
-    """
-
-    utils.debug("Fetching hstspreload.org pending list...", divider=True)
-    pending_url = "https://hstspreload.org/api/v2/pending"
-
-    try:
-        request = requests.get(pending_url)
-    except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as err:
-        logging.exception('Failed to fetch pending preload list: {}'.format(pending_url))
-        logging.debug('{}'.format(err))
-        return []
-
-    # TODO: abstract Py 2/3 check out to utils
-    if sys.version_info[0] < 3:
-        raw = request.content
-    else:
-        raw = str(request.content, 'utf-8')
-
-    pending_json = json.loads(raw)
-
-    pending = []
-    for entry in pending_json:
-        if entry.get('include_subdomains', False) is True:
-            pending.append(entry['name'])
-
-    return pending
-
-
-def load_preload_list():
-    preload_json = None
-
-    utils.debug("Fetching Chrome preload list from source...", divider=True)
-
-    # Downloads the chromium preloaded domain list and sets it to a global set
-    file_url = 'https://chromium.googlesource.com/chromium/src/net/+/master/http/transport_security_state_static.json?format=TEXT'
-
-    try:
-        request = requests.get(file_url)
-    except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as err:
-        logging.exception('Failed to fetch preload list: {}'.format(file_url))
-        logging.debug('{}'.format(err))
-        return []
-
-    raw = request.content
-
-    # To avoid parsing the contents of the file out of the source tree viewer's
-    # HTML, we download it as a raw file. googlesource.com Base64-encodes the
-    # file to avoid potential content injection issues, so we need to decode it
-    # before using it. https://code.google.com/p/gitiles/issues/detail?id=7
-    raw = base64.b64decode(raw).decode('utf-8')
-
-    # The .json file contains '//' comments, which are not actually valid JSON,
-    # and confuse Python's JSON decoder. Begone, foul comments!
-    raw = ''.join([re.sub(r'^\s*//.*$', '', line)
-                   for line in raw.splitlines()])
-
-    preload_json = json.loads(raw)
-
-    # For our purposes, we only care about entries that includeSubDomains
-    fully_preloaded = []
-    for entry in preload_json['entries']:
-        if entry.get('include_subdomains', False) is True:
-            fully_preloaded.append(entry['name'])
-
-    return fully_preloaded
-
-
-# Returns an instantiated PublicSuffixList object, and the
-# list of lines read from the file.
-def load_suffix_list():
-    # File does not exist, download current list and cache it at given location.
-    utils.debug("Downloading the Public Suffix List...", divider=True)
-    try:
-        cache_file = fetch()
-    except URLError as err:
-        logging.exception("Unable to download the Public Suffix List...")
-        utils.debug("{}".format(err))
-        return []
-    content = cache_file.readlines()
-    suffixes = PublicSuffixList(content)
-    return suffixes, content
-
-
-def initialize_external_data(
-    init_preload_list=None,
-    init_preload_pending=None,
-    init_suffix_list=None
-):
-    """
-    This function serves to load all of third party external data.
-    This can be called explicitly by a library, as part of the setup needed
-    before calling other library functions, or called as part of running
-    inspect_domains() or CLI operation.
-    If values are passed in to this function, they will be assigned to
-    be the cached values. This allows a caller of the Python API to manage
-    cached data in a customized way.
-    It also potentially allows clients to pass in subsets of these lists,
-    for testing or novel performance reasons.
-    Otherwise, if the --cache-third-parties=[DIR] flag specifies a directory,
-    all downloaded third party data will be cached in a directory, and
-    used from cache on the next pshtt run instead of hitting the network.
-    If no values are passed in, and no --cache-third-parties flag is used,
-    then no cached third party data will be created or used, and pshtt will
-    download the latest data from those third party sources.
-    """
-    global preload_list, preload_pending, suffix_list
-
-    # The preload list should be sent in as a list of domains.
-    if init_preload_list is not None:
-        preload_list = init_preload_list
-
-    # The preload_pending list should be sent in as a list of domains.
-    if init_preload_pending is not None:
-        preload_pending = init_preload_pending
-
-    # The public suffix list should be sent in as a list of file lines.
-    if init_suffix_list is not None:
-        suffix_list = PublicSuffixList(init_suffix_list)
-
-    # If there's a specified cache dir, prepare paths.
-    # Only used when no data has been set yet for a source.
-    if THIRD_PARTIES_CACHE:
-        cache_preload_list = os.path.join(THIRD_PARTIES_CACHE, cache_preload_list_default)
-        cache_preload_pending = os.path.join(THIRD_PARTIES_CACHE, cache_preload_pending_default)
-        cache_suffix_list = os.path.join(THIRD_PARTIES_CACHE, cache_suffix_list_default)
-    else:
-        cache_preload_list, cache_preload_pending, cache_suffix_list = None, None, None
-
-    # Load Chrome's latest versioned HSTS preload list.
-    if preload_list is None:
-        if cache_preload_list and os.path.exists(cache_preload_list):
-            utils.debug("Using cached Chrome preload list.", divider=True)
-            preload_list = json.loads(open(cache_preload_list).read())
-        else:
-            preload_list = load_preload_list()
-
-            if cache_preload_list:
-                utils.debug("Caching preload list at %s" % cache_preload_list, divider=True)
-                utils.write(utils.json_for(preload_list), cache_preload_list)
-
-    # Load Chrome's current HSTS pending preload list.
-    if preload_pending is None:
-        if cache_preload_pending and os.path.exists(cache_preload_pending):
-            utils.debug("Using cached hstspreload.org pending list.", divider=True)
-            preload_pending = json.loads(open(cache_preload_pending).read())
-        else:
-            preload_pending = load_preload_pending()
-
-            if cache_preload_pending:
-                utils.debug("Caching preload pending list at %s" % cache_preload_pending, divider=True)
-                utils.write(utils.json_for(preload_pending), cache_preload_pending)
-
-    # Load Mozilla's current Public Suffix list.
-    if suffix_list is None:
-        if cache_suffix_list and os.path.exists(cache_suffix_list):
-            utils.debug("Using cached suffix list.", divider=True)
-            cache_file = codecs.open(cache_suffix_list, encoding='utf-8')
-            suffix_list = PublicSuffixList(cache_file)
-        else:
-            suffix_list, raw_content = load_suffix_list()
-
-            if cache_suffix_list:
-                utils.debug("Caching suffix list at %s" % cache_suffix_list, divider=True)
-                utils.write(''.join(raw_content), cache_suffix_list)
-
-
-def inspect_domains(domains, options):
-    # Override timeout, user agent, preload cache, default CA bundle
-    global TIMEOUT, USER_AGENT, THIRD_PARTIES_CACHE, CA_FILE, PT_INT_CA_FILE, STORE
-
-    if options.get('timeout'):
-        TIMEOUT = int(options['timeout'])
-    if options.get('user_agent'):
-        USER_AGENT = options['user_agent']
-
-    # Supported cache flag, a directory to store all third party requests.
-    if options.get('cache-third-parties'):
-        THIRD_PARTIES_CACHE = options['cache-third-parties']
-
-    if options.get('ca_file'):
-        CA_FILE = options['ca_file']
-        # By default, the store that we want to check is the Mozilla store
-        # However, if a user wants to use their own CA bundle, check the
-        # "Custom" Option from the sslyze output.
-        STORE = "Custom"
-
-    if options.get('pt_int_ca_file'):
-        PT_INT_CA_FILE = options['pt_int_ca_file']
-
-    # If this has been run once already by a Python API client, it
-    # can be safely run without hitting the network or disk again,
-    # and without overriding the data the Python user set for them.
-    initialize_external_data()
-
-    # For every given domain, get inspect data.
-    for domain in domains:
-        yield inspect(domain)

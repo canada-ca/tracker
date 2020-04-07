@@ -5,7 +5,7 @@ import logging
 import json
 import threading
 import jwt
-from pshtt import cli
+from scan import https
 from flask import Flask, request
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -82,8 +82,8 @@ def dispatch(scan_id, payload):
 def scan(scan_id, domain):
     try:
 
-        # Run local implementation of "pshtt" https-scanning module
-        res_dict = cli.run([domain])[1:-1]
+        # Run https-scanner
+        res_dict = https.run([domain])
         return res_dict
     except Exception as e:
         logging.error("(SCAN: %s) - %s", (scan_id, str(e)))

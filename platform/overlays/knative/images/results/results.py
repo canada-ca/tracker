@@ -33,7 +33,7 @@ def receive():
             algorithm=['HS256']
         )
 
-        payload = request.get_data()
+        payload = request.get_json()
         result_dict = formatted_dictionary(payload["results"])
         scan_type = decoded_token["scan_type"]
         scan_id = decoded_token["scan_id"]
