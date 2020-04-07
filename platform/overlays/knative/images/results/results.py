@@ -5,7 +5,7 @@ import logging
 import jwt
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, Mx_scans, Spf_scans, Scans
+from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, Mx_scans, Spf_scans, Scans, Dmarc_Reports
 from database import *
 from utils import *
 from datetime import datetime
@@ -230,6 +230,11 @@ def process_results(results, scan_type, scan_id):
                 report["heartbleed"] = heartbleed
                 report["openssl_ccs_injection"] = ccs_injection
 
+        elif scan_type == "dmarc_report":
+
+            report = results
+
+
     except Exception as e:
         return {"status": False, "info": str(e)}
 
@@ -247,18 +252,21 @@ def insert(report, scan_type, scan_id):
     try:
 
         if scan_type is "https":
-            result_obj = Https_scans(https_scan={"https": report}, https_flagged_scan=scan)
+            result_obj = Https_scans(https_scan={"https": report}, id=scan.id)
             db.session.add(result_obj)
+
         elif scan_type is "ssl":
-            result_obj = Ssl_scans(ssl_scan={"ssl": report}, ssl_flagged_scan=scan)
+            result_obj = Ssl_scans(ssl_scan={"ssl": report}, id=scan.id)
             db.session.add(result_obj)
+
         elif scan_type is "dmarc":
-            dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": report["dmarc"]}, dmarc_flagged_scan=scan)
-            mx_obj = Mx_scans(mx_scan={"mx": report["mx"]}, mx_flagged_scan=scan)
-            spf_obj = Spf_scans(spf_scan={"spf": report["spf"]}, spf_flagged_scan=scan)
+            dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": report["dmarc"]}, id=scan.id)
+            mx_obj = Mx_scans(mx_scan={"mx": report["mx"]}, id=scan.id)
+            spf_obj = Spf_scans(spf_scan={"spf": report["spf"]}, id=scan.id)
             db.session.add(dmarc_obj)
             db.session.add(mx_obj)
             db.session.add(spf_obj)
+
         elif scan_type is "dkim":
             # Check for previous dkim scans on this domain
             previous_scans = Scans.query.filter(
@@ -275,10 +283,14 @@ def insert(report, scan_type, scan_id):
                         update_recommended = True
 
             report["update-recommended"] = update_recommended
-            result_obj = Dkim_scans(dkim_scan={"dkim": report}, dkim_flagged_scan=scan)
+            result_obj = Dkim_scans(dkim_scan={"dkim": report}, id=scan.id)
             db.session.add(result_obj)
 
-            db.session.commit()
+        elif scan_type is "dmarc_report":
+            dmarc_report_obj = Dmarc_Reports(report={"dmarc_report": report}, id=scan.id)
+            db.session.add(dmarc_report_obj)
+
+        db.session.commit()
 
     except Exception as e:
         db.session.rollback()

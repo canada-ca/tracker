@@ -7,6 +7,7 @@ import threading
 import jwt
 from flask import Flask, request
 from gql import gql, Client
+from gql.transport.requests import RequestsHTTPTransport
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -82,9 +83,23 @@ def dispatch(scan_id, payload):
 def get_reports(scan_id, domain):
     try:
 
+        get_schema = RequestsHTTPTransport(
+            url='https://countries.trevorblades.com/',
+            use_json=True,
+            headers={
+                "Content-type": "application/json",
+            },
+            verify=False
+        )
 
+        client = Client(
+            retries=3,
+            transport=get_schema,
+            fetch_schema_from_transport=True,
+        )
 
-        return res_dict
+        return reports
+
     except Exception as e:
         logging.error("(SCAN: %s) - %s", (scan_id, str(e)))
         return None
