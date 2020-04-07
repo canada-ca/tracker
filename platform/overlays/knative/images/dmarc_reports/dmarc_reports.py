@@ -6,6 +6,7 @@ import json
 import threading
 import jwt
 from flask import Flask, request
+from gql import gql, Client
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
