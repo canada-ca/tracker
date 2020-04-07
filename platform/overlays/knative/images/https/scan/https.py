@@ -1,9 +1,6 @@
-import sslyze
 import re
 import datetime
 import requests
-import logging
-import sys
 import OpenSSL
 import json
 import base64
@@ -15,10 +12,7 @@ from sslyze.scanner import Scanner, ServerScanRequest, ScanCommandExtraArguments
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.server_setting import ServerNetworkLocation, ServerNetworkLocationViaDirectConnection
 from sslyze.plugins.certificate_info._certificate_utils import extract_dns_subject_alternative_names
-from .models import Domain, Endpoint
 from .utils import *
-
-logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 
 
 def run(domains):
