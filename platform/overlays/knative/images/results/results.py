@@ -230,11 +230,6 @@ def process_results(results, scan_type, scan_id):
                 report["heartbleed"] = heartbleed
                 report["openssl_ccs_injection"] = ccs_injection
 
-        elif scan_type == "dmarc_report":
-
-            report = results
-
-
     except Exception as e:
         return {"status": False, "info": str(e)}
 
