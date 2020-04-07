@@ -5,7 +5,7 @@ import logging
 import jwt
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from models import Dmarc_scans, Dkim_scans, Spf_scans, Https_scans, Ssl_scans, Mx_scans, Spf_scans, Scans, Dmarc_Reports
+from models import *
 from database import *
 from utils import *
 from datetime import datetime
@@ -285,10 +285,6 @@ def insert(report, scan_type, scan_id):
             report["update-recommended"] = update_recommended
             result_obj = Dkim_scans(dkim_scan={"dkim": report}, id=scan.id)
             db.session.add(result_obj)
-
-        elif scan_type is "dmarc_report":
-            dmarc_report_obj = Dmarc_Reports(report={"dmarc_report": report}, id=scan.id)
-            db.session.add(dmarc_report_obj)
 
         db.session.commit()
 
