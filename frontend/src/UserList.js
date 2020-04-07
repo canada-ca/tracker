@@ -53,7 +53,6 @@ export function UserList() {
         </Button>
       </SimpleGrid>
       <Divider />
-
       {data
         ? data.user.affiliations.edges[0].node.organization.affiliatedUsers.edges.map(
             (edge) => {
@@ -112,8 +111,10 @@ export function UserList() {
                     </Badge>
                     <Badge
                       variantColor={
-                        edge.node.user.affiliations.edges[0].node.permission === 'ADMIN' ||
-                        edge.node.user.affiliations.edges[0].node.permission === 'SUPER_ADMIN'
+                        edge.node.user.affiliations.edges[0].node.permission ===
+                          'ADMIN' ||
+                        edge.node.user.affiliations.edges[0].node.permission ===
+                          'SUPER_ADMIN'
                           ? 'green'
                           : 'red'
                       }
@@ -135,7 +136,6 @@ export function UserList() {
             },
           )
         : null}
-
       <PaginationButtons
         next={
           data.user.affiliations.edges[0].node.organization.affiliatedUsers

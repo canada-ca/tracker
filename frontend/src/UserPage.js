@@ -51,11 +51,11 @@ export function UserPage(props) {
   })
 
   if (queryUserLoading) {
-    return <p>Loading...</p>
+    return <p>Loading user...</p>
   }
 
   if (queryUserError) {
-    return <p>Error</p>
+    return <p>{String(queryUserError)}</p>
   }
 
   if (updatePasswordLoading) {
@@ -63,7 +63,7 @@ export function UserPage(props) {
   }
 
   if (updatePasswordError) {
-    return <p>Error</p>
+    return <p>{String(updatePasswordError)}</p>
   }
 
   return (
@@ -150,6 +150,7 @@ export function UserPage(props) {
             onClick={() => {
               history.push('/two-factor-code')
             }}
+            isDisabled={location.state ? true : false}
           >
             Enable 2FA
           </Button>
@@ -163,6 +164,7 @@ export function UserPage(props) {
             Manage API keys
           </Button>
         </Stack>
+
         <Button
           variantColor="teal"
           w={'50%'}
@@ -178,6 +180,7 @@ export function UserPage(props) {
               isClosable: true,
             })
           }}
+          isDisabled={location.state ? true : false}
         >
           Sign Out
         </Button>
@@ -186,52 +189,57 @@ export function UserPage(props) {
         <Text fontSize="2xl" fontWeight="bold" textAlign="center">
           Change Password
         </Text>
-        <Text>
-          Change your password below by entering and confirming a new password.
-        </Text>
 
-        <Formik
-          initialValues={{ password: '', confirmPassword: '' }}
-          onSubmit={async (values) => {
-            // Submit GraphQL mutation
-            console.log(values)
-            await updatePassword({
-              variables: {
-                userName: 'testuser@test.ca', // This needs to be retreived from a seperate GQL query or props that will populate this entire page with data.
-                password: values.password,
-                confirmPassword: values.confirmPassword,
-              },
-            })
-
-            if (!updatePasswordError) {
-              console.log(updatePasswordData)
-              toast({
-                title: 'Password Updated.',
-                description: 'You have successfully changed your password.',
-                status: 'success',
-                duration: 9000,
-                isClosable: true,
+        {location.state ? (
+          <Text>You can only change the password for your own account.</Text>
+        ) : (
+          <Formik
+            initialValues={{ password: '', confirmPassword: '' }}
+            onSubmit={async (values) => {
+              // Submit GraphQL mutation
+              console.log(values)
+              await updatePassword({
+                variables: {
+                  userName: 'testuser@test.ca', // This needs to be retreived from a seperate GQL query or props that will populate this entire page with data.
+                  password: values.password,
+                  confirmPassword: values.confirmPassword,
+                },
               })
-            }
-          }}
-        >
-          {({ handleSubmit, isSubmitting }) => (
-            <form id="form" onSubmit={handleSubmit}>
-              <PasswordConfirmation />
 
-              <Stack mt={6} spacing={4} isInline>
-                <Button
-                  variantColor="teal"
-                  isLoading={isSubmitting}
-                  type="submit"
-                  id="submitBtn"
-                >
-                  Change Password
-                </Button>
-              </Stack>
-            </form>
-          )}
-        </Formik>
+              if (!updatePasswordError) {
+                console.log(updatePasswordData)
+                toast({
+                  title: 'Password Updated.',
+                  description: 'You have successfully changed your password.',
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                })
+              }
+            }}
+          >
+            {({ handleSubmit, isSubmitting }) => (
+              <form id="form" onSubmit={handleSubmit}>
+                <Text>
+                  Change your password below by entering and confirming a new
+                  password.
+                </Text>
+                <PasswordConfirmation />
+
+                <Stack mt={6} spacing={4} isInline>
+                  <Button
+                    variantColor="teal"
+                    isLoading={isSubmitting}
+                    type="submit"
+                    id="submitBtn"
+                  >
+                    Change Password
+                  </Button>
+                </Stack>
+              </form>
+            )}
+          </Formik>
+        )}
       </Stack>
     </SimpleGrid>
   )
