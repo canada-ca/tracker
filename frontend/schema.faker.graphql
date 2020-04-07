@@ -735,6 +735,11 @@ type Query {
   An api endpoint that will send a verification email to a given email address.
   """
   sendValidationEmail(email: EmailAddress!): NotificationEmail
+  
+  """
+  An api endpoint that will be used to populate a userList component in the front end.
+  """
+  userList(organizaion: Acronym!): UserList
 }
 
 """DMARC aggregate report record"""
@@ -1089,4 +1094,21 @@ type WWWScanEdge {
 
   """A cursor for use in pagination"""
   cursor: String!
+}
+
+"""
+This custom object is used to populate the userList componenet in the front end.
+"""
+type UserList {
+  organizaion: Acronym!
+  userItems: [UserListItem]!
+}
+
+type UserListItem implements Node {
+    """The ID of the object."""
+    id: ID!
+    userName: EmailAddress!
+    displayName: String!
+    tfa: Boolean!
+    admin: Boolean!
 }
