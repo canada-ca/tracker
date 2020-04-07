@@ -322,6 +322,31 @@ spec:
 
 ---
 
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: dmarc-reports
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Disable scaling to zero
+        autoscaling.knative.dev/minScale: "1"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: dmarc-reports
+          image: gcr.io/track-compliance/dmarc_reports # The URL to the image of the app
+
+---
+
 # Everything after this is just structure for the above.
 
 ---

@@ -43,7 +43,7 @@ def receive():
         res = scan(scan_id, domain)
 
         # If this was a test scan, return results
-        if test_flag:
+        if test_flag == "true":
             return str(res)
 
         # Construct request payload for result-processor

@@ -5,7 +5,6 @@ import logging
 import json
 import threading
 import jwt
-from scan import https
 from flask import Flask, request
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -36,8 +35,8 @@ def receive():
         scan_id = decoded_payload["scan_id"]
         domain = decoded_payload["domain"]
 
-        # Perform scan
-        res = scan(scan_id, domain)
+        # Retrieve DMARC report
+        res = get_reports(scan_id, domain)
 
         # If this was a test scan, return results
         if test_flag == "true":
@@ -46,10 +45,10 @@ def receive():
         # Construct request payload for result-processor
         if res is not None:
             payload = {"results": str(res)}
-            token = {"scan_type": "https", "scan_id": scan_id}
+            token = {"scan_type": "dmarc_report", "scan_id": scan_id}
             logging.info(str(res)+'\n')
         else:
-            raise Exception("(SCAN: %s) - An error occurred while attempting pshtt scan" % scan_id)
+            raise Exception("(SCAN: %s) - An error occurred while attempting to retrieve DMARC report(s)" % scan_id)
 
         headers["Token"] = jwt.encode(
             token,
@@ -61,11 +60,11 @@ def receive():
         th = threading.Thread(target=dispatch, args=[scan_id, payload])
         th.start()
 
-        return 'Scan sent to result-handling service'
+        return 'Report(s) sent to result-handling service'
 
     except Exception as e:
         logging.error(str(e)+'\n')
-        return 'Failed to send scan to result-handling service'
+        return 'Failed to send report(s) to result-handling service'
 
 
 def dispatch(scan_id, payload):
@@ -79,11 +78,11 @@ def dispatch(scan_id, payload):
         logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
 
 
-def scan(scan_id, domain):
+def get_reports(scan_id, domain):
     try:
 
-        # Run https-scanner
-        res_dict = https.run([domain])
+
+
         return res_dict
     except Exception as e:
         logging.error("(SCAN: %s) - %s", (scan_id, str(e)))
