@@ -13,7 +13,7 @@ export const DOMAINS = gql`
 `
 
 export const GENERATE_OTP_URL = gql`
-  query GenerateOtpUrl($userName: EmailAddress!) {
-    generateOtpUrl(userName: $userName)
+  query GenerateOtpUrl($email: EmailAddress!) {
+    generateOtpUrl(email: $email)
   }
 `

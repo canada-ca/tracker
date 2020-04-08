@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -20,10 +19,11 @@ import {
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
 import { Formik, Field } from 'formik'
-
+import { useUserState } from './UserState'
 import { SIGN_IN } from './graphql/mutations'
 
 export function SignInPage() {
+  const { login } = useUserState()
   const history = useHistory()
 
   const toast = useToast()
@@ -31,16 +31,6 @@ export function SignInPage() {
   const { i18n } = useLingui()
 
   const [signIn, { loading, error }] = useMutation(SIGN_IN, {
-    update(cache, { data: { signIn } }) {
-      // write the users token to the cache
-      cache.writeData({
-        data: {
-          jwt: signIn.authToken,
-          tfa: signIn.user.tfa,
-          userName: signIn.user.userName,
-        },
-      })
-    },
     onError(e) {
       console.log('Error!', e)
       toast({
@@ -53,7 +43,12 @@ export function SignInPage() {
         isClosable: true,
       })
     },
-    onCompleted() {
+    onCompleted({ signIn }) {
+      login({
+        jwt: signIn.authToken,
+        tfa: signIn.user.tfa,
+        userName: signIn.user.userName,
+      })
       // redirect to the home page.
       history.push('/')
       // Display a welcome message
@@ -93,7 +88,12 @@ export function SignInPage() {
         {(props) => (
           // Needed for testing library
           // eslint-disable-next-line jsx-a11y/no-redundant-roles
-          <form onSubmit={props.handleSubmit} role="form" aria-label="form" name="form">
+          <form
+            onSubmit={props.handleSubmit}
+            role="form"
+            aria-label="form"
+            name="form"
+          >
             <Field name="email">
               {({ field, form }) => (
                 <FormControl

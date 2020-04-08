@@ -3,12 +3,7 @@ import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import {
-  render,
-  cleanup,
-  waitForElement,
-  getByText,
-} from '@testing-library/react'
+import { render, waitFor, getByText } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { DmarcReportPage } from '../DmarcReportPage'
 import gql from 'graphql-tag'
@@ -17,23 +12,6 @@ i18n.load('en', { en: {} })
 i18n.activate('en')
 
 describe('<DmarcReportPage />', () => {
-  afterEach(cleanup)
-
-  it('successfully renders the component on its own', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider>
-              <DmarcReportPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
-    expect(render).toBeTruthy()
-  })
-
   it('renders pass icons in sub-headers correctly', async () => {
     const mocks = [
       {
@@ -131,7 +109,7 @@ describe('<DmarcReportPage />', () => {
     expect(render).toBeTruthy()
     expect(container).toBeTruthy()
 
-    await waitForElement(() => getByText(container, /DMARC Report/i), {
+    await waitFor(() => getByText(container, /DMARC Report/i), {
       container,
     })
 
@@ -139,13 +117,15 @@ describe('<DmarcReportPage />', () => {
     const dkimHeader = getByRole('dkimHeader')
     const spfHeader = getByRole('spfHeader')
 
-    expect(dmarcHeader).toBeTruthy()
-    expect(dkimHeader).toBeTruthy()
-    expect(spfHeader).toBeTruthy()
+    await waitFor(() => {
+      expect(dmarcHeader).toBeTruthy()
+      expect(dkimHeader).toBeTruthy()
+      expect(spfHeader).toBeTruthy()
 
-    expect(dmarcHeader.children[1]).toHaveAttribute('role', 'passIcon')
-    expect(dkimHeader.children[1]).toHaveAttribute('role', 'passIcon')
-    expect(spfHeader.children[1]).toHaveAttribute('role', 'passIcon')
+      expect(dmarcHeader.children[1]).toHaveAttribute('role', 'passIcon')
+      expect(dkimHeader.children[1]).toHaveAttribute('role', 'passIcon')
+      expect(spfHeader.children[1]).toHaveAttribute('role', 'passIcon')
+    })
   })
 
   it('renders fail icons in sub-headers correctly', async () => {
@@ -226,7 +206,7 @@ describe('<DmarcReportPage />', () => {
       },
     ]
 
-    const { container, getByRole } = render(
+    const { getByText, getByRole } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -237,12 +217,8 @@ describe('<DmarcReportPage />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-    expect(render).toBeTruthy()
-    expect(container).toBeTruthy()
 
-    await waitForElement(() => getByText(container, /DMARC Report/i), {
-      container,
-    })
+    await waitFor(() => getByText(/DMARC Report/i))
 
     const dmarcHeader = getByRole('dmarcHeader')
     const dkimHeader = getByRole('dkimHeader')

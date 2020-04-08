@@ -1,16 +1,18 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import PropTypes from 'prop-types'
 import { Box, Stack, Text, Button } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
+import { useUserState } from './UserState'
 import { GENERATE_OTP_URL } from './graphql/queries'
 import QRCode from 'qrcode.react'
 
-export function QRcodePage({ userName }) {
+export function QRcodePage() {
+  const { currentUser } = useUserState()
+
   // This function generates the URL when the page loads
   const { loading, error, data } = useQuery(GENERATE_OTP_URL, {
-    variables: { userName: userName },
+    variables: { email: currentUser.userName },
   })
 
   if (loading)
@@ -67,8 +69,4 @@ export function QRcodePage({ userName }) {
         </Stack>
       </Stack>
     )
-}
-
-QRcodePage.propTypes = {
-  userName: PropTypes.string.isRequired,
 }

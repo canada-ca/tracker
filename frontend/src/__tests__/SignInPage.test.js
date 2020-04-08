@@ -8,6 +8,7 @@ import { I18nProvider } from '@lingui/react'
 import { render, waitFor, fireEvent, getByText } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import gql from 'graphql-tag'
+import { UserStateProvider } from '../UserState'
 import App from '../App'
 
 i18n.load('en', { en: {} })
@@ -51,15 +52,19 @@ describe('<SignInPage />', () => {
   describe('when the email field is empty', () => {
     it('displays an error message', async () => {
       const { container, getByText } = render(
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider resolvers={resolvers} mocks={mocks}>
-                <SignInPage />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>,
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfa: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <MockedProvider resolvers={resolvers} mocks={mocks}>
+                  <SignInPage />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
       )
 
       const email = container.querySelector('#email')
@@ -77,19 +82,23 @@ describe('<SignInPage />', () => {
   describe('when the password field is empty', () => {
     it('displays an error message', async () => {
       const { container } = render(
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider
-                resolvers={resolvers}
-                mocks={mocks}
-                addTypename={false}
-              >
-                <SignInPage />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>,
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfa: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                <MockedProvider
+                  resolvers={resolvers}
+                  mocks={mocks}
+                  addTypename={false}
+                >
+                  <SignInPage />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
       )
 
       const password = container.querySelector('#password')
@@ -153,19 +162,23 @@ describe('<SignInPage />', () => {
       })
 
       const { container, getByRole, queryByText } = render(
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <Router history={history}>
-              <MockedProvider
-                resolvers={resolvers}
-                mocks={mocks}
-                addTypename={false}
-              >
-                <App />
-              </MockedProvider>
-            </Router>
-          </I18nProvider>
-        </ThemeProvider>,
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfa: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <Router history={history}>
+                <MockedProvider
+                  resolvers={resolvers}
+                  mocks={mocks}
+                  addTypename={false}
+                >
+                  <App />
+                </MockedProvider>
+              </Router>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
       )
       await waitFor(() => {
         expect(
