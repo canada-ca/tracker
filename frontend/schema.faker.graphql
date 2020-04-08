@@ -1121,16 +1121,16 @@ type UserListItem implements Node {
     id: ID!
 
     """ The users email address or userName """
-    userName: EmailAddress!
+    userName: EmailAddress! @fake(type: email)
 
     """ The users display name"""
-    displayName: String!
+    displayName: String! @fake(type: firstName)
 
     """ Indicates wether or not this user has enabled two factor authentication"""
-    tfa: Boolean!
+    tfa: Boolean! @examples(values: [true, false])
 
     """ Indicates if this user is an admin of the organization specified in UserList query."""
-    admin: Boolean!
+    admin: Boolean! @examples(values: [true, false])
 }
 
 """
@@ -1138,22 +1138,22 @@ This custom gql object is used to populate a userPage component in the front end
 """
 type UserPage{
     """ The users email address or userName"""
-    userName: EmailAddress!
+    userName: EmailAddress! @fake(type: email)
 
     """ The users display name"""
-    displayName: String!
+    displayName: String! @fake(type: firstName)
 
     """ Indicates which organization this users data is being displayed for."""
-    organization: Acronym!
+    organization: Acronym! @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
 
     """ Indicates the preferred language of this user."""
-    lang: String!
+    lang: String! @examples(values: ["English, "French])
 
     """ Indicates wether or not this user has enabled two factor authentication"""
-    tfa: Boolean!
+    tfa: Boolean! @examples(values: [true, false])
 
     """ Indicates if this user is an admin of the organization specified."""
-    admin: Boolean!
+    admin: Boolean! @examples(values: [true, false])
 }
 
 """A Relay edge containing a `UserItem` and its cursor."""
