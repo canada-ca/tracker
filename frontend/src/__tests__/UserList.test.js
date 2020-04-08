@@ -45,74 +45,29 @@ describe('<UserList />', () => {
         },
         result: {
           data: {
-            user: {
-              affiliations: {
-                edges: [
-                  {
-                    node: {
-                      organization: {
-                        acronym: 'TEST',
-                        affiliatedUsers: {
-                          pageInfo: {
-                            hasNextPage: true,
-                            hasPreviousPage: true,
-                            startCursor: 'string',
-                            endCursor: 'string',
-                          },
-                          edges: [
-                            {
-                              node: {
-                                id: 'NzYzMzQ1MzQ1Ng==',
-                                user: {
-                                  userName: 'testuser@testemail.ca',
-                                  displayName: 'Test User',
-                                  tfa: false,
-                                  affiliations: {
-                                    edges: [
-                                      {
-                                        node: {
-                                          id: 'ODAyOTY1MDMyMQ==',
-                                          organization: {
-                                            acronym: 'GC',
-                                          },
-                                          permission: 'SUPER_ADMIN',
-                                        },
-                                      },
-                                      {
-                                        node: {
-                                          id: 'NjI3NzcyNDQ=',
-                                          organization: {
-                                            acronym: 'BC',
-                                          },
-                                          permission: 'USER_WRITE',
-                                        },
-                                      },
-                                      {
-                                        node: {
-                                          id: 'NjkyMzAyOTAx',
-                                          organization: {
-                                            acronym: 'BC',
-                                          },
-                                          permission: 'ADMIN',
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    },
-                  },
-                ],
+            userList: {
+              organization: 'TEST',
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
               },
+              edges: [
+                {
+                  node: {
+                    id: 'ODY0MDEzMTE1NA==',
+                    userName: 'testuser@testemail.gc.ca',
+                    admin: false,
+                    tfa: false,
+                    displayName: 'Test User',
+                  },
+                },
+              ],
             },
           },
         },
       },
     ]
+
     // Set the inital history item to user-list
     const { container, queryAllByRole, getByText } = render(
       <ThemeProvider theme={theme}>
@@ -145,69 +100,23 @@ describe('<UserList />', () => {
         },
         result: {
           data: {
-            user: {
-              affiliations: {
-                edges: [
-                  {
-                    node: {
-                      organization: {
-                        acronym: 'TEST',
-                        affiliatedUsers: {
-                          pageInfo: {
-                            hasNextPage: true,
-                            hasPreviousPage: true,
-                            startCursor: 'string',
-                            endCursor: 'string',
-                          },
-                          edges: [
-                            {
-                              node: {
-                                id: 'NzYzMzQ1MzQ1Ng==',
-                                user: {
-                                  userName: 'testuser@testemail.ca',
-                                  displayName: 'Test User',
-                                  tfa: false,
-                                  affiliations: {
-                                    edges: [
-                                      {
-                                        node: {
-                                          id: 'ODAyOTY1MDMyMQ==',
-                                          organization: {
-                                            acronym: 'GC',
-                                          },
-                                          permission: 'SUPER_ADMIN',
-                                        },
-                                      },
-                                      {
-                                        node: {
-                                          id: 'NjI3NzcyNDQ=',
-                                          organization: {
-                                            acronym: 'BC',
-                                          },
-                                          permission: 'USER_WRITE',
-                                        },
-                                      },
-                                      {
-                                        node: {
-                                          id: 'NjkyMzAyOTAx',
-                                          organization: {
-                                            acronym: 'BC',
-                                          },
-                                          permission: 'ADMIN',
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    },
-                  },
-                ],
+            userList: {
+              organization: 'TEST',
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
               },
+              edges: [
+                {
+                  node: {
+                    id: 'ODY0MDEzMTE1NA==',
+                    userName: 'testuser@testemail.gc.ca',
+                    admin: false,
+                    tfa: false,
+                    displayName: 'Test User',
+                  },
+                },
+              ],
             },
           },
         },
@@ -262,51 +171,23 @@ describe('<UserList />', () => {
         },
         result: {
           data: {
-            user: {
-              affiliations: {
-                edges: [
-                  {
-                    node: {
-                      organization: {
-                        acronym: 'TEST',
-                        affiliatedUsers: {
-                          pageInfo: {
-                            hasNextPage: true,
-                            hasPreviousPage: true,
-                            startCursor: 'string',
-                            endCursor: 'string',
-                          },
-                          edges: [
-                            {
-                              node: {
-                                id: 'NzYzMzQ1MzQ1Ng==',
-                                user: {
-                                  userName: 'testuser@testemail.ca',
-                                  displayName: 'Test User',
-                                  tfa: true,
-                                  affiliations: {
-                                    edges: [
-                                      {
-                                        node: {
-                                          id: 'ODAyOTY1MDMyMQ==',
-                                          organization: {
-                                            acronym: 'GC',
-                                          },
-                                          permission: 'SUPER_ADMIN',
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    },
-                  },
-                ],
+            userList: {
+              organization: 'TEST',
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
               },
+              edges: [
+                {
+                  node: {
+                    id: 'ODY0MDEzMTE1NA==',
+                    userName: 'testuser@testemail.gc.ca',
+                    admin: true,
+                    tfa: true,
+                    displayName: 'Test User',
+                  },
+                },
+              ],
             },
           },
         },
@@ -352,57 +233,28 @@ describe('<UserList />', () => {
         },
         result: {
           data: {
-            user: {
-              affiliations: {
-                edges: [
-                  {
-                    node: {
-                      organization: {
-                        acronym: 'TEST',
-                        affiliatedUsers: {
-                          pageInfo: {
-                            hasNextPage: true,
-                            hasPreviousPage: true,
-                            startCursor: 'string',
-                            endCursor: 'string',
-                          },
-                          edges: [
-                            {
-                              node: {
-                                id: 'NzYzMzQ1MzQ1Ng==',
-                                user: {
-                                  userName: 'testuser@testemail.ca',
-                                  displayName: 'Test User',
-                                  tfa: false,
-                                  affiliations: {
-                                    edges: [
-                                      {
-                                        node: {
-                                          id: 'ODAyOTY1MDMyMQ==',
-                                          organization: {
-                                            acronym: 'GC',
-                                          },
-                                          permission: 'USER_READ',
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    },
-                  },
-                ],
+            userList: {
+              organization: 'TEST',
+              pageInfo: {
+                hasNextPage: true,
+                hasPreviousPage: true,
               },
+              edges: [
+                {
+                  node: {
+                    id: 'ODY0MDEzMTE1NA==',
+                    userName: 'testuser@testemail.gc.ca',
+                    admin: false,
+                    tfa: false,
+                    displayName: 'Test User',
+                  },
+                },
+              ],
             },
           },
         },
       },
     ]
-
     const { container, queryAllByRole, getByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>

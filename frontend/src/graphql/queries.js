@@ -20,43 +20,19 @@ export const GENERATE_OTP_URL = gql`
 
 export const QUERY_USERLIST = gql`
   {
-    user {
-      affiliations {
-        edges {
-          node {
-            organization {
-              acronym
-              affiliatedUsers {
-                pageInfo {
-                  hasNextPage
-                  hasPreviousPage
-                  startCursor
-                  endCursor
-                }
-                edges {
-                  node {
-                    id
-                    user {
-                      userName
-                      displayName
-                      tfa
-                      affiliations {
-                        edges {
-                          node {
-                            id
-                            organization {
-                              acronym
-                            }
-                            permission
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+    userList(organizaion: "NS") {
+      organization
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        node {
+          id
+          userName
+          admin
+          tfa
+          displayName
         }
       }
     }

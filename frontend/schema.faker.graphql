@@ -1109,21 +1109,24 @@ type UserList {
   """ Indicates which organization this list is being queried for."""
   organization: Acronym!
 
-  """ A list of userItems that will make up the list on the front end.  An item per user in the org."
-  userItems: [UserListItem]!
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection.  Aka: A list of userItems that will make up the list on the front end."""
+  edges: [UserItemEdge]!
 }
 
 type UserListItem implements Node {
     """The ID of the object."""
     id: ID!
 
-    """ The users email address or userName
+    """ The users email address or userName """
     userName: EmailAddress!
 
     """ The users display name"""
     displayName: String!
 
-    """ Indicates wether or not this user has enabled two factor authentication"
+    """ Indicates wether or not this user has enabled two factor authentication"""
     tfa: Boolean!
 
     """ Indicates if this user is an admin of the organization specified in UserList query."""
@@ -1134,7 +1137,7 @@ type UserListItem implements Node {
 This custom gql object is used to populate a userPage component in the front end.
 """
 type UserPage{
-    """ The users email address or userName
+    """ The users email address or userName"""
     userName: EmailAddress!
 
     """ The users display name"""
@@ -1146,9 +1149,18 @@ type UserPage{
     """ Indicates the preferred language of this user."""
     lang: String!
 
-    """ Indicates wether or not this user has enabled two factor authentication"
+    """ Indicates wether or not this user has enabled two factor authentication"""
     tfa: Boolean!
 
     """ Indicates if this user is an admin of the organization specified."""
     admin: Boolean!
+}
+
+"""A Relay edge containing a `UserItem` and its cursor."""
+type UserItemEdge {
+  """The item at the end of the edge"""
+  node: UserListItem!
+
+  """A cursor for use in pagination"""
+  cursor: String!
 }
