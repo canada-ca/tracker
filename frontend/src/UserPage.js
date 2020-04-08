@@ -71,8 +71,8 @@ export function UserPage(props) {
       <Formik
         initialValues={{
           email: location.state ? location.state.detail : props.userName, // This value is taken from either the userName prop or the location.state prop passed from userList
-          lang: queryUserData.user.lang,
-          displayName: queryUserData.user.displayName,
+          lang: queryUserData.userPage.lang,
+          displayName: queryUserData.userPage.displayName,
         }}
         onSubmit={(values, actions) => {
           window.alert('coming soon!!\n' + JSON.stringify(values, null, 2))
@@ -137,7 +137,7 @@ export function UserPage(props) {
         <CheckboxGroup
           mt="20px"
           variantColor="teal"
-          defaultValue={['admin', 'active']}
+          defaultValue={[queryUserData.userPage.admin? 'admin' : '', 'active']}
         >
           <Checkbox value="admin">Administrative Account</Checkbox>
           <Checkbox value="active">Account Active</Checkbox>

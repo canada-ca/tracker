@@ -40,11 +40,14 @@ export const QUERY_USERLIST = gql`
 `
 
 export const QUERY_USER = gql`
-  query User($userName: EmailAddress!) {
-    user(userName: $userName) {
+  query UserPage($userName: EmailAddress!) {
+    userPage(userName: $userName) {
       userName
-      displayName
+      tfa
+      organization
+      admin
       lang
+      displayName
     }
   }
 `
