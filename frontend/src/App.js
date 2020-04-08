@@ -16,29 +16,16 @@ import { Footer } from './Footer'
 import { Navigation } from './Navigation'
 import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { UserPage } from './UserPage'
 import { UserList } from './UserList'
 import { DmarcReportPage } from './DmarcReportPage'
-
+import { useUserState } from './UserState'
 
 export default function App() {
   // Hooks to be used with this functional component
-  const GET_JWT_TOKEN = gql`
-    {
-      jwt @client
-      tfa @client
-      userName @client
-    }
-  `
   const { i18n } = useLingui()
-  const { data, loading } = useQuery(GET_JWT_TOKEN)
-
-  if (loading) {
-    return <p>Loading...</p>
-  }
+  const { currentUser, isLoggedIn } = useUserState()
 
   return (
     <>
@@ -66,14 +53,13 @@ export default function App() {
             <Trans>Domains</Trans>
           </Link>
 
-          {// Dynamically decide if the link should be sign in or sign out.
-          (data && data.jwt === null) || data === undefined ? (
-            <Link to="/sign-in">
-              <Trans>Sign In</Trans>
-            </Link>
-          ) : (
+          {isLoggedIn() ? (
             <Link to="/user">
               <Trans>User Profile</Trans>
+            </Link>
+          ) : (
+            <Link to="/sign-in">
+              <Trans>Sign In</Trans>
             </Link>
           )}
           <Link to="/user-list">
@@ -83,8 +69,7 @@ export default function App() {
             <Trans>DMARC</Trans>
           </Link>
         </Navigation>
-        {// Dynamically show the TwoFactorNotification bar
-        data && !data.tfa && <TwoFactorNotificationBar />}
+        {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
         <Main>
           <Route exact path="/">
             <LandingPage />
@@ -94,9 +79,11 @@ export default function App() {
             <DomainsPage />
           </Route>
 
-          <Route path="/user">
-            <UserPage userName={data && data.userName ? data.userName : null} />
-          </Route>
+          {isLoggedIn() && (
+            <Route path="/user">
+              <UserPage userName={currentUser.userName} />
+            </Route>
+          )}
 
           <Route path="/sign-in">
             <SignInPage />
@@ -106,16 +93,17 @@ export default function App() {
             <CreateUserPage />
           </Route>
 
-          <Route path="/two-factor-code">
-            <QRcodePage userName={''} />
-          </Route>
+          {isLoggedIn() && (
+            <Route path="/two-factor-code">
+              <QRcodePage userName={currentUser.userName} />
+            </Route>
+          )}
 
           <Route path="/user-list">
             <UserList />
           </Route>
           <Route path="/dmarc-report">
             <DmarcReportPage />
-
           </Route>
 
           <Route>

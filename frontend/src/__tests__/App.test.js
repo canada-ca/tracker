@@ -6,6 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { waitFor, render, cleanup } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import gql from 'graphql-tag'
+import { UserStateProvider } from '../UserState'
 import App from '../App'
 
 i18n.load('en', { en: {} })
@@ -62,15 +63,19 @@ describe('<App/>', () => {
     describe('/', () => {
       it('renders the main page', async () => {
         const { getByRole } = render(
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider resolvers={resolvers} mocks={mocks}>
-                  <App />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>,
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfa: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                  <MockedProvider resolvers={resolvers} mocks={mocks}>
+                    <App />
+                  </MockedProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>,
         )
         await waitFor(() =>
           expect(getByRole('heading')).toHaveTextContent(/track web/i),
@@ -81,19 +86,23 @@ describe('<App/>', () => {
     describe('/domains', () => {
       it('renders the domains page', async () => {
         const { getByRole } = render(
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                <MockedProvider
-                  mocks={mocks}
-                  resolvers={resolvers}
-                  addTypename={false}
-                >
-                  <App />
-                </MockedProvider>
-              </MemoryRouter>
-            </I18nProvider>
-          </ThemeProvider>,
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfa: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={i18n}>
+                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                  <MockedProvider
+                    mocks={mocks}
+                    resolvers={resolvers}
+                    addTypename={false}
+                  >
+                    <App />
+                  </MockedProvider>
+                </MemoryRouter>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>,
         )
 
         await waitFor(() =>

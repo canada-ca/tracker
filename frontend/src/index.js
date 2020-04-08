@@ -8,32 +8,23 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router } from 'react-router-dom'
 import canada from './theme/canada'
-import { createHttpLink } from 'apollo-link-http'
-import ApolloClient from 'apollo-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import fetch from 'isomorphic-unfetch'
+import { Client } from './client'
+import { UserStateProvider } from './UserState'
 
-const client = new ApolloClient({
-  link: createHttpLink({ fetch }),
-  cache: new InMemoryCache(),
-  resolvers: {
-    Query: {
-      jwt: () => null,
-      tfa: () => null,
-    },
-  },
-})
+const client = new Client()
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <ThemeProvider theme={canada}>
-      <I18nProvider i18n={i18n}>
-        <Router>
-          <App />
-        </Router>
-      </I18nProvider>
-    </ThemeProvider>
-  </ApolloProvider>,
+  <UserStateProvider initialState={{ userName: null, jwt: null, tfa: null }}>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={canada}>
+        <I18nProvider i18n={i18n}>
+          <Router>
+            <App />
+          </Router>
+        </I18nProvider>
+      </ThemeProvider>
+    </ApolloProvider>
+  </UserStateProvider>,
   document.getElementById('root'),
 )
 

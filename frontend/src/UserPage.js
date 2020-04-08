@@ -4,7 +4,7 @@ import React from 'react'
 import { Formik } from 'formik'
 import { useHistory } from 'react-router-dom'
 
-import { string } from 'prop-types'
+//import { string } from 'prop-types'
 
 import {
   Stack,
@@ -22,7 +22,9 @@ import { useApolloClient, useMutation, useQuery } from '@apollo/react-hooks'
 import { PasswordConfirmation } from './PasswordConfirmation'
 import gql from 'graphql-tag'
 
-export function UserPage({ userName }) {
+export function UserPage() {
+  const userName = 'mike@korora.ca'
+
   // TODO: Move to mutations folder
   const UPDATE_PASSWORD = gql`
     mutation UpdatePassword(
@@ -45,7 +47,6 @@ export function UserPage({ userName }) {
   const QUERY_USER = gql`
     query User($userName: EmailAddress!) {
       user(userName: $userName) {
-        userName
         displayName
         lang
       }
@@ -251,5 +252,3 @@ export function UserPage({ userName }) {
     </SimpleGrid>
   )
 }
-
-UserPage.propTypes = { userName: string.isRequired }

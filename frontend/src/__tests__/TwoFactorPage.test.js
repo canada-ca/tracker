@@ -1,10 +1,12 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import { TwoFactorPage } from '../TwoFactorPage'
+import App from '../App'
 import { i18n } from '@lingui/core'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
+import { UserStateProvider } from '../UserState'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/react-testing'
 
@@ -120,6 +122,98 @@ describe('<TwoFactorPage />', () => {
     await waitFor(() =>
       expect(queryByText(/Code must be numbers only/i)).toBeInTheDocument(),
     )
+  })
+
+  it('does NOT render component when user has verified tfa', async () => {
+    const mocks = [
+      {
+        request: {
+          query: gql`
+            {
+              jwt @client
+              tfa @client
+            }
+          `,
+        },
+        result: {
+          data: {
+            jwt: 'string',
+            tfa: true,
+          },
+        },
+      },
+    ]
+
+    const { queryByText } = render(
+      <UserStateProvider
+        initialState={{
+          userName: 'foo@example.com',
+          jwt: 'soemestring',
+          tfa: true,
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks} resolvers={resolvers}>
+                <App />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
+    )
+
+    const tfaBar = await waitFor(() =>
+      queryByText(/You have not enabled Two Factor Authentication./i),
+    )
+    expect(tfaBar).toBe(null)
+  })
+
+  it('successfully renders the component as part of the entire App when user has not verified tfa', async () => {
+    const mocks = [
+      {
+        request: {
+          query: gql`
+            {
+              jwt @client
+              tfa @client
+            }
+          `,
+        },
+        result: {
+          data: {
+            jwt: 'string',
+            tfa: false,
+          },
+        },
+      },
+    ]
+
+    const { queryByText } = render(
+      <UserStateProvider
+        initialState={{
+          userName: 'foo@example.com',
+          jwt: 'somestring',
+          tfa: false,
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks} resolvers={resolvers}>
+                <App />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
+    )
+
+    const tfaBar = await waitFor(() =>
+      queryByText(/You have not enabled Two Factor Authentication./i),
+    )
+    expect(tfaBar).toBeDefined()
   })
 
   it('6 digit code does not display an error message', async () => {
