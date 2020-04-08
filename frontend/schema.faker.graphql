@@ -740,6 +740,12 @@ type Query {
   An api endpoint that will be used to populate a userList component in the front end.
   """
   userList(organizaion: Acronym!): UserList
+
+  """
+  An api endpoint that will be used to populate a userPage component in the front end.
+  """
+  userPage(userName: EmailAddress!): UserPage
+
 }
 
 """DMARC aggregate report record"""
@@ -1100,15 +1106,49 @@ type WWWScanEdge {
 This custom object is used to populate the userList componenet in the front end.
 """
 type UserList {
-  organizaion: Acronym!
+  """ Indicates which organization this list is being queried for."""
+  organization: Acronym!
+
+  """ A list of userItems that will make up the list on the front end.  An item per user in the org."
   userItems: [UserListItem]!
 }
 
 type UserListItem implements Node {
     """The ID of the object."""
     id: ID!
+
+    """ The users email address or userName
     userName: EmailAddress!
+
+    """ The users display name"""
     displayName: String!
+
+    """ Indicates wether or not this user has enabled two factor authentication"
     tfa: Boolean!
+
+    """ Indicates if this user is an admin of the organization specified in UserList query."""
+    admin: Boolean!
+}
+
+"""
+This custom gql object is used to populate a userPage component in the front end.
+"""
+type UserPage{
+    """ The users email address or userName
+    userName: EmailAddress!
+
+    """ The users display name"""
+    displayName: String!
+
+    """ Indicates which organization this users data is being displayed for."""
+    organization: Acronym!
+
+    """ Indicates the preferred language of this user."""
+    lang: String!
+
+    """ Indicates wether or not this user has enabled two factor authentication"
+    tfa: Boolean!
+
+    """ Indicates if this user is an admin of the organization specified."""
     admin: Boolean!
 }
