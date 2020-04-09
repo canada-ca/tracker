@@ -48,7 +48,7 @@
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
     "@hot-loader/react-dom": "^16.13.0",
-    "@lingui/cli": "^3.0.0-7",
+    "@lingui/cli": "^3.0.0-9",
     "@lingui/loader": "^3.0.0-7",
     "@lingui/macro": "^3.0.0-7",
     "@testing-library/jest-dom": "^5.4.0",
