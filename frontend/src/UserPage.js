@@ -4,7 +4,7 @@ import React from 'react'
 import { Formik } from 'formik'
 import { useHistory } from 'react-router-dom'
 
-//import { string } from 'prop-types'
+import { string } from 'prop-types'
 
 import {
   Stack,
@@ -137,7 +137,7 @@ export function UserPage(props) {
         <CheckboxGroup
           mt="20px"
           variantColor="teal"
-          defaultValue={[queryUserData.userPage.admin? 'admin' : '', 'active']}
+          defaultValue={[queryUserData.userPage.admin ? 'admin' : '', 'active']}
         >
           <Checkbox value="admin">Administrative Account</Checkbox>
           <Checkbox value="active">Account Active</Checkbox>
