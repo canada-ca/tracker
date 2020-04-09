@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor, getByText } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { DmarcReportPage } from '../DmarcReportPage'
-import gql from 'graphql-tag'
+import { QUERY_DMARC_REPORT } from '../graphql/queries'
 
 i18n.load('en', { en: {} })
 i18n.activate('en')
@@ -16,79 +16,45 @@ describe('<DmarcReportPage />', () => {
     const mocks = [
       {
         request: {
-          query: gql`
-            {
-              dmarcReport {
-                reportId
-                orgName
-                endDate
-                dmarcResult
-                dkimResult
-                spfResult
-                passPercentage
-                count
-                dkim {
-                  domain
-                  selector
-                  result
-                }
-                spf {
-                  domain
-                  scope
-                  result
-                }
-                source {
-                  ipAddress
-                  country
-                  reverseDns
-                  baseDomain
-                }
-                identifiers {
-                  headerFrom
-                }
-              }
-            }
-          `,
+          query: QUERY_DMARC_REPORT,
+          variables: {
+            reportId: 'test-report-id',
+          },
         },
         result: {
           data: {
-            dmarcReport: {
+            queryDmarcReport: {
               reportId: 'string',
-              orgName: 'test-org',
-              endDate: '<DateTime>',
-              dmarcResult: 'pass',
-              dkimResult: 'pass',
-              spfResult: 'pass',
-              passPercentage: 95,
-              count: 47832,
+              orgName: 'string',
+              endDate: 'string',
+              dmarcResult: true,
+              dkimResult: true,
+              spfResult: true,
+              passPercentage: 70,
+              count: 2,
               dkim: [
                 {
-                  domain: 'geovanni.name',
-                  selector: 'test-selector',
-                  result: 'pass',
-                  __typename: 'DkimResult',
+                  domain: 'string',
+                  selector: 'string',
+                  result: false,
                 },
               ],
               spf: [
                 {
-                  domain: 'deonte.org',
-                  scope: 'test-scope',
-                  result: 'pass',
-                  __typename: 'SpfResult',
+                  domain: 'string',
+                  scope: 'string',
+                  result: false,
                 },
               ],
               source: {
-                ipAddress: '127.0.0.1',
-                country: 'Canada',
+                ipAddress: 'string',
+                country: 'string',
                 reverseDns: 'string',
-                baseDomain: 'werner.biz',
-                __typename: 'Source',
+                baseDomain: 'string',
               },
               identifiers: {
-                headerFrom: 'dortha.biz',
-                __typename: 'Identifiers',
+                headerFrom: 'string',
               },
-              __typename: 'DmarcReport',
             },
           },
         },
@@ -99,7 +65,7 @@ describe('<DmarcReportPage />', () => {
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks}>
+            <MockedProvider mocks={mocks} addTypename={false}>
               <DmarcReportPage />
             </MockedProvider>
           </MemoryRouter>
@@ -132,73 +98,44 @@ describe('<DmarcReportPage />', () => {
     const mocks = [
       {
         request: {
-          query: gql`
-            {
-              dmarcReport {
-                reportId
-                orgName
-                endDate
-                dmarcResult
-                dkimResult
-                spfResult
-                passPercentage
-                count
-                dkim {
-                  domain
-                  selector
-                  result
-                }
-                spf {
-                  domain
-                  scope
-                  result
-                }
-                source {
-                  ipAddress
-                  country
-                  reverseDns
-                  baseDomain
-                }
-                identifiers {
-                  headerFrom
-                }
-              }
-            }
-          `,
+          query: QUERY_DMARC_REPORT,
+          variables: {
+            reportId: 'test-report-id',
+          },
         },
         result: {
           data: {
-            dmarcReport: {
+            queryDmarcReport: {
               reportId: 'string',
-              orgName: 'test-org',
-              endDate: '<DateTime>',
-              dmarcResult: 'fail',
-              dkimResult: 'fail',
-              spfResult: 'fail',
-              passPercentage: 95,
-              count: 47832,
+              orgName: 'string',
+              endDate: 'string',
+              dmarcResult: false,
+              dkimResult: false,
+              spfResult: false,
+              passPercentage: 70,
+              count: 2,
               dkim: [
                 {
-                  domain: 'geovanni.name',
-                  selector: 'test-selector',
-                  result: 'pass',
+                  domain: 'string',
+                  selector: 'string',
+                  result: false,
                 },
               ],
               spf: [
                 {
-                  domain: 'deonte.org',
-                  scope: 'test-scope',
-                  result: 'pass',
+                  domain: 'string',
+                  scope: 'string',
+                  result: false,
                 },
               ],
               source: {
-                ipAddress: '127.0.0.1',
-                country: 'Canada',
+                ipAddress: 'string',
+                country: 'string',
                 reverseDns: 'string',
-                baseDomain: 'werner.biz',
+                baseDomain: 'string',
               },
               identifiers: {
-                headerFrom: 'dortha.biz',
+                headerFrom: 'string',
               },
             },
           },
