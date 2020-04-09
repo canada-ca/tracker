@@ -49,7 +49,7 @@ def receive():
 
         # Construct request payload for result-processor
         if res is not None:
-            payload = {"results": str(res)}
+            payload = json.dumps({"results": str(res)})
             token = {"scan_type": "dmarc", "scan_id": scan_id}
             logging.info(str(res) + '\n')
         else:

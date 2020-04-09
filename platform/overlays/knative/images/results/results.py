@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import logging
+import traceback
 import jwt
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
@@ -207,7 +208,7 @@ def process_results(results, scan_type, scan_id):
                 used_ciphers = {cipher for cipher in results["TLS"]["accepted_cipher_list"]}
                 signature_algorithm = results["signature_algorithm"]
 
-                if any([any_rc4, any_3des, report["SSLV2"], report["SSLV3"], report["TLSV1"], report["TLSV1_1"]]):
+                if any([any_rc4, any_3des, report["SSL_2_0"], report["SSL_3_0"], report["TLS_1_0"], report["TLS_1_1"]]):
                     bod_crypto = False
                 else:
                     bod_crypto = True
@@ -231,12 +232,13 @@ def process_results(results, scan_type, scan_id):
                 report["openssl_ccs_injection"] = ccs_injection
 
     except Exception as e:
-        return {"status": False, "info": str(e)}
+        return {"status": False, "info": traceback.format_exc()}
 
     finalized_report = json.JSONEncoder().encode(str(report))
 
     insert(finalized_report, scan_type, scan_id)
 
+    logging.info("(SCAN: %s) - Successfully parsed results" % scan_id)
     return {"status": True, "info": "Results processed successfully"}
 
 

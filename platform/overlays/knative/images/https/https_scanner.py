@@ -45,7 +45,7 @@ def receive():
 
         # Construct request payload for result-processor
         if res is not None:
-            payload = {"results": str(res)}
+            payload = json.dumps({"results": str(res)})
             token = {"scan_type": "https", "scan_id": scan_id}
             logging.info(str(res)+'\n')
         else:
@@ -84,7 +84,9 @@ def scan(scan_id, domain):
 
         # Run https-scanner
         res_dict = https.run([domain])
-        return res_dict
+
+        # Return scan results for the designated domain
+        return res_dict[domain]
     except Exception as e:
         logging.error("(SCAN: %s) - %s", (scan_id, str(e)))
         return None
