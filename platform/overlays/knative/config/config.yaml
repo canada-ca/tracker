@@ -27,26 +27,6 @@ spec:
 
 ---
 
-# The trigger for "https-scan" events
-
-#apiVersion: config.knative.dev/v1alpha1
-#kind: Trigger
-#metadata:
-#  name: https-scan-trigger
-#  namespace: tracker
-#spec:
-#  broker: default
-#  filter:
-#    attributes:
-#      type: https-scan
-#  subscriber:
-#    ref:
-#      apiVersion: v1
-#      kind: Service
-#      name: svc
-
----
-
 # The broker
 
 apiVersion: eventing.knative.dev/v1alpha1
@@ -70,26 +50,6 @@ metadata:
 
 ---
 
-# The Subscription to the InMemoryChannel.
-
-#apiVersion: messaging.knative.dev/v1alpha1
-#kind: Subscription
-#metadata:
-#  name: sub
-#  namespace: tracker
-#spec:
-#  channel:
-#    apiVersion: messaging.knative.dev/v1alpha1
-#    kind: InMemoryChannel
-#    name: chan
-#  subscriber:
-#    ref:
-#      apiVersion: v1
-#      kind: Service
-#      name: svc
-
-# K8s Deployment that simply writes input requests to its log.
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
@@ -99,6 +59,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -122,6 +84,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -145,6 +109,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -168,6 +134,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -191,6 +159,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -214,6 +184,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -237,6 +209,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -260,6 +234,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -283,6 +259,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
@@ -306,6 +284,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency

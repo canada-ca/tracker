@@ -1,0 +1,244 @@
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: scan-monitoring
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: scan-monitoring
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-server-conf
+  labels:
+    name: prometheus-server-conf
+  namespace: scan-monitoring
+data:
+  prometheus.rules: |-
+    groups:
+    - name: HTTPS Alert
+      rules:
+      - alert: HTTPSScannerHighTraffic
+        expr: sum(http_inprogress_requests{serving_knative_dev_service="https-scanner"}) > 10
+        for: 1m
+        labels:
+          severity: Medium
+        annotations:
+          summary: HTTPS Scanner experiencing high volume of traffic
+      - alert: HTTPSScannerFailure
+        expr: up{serving_knative_dev_service="https-scanner"} < 1
+        for: 1m
+        labels:
+          severity: High
+        annotations:
+          summary: HTTPS Scanner Failed
+    - name: SSL Alert
+      rules:
+      - alert: SSLScannerHighTraffic
+        expr: sum(http_inprogress_requests{serving_knative_dev_service="ssl-scanner"}) > 10
+        for: 1m
+        labels:
+          severity: Medium
+        annotations:
+          summary: SSL Scanner experiencing high volume of traffic
+      - alert: SSLScannerFailure
+        expr: up{serving_knative_dev_service="ssl-scanner"} < 1
+        for: 1m
+        labels:
+          severity: High
+        annotations:
+          summary: SSL Scanner Failed
+    - name: DMARC Alert
+      rules:
+      - alert: DMARCScannerHighTraffic
+        expr: sum(http_inprogress_requests{serving_knative_dev_service="dmarc-scanner"}) > 10
+        for: 1m
+        labels:
+          severity: Medium
+        annotations:
+          summary: DMARC Scanner experiencing high volume of traffic
+      - alert: DMARCScannerFailure
+        expr: up{serving_knative_dev_service="dmarc-scanner"} < 1
+        for: 1m
+        labels:
+          severity: High
+        annotations:
+          summary: DMARC Scanner Failed
+    - name: DKIM Alert
+      rules:
+      - alert: DKIMScannerHighTraffic
+        expr: sum(http_inprogress_requests{serving_knative_dev_service="dkim-scanner"}) > 10
+        for: 1m
+        labels:
+          severity: Medium
+        annotations:
+          summary: DKIM Scanner experiencing high volume of traffic
+      - alert: DKIMScannerFailure
+        expr: up{serving_knative_dev_service="dkim-scanner"} < 1
+        for: 1m
+        labels:
+          severity: High
+        annotations:
+          summary: DKIM Scanner Failed
+    - name: Dispatcher Alert
+      rules:
+      - alert: DispatcherHighTraffic
+        expr: sum(http_inprogress_requests{serving_knative_dev_service="dispatcher"}) > 10
+        for: 1m
+        labels:
+          severity: Medium
+        annotations:
+          summary: Dispatcher experiencing high volume of traffic
+      - alert: DispatcherFailure
+        expr: up{serving_knative_dev_service="dispatcher"} < 1
+        for: 1m
+        labels:
+          severity: High
+        annotations:
+          summary: Dispatcher Failed
+    - name: Results Alert
+      rules:
+      - alert: ResultProcessorHighTraffic
+        expr: sum(http_inprogress_requests{serving_knative_dev_service="result-processor"}) > 10
+        for: 1m
+        labels:
+          severity: Medium
+        annotations:
+          summary: Result Processor experiencing high volume of traffic
+      - alert: ResultProcessorFailure
+        expr: up{serving_knative_dev_service="result-processor"} < 1
+        for: 1m
+        labels:
+          severity: High
+        annotations:
+          summary: Result Processor Failed
+  prometheus.yml: |-
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 5s
+    rule_files:
+      - /etc/prometheus/prometheus.rules
+    alerting:
+      alertmanagers:
+      - scheme: http
+        static_configs:
+        - targets:
+          - "alertmanager.monitoring.svc:9093"
+
+    scrape_configs:
+      - job_name: 'kubernetes-pods'
+
+        kubernetes_sd_configs:
+        - role: pod
+
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+          action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_pod_name]
+          action: replace
+          target_label: kubernetes_pod_name
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-deployment
+  namespace: scan-monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus-server
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.12.0
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus/"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            defaultMode: 420
+            name: prometheus-server-conf
+
+        - name: prometheus-storage-volume
+          emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+  namespace: scan-monitoring
+spec:
+  selector:
+    app: prometheus-server
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 9090
+      nodePort: 30000
