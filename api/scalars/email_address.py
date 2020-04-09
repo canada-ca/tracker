@@ -15,37 +15,38 @@ EMAIL_ADDRESS_REGEX = compile(EMAIL_ADDRESS_REGEX)
 
 
 class EmailAddress(Scalar):
-	"""
-	A field whose value conforms to the standard internet email address format as specified in RFC822:
-	https://www.w3.org/Protocols/rfc822/.
-	"""
+    """
+    A field whose value conforms to the standard internet email address format as specified in RFC822:
+    https://www.w3.org/Protocols/rfc822/.
+    """
 
-	@staticmethod
-	def serialize(value):
-		if not isinstance(value, str):
-			raise GraphQLError(scalar_error_type("String", value))
+    @staticmethod
+    def serialize(value):
+        if not isinstance(value, str):
+            raise GraphQLError(scalar_error_type("String", value))
 
-		if not EMAIL_ADDRESS_REGEX.search(value):
-			raise GraphQLError(scalar_error_type("email address", value))
+        if not EMAIL_ADDRESS_REGEX.search(value):
+            raise GraphQLError(scalar_error_type("email address", value))
 
-		return value
+        return value
 
-	@staticmethod
-	def parse_value(value):
-		if not isinstance(value, str):
-			raise GraphQLError(scalar_error_type("String", value))
+    @staticmethod
+    def parse_value(value):
+        if not isinstance(value, str):
+            raise GraphQLError(scalar_error_type("String", value))
 
-		if not EMAIL_ADDRESS_REGEX.search(value):
-			raise GraphQLError(scalar_error_type("email address", value))
+        if not EMAIL_ADDRESS_REGEX.search(value):
+            raise GraphQLError(scalar_error_type("email address", value))
 
-		return value
+        return value
 
-	@staticmethod
-	def parse_literal(node):
-		if not isinstance(node, ast.StringValue):
-			raise GraphQLError(scalar_error_only_types("strings", "email address", str(ast.Type)))
+    @staticmethod
+    def parse_literal(node):
+        if not isinstance(node, ast.StringValue):
+            raise GraphQLError(
+                scalar_error_only_types("strings", "email address", str(type(node))))
 
-		if not EMAIL_ADDRESS_REGEX.search(node.value):
-			raise GraphQLError(scalar_error_type("email address", node.value))
+        if not EMAIL_ADDRESS_REGEX.search(node.value):
+            raise GraphQLError(scalar_error_type("email address", node.value))
 
-		return node.value
+        return node.value
