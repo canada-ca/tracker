@@ -44,10 +44,12 @@ export const QUERY_USER = gql`
     userPage(userName: $userName) {
       userName
       tfa
-      organization
-      admin
       lang
       displayName
+      userAffiliations{
+        admin
+        organization
+      }
     }
   }
 `

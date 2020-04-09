@@ -30,6 +30,10 @@ describe('<UserPage />', () => {
           userName: 'testuser@testemail.gc.ca',
           displayName: 'Test User',
           lang: 'English',
+          userAffiliations: {
+            admin: true,
+            organization: 'TEST',
+          },
         },
       },
     },

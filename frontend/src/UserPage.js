@@ -137,7 +137,7 @@ export function UserPage(props) {
         <CheckboxGroup
           mt="20px"
           variantColor="teal"
-          defaultValue={[queryUserData.userPage.admin ? 'admin' : '', 'active']}
+          defaultValue={[queryUserData.userPage.userAffiliations[0].admin ? 'admin' : '', 'active']}
         >
           <Checkbox value="admin">Administrative Account</Checkbox>
           <Checkbox value="active">Account Active</Checkbox>
