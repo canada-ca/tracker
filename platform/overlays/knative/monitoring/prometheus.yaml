@@ -57,15 +57,15 @@ data:
     - name: HTTPS Alert
       rules:
       - alert: HTTPSScannerHighTraffic
-        expr: sum(http_inprogress_requests{serving_knative_dev_service="https-scanner"}) > 10
-        for: 1m
+        expr: queue_requests_per_second{serving_knative_dev_service="https-scanner"} > 10
+        for: 20s
         labels:
           severity: Medium
         annotations:
           summary: HTTPS Scanner experiencing high volume of traffic
       - alert: HTTPSScannerDown
         expr: up{serving_knative_dev_service="https-scanner"} == 0
-        for: 1m
+        for: 5s
         labels:
           severity: Info
         annotations:
@@ -73,15 +73,15 @@ data:
     - name: SSL Alert
       rules:
       - alert: SSLScannerHighTraffic
-        expr: sum(http_inprogress_requests{serving_knative_dev_service="ssl-scanner"}) > 10
-        for: 1m
+        expr: queue_requests_per_second{serving_knative_dev_service="ssl-scanner"} > 10
+        for: 20s
         labels:
           severity: Medium
         annotations:
           summary: SSL Scanner experiencing high volume of traffic
       - alert: SSLScannerDown
         expr: up{serving_knative_dev_service="ssl-scanner"} == 0
-        for: 1m
+        for: 5s
         labels:
           severity: Info
         annotations:
@@ -89,15 +89,15 @@ data:
     - name: DMARC Alert
       rules:
       - alert: DMARCScannerHighTraffic
-        expr: sum(http_inprogress_requests{serving_knative_dev_service="dmarc-scanner"}) > 10
-        for: 1m
+        expr: queue_requests_per_second{serving_knative_dev_service="dmarc-scanner"} > 10
+        for: 20s
         labels:
           severity: Medium
         annotations:
           summary: DMARC Scanner experiencing high volume of traffic
       - alert: DMARCScannerDown
         expr: up{serving_knative_dev_service="dmarc-scanner"} == 0
-        for: 1m
+        for: 5s
         labels:
           severity: Info
         annotations:
@@ -105,15 +105,15 @@ data:
     - name: DKIM Alert
       rules:
       - alert: DKIMScannerHighTraffic
-        expr: sum(http_inprogress_requests{serving_knative_dev_service="dkim-scanner"}) > 10
-        for: 1m
+        expr: queue_requests_per_second{http_inprogress_requests{serving_knative_dev_service="dkim-scanner"} > 10
+        for: 20s
         labels:
           severity: Medium
         annotations:
           summary: DKIM Scanner experiencing high volume of traffic
       - alert: DKIMScannerDown
         expr: up{serving_knative_dev_service="dkim-scanner"} == 0
-        for: 1m
+        for: 5s
         labels:
           severity: Info
         annotations:
@@ -121,15 +121,15 @@ data:
     - name: Dispatcher Alert
       rules:
       - alert: DispatcherHighTraffic
-        expr: sum(http_inprogress_requests{serving_knative_dev_service="dispatcher"}) > 10
-        for: 1m
+        expr: queue_requests_per_second{serving_knative_dev_service="dispatcher"} > 10
+        for: 20s
         labels:
           severity: Medium
         annotations:
           summary: Dispatcher experiencing high volume of traffic
       - alert: DispatcherDown
         expr: up{serving_knative_dev_service="dispatcher"} == 0
-        for: 1m
+        for: 5s
         labels:
           severity: Info
         annotations:
@@ -137,15 +137,15 @@ data:
     - name: Results Alert
       rules:
       - alert: ResultProcessorHighTraffic
-        expr: sum(http_inprogress_requests{serving_knative_dev_service="result-processor"}) > 10
-        for: 1m
+        expr: queue_requests_per_second{serving_knative_dev_service="result-processor"} > 10
+        for: 20s
         labels:
           severity: Medium
         annotations:
           summary: Result Processor experiencing high volume of traffic
       - alert: ResultProcessorDown
         expr: up{serving_knative_dev_service="result-processor"} == 0
-        for: 1m
+        for: 5s
         labels:
           severity: Info
         annotations:

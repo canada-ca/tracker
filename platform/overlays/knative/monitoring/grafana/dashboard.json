@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -23,7 +23,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "Prometheus",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -59,7 +59,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(http_inprogress_requests{serving_knative_dev_service=\"dispatcher\"})",
+          "expr": "queue_requests_per_second{serving_knative_dev_service=\"dispatcher\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -147,7 +147,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(http_inprogress_requests{serving_knative_dev_service=\"result-processor\"})",
+          "expr": "queue_requests_per_second{serving_knative_dev_service=\"result-processor\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -343,7 +343,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(http_inprogress_requests{serving_knative_dev_service=\"dmarc-scanner\"})",
+          "expr": "queue_requests_per_second{serving_knative_dev_service=\"dmarc-scanner\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -431,7 +431,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(http_inprogress_requests{serving_knative_dev_service=\"ssl-scanner\"})",
+          "expr": "queue_requests_per_second{serving_knative_dev_service=\"ssl-scanner\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -519,7 +519,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(http_inprogress_requests{serving_knative_dev_service=\"https-scanner\"})",
+          "expr": "queue_requests_per_second{serving_knative_dev_service=\"https-scanner\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -597,5 +597,5 @@
   "variables": {
     "list": []
   },
-  "version": 1
+  "version": 2
 }
