@@ -48,11 +48,12 @@ export const QUERY_USER = gql`
       displayName
       userAffiliations{
         admin
-        organization
+        organization     
       }
     }
   }
 `
+
 export const QUERY_DMARC_REPORT = gql`
   query QueryDmarcReport($reportId: String!) {
     queryDmarcReport(reportId: $reportId) {
