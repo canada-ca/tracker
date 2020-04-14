@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Stack, Text, Divider } from '@chakra-ui/core'
-import { string } from 'prop-types'
+import { string, bool } from 'prop-types'
 
 export default function SpfEntry(props) {
   return (
@@ -34,5 +34,5 @@ export default function SpfEntry(props) {
 SpfEntry.propTypes = {
   domain: string.isRequired,
   scope: string.isRequired,
-  result: string.isRequired,
+  result: bool.isRequired,
 }

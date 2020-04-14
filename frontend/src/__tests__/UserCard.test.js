@@ -8,31 +8,12 @@ import { MockedProvider } from '@apollo/react-testing'
 
 import { UserCard } from '../UserCard'
 
-// If this unused import, the mocked data test fails.  VERY weird.
-import App from '../App'
+i18n.load('en', { en: {} })
+i18n.activate('en')
 
-describe('<UserList />', () => {
-  it('successfully renders', async () => {
-    const { container } = render(
-      <MockedProvider>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <UserCard
-                userName="testuser@testemail.gc.ca"
-                displayName="Test User"
-                tfa={true}
-                admin={true}
-              />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </MockedProvider>,
-    )
-    expect(container).toBeDefined()
-  })
+describe('<UserCard />', () => {
   it('badges are green when TwoFactor and Admin values are true', async () => {
-    const { container, getByText } = render(
+    const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
@@ -48,7 +29,6 @@ describe('<UserList />', () => {
         </MemoryRouter>
       </MockedProvider>,
     )
-    expect(container).toBeDefined()
 
     const tfaBadge = getByText(/TwoFactor/i)
     const adminBadge = getByText(/Admin/i)
@@ -61,7 +41,7 @@ describe('<UserList />', () => {
   })
 
   it('badges are red when TwoFactor and Admin values are false', async () => {
-    const { container, getByText } = render(
+    const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
@@ -77,7 +57,6 @@ describe('<UserList />', () => {
         </MemoryRouter>
       </MockedProvider>,
     )
-    expect(container).toBeDefined()
 
     const tfaBadge = getByText(/TwoFactor/i)
     const adminBadge = getByText(/Admin/i)
