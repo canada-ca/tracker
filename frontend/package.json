@@ -61,7 +61,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "file-loader": "^6.0.0",
     "fs-extra": "^9.0.0",
-    "jest": "^24.9.0",
+    "jest": "^25.3.0",
     "jest-emotion": "^10.0.32",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "prettier": "^2.0.4",
