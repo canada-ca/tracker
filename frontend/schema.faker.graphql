@@ -735,7 +735,7 @@ type Query {
   An api endpoint that will send a verification email to a given email address.
   """
   sendValidationEmail(email: EmailAddress!): NotificationEmail
-  
+
   """
   An api endpoint that will be used to populate a userList component in the front end.
   """
@@ -746,6 +746,9 @@ type Query {
   """
   userPage(userName: EmailAddress!): UserPage
 
+
+
+  queryDmarcReport(reportId: String!): QueryDmarcReport
 }
 
 """DMARC aggregate report record"""
@@ -1168,4 +1171,43 @@ type UserPageAffiliations{
 
     """ Indicates which organization this users data is being displayed for."""
     organization: Acronym! @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
+
+"""A custom type used to query a DmarcReport for the front end."""
+
+type QueryDmarcReport {
+  reportId: String!
+  orgName: String!
+  endDate: String!
+  dmarcResult: Boolean! @examples(values: [true, false])
+  dkimResult: Boolean! @examples(values: [true, false])
+  spfResult: Boolean! @examples(values: [true, false])
+  passPercentage: Int! @examples(values: [10,20,30,40,50,60,70,80,90,100])
+  count: Int! @examples(values: [1,2,3])
+  dkim: [queryDkimResult]!  
+  spf: [querySpfResult]!
+  source: queryReportSource!
+  identifiers: queryReportIdentifiers!
+}
+
+type queryDkimResult{
+  domain: String!
+  selector: String!
+  result: Boolean! @examples(values: [true, false])
+}
+
+type querySpfResult{
+  domain: String!
+  scope: String!
+  result: Boolean! @examples(values: [true, false])
+}
+
+type queryReportSource{
+  ipAddress: String!
+  country: String!
+  reverseDns: String!
+  baseDomain: String!
+}
+
+type queryReportIdentifiers{
+  headerFrom: String!
 }

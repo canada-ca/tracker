@@ -14,47 +14,16 @@ import DkimEntry from './DkimEntry'
 import SpfEntry from './SpfEntry'
 
 import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
-
+import { QUERY_DMARC_REPORT } from './graphql/queries'
 import PieChart from 'react-minimal-pie-chart'
 
 export function DmarcReportPage() {
-  const { loading, error, data } = useQuery(gql`
-    {
-      dmarcReport {
-        reportId
-        orgName
-        endDate
-        dmarcResult
-        dkimResult
-        spfResult
-        passPercentage
-        count
-        dkim {
-          domain
-          selector
-          result
-        }
-        spf {
-          domain
-          scope
-          result
-        }
-        source {
-          ipAddress
-          country
-          reverseDns
-          baseDomain
-        }
-        identifiers {
-          headerFrom
-        }
-      }
-    }
-  `)
+  const { loading, error, data } = useQuery(QUERY_DMARC_REPORT, {
+    variables: { reportId: 'test-report-id' },
+  })
 
   if (loading) return <p>Loading...</p>
-  if (error) return <p>Error :(</p>
+  if (error) return <p>{String(error)}</p>
   return (
     <Box>
       <Heading mb={4}>DMARC Report</Heading>
@@ -75,7 +44,7 @@ export function DmarcReportPage() {
             <Text fontSize="2xl" fontWeight="bold">
               DMARC
             </Text>
-            {data.dmarcReport.dmarcResult === 'pass' ? (
+            {data.queryDmarcReport.dmarcResult ? (
               <Icon
                 ml={2}
                 name="check-circle"
@@ -104,12 +73,12 @@ export function DmarcReportPage() {
                 data={[
                   {
                     title: 'Passed Dmarc',
-                    value: data.dmarcReport.passPercentage,
+                    value: data.queryDmarcReport.passPercentage,
                     color: '#2D8133',
                   },
                   {
                     title: 'Failed Dmarc',
-                    value: 100 - data.dmarcReport.passPercentage,
+                    value: 100 - data.queryDmarcReport.passPercentage,
                     color: '#e53e3e',
                   },
                 ]}
@@ -119,9 +88,11 @@ export function DmarcReportPage() {
               Result Breakdown
             </Text>
 
-            <Text fontSize="lg">Pass: {data.dmarcReport.passPercentage}%</Text>
             <Text fontSize="lg">
-              Fail: {100 - data.dmarcReport.passPercentage}%
+              Pass: {data.queryDmarcReport.passPercentage}%
+            </Text>
+            <Text fontSize="lg">
+              Fail: {100 - data.queryDmarcReport.passPercentage}%
             </Text>
           </Flex>
         </Stack>
@@ -130,7 +101,7 @@ export function DmarcReportPage() {
             <Text fontSize="xl" fontWeight="semibold">
               Orginization name:
             </Text>
-            <Text fontSize="xl">{data.dmarcReport.orgName || 'null'}</Text>
+            <Text fontSize="xl">{data.queryDmarcReport.orgName || 'null'}</Text>
           </Stack>
 
           <Stack isInline>
@@ -138,7 +109,7 @@ export function DmarcReportPage() {
               IP address:
             </Text>
             <Text fontSize="xl">
-              {data.dmarcReport.source.ipAddress || 'null'}
+              {data.queryDmarcReport.source.ipAddress || 'null'}
             </Text>
           </Stack>
 
@@ -146,14 +117,16 @@ export function DmarcReportPage() {
             <Text fontSize="xl" fontWeight="semibold">
               Date:
             </Text>
-            <Text fontSize="xl">{data.dmarcReport.endDate || 'null'}</Text>
+            <Text fontSize="xl">{data.queryDmarcReport.endDate || 'null'}</Text>
           </Stack>
 
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Report ID:
             </Text>
-            <Text fontSize="xl">{data.dmarcReport.reportId || 'null'}</Text>
+            <Text fontSize="xl">
+              {data.queryDmarcReport.reportId || 'null'}
+            </Text>
           </Stack>
 
           <Stack isInline>
@@ -161,7 +134,7 @@ export function DmarcReportPage() {
               Country:
             </Text>
             <Text fontSize="xl">
-              {data.dmarcReport.source.country || 'null'}
+              {data.queryDmarcReport.source.country || 'null'}
             </Text>
           </Stack>
 
@@ -170,7 +143,7 @@ export function DmarcReportPage() {
               Reverse DNS:
             </Text>
             <Text fontSize="xl">
-              {data.dmarcReport.source.reverse_dns || 'null'}
+              {data.queryDmarcReport.source.reverse_dns || 'null'}
             </Text>
           </Stack>
 
@@ -179,21 +152,21 @@ export function DmarcReportPage() {
               Base domain:
             </Text>
             <Text fontSize="xl">
-              {data.dmarcReport.source.base_domain || 'null'}
+              {data.queryDmarcReport.source.base_domain || 'null'}
             </Text>
           </Stack>
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Count:
             </Text>
-            <Text fontSize="xl">{data.dmarcReport.count || 'null'}</Text>
+            <Text fontSize="xl">{data.queryDmarcReport.count || 'null'}</Text>
           </Stack>
           <Stack isInline>
             <Text fontSize="xl" fontWeight="semibold">
               Header from:
             </Text>
             <Text fontSize="xl">
-              {data.dmarcReport.identifiers.header_from || 'null'}
+              {data.queryDmarcReport.identifiers.header_from || 'null'}
             </Text>
           </Stack>
         </Stack>
@@ -203,7 +176,7 @@ export function DmarcReportPage() {
             <Text fontSize="2xl" fontWeight="bold">
               DKIM
             </Text>
-            {data.dmarcReport.dkimResult === 'pass' ? (
+            {data.queryDmarcReport.dkimResult ? (
               <Icon
                 ml={2}
                 name="check-circle"
@@ -222,7 +195,7 @@ export function DmarcReportPage() {
             )}
           </Flex>
 
-          {data.dmarcReport.dkim.map(dkim => {
+          {data.queryDmarcReport.dkim.map((dkim) => {
             return (
               <DkimEntry
                 key={dkim.domain}
@@ -251,7 +224,7 @@ export function DmarcReportPage() {
             <Text fontSize="2xl" fontWeight="bold">
               SPF
             </Text>
-            {data.dmarcReport.spfResult === 'pass' ? (
+            {data.queryDmarcReport.spfResult ? (
               <Icon
                 ml={2}
                 name="check-circle"
@@ -270,7 +243,7 @@ export function DmarcReportPage() {
             )}
           </Flex>
 
-          {data.dmarcReport.spf.map(spf => {
+          {data.queryDmarcReport.spf.map((spf) => {
             return (
               <SpfEntry
                 key={spf.domain}

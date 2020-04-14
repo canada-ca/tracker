@@ -53,3 +53,36 @@ export const QUERY_USER = gql`
     }
   }
 `
+export const QUERY_DMARC_REPORT = gql`
+  query QueryDmarcReport($reportId: String!) {
+    queryDmarcReport(reportId: $reportId) {
+      reportId
+      orgName
+      endDate
+      dmarcResult
+      dkimResult
+      spfResult
+      passPercentage
+      count
+      dkim {
+        domain
+        selector
+        result
+      }
+      spf {
+        domain
+        scope
+        result
+      }
+      source {
+        ipAddress
+        country
+        reverseDns
+        baseDomain
+      }
+      identifiers {
+        headerFrom
+      }
+    }
+  }
+`
