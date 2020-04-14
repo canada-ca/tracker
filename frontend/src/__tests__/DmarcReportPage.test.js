@@ -3,7 +3,7 @@ import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import { render, waitFor, getByText } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { DmarcReportPage } from '../DmarcReportPage'
 import { QUERY_DMARC_REPORT } from '../graphql/queries'
@@ -61,7 +61,7 @@ describe('<DmarcReportPage />', () => {
       },
     ]
 
-    const { container, getByRole } = render(
+    const { getByRole } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
@@ -72,22 +72,12 @@ describe('<DmarcReportPage />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-    expect(render).toBeTruthy()
-    expect(container).toBeTruthy()
 
-    await waitFor(() => getByText(container, /DMARC Report/i), {
-      container,
-    })
-
-    const dmarcHeader = getByRole('dmarcHeader')
-    const dkimHeader = getByRole('dkimHeader')
-    const spfHeader = getByRole('spfHeader')
+    const dmarcHeader = await waitFor(() => getByRole('dmarcHeader'))
+    const dkimHeader = await waitFor(() => getByRole('dkimHeader'))
+    const spfHeader = await waitFor(() => getByRole('spfHeader'))
 
     await waitFor(() => {
-      expect(dmarcHeader).toBeTruthy()
-      expect(dkimHeader).toBeTruthy()
-      expect(spfHeader).toBeTruthy()
-
       expect(dmarcHeader.children[1]).toHaveAttribute('role', 'passIcon')
       expect(dkimHeader.children[1]).toHaveAttribute('role', 'passIcon')
       expect(spfHeader.children[1]).toHaveAttribute('role', 'passIcon')

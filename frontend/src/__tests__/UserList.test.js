@@ -3,7 +3,6 @@ import { UserList } from '../UserList'
 import { i18n } from '@lingui/core'
 import {
   render,
-  waitForElementToBeRemoved,
   fireEvent,
   waitFor,
 } from '@testing-library/react'
@@ -15,25 +14,10 @@ import { createMemoryHistory } from 'history'
 
 import { QUERY_USERLIST } from '../graphql/queries'
 
-// If this unused import, the mocked data test fails.  VERY weird.
-import App from '../App'
+i18n.load('en', { en: {} })
+i18n.activate('en')
 
 describe('<UserList />', () => {
-  it('successfully renders', async () => {
-    const { container } = render(
-      <MockedProvider>
-        <MemoryRouter initialEntries={['/']}>
-          <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <UserList />
-            </I18nProvider>
-          </ThemeProvider>
-        </MemoryRouter>
-      </MockedProvider>,
-    )
-    expect(container).toBeDefined()
-  })
-
   it('successfully renders with mocked data', async () => {
     const mocks = [
       {
@@ -66,7 +50,7 @@ describe('<UserList />', () => {
     ]
 
     // Set the inital history item to user-list
-    const { container, getAllByText, getByText } = render(
+    const { getAllByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']}>
@@ -77,16 +61,13 @@ describe('<UserList />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-    expect(container).toBeDefined()
 
-    expect(getByText('Loading...')).toBeInTheDocument()
-    const loadingElement = getByText('Loading...')
-
-    await waitForElementToBeRemoved(loadingElement)
-
+    //
     // Get all of the mocked user cards, and expect there to be only one entry.
-    const userCards = getAllByText('testuser@testemail.gc.ca')
-    expect(userCards).toHaveLength(1)
+    await waitFor(() => {
+      const userCards = getAllByText('testuser@testemail.gc.ca')
+      expect(userCards).toHaveLength(1)
+    })
   })
 
   it('redirects to userPage when a list element is clicked', async () => {
@@ -128,7 +109,7 @@ describe('<UserList />', () => {
     })
 
     // Set the inital history item to user-list
-    const { container, getAllByText, getByText } = render(
+    const { getAllByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <Router history={history}>
@@ -139,15 +120,11 @@ describe('<UserList />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-    expect(container).toBeDefined()
-
-    expect(getByText('Loading...')).toBeInTheDocument()
-    const loadingElement = getByText('Loading...')
-
-    await waitForElementToBeRemoved(loadingElement)
 
     // Get all of the mocked user cards, and expect there to be only one entry.
-    const userCards = getAllByText('testuser@testemail.gc.ca')
+    const userCards = await waitFor(() =>
+      getAllByText('testuser@testemail.gc.ca'),
+    )
     expect(userCards).toHaveLength(1)
 
     const leftClick = { button: 0 }
