@@ -1,28 +1,23 @@
 import React from 'react'
 
 import {
-  Badge,
   Stack,
   SimpleGrid,
   Divider,
-  Box,
-  Text,
   Button,
   Icon,
   InputGroup,
   InputLeftElement,
   Input,
-  PseudoBox,
 } from '@chakra-ui/core'
 
 import { Trans } from '@lingui/macro'
 import { QUERY_USERLIST } from './graphql/queries'
 import { useQuery } from '@apollo/react-hooks'
 import { PaginationButtons } from './PaginationButtons'
-import { useHistory } from 'react-router-dom'
+import { UserCard } from './UserCard'
 
 export function UserList() {
-  const history = useHistory()
   // This function generates the URL when the page loads
   const { loading, error, data } = useQuery(QUERY_USERLIST)
   if (loading) {
@@ -56,54 +51,13 @@ export function UserList() {
       {data
         ? data.userList.edges.map((edge) => {
             return (
-              <PseudoBox
+              <UserCard
                 key={edge.node.id}
-                role="userCard"
-                width="100%"
-                display={{ md: 'flex' }}
-                alignItems="center"
-                onClick={() => {
-                  history.push({
-                    pathname: '/user',
-                    state: { detail: edge.node.userName },
-                  })
-                }}
-                _hover={{ borderColor: 'gray.200', bg: 'gray.200' }}
-                p="30px"
-              >
-                <Box flexShrink="0" minW="15%">
-                  <Text mt={1} fontSize="lg" fontWeight="semibold">
-                    {edge.node.displayName}
-                  </Text>
-                </Box>
-                <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="35%">
-                  <Text fontSize="lg" minW="10%">
-                    {edge.node.userName}
-                  </Text>
-                </Box>
-                <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="15%">
-                  <Badge
-                    variantColor={edge.node.tfa ? 'green' : 'red'}
-                    minW="15%"
-                  >
-                    <Trans>TwoFactor</Trans>
-                  </Badge>
-                  <Badge
-                    variantColor={edge.node.admin ? 'green' : 'red'}
-                    ml="10px"
-                    mr={{ md: 4 }}
-                  >
-                    <Trans>Admin</Trans>
-                  </Badge>
-                </Box>
-                <Box
-                  flexShrink="0"
-                  ml={{ md: 4 }}
-                  mr={{ md: 4 }}
-                  mt={2}
-                  minW="15%"
-                ></Box>
-              </PseudoBox>
+                userName={edge.node.userName}
+                tfa={edge.node.tfa}
+                admin={edge.node.admin}
+                displayName={edge.node.displayName}
+              />
             )
           })
         : null}
@@ -115,7 +69,9 @@ export function UserList() {
   )
 }
 
-/*<Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="25%">
+/* -- Source code for adding organizations, not being used. -- 
+
+<Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="25%">
   <Box mt={2} color="gray.500">
     Orgs:&nbsp;
     {// Populate the user-orgs list.

@@ -3,7 +3,6 @@ import { UserList } from '../UserList'
 import { i18n } from '@lingui/core'
 import {
   render,
-  cleanup,
   waitForElementToBeRemoved,
   fireEvent,
   waitFor,
@@ -20,8 +19,6 @@ import { QUERY_USERLIST } from '../graphql/queries'
 import App from '../App'
 
 describe('<UserList />', () => {
-  afterEach(cleanup)
-
   it('successfully renders', async () => {
     const { container } = render(
       <MockedProvider>
@@ -69,7 +66,7 @@ describe('<UserList />', () => {
     ]
 
     // Set the inital history item to user-list
-    const { container, queryAllByRole, getByText } = render(
+    const { container, getAllByText, getByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <MemoryRouter initialEntries={['/']}>
@@ -88,7 +85,7 @@ describe('<UserList />', () => {
     await waitForElementToBeRemoved(loadingElement)
 
     // Get all of the mocked user cards, and expect there to be only one entry.
-    const userCards = queryAllByRole('userCard')
+    const userCards = getAllByText('testuser@testemail.gc.ca')
     expect(userCards).toHaveLength(1)
   })
 
@@ -131,7 +128,7 @@ describe('<UserList />', () => {
     })
 
     // Set the inital history item to user-list
-    const { container, queryAllByRole, getByText } = render(
+    const { container, getAllByText, getByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={i18n}>
           <Router history={history}>
@@ -150,7 +147,7 @@ describe('<UserList />', () => {
     await waitForElementToBeRemoved(loadingElement)
 
     // Get all of the mocked user cards, and expect there to be only one entry.
-    const userCards = queryAllByRole('userCard')
+    const userCards = getAllByText('testuser@testemail.gc.ca')
     expect(userCards).toHaveLength(1)
 
     const leftClick = { button: 0 }
@@ -161,129 +158,5 @@ describe('<UserList />', () => {
       // Path should be '/user', so expect that value
       expect(history.location.pathname).toEqual('/user')
     })
-  })
-
-  it('badges are green when TwoFactor and Admin values are true', async () => {
-    const mocks = [
-      {
-        request: {
-          query: QUERY_USERLIST,
-        },
-        result: {
-          data: {
-            userList: {
-              organization: 'TEST',
-              pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
-              },
-              edges: [
-                {
-                  node: {
-                    id: 'ODY0MDEzMTE1NA==',
-                    userName: 'testuser@testemail.gc.ca',
-                    admin: true,
-                    tfa: true,
-                    displayName: 'Test User',
-                  },
-                },
-              ],
-            },
-          },
-        },
-      },
-    ]
-
-    const { container, queryAllByRole, getByText } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <UserList />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
-    expect(container).toBeDefined()
-
-    expect(getByText('Loading...')).toBeInTheDocument()
-    const loadingElement = getByText('Loading...')
-
-    await waitForElementToBeRemoved(loadingElement)
-
-    // Get all of the mocked user cards, and expect there to be only one entry.
-    const userCards = queryAllByRole('userCard')
-    expect(userCards).toHaveLength(1)
-
-    const tfaBadge = getByText(/TwoFactor/i)
-    const adminBadge = getByText(/Admin/i)
-
-    expect(tfaBadge).toBeDefined()
-    expect(adminBadge).toBeDefined()
-
-    expect(tfaBadge).toHaveStyle('background-color: rgb(198, 246, 213)')
-    expect(adminBadge).toHaveStyle('background-color: rgb(198, 246, 213)')
-  })
-  it('badges are red when TwoFactor and Admin values are false', async () => {
-    const mocks = [
-      {
-        request: {
-          query: QUERY_USERLIST,
-        },
-        result: {
-          data: {
-            userList: {
-              organization: 'TEST',
-              pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
-              },
-              edges: [
-                {
-                  node: {
-                    id: 'ODY0MDEzMTE1NA==',
-                    userName: 'testuser@testemail.gc.ca',
-                    admin: false,
-                    tfa: false,
-                    displayName: 'Test User',
-                  },
-                },
-              ],
-            },
-          },
-        },
-      },
-    ]
-    const { container, queryAllByRole, getByText } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <MemoryRouter>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <UserList />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
-    )
-    expect(container).toBeDefined()
-
-    expect(getByText('Loading...')).toBeInTheDocument()
-    const loadingElement = getByText('Loading...')
-
-    await waitForElementToBeRemoved(loadingElement)
-
-    // Get all of the mocked user cards, and expect there to be only one entry.
-    const userCards = queryAllByRole('userCard')
-    expect(userCards).toHaveLength(1)
-
-    const tfaBadge = getByText(/TwoFactor/i)
-    const adminBadge = getByText(/Admin/i)
-
-    expect(tfaBadge).toBeDefined()
-    expect(adminBadge).toBeDefined()
-
-    expect(tfaBadge).toHaveStyle('background-color: rgb(254, 215, 215)')
-    expect(adminBadge).toHaveStyle('background-color: rgb(254, 215, 215)')
   })
 })
