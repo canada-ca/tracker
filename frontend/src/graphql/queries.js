@@ -18,6 +18,43 @@ export const GENERATE_OTP_URL = gql`
   }
 `
 
+export const QUERY_USERLIST = gql`
+  {
+    userList(organizaion: "NS") {
+      organization
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        node {
+          id
+          userName
+          admin
+          tfa
+          displayName
+        }
+      }
+    }
+  }
+`
+
+export const QUERY_USER = gql`
+  query UserPage($userName: EmailAddress!) {
+    userPage(userName: $userName) {
+      userName
+      tfa
+      lang
+      displayName
+      userAffiliations{
+        admin
+        organization     
+      }
+    }
+  }
+`
+
+
 export const QUERY_DMARC_REPORT = gql`
   query QueryDmarcReport($reportId: String!) {
     queryDmarcReport(reportId: $reportId) {

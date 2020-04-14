@@ -42,4 +42,22 @@ export const VALIDATE_TWO_FACTOR = gql`
   }
 `
 
+export const UPDATE_PASSWORD = gql`
+  mutation UpdatePassword(
+    $userName: EmailAddress!
+    $password: String!
+    $confirmPassword: String!
+  ) {
+    updatePassword(
+      userName: $userName
+      password: $password
+      confirmPassword: $confirmPassword
+    ) {
+      user {
+        userName
+      }
+    }
+  }
+`
+
 export default ''
