@@ -1,11 +1,14 @@
 import React from 'react'
-import { i18n } from '@lingui/core'
 import { object, string } from 'yup'
 import { waitFor, render, fireEvent } from '@testing-library/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
-import { I18nProvider } from '@lingui/react'
 import { EmailField } from '../EmailField'
 import { Formik } from 'formik'
+import { I18nProvider } from '@lingui/react'
+import { i18n } from '@lingui/core'
+import { en } from 'make-plural/plurals'
+
+i18n.loadLocaleData('en', { plurals: en })
 i18n.load('en', { en: {} })
 i18n.activate('en')
 

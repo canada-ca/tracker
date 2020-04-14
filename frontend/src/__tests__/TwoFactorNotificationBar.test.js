@@ -1,11 +1,13 @@
 import React from 'react'
-import { i18n } from '@lingui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { render } from '@testing-library/react'
 import { TwoFactorNotificationBar } from '../TwoFactorNotificationBar'
+import { i18n } from '@lingui/core'
+import { en } from 'make-plural/plurals'
 
+i18n.loadLocaleData('en', { plurals: en })
 i18n.load('en', { en: {} })
 i18n.activate('en')
 
