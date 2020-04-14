@@ -85,7 +85,7 @@ describe('<App/>', () => {
 
     describe('/domains', () => {
       it('renders the domains page', async () => {
-        const { getByRole } = render(
+        const { queryByText } = render(
           <UserStateProvider
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
@@ -104,10 +104,9 @@ describe('<App/>', () => {
             </ThemeProvider>
           </UserStateProvider>,
         )
-
-        await waitFor(() =>
-          expect(getByRole('heading')).toHaveTextContent(/Domains/i),
-        )
+        await waitFor(() => {
+          expect(queryByText(/Domains/i)).toBeInTheDocument()
+        })
       })
     })
   })
