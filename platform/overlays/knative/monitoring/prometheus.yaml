@@ -63,20 +63,13 @@ data:
           severity: Medium
         annotations:
           summary: HTTPS Scanner experiencing high volume of traffic
-      - alert: HTTPSScannerFailure
-        expr: http_requests_total[1m] > 0 and up{serving_knative_dev_service="https-scanner"} == 0
-        for: 1m
-        labels:
-          severity: High
-        annotations:
-          summary: HTTPS Scanner Failed
       - alert: HTTPSScannerDown
-        expr: http_requests_total[1m] == 0 and up{serving_knative_dev_service="https-scanner"} == 0
+        expr: up{serving_knative_dev_service="https-scanner"} == 0
         for: 1m
         labels:
           severity: Info
         annotations:
-          summary: HTTPS Scanner scaled down to zero
+          summary: HTTPS Scanner is not running
     - name: SSL Alert
       rules:
       - alert: SSLScannerHighTraffic
@@ -86,20 +79,13 @@ data:
           severity: Medium
         annotations:
           summary: SSL Scanner experiencing high volume of traffic
-      - alert: SSLScannerFailure
-        expr: http_requests_total[1m] > 0 and up{serving_knative_dev_service="ssl-scanner"} == 0
-        for: 1m
-        labels:
-          severity: High
-        annotations:
-          summary: SSL Scanner Failed
       - alert: SSLScannerDown
-        expr: http_requests_total[1m] == 0 and up{serving_knative_dev_service="ssl-scanner"} == 0
+        expr: up{serving_knative_dev_service="ssl-scanner"} == 0
         for: 1m
         labels:
           severity: Info
         annotations:
-          summary: SSL Scanner scaled down to zero
+          summary: SSL Scanner is not running
     - name: DMARC Alert
       rules:
       - alert: DMARCScannerHighTraffic
@@ -109,20 +95,13 @@ data:
           severity: Medium
         annotations:
           summary: DMARC Scanner experiencing high volume of traffic
-      - alert: DMARCScannerFailure
-        expr: http_requests_total[1m] > 0 and up{serving_knative_dev_service="dmarc-scanner"} == 0
-        for: 1m
-        labels:
-          severity: High
-        annotations:
-          summary: DMARC Scanner Failed
       - alert: DMARCScannerDown
-        expr: http_requests_total[1m] == 0 and up{serving_knative_dev_service="dmarc-scanner"} == 0
+        expr: up{serving_knative_dev_service="dmarc-scanner"} == 0
         for: 1m
         labels:
           severity: Info
         annotations:
-          summary: DMARC Scanner scaled down to zero
+          summary: DMARC Scanner is not running
     - name: DKIM Alert
       rules:
       - alert: DKIMScannerHighTraffic
@@ -132,20 +111,13 @@ data:
           severity: Medium
         annotations:
           summary: DKIM Scanner experiencing high volume of traffic
-      - alert: DKIMScannerFailure
-        expr: http_requests_total[1m] > 0 and up{serving_knative_dev_service="dkim-scanner"} == 0
-        for: 1m
-        labels:
-          severity: High
-        annotations:
-          summary: DKIM Scanner Failed
       - alert: DKIMScannerDown
-        expr: http_requests_total[1m] == 0 and up{serving_knative_dev_service="dkim-scanner"} == 0
+        expr: up{serving_knative_dev_service="dkim-scanner"} == 0
         for: 1m
         labels:
           severity: Info
         annotations:
-          summary: DKIM Scanner scaled down to zero
+          summary: DKIM Scanner is not running
     - name: Dispatcher Alert
       rules:
       - alert: DispatcherHighTraffic
@@ -155,20 +127,13 @@ data:
           severity: Medium
         annotations:
           summary: Dispatcher experiencing high volume of traffic
-      - alert: DispatcherFailure
-        expr: http_requests_total[1m] > 0 and up{serving_knative_dev_service="dispatcher"} == 0
-        for: 1m
-        labels:
-          severity: High
-        annotations:
-          summary: Dispatcher Failed
       - alert: DispatcherDown
-        expr: http_requests_total[1m] == 0 and up{serving_knative_dev_service="dispatcher"} == 0
+        expr: up{serving_knative_dev_service="dispatcher"} == 0
         for: 1m
         labels:
           severity: Info
         annotations:
-          summary: Dispatcher scaled down to zero
+          summary: Dispatcher is not running
     - name: Results Alert
       rules:
       - alert: ResultProcessorHighTraffic
@@ -178,20 +143,13 @@ data:
           severity: Medium
         annotations:
           summary: Result Processor experiencing high volume of traffic
-      - alert: ResultProcessorFailure
-        expr: http_requests_total[1m] > 0 and up{serving_knative_dev_service="result-processor"} == 0
-        for: 1m
-        labels:
-          severity: High
-        annotations:
-          summary: Result Processor Failed
       - alert: ResultProcessorDown
-        expr: http_requests_total[1m] == 0 and up{serving_knative_dev_service="result-processor"} == 0
+        expr: up{serving_knative_dev_service="result-processor"} == 0
         for: 1m
         labels:
           severity: Info
         annotations:
-          summary: Result Processor scaled down to zero
+          summary: Result Processor is not running
   prometheus.yml: |-
     global:
       scrape_interval: 5s
