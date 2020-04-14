@@ -72,6 +72,10 @@ export function DmarcReportPage() {
 
           <DmarcReportGraph
             passDmarcPercentage={data.queryDmarcReport.passDmarcPercentage}
+            passArcPercentage={data.queryDmarcReport.passArcPercentage}
+            failDmarcPercentage={data.queryDmarcReport.failDmarcPercentage}
+            failDkimPercentage={data.queryDmarcReport.failDkimPercentage}
+            failSpfPercentage={data.queryDmarcReport.failSpfPercentage}
           />
         </Stack>
         <Stack>

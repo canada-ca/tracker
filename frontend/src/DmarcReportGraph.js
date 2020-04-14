@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, Text, Flex } from '@chakra-ui/core'
+import { Box, Text, Flex, Stack } from '@chakra-ui/core'
 
 import PieChart from 'react-minimal-pie-chart'
 
@@ -27,7 +27,7 @@ export function DmarcReportGraph(props) {
             },
             {
               title: 'Failed DMARC',
-              value:  props.failDmarcPercentage,
+              value: props.failDmarcPercentage,
               color: '#e53e3e',
             },
             {
@@ -49,20 +49,22 @@ export function DmarcReportGraph(props) {
           radius={50}
           rounded={false}
           startAngle={0}
-          viewBoxSize={[
-            100,
-            100
-          ]}
+          viewBoxSize={[100, 100]}
         />
       </Box>
-      <Text fontSize="lg" fontWeight="semibold" mt={5}>
+      <Text fontSize="xl" fontWeight="semibold" mt={5}>
         Result Breakdown
       </Text>
 
-      <Text fontSize="lg">Pass: {props.passDmarcPercentage}%</Text>
-      <Text fontSize="lg">
-        Fail: {100 - props.passDmarcPercentage}%
-      </Text>
+      <Stack isInline spacing="15px" mt="10px">
+        <Text fontSize="lg">Pass Dmarc: {props.passDmarcPercentage}%</Text>
+        <Text fontSize="lg">Pass Arc: {props.passArcPercentage}%</Text>
+      </Stack>
+      <Stack isInline spacing="15px" mt="10px">
+        <Text fontSize="lg">Fail Dmarc: {props.failDmarcPercentage}%</Text>
+        <Text fontSize="lg">Fail Dkim: {props.failDkimPercentage}%</Text>
+        <Text fontSize="lg">Fail Spf: {props.failSpfPercentage}%</Text>
+      </Stack>
     </Flex>
   )
 }
