@@ -28,7 +28,11 @@ describe('<DmarcReportPage />', () => {
               dmarcResult: true,
               dkimResult: true,
               spfResult: true,
-              passPercentage: 70,
+              passDmarcPercentage: 60,
+              passArcPercentage: 5,
+              failDmarcPercentage: 5,
+              failDkimPercentage: 5,
+              failSpfPercentage: 25,
               count: 2,
               dkim: [
                 {
@@ -108,7 +112,11 @@ describe('<DmarcReportPage />', () => {
               dmarcResult: false,
               dkimResult: false,
               spfResult: false,
-              passPercentage: 70,
+              passDmarcPercentage: 60,
+              passArcPercentage: 5,
+              failDmarcPercentage: 5,
+              failDkimPercentage: 5,
+              failSpfPercentage: 25,
               count: 2,
               dkim: [
                 {

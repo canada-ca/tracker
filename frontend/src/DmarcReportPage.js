@@ -10,12 +10,13 @@ import {
   Button,
 } from '@chakra-ui/core'
 
-import DkimEntry from './DkimEntry'
-import SpfEntry from './SpfEntry'
 import { useUserState } from './UserState'
+import { DkimEntry } from './DkimEntry'
+import { SpfEntry } from './SpfEntry'
+
 import { useQuery } from '@apollo/react-hooks'
 import { QUERY_DMARC_REPORT } from './graphql/queries'
-import PieChart from 'react-minimal-pie-chart'
+import { DmarcReportGraph } from './DmarcReportGraph'
 
 export function DmarcReportPage() {
   const { currentUser } = useUserState()
@@ -68,39 +69,10 @@ export function DmarcReportPage() {
               />
             )}
           </Flex>
-          <Flex
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Box w={'40%'} mt="30px">
-              <PieChart
-                animate={true}
-                data={[
-                  {
-                    title: 'Passed Dmarc',
-                    value: data.queryDmarcReport.passPercentage,
-                    color: '#2D8133',
-                  },
-                  {
-                    title: 'Failed Dmarc',
-                    value: 100 - data.queryDmarcReport.passPercentage,
-                    color: '#e53e3e',
-                  },
-                ]}
-              />
-            </Box>
-            <Text fontSize="lg" fontWeight="semibold" mt={5}>
-              Result Breakdown
-            </Text>
 
-            <Text fontSize="lg">
-              Pass: {data.queryDmarcReport.passPercentage}%
-            </Text>
-            <Text fontSize="lg">
-              Fail: {100 - data.queryDmarcReport.passPercentage}%
-            </Text>
-          </Flex>
+          <DmarcReportGraph
+            passDmarcPercentage={data.queryDmarcReport.passDmarcPercentage}
+          />
         </Stack>
         <Stack>
           <Stack isInline mt="50px">

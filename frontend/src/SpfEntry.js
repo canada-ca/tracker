@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Stack, Text, Divider } from '@chakra-ui/core'
 import { string, bool } from 'prop-types'
 
-export default function SpfEntry(props) {
+export function SpfEntry(props) {
   return (
     <Box>
       <Stack isInline>
