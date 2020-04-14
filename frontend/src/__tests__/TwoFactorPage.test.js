@@ -2,14 +2,16 @@ import React from 'react'
 import gql from 'graphql-tag'
 import { TwoFactorPage } from '../TwoFactorPage'
 import App from '../App'
-import { i18n } from '@lingui/core'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/react-testing'
+import { i18n } from '@lingui/core'
+import { en } from 'make-plural/plurals'
 
+i18n.loadLocaleData('en', { plurals: en })
 i18n.load('en', { en: {} })
 i18n.activate('en')
 

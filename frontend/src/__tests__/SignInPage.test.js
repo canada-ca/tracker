@@ -1,7 +1,6 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
 import { SignInPage } from '../SignInPage'
-import { i18n } from '@lingui/core'
 import { Router, MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
@@ -10,7 +9,10 @@ import { MockedProvider } from '@apollo/react-testing'
 import gql from 'graphql-tag'
 import { UserStateProvider } from '../UserState'
 import App from '../App'
+import { i18n } from '@lingui/core'
+import { en } from 'make-plural/plurals'
 
+i18n.loadLocaleData('en', { plurals: en })
 i18n.load('en', { en: {} })
 i18n.activate('en')
 

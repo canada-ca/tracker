@@ -1,6 +1,5 @@
 import React from 'react'
 import { UserList } from '../UserList'
-import { i18n } from '@lingui/core'
 import {
   render,
   fireEvent,
@@ -11,9 +10,11 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { createMemoryHistory } from 'history'
-
 import { QUERY_USERLIST } from '../graphql/queries'
+import { i18n } from '@lingui/core'
+import { en } from 'make-plural/plurals'
 
+i18n.loadLocaleData('en', { plurals: en })
 i18n.load('en', { en: {} })
 i18n.activate('en')
 

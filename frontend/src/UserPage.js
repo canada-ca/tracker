@@ -1,11 +1,7 @@
-/* eslint react/prop-types: 0 */
 import React from 'react'
-
 import { Formik } from 'formik'
 import { useHistory } from 'react-router-dom'
-
 import { string } from 'prop-types'
-
 import {
   Stack,
   SimpleGrid,
@@ -21,7 +17,7 @@ import {
 import { useApolloClient, useMutation, useQuery } from '@apollo/react-hooks'
 import { PasswordConfirmation } from './PasswordConfirmation'
 import { useLocation } from 'react-router-dom'
-
+import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
 import { UPDATE_PASSWORD } from './graphql/mutations'
 
@@ -30,6 +26,7 @@ export function UserPage(props) {
   const client = useApolloClient()
   const toast = useToast()
   const history = useHistory()
+  const { currentUser } = useUserState()
 
   const [
     updatePassword,
@@ -46,7 +43,7 @@ export function UserPage(props) {
     data: queryUserData,
   } = useQuery(QUERY_USER, {
     variables: {
-      userName: location.state ? location.state.detail : props.userName,
+      userName: currentUser.userName,
     },
   })
 
@@ -70,7 +67,7 @@ export function UserPage(props) {
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Formik
         initialValues={{
-          email: location.state ? location.state.detail : props.userName, // This value is taken from either the userName prop or the location.state prop passed from userList
+          email: currentUser.userName,
           lang: queryUserData.userPage.lang,
           displayName: queryUserData.userPage.displayName,
         }}
@@ -137,7 +134,10 @@ export function UserPage(props) {
         <CheckboxGroup
           mt="20px"
           variantColor="teal"
-          defaultValue={[queryUserData.userPage.userAffiliations[0].admin ? 'admin' : '', 'active']}
+          defaultValue={[
+            queryUserData.userPage.userAffiliations[0].admin ? 'admin' : '',
+            'active',
+          ]}
         >
           <Checkbox value="admin">Administrative Account</Checkbox>
           <Checkbox value="active">Account Active</Checkbox>
@@ -200,7 +200,7 @@ export function UserPage(props) {
               console.log(values)
               await updatePassword({
                 variables: {
-                  userName: 'testuser@test.ca', // This needs to be retreived from a seperate GQL query or props that will populate this entire page with data.
+                  userName: currentUser.userName,
                   password: values.password,
                   confirmPassword: values.confirmPassword,
                 },

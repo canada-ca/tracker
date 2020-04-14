@@ -46,9 +46,9 @@ export const QUERY_USER = gql`
       tfa
       lang
       displayName
-      userAffiliations{
+      userAffiliations {
         admin
-        organization     
+        organization
       }
     }
   }
