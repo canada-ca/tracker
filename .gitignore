@@ -1,6 +1,7 @@
 **/.DS_Store
 
 platform/**/*.json
+!platform/overlays/knative/monitoring/grafana/*.json
 
 api/schema.json
 
