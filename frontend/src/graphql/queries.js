@@ -54,7 +54,6 @@ export const QUERY_USER = gql`
   }
 `
 
-
 export const QUERY_DMARC_REPORT = gql`
   query QueryDmarcReport($reportId: String!) {
     queryDmarcReport(reportId: $reportId) {

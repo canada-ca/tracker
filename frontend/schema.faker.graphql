@@ -746,6 +746,18 @@ type Query {
   """
   userPage(userName: EmailAddress!): UserPage
 
+  """
+  An api endpoint that will be used to populate a userList component in the front end.
+  """
+  userList(organizaion: Acronym!): UserList
+
+  """
+  An api endpoint that will be used to populate a userPage component in the front end.
+  """
+  userPage(userName: EmailAddress!): UserPage
+
+
+
   queryDmarcReport(reportId: String!): QueryDmarcReport
 }
 
