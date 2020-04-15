@@ -1,4 +1,5 @@
 import React from 'react'
+import equal from 'fast-deep-equal'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 
 import { UserStateProvider, UserState, useUserState } from '../UserState'
@@ -139,43 +140,22 @@ describe('<UserStateProvider/>', () => {
         })
       })
       describe('isLoggedIn()', () => {
-        it('returns false if currentUser object values are falsey', async () => {
-          let isLoggedIn
-
-          render(
-            <UserStateProvider initialState={initialState}>
-              <UserState>
-                {(state) => {
-                  const { isLoggedIn: ili } = state
-                  isLoggedIn = ili
-                  return (
-                    <p data-testid="username">{state.currentUser.userName}</p>
-                  )
-                }}
-              </UserState>
-            </UserStateProvider>,
-          )
-
-          await waitFor(() => {
-            expect(isLoggedIn()).toEqual(false)
-          })
-        })
-
-        it('returns true if currentUser object values are truthy', async () => {
-          let isLoggedIn
-
+        it('returns true if currentUser object values differ from initialState', async () => {
           const testUser = {
             jwt: 'string',
             tfa: true,
             userName: 'foo@example.com',
           }
 
+          let isLoggedIn, login
+
           render(
-            <UserStateProvider initialState={testUser}>
+            <UserStateProvider initialState={initialState}>
               <UserState>
                 {(state) => {
-                  const { isLoggedIn: ili } = state
+                  const { isLoggedIn: ili, login: li } = state
                   isLoggedIn = ili
+                  login = li
                   return (
                     <p data-testid="username">{state.currentUser.userName}</p>
                   )
@@ -184,8 +164,43 @@ describe('<UserStateProvider/>', () => {
             </UserStateProvider>,
           )
 
+          await waitFor(() => login(testUser))
+
           await waitFor(() => {
             expect(isLoggedIn()).toEqual(true)
+          })
+        })
+
+        it('returns false if currentUser object values match initialState', async () => {
+          const testUser = {
+            jwt: 'string',
+            tfa: true,
+            userName: 'foo@example.com',
+          }
+
+          let isLoggedIn, logout, login
+
+          render(
+            <UserStateProvider initialState={initialState}>
+              <UserState>
+                {(state) => {
+                  const { isLoggedIn: ili, login: li, logout: lo } = state
+                  isLoggedIn = ili
+                  login = li
+                  logout = lo
+                  return (
+                    <p data-testid="username">{state.currentUser.userName}</p>
+                  )
+                }}
+              </UserState>
+            </UserStateProvider>,
+          )
+
+          await waitFor(() => login(testUser))
+          await waitFor(() => logout())
+
+          await waitFor(() => {
+            expect(isLoggedIn()).toEqual(false)
           })
         })
       })

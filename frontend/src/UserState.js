@@ -1,4 +1,5 @@
 import React, { useContext, useReducer } from 'react'
+import equal from 'fast-deep-equal'
 
 const UserStateContext = React.createContext()
 const { Provider, Consumer } = UserStateContext
@@ -19,10 +20,7 @@ export function UserStateProvider({ initialState, children }) {
 
   const userState = {
     currentUser: state,
-    // If all state values are falsey no user is logged in.
-    // This should hold as long as the state object doesn't have array or object
-    // values added to it.
-    isLoggedIn: () => Object.values(state).filter((v) => !!v).length > 0,
+    isLoggedIn: () => !equal(state, initialState),
     login: (user) => dispatch({ type: 'LOGIN', user }),
     logout: () => dispatch({ type: 'LOGOUT', user: initialState }),
   }
