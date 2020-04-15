@@ -17,6 +17,9 @@ import { SpfEntry } from './SpfEntry'
 import { useQuery } from '@apollo/react-hooks'
 import { QUERY_DMARC_REPORT } from './graphql/queries'
 import { DmarcReportGraph } from './DmarcReportGraph'
+import { DmarcReportTimeGraph } from './DmarcReportTimeGraph'
+import { DmarcGuidance } from './DmarcGuidance'
+import { DmarcReportBreakdown } from './DmarcReportBreakdown'
 
 export function DmarcReportPage() {
   const { currentUser } = useUserState()
@@ -40,119 +43,64 @@ export function DmarcReportPage() {
         veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
         commodo consequat.
       </Text>
+      <Text mb={10}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat.
+      </Text>
+      <Stack>
+        <Flex align="center" role="dmarcHeader">
+          <Text fontSize="2xl" fontWeight="bold">
+            DMARC
+          </Text>
+          {data.queryDmarcReport.dmarcResult ? (
+            <Icon
+              ml={2}
+              name="check-circle"
+              size="26px"
+              color="green.500"
+              role="passIcon"
+            />
+          ) : (
+            <Icon
+              ml={2}
+              name="warning"
+              size="26px"
+              color="red.500"
+              role="failIcon"
+            />
+          )}
+        </Flex>
+
+        <DmarcReportGraph
+          passDmarcPercentage={data.queryDmarcReport.passDmarcPercentage}
+          passArcPercentage={data.queryDmarcReport.passArcPercentage}
+          failDmarcPercentage={data.queryDmarcReport.failDmarcPercentage}
+          failDkimPercentage={data.queryDmarcReport.failDkimPercentage}
+          failSpfPercentage={data.queryDmarcReport.failSpfPercentage}
+          count={data.queryDmarcReport.count}
+        />
+      </Stack>
+
+      <DmarcReportBreakdown
+        passDmarcPercentage={data.queryDmarcReport.passDmarcPercentage}
+        passArcPercentage={data.queryDmarcReport.passArcPercentage}
+        failDmarcPercentage={data.queryDmarcReport.failDmarcPercentage}
+        failDkimPercentage={data.queryDmarcReport.failDkimPercentage}
+        failSpfPercentage={data.queryDmarcReport.failSpfPercentage}
+        count={data.queryDmarcReport.count}
+      />
+
+      <DmarcReportTimeGraph />
+      <DmarcGuidance />
+
       <SimpleGrid
         columns={{ sm: 1, md: 1, lg: 2, xl: 2 }}
         spacing="50px"
-        spacingY="100px"
+        spacingY={{ sm: '50px', md: '50px', lg: '150px', xl: '150px' }}
         mb="105px"
       >
-        <Stack>
-          <Flex align="center" role="dmarcHeader">
-            <Text fontSize="2xl" fontWeight="bold">
-              DMARC
-            </Text>
-            {data.queryDmarcReport.dmarcResult ? (
-              <Icon
-                ml={2}
-                name="check-circle"
-                size="26px"
-                color="green.500"
-                role="passIcon"
-              />
-            ) : (
-              <Icon
-                ml={2}
-                name="warning"
-                size="26px"
-                color="red.500"
-                role="failIcon"
-              />
-            )}
-          </Flex>
-
-          <DmarcReportGraph
-            passDmarcPercentage={data.queryDmarcReport.passDmarcPercentage}
-            passArcPercentage={data.queryDmarcReport.passArcPercentage}
-            failDmarcPercentage={data.queryDmarcReport.failDmarcPercentage}
-            failDkimPercentage={data.queryDmarcReport.failDkimPercentage}
-            failSpfPercentage={data.queryDmarcReport.failSpfPercentage}
-          />
-        </Stack>
-        <Stack>
-          <Stack isInline mt="50px">
-            <Text fontSize="xl" fontWeight="semibold">
-              Orginization name:
-            </Text>
-            <Text fontSize="xl">{data.queryDmarcReport.orgName || 'null'}</Text>
-          </Stack>
-
-          <Stack isInline>
-            <Text fontSize="xl" fontWeight="semibold">
-              IP address:
-            </Text>
-            <Text fontSize="xl">
-              {data.queryDmarcReport.source.ipAddress || 'null'}
-            </Text>
-          </Stack>
-
-          <Stack isInline>
-            <Text fontSize="xl" fontWeight="semibold">
-              Date:
-            </Text>
-            <Text fontSize="xl">{data.queryDmarcReport.endDate || 'null'}</Text>
-          </Stack>
-
-          <Stack isInline>
-            <Text fontSize="xl" fontWeight="semibold">
-              Report ID:
-            </Text>
-            <Text fontSize="xl">
-              {data.queryDmarcReport.reportId || 'null'}
-            </Text>
-          </Stack>
-
-          <Stack isInline>
-            <Text fontSize="xl" fontWeight="semibold">
-              Country:
-            </Text>
-            <Text fontSize="xl">
-              {data.queryDmarcReport.source.country || 'null'}
-            </Text>
-          </Stack>
-
-          <Stack isInline>
-            <Text fontSize="xl" fontWeight="semibold">
-              Reverse DNS:
-            </Text>
-            <Text fontSize="xl">
-              {data.queryDmarcReport.source.reverse_dns || 'null'}
-            </Text>
-          </Stack>
-
-          <Stack isInline>
-            <Text fontSize="xl" fontWeight="semibold">
-              Base domain:
-            </Text>
-            <Text fontSize="xl">
-              {data.queryDmarcReport.source.base_domain || 'null'}
-            </Text>
-          </Stack>
-          <Stack isInline>
-            <Text fontSize="xl" fontWeight="semibold">
-              Count:
-            </Text>
-            <Text fontSize="xl">{data.queryDmarcReport.count || 'null'}</Text>
-          </Stack>
-          <Stack isInline>
-            <Text fontSize="xl" fontWeight="semibold">
-              Header from:
-            </Text>
-            <Text fontSize="xl">
-              {data.queryDmarcReport.identifiers.header_from || 'null'}
-            </Text>
-          </Stack>
-        </Stack>
-
         <Stack>
           <Flex align="center" role="dkimHeader">
             <Text fontSize="2xl" fontWeight="bold">
