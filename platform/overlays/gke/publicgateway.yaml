@@ -3,6 +3,8 @@ kind: Gateway
 metadata:
   name: publicgateway
   namespace: istio-system
+  labels:
+    istio: publicgateway
 spec:
   selector:
     istio: ingressgateway
@@ -34,3 +36,4 @@ spec:
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
         - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+
