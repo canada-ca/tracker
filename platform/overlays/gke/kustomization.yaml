@@ -5,7 +5,6 @@ resources:
 - cert-manager.yaml
 - certificate.yaml
 - letsencrypt-issuer.yaml
-- publicgateway.yaml
 images:
 - name: gcr.io/track-compliance/api
   newTag: master-4301b10
@@ -14,7 +13,5 @@ images:
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
-- tracker-api-virtual-service.yaml
-- tracker-frontend-virtual-service.yaml
 - istio.yaml
-- envoy-filter.yaml
+- publicgateway.yaml

@@ -1,19 +1,26 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: gateway-gzip
+  name: ingressgateway-gzip
   namespace: istio-system
 spec:
   workloadSelector:
     labels:
       istio: ingressgateway
-  filters:
-  # Add gzip compression
-  - listenerMatch:
-      listenerType: GATEWAY
-      listenerProtocol: HTTP
-    filterName: envoy.gzip
-    filterType: HTTP
-    filterConfig:
-      inlineCode: |
-        compression_level: BEST
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.http_connection_manager"
+              subFilter:
+                name: 'envoy.router'
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.gzip
+          config:
+            remove_accept_encoding_header: true
+            compression_level: BEST

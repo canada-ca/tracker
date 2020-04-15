@@ -2,12 +2,12 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: tracker-api-virtual-service
-  namespace: api
+  namespace: istio-system
 spec:
   hosts:
     - '*'
   gateways:
-    - ingressgateway.istio-system.svc.cluster.local
+    - publicgateway.istio-system.svc.cluster.local
   http:
     - match:
         - uri:

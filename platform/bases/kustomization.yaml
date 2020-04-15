@@ -14,3 +14,4 @@ resources:
 - istio-authentication-policy.yaml
 - istio.yaml
 - envoy-filter.yaml
+- publicgateway.yaml
