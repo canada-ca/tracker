@@ -1,22 +1,13 @@
 import React from 'react'
 import { UserList } from '../UserList'
-import {
-  render,
-  fireEvent,
-  waitFor,
-} from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { createMemoryHistory } from 'history'
 import { QUERY_USERLIST } from '../graphql/queries'
-import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
-i18n.loadLocaleData('en', { plurals: en })
-i18n.load('en', { en: {} })
-i18n.activate('en')
+import { setupI18n } from '@lingui/core'
 
 describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
@@ -53,7 +44,7 @@ describe('<UserList />', () => {
     // Set the inital history item to user-list
     const { getAllByText } = render(
       <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
+        <I18nProvider i18n={setupI18n()}>
           <MemoryRouter initialEntries={['/']}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <UserList />
@@ -112,7 +103,7 @@ describe('<UserList />', () => {
     // Set the inital history item to user-list
     const { getAllByText } = render(
       <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
+        <I18nProvider i18n={setupI18n()}>
           <Router history={history}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <UserList />

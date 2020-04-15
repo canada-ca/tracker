@@ -5,12 +5,7 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { UserCard } from '../UserCard'
-import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
-i18n.loadLocaleData('en', { plurals: en })
-i18n.load('en', { en: {} })
-i18n.activate('en')
+import { setupI18n } from '@lingui/core'
 
 describe('<UserCard />', () => {
   it('badges are green when TwoFactor and Admin values are true', async () => {
@@ -18,7 +13,7 @@ describe('<UserCard />', () => {
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider i18n={setupI18n()}>
               <UserCard
                 userName="testuser@testemail.gc.ca"
                 displayName="Test User"
@@ -46,7 +41,7 @@ describe('<UserCard />', () => {
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider i18n={setupI18n()}>
               <UserCard
                 userName="testuser@testemail.gc.ca"
                 displayName="Test User"

@@ -7,12 +7,7 @@ import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { UserStateProvider } from '../UserState'
 import { GENERATE_OTP_URL } from '../graphql/queries'
-import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
-i18n.loadLocaleData('en', { plurals: en })
-i18n.load('en', { en: {} })
-i18n.activate('en')
+import { setupI18n } from '@lingui/core'
 
 const email = 'foo@example.com'
 const resolvers = {
@@ -51,7 +46,7 @@ describe('<QRcodePage />', () => {
           <MockedProvider mocks={mocks} resolvers={resolvers}>
             <MemoryRouter initialEntries={['/']}>
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={i18n}>
+                <I18nProvider i18n={setupI18n()}>
                   <QRcodePage />
                 </I18nProvider>
               </ThemeProvider>

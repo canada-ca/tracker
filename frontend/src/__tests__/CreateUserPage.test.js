@@ -6,12 +6,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { CreateUserPage } from '../CreateUserPage'
 import { CREATE_USER } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
-import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
-i18n.loadLocaleData('en', { plurals: en })
-i18n.load('en', { en: {} })
-i18n.activate('en')
+import { setupI18n } from '@lingui/core'
 
 const resolvers = {
   Query: {
@@ -42,7 +37,7 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
+              <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
                   <MockedProvider mocks={mocks} resolvers={resolvers}>
                     <CreateUserPage />
@@ -68,7 +63,7 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
+              <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
                   <MockedProvider mocks={mocks} resolvers={resolvers}>
                     <CreateUserPage />
@@ -97,7 +92,7 @@ describe('<CreateUserPage />', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
+              <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
                   <MockedProvider mocks={mocks} resolvers={resolvers}>
                     <CreateUserPage />

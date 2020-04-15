@@ -8,12 +8,7 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/react-testing'
-import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
-i18n.loadLocaleData('en', { plurals: en })
-i18n.load('en', { en: {} })
-i18n.activate('en')
+import { setupI18n } from '@lingui/core'
 
 const resolvers = {
   Query: {
@@ -47,7 +42,7 @@ describe('<TwoFactorPage />', () => {
       <MockedProvider mocks={mocks} resolvers={resolvers}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider i18n={setupI18n()}>
               <TwoFactorPage />
             </I18nProvider>
           </ThemeProvider>
@@ -71,7 +66,7 @@ describe('<TwoFactorPage />', () => {
       <MockedProvider mocks={mocks} resolvers={resolvers}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider i18n={setupI18n()}>
               <TwoFactorPage />
             </I18nProvider>
           </ThemeProvider>
@@ -101,7 +96,7 @@ describe('<TwoFactorPage />', () => {
       <MockedProvider mocks={mocks} resolvers={resolvers}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider i18n={setupI18n()}>
               <TwoFactorPage />
             </I18nProvider>
           </ThemeProvider>
@@ -155,7 +150,7 @@ describe('<TwoFactorPage />', () => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
+          <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <MockedProvider mocks={mocks} resolvers={resolvers}>
                 <App />
@@ -201,7 +196,7 @@ describe('<TwoFactorPage />', () => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
+          <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <MockedProvider mocks={mocks} resolvers={resolvers}>
                 <App />
@@ -223,7 +218,7 @@ describe('<TwoFactorPage />', () => {
       <MockedProvider mocks={mocks} resolvers={resolvers}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider i18n={setupI18n()}>
               <TwoFactorPage />
             </I18nProvider>
           </ThemeProvider>

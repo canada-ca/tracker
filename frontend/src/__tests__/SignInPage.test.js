@@ -9,12 +9,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import gql from 'graphql-tag'
 import { UserStateProvider } from '../UserState'
 import App from '../App'
-import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
-i18n.loadLocaleData('en', { plurals: en })
-i18n.load('en', { en: {} })
-i18n.activate('en')
+import { setupI18n } from '@lingui/core'
 
 const resolvers = {
   Query: {
@@ -58,7 +53,7 @@ describe('<SignInPage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider i18n={setupI18n()}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <MockedProvider resolvers={resolvers} mocks={mocks}>
                   <SignInPage />
@@ -88,7 +83,7 @@ describe('<SignInPage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider i18n={setupI18n()}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <MockedProvider
                   resolvers={resolvers}
@@ -168,7 +163,7 @@ describe('<SignInPage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
+            <I18nProvider i18n={setupI18n()}>
               <Router history={history}>
                 <MockedProvider
                   resolvers={resolvers}
