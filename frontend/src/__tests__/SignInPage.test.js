@@ -11,13 +11,6 @@ import { UserStateProvider } from '../UserState'
 import App from '../App'
 import { setupI18n } from '@lingui/core'
 
-const resolvers = {
-  Query: {
-    jwt: () => null,
-    tfa: () => null,
-  },
-}
-
 const mocks = [
   {
     request: {
@@ -55,7 +48,7 @@ describe('<SignInPage />', () => {
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider resolvers={resolvers} mocks={mocks}>
+                <MockedProvider mocks={mocks}>
                   <SignInPage />
                 </MockedProvider>
               </MemoryRouter>
@@ -85,11 +78,7 @@ describe('<SignInPage />', () => {
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider
-                  resolvers={resolvers}
-                  mocks={mocks}
-                  addTypename={false}
-                >
+                <MockedProvider mocks={mocks} addTypename={false}>
                   <SignInPage />
                 </MockedProvider>
               </MemoryRouter>
@@ -165,11 +154,7 @@ describe('<SignInPage />', () => {
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
               <Router history={history}>
-                <MockedProvider
-                  resolvers={resolvers}
-                  mocks={mocks}
-                  addTypename={false}
-                >
+                <MockedProvider mocks={mocks} addTypename={false}>
                   <App />
                 </MockedProvider>
               </Router>

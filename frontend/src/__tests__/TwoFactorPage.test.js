@@ -1,5 +1,4 @@
 import React from 'react'
-import gql from 'graphql-tag'
 import { TwoFactorPage } from '../TwoFactorPage'
 import App from '../App'
 import { render, waitFor, fireEvent } from '@testing-library/react'
@@ -10,36 +9,10 @@ import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { setupI18n } from '@lingui/core'
 
-const resolvers = {
-  Query: {
-    jwt: () => null,
-    tfa: () => null,
-  },
-}
-
-const mocks = [
-  {
-    request: {
-      query: gql`
-        {
-          jwt @client
-          tfa @client
-        }
-      `,
-    },
-    result: {
-      data: {
-        jwt: 'string',
-        tfa: false,
-      },
-    },
-  },
-]
-
 describe('<TwoFactorPage />', () => {
   it('an empty input for code field displays an error message', async () => {
     const { container, queryByText } = render(
-      <MockedProvider mocks={mocks} resolvers={resolvers}>
+      <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
@@ -63,7 +36,7 @@ describe('<TwoFactorPage />', () => {
 
   it('5 digit code displays an error message', async () => {
     const { container, queryByText } = render(
-      <MockedProvider mocks={mocks} resolvers={resolvers}>
+      <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
@@ -93,7 +66,7 @@ describe('<TwoFactorPage />', () => {
 
   it('non digit code displays an error message', async () => {
     const { container, queryByText } = render(
-      <MockedProvider mocks={mocks} resolvers={resolvers}>
+      <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
@@ -122,25 +95,6 @@ describe('<TwoFactorPage />', () => {
   })
 
   it('does NOT render component when user has verified tfa', async () => {
-    const mocks = [
-      {
-        request: {
-          query: gql`
-            {
-              jwt @client
-              tfa @client
-            }
-          `,
-        },
-        result: {
-          data: {
-            jwt: 'string',
-            tfa: true,
-          },
-        },
-      },
-    ]
-
     const { queryByText } = render(
       <UserStateProvider
         initialState={{
@@ -152,7 +106,7 @@ describe('<TwoFactorPage />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider mocks={mocks} resolvers={resolvers}>
+              <MockedProvider>
                 <App />
               </MockedProvider>
             </MemoryRouter>
@@ -168,25 +122,6 @@ describe('<TwoFactorPage />', () => {
   })
 
   it('successfully renders the component as part of the entire App when user has not verified tfa', async () => {
-    const mocks = [
-      {
-        request: {
-          query: gql`
-            {
-              jwt @client
-              tfa @client
-            }
-          `,
-        },
-        result: {
-          data: {
-            jwt: 'string',
-            tfa: false,
-          },
-        },
-      },
-    ]
-
     const { queryByText } = render(
       <UserStateProvider
         initialState={{
@@ -198,7 +133,7 @@ describe('<TwoFactorPage />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider mocks={mocks} resolvers={resolvers}>
+              <MockedProvider>
                 <App />
               </MockedProvider>
             </MemoryRouter>
@@ -215,7 +150,7 @@ describe('<TwoFactorPage />', () => {
 
   it('6 digit code does not display an error message', async () => {
     const { container, queryByText } = render(
-      <MockedProvider mocks={mocks} resolvers={resolvers}>
+      <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>

@@ -10,13 +10,6 @@ import { GENERATE_OTP_URL } from '../graphql/queries'
 import { setupI18n } from '@lingui/core'
 
 const email = 'foo@example.com'
-const resolvers = {
-  Query: {
-    jwt: () => 'string',
-    tfa: () => true,
-    userName: () => email,
-  },
-}
 
 describe('<QRcodePage />', () => {
   describe('given a logged in user', () => {
@@ -43,7 +36,7 @@ describe('<QRcodePage />', () => {
             tfa: null,
           }}
         >
-          <MockedProvider mocks={mocks} resolvers={resolvers}>
+          <MockedProvider mocks={mocks}>
             <MemoryRouter initialEntries={['/']}>
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={setupI18n()}>
