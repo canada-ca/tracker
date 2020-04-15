@@ -3,48 +3,11 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { waitFor, render, cleanup } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
-import gql from 'graphql-tag'
 import { UserStateProvider } from '../UserState'
+import { DOMAINS } from '../graphql/queries'
 import App from '../App'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-
-const mocks = [
-  {
-    request: {
-      query: gql`
-        {
-          domains(organization: BOC) {
-            edges {
-              node {
-                url
-              }
-            }
-          }
-        }
-      `,
-      variables: {},
-    },
-    result: {
-      data: {
-        domains: {
-          edges: [
-            {
-              node: {
-                url: 'canada.ca',
-              },
-            },
-            {
-              node: {
-                url: 'alpha.canada.ca',
-              },
-            },
-          ],
-        },
-      },
-    },
-  },
-]
 
 describe('<App/>', () => {
   afterEach(cleanup)
@@ -59,7 +22,7 @@ describe('<App/>', () => {
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider mocks={mocks}>
+                  <MockedProvider>
                     <App />
                   </MockedProvider>
                 </MemoryRouter>
@@ -74,6 +37,37 @@ describe('<App/>', () => {
     })
 
     describe('/domains', () => {
+      const mocks = [
+        {
+          request: {
+            query: DOMAINS,
+          },
+          result: {
+            data: {
+              domains: {
+                edges: [
+                  {
+                    node: {
+                      organization: {
+                        acronym: 'BC',
+                      },
+                      url: 'bonita.com',
+                    },
+                  },
+                  {
+                    node: {
+                      organization: {
+                        acronym: 'BC',
+                      },
+                      url: 'elenora.com',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      ]
       it('renders the domains page', async () => {
         const { queryByText } = render(
           <UserStateProvider
