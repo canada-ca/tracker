@@ -13,8 +13,6 @@ spec:
             - --memcached-hostname=memcached.flux
             - --memcached-service=
             - --ssh-keygen-dir=/var/fluxd/keygen
-            - --registry-include-image=gcr.io/track-compliance/*:master-*
-            - --registry-exclude-image=gcr.io/track-compliance/*
             - --git-branch=master
             - --git-ci-skip
             - --git-path=platform/overlays/gke
