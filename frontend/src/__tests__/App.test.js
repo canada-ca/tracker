@@ -9,13 +9,6 @@ import App from '../App'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
-const resolvers = {
-  Query: {
-    jwt: () => null,
-    tfa: () => null,
-  },
-}
-
 const mocks = [
   {
     request: {
@@ -66,7 +59,7 @@ describe('<App/>', () => {
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider resolvers={resolvers} mocks={mocks}>
+                  <MockedProvider mocks={mocks}>
                     <App />
                   </MockedProvider>
                 </MemoryRouter>
@@ -89,11 +82,7 @@ describe('<App/>', () => {
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                  <MockedProvider
-                    mocks={mocks}
-                    resolvers={resolvers}
-                    addTypename={false}
-                  >
+                  <MockedProvider mocks={mocks} addTypename={false}>
                     <App />
                   </MockedProvider>
                 </MemoryRouter>

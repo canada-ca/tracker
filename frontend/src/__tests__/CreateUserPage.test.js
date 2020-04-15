@@ -8,13 +8,6 @@ import { CREATE_USER } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
-const resolvers = {
-  Query: {
-    jwt: () => null,
-    tfa: () => null,
-  },
-}
-
 const mocks = [
   {
     request: {
@@ -39,7 +32,7 @@ describe('<CreateUserPage />', () => {
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider mocks={mocks} resolvers={resolvers}>
+                  <MockedProvider mocks={mocks}>
                     <CreateUserPage />
                   </MockedProvider>
                 </MemoryRouter>
@@ -65,7 +58,7 @@ describe('<CreateUserPage />', () => {
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider mocks={mocks} resolvers={resolvers}>
+                  <MockedProvider mocks={mocks}>
                     <CreateUserPage />
                   </MockedProvider>
                 </MemoryRouter>
@@ -94,7 +87,7 @@ describe('<CreateUserPage />', () => {
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider mocks={mocks} resolvers={resolvers}>
+                  <MockedProvider mocks={mocks}>
                     <CreateUserPage />
                   </MockedProvider>
                 </MemoryRouter>
