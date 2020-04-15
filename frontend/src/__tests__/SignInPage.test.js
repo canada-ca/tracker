@@ -11,33 +11,6 @@ import { UserStateProvider } from '../UserState'
 import App from '../App'
 import { setupI18n } from '@lingui/core'
 
-const mocks = [
-  {
-    request: {
-      query: gql`
-        {
-          domains(organization: BOC) {
-            url
-          }
-        }
-      `,
-      variables: {},
-    },
-    result: {
-      data: {
-        domains: [
-          {
-            url: 'canada.ca',
-          },
-          {
-            url: 'alpha.canada.ca',
-          },
-        ],
-      },
-    },
-  },
-]
-
 describe('<SignInPage />', () => {
   describe('when the email field is empty', () => {
     it('displays an error message', async () => {
@@ -48,7 +21,7 @@ describe('<SignInPage />', () => {
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider mocks={mocks}>
+                <MockedProvider>
                   <SignInPage />
                 </MockedProvider>
               </MemoryRouter>
@@ -78,7 +51,7 @@ describe('<SignInPage />', () => {
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <MockedProvider mocks={mocks} addTypename={false}>
+                <MockedProvider>
                   <SignInPage />
                 </MockedProvider>
               </MemoryRouter>
