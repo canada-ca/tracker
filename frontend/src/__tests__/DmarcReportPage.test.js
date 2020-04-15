@@ -6,12 +6,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { DmarcReportPage } from '../DmarcReportPage'
 import { QUERY_DMARC_REPORT } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
-import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
-i18n.loadLocaleData('en', { plurals: en })
-i18n.load('en', { en: {} })
-i18n.activate('en')
+import { setupI18n } from '@lingui/core'
 
 describe('<DmarcReportPage />', () => {
   it('renders pass icons in sub-headers correctly', async () => {
@@ -65,7 +60,7 @@ describe('<DmarcReportPage />', () => {
 
     const { getByRole } = render(
       <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
+        <I18nProvider i18n={setupI18n()}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <DmarcReportPage />
@@ -137,7 +132,7 @@ describe('<DmarcReportPage />', () => {
 
     const { getByText, getByRole } = render(
       <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
+        <I18nProvider i18n={setupI18n()}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <DmarcReportPage />

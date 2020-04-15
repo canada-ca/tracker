@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/UserList.js:144
+#: src/UserCard.js:45
 msgid "Admin"
 msgstr "Admin"
 
@@ -21,38 +21,37 @@ msgstr "Admin"
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 
-#: src/SignInPage.js:146
+#: src/SignInPage.js:137
 msgid "Create Account"
 msgstr "Create Account"
 
-#: src/UserList.js:88
+#: src/UserList.js:47
 msgid "Create User"
 msgstr "Create User"
 
-#: src/App.js:60
-#: src/DomainsPage.js:24
+#: src/App.js:69
+msgid "DMARC"
+msgstr "DMARC"
+
+#: src/App.js:53
+#: src/DomainsPage.js:18
 msgid "Domains"
 msgstr "Domains"
-
 
 #: src/EmailField.js:31
 msgid "Email {0}"
 msgstr "Email {0}"
 
-#: src/SignInPage.js:116
+#: src/SignInPage.js:119
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
-#: src/App.js:57
+#: src/App.js:50
+#: src/QRcodePage.js:67
 msgid "Home"
 msgstr "Home"
 
-#: src/UserList.js:154
-msgid "Language: {0}"
-msgstr "Language: {0}"
-
-
-#: src/QRcodePage.js:19
+#: src/QRcodePage.js:21
 msgid "Loading..."
 msgstr "Loading..."
 
@@ -60,28 +59,29 @@ msgstr "Loading..."
 msgid "Page not found"
 msgstr "Page not found"
 
-#: src/App.js:50
+#: src/App.js:43
 msgid "Pre-Alpha"
 msgstr "Pre-Alpha"
 
-#: src/App.js:129
+#: src/App.js:121
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/App.js:66
-#: src/SignInPage.js:137
+#: src/QRcodePage.js:30
+msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
+msgstr "Scan this QR code with a 2FA app like Authy or Google Authenticator"
+
+#: src/App.js:62
+#: src/QRcodePage.js:58
+#: src/SignInPage.js:128
 msgid "Sign In"
 msgstr "Sign In"
 
-#: src/App.js:83
-msgid "Sign Out"
-msgstr "Sign Out"
-
-#: src/SignInPage.js:92
+#: src/SignInPage.js:76
 msgid "Sign in with your username and password."
 msgstr "Sign in with your username and password."
 
-#: src/App.js:48
+#: src/App.js:41
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -89,7 +89,7 @@ msgstr "Skip to main content"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Sorry, the page you were trying to view does not exist."
 
-#: src/App.js:139
+#: src/App.js:131
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -97,7 +97,7 @@ msgstr "Terms & conditions"
 msgid "This is the full list of domains"
 msgstr "This is the full list of domains"
 
-#: src/App.js:51
+#: src/App.js:44
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
@@ -105,14 +105,18 @@ msgstr "This service is being developed in the open"
 msgid "Track web security compliance"
 msgstr "Track web security compliance"
 
-#: src/UserList.js:132
+#: src/UserCard.js:38
 msgid "TwoFactor"
 msgstr "TwoFactor"
 
-#: src/App.js:87
+#: src/App.js:66
 msgid "User List"
 msgstr "User List"
 
-#: src/QRcodePage.js:43
+#: src/App.js:58
+msgid "User Profile"
+msgstr "User Profile"
+
+#: src/QRcodePage.js:45
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
 msgstr "Your 2FA app will then have a valid code that you can use when you sign in."

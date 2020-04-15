@@ -5,12 +5,7 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { PasswordConfirmation } from '../PasswordConfirmation'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
-import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
-i18n.loadLocaleData('en', { plurals: en })
-i18n.load('en', { en: {} })
-i18n.activate('en')
+import { setupI18n } from '@lingui/core'
 
 describe('<PasswordConfirmation />', () => {
   it('renders within a <Formik> wrapper', async () => {
@@ -20,7 +15,7 @@ describe('<PasswordConfirmation />', () => {
     })
 
     const { container } = render(
-      <I18nProvider i18n={i18n}>
+      <I18nProvider i18n={setupI18n()}>
         <ThemeProvider theme={theme}>
           <Formik
             // return a sadness error for the password field
@@ -47,7 +42,7 @@ describe('<PasswordConfirmation />', () => {
       })
 
       const { getByRole } = render(
-        <I18nProvider i18n={i18n}>
+        <I18nProvider i18n={setupI18n()}>
           <ThemeProvider theme={theme}>
             <Formik
               // return a sadness error for the password field

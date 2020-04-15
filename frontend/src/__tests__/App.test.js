@@ -7,12 +7,7 @@ import gql from 'graphql-tag'
 import { UserStateProvider } from '../UserState'
 import App from '../App'
 import { I18nProvider } from '@lingui/react'
-import { i18n } from '@lingui/core'
-import { en } from 'make-plural/plurals'
-
-i18n.loadLocaleData('en', { plurals: en })
-i18n.load('en', { en: {} })
-i18n.activate('en')
+import { setupI18n } from '@lingui/core'
 
 const resolvers = {
   Query: {
@@ -69,7 +64,7 @@ describe('<App/>', () => {
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
+              <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
                   <MockedProvider resolvers={resolvers} mocks={mocks}>
                     <App />
@@ -92,7 +87,7 @@ describe('<App/>', () => {
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
             <ThemeProvider theme={theme}>
-              <I18nProvider i18n={i18n}>
+              <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                   <MockedProvider
                     mocks={mocks}
