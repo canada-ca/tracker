@@ -1,0 +1,4 @@
+Flask
+waitress
+PyJWT
+requests>=2.18.4
