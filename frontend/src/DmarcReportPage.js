@@ -4,10 +4,9 @@ import {
   Box,
   Text,
   Stack,
-  SimpleGrid,
   Icon,
   Flex,
-  Button,
+  Divider,
 } from '@chakra-ui/core'
 
 import { useUserState } from './UserState'
@@ -35,22 +34,24 @@ export function DmarcReportPage() {
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
   return (
-    <Box>
-      <Heading mb={4}>DMARC Report</Heading>
-      <Text mb={10}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
-      </Text>
-      <Text mb={10}>
+    <Box p={{ sm: '15px', md: '10px', lg: '0px', xl: '0px' }} mb="100px">
+      <Heading mb={4} textAlign={['center', 'left']}>
+        DMARC Report
+      </Heading>
+      <Text w="100%" p={['30px', '0px']}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
         veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
         commodo consequat.
       </Text>
       <Stack>
-        <Flex align="center" role="dmarcHeader">
+        <Flex
+          align="center"
+          role="dmarcHeader"
+          justifyContent={['center', 'left']}
+          maxW="100%"
+          mt={['0px', '50px']}
+        >
           <Text fontSize="2xl" fontWeight="bold">
             DMARC
           </Text>
@@ -91,11 +92,32 @@ export function DmarcReportPage() {
         failSpfPercentage={data.queryDmarcReport.failSpfPercentage}
         count={data.queryDmarcReport.count}
       />
-
+      <Divider
+        m={['10px auto', '10px']}
+        mt={['10px', '50px']}
+        w={['70%', '100%']}
+      />
       <DmarcReportTimeGraph />
+      <Divider
+        m={['10px auto', '10px']}
+        mt={['10px', '50px']}
+        w={['70%', '100%']}
+      />
       <DmarcGuidance />
+      <Divider
+        m={['10px auto', '10px']}
+        mt={['10px', '50px']}
+        w={['70%', '100%']}
+      />
+    </Box>
+  )
+}
 
-      <SimpleGrid
+/* 
+  THIS IS FOR THE DKIM & SPF ENTRIES!
+  THIS NEEDS TO BE COMFRIMED FOR USE
+
+ <SimpleGrid
         columns={{ sm: 1, md: 1, lg: 2, xl: 2 }}
         spacing="50px"
         spacingY={{ sm: '50px', md: '50px', lg: '150px', xl: '150px' }}
@@ -196,6 +218,5 @@ export function DmarcReportPage() {
           </Button>
         </Stack>
       </SimpleGrid>
-    </Box>
-  )
-}
+
+*/

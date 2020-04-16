@@ -19,8 +19,8 @@ export function DmarcReportGraph(props) {
             data={data}
             cx="50%"
             cy="50%"
-            innerRadius="40%"
-            outerRadius="80%"
+            innerRadius="50%"
+            outerRadius="90%"
             paddingAngle={2}
             dataKey="value"
           >

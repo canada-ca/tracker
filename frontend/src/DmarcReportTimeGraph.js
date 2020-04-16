@@ -58,8 +58,8 @@ export function DmarcReportTimeGraph() {
     },
   ]
   return (
-    <Stack textAlign="center" mt="100px">
-      <Text fontSize="2xl" fontWeight="bold">
+    <Stack textAlign="center" mt={['30px', '150px']}>
+      <Text fontSize="2xl" fontWeight="bold" mb="50px">
         Dmarc Results by Month
       </Text>
       <ResponsiveContainer width="90%" height={500}>

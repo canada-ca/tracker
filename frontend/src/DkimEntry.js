@@ -6,24 +6,24 @@ export function DkimEntry(props) {
   return (
     <Box>
       <Stack isInline>
-        <Text fontSize="xl" fontWeight="semibold">
+        <Text fontSize="md" fontWeight="semibold">
           Domain:
         </Text>
-        <Text fontSize="xl">{props.domain}</Text>
+        <Text fontSize="md">{props.domain}</Text>
       </Stack>
 
       <Stack isInline>
-        <Text fontSize="xl" fontWeight="semibold">
+        <Text fontSize="md" fontWeight="semibold">
           Selector:
         </Text>
-        <Text fontSize="xl">{props.selector}</Text>
+        <Text fontSize="md">{props.selector}</Text>
       </Stack>
 
       <Stack isInline>
-        <Text fontSize="xl" fontWeight="semibold">
+        <Text fontSize="md" fontWeight="semibold">
           Result:
         </Text>
-        <Text fontSize="xl">{props.result}</Text>
+        <Text fontSize="md">{props.result}</Text>
       </Stack>
 
       <Divider />
