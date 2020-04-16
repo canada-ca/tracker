@@ -5,6 +5,10 @@ resources:
 - cert-manager.yaml
 - certificate.yaml
 - letsencrypt-issuer.yaml
+- knative/config/config.yaml
+- knative/monitoring/prometheus.yaml
+- knative/monitoring/grafana/grafana.yaml
+- knative/monitoring/node-exporter.yaml
 images:
 - name: gcr.io/track-compliance/api
   newTag: master-4301b10
