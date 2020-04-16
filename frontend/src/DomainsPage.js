@@ -11,7 +11,7 @@ export function DomainsPage() {
   const { loading, error, data } = useQuery(DOMAINS, {
     context: {
       headers: {
-        authorization: `Bearer ${currentUser.jwt}`
+        authorization: currentUser.jwt,
       },
     },
   })

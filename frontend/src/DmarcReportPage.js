@@ -23,7 +23,7 @@ export function DmarcReportPage() {
     variables: { reportId: 'test-report-id' },
     context: {
       headers: {
-        authorization: `Bearer ${currentUser.jwt}`
+        authorization: currentUser.jwt,
       },
     },
   })
