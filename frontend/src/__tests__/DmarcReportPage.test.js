@@ -7,6 +7,7 @@ import { DmarcReportPage } from '../DmarcReportPage'
 import { QUERY_DMARC_REPORT } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 
 describe('<DmarcReportPage />', () => {
   it('renders pass icons in sub-headers correctly', async () => {
@@ -59,15 +60,23 @@ describe('<DmarcReportPage />', () => {
     ]
 
     const { getByRole } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <DmarcReportPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
+      <UserStateProvider
+        initialState={{
+          userName: 'foo@example.com',
+          jwt: 'somestring',
+          tfa: null,
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={setupI18n()}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks} addTypename={false}>
+                <DmarcReportPage />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
 
     const dmarcHeader = await waitFor(() => getByRole('dmarcHeader'))
@@ -131,15 +140,23 @@ describe('<DmarcReportPage />', () => {
     ]
 
     const { getByText, getByRole } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <DmarcReportPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
+      <UserStateProvider
+        initialState={{
+          userName: 'foo@example.com',
+          jwt: 'somestring',
+          tfa: null,
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={setupI18n()}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks} addTypename={false}>
+                <DmarcReportPage />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
 
     await waitFor(() => getByText(/DMARC Report/i))

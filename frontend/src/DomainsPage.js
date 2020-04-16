@@ -4,9 +4,17 @@ import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { Heading, Text, Stack, List, ListItem } from '@chakra-ui/core'
 import { DOMAINS } from './graphql/queries'
+import { useUserState } from './UserState'
 
 export function DomainsPage() {
-  const { loading, error, data } = useQuery(DOMAINS)
+  const { currentUser } = useUserState()
+  const { loading, error, data } = useQuery(DOMAINS, {
+    context: {
+      headers: {
+        authorization: `Bearer ${currentUser.jwt}`
+      },
+    },
+  })
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error :(</p>
