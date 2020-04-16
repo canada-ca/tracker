@@ -8,4 +8,4 @@ metadata:
   namespace: api
   annotations:
     fluxcd.io/automated: "true"
-    fluxcd.io/tag.api: glob:master-*
+    fluxcd.io/tag.api: regexp:^(master-*)$
