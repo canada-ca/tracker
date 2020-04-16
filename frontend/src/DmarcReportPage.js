@@ -12,14 +12,20 @@ import {
 
 import DkimEntry from './DkimEntry'
 import SpfEntry from './SpfEntry'
-
+import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
 import { QUERY_DMARC_REPORT } from './graphql/queries'
 import PieChart from 'react-minimal-pie-chart'
 
 export function DmarcReportPage() {
+  const { currentUser } = useUserState()
   const { loading, error, data } = useQuery(QUERY_DMARC_REPORT, {
     variables: { reportId: 'test-report-id' },
+    context: {
+      headers: {
+        authorization: `Bearer ${currentUser.jwt}`
+      },
+    },
   })
 
   if (loading) return <p>Loading...</p>
