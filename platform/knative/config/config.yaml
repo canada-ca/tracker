@@ -1,0 +1,354 @@
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tracker
+
+---
+
+# The event source.
+
+apiVersion: sources.knative.dev/v1alpha1
+kind: ApiServerSource
+metadata:
+  name: src
+  namespace: tracker
+spec:
+  serviceAccountName: service-account
+  mode: Resource
+  resources:
+    - apiVersion: v1
+      kind: Event
+  sink:
+    ref:
+      apiVersion: messaging.knative.dev/v1alpha1
+      kind: InMemoryChannel
+      name: chan
+
+---
+
+# The broker
+
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Broker
+metadata:
+  name: default
+  namespace: tracker
+spec:
+  channelTemplateSpec:
+    apiVersion: messaging.knative.dev/v1alpha1
+    kind: InMemoryChannel
+---
+
+# The Channel events are sent to.
+
+apiVersion: messaging.knative.dev/v1alpha1
+kind: InMemoryChannel
+metadata:
+  name: chan
+  namespace: tracker
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: https-scanner
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: https-scanner
+          image: gcr.io/track-compliance/https # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: result-processor
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: result-processor
+          image: gcr.io/track-compliance/results # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: ssl-scanner
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: ssl-scanner
+          image: gcr.io/track-compliance/ssl # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: dmarc-scanner
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: dmarc-scanner
+          image: gcr.io/track-compliance/dmarc # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: dkim-scanner
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: dkim-scanner
+          image: gcr.io/track-compliance/dkim # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: ssl-scanner-manual
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: ssl-scanner
+          image: gcr.io/track-compliance/ssl # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: dmarc-scanner-manual
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: dmarc-scanner
+          image: gcr.io/track-compliance/dmarc # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: dkim-scanner-manual
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: dkim-scanner
+          image: gcr.io/track-compliance/dkim # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: https-scanner-manual
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: https-scanner
+          image: gcr.io/track-compliance/https # The URL to the image of the app
+
+---
+
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: dispatcher
+  namespace: tracker
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port:   '9090'
+        # Knative concurrency-based autoscaling (default).
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        # Target 10 requests in-flight per pod.
+        autoscaling.knative.dev/target: "10"
+        # Disable scaling to zero
+        autoscaling.knative.dev/minScale: "1"
+        # Limit scaling to 10 pods.
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - name: dispatcher
+          image: gcr.io/track-compliance/dispatcher # The URL to the image of the app
+
+---
+
+# Everything after this is just structure for the above.
+
+---
+
+# K8s Service Account that runs `src`'s container.
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: service-account
+  namespace: tracker
+
+---
+
+# The permissions that `src` needs.
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: event-watcher
+  namespace: tracker
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - get
+      - list
+      - watch
+
+---
+
+# Give `src`'s service account the necessary permissions.
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  name: k8s-ra-event-watcher
+  namespace: tracker
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: event-watcher
+subjects:
+  - kind: ServiceAccount
+    name: service-account
+    namespace: tracker
