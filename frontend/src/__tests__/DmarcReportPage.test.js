@@ -10,7 +10,7 @@ import { UserStateProvider } from '../UserState'
 
 describe('<DmarcReportPage />', () => {
   it('renders correctly', () => {
-    const { getByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={setupI18n()}>
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
