@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
         - name: https-scanner
-          image: gcr.io/track-compliance/https # The URL to the image of the app
+          image: gcr.io/track-compliance/https:master # The URL to the image of the app
 
 ---
 
@@ -96,7 +96,7 @@ spec:
     spec:
       containers:
         - name: result-processor
-          image: gcr.io/track-compliance/results # The URL to the image of the app
+          image: gcr.io/track-compliance/results:master # The URL to the image of the app
 
 ---
 
@@ -121,7 +121,7 @@ spec:
     spec:
       containers:
         - name: ssl-scanner
-          image: gcr.io/track-compliance/ssl # The URL to the image of the app
+          image: gcr.io/track-compliance/ssl:master # The URL to the image of the app
 
 ---
 
@@ -146,7 +146,7 @@ spec:
     spec:
       containers:
         - name: dmarc-scanner
-          image: gcr.io/track-compliance/dmarc # The URL to the image of the app
+          image: gcr.io/track-compliance/dmarc:master # The URL to the image of the app
 
 ---
 
@@ -171,7 +171,7 @@ spec:
     spec:
       containers:
         - name: dkim-scanner
-          image: gcr.io/track-compliance/dkim # The URL to the image of the app
+          image: gcr.io/track-compliance/dkim:master # The URL to the image of the app
 
 ---
 
@@ -196,7 +196,7 @@ spec:
     spec:
       containers:
         - name: ssl-scanner
-          image: gcr.io/track-compliance/ssl # The URL to the image of the app
+          image: gcr.io/track-compliance/ssl:master # The URL to the image of the app
 
 ---
 
@@ -221,7 +221,7 @@ spec:
     spec:
       containers:
         - name: dmarc-scanner
-          image: gcr.io/track-compliance/dmarc # The URL to the image of the app
+          image: gcr.io/track-compliance/dmarc:master # The URL to the image of the app
 
 ---
 
@@ -246,7 +246,7 @@ spec:
     spec:
       containers:
         - name: dkim-scanner
-          image: gcr.io/track-compliance/dkim # The URL to the image of the app
+          image: gcr.io/track-compliance/dkim:master # The URL to the image of the app
 
 ---
 
@@ -271,7 +271,7 @@ spec:
     spec:
       containers:
         - name: https-scanner
-          image: gcr.io/track-compliance/https # The URL to the image of the app
+          image: gcr.io/track-compliance/https:master # The URL to the image of the app
 
 ---
 
@@ -298,7 +298,7 @@ spec:
     spec:
       containers:
         - name: dispatcher
-          image: gcr.io/track-compliance/dispatcher # The URL to the image of the app
+          image: gcr.io/track-compliance/dispatcher:master # The URL to the image of the app
 
 ---
 
