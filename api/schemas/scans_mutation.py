@@ -3,7 +3,7 @@ import graphene
 from graphql import GraphQLError
 
 from app import app
-from db import db
+from db import db_session
 
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_admin
@@ -49,7 +49,7 @@ class RequestScan(graphene.Mutation):
             test = kwargs.get('test', False)
 
             # Get Domain ORM related to requested domain
-            domain_orm = db.session.query(Domains).filter(
+            domain_orm = db_session.query(Domains).filter(
                 Domains.domain == url
             ).first()
 

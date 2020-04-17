@@ -6,7 +6,7 @@ import datetime
 from flask import request
 
 from app import app
-from db import db
+from db import db_session
 
 from models import Scans, Domains
 
@@ -30,17 +30,17 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
         scan_date=scan_datetime,
         initiated_by=user_id
     )
-    db.session.add(new_scan)
+    db_session.add(new_scan)
 
     # Update Domain Tables Last Run
     Domains.query.filter(
         Domains.id == domain_id
     ).update({'last_run': scan_datetime})
 
-    db.session.commit()
+    db_session.commit()
 
     # Get latest scan entry
-    scan_orm = db.session.query(Scans).order_by(
+    scan_orm = db_session.query(Scans).order_by(
         Scans.id.desc()
     ).first()
     scan_id = scan_orm.id
