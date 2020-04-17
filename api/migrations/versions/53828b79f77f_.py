@@ -34,7 +34,7 @@ def upgrade():
         users_table,
         [
             {
-                'id': 1,
+                'id': 100,
                 'display_name': 'testsuperadmin',
                 'user_password': '$2b$12$vXlvwc80mGCrxULUKTEbmOrZR9tafrDUVOujO6i2RAEeWmLMm.s8S',
                 'preferred_lang': 'English',
@@ -56,7 +56,7 @@ def upgrade():
         org_table,
         [
             {
-                'id': 1,
+                'id': 100,
                 'org_tags': {
                     'Description': 'Super Admin Org'
                 },
@@ -77,10 +77,10 @@ def upgrade():
         user_aff_table,
         [
             {
-                'id': 1,
-                'organization_id': 1,
+                'id': 100,
+                'organization_id': 100,
                 'permission': 'super_admin',
-                'user_id': 1
+                'user_id': 100
             }
         ]
     )
