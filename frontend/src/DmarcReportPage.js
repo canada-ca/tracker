@@ -17,7 +17,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { QUERY_DMARC_REPORT } from './graphql/queries'
 import { DmarcReportGraph } from './DmarcReportGraph'
 import { DmarcReportTimeGraph } from './DmarcReportTimeGraph'
-import { DmarcGuidance } from './DmarcGuidance'
+import { DmarcReportGuidance } from './DmarcReportGuidance'
 import { DmarcReportBreakdown } from './DmarcReportBreakdown'
 
 export function DmarcReportPage() {
@@ -103,7 +103,7 @@ export function DmarcReportPage() {
         mt={['10px', '50px']}
         w={['70%', '100%']}
       />
-      <DmarcGuidance />
+      <DmarcReportGuidance />
       <Divider
         m={['10px auto', '10px']}
         mt={['10px', '50px']}
