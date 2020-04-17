@@ -1183,7 +1183,13 @@ type QueryDmarcReport {
   dmarcResult: Boolean! @examples(values: [true, false])
   dkimResult: Boolean! @examples(values: [true, false])
   spfResult: Boolean! @examples(values: [true, false])
-  passPercentage: Int! @examples(values: [10,20,30,40,50,60,70,80,90,100])
+  
+  passDmarcPercentage: Int! @examples(values: [10,20,30,40,50,60,70,80,90,100])
+  passArcPercentage: Int! @examples(values: [10,20,30,40,50,60,70,80,90,100])
+  failDmarcPercentage: Int! @examples(values: [10,20,30])
+  failDkimPercentage: Int! @examples(values: [10,20,30])
+  failSpfPercentage: Int! @examples(values: [10,20,30])
+
   count: Int! @examples(values: [1,2,3])
   dkim: [queryDkimResult]!  
   spf: [querySpfResult]!

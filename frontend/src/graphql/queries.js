@@ -66,7 +66,11 @@ export const QUERY_DMARC_REPORT = gql`
       dmarcResult
       dkimResult
       spfResult
-      passPercentage
+      passDmarcPercentage
+      passArcPercentage
+      failDmarcPercentage
+      failDkimPercentage
+      failSpfPercentage
       count
       dkim {
         domain
