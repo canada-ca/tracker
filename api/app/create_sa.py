@@ -9,7 +9,7 @@ SA_DISPLAY_NAME = os.getenv('SA_DISPLAY_NAME')
 
 def create_sa():
     user_orm = db_session.query(Users).filter(
-        Users.user_name == 'admin@istio.actually.works'
+        Users.user_name == SA_USER_NAME
     ).first()
 
     if user_orm is None:
@@ -40,7 +40,7 @@ def create_sa():
         db_session.commit()
 
     user_orm = db_session.query(Users).filter(
-        Users.user_name == 'admin@istio.actually.works'
+        Users.user_name == SA_USER_NAME
     ).first()
     org_orm = db_session.query(Organizations).filter(
         Organizations.acronym == 'SA'
