@@ -11,6 +11,7 @@ from db import db_session
 from models import Scans, Domains
 
 TOKEN_KEY = os.getenv('TOKEN_KEY')
+DISPATCHER_URL = os.getenv('ISTIO_INGRESS')
 
 
 def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
@@ -71,7 +72,7 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
         headers['True'] = 'true'
 
     status = requests.post(
-        "http://34.67.57.19/receive",
+        DISPATCHER_URL + "/receive",
         headers=headers
     )
 

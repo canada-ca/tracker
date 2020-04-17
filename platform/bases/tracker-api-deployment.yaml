@@ -69,6 +69,11 @@ spec:
             secretKeyRef:
               name: jwt
               key: jwt-key
+        - name: ISTIO_INGRESS
+          valueFrom:
+            secretKeyRef:
+              name: istio
+              key: istio-ingress
         - name: DB_HOST
           value: postgres
         - name: DB_PORT
@@ -131,6 +136,11 @@ spec:
             secretKeyRef:
               name: jwt
               key: jwt-key
+        - name: ISTIO_INGRESS
+          valueFrom:
+            secretKeyRef:
+              name: istio
+              key: istio-ingress
         - name: DB_HOST
           value: postgres
         - name: DB_PORT
