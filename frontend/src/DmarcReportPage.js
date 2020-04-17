@@ -91,13 +91,14 @@ export function DmarcReportPage() {
         failDkimPercentage={data.queryDmarcReport.failDkimPercentage}
         failSpfPercentage={data.queryDmarcReport.failSpfPercentage}
         count={data.queryDmarcReport.count}
+        messageCount={12342}
       />
       <Divider
         m={['10px auto', '10px']}
         mt={['10px', '50px']}
         w={['70%', '100%']}
       />
-      <DmarcReportTimeGraph />
+      <DmarcReportTimeGraph/>
       <Divider
         m={['10px auto', '10px']}
         mt={['10px', '50px']}

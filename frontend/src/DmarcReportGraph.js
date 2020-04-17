@@ -1,4 +1,5 @@
 import React from 'react'
+import { number } from 'prop-types'
 
 import { Flex } from '@chakra-ui/core'
 
@@ -34,4 +35,11 @@ export function DmarcReportGraph(props) {
       </ResponsiveContainer>
     </Flex>
   )
+}
+
+DmarcReportGraph.propTypes = {
+  passDmarcPercentage: number,
+  failDmarcPercentage: number,
+  failDkimPercentage: number,
+  failSpfPercentage: number,
 }

@@ -13,6 +13,7 @@ import {
 import { Text, Stack } from '@chakra-ui/core'
 
 export function DmarcReportTimeGraph() {
+  // This data needs to be edited to use some kind of query from the API.  It shall likely be called on the DmarcReport main page and then passed as props.
   const data = [
     {
       month: 'January',

@@ -1,4 +1,5 @@
 import React from 'react'
+import { string, number } from 'prop-types'
 
 import { Text, Stack, SimpleGrid, Box, Button } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
@@ -23,30 +24,30 @@ export function DmarcReportBreakdown(props) {
           <Text fontSize="md" fontWeight="semibold">
             Message Count:
           </Text>
-          <Text fontSize="md">1234</Text>
+          <Text fontSize="md">{props.messageCount}</Text>
         </Stack>
 
         <Stack isInline>
           <Text fontSize="md" fontWeight="semibold">
-            Passed Dmarc:{' '}
+            Passed Dmarc:
           </Text>
           <Text fontSize="md">{props.passDmarcPercentage}%</Text>
         </Stack>
         <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
           <Text fontSize="md" fontWeight="semibold">
-            Fail Dmarc:{' '}
+            Fail Dmarc:
           </Text>
           <Text fontSize="md">{props.failDmarcPercentage}%</Text>
         </Stack>
         <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
           <Text fontSize="md" fontWeight="semibold">
-            Fail Dkim:{' '}
+            Fail Dkim:
           </Text>
           <Text fontSize="md">{props.failDkimPercentage}%</Text>
         </Stack>
         <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
           <Text fontSize="md" fontWeight="semibold">
-            Fail Dkim:{' '}
+            Fail Dkim:
           </Text>
           <Text fontSize="md">{props.failSpfPercentage}%</Text>
         </Stack>
@@ -122,4 +123,18 @@ export function DmarcReportBreakdown(props) {
   )
 }
 
-//TODO: ADD PROP TYPES HERE!!!
+DmarcReportBreakdown.propTypes = {
+  messageCount: number,
+  passDmarcPercentage: number,
+  failDkimPercentage: number,
+  failSpfPercentage: number,
+  failDmarcPercentage: number,
+  header_from: string,
+  base_domain: string,
+  reverse_dns: string,
+  country: string,
+  reportId: string,
+  endDate: string,
+  ipAddress: string,
+  orgName: string,
+}
