@@ -19,7 +19,6 @@ import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { UserPage } from './UserPage'
 import { UserList } from './UserList'
-import { DmarcReportPage } from './DmarcReportPage'
 import { useUserState } from './UserState'
 
 export default function App() {
@@ -65,9 +64,6 @@ export default function App() {
           <Link to="/user-list">
             <Trans>User List</Trans>
           </Link>
-          <Link to="/dmarc-report">
-            <Trans>DMARC</Trans>
-          </Link>
         </Navigation>
         {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
         <Main>
@@ -101,9 +97,6 @@ export default function App() {
 
           <Route path="/user-list">
             <UserList />
-          </Route>
-          <Route path="/dmarc-report">
-            <DmarcReportPage />
           </Route>
 
           <Route>

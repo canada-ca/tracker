@@ -1,24 +1,22 @@
 import React from 'react'
+import { Trans } from '@lingui/macro'
 import {
-  Heading,
-  Box,
   Text,
   Stack,
+  SimpleGrid,
+  Box,
+  Button,
+  Heading,
   Icon,
   Flex,
   Divider,
 } from '@chakra-ui/core'
-
 import { useUserState } from './UserState'
-import { DkimEntry } from './DkimEntry'
-import { SpfEntry } from './SpfEntry'
-
 import { useQuery } from '@apollo/react-hooks'
 import { QUERY_DMARC_REPORT } from './graphql/queries'
 import { DmarcReportGraph } from './DmarcReportGraph'
 import { DmarcReportTimeGraph } from './DmarcReportTimeGraph'
 import { DmarcReportGuidance } from './DmarcReportGuidance'
-import { DmarcReportBreakdown } from './DmarcReportBreakdown'
 
 export function DmarcReportPage() {
   const { currentUser } = useUserState()
@@ -30,6 +28,12 @@ export function DmarcReportPage() {
       },
     },
   })
+
+  const [show, setShow] = React.useState(true)
+  const handleClick = () => {
+    setShow(!show)
+    console.log('Show: ' + show)
+  }
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
@@ -84,21 +88,142 @@ export function DmarcReportPage() {
         />
       </Stack>
 
-      <DmarcReportBreakdown
-        passDmarcPercentage={data.queryDmarcReport.passDmarcPercentage}
-        passArcPercentage={data.queryDmarcReport.passArcPercentage}
-        failDmarcPercentage={data.queryDmarcReport.failDmarcPercentage}
-        failDkimPercentage={data.queryDmarcReport.failDkimPercentage}
-        failSpfPercentage={data.queryDmarcReport.failSpfPercentage}
-        count={data.queryDmarcReport.count}
-        messageCount={12342}
-      />
+      <Box mt={['20px', '125px']} p={['30px', '0px']}>
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+          Report Breakdown
+        </Text>
+        <SimpleGrid
+          mt="40px"
+          columns={{ sm: 1, md: 1, lg: 4, xl: 4 }}
+          spacing="20px"
+        >
+          <Stack isInline>
+            <Text fontSize="md" fontWeight="semibold">
+              Message Count:
+            </Text>
+            <Text fontSize="md">12345</Text>
+          </Stack>
+
+          <Stack isInline>
+            <Text fontSize="md" fontWeight="semibold">
+              Passed Dmarc:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.passDmarcPercentage}%
+            </Text>
+          </Stack>
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              Fail Dmarc:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.failDmarcPercentage}%
+            </Text>
+          </Stack>
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              Fail Dkim:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.failDkimPercentage}%
+            </Text>
+          </Stack>
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              Fail Dkim:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.failSpfPercentage}%
+            </Text>
+          </Stack>
+
+          <Stack isInline>
+            <Text fontSize="md" fontWeight="semibold">
+              Orginization name:
+            </Text>
+            <Text fontSize="md">{data.queryDmarcReport.orgName || 'null'}</Text>
+          </Stack>
+
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              IP address:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.source.ipAddress || 'null'}
+            </Text>
+          </Stack>
+
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              Date:
+            </Text>
+            <Text fontSize="md">{data.queryDmarcReport.endDate || 'null'}</Text>
+          </Stack>
+
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              Report ID:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.reportId || 'null'}
+            </Text>
+          </Stack>
+
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              Country:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.source.country || 'null'}
+            </Text>
+          </Stack>
+
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              Reverse DNS:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.source.reverseDns || 'null'}
+            </Text>
+          </Stack>
+
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              Base domain:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.source.baseDomain || 'null'}
+            </Text>
+          </Stack>
+          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
+            <Text fontSize="md" fontWeight="semibold">
+              Header from:
+            </Text>
+            <Text fontSize="md">
+              {data.queryDmarcReport.identifiers.headerFrom || 'null'}
+            </Text>
+          </Stack>
+        </SimpleGrid>
+        <Button
+          variant="link"
+          textAlign="center"
+          w="100%"
+          variantColor="teal"
+          mt="10"
+          mb="10px"
+          onClick={handleClick}
+          display={['inline', 'none']}
+        >
+          {show ? <Trans>Show More</Trans> : <Trans>Show Less</Trans>}
+        </Button>
+      </Box>
+
       <Divider
         m={['10px auto', '10px']}
         mt={['10px', '50px']}
         w={['70%', '100%']}
       />
-      <DmarcReportTimeGraph/>
+      <DmarcReportTimeGraph />
       <Divider
         m={['10px auto', '10px']}
         mt={['10px', '50px']}
@@ -113,111 +238,3 @@ export function DmarcReportPage() {
     </Box>
   )
 }
-
-/* 
-  THIS IS FOR THE DKIM & SPF ENTRIES!
-  THIS NEEDS TO BE COMFRIMED FOR USE
-
- <SimpleGrid
-        columns={{ sm: 1, md: 1, lg: 2, xl: 2 }}
-        spacing="50px"
-        spacingY={{ sm: '50px', md: '50px', lg: '150px', xl: '150px' }}
-        mb="105px"
-      >
-        <Stack>
-          <Flex align="center" role="dkimHeader">
-            <Text fontSize="2xl" fontWeight="bold">
-              DKIM
-            </Text>
-            {data.queryDmarcReport.dkimResult ? (
-              <Icon
-                ml={2}
-                name="check-circle"
-                size="26px"
-                color="green.500"
-                role="passIcon"
-              />
-            ) : (
-              <Icon
-                ml={2}
-                name="warning"
-                size="26px"
-                color="red.500"
-                role="failIcon"
-              />
-            )}
-          </Flex>
-
-          {data.queryDmarcReport.dkim.map((dkim) => {
-            return (
-              <DkimEntry
-                key={dkim.domain}
-                domain={dkim.domain}
-                selector={dkim.selector}
-                result={dkim.result}
-              />
-            )
-          })}
-
-          <Button
-            mt={'5px'}
-            variantColor="teal"
-            variant="link"
-            justifyContent="start"
-            onClick={() => {
-              window.alert('function coming soon')
-            }}
-          >
-            Show all DKIM scans
-          </Button>
-        </Stack>
-
-        <Stack>
-          <Flex align="center" role="spfHeader">
-            <Text fontSize="2xl" fontWeight="bold">
-              SPF
-            </Text>
-            {data.queryDmarcReport.spfResult ? (
-              <Icon
-                ml={2}
-                name="check-circle"
-                size="26px"
-                color="green.500"
-                role="passIcon"
-              />
-            ) : (
-              <Icon
-                ml={2}
-                name="warning"
-                size="26px"
-                color="red.500"
-                role="failIcon"
-              />
-            )}
-          </Flex>
-
-          {data.queryDmarcReport.spf.map((spf) => {
-            return (
-              <SpfEntry
-                key={spf.domain}
-                domain={spf.domain}
-                scope={spf.scope}
-                result={spf.result}
-              />
-            )
-          })}
-          <Button
-            mt={'5px'}
-            variantColor="teal"
-            variant="link"
-            justifyContent="start"
-            onClick={() => {
-              window.alert('function coming soon')
-            }}
-          >
-            Show all SPF scans
-          </Button>
-        </Stack>
-      </SimpleGrid>
-
-*/
