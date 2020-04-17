@@ -10,6 +10,8 @@ from db import db_session
 
 from models import Scans, Domains
 
+TOKEN_KEY = os.getenv('TOKEN_KEY')
+
 
 def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
     """
@@ -53,10 +55,9 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
         "user_init": True
     }
 
-    # TODO Replace secret
     encoded_payload = jwt.encode(
         payload,
-        'test_jwt',
+        TOKEN_KEY,
         algorithm='HS256'
     ).decode('utf-8')
 
