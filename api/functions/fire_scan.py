@@ -69,7 +69,9 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
     }
 
     if test:
-        headers['True'] = 'true'
+        headers['Test'] = 'true'
+    else:
+        headers['Test'] = 'false'
 
     status = requests.post(
         DISPATCHER_URL + "/receive",
