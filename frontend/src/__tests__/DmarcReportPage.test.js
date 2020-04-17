@@ -11,15 +11,19 @@ import { UserStateProvider } from '../UserState'
 describe('<DmarcReportPage />', () => {
   it('renders correctly', () => {
     render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <MockedProvider>
-              <DmarcReportPage />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfa: null }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={setupI18n()}>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider>
+                <DmarcReportPage />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
   })
   /*it('renders pass icons in sub-headers correctly', async () => {
