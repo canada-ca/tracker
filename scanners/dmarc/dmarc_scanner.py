@@ -73,6 +73,12 @@ def receive():
 
 
 def dispatch(scan_id, payload):
+    """
+    Dispatch scan results to result-processor
+    :param scan_id: ID of the scan object
+    :param payload: Dict containing scan results, encrypted by JWT
+    :return: Response from result-processor service
+    """
     try:
         # Post request to result-handling service
         response = requests.post(ISTIO_INGRESS, headers=headers, data=payload)
@@ -84,7 +90,12 @@ def dispatch(scan_id, payload):
 
 
 def scan(scan_id, domain):
-
+    """
+    Scan domain to assess DMARC/SPF/MX records
+    :param scan_id: ID of the scan object
+    :param domain: Domain to be scanned
+    :return: Scan results for provided domain
+    """
     # Single-item list to pass off to check_domains function
     domain_list = list()
     domain_list.append(domain)

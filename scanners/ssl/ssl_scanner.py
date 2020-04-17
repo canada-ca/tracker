@@ -74,6 +74,12 @@ def receive():
 
 
 def dispatch(scan_id, payload):
+    """
+    Dispatch scan results to result-processor
+    :param scan_id: ID of the scan object
+    :param payload: Dict containing scan results, encrypted by JWT
+    :return: Response from result-processor service
+    """
     try:
         # Post request to result-handling service
         response = requests.post(ISTIO_INGRESS, headers=headers, data=payload)
@@ -85,6 +91,12 @@ def dispatch(scan_id, payload):
 
 
 def get_server_info(scan_id, domain):
+    """
+    Retrieve server connectivity info by performing a connection test
+    :param scan_id: ID of the scan object
+    :param domain: Domain to be assessed
+    :return: Server connectivity information
+    """
 
     try:
         # Retrieve server information, look-up IP address
@@ -106,7 +118,12 @@ def get_server_info(scan_id, domain):
 
 
 def scan(scan_id, domain):
-
+    """
+    Scan domain to assess SSL/TLS configuration
+    :param scan_id: ID of the scan object
+    :param domain: Domain to be scanned
+    :return: Scan results for provided domain
+    """
     server_info = get_server_info(scan_id, domain)
 
     if server_info is None:
