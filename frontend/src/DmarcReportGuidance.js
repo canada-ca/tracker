@@ -14,6 +14,9 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
+  List,
+  ListItem,
+  Divider,
 } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 
@@ -110,7 +113,55 @@ export function DmarcReportGuidance() {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Trans>Test modal 1</Trans>
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Causes</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>
+                      The SPF record for the domain is missing or invalid.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>There are multiple SPF records. </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      The sending IP address is not included in the SPF record.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>Forwarding by an intermediate server. </Trans>
+                  </ListItem>
+                </List>
+                <Divider />
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Resolutions</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>Ensure the SPF record is present and valid.</Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>Remove redundant SPF records. </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      Modify the SPF record to include the sending IP address.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      Add an "include" clause for a third party sender.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      Configure the server to use the correct domain for the
+                      "headerfrom" address.
+                    </Trans>
+                  </ListItem>
+                </List>
               </ModalBody>
 
               <ModalFooter>
@@ -154,7 +205,42 @@ export function DmarcReportGuidance() {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Trans>Test modal 2</Trans>
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Causes</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>
+                      A server configured to use the wrong "envelope from"
+                      address.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      A third party sender not using a custom return path.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>Forwarding by an intermediate server.</Trans>
+                  </ListItem>
+                </List>
+                <Divider />
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Resolutions</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>
+                      Configure the server to use the same domain for the
+                      "envelope from" and "header from" addresses.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      Add a custom return path for athird party sender.
+                    </Trans>
+                  </ListItem>
+                </List>
               </ModalBody>
 
               <ModalFooter>
@@ -198,7 +284,48 @@ export function DmarcReportGuidance() {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Trans>Test modal 3</Trans>
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Causes</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>The message was not signed with DKIM.</Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      There is no DKIM record for the domain and/or selector
+                      used or the record is invalid.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      The message was modified by an intermediate server.
+                    </Trans>
+                  </ListItem>
+                </List>
+                <Divider />
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Resolutions</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>
+                      Configure the server to sign outbound messages with DKIM.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      Ensure the DKIM record for thedomain and selector is
+                      present andvalid.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      Add a CNAME record to refer to a DKIM record maintained by
+                      a third party sender.
+                    </Trans>
+                  </ListItem>
+                </List>
               </ModalBody>
 
               <ModalFooter>
@@ -242,7 +369,38 @@ export function DmarcReportGuidance() {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Trans>Test modal 4</Trans>
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Causes</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>
+                      The server is configured to use a different domain for the
+                      DKIM header than for the "header from" address.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>
+                      There is no DKIM record for the domain and/or selector
+                      used or the record is invalid.
+                    </Trans>
+                  </ListItem>
+                  <ListItem>
+                    <Trans>Forwarding by an intermediate server.</Trans>
+                  </ListItem>
+                </List>
+                <Divider />
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Resolutions</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>
+                      Configure the server to use the same domain for the DKIM
+                      header as for the "header from" address.
+                    </Trans>
+                  </ListItem>
+                </List>
               </ModalBody>
 
               <ModalFooter>
@@ -286,9 +444,29 @@ export function DmarcReportGuidance() {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Text>
-                  <Trans>Test modal 5</Trans>
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Causes</Trans>
                 </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>
+                      The policy applied is based on the DMARC record of the
+                      root domain or subdomain.
+                    </Trans>
+                  </ListItem>
+                </List>
+                <Divider />
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Resolutions</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>
+                      Adjust the policy portion of the DMARCrecord of the root
+                      domain or subdomain.
+                    </Trans>
+                  </ListItem>
+                </List>
               </ModalBody>
 
               <ModalFooter>
@@ -333,7 +511,25 @@ export function DmarcReportGuidance() {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Trans>Test modal</Trans>
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Causes</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>Please see the SPF and DKIM causes sections.</Trans>
+                  </ListItem>
+                </List>
+                <Divider />
+                <Text fontSize="md" fontWeight="semibold">
+                  <Trans>Possible Resolutions</Trans>
+                </Text>
+                <List styleType="disc">
+                  <ListItem>
+                    <Trans>
+                      Please see the SPF and DKIM resolutions sections.
+                    </Trans>
+                  </ListItem>
+                </List>
               </ModalBody>
 
               <ModalFooter>
