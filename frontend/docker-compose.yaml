@@ -1,27 +1,26 @@
 version: "3.7"
 services:
-  envoy:
+  envoy: # proxies localhost:3000 to containers based on rules in config
     image: envoyproxy/envoy-alpine-dev
     entrypoint: envoy
     command: ["-c", "/etc/envoy-dev.yaml", "--service-cluster", "envoy"]
     volumes:
-      - ./envoy-dev.yaml:/etc/envoy-dev.yaml
+      - ./envoy-dev.yaml:/etc/envoy-dev.yaml # Envoy configuration
     expose:
-      - "3000"
-      - "3001"
+      - "3000" # Forward to proxied apps
+      - "3001" # Envoy admin page
     ports:
       - "3000:3000"
       - "3001:3001"
-  frontend:
-    stdin_open: true
+  frontend: # localhost:3000/* is sent to frontend
     image: node:alpine
     working_dir: /app
-    command: npm start
+    command: npm run dev
     volumes:
       - ./:/app
     expose:
       - "3000"
-  api:
+  api: # available at localhost:3000/graphql
     image: apisguru/graphql-faker
     volumes:
       - ./schema.faker.graphql:/workdir/schema.faker.graphql

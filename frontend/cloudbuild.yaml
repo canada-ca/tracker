@@ -1,6 +1,6 @@
 steps:
 
-  - name: node:13-alpine
+  - name: 'gcr.io/track-compliance/ci'
     id: install
     dir: frontend
     entrypoint: npm
@@ -11,6 +11,24 @@ steps:
     dir: frontend
     entrypoint: npm
     args: ['test']
+
+  - name: node:13-alpine
+    id: lingui-extract
+    dir: frontend
+    entrypoint: npm
+    args: ['run', 'extract']
+
+  - name: node:13-alpine
+    id: lingui-compile
+    dir: frontend
+    entrypoint: npm
+    args: ['run', 'compile']
+
+  - name: node:13-alpine
+    id: build-production-bundle
+    dir: frontend
+    entrypoint: npm
+    args: ['run', 'build']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build
