@@ -2,9 +2,10 @@ const { join, resolve } = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 
+const staticPath = join(resolve(process.cwd()), 'public')
+
 function Server() {
   const server = express()
-  const staticPath = join(resolve(process.cwd()), 'public')
   server.use('/', express.static(staticPath, { maxage: '365d' }))
   server.use(bodyParser.json())
   server.disable('x-powered-by')
@@ -18,7 +19,6 @@ function Server() {
   })
 
   server.get('/*', (_req, res) => {
-    console.log(_req.path)
     res.sendFile(resolve(join('public', 'index.html')))
   })
   return server
