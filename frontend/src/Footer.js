@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useLingui } from '@lingui/react'
-import wmms from './images/wmms-blk.svg'
+import wordmark from './images/canada-wordmark.svg'
 import { Box, Flex, List, Image, ListItem } from '@chakra-ui/core'
 import { Layout } from './Layout'
 
-export const Footer = props => {
+export const Footer = (props) => {
   const { i18n } = useLingui()
 
   return (
@@ -13,13 +13,13 @@ export const Footer = props => {
       <Layout>
         <Flex align="center" direction="row">
           <List px={0} d="flex" align="center" direction="row">
-            {React.Children.map(props.children, child => (
+            {React.Children.map(props.children, (child) => (
               <ListItem>{child}</ListItem>
             ))}
           </List>
           <Box py={4} width={{ base: 147.2 }} ml="auto">
             <Image
-              src={wmms}
+              src={wordmark}
               width="100%"
               alt={
                 i18n.locale === 'en'

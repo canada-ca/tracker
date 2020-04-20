@@ -4,8 +4,9 @@ const bodyParser = require('body-parser')
 
 function Server() {
   const server = express()
+  const staticPath = join(resolve(process.cwd()), 'public')
+  server.use('/', express.static(staticPath, { maxage: '365d' }))
   server.use(bodyParser.json())
-  server.use(express.static(resolve(join('build'))))
   server.disable('x-powered-by')
 
   server.get('/alive', (_req, res) => {
@@ -17,7 +18,8 @@ function Server() {
   })
 
   server.get('/*', (_req, res) => {
-    res.sendFile(resolve(join('build', 'index.html')))
+    console.log(_req.path)
+    res.sendFile(resolve(join('public', 'index.html')))
   })
   return server
 }

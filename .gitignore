@@ -1,7 +1,7 @@
 **/.DS_Store
 
 platform/**/*.json
-frontend/build
+frontend/public
 api/schema.json
 
 **/node_modules
