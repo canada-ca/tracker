@@ -72,6 +72,12 @@ def receive():
 
 
 def dispatch(scan_id, payload):
+    """
+    Dispatch scan results to result-processor
+    :param scan_id: ID of the scan object
+    :param payload: Dict containing scan results, encrypted by JWT
+    :return: Response from result-processor service
+    """
     try:
         # Post request to result-handling service
         response = requests.post(ISTIO_INGRESS, headers=headers, data=payload)
@@ -88,6 +94,16 @@ def bitsize(x):
 
 
 def load_pk(name, s=None):
+    """
+    Load the corresponding public key from DNS records
+    :param name: Domain name
+    :param s: TXT record from DNS
+    :return: tuple (pk, keysize, ktag)
+        WHERE
+        pk: public key value
+        keysize: size of public key
+        ktag: key type (RSA, etc.)
+    """
     if not s:
         raise KeyFormatError("missing public key: %s"%name)
     try:
@@ -116,7 +132,12 @@ def load_pk(name, s=None):
 
 
 def scan(scan_id, domain):
-
+    """
+    Scan domain to assess DomainKeys Identified Mail (DKIM) record and key strength
+    :param scan_id: ID of the scan object
+    :param domain: Domain to be scanned
+    :return: Scan results for provided domain
+    """
     record = {}
 
     try:

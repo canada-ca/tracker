@@ -82,6 +82,16 @@ def receive():
 
 
 def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
+    """
+    Dispatch scans to designated scanners
+    :param encrypted_payload: Dict containing scan info, encrypted by JWT
+    :param dkim_flag: Flag indicating whether this is a dkim scan
+    :param manual: Flag indicating whether this is a user-initiated scan
+    :param scan_id: ID of the scan object
+    :param test_flag: Flag indicating whether this is a test scan
+    :return: If test_flag, return results. Else, return nothing
+    """
+
     headers = {
         "Content-Type": "application/json",
         "Host": None,
@@ -93,7 +103,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
 
     if not manual:
 
-        if dkim_flag:
+        if dkim_flag is True:
             for host in dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
@@ -112,7 +122,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
 
     else:
 
-        if dkim_flag:
+        if dkim_flag is True:
             for host in manual_scan_dkim_flagged_hosts:
                 headers["Host"] = host
                 try:

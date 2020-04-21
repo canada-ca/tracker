@@ -13,6 +13,10 @@ secretGenerator:
   - kiali.env
   name: kiali
   namespace: istio-system
+- envs:
+  - scanners.env
+  name: scanners
+  namespace: tracker
 - files:
   - gcp-dns-admin.json
   name: cert-manager-credentials

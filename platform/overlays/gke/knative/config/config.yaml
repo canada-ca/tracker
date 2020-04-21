@@ -72,6 +72,17 @@ spec:
       containers:
         - name: https-scanner
           image: gcr.io/track-compliance/https:master # The URL to the image of the app
+          env:
+            - name: ISTIO_INGRESS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ISTIO_INGRESS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -97,6 +108,31 @@ spec:
       containers:
         - name: result-processor
           image: gcr.io/track-compliance/results:master # The URL to the image of the app
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -122,6 +158,17 @@ spec:
       containers:
         - name: ssl-scanner
           image: gcr.io/track-compliance/ssl:master # The URL to the image of the app
+          env:
+            - name: ISTIO_INGRESS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ISTIO_INGRESS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -147,6 +194,17 @@ spec:
       containers:
         - name: dmarc-scanner
           image: gcr.io/track-compliance/dmarc:master # The URL to the image of the app
+          env:
+            - name: ISTIO_INGRESS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ISTIO_INGRESS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -172,6 +230,17 @@ spec:
       containers:
         - name: dkim-scanner
           image: gcr.io/track-compliance/dkim:master # The URL to the image of the app
+          env:
+            - name: ISTIO_INGRESS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ISTIO_INGRESS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -197,6 +266,17 @@ spec:
       containers:
         - name: ssl-scanner
           image: gcr.io/track-compliance/ssl:master # The URL to the image of the app
+          env:
+            - name: ISTIO_INGRESS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ISTIO_INGRESS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -222,6 +302,17 @@ spec:
       containers:
         - name: dmarc-scanner
           image: gcr.io/track-compliance/dmarc:master # The URL to the image of the app
+          env:
+            - name: ISTIO_INGRESS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ISTIO_INGRESS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -247,6 +338,17 @@ spec:
       containers:
         - name: dkim-scanner
           image: gcr.io/track-compliance/dkim:master # The URL to the image of the app
+          env:
+            - name: ISTIO_INGRESS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ISTIO_INGRESS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -272,6 +374,17 @@ spec:
       containers:
         - name: https-scanner
           image: gcr.io/track-compliance/https:master # The URL to the image of the app
+          env:
+            - name: ISTIO_INGRESS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ISTIO_INGRESS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -299,6 +412,17 @@ spec:
       containers:
         - name: dispatcher
           image: gcr.io/track-compliance/dispatcher:master # The URL to the image of the app
+          env:
+            - name: ISTIO_INGRESS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: ISTIO_INGRESS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
