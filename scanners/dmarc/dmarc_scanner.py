@@ -37,12 +37,7 @@ def receive():
         test_flag = request.headers.get("Test")
         scan_id = decoded_payload["scan_id"]
 
-        received_domain = decoded_payload["domain"]
-
-        if received_domain.startswith("www."):
-            domain = received_domain[4:]
-
-        ext = tldextract.extract(domain)
+        ext = tldextract.extract(decoded_payload["domain"])
         domain = ext.registered_domain
 
         # Perform scan

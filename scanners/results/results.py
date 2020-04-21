@@ -183,6 +183,7 @@ def process_results(results, scan_type, scan_id):
                 report["bod_crypto"] = False
                 report["rc4"] = False
                 report["3des"] = False
+                report["dnssec"] = False
                 report["used_ciphers"] = []
                 report["good_cert"] = False
                 report["signature_algorithm"] = None
@@ -221,6 +222,7 @@ def process_results(results, scan_type, scan_id):
                 else:
                     good_cert = False
 
+                report["dnssec"] = results["dnssec"]
                 report["bod_crypto"] = bod_crypto
                 report["rc4"] = any_rc4
                 report["3des"] = any_3des

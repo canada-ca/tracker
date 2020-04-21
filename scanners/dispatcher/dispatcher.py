@@ -103,7 +103,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
 
     if not manual:
 
-        if dkim_flag:
+        if dkim_flag == "True":
             for host in dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
@@ -122,7 +122,7 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
 
     else:
 
-        if dkim_flag:
+        if dkim_flag == "True":
             for host in manual_scan_dkim_flagged_hosts:
                 headers["Host"] = host
                 try:
