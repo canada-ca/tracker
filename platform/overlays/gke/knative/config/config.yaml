@@ -76,13 +76,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio
-                  key: istio-ingress
+                  name: istio-ingress-ip
+                  key: value
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
@@ -131,8 +131,8 @@ spec:
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
@@ -162,13 +162,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio
-                  key: istio-ingress
+                  name: istio-ingress-ip
+                  key: value
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
@@ -198,13 +198,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio
-                  key: istio-ingress
+                  name: istio-ingress-ip
+                  key: value
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
@@ -234,13 +234,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio
-                  key: istio-ingress
+                  name: istio-ingress-ip
+                  key: value
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
@@ -270,13 +270,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio
-                  key: istio-ingress
+                  name: istio-ingress-ip
+                  key: value
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
@@ -306,13 +306,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio
-                  key: istio-ingress
+                  name: istio-ingress-ip
+                  key: value
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
@@ -342,13 +342,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio
-                  key: istio-ingress
+                  name: istio-ingress-ip
+                  key: value
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
@@ -378,13 +378,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio
-                  key: istio-ingress
+                  name: istio-ingress-ip
+                  key: value
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
@@ -416,13 +416,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio
-                  key: istio-ingress
+                  name: istio-ingress-ip
+                  key: value
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt
-                  key: jwt-key
+                  name: token-key
+                  key: value
 
 ---
 
