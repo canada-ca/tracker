@@ -76,13 +76,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio-ingress-ip
-                  key: value
+                  name: scanners
+                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -112,12 +112,12 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: api
+                  name: scanners
                   key: DB_USER
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: api
+                  name: scanners
                   key: DB_PASS
             - name: DB_HOST
               value: postgres
@@ -126,13 +126,13 @@ spec:
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: api
+                  name: scanners
                   key: DB_NAME
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -162,13 +162,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio-ingress-ip
-                  key: value
+                  name: scanners
+                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -198,13 +198,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio-ingress-ip
-                  key: value
+                  name: scanners
+                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -234,13 +234,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio-ingress-ip
-                  key: value
+                  name: scanners
+                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -270,13 +270,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio-ingress-ip
-                  key: value
+                  name: scanners
+                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -306,13 +306,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio-ingress-ip
-                  key: value
+                  name: scanners
+                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -342,13 +342,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio-ingress-ip
-                  key: value
+                  name: scanners
+                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -378,13 +378,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio-ingress-ip
-                  key: value
+                  name: scanners
+                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 
@@ -416,13 +416,13 @@ spec:
             - name: ISTIO_INGRESS
               valueFrom:
                 secretKeyRef:
-                  name: istio-ingress-ip
-                  key: value
+                  name: scanners
+                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
-                  name: token-key
-                  key: value
+                  name: scanners
+                  key: TOKEN_KEY
 
 ---
 

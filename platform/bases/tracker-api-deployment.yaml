@@ -77,13 +77,13 @@ spec:
         - name: TOKEN_KEY
           valueFrom:
             secretKeyRef:
-              name: jwt
-              key: jwt-key
+              name: api
+              key: TOKEN_KEY
         - name: ISTIO_INGRESS
           valueFrom:
             secretKeyRef:
-              name: istio
-              key: istio-ingress
+              name: api
+              key: ISTIO_INGRESS
         - name: DB_HOST
           value: postgres
         - name: DB_PORT
@@ -144,13 +144,13 @@ spec:
         - name: TOKEN_KEY
           valueFrom:
             secretKeyRef:
-              name: jwt
-              key: jwt-key
+              name: api
+              key: TOKEN_KEY
         - name: ISTIO_INGRESS
           valueFrom:
             secretKeyRef:
-              name: istio
-              key: istio-ingress
+              name: api
+              key: ISTIO_INGRESS
         - name: DB_HOST
           value: postgres
         - name: DB_PORT
