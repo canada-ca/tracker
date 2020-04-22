@@ -48,8 +48,6 @@ kind: Service
 metadata:
   name: grafana
   namespace: scan-monitoring
-  labels:
-    app: scanners
 spec:
   selector:
     app: grafana

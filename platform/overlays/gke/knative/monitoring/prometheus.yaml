@@ -234,8 +234,6 @@ kind: Service
 metadata:
   name: prometheus-service
   namespace: scan-monitoring
-  labels:
-    app: scanners
 spec:
   selector:
     app: prometheus-server
