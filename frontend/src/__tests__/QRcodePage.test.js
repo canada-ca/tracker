@@ -1,5 +1,5 @@
 import React from 'react'
-import { QRcodePage } from '../QRcodePage'
+import QRcodePage from '../QRcodePage'
 import { waitFor, render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'

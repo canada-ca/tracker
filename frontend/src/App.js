@@ -1,13 +1,8 @@
-import React from 'react'
-import { Route } from 'react-router-dom'
+import React, { Suspense, lazy } from 'react'
+import { Route, Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { Global, css } from '@emotion/core'
-import { PageNotFound } from './PageNotFound'
 import { LandingPage } from './LandingPage'
-import { DomainsPage } from './DomainsPage'
-import { SignInPage } from './SignInPage'
-import { CreateUserPage } from './CreateUserPage'
-import { QRcodePage } from './QRcodePage'
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
 import { TopBanner } from './TopBanner'
@@ -17,9 +12,15 @@ import { Navigation } from './Navigation'
 import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
-import { UserPage } from './UserPage'
-import { UserList } from './UserList'
 import { useUserState } from './UserState'
+
+const PageNotFound = lazy(() => import('./PageNotFound'))
+const DomainsPage = lazy(() => import('./DomainsPage'))
+const CreateUserPage = lazy(() => import('./CreateUserPage'))
+const QRcodePage = lazy(() => './QRcodePage')
+const UserPage = lazy(() => import('./UserPage'))
+const UserList = lazy(() => import('./UserList'))
+const SignInPage = lazy(() => import('./SignInPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -67,41 +68,41 @@ export default function App() {
         </Navigation>
         {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
         <Main>
-          <Route exact path="/">
-            <LandingPage />
-          </Route>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Switch>
+              <Route exact path="/">
+                <LandingPage />
+              </Route>
 
-          <Route path="/domains">
-            <DomainsPage />
-          </Route>
+              <Route path="/domains">
+                <DomainsPage />
+              </Route>
 
-          {isLoggedIn() && (
-            <Route path="/user">
-              <UserPage userName={currentUser.userName} />
-            </Route>
-          )}
+              {isLoggedIn() && (
+                <Route path="/user">
+                  <UserPage userName={currentUser.userName} />
+                </Route>
+              )}
 
-          <Route path="/sign-in">
-            <SignInPage />
-          </Route>
+              <Route path="/sign-in" component={SignInPage} />
 
-          <Route path="/create-user">
-            <CreateUserPage />
-          </Route>
+              <Route path="/create-user">
+                <CreateUserPage />
+              </Route>
 
-          {isLoggedIn() && (
-            <Route path="/two-factor-code">
-              <QRcodePage userName={currentUser.userName} />
-            </Route>
-          )}
+              {isLoggedIn() && (
+                <Route path="/two-factor-code">
+                  <QRcodePage userName={currentUser.userName} />
+                </Route>
+              )}
 
-          <Route path="/user-list">
-            <UserList />
-          </Route>
+              <Route path="/user-list">
+                <UserList />
+              </Route>
 
-          <Route>
-            <PageNotFound />
-          </Route>
+              <Route component={PageNotFound} />
+            </Switch>
+          </Suspense>
         </Main>
         <Footer>
           <Link

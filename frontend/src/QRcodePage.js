@@ -7,7 +7,7 @@ import { useUserState } from './UserState'
 import { GENERATE_OTP_URL } from './graphql/queries'
 import QRCode from 'qrcode.react'
 
-export function QRcodePage() {
+export default function QRcodePage() {
   const { currentUser } = useUserState()
 
   // This function generates the URL when the page loads

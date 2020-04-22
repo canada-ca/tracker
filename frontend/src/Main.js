@@ -1,6 +1,5 @@
 import React from 'react'
 import { node } from 'prop-types'
-import { Switch } from 'react-router-dom'
 import { Flex } from '@chakra-ui/core'
 
 export const Main = ({ children }) => (
@@ -15,7 +14,7 @@ export const Main = ({ children }) => (
     width="100%"
     bg="gray.50"
   >
-    <Switch>{children}</Switch>
+    {children}
   </Flex>
 )
 

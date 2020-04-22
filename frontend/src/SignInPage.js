@@ -22,7 +22,7 @@ import { Formik, Field } from 'formik'
 import { useUserState } from './UserState'
 import { SIGN_IN } from './graphql/mutations'
 
-export function SignInPage() {
+export default function SignInPage() {
   const { login } = useUserState()
   const history = useHistory()
 
@@ -86,8 +86,6 @@ export function SignInPage() {
         }}
       >
         {(props) => (
-          // Needed for testing library
-          // eslint-disable-next-line jsx-a11y/no-redundant-roles
           <form
             onSubmit={props.handleSubmit}
             role="form"

@@ -1,6 +1,6 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
-import { SignInPage } from '../SignInPage'
+import SignInPage from '../SignInPage'
 import { Router, MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'

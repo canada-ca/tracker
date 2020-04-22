@@ -1,5 +1,5 @@
 import React from 'react'
-import { UserPage } from '../UserPage'
+import UserPage from '../UserPage'
 import { setupI18n } from '@lingui/core'
 import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
