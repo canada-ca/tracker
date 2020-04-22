@@ -1,20 +1,12 @@
 import os
 import sys
 from os.path import dirname, join, expanduser, normpath, realpath
-
 from graphene.test import Client
-
-# This is the only way I could get imports to work for unit testing.
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
-sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
-
 from functions.email_templates import (
     email_verification_template,
     password_reset_template)
 from functions.error_messages import scalar_error_type
 from app import app
-
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
 
