@@ -6,7 +6,7 @@ import { Heading, Text, Stack, List, ListItem } from '@chakra-ui/core'
 import { DOMAINS } from './graphql/queries'
 import { useUserState } from './UserState'
 
-export function DomainsPage() {
+export default function DomainsPage() {
   const { currentUser } = useUserState()
   const { loading, error, data } = useQuery(DOMAINS, {
     context: {

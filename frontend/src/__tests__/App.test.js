@@ -84,8 +84,9 @@ describe('<App/>', () => {
             </ThemeProvider>
           </UserStateProvider>,
         )
+        const domains = await waitFor(() => queryByText(/Domains/i))
         await waitFor(() => {
-          expect(queryByText(/Domains/i)).toBeInTheDocument()
+          expect(domains).toBeInTheDocument()
         })
       })
     })

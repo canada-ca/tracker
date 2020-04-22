@@ -8,9 +8,20 @@ module.exports = ({ mode }) => {
 
   return {
     mode,
+    entry: {
+      main: './src/index.js',
+    },
     output: {
       path: path.resolve(__dirname, 'public'),
-      filename: 'bundle.js',
+      filename: '[name].[hash].js',
+    },
+    optimization: {
+      runtimeChunk: {
+        name: (entrypoint) => `runtime~${entrypoint.name}`,
+      },
+      splitChunks: {
+        chunks: 'all',
+      },
     },
     resolve: removeEmpty({
       alias: ifNotProduction({

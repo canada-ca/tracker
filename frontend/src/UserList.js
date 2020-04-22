@@ -17,7 +17,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
 
-export function UserList() {
+export default function UserList() {
   // This function generates the URL when the page loads
   const { loading, error, data } = useQuery(QUERY_USERLIST)
   if (loading) {
@@ -69,7 +69,7 @@ export function UserList() {
   )
 }
 
-/* -- Source code for adding organizations, not being used. -- 
+/* -- Source code for adding organizations, not being used. --
 
 <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="25%">
   <Box mt={2} color="gray.500">

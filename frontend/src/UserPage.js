@@ -21,7 +21,7 @@ import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
 import { UPDATE_PASSWORD } from './graphql/mutations'
 
-export function UserPage(props) {
+export default function UserPage(props) {
   const location = useLocation()
   const client = useApolloClient()
   const toast = useToast()

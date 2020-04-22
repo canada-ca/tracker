@@ -14,7 +14,7 @@ const validationSchema = object().shape({
   confirmPassword: string().required('cannot be empty'),
 })
 
-export function CreateUserPage() {
+export default function CreateUserPage() {
   const [createUser, { loading, error, data }] = useMutation(CREATE_USER)
 
   const history = useHistory()

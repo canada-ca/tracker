@@ -2,7 +2,7 @@ import React from 'react'
 import { Heading, Box, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 
-export function PageNotFound() {
+export default function PageNotFound() {
   return (
     <Box>
       <Heading as="h1">
