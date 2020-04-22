@@ -10,7 +10,7 @@ COPY . .
 RUN npm ci --production
 
 # Base the production image on something slimmer
-FROM node:13-alpine
+FROM node:14-alpine
 LABEL maintainer="mike.williamson@tbs-sct.gc.ca"
 
 ENV HOST 0.0.0.0
