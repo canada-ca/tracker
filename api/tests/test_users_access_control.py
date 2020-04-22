@@ -1,21 +1,12 @@
 import sys
 import os
 from os.path import dirname, join, expanduser, normpath, realpath
-
 import pytest
 from flask import Request
 from graphene.test import Client
 from flask_bcrypt import Bcrypt
-
 from unittest import TestCase
-
 from werkzeug.test import create_environ
-
-# This is the only way I could get imports to work for unit testing.
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
-sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
-
 from app import app
 from db import db_session
 from models import Organizations, Users, User_affiliations

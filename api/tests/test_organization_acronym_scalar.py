@@ -1,17 +1,8 @@
 import sys
 import os
-
 from graphql.language import ast
 from graphql import GraphQLError
-
-import unittest
-
-# This is the only way I could get imports to work for unit testing.
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = os.path.dirname(
-    os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
-sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-
+from unittest import TestCase
 from scalars.organization_acronym import (
     scalar_error_only_types,
     scalar_error_type,
@@ -19,7 +10,7 @@ from scalars.organization_acronym import (
 )
 
 
-class TestOrganizationScalar(unittest.TestCase):
+class TestOrganizationScalar(TestCase):
 
     def test_valid_acronym_serialize(self):
         test_value = 'TEST_ORG'

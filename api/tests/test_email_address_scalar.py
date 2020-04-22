@@ -1,28 +1,18 @@
 import sys
 import os
-
 import pytest
 from graphene.test import Client
 from graphql import GraphQLScalarType
 from graphql.language import ast
 from graphql import GraphQLError
-
-import unittest
-
-# This is the only way I could get imports to work for unit testing.
-PACKAGE_PARENT = '..'
-SCRIPT_DIR = os.path.dirname(
-    os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
-sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-
+from unittest import TestCase
 from scalars.email_address import (
     EmailAddress,
     scalar_error_type,
     scalar_error_only_types
 )
 
-
-class TestEmailAddressScalar(unittest.TestCase):
+class TestEmailAddressScalar(TestCase):
 
     def test_valid_email_serialize(self):
         test_email = 'test.account@canada.ca'
