@@ -1,35 +1,30 @@
 import os
 import sys
-import re
-import subprocess
-import json
 import logging
 import requests
 import jwt
 import threading
 from flask import Flask, request
-from datetime import datetime
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = Flask(__name__)
 
-ISTIO_INGRESS = os.getenv("ISTIO_INGRESS")
 TOKEN_KEY = os.getenv("TOKEN_KEY")
 
-hosts = ['https-scanner.tracker.example.com',
-         'ssl-scanner.tracker.example.com',
-         'dmarc-scanner.tracker.example.com']
+hosts = ['https-scanner.tracker.svc.cluster.local',
+         'ssl-scanner.tracker.svc.cluster.local',
+         'dmarc-scanner.tracker.svc.cluster.local']
 
-dkim_flagged_hosts = ['dkim-scanner.tracker.example.com,'
-                      'dmarc-scanner.tracker.example.com']
+dkim_flagged_hosts = ['dkim-scanner.tracker.svc.cluster.local',
+                      'dmarc-scanner.tracker.svc.cluster.local']
 
-manual_scan_hosts = ['https-scanner-manual.tracker.example.com',
-                     'ssl-scanner-manual.tracker.example.com',
-                     'dmarc-scanner-manual.tracker.example.com']
+manual_scan_hosts = ['https-scanner-manual.tracker.svc.cluster.local',
+                     'ssl-scanner-manual.tracker.svc.cluster.local',
+                     'dmarc-scanner-manual.tracker.svc.cluster.local']
 
-manual_scan_dkim_flagged_hosts = ['dkim-scanner-manual.tracker.example.com,'
-                                  'dmarc-scanner-manual.tracker.example.com']
+manual_scan_dkim_flagged_hosts = ['dkim-scanner-manual.tracker.svc.cluster.local',
+                                  'dmarc-scanner-manual.tracker.svc.cluster.local']
 
 
 @app.route('/receive', methods=['GET', 'POST'])
@@ -94,7 +89,6 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
 
     headers = {
         "Content-Type": "application/json",
-        "Host": None,
         "Data": encrypted_payload,
         "Test": test_flag
     }
@@ -105,17 +99,15 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
 
         if dkim_flag is True:
             for host in dkim_flagged_hosts:
-                headers["Host"] = host
                 try:
-                    dispatched[scan_id][host] = requests.post(ISTIO_INGRESS, headers=headers)
+                    dispatched[scan_id][host] = requests.post(host, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
         else:
             for host in hosts:
-                headers['Host'] = host
                 try:
-                    dispatched[scan_id][host] = requests.post(ISTIO_INGRESS, headers=headers)
+                    dispatched[scan_id][host] = requests.post(host, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -124,17 +116,15 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
 
         if dkim_flag is True:
             for host in manual_scan_dkim_flagged_hosts:
-                headers["Host"] = host
                 try:
-                    dispatched[scan_id][host] = requests.post(ISTIO_INGRESS, headers=headers)
+                    dispatched[scan_id][host] = requests.post(host, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
         else:
             for host in manual_scan_hosts:
-                headers["Host"] = host
                 try:
-                    dispatched[scan_id][host] = requests.post(ISTIO_INGRESS, headers=headers)
+                    dispatched[scan_id][host] = requests.post(host, headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))

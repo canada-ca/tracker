@@ -13,13 +13,13 @@ from flask import Flask, request
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 headers = {
-    "Content-Type": "application/json",
-    "Host": "result-processor.tracker.example.com"
+    "Content-Type": "application/json"
 }
+
+destination = "result-processor.tracker.svc.cluster.local"
 
 app = Flask(__name__)
 
-ISTIO_INGRESS = os.getenv("ISTIO_INGRESS")
 TOKEN_KEY = os.getenv("TOKEN_KEY")
 
 
@@ -80,7 +80,7 @@ def dispatch(scan_id, payload):
     """
     try:
         # Post request to result-handling service
-        response = requests.post(ISTIO_INGRESS, headers=headers, data=payload)
+        response = requests.post(destination, headers=headers, data=payload)
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
         return str(response.text)
