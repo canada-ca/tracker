@@ -50,11 +50,30 @@ metadata:
 
 ---
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-domain
+  namespace: knative-serving
+data:
+  # svc.cluster.local will be used for routes having app=prod.
+  svc.cluster.local: |
+    selector:
+      app: scanners
+  # Default value for domain, for routes that does not have app=prod labels.
+  # Although it will match all routes, it is the least-specific rule so it
+  # will only be used if no other domain matches.
+  example.com: ""
+
+---
+
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
   name: https-scanner
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -73,11 +92,6 @@ spec:
         - name: https-scanner
           image: gcr.io/track-compliance/https:master # The URL to the image of the app
           env:
-            - name: ISTIO_INGRESS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
@@ -91,6 +105,8 @@ kind: Service
 metadata:
   name: result-processor
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -141,6 +157,8 @@ kind: Service
 metadata:
   name: ssl-scanner
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -159,11 +177,6 @@ spec:
         - name: ssl-scanner
           image: gcr.io/track-compliance/ssl:master # The URL to the image of the app
           env:
-            - name: ISTIO_INGRESS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
@@ -177,6 +190,8 @@ kind: Service
 metadata:
   name: dmarc-scanner
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -195,11 +210,6 @@ spec:
         - name: dmarc-scanner
           image: gcr.io/track-compliance/dmarc:master # The URL to the image of the app
           env:
-            - name: ISTIO_INGRESS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
@@ -213,6 +223,8 @@ kind: Service
 metadata:
   name: dkim-scanner
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -231,11 +243,6 @@ spec:
         - name: dkim-scanner
           image: gcr.io/track-compliance/dkim:master # The URL to the image of the app
           env:
-            - name: ISTIO_INGRESS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
@@ -249,6 +256,8 @@ kind: Service
 metadata:
   name: ssl-scanner-manual
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -267,11 +276,6 @@ spec:
         - name: ssl-scanner
           image: gcr.io/track-compliance/ssl:master # The URL to the image of the app
           env:
-            - name: ISTIO_INGRESS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
@@ -285,6 +289,8 @@ kind: Service
 metadata:
   name: dmarc-scanner-manual
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -303,11 +309,6 @@ spec:
         - name: dmarc-scanner
           image: gcr.io/track-compliance/dmarc:master # The URL to the image of the app
           env:
-            - name: ISTIO_INGRESS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
@@ -321,6 +322,8 @@ kind: Service
 metadata:
   name: dkim-scanner-manual
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -339,11 +342,6 @@ spec:
         - name: dkim-scanner
           image: gcr.io/track-compliance/dkim:master # The URL to the image of the app
           env:
-            - name: ISTIO_INGRESS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
@@ -357,6 +355,8 @@ kind: Service
 metadata:
   name: https-scanner-manual
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -375,11 +375,6 @@ spec:
         - name: https-scanner
           image: gcr.io/track-compliance/https:master # The URL to the image of the app
           env:
-            - name: ISTIO_INGRESS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:
@@ -393,6 +388,8 @@ kind: Service
 metadata:
   name: dispatcher
   namespace: tracker
+  labels:
+    app: scanners
 spec:
   template:
     metadata:
@@ -413,11 +410,6 @@ spec:
         - name: dispatcher
           image: gcr.io/track-compliance/dispatcher:master # The URL to the image of the app
           env:
-            - name: ISTIO_INGRESS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: ISTIO_INGRESS
             - name: TOKEN_KEY
               valueFrom:
                 secretKeyRef:

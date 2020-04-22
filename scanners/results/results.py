@@ -9,7 +9,6 @@ from flask_sqlalchemy import SQLAlchemy
 from models import *
 from database import *
 from utils import *
-from datetime import datetime
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
