@@ -3,3 +3,4 @@ waitress
 PyJWT
 requests>=2.18.4
 sslyze
+pyopenssl>=17.5.0
