@@ -3,9 +3,10 @@ from sqlalchemy.types import Integer, Boolean, DateTime, Float
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
-
 from db import Base
 
+from models.Users import Users
+from models.Organizations import Organizations
 
 class Domains(Base):
     __tablename__ = 'domains'
@@ -17,30 +18,6 @@ class Domains(Base):
     organization = relationship("Organizations", back_populates="domains", cascade="all, delete")
     scans = relationship("Scans", back_populates="domain", cascade="all, delete")
     dmarc_reports = relationship("Dmarc_Reports", back_populates="domain", cascade="all, delete")
-
-
-class Organizations(Base):
-    __tablename__ = 'organizations'
-
-    id = Column(Integer, primary_key=True)
-    acronym = Column(String)
-    org_tags = Column(JSONB)
-    domains = relationship("Domains", back_populates="organization", cascade="all, delete")
-    users = relationship("User_affiliations", back_populates="user_organization", cascade="all, delete")
-
-
-class Users(Base):
-    __tablename__ = 'users'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_name = Column(String)
-    display_name = Column(String)
-    user_password = Column(String)
-    preferred_lang = Column(String)
-    failed_login_attempts = Column(Integer, default=0)
-    failed_login_attempt_time = Column(Float, default=0, nullable=True)
-    tfa_validated = Column(Boolean, default=False)
-    user_affiliation = relationship("User_affiliations", back_populates="user", cascade="all, delete")
 
 
 class User_affiliations(Base):

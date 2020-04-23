@@ -29,9 +29,10 @@ flask-migrate = "*"
 pytest = "*"
 pyotp = "*"
 pyjwt = "*"
+pytest-xdist = "*"
 
 [scripts]
-test = "python -m pytest"
+test = "python -m pytest -v -s"
 server = "python application.py"
 schema-export = "python schema_export.py"
 db-init = 'python manage.py db init'
