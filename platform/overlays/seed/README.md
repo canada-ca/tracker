@@ -1,16 +1,83 @@
-# Flux
+# Seed
 
-This overlay bootstraps a cluster with [Flux](https://fluxcd.io/), getting [pull based](https://alex.kaskaso.li/post/pull-based-pipelines) Continuous Deployment going.
+This overlay seeds the cluster with the initial namespaces and secrets needed
+by the other overlays.
 
-The assumption is that you have created a cluster already. To setup flux you will need a gpg key for flux to use to decrypt secrets. The private key will then live in the cluster.
-First `gpg --full-gen-key` to generate an `RSA and RSA` key, that does not have a password.
+The way this currently works is leveraging [kustomize](https://kustomize.io/) and its [secret generator](https://github.com/kubernetes-sigs/kustomize/blob/master/examples/secretGeneratorPlugin.md) to generate kubernetes config from the .env and namespace files in this directory.
 
-Assuming the id of the key is 2169XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX, then you will create a kubernetes secret containing the key in the flux namespace with the following command:
+The namespaces are created primarily because they are needed to put the secrets in, but also because we can add the [labels needed to enable Istios automatic sidecar injection](https://istio.io/docs/setup/additional-setup/sidecar-injection/#automatic-sidecar-injection) feature.
+There are a few files that will need to be created in this folder for everything to work.
 
-```bash
-gpg --export-secret-keys --armor 2169XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX | kubectl create secret generic flux-gpg-signing-key --namespace=flux --from-file=flux.asc=/dev/stdin --dry-run -o yaml > flux-gpg-signing-key.yaml
+```sh
+api.env
+gcp-dns-admin.json
+kiali.env
+postgres.env
+scanners.env
 ```
 
-With that key created you can seed the cluster by running `kustomize build . | kubectl apply -f -` in this directory.
+## scanners.env
 
-When Flux starts it will print out it's public key in the logs. Use that key to create a deploy key with write access [on GitHub](https://github.com/canada-ca/tracker/settings/keys).
+These are the JWT credentials needed for the various scanners to talk to each other, as well as the database credentials needed for the `results` service to put scan results into the database.
+
+```sh
+DB_USER=
+DB_PASS=
+DB_NAME=
+TOKEN_KEY=
+```
+
+## postgres.env
+
+To keep things simple in the early part of the development process, we've been running the [official Postgres Docker image](https://hub.docker.com/_/postgres) without bothering to persist the data. 
+
+One of the interesting features of this image is that if you define both the `POSTGRES_USER` and `POSTGRES_PASSWORD` environment variables, it will create a user and a database with the same name. The values we set in `postgres.env` should be done keeping this feature in mind, since this has implications for the `DB_USER` and `DB_NAME` values in `api.env` and `scanners.env`.
+
+```sh
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+```
+
+## kiali.env
+
+[Kiali](https://kiali.io/) is an observabiltiy tool for the Istio service mesh. It is not exposed externally, and currently only accessible via `istioctl dashboard kiali` for debugging purposes. Running this command will tunnel into the cluster, connect to Kiali and open it's admin dashboard. The credentials for that dashboard are what is being specified in `kiali.env`:
+
+```sh
+username=
+passphrase=
+```
+
+## gcp-dns-admin.json
+
+The secrets that Istio reads it's TLS certificates from are created by [Cert Manager](https://cert-manager.io/). Cert manager uses the Google Cloud DNS credentials in `gcp-dns-admin.json` to manipulate DNS settings in order to complete a [DNS-01 challenge](https://tools.ietf.org/html/rfc8555#section-8.4) using the ACME protocol. 
+
+The completion of this challenge is needed to prove domain ownership so that [Let's Encrypt](https://letsencrypt.org/) will issue a certificate which Cert Manager will then write into a Kubernetes secret specified with the `secretName` property of the [Certificate](https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1alpha3.Certificate) object.
+
+The `gcp-dns-admin.json` file can be created with the following command:
+
+```sh
+gcloud iam service-accounts keys create ./gcp-dns-admin.json --iam-account=dns-admin@track-compliance.iam.gserviceaccount.com
+```
+
+You may need to set up Google Cloud DNS as described [here](https://github.com/stefanprodan/istio-gke/blob/master/docs/istio/05-letsencrypt-setup.md). 
+
+## api.env
+
+This file should contain the following values and generates a secret called `api` which is placed in the `api` namespace. Unsurprisingly it is used to set the env vars for the API deployment.
+
+```sh
+DB_USER=track_dmarc
+DB_PASS=
+DB_HOST=postgres
+DB_PORT=5432
+DB_NAME=track_dmarc
+BASE32_SECRET=
+SUPER_SECRET_KEY=
+SUPER_SECRET_SALT=
+NOTIFICATION_API_KEY=
+NOTIFICATION_API_URL=
+SA_USER_NAME=
+SA_PASSWORD=
+SA_DISPLAY_NAME=
+TOKEN_KEY=
+```
