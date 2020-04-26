@@ -1,5 +1,4 @@
 from graphql import GraphQLError
-from flask_bcrypt import Bcrypt
 from flask import current_app as app
 
 from functions.input_validators import *
@@ -30,17 +29,14 @@ def create_user(display_name, password, confirm_password, user_name):
     if password != confirm_password:
         raise GraphQLError(error_passwords_do_not_match())
 
-    bcrypt = Bcrypt(app)  # Create the bcrypt object that handles password hashing and verifying.
-
-    user = User.query.filter(User.user_name == user_name).first()
+    user = User.find_by_user_name(user_name)
 
     if user is None:
         user = User(
             user_name=user_name,
             display_name=display_name,
-            preferred_lang='English',
-            user_password=bcrypt.generate_password_hash(
-                password=password).decode('UTF-8')  # Hash the password
+            preferred_lang="English",
+            user_password=password,
         )
 
         db_session.add(user)

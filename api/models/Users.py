@@ -1,15 +1,10 @@
 from sqlalchemy.types import Integer, Boolean, Float
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy import event
-from flask_bcrypt import Bcrypt
-from flask import current_app as app
+from app import bcrypt
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from db import Base
-
-bcrypt = Bcrypt(
-    app
-)  # Create the bcrypt object that handles password hashing and verifying.
 
 
 class Users(Base):
@@ -31,12 +26,13 @@ class Users(Base):
     def find_by_user_name(self, user_name):
         return self.query.filter(self.user_name == user_name).first()
 
-    @event.listens_for(Users.user_password, "set", propagate=True)
-    def validate_password(target, value, oldvalue, initiator):
-        pw = bcrypt.generate_password_hash(password=oldvalue).decode("UTF-8")
-        return pw
+    @hybrid_property
+    def password(self):
+        return self.user_password
 
-    @validates("user_password")
-    def validate_password(self, key, user_password):
-        print("user_password")
-        return True
+    @password.setter
+    def password(self, password):
+        if len(password) < 12:
+            raise ValueError("Password must be greater than 12 characters")
+        else:
+            self.user_password = bcrypt.generate_password_hash(password).decode("UTF-8")

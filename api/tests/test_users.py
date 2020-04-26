@@ -1,33 +1,25 @@
 import pytest
 from app import app
+from models import Users
 from db import db_session
-from pytest_bdd import given, when, then
-from models import Organizations, Users, User_affiliations
-from db import db_session as db
 
 
 @pytest.fixture
-def db():
+def save():
+    def save(thing):
+        db_session.add(thing)
+        db_session.commit()
+
     with app.app_context():
-        yield db
+        yield save
         Users.query.delete()
-        db.commit()
 
 
-def save(thing):
-    db.add(thing)
-    db.commit()
-
-
-@when("The database is empty")
-@then("Users.find_by_user_name returns None")
-def test_find_by_user_name_returns_none(db):
+def test_find_by_user_name_returns_none():
     assert Users.find_by_user_name("bob") is None
 
 
-@when("a user foo@example.com exists")
-@then("Users.find_by_user_name returns that user")
-def test_find_by_user_name_returns_a_user(db):
+def test_find_by_user_name_returns_a_user(save):
     test_user = Users(user_name="foo@example.com")
 
     save(test_user)
@@ -36,9 +28,18 @@ def test_find_by_user_name_returns_a_user(db):
     assert retrieved_user.user_name == test_user.user_name
 
 
-@when("saving a user with a bad password")
-@then("the model rejects it")
-def test_password_validation(db):
-    test_user = Users(user_name="foo@example.com", user_password="aaa")
+def test_short_passwords_raise_an_error():
+    with pytest.raises(ValueError):
+        Users(user_name="foo@example.com", password="1")
 
-    assert retrieved_user.user_name == test_user.user_name
+
+def test_user_model_encrypts_the_user_password():
+    acceptable_password = "twelvechars!"
+    user = Users(
+        user_name="foo",
+        display_name="Foo",
+        preferred_lang="English",
+        password=acceptable_password,
+    )
+
+    assert len(user.password) is 60
