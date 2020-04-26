@@ -1,10 +1,6 @@
-import sys
-import os
-from os.path import dirname, join, expanduser, normpath, realpath
 import pytest
 from flask import Request
 from graphene.test import Client
-from flask_bcrypt import Bcrypt
 from unittest import TestCase
 from werkzeug.test import create_environ
 from app import app
@@ -22,161 +18,126 @@ from models import (
     Https_scans,
     Mx_scans,
     Spf_scans,
-    Ssl_scans
+    Ssl_scans,
 )
 
-@pytest.fixture(scope='class')
-def organization_mutation_db_init():
-    bcrypt = Bcrypt(app)
 
+@pytest.fixture(scope="class")
+def organization_mutation_db_init():
     with app.app_context():
         test_super_admin = Users(
             id=1,
             display_name="testsuperadmin",
             user_name="testsuperadmin@testemail.ca",
-            user_password=bcrypt.generate_password_hash(
-                password="testpassword123").decode("UTF-8")
+            password="testpassword123",
         )
         db_session.add(test_super_admin)
         test_admin = Users(
             id=2,
             display_name="testadmin",
             user_name="testadmin@testemail.ca",
-            user_password=bcrypt.generate_password_hash(
-                password="testpassword123").decode("UTF-8")
+            password="testpassword123",
         )
         db_session.add(test_admin)
         test_write = Users(
             id=3,
             display_name="testuserwrite",
             user_name="testuserwrite@testemail.ca",
-            user_password=bcrypt.generate_password_hash(
-                password="testpassword123").decode("UTF-8")
+            password="testpassword123",
         )
         db_session.add(test_write)
         test_read = Users(
             id=4,
             display_name="testuserread",
             user_name="testuserread@testemail.ca",
-            user_password=bcrypt.generate_password_hash(
-                password="testpassword123").decode("UTF-8"),
+            password="testpassword123",
         )
         db_session.add(test_read)
 
         # Super Admin Test Values
-        sa_org = Organizations(
-            acronym='SA'
-        )
+        sa_org = Organizations(acronym="SA")
         db_session.add(sa_org)
         db_session.commit()
-        org_orm = db_session.query(Organizations).filter(
-            Organizations.acronym == 'SA'
-        ).first()
+        org_orm = (
+            db_session.query(Organizations)
+            .filter(Organizations.acronym == "SA")
+            .first()
+        )
         sa_user_aff = User_affiliations(
-            organization_id=org_orm.id,
-            user_id=1,
-            permission='super_admin'
+            organization_id=org_orm.id, user_id=1, permission="super_admin"
         )
         db_session.add(sa_user_aff)
         db_session.commit()
-        sa_check_org = Organizations(
-            acronym="SA_CHECK"
-        )
+        sa_check_org = Organizations(acronym="SA_CHECK")
         db_session.add(sa_check_org)
-        sa_update_org = Organizations(
-            acronym="SA_UPDATE"
-        )
+        sa_update_org = Organizations(acronym="SA_UPDATE")
         db_session.add(sa_update_org)
-        sa_delete_org = Organizations(
-            acronym="SA_DELETE"
-        )
+        sa_delete_org = Organizations(acronym="SA_DELETE")
         db_session.add(sa_delete_org)
         db_session.commit()
-        org_orm = db_session.query(Organizations).filter(
-            Organizations.acronym == 'SA_DELETE'
-        ).first()
-        sa_domain = Domains(
-            id=1,
-            organization_id=org_orm.id
+        org_orm = (
+            db_session.query(Organizations)
+            .filter(Organizations.acronym == "SA_DELETE")
+            .first()
         )
+        sa_domain = Domains(id=1, organization_id=org_orm.id)
         db_session.add(sa_domain)
-        sa_scan = Scans(
-            id=1,
-            domain_id=1
-        )
+        sa_scan = Scans(id=1, domain_id=1)
         db_session.add(sa_scan)
         db_session.commit()
-        sa_dkim = Dkim_scans(
-            id=1
-        )
+        sa_dkim = Dkim_scans(id=1)
         db_session.add(sa_dkim)
-        sa_dmarc = Dmarc_scans(
-            id=1
-        )
+        sa_dmarc = Dmarc_scans(id=1)
         db_session.add(sa_dmarc)
-        sa_https = Https_scans(
-            id=1
-        )
+        sa_https = Https_scans(id=1)
         db_session.add(sa_https)
-        sa_mx = Mx_scans(
-            id=1
-        )
+        sa_mx = Mx_scans(id=1)
         db_session.add(sa_mx)
-        sa_spf = Spf_scans(
-            id=1
-        )
+        sa_spf = Spf_scans(id=1)
         db_session.add(sa_spf)
-        sa_ssl = Ssl_scans(
-            id=1
-        )
+        sa_ssl = Ssl_scans(id=1)
         db_session.add(sa_ssl)
         db_session.commit()
 
         # Admin Db Inserts
-        admin_org = Organizations(
-            acronym="ADMIN_ORG"
-        )
+        admin_org = Organizations(acronym="ADMIN_ORG")
         db_session.add(admin_org)
         db_session.commit()
-        org_orm = db_session.query(Organizations).filter(
-            Organizations.acronym == 'ADMIN_ORG'
-        ).first()
+        org_orm = (
+            db_session.query(Organizations)
+            .filter(Organizations.acronym == "ADMIN_ORG")
+            .first()
+        )
         admin_aff = User_affiliations(
-            organization_id=org_orm.id,
-            user_id=2,
-            permission='admin'
+            organization_id=org_orm.id, user_id=2, permission="admin"
         )
         db_session.add(admin_aff)
 
         # User Write Db Inserts
-        user_write_org = Organizations(
-            acronym="USER_W_ORG"
-        )
+        user_write_org = Organizations(acronym="USER_W_ORG")
         db_session.add(user_write_org)
         db_session.commit()
-        org_orm = db_session.query(Organizations).filter(
-            Organizations.acronym == 'USER_W_ORG'
-        ).first()
+        org_orm = (
+            db_session.query(Organizations)
+            .filter(Organizations.acronym == "USER_W_ORG")
+            .first()
+        )
         user_write_aff = User_affiliations(
-            organization_id=org_orm.id,
-            user_id=3,
-            permission='user_write'
+            organization_id=org_orm.id, user_id=3, permission="user_write"
         )
         db_session.add(user_write_aff)
 
         # User Read Db Inserts
-        user_read_org = Organizations(
-            acronym="USER_R_ORG"
-        )
+        user_read_org = Organizations(acronym="USER_R_ORG")
         db_session.add(user_read_org)
         db_session.commit()
-        org_orm = db_session.query(Organizations).filter(
-            Organizations.acronym == 'USER_R_ORG'
-        ).first()
+        org_orm = (
+            db_session.query(Organizations)
+            .filter(Organizations.acronym == "USER_R_ORG")
+            .first()
+        )
         user_read_aff = User_affiliations(
-            organization_id=org_orm.id,
-            user_id=4,
-            permission='user_read'
+            organization_id=org_orm.id, user_id=4, permission="user_read"
         )
         db_session.add(user_read_aff)
         db_session.commit()
@@ -198,7 +159,7 @@ def organization_mutation_db_init():
         db_session.commit()
 
 
-@pytest.mark.usefixtures('organization_mutation_db_init')
+@pytest.mark.usefixtures("organization_mutation_db_init")
 class TestOrganizationMutations(TestCase):
     # Super Admin Tests
     def test_sa_org_mutation_create_org(self):
@@ -209,25 +170,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     createOrganization(
                         acronym: "TEST_ORG"
@@ -240,14 +201,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['data']
-            assert executed['data']['createOrganization']
-            assert executed['data']['createOrganization']['status']
+            assert executed["data"]
+            assert executed["data"]["createOrganization"]
+            assert executed["data"]["createOrganization"]["status"]
 
             executed = client.execute(
-                '''
+                """
                 {
                     organization(org: "TEST_ORG") {
                         edges {
@@ -262,7 +226,10 @@ class TestOrganizationMutations(TestCase):
                         }
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
             result_refr = {
                 "data": {
                     "organization": {
@@ -274,7 +241,7 @@ class TestOrganizationMutations(TestCase):
                                     "zone": "Test Zone",
                                     "sector": "Test Sector",
                                     "province": "Nova Scotia",
-                                    "city": "Halifax"
+                                    "city": "Halifax",
                                 }
                             }
                         ]
@@ -291,25 +258,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     createOrganization(
                         acronym: "SA_CHECK"
@@ -322,11 +289,16 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, Organization alredy exists"
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"] == "Error, Organization alredy exists"
+            )
 
     def test_sa_org_mutation_update_org(self):
         """
@@ -336,25 +308,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     updateOrganization(
                         acronym: "TEST_ORG"
@@ -368,14 +340,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['data']
-            assert executed['data']['updateOrganization']
-            assert executed['data']['updateOrganization']['status']
+            assert executed["data"]
+            assert executed["data"]["updateOrganization"]
+            assert executed["data"]["updateOrganization"]["status"]
 
             executed = client.execute(
-                '''
+                """
                 {
                     organization(org: "NEW_ORG") {
                         edges {
@@ -390,7 +365,10 @@ class TestOrganizationMutations(TestCase):
                         }
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
             result_refr = {
                 "data": {
                     "organization": {
@@ -402,7 +380,7 @@ class TestOrganizationMutations(TestCase):
                                     "zone": "Test Zone",
                                     "sector": "Test Sector",
                                     "province": "Nova Scotia",
-                                    "city": "Halifax"
+                                    "city": "Halifax",
                                 }
                             }
                         ]
@@ -419,25 +397,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     updateOrganization(
                         acronym: "SA_UPDATE"
@@ -451,11 +429,14 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, acronym already in use."
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert executed["errors"][0]["message"] == "Error, acronym already in use."
 
     def test_sa_org_mutation_update_org_does_not_exist(self):
         """
@@ -465,25 +446,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     updateOrganization(
                         acronym: "TEST_ORG"
@@ -497,11 +478,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, organization does not exist."
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, organization does not exist."
+            )
 
     def test_sa_org_mutation_remove_org(self):
         """
@@ -511,29 +498,32 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
-            org_id = db_session.query(Organizations).filter(
-                Organizations.acronym == 'SA_DELETE'
-            ).first().id
+            org_id = (
+                db_session.query(Organizations)
+                .filter(Organizations.acronym == "SA_DELETE")
+                .first()
+                .id
+            )
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     removeOrganization(
                         acronym: "SA_DELETE"
@@ -541,20 +531,27 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['data']
-            assert executed['data']['removeOrganization']
-            assert executed['data']['removeOrganization']['status']
+            assert executed["data"]
+            assert executed["data"]["removeOrganization"]
+            assert executed["data"]["removeOrganization"]["status"]
 
-            check_org_orm = db_session.query(Organizations).filter(
-                Organizations.acronym == 'SA_DELETE'
-            ).first()
+            check_org_orm = (
+                db_session.query(Organizations)
+                .filter(Organizations.acronym == "SA_DELETE")
+                .first()
+            )
             assert check_org_orm is None
 
-            check_user_aff = db_session.query(User_affiliations).filter(
-                User_affiliations.organization_id == org_id
-            ).all()
+            check_user_aff = (
+                db_session.query(User_affiliations)
+                .filter(User_affiliations.organization_id == org_id)
+                .all()
+            )
             assert not check_user_aff
 
             assert not db_session.query(Domains).all()
@@ -574,25 +571,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     removeOrganization(
                         acronym: "SA"
@@ -600,11 +597,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you cannot remove this organization"
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you cannot remove this organization"
+            )
 
     def test_sa_org_mutation_remove_org_does_not_exist(self):
         """
@@ -614,25 +617,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     removeOrganization(
                         acronym: "RANDOM"
@@ -640,11 +643,16 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, organization does not exist"
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"] == "Error, organization does not exist"
+            )
 
     # Admin Test
     def test_admin_org_mutation_create_org_fail(self):
@@ -655,25 +663,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     createOrganization(
                         acronym: "ADMIN_NEW"
@@ -686,11 +694,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to create organizations"
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you do not have permission to create organizations"
+            )
 
     def test_admin_org_mutation_update_org_fail(self):
         """
@@ -700,25 +714,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     updateOrganization(
                         acronym: "ADMIN_ORG"
@@ -731,11 +745,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to update organizations"
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you do not have permission to update organizations"
+            )
 
     def test_admin_org_mutation_remove_org_fail(self):
         """
@@ -745,25 +765,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testadmin@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     removeOrganization(
                         acronym: "ADMIN_ORG"
@@ -771,11 +791,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to remove organizations."
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you do not have permission to remove organizations."
+            )
 
     # User Write Test
     def test_user_write_org_mutation_create_org_fail(self):
@@ -786,25 +812,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserwrite@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     createOrganization(
                         acronym: "USER_W_NEW"
@@ -817,11 +843,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to create organizations"
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you do not have permission to create organizations"
+            )
 
     def test_user_write_org_mutation_update_org_fail(self):
         """
@@ -831,25 +863,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserwrite@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     updateOrganization(
                         acronym: "USER_W_ORG"
@@ -862,11 +894,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to update organizations"
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you do not have permission to update organizations"
+            )
 
     def test_user_write_org_mutation_remove_org_fail(self):
         """
@@ -876,25 +914,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserwrite@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     removeOrganization(
                         acronym: "USER_W_ORG"
@@ -902,11 +940,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to remove organizations."
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you do not have permission to remove organizations."
+            )
 
     # User Read Test
     def test_user_read_org_mutation_create_org_fail(self):
@@ -917,25 +961,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     createOrganization(
                         acronym: "USER_R_NEW"
@@ -948,11 +992,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to create organizations"
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you do not have permission to create organizations"
+            )
 
     def test_user_read_org_mutation_update_org_fail(self):
         """
@@ -962,25 +1012,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     updateOrganization(
                         acronym: "USER_R_ORG"
@@ -993,11 +1043,17 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to update organizations"
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you do not have permission to update organizations"
+            )
 
     def test_user_read_org_mutation_remove_org_fail(self):
         """
@@ -1007,25 +1063,25 @@ class TestOrganizationMutations(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 mutation {
                     removeOrganization(
                         acronym: "USER_R_ORG"
@@ -1033,8 +1089,14 @@ class TestOrganizationMutations(TestCase):
                         status
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
 
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, you do not have permission to remove organizations."
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, you do not have permission to remove organizations."
+            )

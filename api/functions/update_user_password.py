@@ -1,11 +1,8 @@
 import datetime
-
 from graphql import GraphQLError
-from flask_bcrypt import Bcrypt
-
+from app import bcrypt
 from functions.input_validators import *
 from functions.error_messages import *
-
 from models import Users as User
 from app import app
 from db import db_session
@@ -29,19 +26,18 @@ def update_password(user_name, password, confirm_password):
     if password != confirm_password:
         raise GraphQLError(error_passwords_do_not_match())
 
-    user = User.query.filter(User.user_name == user_name).first()
+    user = User.find_by_user_name(user_name)
 
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
 
-    bcrypt = Bcrypt(app)  # Create the bcrypt object that will handle password hashing and verification
-
-    user = User.query.filter(User.user_name == user_name) \
-        .update({
-            'user_password': bcrypt.generate_password_hash(password).decode('UTF-8'),
-            'failed_login_attempts': 0,
-            'failed_login_attempt_time': 0
-        })
+    user = User.query.filter(User.user_name == user_name).update(
+        {
+            "user_password": bcrypt.generate_password_hash(password).decode("UTF-8"),
+            "failed_login_attempts": 0,
+            "failed_login_attempt_time": 0,
+        }
+    )
 
     db_session.commit()
 
@@ -49,5 +45,5 @@ def update_password(user_name, password, confirm_password):
         raise GraphQLError(error_password_not_updated())
     else:
         # Re-query the user to ensure the latest object is returned
-        user = User.query.filter(User.user_name == user_name).first()
+        user = User.find_by_user_name(user_name)
         return user
