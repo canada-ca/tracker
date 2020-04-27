@@ -1,14 +1,11 @@
 from flask import Flask
-
 from app.logger import logger
-from app.create_sa import create_sa
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 
 
 def create_application():
-
     app.debug = True
-    create_sa()
-
     return app

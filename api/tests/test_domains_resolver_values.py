@@ -1,10 +1,6 @@
-import sys
-import os
-from os.path import dirname, join, expanduser, normpath, realpath
 import pytest
 from flask import Request
 from graphene.test import Client
-from flask_bcrypt import Bcrypt
 from unittest import TestCase
 from werkzeug.test import create_environ
 from app import app
@@ -23,51 +19,35 @@ from models import (
     Https_scans,
     Mx_scans,
     Spf_scans,
-    Ssl_scans
+    Ssl_scans,
 )
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope="class")
 def domain_test_db_init():
-    bcrypt = Bcrypt(app)
 
     with app.app_context():
         test_user = Users(
             id=1,
             display_name="testuserread",
             user_name="testuserread@testemail.ca",
-            user_password=bcrypt.generate_password_hash(
-                password="testpassword123").decode("UTF-8"),
+            password="testpassword123",
         )
         db_session.add(test_user)
 
         org = Organizations(
-            id=1,
-            acronym='ORG1',
-            org_tags={
-                "description": 'Organization 1'
-            }
+            id=1, acronym="ORG1", org_tags={"description": "Organization 1"}
         )
         db_session.add(org)
 
         test_user_read_role = User_affiliations(
-            user_id=1,
-            organization_id=1,
-            permission='user_read'
+            user_id=1, organization_id=1, permission="user_read"
         )
         db_session.add(test_user_read_role)
 
-        domain = Domains(
-            id=1,
-            domain='accurateplastics.com',
-            organization_id=1
-        )
+        domain = Domains(id=1, domain="accurateplastics.com", organization_id=1)
         db_session.add(domain)
-        domain = Domains(
-            id=2,
-            domain='addisonfoods.com',
-            organization_id=1
-        )
+        domain = Domains(id=2, domain="addisonfoods.com", organization_id=1)
         db_session.add(domain)
 
         test_dmarc_report = Dmarc_Reports(
@@ -86,7 +66,7 @@ def domain_test_db_init():
                     "end_date": "2018-10-01 13:07:12",
                     "errors": [
                         "Invalid XML: not well-formed (invalid token): line 5, column 17"
-                    ]
+                    ],
                 },
                 "policy_published": {
                     "domain": "example.com",
@@ -95,7 +75,7 @@ def domain_test_db_init():
                     "p": "none",
                     "sp": "reject",
                     "pct": "100",
-                    "fo": "0"
+                    "fo": "0",
                 },
                 "records": [
                     {
@@ -103,46 +83,36 @@ def domain_test_db_init():
                             "ip_address": "12.20.127.122",
                             "country": "US",
                             "reverse_dns": "null",
-                            "base_domain": "null"
+                            "base_domain": "null",
                         },
                         "count": 1,
-                        "alignment": {
-                            "spf": False,
-                            "dkim": False,
-                            "dmarc": False
-                        },
+                        "alignment": {"spf": False, "dkim": False, "dmarc": False},
                         "policy_evaluated": {
                             "disposition": "none",
                             "dkim": "fail",
                             "spf": "fail",
-                            "policy_override_reasons": [
-                                "TESTING TEXT"
-                            ]
+                            "policy_override_reasons": ["TESTING TEXT"],
                         },
                         "identifiers": {
                             "header_from": "example.com",
                             "envelope_from": "null",
-                            "envelope_to": "null"
+                            "envelope_to": "null",
                         },
                         "auth_results": {
                             "dkim": [
                                 {
                                     "domain": "toptierhighticket.club",
                                     "selector": "default",
-                                    "result": "pass"
+                                    "result": "pass",
                                 }
                             ],
                             "spf": [
-                                {
-                                    "domain": "null",
-                                    "scope": "mfrom",
-                                    "result": "none"
-                                }
-                            ]
-                        }
+                                {"domain": "null", "scope": "mfrom", "result": "none"}
+                            ],
+                        },
                     }
-                ]
-            }
+                ],
+            },
         )
         db_session.add(test_dmarc_report)
         db_session.commit()
@@ -165,7 +135,7 @@ def domain_test_db_init():
         db_session.commit()
 
 
-@pytest.mark.usefixtures('domain_test_db_init')
+@pytest.mark.usefixtures("domain_test_db_init")
 class TestDomainsResolver(TestCase):
     def test_get_domain_resolver_dmarc_report(self):
         """
@@ -175,25 +145,25 @@ class TestDomainsResolver(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 {
                     domain(url: "accurateplastics.com") {
                         url
@@ -256,8 +226,11 @@ class TestDomainsResolver(TestCase):
                         }
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
-            result_refr ={
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
+            result_refr = {
                 "data": {
                     "domain": [
                         {
@@ -280,7 +253,7 @@ class TestDomainsResolver(TestCase):
                                                 "p": "none",
                                                 "sp": "reject",
                                                 "pct": 100,
-                                                "fo": 0
+                                                "fo": 0,
                                             },
                                             "records": [
                                                 {
@@ -289,12 +262,12 @@ class TestDomainsResolver(TestCase):
                                                         "ipAddress": "12.20.127.122",
                                                         "country": "US",
                                                         "reverseDns": "null",
-                                                        "baseDomain": "null"
+                                                        "baseDomain": "null",
                                                     },
                                                     "alignment": {
                                                         "spf": False,
                                                         "dkim": False,
-                                                        "dmarc": False
+                                                        "dmarc": False,
                                                     },
                                                     "policyEvaluated": {
                                                         "disposition": "none",
@@ -302,35 +275,35 @@ class TestDomainsResolver(TestCase):
                                                         "spf": "fail",
                                                         "policyOverrideReasons": [
                                                             "TESTING TEXT"
-                                                        ]
+                                                        ],
                                                     },
                                                     "identifiers": {
                                                         "headerFrom": "example.com",
                                                         "envelopeFrom": "null",
-                                                        "envelopeTo": "null"
+                                                        "envelopeTo": "null",
                                                     },
                                                     "authResults": {
                                                         "dkim": [
                                                             {
                                                                 "domain": "toptierhighticket.club",
                                                                 "selector": "default",
-                                                                "result": "pass"
+                                                                "result": "pass",
                                                             }
                                                         ],
                                                         "spf": [
                                                             {
                                                                 "domain": "null",
                                                                 "scope": "mfrom",
-                                                                "result": "none"
+                                                                "result": "none",
                                                             }
-                                                        ]
-                                                    }
+                                                        ],
+                                                    },
                                                 }
-                                            ]
+                                            ],
                                         }
                                     }
                                 ]
-                            }
+                            },
                         }
                     ]
                 }
@@ -345,25 +318,25 @@ class TestDomainsResolver(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 {
                     domain(url: "accurateplastics.com") {
                         url
@@ -426,8 +399,11 @@ class TestDomainsResolver(TestCase):
                         }
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
-            result_refr ={
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
+            result_refr = {
                 "data": {
                     "domain": [
                         {
@@ -450,7 +426,7 @@ class TestDomainsResolver(TestCase):
                                                 "p": "none",
                                                 "sp": "reject",
                                                 "pct": 100,
-                                                "fo": 0
+                                                "fo": 0,
                                             },
                                             "records": [
                                                 {
@@ -459,12 +435,12 @@ class TestDomainsResolver(TestCase):
                                                         "ipAddress": "12.20.127.122",
                                                         "country": "US",
                                                         "reverseDns": "null",
-                                                        "baseDomain": "null"
+                                                        "baseDomain": "null",
                                                     },
                                                     "alignment": {
                                                         "spf": False,
                                                         "dkim": False,
-                                                        "dmarc": False
+                                                        "dmarc": False,
                                                     },
                                                     "policyEvaluated": {
                                                         "disposition": "none",
@@ -472,35 +448,35 @@ class TestDomainsResolver(TestCase):
                                                         "spf": "fail",
                                                         "policyOverrideReasons": [
                                                             "TESTING TEXT"
-                                                        ]
+                                                        ],
                                                     },
                                                     "identifiers": {
                                                         "headerFrom": "example.com",
                                                         "envelopeFrom": "null",
-                                                        "envelopeTo": "null"
+                                                        "envelopeTo": "null",
                                                     },
                                                     "authResults": {
                                                         "dkim": [
                                                             {
                                                                 "domain": "toptierhighticket.club",
                                                                 "selector": "default",
-                                                                "result": "pass"
+                                                                "result": "pass",
                                                             }
                                                         ],
                                                         "spf": [
                                                             {
                                                                 "domain": "null",
                                                                 "scope": "mfrom",
-                                                                "result": "none"
+                                                                "result": "none",
                                                             }
-                                                        ]
-                                                    }
+                                                        ],
+                                                    },
                                                 }
-                                            ]
+                                            ],
                                         }
                                     }
                                 ]
-                            }
+                            },
                         }
                     ]
                 }
@@ -515,25 +491,25 @@ class TestDomainsResolver(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 {
                     domain(url: "accurateplastics.com") {
                         url
@@ -596,10 +572,16 @@ class TestDomainsResolver(TestCase):
                         }
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == "Error, no reports for that domain in that date range."
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, no reports for that domain in that date range."
+            )
 
     def test_get_domain_resolver_dmarc_report_domain_missing_report(self):
         """
@@ -609,25 +591,25 @@ class TestDomainsResolver(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 {
                     domain(url: "addisonfoods.com") {
                         url
@@ -690,10 +672,15 @@ class TestDomainsResolver(TestCase):
                         }
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == 'Error, no reports for that domain.'
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"] == "Error, no reports for that domain."
+            )
 
     def test_get_domain_resolver_dmarc_report_no_start_date(self):
         """
@@ -703,25 +690,25 @@ class TestDomainsResolver(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 {
                     domain(url: "addisonfoods.com") {
                         url
@@ -784,10 +771,16 @@ class TestDomainsResolver(TestCase):
                         }
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == 'Error, both start and end dates are required.'
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, both start and end dates are required."
+            )
 
     def test_get_domain_resolver_dmarc_report_no_end_date(self):
         """
@@ -797,25 +790,25 @@ class TestDomainsResolver(TestCase):
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             get_token = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
                         authToken
                     }
                 }
-                ''', backend=backend)
-            assert get_token['data']['signIn']['authToken'] is not None
-            token = get_token['data']['signIn']['authToken']
+                """,
+                backend=backend,
+            )
+            assert get_token["data"]["signIn"]["authToken"] is not None
+            token = get_token["data"]["signIn"]["authToken"]
             assert token is not None
 
             environ = create_environ()
-            environ.update(
-                HTTP_AUTHORIZATION=token
-            )
+            environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
             executed = client.execute(
-                '''
+                """
                 {
                     domain(url: "addisonfoods.com") {
                         url
@@ -878,7 +871,13 @@ class TestDomainsResolver(TestCase):
                         }
                     }
                 }
-                ''', context_value=request_headers, backend=backend)
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message'] == 'Error, both start and end dates are required.'
+                """,
+                context_value=request_headers,
+                backend=backend,
+            )
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert (
+                executed["errors"][0]["message"]
+                == "Error, both start and end dates are required."
+            )
