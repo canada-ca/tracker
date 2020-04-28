@@ -9,6 +9,7 @@ The `istio.yaml` file in this folder is generated with the following command:
 ```sh
 istioctl manifest generate --set values.kiali.enabled=true \
   --set values.tracing.enabled=true \
+  --set values.pilot.traceSampling=100 \
   --set values.global.proxy.accessLogFile="/dev/stdout" \
   --set values.gateways.istio-ingressgateway.loadBalancerIP=34.95.5.243 > istio.yaml
 ```
