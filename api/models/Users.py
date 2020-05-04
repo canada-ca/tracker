@@ -1,4 +1,5 @@
 from sqlalchemy.types import Integer, Boolean, Float
+from functions.orm_to_dict import orm_to_dict
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy import event
 from app import bcrypt
@@ -25,6 +26,22 @@ class Users(Base):
     @hybrid_method
     def find_by_user_name(self, user_name):
         return self.query.filter(self.user_name == user_name).first()
+
+    @hybrid_property
+    def roles(self):
+        affiliations = orm_to_dict(self.user_affiliation)
+        roles = []
+        if len(affiliations):
+            roles = []
+            for affiliation in affiliations:
+                roles.append(
+                    {
+                        "user_id": affiliation["user_id"],
+                        "org_id": affiliation["organization_id"],
+                        "permission": affiliation["permission"],
+                    }
+                )
+        return roles
 
     @hybrid_property
     def password(self):
