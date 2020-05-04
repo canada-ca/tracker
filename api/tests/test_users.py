@@ -1,18 +1,16 @@
 import pytest
 from app import app
-from models import Users
-from db import db_session
+from models import Users, User_affiliations, Organizations
+from db import DB
+
+s, cleanup, _ = DB()
 
 
 @pytest.fixture
 def save():
-    def save(thing):
-        db_session.add(thing)
-        db_session.commit()
-
     with app.app_context():
-        yield save
-        Users.query.delete()
+        yield s
+        cleanup()
 
 
 def test_find_by_user_name_returns_none():
@@ -43,3 +41,26 @@ def test_user_model_encrypts_the_user_password():
     )
 
     assert len(user.password) is 60
+
+
+def test_users_roles_can_be_accessed_by_a_roles_method(save):
+    acceptable_password = "twelvechars!"
+    user = Users(
+        user_name="foo",
+        display_name="Foo",
+        preferred_lang="English",
+        password=acceptable_password,
+    )
+
+    user.user_affiliation.append(
+        User_affiliations(
+            permission="user_write",
+            user_organization=Organizations(
+                acronym="ORG1", org_tags={"description": "Organization 1"}
+            ),
+        )
+    )
+
+    # Before save org_id and user_id are None
+    role = filter(lambda d: d["permission"] == "user_write", user.roles)
+    assert user.roles == [{"org_id": None, "permission": "user_write", "user_id": None}]
