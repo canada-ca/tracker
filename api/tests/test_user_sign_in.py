@@ -10,7 +10,7 @@ from graphene.test import Client
 
 
 # This is the only way I could get imports to work for unit testing.
-PACKAGE_PARENT = '..'
+PACKAGE_PARENT = ".."
 SCRIPT_DIR = dirname(realpath(join(os.getcwd(), expanduser(__file__))))
 sys.path.append(normpath(join(SCRIPT_DIR, PACKAGE_PARENT)))
 
@@ -19,14 +19,14 @@ from app import app
 from queries import schema
 from models import Users
 from backend.security_check import SecurityAnalysisBackend
-from functions.error_messages import(
+from functions.error_messages import (
     error_invalid_credentials,
     error_too_many_failed_login_attempts,
-    error_user_does_not_exist
+    error_user_does_not_exist,
 )
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope="class")
 def user_schema_test_db_init():
     bcrypt = Bcrypt(app)
 
@@ -35,8 +35,10 @@ def user_schema_test_db_init():
             display_name="testuser",
             user_name="testuser@testemail.ca",
             user_password=bcrypt.generate_password_hash(
-                password="testpassword123").decode("UTF-8"),
-            failed_login_attempt_time=datetime.datetime.now().timestamp() + 1920, # This mocks that the user is accessing the service 32 mins after their last failed login attempt
+                password="testpassword123"
+            ).decode("UTF-8"),
+            failed_login_attempt_time=datetime.datetime.now().timestamp()
+            + 1920,  # This mocks that the user is accessing the service 32 mins after their last failed login attempt
         )
         db_session.add(test_user)
 
@@ -44,9 +46,11 @@ def user_schema_test_db_init():
             display_name="test_failed_user",
             user_name="test_already_failed_user@testemail.ca",
             user_password=bcrypt.generate_password_hash(
-                password="testpassword123").decode("UTF-8"),
+                password="testpassword123"
+            ).decode("UTF-8"),
             failed_login_attempts=3,
-            failed_login_attempt_time=datetime.datetime.now().timestamp() + 1920, # This mocks that the user is accessing the service 32 mins after their last failed login attempt
+            failed_login_attempt_time=datetime.datetime.now().timestamp()
+            + 1920,  # This mocks that the user is accessing the service 32 mins after their last failed login attempt
         )
         db_session.add(test_already_failed_user)
 
@@ -54,7 +58,8 @@ def user_schema_test_db_init():
             display_name="test_too_many_fails_user",
             user_name="test_too_many_failed_user@testemail.ca",
             user_password=bcrypt.generate_password_hash(
-                password="testpassword123").decode("UTF-8"),
+                password="testpassword123"
+            ).decode("UTF-8"),
             failed_login_attempts=30,
             failed_login_attempt_time=0,
         )
@@ -71,7 +76,7 @@ def user_schema_test_db_init():
 
 ##
 # This class of tests works within the 'signIn' api endpoint
-@pytest.mark.usefixtures('user_schema_test_db_init')
+@pytest.mark.usefixtures("user_schema_test_db_init")
 class TestSignInUser:
     def test_successful_sign_in(self):
         """
@@ -81,7 +86,7 @@ class TestSignInUser:
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuser@testemail.ca",
                             password:"testpassword123"){
@@ -90,12 +95,16 @@ class TestSignInUser:
                         }
                     }
                 }
-                ''', backend=backend)
-            assert executed['data']
-            assert executed['data']['signIn']
-            assert executed['data']['signIn']['user']
-            assert executed['data']['signIn']['user']['userName'] \
-                   == "testuser@testemail.ca"
+                """,
+                backend=backend,
+            )
+            assert executed["data"]
+            assert executed["data"]["signIn"]
+            assert executed["data"]["signIn"]["user"]
+            assert (
+                executed["data"]["signIn"]["user"]["userName"]
+                == "testuser@testemail.ca"
+            )
 
     def test_invalid_credentials(self):
         """
@@ -105,7 +114,7 @@ class TestSignInUser:
         with app.app_context():
             client = Client(schema)
             executed = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"testuser@testemail.ca",
                             password:"testpassword1234"){
@@ -114,15 +123,16 @@ class TestSignInUser:
                         }
                     }
                 }
-                ''')
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message']
-            assert executed['errors'][0]['message'] \
-                   == error_invalid_credentials()
+                """
+            )
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert executed["errors"][0]["message"]
+            assert executed["errors"][0]["message"] == error_invalid_credentials()
 
-            failed_user = Users.query\
-                .filter(Users.user_name == "testuser@testemail.ca").first()
+            failed_user = Users.query.filter(
+                Users.user_name == "testuser@testemail.ca"
+            ).first()
 
             assert failed_user is not None
             assert failed_user.failed_login_attempts == 1
@@ -136,7 +146,7 @@ class TestSignInUser:
         with app.app_context():
             client = Client(schema)
             executed = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"test_already_failed_user@testemail.ca",
                      password:"testpassword123"){
@@ -145,19 +155,23 @@ class TestSignInUser:
                         }
                     }
                 }
-                ''')
+                """
+            )
 
-            user = Users.query\
-                .filter(Users.user_name ==
-                        "test_already_failed_user@testemail.ca").first()
+            user = Users.query.filter(
+                Users.user_name == "test_already_failed_user@testemail.ca"
+            ).first()
 
             assert user is not None
             assert user.failed_login_attempts == 0
             assert user.failed_login_attempt_time == 0
 
-            assert executed['data']
-            assert executed['data']['signIn']
-            assert executed['data']['signIn']['user']['userName'] == "test_already_failed_user@testemail.ca"
+            assert executed["data"]
+            assert executed["data"]["signIn"]
+            assert (
+                executed["data"]["signIn"]["user"]["userName"]
+                == "test_already_failed_user@testemail.ca"
+            )
 
     def test_too_many_failed_attempts(self):
         """Test that ensures a user can be signed in"""
@@ -165,7 +179,7 @@ class TestSignInUser:
             backend = SecurityAnalysisBackend()
             client = Client(schema)
             executed = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"test_too_many_failed_user@testemail.ca",
                      password:"testpassword123"){
@@ -174,19 +188,23 @@ class TestSignInUser:
                         }
                     }
                 }
-                ''', backend=backend)
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message']
-            assert executed['errors'][0]['message'] \
-                   == error_too_many_failed_login_attempts()
+                """,
+                backend=backend,
+            )
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert executed["errors"][0]["message"]
+            assert (
+                executed["errors"][0]["message"]
+                == error_too_many_failed_login_attempts()
+            )
 
     def test_no_such_user(self):
         """Test that ensures error message is sent if user does not exist"""
         with app.app_context():
             client = Client(schema)
             executed = client.execute(
-                '''
+                """
                 mutation{
                     signIn(userName:"nouser@testemail.ca",
                      password:"testpassword123"){
@@ -195,8 +213,9 @@ class TestSignInUser:
                         }
                     }
                 }
-                ''')
-            assert executed['errors']
-            assert executed['errors'][0]
-            assert executed['errors'][0]['message']
-            assert executed['errors'][0]['message'] == error_user_does_not_exist()
+                """
+            )
+            assert executed["errors"]
+            assert executed["errors"][0]
+            assert executed["errors"][0]["message"]
+            assert executed["errors"][0]["message"] == error_user_does_not_exist()

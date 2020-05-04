@@ -21,6 +21,7 @@ class Users(SQLAlchemyObjectType):
     This object is used to return a list of users with their user name, display
     name and their permission for the requested organization
     """
+
     class Meta:
         model = User_affiliations
         interfaces = (relay.Node,)
@@ -30,16 +31,17 @@ class Users(SQLAlchemyObjectType):
             "organization_id",
             "permission",
             "user",
-            "user_organization"
+            "user_organization",
         )
+
     user_name = EmailAddress(description="Email that the user signed up with")
     display_name = graphene.String(description="Name displayed to other users")
     permission = RoleEnums(
-        description="The level of access this user has to the requested "
-                    "organization"
+        description="The level of access this user has to the requested " "organization"
     )
 
     with app.app_context():
+
         def resolve_user_name(self: User_affiliations, info):
             query = User.get_query(info)
             query = query.filter(Organizations.id == self.organization_id)
@@ -57,7 +59,7 @@ class Users(SQLAlchemyObjectType):
 
         def resolve_affiliations(self: User_affiliations, info):
             query = Organization.get_query(info)
-            query =query.filter(Organizations.users.user_id == self.id)
+            query = query.filter(Organizations.users.user_id == self.id)
             return query.all()
 
 

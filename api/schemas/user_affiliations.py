@@ -27,19 +27,19 @@ class UserAffClass(SQLAlchemyObjectType):
             "organization_id",
             "permission",
             "user",
-            "user_organization"
+            "user_organization",
         )
+
     user_id = graphene.Int(description="User's ID")
     user = ORMField(model_attr="user")
-    permission = RoleEnums(
-        description="User's level of access to a given organization"
-    )
+    permission = RoleEnums(description="User's level of access to a given organization")
     organization = ORMField(
-        model_attr='user_organization',
-        description="The organization this affiliation belongs to"
+        model_attr="user_organization",
+        description="The organization this affiliation belongs to",
     )
 
     with app.app_context():
+
         def resolve_user_id(self: UserAff, info):
             return self.user_id
 
