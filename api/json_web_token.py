@@ -1,4 +1,6 @@
 import jwt
+from werkzeug.test import create_environ
+from flask import Request
 from operator import itemgetter
 from datetime import datetime as dt, timedelta
 from os import environ
@@ -17,3 +19,8 @@ def tokenize(
         secret,
         algorithm="HS256",
     ).decode("utf-8")
+
+def auth_header(token):
+    env = create_environ()
+    env.update(HTTP_AUTHORIZATION=token)
+    return Request(env)
