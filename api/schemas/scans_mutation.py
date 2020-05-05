@@ -6,7 +6,7 @@ from app import app
 from db import db_session
 
 from functions.auth_wrappers import require_token
-from functions.auth_functions import is_admin
+from functions.auth_functions import is_user_write
 from functions.fire_scan import fire_scan
 from functions.input_validators import cleanse_input
 
@@ -60,7 +60,7 @@ class RequestScan(graphene.Mutation):
             # Check to ensure user has admin rights
             org_id = domain_orm.organization_id
             domain_id = domain_orm.id
-            if is_admin(user_role=user_roles, org_id=org_id):
+            if is_user_write(user_roles=user_roles, org_id=org_id):
                 # Fire scan and get status from request
                 status = fire_scan(
                     user_id=user_id,

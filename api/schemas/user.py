@@ -69,7 +69,7 @@ class User(SQLAlchemyObjectType):
             rtr_list = []
 
             for role in user_roles:
-                if is_user_read(user_role=user_roles, org_id=role['org_id']):
+                if is_user_read(user_roles=user_roles, org_id=role['org_id']):
                     query = UserAffClass.get_query(info)
                     query = query.filter(User_affiliations.organization_id == role['org_id']) \
                         .filter(User_affiliations.user_id == self.id)

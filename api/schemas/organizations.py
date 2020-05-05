@@ -85,7 +85,7 @@ class Organization(SQLAlchemyObjectType):
         @require_token
         def resolve_affiliated_users(self: OrgModel, info, **kwargs):
             user_roles = kwargs.get('user_roles')
-            if is_admin(user_role=user_roles, org_id=self.id):
+            if is_admin(user_roles=user_roles, org_id=self.id):
                 query = UserAffClass.get_query(info)
                 query = query.filter(
                     UserAffModel.organization_id == self.id

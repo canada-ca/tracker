@@ -59,7 +59,7 @@ class CreateOrganization(graphene.Mutation):
             province = cleanse_input(kwargs.get("province"))
             city = cleanse_input(kwargs.get("city"))
 
-            if is_super_admin(user_role=user_roles):
+            if is_super_admin(user_roles=user_roles):
                 # Check to see if organization already exists
                 org_orm = (
                     db_session.query(Organizations)
@@ -130,6 +130,7 @@ class UpdateOrganization(graphene.Mutation):
         @require_token
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
+<<<<<<< HEAD
             user_roles = kwargs.get("user_roles")
             name = cleanse_input(kwargs.get("name"))
             acronym = cleanse_input(kwargs.get("acronym"))
@@ -142,6 +143,18 @@ class UpdateOrganization(graphene.Mutation):
 
             # XXX: only the Super User can edit orgs?
             if is_super_admin(user_role=user_roles):
+=======
+            user_roles = kwargs.get('user_roles')
+            acronym = cleanse_input(kwargs.get('acronym'))
+            updated_acronym = cleanse_input(kwargs.get('updated_acronym'))
+            description = cleanse_input(kwargs.get('description'))
+            zone = cleanse_input(kwargs.get('zone'))
+            sector = cleanse_input(kwargs.get('sector'))
+            province = cleanse_input(kwargs.get('province'))
+            city = cleanse_input(kwargs.get('city'))
+
+            if is_super_admin(user_roles=user_roles):
+>>>>>>> 8f7e9321... Cleaned, and corrected schema files
 
                 # Get requested org orm
                 org_orm = (
@@ -225,8 +238,12 @@ class RemoveOrganization(graphene.Mutation):
                 raise GraphQLError("Error, organization does not exist")
 
             # Check Permissions
+<<<<<<< HEAD
             if is_super_admin(user_role=user_roles):
                 # XXX shouldn't cascade delete do all of this for us?
+=======
+            if is_super_admin(user_roles=user_roles):
+>>>>>>> 8f7e9321... Cleaned, and corrected schema files
                 try:
                     # Get All Domains
                     domain_orm = Domains.query.filter(
