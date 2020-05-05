@@ -1,5 +1,4 @@
 from graphql import GraphQLError
-from flask import current_app as app
 
 from functions.input_validators import *
 from functions.error_messages import *
@@ -12,7 +11,8 @@ def create_user(display_name, password, confirm_password, user_name):
     """
     This function creates and inserts a new user into the database. It includes appropriate error checking to ensure
     that the API is managed properly.
-    :param username: The username for the new user.
+    :param display_name: The users display name.
+    :param user_name: The username for the new user.
     :param password: The password for the new user.
     :param confirm_password: Password confirmation for the new user -- Must be identical to password.
     :param user_name: The email address to be associated with the new user -- Must be unique for every user.
