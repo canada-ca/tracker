@@ -199,19 +199,13 @@ def process_results(results, scan_type, scan_id):
                 ###
                 # ITPIN cares about usage of TLS 1.0/1.1/1.2
 
-                for version in ["SSL_2_0", "SSL_3_0", "TLS_1_0", "TLS_1_1", "TLS_1_2", "TLS_1_3"]:
-                    if version == results["TLS"]["supported"]:
+                for version in ['SSL_2_0', 'SSL_3_0', 'TLS_1_0', 'TLS_1_1', 'TLS_1_2', 'TLS_1_3']:
+                    if version in results["TLS"]["supported"]:
                         report[version] = True
                     else:
                         report[version] = False
 
-                used_ciphers = {cipher for cipher in results["TLS"]["accepted_cipher_list"]}
                 signature_algorithm = results["signature_algorithm"]
-
-                if any([any_rc4, any_3des, report["SSL_2_0"], report["SSL_3_0"], report["TLS_1_0"], report["TLS_1_1"]]):
-                    bod_crypto = False
-                else:
-                    bod_crypto = True
 
                 heartbleed = results.get("is_vulnerable_to_heartbleed", False)
                 ccs_injection = results.get("is_vulnerable_to_ccs_injection", False)
@@ -221,14 +215,27 @@ def process_results(results, scan_type, scan_id):
                 else:
                     good_cert = False
 
-                report["dnssec"] = results["dnssec"]
-                report["bod_crypto"] = bod_crypto
+                strong_ciphers = []
+                acceptable_ciphers = []
+                weak_ciphers = []
+                for cipher in results["TLS"]["accepted_cipher_list"]:
+                    if ("RC4" or "3DES") in cipher:
+                        weak_ciphers.append(cipher)
+                    elif ("ECDHE" in cipher) and ("GCM" or "CHACHA20") in cipher:
+                        strong_ciphers.append(cipher)
+                    elif ("ECDHE" or "DHE") in cipher:
+                        acceptable_ciphers.append(cipher)
+                    else:
+                        weak_ciphers.append(cipher)
+
                 report["rc4"] = any_rc4
                 report["3des"] = any_3des
-                report["used_ciphers"] = used_ciphers
+                report["strong_ciphers"] = strong_ciphers
+                report["acceptable_ciphers"] = acceptable_ciphers
+                report["weak_ciphers"] = weak_ciphers
                 report["acceptable_certificate"] = good_cert
                 report["signature_algorithm"] = signature_algorithm
-
+                report["preferred_cipher"] = results["TLS"]["preferred_cipher"]
                 report["heartbleed"] = heartbleed
                 report["openssl_ccs_injection"] = ccs_injection
 
