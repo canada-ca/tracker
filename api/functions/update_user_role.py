@@ -14,16 +14,13 @@ from models import User_affiliations as User_aff
 def update_user_role(**kwargs):
     """
     Updates the user role associate with the user given by email address
-    :param user_name: The email address associated with the user who's role will be updated.
-    :param org: The organization that the users permissions will be edited to
-    :param new_role: The new role that will be given to the user.
+    :param kwargs: Contains user_name, org, and new role
     :returns user: The newly updated user object retrieved from the DB (after the update is committed).
     """
     user_name = kwargs.get('user_name')
     org = kwargs.get('org')
     new_role = kwargs.get('role')
     user_roles = kwargs.get('user_roles')
-    user_id = kwargs.get('user_id')
 
     with app.app_context():
         user = User.query.filter(User.user_name == user_name).all()
@@ -45,13 +42,13 @@ def update_user_role(**kwargs):
             db_session.commit()
 
     if new_role == 'admin' or new_role == 'super_admin':
-        if is_super_admin(user_role=user_roles):
+        if is_super_admin(user_roles=user_roles):
             update_user_role_db()
         else:
             raise GraphQLError(error_not_an_admin())
 
     elif new_role == 'user_read' or new_role == 'user_write':
-        if is_admin(user_roles, org_id):
+        if is_admin(user_roles=user_roles, org_id=org_id):
             update_user_role_db()
         else:
             raise GraphQLError(error_not_an_admin())
