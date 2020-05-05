@@ -5,7 +5,6 @@ from sqlalchemy.orm import load_only
 
 from graphql import GraphQLError
 
-from app import app
 from db import db_session
 
 from models import (
@@ -36,14 +35,8 @@ def resolve_users(self, info, **kwargs):
     """
 
     # Get information from kwargs
-    user_id = kwargs.get('user_id')
     user_roles = kwargs.get('user_roles')
     org = kwargs.get('org', None)
-
-    # Generate user Org ID list
-    org_id_list = []
-    for role in user_roles:
-        org_id_list.append(role["org_id"])
 
     # Get initial query
     query = UsersSchema.get_query(info)
@@ -60,7 +53,7 @@ def resolve_users(self, info, **kwargs):
         org_id = org_orm.id
 
     # Check to see if user has super admin access, and return all users
-    if is_super_admin(user_role=user_roles):
+    if is_super_admin(user_roles=user_roles):
         # Sub query to retrieve all users in the requested organization
         user_id_list = db_session.query(User_affiliations).filter(
             User_affiliations.organization_id == org_id
@@ -76,7 +69,7 @@ def resolve_users(self, info, **kwargs):
         return query.all()
 
     # Check if user has admin claim for the requested organization
-    elif is_admin(user_role=user_roles, org_id=org_id):
+    elif is_admin(user_roles=user_roles, org_id=org_id):
         # Sub query to retrieve all users in the requested organization
         user_id_list = db_session.query(User_affiliations).filter(
             User_affiliations.organization_id == org_id

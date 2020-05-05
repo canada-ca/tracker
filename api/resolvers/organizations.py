@@ -1,7 +1,4 @@
 from graphql import GraphQLError
-from sqlalchemy.orm import load_only
-
-from app import app
 from db import db_session
 
 from functions.auth_wrappers import require_token
@@ -27,12 +24,6 @@ def resolve_organization(self: Organization, info, **kwargs):
     # Get Information from kwargs
     org = kwargs.get('org')
     user_roles = kwargs.get('user_roles')
-    user_id = kwargs.get('user_id')
-
-    # Generate user Org ID list
-    org_id_list = []
-    for role in user_roles:
-        org_id_list.append(role["org_id"])
 
     # Gather Initial Organization Query Object
     query = Organization.get_query(info)
@@ -48,7 +39,7 @@ def resolve_organization(self: Organization, info, **kwargs):
     org_id = org_orm.id
 
     # Check to ensure user has access to given org
-    if is_user_read(user_role=user_roles, org_id=org_id):
+    if is_user_read(user_roles=user_roles, org_id=org_id):
         query_rtn = query.filter(
             Organizations.acronym == org
         ).all()
@@ -70,20 +61,18 @@ def resolve_organizations(self, info, **kwargs):
     :return: Filtered Organization SQLAlchemyObject Type
     """
     # Get Information from kwargs
-    user_id = kwargs.get('user_id')
-    org = kwargs.get('org')
     user_roles = kwargs.get('user_roles')
 
     # Generate user Org ID list
-    org_id_list = []
+    org_ids = []
     for role in user_roles:
-        org_id_list.append(role["org_id"])
+        org_ids.append(role["org_id"])
 
     # Gather Initial Organization Query Object
     query = Organization.get_query(info)
 
     # Check to see if user has a super admin claim
-    if is_super_admin(user_role=user_roles):
+    if is_super_admin(user_roles=user_roles):
         query_rtn = query.all()
         # If no org can be matched
         if not len(query_rtn):
@@ -93,8 +82,8 @@ def resolve_organizations(self, info, **kwargs):
     else:
         # Check to ensure user has access to given org
         query_rtr = []
-        for org_id in org_id_list:
-            if is_user_read(user_role=user_roles, org_id=org_id):
+        for org_id in org_ids:
+            if is_user_read(user_roles=user_roles, org_id=org_id):
                 tmp_query = query.filter(
                     Organizations.id == org_id
                 ).first()

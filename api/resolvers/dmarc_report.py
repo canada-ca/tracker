@@ -20,7 +20,6 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
     :param kwargs:
     :return:
     """
-    user_id = kwargs.get('user_id')
     user_roles = kwargs.get('user_roles')
     domain = cleanse_input(kwargs.get('domain'))
     start_date = kwargs.get('start_date')
@@ -67,7 +66,7 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
             )
 
         # Check Permissions
-        if is_user_read(user_role=user_roles, org_id=org_id):
+        if is_user_read(user_roles=user_roles, org_id=org_id):
             return query.all()
         else:
             raise GraphQLError(
@@ -91,7 +90,7 @@ def resolve_dmarc_reports(self: DmarcReport, info, **kwargs):
         query = DmarcReport.get_query(info)
 
         # Check Permissions
-        if is_user_read(user_role=user_roles, org_id=org_id):
+        if is_user_read(user_roles=user_roles, org_id=org_id):
             query = query.filter(
                 Dmarc_Reports.domain_id == domain_id
             )
