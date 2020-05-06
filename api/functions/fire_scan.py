@@ -10,8 +10,8 @@ from db import db_session
 
 from models import Scans, Domains
 
-TOKEN_KEY = os.getenv("TOKEN_KEY")
-DISPATCHER_URL = os.getenv("ISTIO_INGRESS")
+TOKEN_KEY = os.getenv('TOKEN_KEY')
+DISPATCHER_URL = "dispatcher.tracker.svc.cluster.local"
 
 
 def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
@@ -51,9 +51,8 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
     encoded_payload = jwt.encode(payload, TOKEN_KEY, algorithm="HS256").decode("utf-8")
 
     headers = {
-        "Content-Type": "application/json",
-        "Host": "dispatcher.tracker.example.com",
-        "Data": encoded_payload,
+        'Content-Type': 'application/json',
+        'Data': encoded_payload
     }
 
     if test:
