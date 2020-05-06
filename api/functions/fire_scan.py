@@ -11,7 +11,7 @@ from db import db_session
 from models import Scans, Domains
 
 TOKEN_KEY = os.getenv('TOKEN_KEY')
-DISPATCHER_URL = os.getenv('ISTIO_INGRESS')
+DISPATCHER_URL = "dispatcher.tracker.svc.cluster.local"
 
 
 def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
@@ -64,7 +64,6 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
 
     headers = {
         'Content-Type': 'application/json',
-        'Host': 'dispatcher.tracker.example.com',
         'Data': encoded_payload
     }
 
