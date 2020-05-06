@@ -24,18 +24,19 @@ def resolve_domain(self: Domain, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in via kwargs
-    url = kwargs.get('url')
-    user_roles = kwargs.get('user_roles')
+    url = kwargs.get("url")
+    user_roles = kwargs.get("user_roles")
 
     # Get initial Domain Query Object
     query = Domain.get_query(info)
 
     # Get org id that is related to the domain
-    org_orm = db_session.query(Organizations).filter(
-        Organizations.id == Domains.organization_id
-    ).filter(
-        Domains.domain == url
-    ).first()
+    org_orm = (
+        db_session.query(Organizations)
+        .filter(Organizations.id == Domains.organization_id)
+        .filter(Domains.domain == url)
+        .first()
+    )
 
     # If org cannot be found
     if not org_orm:
@@ -44,11 +45,11 @@ def resolve_domain(self: Domain, info, **kwargs):
 
     # Check if user has read access or higher to the requested organization
     if is_user_read(user_roles=user_roles, org_id=org_id):
-        query_rtn = query.filter(
-            Domains.domain == url
-        ).filter(
-            Domains.organization_id == org_id
-        ).all()
+        query_rtn = (
+            query.filter(Domains.domain == url)
+            .filter(Domains.organization_id == org_id)
+            .all()
+        )
     else:
         raise GraphQLError("Error, you do not have permission to view that domain")
 
@@ -67,8 +68,8 @@ def resolve_domains(self, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in from kwargs
-    organization = kwargs.get('organization')
-    user_roles = kwargs.get('user_roles')
+    organization = kwargs.get("organization")
+    user_roles = kwargs.get("user_roles")
 
     # Generate list of org's the user has access to
     org_ids = []
@@ -84,9 +85,11 @@ def resolve_domains(self, info, **kwargs):
     if organization:
         # Retrieve org id from organization enum
         with app.app_context():
-            org_orms = db_session.query(Organizations).filter(
-                Organizations.acronym == organization
-            ).options(load_only('id'))
+            org_orms = (
+                db_session.query(Organizations)
+                .filter(Organizations.acronym == organization)
+                .options(load_only("id"))
+            )
 
         # Check if org exists
         if not len(org_orms.all()):
@@ -97,16 +100,17 @@ def resolve_domains(self, info, **kwargs):
 
         # Check if user has permission to view org
         if is_user_read(user_roles, org_id):
-            query_rtn = query.filter(
-                Domains.organization_id == org_id
-            ).all()
+            query_rtn = query.filter(Domains.organization_id == org_id).all()
 
             # If org has no domains related to it
             if not len(query_rtn):
-                raise GraphQLError("Error, no domains associated with that organization")
+                raise GraphQLError(
+                    "Error, no domains associated with that organization"
+                )
         else:
             raise GraphQLError(
-                "Error, you do not have permission to view that organization")
+                "Error, you do not have permission to view that organization"
+            )
 
         return query_rtn
     else:
@@ -119,11 +123,8 @@ def resolve_domains(self, info, **kwargs):
             query_rtr = []
             for org_id in org_ids:
                 if is_user_read(user_roles=user_roles, org_id=org_id):
-                    tmp_query = query.filter(
-                        Domains.organization_id == org_id
-                    ).first()
+                    tmp_query = query.filter(Domains.organization_id == org_id).first()
                     query_rtr.append(tmp_query)
             if not query_rtr:
                 raise GraphQLError("Error, no domains to display")
             return query_rtr
-

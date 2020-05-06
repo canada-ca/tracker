@@ -5,7 +5,8 @@
 def error_password_does_not_meet_requirements():
     """Function that returns an error message when password does not meet requirements"""
     return str(
-        "Password does not meet minimum requirements (Must be 12 or more chars long)")
+        "Password does not meet minimum requirements (Must be 12 or more chars long)"
+    )
 
 
 def error_passwords_do_not_match():
@@ -70,5 +71,11 @@ def scalar_error_type(value_type, value):
 
 def scalar_error_only_types(value_types, expected_types, value):
     """Function that returns an error message when a scalar type can not be validated due to mismatched types"""
-    return str("Can only validate " + str(value_types) + " as " + str(
-        expected_types) + " but got a: " + str(type(value)))
+    return str(
+        "Can only validate "
+        + str(value_types)
+        + " as "
+        + str(expected_types)
+        + " but got a: "
+        + str(type(value))
+    )

@@ -7,9 +7,9 @@ from functions.orm_to_dict import orm_to_dict
 from app import app, logger
 from models import User_affiliations, Organizations
 
-user_admin_perm = ['super_admin', 'admin']
-user_write_perm = ['super_admin', 'admin', 'user_write']
-user_read_perm = ['super_admin', 'admin', 'user_write', 'user_read']
+user_admin_perm = ["super_admin", "admin"]
+user_write_perm = ["super_admin", "admin", "user_write"]
+user_read_perm = ["super_admin", "admin", "user_write", "user_read"]
 
 
 def decode_auth_token(request):
@@ -18,18 +18,16 @@ def decode_auth_token(request):
     :param request: The http request sent from the user
     :return: Returns a list of dicts that contains the user claims
     """
-    auth_header = request.headers.get('Authorization')
+    auth_header = request.headers.get("Authorization")
     try:
         payload = jwt.decode(
-            auth_header,
-            os.getenv('SUPER_SECRET_SALT'),
-            algorithms=['HS256']
+            auth_header, os.getenv("SUPER_SECRET_SALT"), algorithms=["HS256"]
         )
         return payload
     except jwt.ExpiredSignatureError:
-        raise GraphQLError('Signature expired, please login again')
+        raise GraphQLError("Signature expired, please login again")
     except jwt.InvalidTokenError:
-        raise GraphQLError('Invalid token, please login again')
+        raise GraphQLError("Invalid token, please login again")
 
 
 def check_user_claims(user_claims):
@@ -41,10 +39,10 @@ def check_user_claims(user_claims):
     :return: Returns a valid list of user claims
     """
     user_roles = []
-    if user_claims[0] == 'none':
+    if user_claims[0] == "none":
         return {}
     elif user_claims:
-        user_id = user_claims[0]['user_id']
+        user_id = user_claims[0]["user_id"]
         with app.app_context():
 <<<<<<< HEAD
             # XXX: affiliations should have been eager loaded with joinedload
@@ -52,22 +50,26 @@ def check_user_claims(user_claims):
             user_aff = User_affiliations.query.filter(
 =======
             user_affs = User_affiliations.query.filter(
+<<<<<<< HEAD
 >>>>>>> 5a1d2cbc... Pluralized user roles argument, user affiliations
                 User_affiliations.user_id == user_id).all()
+=======
+                User_affiliations.user_id == user_id
+            ).all()
+>>>>>>> ae6acc16... Ran modified files through black
             user_affs = orm_to_dict(user_affs)
         if user_affs:
             for select in user_affs:
                 temp_dict = {
-                    'user_id': select['user_id'],
-                    'org_id': select['organization_id'],
-                    'permission': select['permission']
+                    "user_id": select["user_id"],
+                    "org_id": select["organization_id"],
+                    "permission": select["permission"],
                 }
                 user_roles.append(temp_dict)
 
         user_claim_diff = list(
-            itertools.filterfalse(lambda x: x in user_claims, user_roles)) \
-                          + list(
-            itertools.filterfalse(lambda x: x in user_roles, user_claims))
+            itertools.filterfalse(lambda x: x in user_claims, user_roles)
+        ) + list(itertools.filterfalse(lambda x: x in user_roles, user_claims))
         if user_claim_diff:
             # User has a difference in their claims
             raise GraphQLError("Error, please sign in again.")
@@ -82,10 +84,11 @@ def require_token(method):
         with app.app_context():
             auth_resp = decode_auth_token(args[0].context)
             if isinstance(auth_resp, dict):
-                kwargs['user_id'] = auth_resp['user_id']
+                kwargs["user_id"] = auth_resp["user_id"]
 
-                user_claims = check_user_claims(auth_resp['roles'])
-                kwargs['user_roles'] = user_claims
+                user_claims = check_user_claims(auth_resp["roles"])
+                kwargs["user_roles"] = user_claims
                 return method(self, *args, **kwargs)
             raise GraphQLError(auth_resp)
+
     return wrapper
