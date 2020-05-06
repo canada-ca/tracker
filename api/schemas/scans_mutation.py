@@ -19,10 +19,9 @@ class RequestScan(graphene.Mutation):
     """
     This mutation is used to send a domain to the scanners to be scanned
     """
+
     class Arguments:
-        url = URL(
-            description="The domain that you would like the scan to be ran on."
-        )
+        url = URL(description="The domain that you would like the scan to be ran on.")
         dkim = graphene.Boolean(
             description="If this is a DKIM scan please set to true."
         )
@@ -33,6 +32,7 @@ class RequestScan(graphene.Mutation):
     status = graphene.String()
 
     with app.app_context():
+
         @require_token
         def mutate(self, info, **kwargs):
             """
@@ -42,16 +42,14 @@ class RequestScan(graphene.Mutation):
             :return: Request Scan object with status of request
             """
             # Get variables from kwargs
-            user_id = kwargs.get('user_id')
-            user_roles = kwargs.get('user_roles')
-            url = cleanse_input(kwargs.get('url'))
-            dkim = kwargs.get('dkim')
-            test = kwargs.get('test', False)
+            user_id = kwargs.get("user_id")
+            user_roles = kwargs.get("user_roles")
+            url = cleanse_input(kwargs.get("url"))
+            dkim = kwargs.get("dkim")
+            test = kwargs.get("test", False)
 
             # Get Domain ORM related to requested domain
-            domain_orm = db_session.query(Domains).filter(
-                Domains.domain == url
-            ).first()
+            domain_orm = db_session.query(Domains).filter(Domains.domain == url).first()
 
             # Check to make sure domain exists
             if domain_orm is None:
@@ -63,11 +61,7 @@ class RequestScan(graphene.Mutation):
             if is_user_write(user_roles=user_roles, org_id=org_id):
                 # Fire scan and get status from request
                 status = fire_scan(
-                    user_id=user_id,
-                    domain_id=domain_id,
-                    url=url,
-                    dkim=dkim,
-                    test=test
+                    user_id=user_id, domain_id=domain_id, url=url, dkim=dkim, test=test
                 )
 
                 # Return status information to user

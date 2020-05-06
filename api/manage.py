@@ -16,15 +16,17 @@ from db import (
 )
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config[
+    "SQLALCHEMY_DATABASE_URI"
+] = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+app.config["SQLALCHEMY_COMMIT_ON_TEARDOWN"] = True
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 db.init_app(app)
 migrate_app = Migrate(app, db)
 
 manager = Manager(app)
-manager.add_command('db', MigrateCommand)
+manager.add_command("db", MigrateCommand)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     manager.run()

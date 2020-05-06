@@ -25,6 +25,7 @@ class User(SQLAlchemyObjectType):
     information or if the user is an org or super admin they can query a user
     by their user name
     """
+
     class Meta:
         model = UserModel
         interfaces = (relay.Node,)
@@ -39,6 +40,7 @@ class User(SQLAlchemyObjectType):
             "user_affiliation",
             "user_password",
         )
+
     user_name = EmailAddress(description="Email that the user signed up with")
     display_name = graphene.String(description="Name displayed to other users")
     lang = graphene.String(description="Users preferred language")
@@ -46,11 +48,11 @@ class User(SQLAlchemyObjectType):
         description="Has the user completed two factor authentication"
     )
     affiliations = graphene.ConnectionField(
-        UserAffClass._meta.connection,
-        description="Users access to organizations"
+        UserAffClass._meta.connection, description="Users access to organizations"
     )
 
     with app.app_context():
+
         def resolve_user_name(self: UserModel, info):
             return self.user_name
 
@@ -65,14 +67,15 @@ class User(SQLAlchemyObjectType):
 
         @require_token
         def resolve_affiliations(self: UserModel, info, **kwargs):
-            user_roles = kwargs.get('user_roles')
+            user_roles = kwargs.get("user_roles")
             rtr_list = []
 
             for role in user_roles:
-                if is_user_read(user_roles=user_roles, org_id=role['org_id']):
+                if is_user_read(user_roles=user_roles, org_id=role["org_id"]):
                     query = UserAffClass.get_query(info)
-                    query = query.filter(User_affiliations.organization_id == role['org_id']) \
-                        .filter(User_affiliations.user_id == self.id)
+                    query = query.filter(
+                        User_affiliations.organization_id == role["org_id"]
+                    ).filter(User_affiliations.user_id == self.id)
                     rtr_list.append(query.first())
             return rtr_list
 
@@ -100,8 +103,7 @@ class CreateUser(graphene.Mutation):
 class SignInUser(graphene.Mutation):
     class Arguments:
         user_name = EmailAddress(required=True, description="User's email")
-        password = graphene.String(required=True,
-                                   description="Users's password")
+        password = graphene.String(required=True, description="Users's password")
 
     user = graphene.Field(lambda: User)
     auth_token = graphene.String(description="Token returned to user")
@@ -110,8 +112,7 @@ class SignInUser(graphene.Mutation):
     def mutate(cls, _, info, user_name, password):
         user_dict = sign_in_user(user_name, password)
         return SignInUser(
-            auth_token=str(user_dict['auth_token']),
-            user=user_dict['user']
+            auth_token=str(user_dict["auth_token"]), user=user_dict["user"]
         )
 
 
@@ -125,8 +126,9 @@ class UpdateUserPassword(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, password, confirm_password, user_name):
-        user = update_password(user_name=user_name, password=password,
-                               confirm_password=confirm_password)
+        user = update_password(
+            user_name=user_name, password=password, confirm_password=confirm_password
+        )
         return UpdateUserPassword(user=user)
 
 

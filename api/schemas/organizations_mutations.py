@@ -28,7 +28,13 @@ class CreateOrganization(graphene.Mutation):
 
     class Arguments:
         acronym = Acronym(description="Acronym of organization.", required=True)
+<<<<<<< HEAD
         name = graphene.String(description="Full name of organization.", required=True)
+=======
+        description = graphene.String(
+            description="Full name of organization.", required=True
+        )
+>>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
         zone = graphene.String(
             description="The zone which the organization belongs to.", required=True
         )
@@ -52,8 +58,13 @@ class CreateOrganization(graphene.Mutation):
         @require_token
         def mutate(self, info, **kwargs):
             user_roles = kwargs.get("user_roles")
+<<<<<<< HEAD
             name = cleanse_input(kwargs.get("name"))
             acronym = cleanse_input(kwargs.get("acronym"))
+=======
+            acronym = cleanse_input(kwargs.get("acronym"))
+            description = cleanse_input(kwargs.get("description"))
+>>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
             zone = cleanse_input(kwargs.get("zone"))
             sector = cleanse_input(kwargs.get("sector"))
             province = cleanse_input(kwargs.get("province"))
@@ -79,7 +90,11 @@ class CreateOrganization(graphene.Mutation):
                 }
 
                 # Create new org entry in db
+<<<<<<< HEAD
                 new_org = Organizations(name=name, acronym=acronym, org_tags=org_tags)
+=======
+                new_org = Organizations(acronym=acronym, org_tags=org_tags)
+>>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
 
                 # Add new org entry into the session
                 db_session.add(new_org)
@@ -105,6 +120,12 @@ class UpdateOrganization(graphene.Mutation):
         )
         updated_acronym = Acronym(
             description="Organization Acronym you would like updated", required=False
+<<<<<<< HEAD
+=======
+        )
+        description = graphene.String(
+            description="Full name of organization.", required=False
+>>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
         )
         name = graphene.String(description="Full name of organization.", required=False)
         zone = graphene.String(
@@ -131,8 +152,12 @@ class UpdateOrganization(graphene.Mutation):
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
 <<<<<<< HEAD
+<<<<<<< HEAD
             user_roles = kwargs.get("user_roles")
             name = cleanse_input(kwargs.get("name"))
+=======
+            user_roles = kwargs.get("user_roles")
+>>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
             acronym = cleanse_input(kwargs.get("acronym"))
             updated_acronym = cleanse_input(kwargs.get("updated_acronym"))
             description = cleanse_input(kwargs.get("description"))
@@ -140,6 +165,7 @@ class UpdateOrganization(graphene.Mutation):
             sector = cleanse_input(kwargs.get("sector"))
             province = cleanse_input(kwargs.get("province"))
             city = cleanse_input(kwargs.get("city"))
+<<<<<<< HEAD
 
             # XXX: only the Super User can edit orgs?
             if is_super_admin(user_role=user_roles):
@@ -152,6 +178,8 @@ class UpdateOrganization(graphene.Mutation):
             sector = cleanse_input(kwargs.get('sector'))
             province = cleanse_input(kwargs.get('province'))
             city = cleanse_input(kwargs.get('city'))
+=======
+>>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
 
             if is_super_admin(user_roles=user_roles):
 >>>>>>> 8f7e9321... Cleaned, and corrected schema files
@@ -177,6 +205,7 @@ class UpdateOrganization(graphene.Mutation):
                 if update_org_orm is not None:
                     raise GraphQLError("Error, acronym already in use.")
 
+<<<<<<< HEAD
                 if updated_acronym is not acronym:
                     # Update orm
                     org_orm.name = name
@@ -187,6 +216,21 @@ class UpdateOrganization(graphene.Mutation):
                         "province": province,
                         "city": city,
                     }
+=======
+                # Generate org tags
+                org_tags = {
+                    "description": description,
+                    "zone": zone,
+                    "sector": sector,
+                    "province": province,
+                    "city": city,
+                }
+                if updated_acronym is not acronym:
+                    # Update orm
+                    Organizations.query.filter(Organizations.acronym == acronym).update(
+                        {"acronym": updated_acronym, "org_tags": org_tags}
+                    )
+>>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
 
                 # Push update to db and return status
 
@@ -284,10 +328,35 @@ class RemoveOrganization(graphene.Mutation):
                                     return RemoveOrganization(status=False)
                             # Delete Domains
                             try:
+<<<<<<< HEAD
                                 Domains.query.filter(Domains.id == domain.id).delete()
+=======
+                                Dkim_scans.query.filter(
+                                    Dkim_scans.id == scan.id
+                                ).delete()
+                                Dmarc_scans.query.filter(
+                                    Dmarc_scans.id == scan.id
+                                ).delete()
+                                Https_scans.query.filter(
+                                    Https_scans.id == scan.id
+                                ).delete()
+                                Mx_scans.query.filter(Mx_scans.id == scan.id).delete()
+                                Spf_scans.query.filter(Spf_scans.id == scan.id).delete()
+                                Ssl_scans.query.filter(Ssl_scans.id == scan.id).delete()
+                                Scans.query.filter(Scans.id == scan.id).delete()
+>>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
                             except Exception as e:
                                 print("Domain: " + str(e))
                                 return RemoveOrganization(status=False)
+<<<<<<< HEAD
+=======
+                        # Delete Domains
+                        try:
+                            Domains.query.filter(Domains.id == domain.id).delete()
+                        except Exception as e:
+                            print("Domain: " + str(e))
+                            return RemoveOrganization(status=False)
+>>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
 
                     try:
                         # Get all user aff
