@@ -35,3 +35,6 @@ scanner/logs
 
 # IDE Files
 .idea/
+
+# Juypter File
+api/.ipynb
