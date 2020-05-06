@@ -19,28 +19,24 @@ class DKIM(SQLAlchemyObjectType):
     message.  This can be an author's organization, an operational relay,
     or one of their agents.
     """
+
     class Meta:
         model = Dkim_scans
-        exclude_fields = (
-            "id",
-            "dkim_scan"
-        )
+        exclude_fields = ("id", "dkim_scan")
+
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="Time when scan was initiated")
     record = graphene.String(
-        description="DKIM record retrieved during the scan of the "
-                    "given domain "
+        description="DKIM record retrieved during the scan of the " "given domain "
     )
-    key_length = graphene.String(
-        description="Length of DKIM public key"
-    )
+    key_length = graphene.String(description="Length of DKIM public key")
     dkim_guidance_tags = graphene.List(
-        lambda: DkimTags,
-        description="Key tags found during scan"
+        lambda: DkimTags, description="Key tags found during scan"
     )
 
     with app.app_context():
+
         def resolve_domain(self, info):
             get_domain(self, info)
 

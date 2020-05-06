@@ -4,31 +4,32 @@ from functions.input_validators import *
 
 # This class tests the password strength functions in 'input_validators.py'
 
+
 class TestPasswordValidators:
 
     # These functions test the length requirement validator
 
     def test_valid_password_length(self):
-        valid_pass = 'ThisIsAVa1idPassword!'
+        valid_pass = "ThisIsAVa1idPassword!"
         assert is_strong_password(valid_pass)
 
     def test_invalid_password_length(self):
-        invalid_pass = '2short'
+        invalid_pass = "2short"
         assert not is_strong_password(invalid_pass)
 
     def test_empty_password_length(self):
-        invalid_pass = ''
+        invalid_pass = ""
         assert not is_strong_password(invalid_pass)
 
 
 # This class tests the input cleansing function in 'input_validators.py'
 
-class TestInputCleanser:
 
+class TestInputCleanser:
     def test_whitespace_strip(self):
-        output_string = cleanse_input('     strip-whitespaces     ')
-        assert output_string == 'strip-whitespaces'
+        output_string = cleanse_input("     strip-whitespaces     ")
+        assert output_string == "strip-whitespaces"
 
     def test_html_specials(self):
-        output_string = cleanse_input('<!>')
-        assert output_string == '&lt;!&gt;'
+        output_string = cleanse_input("<!>")
+        assert output_string == "&lt;!&gt;"

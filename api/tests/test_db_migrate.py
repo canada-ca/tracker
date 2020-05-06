@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from manage import *
 from db import db_session, Base, engine
 
+
 class TestDBCreation:
     def test_created_schema_contains_expected_tables(self):
         """This test determines that the postgres db is created with the expected tables"""

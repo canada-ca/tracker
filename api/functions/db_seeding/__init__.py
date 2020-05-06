@@ -1,5 +1,8 @@
 from functions.db_seeding.ciphers import seed_ciphers, remove_ciphers
-from functions.db_seeding.classification import seed_classification, remove_classification
+from functions.db_seeding.classification import (
+    seed_classification,
+    remove_classification,
+)
 from functions.db_seeding.dkim_scans import seed_dkim, remove_dkim
 from functions.db_seeding.dmarc_scans import seed_dmarc, remove_dmarc
 from functions.db_seeding.domains import seed_domains, remove_domains

@@ -1,11 +1,5 @@
-from typing import (
-    Dict,
-    List
-)
-from graphql.language.ast import (
-    FragmentDefinition,
-    OperationDefinition
-)
+from typing import Dict, List
+from graphql.language.ast import FragmentDefinition, OperationDefinition
 
 
 def get_fragments(definitions) -> Dict[str, FragmentDefinition]:

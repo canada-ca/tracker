@@ -1,6 +1,4 @@
-from typing import (
-    Dict
-)
+from typing import Dict
 from graphql.language.ast import (
     Document,
     FragmentDefinition,
@@ -8,12 +6,9 @@ from graphql.language.ast import (
     Node,
     FragmentSpread,
     Field,
-    InlineFragment
+    InlineFragment,
 )
-from backend import (
-    get_fragments,
-    get_queries_and_mutations
-)
+from backend import get_fragments, get_queries_and_mutations
 
 from backend.cost_map import cost_map
 
@@ -67,6 +62,4 @@ def check_cost_analysis(max_cost: int, document: Document):
     for query in queries:
         total_cost = measure_cost(query, fragments)
         if total_cost > max_cost:
-            raise CostLimitReached(
-                'Query cost is too high'
-            )
+            raise CostLimitReached("Query cost is too high")

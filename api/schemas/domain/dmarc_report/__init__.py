@@ -15,54 +15,47 @@ class DmarcReport(SQLAlchemyObjectType):
     """
     Generated DMARC Aggregated Report's
     """
+
     class Meta:
         model = Dmarc_Reports
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
         exclude_fields = (
-            'id',
-            'start_date',
-            'end_date',
-            'report',
-            'domain_id',
-            'domain'
+            "id",
+            "start_date",
+            "end_date",
+            "report",
+            "domain_id",
+            "domain",
         )
-    report_id = graphene.String(
-        description="ID of the report."
-    )
+
+    report_id = graphene.String(description="ID of the report.")
     org_name = graphene.String(
         description="The organization name the report was generated from."
     )
     org_email = graphene.String(
         description="The organization email name the report was generated from."
     )
-    start_date = graphene.DateTime(
-        description="Start date & time of aggregate report"
-    )
-    end_date = graphene.DateTime(
-        description="End date & time of aggregate report"
-    )
+    start_date = graphene.DateTime(description="Start date & time of aggregate report")
+    end_date = graphene.DateTime(description="End date & time of aggregate report")
     errors = graphene.List(
         lambda: graphene.String,
-        description="Errors that occurred during the report generation"
+        description="Errors that occurred during the report generation",
     )
     policy_published = graphene.Field(
-        lambda: PolicyPublished,
-        description='DMARC published policies'
+        lambda: PolicyPublished, description="DMARC published policies"
     )
-    records = graphene.List(
-        lambda: Record,
-        description="Aggregate report records"
-    )
+    records = graphene.List(lambda: Record, description="Aggregate report records")
 
     with app.app_context():
+
         def resolve_report_id(self: Dmarc_Reports, info):
-            return self.report['report_metadata']['report_id']
+            return self.report["report_metadata"]["report_id"]
 
         def resolve_org_name(self: Dmarc_Reports, info):
-            return self.report['report_metadata']['org_name']
+            return self.report["report_metadata"]["org_name"]
 
         def resolve_org_email(self: Dmarc_Reports, info):
-            return self.report['report_metadata']['org_email']
+            return self.report["report_metadata"]["org_email"]
 
         def resolve_start_date(self: Dmarc_Reports, info):
             return self.start_date
@@ -71,30 +64,32 @@ class DmarcReport(SQLAlchemyObjectType):
             return self.end_date
 
         def resolve_errors(self: Dmarc_Reports, info):
-            return self.report['report_metadata']['errors']
+            return self.report["report_metadata"]["errors"]
 
         def resolve_policy_published(self: Dmarc_Reports, info):
             return PolicyPublished(
-                self.report['policy_published']['domain'],
-                self.report['policy_published']['adkim'],
-                self.report['policy_published']['aspf'],
-                self.report['policy_published']['p'],
-                self.report['policy_published']['sp'],
-                self.report['policy_published']['pct'],
-                self.report['policy_published']['fo']
+                self.report["policy_published"]["domain"],
+                self.report["policy_published"]["adkim"],
+                self.report["policy_published"]["aspf"],
+                self.report["policy_published"]["p"],
+                self.report["policy_published"]["sp"],
+                self.report["policy_published"]["pct"],
+                self.report["policy_published"]["fo"],
             )
 
         def resolve_records(self: Dmarc_Reports, info):
             rtr_list = []
-            for record in self.report['records']:
-                rtr_list.append(Record(
-                    record['count'],
-                    record['source'],
-                    record['alignment'],
-                    record['policy_evaluated'],
-                    record['identifiers'],
-                    record['auth_results']
-                ))
+            for record in self.report["records"]:
+                rtr_list.append(
+                    Record(
+                        record["count"],
+                        record["source"],
+                        record["alignment"],
+                        record["policy_evaluated"],
+                        record["identifiers"],
+                        record["auth_results"],
+                    )
+                )
             return rtr_list
 
 

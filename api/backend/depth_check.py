@@ -6,13 +6,10 @@ from graphql.language.ast import (
     Node,
     FragmentSpread,
     Field,
-    InlineFragment
+    InlineFragment,
 )
 
-from backend import (
-    get_fragments,
-    get_queries_and_mutations
-)
+from backend import get_fragments, get_queries_and_mutations
 
 
 class DepthLimitReached(Exception):
@@ -64,6 +61,4 @@ def check_max_depth(max_depth: int, document: Document):
     for query in queries:
         depth = measure_depth(query, fragments)
         if depth > max_depth:
-            raise DepthLimitReached(
-                'Query is too complex'
-            )
+            raise DepthLimitReached("Query is too complex")

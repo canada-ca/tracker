@@ -6,22 +6,18 @@ from notifications_python_client import NotificationsAPIClient
 
 from functions.email_templates import (
     email_verification_template,
-    password_reset_template)
-from schemas.notification_email import (
-    Content,
-    Template,
-    NotificationEmail
+    password_reset_template,
 )
+from schemas.notification_email import Content, Template, NotificationEmail
 
-NOTIFICATION_API_KEY = os.getenv('NOTIFICATION_API_KEY')
-NOTIFICATION_API_URL = os.getenv('NOTIFICATION_API_URL')
+NOTIFICATION_API_KEY = os.getenv("NOTIFICATION_API_KEY")
+NOTIFICATION_API_URL = os.getenv("NOTIFICATION_API_URL")
 
-SUPER_SECRET_KEY = os.getenv('SUPER_SECRET_KEY')
-SUPER_SECRET_SALT = os.getenv('SUPER_SECRET_SALT')
+SUPER_SECRET_KEY = os.getenv("SUPER_SECRET_KEY")
+SUPER_SECRET_SALT = os.getenv("SUPER_SECRET_SALT")
 
 notifications_client = NotificationsAPIClient(
-    NOTIFICATION_API_KEY,
-    NOTIFICATION_API_URL,
+    NOTIFICATION_API_KEY, NOTIFICATION_API_URL,
 )
 
 
@@ -30,16 +26,19 @@ def resolve_send_password_reset(self, info, email):
     password_reset_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
 
     # Note: request.headers['Origin'] returns the server name that made the req
-    password_reset_url = request.headers['Origin'] + "/reset-password/" \
-                + password_reset_serial.dumps(email, salt=SUPER_SECRET_SALT)
+    password_reset_url = (
+        request.headers["Origin"]
+        + "/reset-password/"
+        + password_reset_serial.dumps(email, salt=SUPER_SECRET_SALT)
+    )
 
     response = notifications_client.send_email_notification(
         email_address=email,
         personalisation={
-            'user': email.split('@')[0],  # A pseudo username
-            'password_reset_url': password_reset_url
+            "user": email.split("@")[0],  # A pseudo username
+            "password_reset_url": password_reset_url,
         },
-        template_id=template_id
+        template_id=template_id,
     )
 
     return populate_notification_email(response)
@@ -51,16 +50,19 @@ def resolve_send_validation_email(self, info, email):
     verify_email_serial = URLSafeTimedSerializer(SUPER_SECRET_KEY)
 
     # Note: request.headers['Origin'] returns the server name that made the req
-    verify_email_url = request.headers['Origin'] + "/verify-email/" \
-                   + verify_email_serial.dumps(email, salt=SUPER_SECRET_SALT)
+    verify_email_url = (
+        request.headers["Origin"]
+        + "/verify-email/"
+        + verify_email_serial.dumps(email, salt=SUPER_SECRET_SALT)
+    )
 
     response = notifications_client.send_email_notification(
         email_address=email,
         personalisation={
-            'user': email.split('@')[0],  # A pseudo username
-            'verify_email_url': verify_email_url
+            "user": email.split("@")[0],  # A pseudo username
+            "verify_email_url": verify_email_url,
         },
-        template_id=template_id
+        template_id=template_id,
     )
 
     return populate_notification_email(response)
@@ -72,25 +74,24 @@ def populate_notification_email(response):
     :param response: The email response dict from notification client
     :return: The populated NotificationEmail object ot be sent to GraphQL
     """
-    content = Content(response['content']['body'],
-                      response['content']['from_email'],
-                      response['content']['subject'])
+    content = Content(
+        response["content"]["body"],
+        response["content"]["from_email"],
+        response["content"]["subject"],
+    )
 
-    id = response['id']
+    id = response["id"]
 
-    reference = response['reference']
+    reference = response["reference"]
 
-    scheduled_for = response['scheduled_for']
+    scheduled_for = response["scheduled_for"]
 
-    template = Template(response['template']['id'],
-                        response['template']['uri'],
-                        response['template']['version'])
+    template = Template(
+        response["template"]["id"],
+        response["template"]["uri"],
+        response["template"]["version"],
+    )
 
-    uri = response['uri']
+    uri = response["uri"]
 
-    return NotificationEmail(content,
-                             id,
-                             reference,
-                             scheduled_for,
-                             template,
-                             uri)
+    return NotificationEmail(content, id, reference, scheduled_for, template, uri)

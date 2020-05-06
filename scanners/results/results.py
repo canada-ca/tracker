@@ -14,23 +14,23 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config[
+    "SQLALCHEMY_DATABASE_URI"
+] = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+app.config["SQLALCHEMY_COMMIT_ON_TEARDOWN"] = True
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
-MIN_HSTS_AGE = 31536000 # one year
+MIN_HSTS_AGE = 31536000  # one year
 
 TOKEN_KEY = os.getenv("TOKEN_KEY")
 
 
-@app.route('/receive', methods=['GET', 'POST'])
+@app.route("/receive", methods=["GET", "POST"])
 def receive():
 
     try:
         decoded_token = jwt.decode(
-            request.headers.get("Token"),
-            TOKEN_KEY,
-            algorithm=['HS256']
+            request.headers.get("Token"), TOKEN_KEY, algorithm=["HS256"]
         )
 
         payload = request.get_json()
@@ -44,7 +44,7 @@ def receive():
         return res["info"]
 
     except Exception as e:
-        logging.error('Failed: %s\n' % str(e))
+        logging.error("Failed: %s\n" % str(e))
         return "Failed to process results"
 
 
@@ -55,9 +55,17 @@ def process_results(results, scan_type, scan_id):
 
         if scan_type == "dmarc":
             if results is not None:
-                report = {"dmarc": results["dmarc"], "spf": results["spf"], "mx": results["mx"]}
+                report = {
+                    "dmarc": results["dmarc"],
+                    "spf": results["spf"],
+                    "mx": results["mx"],
+                }
             else:
-                report = {"dmarc": {"missing": True}, "spf": {"missing": True},  "mx": {"missing": True}}
+                report = {
+                    "dmarc": {"missing": True},
+                    "spf": {"missing": True},
+                    "mx": {"missing": True},
+                }
 
         elif scan_type == "dkim":
             if results is not None:
@@ -77,7 +85,8 @@ def process_results(results, scan_type, scan_id):
                 else:
                     if results["Valid HTTPS"]:
                         https = "Valid HTTPS"  # Yes
-                    elif (results["HTTPS Bad Chain"] and not results["HTTPS Bad Hostname"]
+                    elif (
+                        results["HTTPS Bad Chain"] and not results["HTTPS Bad Hostname"]
                     ):
                         https = "Bad Chain"  # Yes
                     else:
@@ -98,11 +107,16 @@ def process_results(results, scan_type, scan_id):
                     # Since a pure redirector domain can't "default" to HTTPS
                     # for itself, we'll say it "Enforces HTTPS" if it immediately
                     # redirects to an HTTPS URL.
-                    if results["Strictly Forces HTTPS"] and (results["Defaults to HTTPS"] or results["Redirect"]):
+                    if results["Strictly Forces HTTPS"] and (
+                        results["Defaults to HTTPS"] or results["Redirect"]
+                    ):
                         behavior = "Strict"  # Yes (Strict)
 
                     # "Moderate" means HTTP eventually redirects to HTTPS.
-                    elif not results["Strictly Forces HTTPS"] and results["Defaults to HTTPS"]:
+                    elif (
+                        not results["Strictly Forces HTTPS"]
+                        and results["Defaults to HTTPS"]
+                    ):
                         behavior = "Moderate"  # Yes
 
                     # Either both are False, or just 'Strict Force' is True,
@@ -199,7 +213,14 @@ def process_results(results, scan_type, scan_id):
                 ###
                 # ITPIN cares about usage of TLS 1.0/1.1/1.2
 
-                for version in ['SSL_2_0', 'SSL_3_0', 'TLS_1_0', 'TLS_1_1', 'TLS_1_2', 'TLS_1_3']:
+                for version in [
+                    "SSL_2_0",
+                    "SSL_3_0",
+                    "TLS_1_0",
+                    "TLS_1_1",
+                    "TLS_1_2",
+                    "TLS_1_3",
+                ]:
                     if version in results["TLS"]["supported"]:
                         report[version] = True
                     else:
@@ -274,17 +295,20 @@ def insert(report, scan_type, scan_id):
 
         elif scan_type is "dkim":
             # Check for previous dkim scans on this domain
-            previous_scans = Scans.query.filter(
-                Scans.domain_id == scan.domain_id
-            )
+            previous_scans = Scans.query.filter(Scans.domain_id == scan.domain_id)
 
             update_recommended = False
 
             # If public key has been in use for a year or more, recommend update
             for previous_scan in previous_scans:
                 if (scan.scan_date - previous_scan.scan_date).TotalDays >= 365:
-                    historical_dkim = Dkim_scans.query.filter(Dkim_scans.id == previous_scan.id)
-                    if report["public_key_modulus"] == historical_dkim.dkim_scan["dkim"]["public_key_modulus"]:
+                    historical_dkim = Dkim_scans.query.filter(
+                        Dkim_scans.id == previous_scan.id
+                    )
+                    if (
+                        report["public_key_modulus"]
+                        == historical_dkim.dkim_scan["dkim"]["public_key_modulus"]
+                    ):
                         update_recommended = True
 
             report["update-recommended"] = update_recommended
@@ -296,8 +320,8 @@ def insert(report, scan_type, scan_id):
     except Exception as e:
         db.session.rollback()
         db.session.flush()
-        logging.error('Failed database insertion: %s\n' % str(e))
+        logging.error("Failed database insertion: %s\n" % str(e))
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    app.run(debug=True, host="0.0.0.0", port=8080)

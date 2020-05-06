@@ -9,6 +9,7 @@ from functions.auth_functions import (
     is_user_read,
 )
 
+
 class TestAuthFunctions:
     def test_user_read_check_perm_user_read(self):
         user_role = [{"user_id": 1, "org_id": 1, "permission": "user_read"}]

@@ -9,7 +9,7 @@ from functions.auth_functions import (
     is_super_admin,
     is_admin,
     is_user_write,
-    is_user_read
+    is_user_read,
 )
 
 
@@ -20,35 +20,33 @@ def resolve_test_user_claims(self, info, **kwargs):
     It requires that a JWT token be active, and that the user have an admin role
     :returns: Returns the user_claims if user is an admin, raises error message if not.
     """
-    user_id = kwargs.get('user_id')
-    roles = kwargs.get('user_roles')
-    test_role = kwargs.get('role')
-    org = kwargs.get('org')
+    user_id = kwargs.get("user_id")
+    roles = kwargs.get("user_roles")
+    test_role = kwargs.get("role")
+    org = kwargs.get("org")
 
-    org_orm = db_session.query(Orgs).filter(
-        Orgs.acronym == org
-    ).first()
+    org_orm = db_session.query(Orgs).filter(Orgs.acronym == org).first()
     org_id = org_orm.id
 
-    if test_role == 'super_admin':
+    if test_role == "super_admin":
         if is_super_admin(user_role=roles):
-            return 'User Passed Super Admin Claim'
+            return "User Passed Super Admin Claim"
         else:
-            raise GraphQLError('Error, user is not a super admin')
-    elif test_role == 'admin':
+            raise GraphQLError("Error, user is not a super admin")
+    elif test_role == "admin":
         if is_admin(roles, org_id):
-            return 'User Passed Admin Claim'
+            return "User Passed Admin Claim"
         else:
-            raise GraphQLError('Error, user is not an admin for that org')
-    elif test_role == 'user_write':
+            raise GraphQLError("Error, user is not an admin for that org")
+    elif test_role == "user_write":
         if is_user_write(roles, org_id):
-            return 'User Passed User Write Claim'
+            return "User Passed User Write Claim"
         else:
-            raise GraphQLError('Error, user cannot write to that org')
-    elif test_role == 'user_read':
+            raise GraphQLError("Error, user cannot write to that org")
+    elif test_role == "user_read":
         if is_user_read(roles, org_id):
-            return 'User Passed User Read Claim'
+            return "User Passed User Read Claim"
         else:
-            raise GraphQLError('Error, user cannot read that org')
+            raise GraphQLError("Error, user cannot read that org")
     else:
-        raise GraphQLError('Error, user has no permissions')
+        raise GraphQLError("Error, user has no permissions")

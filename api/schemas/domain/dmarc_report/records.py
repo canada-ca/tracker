@@ -12,27 +12,13 @@ class Record(graphene.ObjectType):
     DMARC aggregate report record
     """
 
-    count = graphene.Int(
-        description=''
-    )
-    source = graphene.Field(
-        lambda: Source,
-        description='DMARC source information'
-    )
-    alignment = graphene.Field(
-        lambda: Alignment,
-        description='DMARC alignment object'
-    )
+    count = graphene.Int(description="")
+    source = graphene.Field(lambda: Source, description="DMARC source information")
+    alignment = graphene.Field(lambda: Alignment, description="DMARC alignment object")
     policy_evaluated = graphene.Field(
-        lambda: PolicyEvaluated,
-        description='DMARC policy evaluation object'
+        lambda: PolicyEvaluated, description="DMARC policy evaluation object"
     )
-    identifiers = graphene.Field(
-        lambda: Identifiers,
-        description='Identifiers Object'
-    )
+    identifiers = graphene.Field(lambda: Identifiers, description="Identifiers Object")
     auth_results = graphene.Field(
-        lambda: AuthResults,
-        description='Raw DKIM, and SPF results'
+        lambda: AuthResults, description="Raw DKIM, and SPF results"
     )
-
