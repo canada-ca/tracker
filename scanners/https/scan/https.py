@@ -13,7 +13,6 @@ from sslyze.scanner import Scanner, ServerScanRequest, ScanCommandExtraArguments
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.server_setting import ServerNetworkLocation, ServerNetworkLocationViaDirectConnection
 from sslyze.plugins.certificate_info._certificate_utils import extract_dns_subject_alternative_names
-from .utils import *
 from .models import Domain, Endpoint
 
 logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
