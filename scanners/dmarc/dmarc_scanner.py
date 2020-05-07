@@ -13,7 +13,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 headers = {"Content-Type": "application/json"}
 
-destination = "result-processor.tracker.svc.cluster.local"
+destination = "http://result-processor.tracker.svc.cluster.local"
 
 app = Flask(__name__)
 

@@ -11,7 +11,7 @@ from db import db_session
 from models import Scans, Domains
 
 TOKEN_KEY = os.getenv("TOKEN_KEY")
-DISPATCHER_URL = "dispatcher.tracker.svc.cluster.local"
+DISPATCHER_URL = "http://dispatcher.tracker.svc.cluster.local"
 
 
 def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):

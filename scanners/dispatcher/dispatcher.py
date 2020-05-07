@@ -12,30 +12,23 @@ app = Flask(__name__)
 
 TOKEN_KEY = os.getenv("TOKEN_KEY")
 
-hosts = [
-    "https-scanner.tracker.svc.cluster.local",
-    "ssl-scanner.tracker.svc.cluster.local",
-    "dmarc-scanner.tracker.svc.cluster.local",
-]
 
-dkim_flagged_hosts = [
-    "dkim-scanner.tracker.svc.cluster.local",
-    "dmarc-scanner.tracker.svc.cluster.local",
-]
+hosts = ['http://https-scanner.tracker.svc.cluster.local',
+         'http://ssl-scanner.tracker.svc.cluster.local',
+         'http://dmarc-scanner.tracker.svc.cluster.local']
 
-manual_scan_hosts = [
-    "https-scanner-manual.tracker.svc.cluster.local",
-    "ssl-scanner-manual.tracker.svc.cluster.local",
-    "dmarc-scanner-manual.tracker.svc.cluster.local",
-]
+dkim_flagged_hosts = ['http://dkim-scanner.tracker.svc.cluster.local',
+                      'http://dmarc-scanner.tracker.svc.cluster.local']
 
-manual_scan_dkim_flagged_hosts = [
-    "dkim-scanner-manual.tracker.svc.cluster.local",
-    "dmarc-scanner-manual.tracker.svc.cluster.local",
-]
+manual_scan_hosts = ['http://https-scanner-manual.tracker.svc.cluster.local',
+                     'http://ssl-scanner-manual.tracker.svc.cluster.local',
+                     'http://dmarc-scanner-manual.tracker.svc.cluster.local']
+
+manual_scan_dkim_flagged_hosts = ['http://dkim-scanner-manual.tracker.svc.cluster.local',
+                                  'http://dmarc-scanner-manual.tracker.svc.cluster.local']
 
 
-@app.route("/receive", methods=["GET", "POST"])
+@app.route('/receive', methods=['GET', 'POST'])
 def receive():
 
     payload = {}
