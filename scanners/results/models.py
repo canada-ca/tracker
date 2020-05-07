@@ -3,8 +3,9 @@ from sqlalchemy.types import Integer, Boolean, DateTime, Float
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.ext.declarative import declarative_base
 
-from database.db import Base
+Base = declarative_base()
 
 
 class Domains(Base):
