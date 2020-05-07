@@ -214,7 +214,7 @@ def process_results(results, scan_type, scan_id):
                 heartbleed = results.get("is_vulnerable_to_heartbleed", False)
                 ccs_injection = results.get("is_vulnerable_to_ccs_injection", False)
 
-                if results["signature_algorithm"] is "SHA256" or "SHA384" or "AEAD":
+                if results["signature_algorithm"] in ["SHA256", "SHA384", "AEAD"]:
                     good_cert = True
                 else:
                     good_cert = False
@@ -223,11 +223,11 @@ def process_results(results, scan_type, scan_id):
                 acceptable_ciphers = []
                 weak_ciphers = []
                 for cipher in results["TLS"]["accepted_cipher_list"]:
-                    if ("RC4" or "3DES") in cipher:
+                    if "RC4" in cipher or "3DES" in cipher:
                         weak_ciphers.append(cipher)
-                    elif ("ECDHE" in cipher) and ("GCM" or "CHACHA20") in cipher:
+                    elif ("ECDHE" in cipher) and ("GCM" in cipher or "CHACHA20" in cipher):
                         strong_ciphers.append(cipher)
-                    elif ("ECDHE" or "DHE") in cipher:
+                    elif "ECDHE" in cipher or "DHE" in cipher:
                         acceptable_ciphers.append(cipher)
                     else:
                         weak_ciphers.append(cipher)
