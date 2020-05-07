@@ -39,7 +39,7 @@ destination = "http://result-processor.tracker.svc.cluster.local"
 
 app = Flask(__name__)
 
-TOKEN_KEY = os.getenv("TOKEN_KEY")
+TOKEN_KEY = pybase64.standard_b64decode(os.getenv("TOKEN_KEY"))
 
 
 @app.route("/receive", methods=["GET", "POST"])
@@ -50,7 +50,7 @@ def receive():
     try:
         decoded_payload = jwt.decode(
             request.headers.get("Data"),
-            pybase64.standard_b64decode(TOKEN_KEY),
+            TOKEN_KEY,
             algorithm=['HS256']
         )
 
@@ -78,7 +78,7 @@ def receive():
 
         headers["Token"] = jwt.encode(
             token,
-            pybase64.standard_b64decode(TOKEN_KEY),
+            TOKEN_KEY,
             algorithm='HS256'
         ).decode('utf-8')
 
