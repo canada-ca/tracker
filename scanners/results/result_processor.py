@@ -1,6 +1,5 @@
 import os
 import sys
-import pybase64
 import json
 import logging
 import traceback
@@ -23,19 +22,18 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 MIN_HSTS_AGE = 31536000  # one year
 
-TOKEN_SECRET = os.getenv("TOKEN_KEY")
+TOKEN_KEY = os.getenv("TOKEN_KEY")
 
 
 @app.route("/receive", methods=["GET", "POST"])
 def receive():
 
     logging.info("Results received\n")
-    token_key = pybase64.standard_b64decode(TOKEN_SECRET)
 
     try:
         decoded_token = jwt.decode(
             request.headers.get("Token"),
-            token_key,
+            TOKEN_KEY,
             algorithm=['HS256']
         )
 
