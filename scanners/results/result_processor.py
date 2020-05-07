@@ -6,8 +6,17 @@ import traceback
 import jwt
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from models import *
-from utils import *
+from utils import formatted_dictionary
+
+from models import (
+    Scans,
+    Https_scans,
+    Ssl_scans,
+    Dmarc_scans,
+    Dkim_scans,
+    Mx_scans,
+    Spf_scans
+)
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
