@@ -1,5 +1,6 @@
 import os
 import sys
+import pybase64
 import requests
 import logging
 import json
@@ -38,7 +39,7 @@ destination = "http://result-processor.tracker.svc.cluster.local"
 
 app = Flask(__name__)
 
-TOKEN_KEY = os.getenv("TOKEN_KEY")
+TOKEN_KEY = pybase64.standard_b64decode(os.getenv("TOKEN_KEY"))
 
 
 @app.route("/receive", methods=["GET", "POST"])

@@ -4,3 +4,4 @@ PyJWT
 requests>=2.18.4
 dkimpy
 dnspython
+pybase64

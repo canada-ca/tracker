@@ -1,5 +1,6 @@
 import os
 import sys
+import pybase64
 import logging
 import requests
 import jwt
@@ -10,7 +11,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = Flask(__name__)
 
-TOKEN_KEY = os.getenv("TOKEN_KEY")
+TOKEN_KEY = pybase64.standard_b64decode(os.getenv("TOKEN_KEY"))
 
 
 hosts = ['http://https-scanner.tracker.svc.cluster.local',
