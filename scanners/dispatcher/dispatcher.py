@@ -100,14 +100,14 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
         if dkim_flag is True:
             for host in dkim_flagged_hosts:
                 try:
-                    dispatched[scan_id][host] = requests.post(host, headers=headers)
+                    dispatched[scan_id][host] = requests.post(host + "/receive", headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
         else:
             for host in hosts:
                 try:
-                    dispatched[scan_id][host] = requests.post(host, headers=headers)
+                    dispatched[scan_id][host] = requests.post(host + "/receive", headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
@@ -117,14 +117,14 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
         if dkim_flag is True:
             for host in manual_scan_dkim_flagged_hosts:
                 try:
-                    dispatched[scan_id][host] = requests.post(host, headers=headers)
+                    dispatched[scan_id][host] = requests.post(host + "/receive", headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
         else:
             for host in manual_scan_hosts:
                 try:
-                    dispatched[scan_id][host] = requests.post(host, headers=headers)
+                    dispatched[scan_id][host] = requests.post(host + "/receive", headers=headers)
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error("(SCAN: %s) - Error occurred while sending scan results: %s\n" % (scan_id, e))
