@@ -11,7 +11,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = Flask(__name__)
 
-TOKEN_KEY = pybase64.standard_b64decode(os.getenv("TOKEN_KEY"))
+TOKEN_KEY = os.getenv("TOKEN_KEY")
 
 
 hosts = ['http://https-scanner.tracker.svc.cluster.local',
@@ -37,7 +37,9 @@ def receive():
 
     try:
         decoded_payload = jwt.decode(
-            request.headers.get("Data"), TOKEN_KEY, algorithm=["HS256"]
+            request.headers.get('Data'),
+            pybase64.standard_b64decode(TOKEN_KEY),
+            algorithm=['HS256']
         )
 
         test_flag = request.headers.get("Test")
@@ -50,9 +52,11 @@ def receive():
         user_initialized = decoded_payload["user_init"]
         scan_id = decoded_payload["scan_id"]
 
-        encrypted_payload = jwt.encode(payload, TOKEN_KEY, algorithm="HS256").decode(
-            "utf-8"
-        )
+        encrypted_payload = jwt.encode(
+            payload,
+            pybase64.standard_b64decode(TOKEN_KEY),
+            algorithm='HS256'
+        ).decode('utf-8')
 
         if test_flag == "true":
             res = dispatch(
