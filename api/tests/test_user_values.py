@@ -4,58 +4,48 @@ from graphene.test import Client
 from unittest import TestCase
 from werkzeug.test import create_environ
 from app import app
-from db import db_session
+from db import DB
 from models import Organizations, Users, User_affiliations
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
 
+save, cleanup, session = DB()
 
 @pytest.fixture(scope="class")
 def user_resolver_test_db_init():
 
     with app.app_context():
+        org1 = Organizations(acronym="ORG1")
+
         test_user = Users(
-            id=1,
             display_name="testuserread",
             user_name="testuserread@testemail.ca",
             password="testpassword123",
             preferred_lang="English",
             tfa_validated=False,
+            user_affiliation=[
+                User_affiliations(
+                    user_organization=org1, permission="user_read"
+                )
+            ]
         )
-        db_session.add(test_user)
+        save(test_user)
+        session.add(test_user)
         test_super_admin = Users(
-            id=2,
             display_name="testsuperadmin",
             user_name="testsuperadmin@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(
+                    user_organization=org1, permission="super_admin"
+                )
+            ]
         )
-        db_session.add(test_super_admin)
+        save(test_super_admin)
 
-        org = Organizations(id=1, acronym="ORG1")
-        db_session.add(org)
-        org = Organizations(id=2, acronym="ORG2")
-        db_session.add(org)
-        org = Organizations(id=3, acronym="ORG3")
-        db_session.add(org)
+        yield
+        cleanup()
 
-        test_admin_role = User_affiliations(
-            user_id=1, organization_id=1, permission="user_read"
-        )
-        db_session.add(test_admin_role)
-        test_admin_role = User_affiliations(
-            user_id=2, organization_id=1, permission="super_admin"
-        )
-        db_session.add(test_admin_role)
-
-        db_session.commit()
-
-    yield
-
-    with app.app_context():
-        User_affiliations.query.delete()
-        Organizations.query.delete()
-        Users.query.delete()
-        db_session.commit()
 
 
 @pytest.mark.usefixtures("user_resolver_test_db_init")
@@ -86,7 +76,7 @@ class TestUserResolverValues(TestCase):
             environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
-            executed = client.execute(
+            results = client.execute(
                 """
                 {
                     user(userName: "testuserread@testemail.ca") {
@@ -94,20 +84,13 @@ class TestUserResolverValues(TestCase):
                         displayName
                         lang
                         tfa
-                        affiliations {
-                            edges {
-                                node {
-                                    userId
-                                }
-                            }
-                        }
                     }
                 }
                 """,
                 context_value=request_headers,
                 backend=backend,
             )
-            result_refr = {
+            expected = {
                 "data": {
                     "user": [
                         {
@@ -115,12 +98,11 @@ class TestUserResolverValues(TestCase):
                             "displayName": "testuserread",
                             "lang": "English",
                             "tfa": False,
-                            "affiliations": {"edges": [{"node": {"userId": 1}}]},
                         }
                     ]
                 }
             }
-            self.assertDictEqual(result_refr, executed)
+            self.assertDictEqual(expected, results)
 
     def test_get_another_users_information_user_does_not_exist(self):
         """
@@ -152,16 +134,6 @@ class TestUserResolverValues(TestCase):
                 {
                     user(userName: "IdontThinkSo@testemail.ca") {
                         userName
-                        displayName
-                        lang
-                        tfa
-                        affiliations {
-                            edges {
-                                node {
-                                    userId
-                                }
-                            }
-                        }
                     }
                 }
                 """,
@@ -206,13 +178,6 @@ class TestUserResolverValues(TestCase):
                         displayName
                         lang
                         tfa
-                        affiliations {
-                            edges {
-                                node {
-                                    userId
-                                }
-                            }
-                        }
                     }
                 }
                 """,
@@ -227,7 +192,6 @@ class TestUserResolverValues(TestCase):
                             "displayName": "testuserread",
                             "lang": "English",
                             "tfa": False,
-                            "affiliations": {"edges": [{"node": {"userId": 1}}]},
                         }
                     ]
                 }

@@ -1,90 +1,76 @@
 import pytest
 from flask import Request
+from json_web_token import tokenize, auth_header
 from graphene.test import Client
 from unittest import TestCase
 from werkzeug.test import create_environ
 from app import app
-from db import db_session
+from db import DB
 from models import Organizations, Users, User_affiliations
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
 
 
+save, cleanup, db_session = DB()
+
+
 @pytest.fixture(scope="class")
 def users_resolver_test_db_init():
     with app.app_context():
-        test_read = Users(
-            id=1,
+        org1 = Organizations(acronym="ORG1")
+        org2 = Organizations(acronym="ORG2")
+        org3 = Organizations(acronym="ORG3")
+
+        reader = Users(
             display_name="testuserread",
             user_name="testuserread@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(user_organization=org1, permission="user_read")
+            ]
         )
-        db_session.add(test_read)
-        test_super_admin = Users(
-            id=2,
+        super_admin = Users(
             display_name="testsuperadmin",
             user_name="testsuperadmin@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(user_organization=org2, permission="super_admin")
+            ]
         )
-        db_session.add(test_super_admin)
-        test_admin = Users(
-            id=3,
+        org1_admin = Users(
             display_name="testadmin",
             user_name="testadmin@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(user_organization=org1, permission="admin")
+            ]
         )
-        db_session.add(test_admin)
-        test_admin = Users(
-            id=4,
+        org2_admin = Users(
             display_name="testadmin2",
             user_name="testadmin2@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(user_organization=org2, permission="admin")
+            ]
         )
-        db_session.add(test_admin)
-        test_write = Users(
-            id=5,
+        writer = Users(
             display_name="testuserwrite",
             user_name="testuserwrite@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(user_organization=org1, permission="user_write")
+            ]
         )
-        db_session.add(test_write)
+        save(reader)
+        save(super_admin)
+        save(org1_admin)
+        save(org2_admin)
+        save(writer)
 
-        org = Organizations(id=1, acronym="ORG1")
-        db_session.add(org)
-        org = Organizations(id=2, acronym="ORG2")
-        db_session.add(org)
-        org = Organizations(id=3, acronym="ORG3")
-        db_session.add(org)
 
-        test_user_read_role = User_affiliations(
-            user_id=1, organization_id=1, permission="user_read"
-        )
-        db_session.add(test_user_read_role)
-        test_super_admin_role = User_affiliations(
-            user_id=2, organization_id=2, permission="super_admin"
-        )
-        db_session.add(test_super_admin_role)
-        test_admin_role = User_affiliations(
-            user_id=3, organization_id=1, permission="admin"
-        )
-        db_session.add(test_admin_role)
-        test_admin_role = User_affiliations(
-            user_id=4, organization_id=2, permission="admin"
-        )
-        db_session.add(test_admin_role)
-        test_user_write_role = User_affiliations(
-            user_id=5, organization_id=1, permission="user_write"
-        )
-        db_session.add(test_user_write_role)
-        db_session.commit()
+        yield
+        cleanup()
 
-    yield
-
-    with app.app_context():
-        User_affiliations.query.delete()
-        Organizations.query.delete()
-        Users.query.delete()
-        db_session.commit()
 
 
 @pytest.mark.usefixtures("users_resolver_test_db_init")

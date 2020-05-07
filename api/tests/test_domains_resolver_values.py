@@ -1,12 +1,11 @@
 import pytest
+from pytest import fail
+from json_web_token import tokenize, auth_header
 from flask import Request
 from graphene.test import Client
-from unittest import TestCase
-from werkzeug.test import create_environ
 from app import app
-from db import db_session
+from db import DB
 from queries import schema
-from backend.security_check import SecurityAnalysisBackend
 from models import (
     Organizations,
     Domains,
@@ -21,863 +20,418 @@ from models import (
     Spf_scans,
     Ssl_scans,
 )
+from tests.testdata import accurateplastics_report
+
+s, cleanup, session = DB()
 
 
-@pytest.fixture(scope="class")
-def domain_test_db_init():
-
+@pytest.fixture
+def save():
     with app.app_context():
-        test_user = Users(
-            id=1,
-            display_name="testuserread",
-            user_name="testuserread@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_user)
+        yield s
+        session.rollback()
+        cleanup()
 
-        org = Organizations(
-            id=1, acronym="ORG1", org_tags={"description": "Organization 1"}
-        )
-        db_session.add(org)
 
-        test_user_read_role = User_affiliations(
-            user_id=1, organization_id=1, permission="user_read"
-        )
-        db_session.add(test_user_read_role)
-
-        domain = Domains(id=1, domain="accurateplastics.com", organization_id=1)
-        db_session.add(domain)
-        domain = Domains(id=2, domain="addisonfoods.com", organization_id=1)
-        db_session.add(domain)
-
-        test_dmarc_report = Dmarc_Reports(
-            id=1,
-            domain_id=1,
-            start_date="2018-10-01 13:07:12",
-            end_date="2018-10-01 13:07:12",
-            report={
-                "xml_schema": "draft",
-                "report_metadata": {
-                    "org_name": "accurateplastics.com",
-                    "org_email": "administrator@accurateplastics.com",
-                    "org_extra_contact_info": "null",
-                    "report_id": "example.com:1538463741",
-                    "begin_date": "2018-10-01 13:07:12",
-                    "end_date": "2018-10-01 13:07:12",
-                    "errors": [
-                        "Invalid XML: not well-formed (invalid token): line 5, column 17"
+def test_get_domain_resolver_dmarc_report(save):
+    """
+    Test to see if all values appear
+    """
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(
+                    acronym="ORG1",
+                    domains=[
+                        Domains(
+                            domain="accurateplastics.com",
+                            dmarc_reports=[
+                                Dmarc_Reports(
+                                    start_date="2018-10-01 13:07:12",
+                                    end_date="2018-10-01 13:07:12",
+                                    report=accurateplastics_report,
+                                )
+                            ],
+                        ),
+                        Domains(domain="addisonfoods.com"),
                     ],
-                },
-                "policy_published": {
-                    "domain": "example.com",
-                    "adkim": "r",
-                    "aspf": "r",
-                    "p": "none",
-                    "sp": "reject",
-                    "pct": "100",
-                    "fo": "0",
-                },
-                "records": [
-                    {
-                        "source": {
-                            "ip_address": "12.20.127.122",
-                            "country": "US",
-                            "reverse_dns": "null",
-                            "base_domain": "null",
-                        },
-                        "count": 1,
-                        "alignment": {"spf": False, "dkim": False, "dmarc": False},
-                        "policy_evaluated": {
-                            "disposition": "none",
-                            "dkim": "fail",
-                            "spf": "fail",
-                            "policy_override_reasons": ["TESTING TEXT"],
-                        },
-                        "identifiers": {
-                            "header_from": "example.com",
-                            "envelope_from": "null",
-                            "envelope_to": "null",
-                        },
-                        "auth_results": {
-                            "dkim": [
-                                {
-                                    "domain": "toptierhighticket.club",
-                                    "selector": "default",
-                                    "result": "pass",
-                                }
-                            ],
-                            "spf": [
-                                {"domain": "null", "scope": "mfrom", "result": "none"}
-                            ],
-                        },
+                ),
+            )
+        ],
+    )
+    save(user)
+
+    token = tokenize(user_id=user.id, roles=user.roles)
+
+    result = Client(schema).execute(
+        """
+        {
+            domain(url: "accurateplastics.com") {
+                url
+                dmarcReport {
+                    edges {
+                        node {
+                            reportId
+                            orgName
+                            orgEmail
+                            startDate
+                            endDate
+                        }
                     }
-                ],
-            },
+                }
+            }
+        }
+        """,
+        context_value=auth_header(token),
+    )
+
+    if "errors" in result:
+        fail("Expected dmarcReport query to succeed. Instead: {}".format(result))
+
+    expected = {
+        "data": {
+            "domain": [
+                {
+                    "url": "accurateplastics.com",
+                    "dmarcReport": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "reportId": "example.com:1538463741",
+                                    "orgName": "accurateplastics.com",
+                                    "orgEmail": "administrator@accurateplastics.com",
+                                    "startDate": "2018-10-01T13:07:12",
+                                    "endDate": "2018-10-01T13:07:12",
+                                }
+                            }
+                        ]
+                    },
+                }
+            ]
+        }
+    }
+    assert expected == result
+
+
+def test_get_domain_resolver_dmarc_report_in_date_range(save):
+    """
+    Test to see if all values appear
+    """
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(
+                    acronym="ORG1",
+                    domains=[
+                        Domains(
+                            domain="accurateplastics.com",
+                            dmarc_reports=[
+                                Dmarc_Reports(
+                                    start_date="2018-10-01 13:07:12",
+                                    end_date="2018-10-01 13:07:12",
+                                    report=accurateplastics_report,
+                                )
+                            ],
+                        ),
+                    ],
+                ),
+            )
+        ],
+    )
+    save(user)
+
+    token = tokenize(user_id=user.id, roles=user.roles)
+
+    result = Client(schema).execute(
+        """
+         {
+             domain(url: "accurateplastics.com") {
+                 url
+                 dmarcReport(startDate: "2018-01-01" endDate: "2018-12-31") {
+                     edges {
+                         node {
+                             reportId
+                             orgName
+                             orgEmail
+                             startDate
+                             endDate
+                         }
+                     }
+                 }
+             }
+         }
+        """,
+        context_value=auth_header(token),
+    )
+
+    if "errors" in result:
+        fail("Expected dmarcReport query to succeed. Instead: {}".format(result))
+
+    expected = {
+        "data": {
+            "domain": [
+                {
+                    "url": "accurateplastics.com",
+                    "dmarcReport": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "reportId": "example.com:1538463741",
+                                    "orgName": "accurateplastics.com",
+                                    "orgEmail": "administrator@accurateplastics.com",
+                                    "startDate": "2018-10-01T13:07:12",
+                                    "endDate": "2018-10-01T13:07:12",
+                                }
+                            }
+                        ]
+                    },
+                }
+            ]
+        }
+    }
+    assert expected == result
+
+
+def test_get_domain_resolver_dmarc_report_for_date_range_with_no_reports(save):
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(
+                    acronym="ORG1",
+                    domains=[
+                        Domains(
+                            domain="accurateplastics.com",
+                            dmarc_reports=[
+                                Dmarc_Reports(
+                                    start_date="2018-10-01 13:07:12",
+                                    end_date="2018-10-01 13:07:12",
+                                    report=accurateplastics_report,
+                                )
+                            ],
+                        ),
+                    ],
+                ),
+            )
+        ],
+    )
+    save(user)
+
+    token = tokenize(user_id=user.id, roles=user.roles)
+
+    result = Client(schema).execute(
+        """
+         {
+             domain(url: "accurateplastics.com") {
+                 url
+                 dmarcReport(startDate: "2019-01-01" endDate: "2019-12-31") {
+                     edges {
+                         node {
+                             reportId
+                             orgName
+                             orgEmail
+                             startDate
+                             endDate
+                         }
+                     }
+                 }
+             }
+         }
+        """,
+        context_value=auth_header(token),
+    )
+
+    if "errors" not in result:
+        fail(
+            "Expected dmarcReport query for report dates we don't have to fail. Instead: {}".format(
+                result
+            )
         )
-        db_session.add(test_dmarc_report)
-        db_session.commit()
-
-    yield
-
-    with app.app_context():
-        Dkim_scans.query.delete()
-        Dmarc_scans.query.delete()
-        Https_scans.query.delete()
-        Mx_scans.query.delete()
-        Spf_scans.query.delete()
-        Ssl_scans.query.delete()
-        Scans.query.delete()
-        Dmarc_Reports.query.delete()
-        Domains.query.delete()
-        User_affiliations.query.delete()
-        Organizations.query.delete()
-        Users.query.delete()
-        db_session.commit()
 
 
-@pytest.mark.usefixtures("domain_test_db_init")
-class TestDomainsResolver(TestCase):
-    def test_get_domain_resolver_dmarc_report(self):
+def test_domain_resolver_dmarc_report_for_domain_with_no_reports_will_fail(save):
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(
+                    acronym="ORG1", domains=[Domains(domain="addisonfoods.com"),],
+                ),
+            )
+        ],
+    )
+    save(user)
+
+    token = tokenize(user_id=user.id, roles=user.roles)
+
+    result = Client(schema).execute(
         """
-        Test to see if all values appear
+         {
+             domain(url: "addisonfoods.com") {
+                 url
+                 dmarcReport {
+                     edges {
+                         node {
+                             reportId
+                             orgName
+                             orgEmail
+                             startDate
+                             endDate
+                         }
+                     }
+                 }
+             }
+         }
+        """,
+        context_value=auth_header(token),
+    )
+
+    if "errors" not in result:
+        fail(
+            "Expected dmarcReport query for report dates we don't have to fail. Instead: {}".format(
+                result
+            )
+        )
+
+    [error] = result["errors"]
+    assert error["message"] == "Error, no reports for that domain."
+
+
+def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing(save):
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(
+                    acronym="ORG1",
+                    domains=[
+                        Domains(
+                            domain="accurateplastics.com",
+                            dmarc_reports=[
+                                Dmarc_Reports(
+                                    start_date="2018-10-01 13:07:12",
+                                    end_date="2018-10-01 13:07:12",
+                                    report=accurateplastics_report,
+                                )
+                            ],
+                        ),
+                    ],
+                ),
+            )
+        ],
+    )
+    save(user)
+
+    token = tokenize(user_id=user.id, roles=user.roles)
+
+    result = Client(schema).execute(
         """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
+         {
+             domain(url: "accurateplastics.com") {
+                 url
+                 dmarcReport(endDate: "2019-12-31") {
+                     edges {
+                         node {
+                             reportId
+                             orgName
+                             orgEmail
+                             startDate
+                             endDate
+                         }
+                     }
+                 }
+             }
+         }
+        """,
+        context_value=auth_header(token),
+    )
+
+    if "errors" not in result:
+        fail(
+            "Expected dmarcReport query with no start date to fail. Instead: {}".format(
+                result
             )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+        )
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    [error] = result["errors"]
+    assert error["message"] == "Error, both start and end dates are required."
 
-            executed = client.execute(
-                """
-                {
-                    domain(url: "accurateplastics.com") {
-                        url
-                        dmarcReport {
-                            edges {
-                                node {
-                                    reportId
-                                    orgName
-                                    orgEmail
-                                    startDate
-                                    endDate
-                                    errors
-                                    policyPublished {
-                                        domain
-                                        adkim
-                                        p
-                                        sp
-                                        pct
-                                        fo
-                                    }
-                                    records {
-                                        count
-                                        source {
-                                            ipAddress
-                                            country
-                                            reverseDns
-                                            baseDomain
-                                        }
-                                        alignment {
-                                            spf
-                                            dkim
-                                            dmarc
-                                        }
-                                        policyEvaluated {
-                                            disposition
-                                            dkim
-                                            spf
-                                            policyOverrideReasons
-                                        }
-                                        identifiers {
-                                            headerFrom
-                                            envelopeFrom
-                                            envelopeTo
-                                        }
-                                        authResults {
-                                            dkim {
-                                                domain
-                                                selector
-                                                result
-                                            }
-                                            spf {
-                                                domain
-                                                scope
-                                                result
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
+
+def test_get_domain_resolver_dmarc_report_returns_error_if_end_date_is_missing(save):
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(
+                    acronym="ORG1",
+                    domains=[
+                        Domains(
+                            domain="accurateplastics.com",
+                            dmarc_reports=[
+                                Dmarc_Reports(
+                                    start_date="2018-10-01 13:07:12",
+                                    end_date="2018-10-01 13:07:12",
+                                    report=accurateplastics_report,
+                                )
+                            ],
+                        ),
+                    ],
+                ),
             )
-            result_refr = {
-                "data": {
-                    "domain": [
-                        {
-                            "url": "accurateplastics.com",
-                            "dmarcReport": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "reportId": "example.com:1538463741",
-                                            "orgName": "accurateplastics.com",
-                                            "orgEmail": "administrator@accurateplastics.com",
-                                            "startDate": "2018-10-01T13:07:12",
-                                            "endDate": "2018-10-01T13:07:12",
-                                            "errors": [
-                                                "Invalid XML: not well-formed (invalid token): line 5, column 17"
-                                            ],
-                                            "policyPublished": {
-                                                "domain": "example.com",
-                                                "adkim": "r",
-                                                "p": "none",
-                                                "sp": "reject",
-                                                "pct": 100,
-                                                "fo": 0,
-                                            },
-                                            "records": [
-                                                {
-                                                    "count": 1,
-                                                    "source": {
-                                                        "ipAddress": "12.20.127.122",
-                                                        "country": "US",
-                                                        "reverseDns": "null",
-                                                        "baseDomain": "null",
-                                                    },
-                                                    "alignment": {
-                                                        "spf": False,
-                                                        "dkim": False,
-                                                        "dmarc": False,
-                                                    },
-                                                    "policyEvaluated": {
-                                                        "disposition": "none",
-                                                        "dkim": "fail",
-                                                        "spf": "fail",
-                                                        "policyOverrideReasons": [
-                                                            "TESTING TEXT"
-                                                        ],
-                                                    },
-                                                    "identifiers": {
-                                                        "headerFrom": "example.com",
-                                                        "envelopeFrom": "null",
-                                                        "envelopeTo": "null",
-                                                    },
-                                                    "authResults": {
-                                                        "dkim": [
-                                                            {
-                                                                "domain": "toptierhighticket.club",
-                                                                "selector": "default",
-                                                                "result": "pass",
-                                                            }
-                                                        ],
-                                                        "spf": [
-                                                            {
-                                                                "domain": "null",
-                                                                "scope": "mfrom",
-                                                                "result": "none",
-                                                            }
-                                                        ],
-                                                    },
-                                                }
-                                            ],
-                                        }
-                                    }
-                                ]
-                            },
-                        }
-                    ]
-                }
-            }
-            self.assertDictEqual(result_refr, executed)
+        ],
+    )
+    save(user)
 
-    def test_get_domain_resolver_dmarc_report_in_date_range(self):
+    token = tokenize(user_id=user.id, roles=user.roles)
+
+    result = Client(schema).execute(
         """
-        Test to see if all values appear within the date range
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+         {
+             domain(url: "accurateplastics.com") {
+                 url
+                 dmarcReport(startDate: "2019-12-31") {
+                     edges {
+                         node {
+                             reportId
+                             orgName
+                             orgEmail
+                             startDate
+                             endDate
+                         }
+                     }
+                 }
+             }
+         }
+        """,
+        context_value=auth_header(token),
+    )
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                """
-                {
-                    domain(url: "accurateplastics.com") {
-                        url
-                        dmarcReport(startDate: "2018-01-01" endDate: "2018-12-31") {
-                            edges {
-                                node {
-                                    reportId
-                                    orgName
-                                    orgEmail
-                                    startDate
-                                    endDate
-                                    errors
-                                    policyPublished {
-                                        domain
-                                        adkim
-                                        p
-                                        sp
-                                        pct
-                                        fo
-                                    }
-                                    records {
-                                        count
-                                        source {
-                                            ipAddress
-                                            country
-                                            reverseDns
-                                            baseDomain
-                                        }
-                                        alignment {
-                                            spf
-                                            dkim
-                                            dmarc
-                                        }
-                                        policyEvaluated {
-                                            disposition
-                                            dkim
-                                            spf
-                                            policyOverrideReasons
-                                        }
-                                        identifiers {
-                                            headerFrom
-                                            envelopeFrom
-                                            envelopeTo
-                                        }
-                                        authResults {
-                                            dkim {
-                                                domain
-                                                selector
-                                                result
-                                            }
-                                            spf {
-                                                domain
-                                                scope
-                                                result
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
+    if "errors" not in result:
+        fail(
+            "Expected dmarcReport query with no start date to fail. Instead: {}".format(
+                result
             )
-            result_refr = {
-                "data": {
-                    "domain": [
-                        {
-                            "url": "accurateplastics.com",
-                            "dmarcReport": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "reportId": "example.com:1538463741",
-                                            "orgName": "accurateplastics.com",
-                                            "orgEmail": "administrator@accurateplastics.com",
-                                            "startDate": "2018-10-01T13:07:12",
-                                            "endDate": "2018-10-01T13:07:12",
-                                            "errors": [
-                                                "Invalid XML: not well-formed (invalid token): line 5, column 17"
-                                            ],
-                                            "policyPublished": {
-                                                "domain": "example.com",
-                                                "adkim": "r",
-                                                "p": "none",
-                                                "sp": "reject",
-                                                "pct": 100,
-                                                "fo": 0,
-                                            },
-                                            "records": [
-                                                {
-                                                    "count": 1,
-                                                    "source": {
-                                                        "ipAddress": "12.20.127.122",
-                                                        "country": "US",
-                                                        "reverseDns": "null",
-                                                        "baseDomain": "null",
-                                                    },
-                                                    "alignment": {
-                                                        "spf": False,
-                                                        "dkim": False,
-                                                        "dmarc": False,
-                                                    },
-                                                    "policyEvaluated": {
-                                                        "disposition": "none",
-                                                        "dkim": "fail",
-                                                        "spf": "fail",
-                                                        "policyOverrideReasons": [
-                                                            "TESTING TEXT"
-                                                        ],
-                                                    },
-                                                    "identifiers": {
-                                                        "headerFrom": "example.com",
-                                                        "envelopeFrom": "null",
-                                                        "envelopeTo": "null",
-                                                    },
-                                                    "authResults": {
-                                                        "dkim": [
-                                                            {
-                                                                "domain": "toptierhighticket.club",
-                                                                "selector": "default",
-                                                                "result": "pass",
-                                                            }
-                                                        ],
-                                                        "spf": [
-                                                            {
-                                                                "domain": "null",
-                                                                "scope": "mfrom",
-                                                                "result": "none",
-                                                            }
-                                                        ],
-                                                    },
-                                                }
-                                            ],
-                                        }
-                                    }
-                                ]
-                            },
-                        }
-                    ]
-                }
-            }
-            self.assertDictEqual(result_refr, executed)
+        )
 
-    def test_get_domain_resolver_dmarc_report_out_of_date_range(self):
-        """
-        Test to see if no values appear out of date range
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                """
-                {
-                    domain(url: "accurateplastics.com") {
-                        url
-                        dmarcReport(startDate: "2019-01-01" endDate: "2019-12-31") {
-                            edges {
-                                node {
-                                    reportId
-                                    orgName
-                                    orgEmail
-                                    startDate
-                                    endDate
-                                    errors
-                                    policyPublished {
-                                        domain
-                                        adkim
-                                        p
-                                        sp
-                                        pct
-                                        fo
-                                    }
-                                    records {
-                                        count
-                                        source {
-                                            ipAddress
-                                            country
-                                            reverseDns
-                                            baseDomain
-                                        }
-                                        alignment {
-                                            spf
-                                            dkim
-                                            dmarc
-                                        }
-                                        policyEvaluated {
-                                            disposition
-                                            dkim
-                                            spf
-                                            policyOverrideReasons
-                                        }
-                                        identifiers {
-                                            headerFrom
-                                            envelopeFrom
-                                            envelopeTo
-                                        }
-                                        authResults {
-                                            dkim {
-                                                domain
-                                                selector
-                                                result
-                                            }
-                                            spf {
-                                                domain
-                                                scope
-                                                result
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"]
-                == "Error, no reports for that domain in that date range."
-            )
-
-    def test_get_domain_resolver_dmarc_report_domain_missing_report(self):
-        """
-        Test to see if no values appear out when domain has no report
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                """
-                {
-                    domain(url: "addisonfoods.com") {
-                        url
-                        dmarcReport {
-                            edges {
-                                node {
-                                    reportId
-                                    orgName
-                                    orgEmail
-                                    startDate
-                                    endDate
-                                    errors
-                                    policyPublished {
-                                        domain
-                                        adkim
-                                        p
-                                        sp
-                                        pct
-                                        fo
-                                    }
-                                    records {
-                                        count
-                                        source {
-                                            ipAddress
-                                            country
-                                            reverseDns
-                                            baseDomain
-                                        }
-                                        alignment {
-                                            spf
-                                            dkim
-                                            dmarc
-                                        }
-                                        policyEvaluated {
-                                            disposition
-                                            dkim
-                                            spf
-                                            policyOverrideReasons
-                                        }
-                                        identifiers {
-                                            headerFrom
-                                            envelopeFrom
-                                            envelopeTo
-                                        }
-                                        authResults {
-                                            dkim {
-                                                domain
-                                                selector
-                                                result
-                                            }
-                                            spf {
-                                                domain
-                                                scope
-                                                result
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"] == "Error, no reports for that domain."
-            )
-
-    def test_get_domain_resolver_dmarc_report_no_start_date(self):
-        """
-        Test to see if no values appear when start date missing
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                """
-                {
-                    domain(url: "addisonfoods.com") {
-                        url
-                        dmarcReport(endDate: "2018-01-01") {
-                            edges {
-                                node {
-                                    reportId
-                                    orgName
-                                    orgEmail
-                                    startDate
-                                    endDate
-                                    errors
-                                    policyPublished {
-                                        domain
-                                        adkim
-                                        p
-                                        sp
-                                        pct
-                                        fo
-                                    }
-                                    records {
-                                        count
-                                        source {
-                                            ipAddress
-                                            country
-                                            reverseDns
-                                            baseDomain
-                                        }
-                                        alignment {
-                                            spf
-                                            dkim
-                                            dmarc
-                                        }
-                                        policyEvaluated {
-                                            disposition
-                                            dkim
-                                            spf
-                                            policyOverrideReasons
-                                        }
-                                        identifiers {
-                                            headerFrom
-                                            envelopeFrom
-                                            envelopeTo
-                                        }
-                                        authResults {
-                                            dkim {
-                                                domain
-                                                selector
-                                                result
-                                            }
-                                            spf {
-                                                domain
-                                                scope
-                                                result
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"]
-                == "Error, both start and end dates are required."
-            )
-
-    def test_get_domain_resolver_dmarc_report_no_end_date(self):
-        """
-        Test to see if no values appear when end date missing
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                """
-                {
-                    domain(url: "addisonfoods.com") {
-                        url
-                        dmarcReport(startDate: "2018-01-01") {
-                            edges {
-                                node {
-                                    reportId
-                                    orgName
-                                    orgEmail
-                                    startDate
-                                    endDate
-                                    errors
-                                    policyPublished {
-                                        domain
-                                        adkim
-                                        p
-                                        sp
-                                        pct
-                                        fo
-                                    }
-                                    records {
-                                        count
-                                        source {
-                                            ipAddress
-                                            country
-                                            reverseDns
-                                            baseDomain
-                                        }
-                                        alignment {
-                                            spf
-                                            dkim
-                                            dmarc
-                                        }
-                                        policyEvaluated {
-                                            disposition
-                                            dkim
-                                            spf
-                                            policyOverrideReasons
-                                        }
-                                        identifiers {
-                                            headerFrom
-                                            envelopeFrom
-                                            envelopeTo
-                                        }
-                                        authResults {
-                                            dkim {
-                                                domain
-                                                selector
-                                                result
-                                            }
-                                            spf {
-                                                domain
-                                                scope
-                                                result
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"]
-                == "Error, both start and end dates are required."
-            )
+    [error] = result["errors"]
+    assert error["message"] == "Error, both start and end dates are required."

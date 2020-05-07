@@ -46,6 +46,8 @@ def check_user_claims(user_claims):
     elif user_claims:
         user_id = user_claims[0]['user_id']
         with app.app_context():
+            # XXX: affiliations should have been eager loaded with joinedload
+            # when user was initally pulled from the db.
             user_aff = User_affiliations.query.filter(
                 User_affiliations.user_id == user_id).all()
             user_aff = orm_to_dict(user_aff)

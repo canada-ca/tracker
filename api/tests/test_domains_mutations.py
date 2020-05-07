@@ -6,7 +6,7 @@ from werkzeug.test import create_environ
 from app import app
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
-from db import db_session
+from db import DB
 from models import (
     Organizations,
     Domains,
@@ -21,206 +21,194 @@ from models import (
     Ssl_scans,
 )
 
+save, cleanup, session = DB()
 
 @pytest.fixture(scope="class")
 def domain_test_db_init():
     with app.app_context():
+        org1 = Organizations(acronym="ORG1")
+        org2 = Organizations(acronym="ORG2")
+        save(org1)
+        save(org2)
+
         test_read = Users(
-            id=1,
             display_name="testuserread",
             user_name="testuserread@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(
+                    user_organization=org1, permission="user_read"
+                )
+            ]
         )
-        db_session.add(test_read)
+        save(test_read)
         test_super_admin = Users(
-            id=2,
             display_name="testsuperadmin",
             user_name="testsuperadmin@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(
+                    user_organization=org2, permission="super_admin"
+                )
+            ]
         )
-        db_session.add(test_super_admin)
+        save(test_super_admin)
         test_admin = Users(
-            id=3,
             display_name="testadmin",
             user_name="testadmin@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(
+                    user_organization=org1, permission="admin"
+                )
+            ]
         )
-        db_session.add(test_admin)
-        test_admin = Users(
-            id=4,
+        save(test_admin)
+        test_admin2 = Users(
             display_name="testadmin2",
             user_name="testadmin2@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(
+                    user_organization=org2, permission="admin"
+                )
+            ]
         )
-        db_session.add(test_admin)
+        save(test_admin2)
         test_write = Users(
-            id=5,
             display_name="testuserwrite",
             user_name="testuserwrite@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(
+                    user_organization=org1, permission="user_write"
+                )
+            ]
         )
-        db_session.add(test_write)
+        save(test_write)
         test_write2 = Users(
-            id=6,
             display_name="testuserwrite2",
             user_name="testuserwrite2@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(
+                    user_organization=org2, permission="user_write"
+                )
+            ]
         )
-        db_session.add(test_write2)
+        save(test_write2)
 
-        org = Organizations(id=1, acronym="ORG1")
-        db_session.add(org)
-        org = Organizations(id=2, acronym="ORG2")
-        db_session.add(org)
 
-        test_user_read_role = User_affiliations(
-            user_id=1, organization_id=1, permission="user_read"
-        )
-        db_session.add(test_user_read_role)
-        test_super_admin_role = User_affiliations(
-            user_id=2, organization_id=2, permission="super_admin"
-        )
-        db_session.add(test_super_admin_role)
-        test_admin_role = User_affiliations(
-            user_id=3, organization_id=1, permission="admin"
-        )
-        db_session.add(test_admin_role)
-        test_admin_role = User_affiliations(
-            user_id=4, organization_id=2, permission="admin"
-        )
-        db_session.add(test_admin_role)
-        test_user_write_role = User_affiliations(
-            user_id=5, organization_id=1, permission="user_write"
-        )
-        db_session.add(test_user_write_role)
-        test_user_write_role_2 = User_affiliations(
-            user_id=6, organization_id=2, permission="user_write"
-        )
-        db_session.add(test_user_write_role_2)
-
-        sa_update_domain = Domains(domain="sa.update.domain.ca", organization_id=1)
-        db_session.add(sa_update_domain)
-        sa_remove_domain = Domains(domain="sa.remove.domain.ca", organization_id=1)
-        db_session.add(sa_remove_domain)
+        sa_update_domain = Domains(domain="sa.update.domain.ca", organization_id=org1.id)
+        session.add(sa_update_domain)
+        sa_remove_domain = Domains(domain="sa.remove.domain.ca", organization_id=org1.id)
+        session.add(sa_remove_domain)
         org_admin_update_domain = Domains(
-            domain="admin.update.domain.ca", organization_id=1
+            domain="admin.update.domain.ca", organization_id=org1.id
         )
-        db_session.add(org_admin_update_domain)
-        org_admin_domain = Domains(domain="admin.remove.domain.ca", organization_id=1)
-        db_session.add(org_admin_domain)
+        session.add(org_admin_update_domain)
+        org_admin_domain = Domains(domain="admin.remove.domain.ca", organization_id=org1.id)
+        session.add(org_admin_domain)
         org_admin_update_domain2 = Domains(
-            domain="admin2.update.domain.ca", organization_id=1
+            domain="admin2.update.domain.ca", organization_id=org1.id
         )
-        db_session.add(org_admin_update_domain2)
-        org_admin_domain2 = Domains(domain="admin2.remove.domain.ca", organization_id=1)
-        db_session.add(org_admin_domain2)
+        session.add(org_admin_update_domain2)
+        org_admin_domain2 = Domains(domain="admin2.remove.domain.ca", organization_id=org1.id)
+        session.add(org_admin_domain2)
         user_write_update_domain = Domains(
-            domain="user.write.update.domain.ca", organization_id=1
+            domain="user.write.update.domain.ca", organization_id=org1.id
         )
-        db_session.add(user_write_update_domain)
+        session.add(user_write_update_domain)
         user_write_domain = Domains(
-            domain="user.write.remove.domain.ca", organization_id=1
+            domain="user.write.remove.domain.ca", organization_id=org1.id
         )
-        db_session.add(user_write_domain)
+        session.add(user_write_domain)
         user_write_update_domain_2 = Domains(
-            domain="user2.write.update.domain.ca", organization_id=1
+            domain="user2.write.update.domain.ca", organization_id=org1.id
         )
-        db_session.add(user_write_update_domain_2)
+        session.add(user_write_update_domain_2)
         user_write_domain_2 = Domains(
-            domain="user2.write.remove.domain.ca", organization_id=1
+            domain="user2.write.remove.domain.ca", organization_id=org1.id
         )
-        db_session.add(user_write_domain_2)
+        session.add(user_write_domain_2)
         user_read_update_domain = Domains(
-            domain="user.read.update.domain.ca", organization_id=1
+            domain="user.read.update.domain.ca", organization_id=org1.id
         )
-        db_session.add(user_read_update_domain)
+        session.add(user_read_update_domain)
         user_read_domain = Domains(
-            domain="user.read.remove.domain.ca", organization_id=1
+            domain="user.read.remove.domain.ca", organization_id=org1.id
         )
-        db_session.add(user_read_domain)
-        db_session.commit()
+        session.add(user_read_domain)
+        session.commit()
 
         # Super Admin Scans
         domain_id = (
-            db_session.query(Domains)
+            session.query(Domains)
             .filter(Domains.domain == "sa.remove.domain.ca")
             .first()
             .id
         )
-        sa_scan = Scans(id=1, domain_id=domain_id)
-        db_session.add(sa_scan)
-        db_session.commit()
-        sa_dkim = Dkim_scans(id=1)
-        db_session.add(sa_dkim)
-        sa_dmarc = Dmarc_scans(id=1)
-        db_session.add(sa_dmarc)
-        sa_https = Https_scans(id=1)
-        db_session.add(sa_https)
-        sa_ssl = Ssl_scans(id=1)
-        db_session.add(sa_ssl)
-        sa_spf = Spf_scans(id=1)
-        db_session.add(sa_spf)
-        db_session.commit()
+        sa_scan = Scans(domain_id=domain_id)
+        save(sa_scan)
+        sa_dkim = Dkim_scans(id=sa_scan.id)
+        session.add(sa_dkim)
+        sa_dmarc = Dmarc_scans(id=sa_scan.id)
+        session.add(sa_dmarc)
+        sa_https = Https_scans(id=sa_scan.id)
+        session.add(sa_https)
+        sa_ssl = Ssl_scans(id=sa_scan.id)
+        session.add(sa_ssl)
+        sa_spf = Spf_scans(id=sa_scan.id)
+        session.add(sa_spf)
+        session.commit()
 
         # Admin Scans
         domain_id = (
-            db_session.query(Domains)
+            session.query(Domains)
             .filter(Domains.domain == "admin.remove.domain.ca")
             .first()
             .id
         )
-        admin_scan = Scans(id=2, domain_id=domain_id)
-        db_session.add(admin_scan)
-        db_session.commit()
-        admin_dkim = Dkim_scans(id=2)
-        db_session.add(admin_dkim)
-        admin_dmarc = Dmarc_scans(id=2)
-        db_session.add(admin_dmarc)
-        admin_https = Https_scans(id=2)
-        db_session.add(admin_https)
-        admin_ssl = Ssl_scans(id=2)
-        db_session.add(admin_ssl)
-        admin_spf = Spf_scans(id=2)
-        db_session.add(admin_spf)
-        db_session.commit()
+        admin_scan = Scans(domain_id=domain_id)
+        session.add(admin_scan)
+        session.commit()
+        admin_dkim = Dkim_scans(id=admin_scan.id)
+        session.add(admin_dkim)
+        admin_dmarc = Dmarc_scans(id=admin_scan.id)
+        session.add(admin_dmarc)
+        admin_https = Https_scans(id=admin_scan.id)
+        session.add(admin_https)
+        admin_ssl = Ssl_scans(id=admin_scan.id)
+        session.add(admin_ssl)
+        admin_spf = Spf_scans(id=admin_scan.id)
+        session.add(admin_spf)
+        session.commit()
 
         # User Write Scans
         domain_id = (
-            db_session.query(Domains)
+            session.query(Domains)
             .filter(Domains.domain == "user.write.remove.domain.ca")
             .first()
             .id
         )
-        user_w_scan = Scans(id=3, domain_id=domain_id)
-        db_session.add(user_w_scan)
-        db_session.commit()
-        user_w_dkim = Dkim_scans(id=3)
-        db_session.add(user_w_dkim)
-        user_w_dmarc = Dmarc_scans(id=3)
-        db_session.add(user_w_dmarc)
-        user_w_https = Https_scans(id=3)
-        db_session.add(user_w_https)
-        user_w_ssl = Ssl_scans(id=3)
-        db_session.add(user_w_ssl)
-        user_w_spf = Spf_scans(id=3)
-        db_session.add(user_w_spf)
-        db_session.commit()
+        user_w_scan = Scans(domain_id=domain_id)
+        session.add(user_w_scan)
+        session.commit()
+        user_w_dkim = Dkim_scans(id=user_w_scan.id)
+        session.add(user_w_dkim)
+        user_w_dmarc = Dmarc_scans(id=user_w_scan.id)
+        session.add(user_w_dmarc)
+        user_w_https = Https_scans(id=user_w_scan.id)
+        session.add(user_w_https)
+        user_w_ssl = Ssl_scans(id=user_w_scan.id)
+        session.add(user_w_ssl)
+        user_w_spf = Spf_scans(id=user_w_scan.id)
+        session.add(user_w_spf)
+        session.commit()
 
-    yield
+        yield
+        cleanup()
 
-    with app.app_context():
-        Ssl_scans.query.delete()
-        Spf_scans.query.delete()
-        Mx_scans.query.delete()
-        Https_scans.query.delete()
-        Dmarc_scans.query.delete()
-        Dkim_scans.query.delete()
-        Scans.query.delete()
-        Domains.query.delete()
-        User_affiliations.query.delete()
-        Organizations.query.delete()
-        Users.query.delete()
-        db_session.commit()
 
 
 @pytest.mark.usefixtures("domain_test_db_init")
@@ -378,17 +366,17 @@ class TestDomainMutationAccessControl(TestCase):
             assert executed["data"]["removeDomain"]["status"]
 
             assert (
-                not db_session.query(Domains)
+                not session.query(Domains)
                 .filter(Domains.domain == "sa.remove.domain.ca")
                 .all()
             )
-            assert not db_session.query(Scans).filter(Scans.id == 1).all()
-            assert not db_session.query(Dkim_scans).filter(Dkim_scans.id == 1).all()
-            assert not db_session.query(Dmarc_scans).filter(Dmarc_scans.id == 1).all()
-            assert not db_session.query(Https_scans).filter(Https_scans.id == 1).all()
-            assert not db_session.query(Mx_scans).filter(Mx_scans.id == 1).all()
-            assert not db_session.query(Ssl_scans).filter(Ssl_scans.id == 1).all()
-            assert not db_session.query(Spf_scans).filter(Spf_scans.id == 1).all()
+            assert not session.query(Scans).filter(Scans.id == 1).all()
+            assert not session.query(Dkim_scans).filter(Dkim_scans.id == 1).all()
+            assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == 1).all()
+            assert not session.query(Https_scans).filter(Https_scans.id == 1).all()
+            assert not session.query(Mx_scans).filter(Mx_scans.id == 1).all()
+            assert not session.query(Ssl_scans).filter(Ssl_scans.id == 1).all()
+            assert not session.query(Spf_scans).filter(Spf_scans.id == 1).all()
 
     def test_domain_creation_super_admin_acronym_sa(self):
         """
@@ -588,17 +576,17 @@ class TestDomainMutationAccessControl(TestCase):
             assert executed["data"]["removeDomain"]["status"]
 
             assert (
-                not db_session.query(Domains)
+                not session.query(Domains)
                 .filter(Domains.domain == "admin.remove.domain.ca")
                 .all()
             )
-            assert not db_session.query(Scans).filter(Scans.id == 2).all()
-            assert not db_session.query(Dkim_scans).filter(Dkim_scans.id == 2).all()
-            assert not db_session.query(Dmarc_scans).filter(Dmarc_scans.id == 2).all()
-            assert not db_session.query(Https_scans).filter(Https_scans.id == 2).all()
-            assert not db_session.query(Mx_scans).filter(Mx_scans.id == 2).all()
-            assert not db_session.query(Ssl_scans).filter(Ssl_scans.id == 2).all()
-            assert not db_session.query(Spf_scans).filter(Spf_scans.id == 2).all()
+            assert not session.query(Scans).filter(Scans.id == 2).all()
+            assert not session.query(Dkim_scans).filter(Dkim_scans.id == 2).all()
+            assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == 2).all()
+            assert not session.query(Https_scans).filter(Https_scans.id == 2).all()
+            assert not session.query(Mx_scans).filter(Mx_scans.id == 2).all()
+            assert not session.query(Ssl_scans).filter(Ssl_scans.id == 2).all()
+            assert not session.query(Spf_scans).filter(Spf_scans.id == 2).all()
 
     # Different Org Admin
     def test_domain_creation_diff_org_admin(self):
@@ -786,7 +774,7 @@ class TestDomainMutationAccessControl(TestCase):
                 backend=backend,
             )
             result_refr = {"data": {"domain": [{"url": "user.write.create.domain.ca"}]}}
-            self.assertDictEqual(result_refr, executed)
+            assert result_refr == executed
 
     def test_domain_modification_user_write(self):
         """
@@ -904,17 +892,17 @@ class TestDomainMutationAccessControl(TestCase):
             assert executed["errors"][0]["message"] == "Error, domain does not exist"
 
             assert (
-                not db_session.query(Domains)
+                not session.query(Domains)
                 .filter(Domains.domain == "user.write.remove.domain.ca")
                 .all()
             )
-            assert not db_session.query(Scans).filter(Scans.id == 3).all()
-            assert not db_session.query(Dkim_scans).filter(Dkim_scans.id == 3).all()
-            assert not db_session.query(Dmarc_scans).filter(Dmarc_scans.id == 3).all()
-            assert not db_session.query(Https_scans).filter(Https_scans.id == 3).all()
-            assert not db_session.query(Mx_scans).filter(Mx_scans.id == 3).all()
-            assert not db_session.query(Ssl_scans).filter(Ssl_scans.id == 3).all()
-            assert not db_session.query(Spf_scans).filter(Spf_scans.id == 3).all()
+            assert not session.query(Scans).filter(Scans.id == 3).all()
+            assert not session.query(Dkim_scans).filter(Dkim_scans.id == 3).all()
+            assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == 3).all()
+            assert not session.query(Https_scans).filter(Https_scans.id == 3).all()
+            assert not session.query(Mx_scans).filter(Mx_scans.id == 3).all()
+            assert not session.query(Ssl_scans).filter(Ssl_scans.id == 3).all()
+            assert not session.query(Spf_scans).filter(Spf_scans.id == 3).all()
 
     # Different Org User Write
     def test_domain_creation_diff_org_user_write(self):

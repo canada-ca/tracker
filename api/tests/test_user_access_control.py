@@ -1,13 +1,16 @@
 import pytest
+from pytest import fail
 from flask import Request
 from graphene.test import Client
 from unittest import TestCase
 from werkzeug.test import create_environ
 from app import app
-from db import db_session
+from db import DB
 from models import Organizations, Users, User_affiliations
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
+
+_, cleanup, db_session = DB()
 
 
 @pytest.fixture(scope="class")
@@ -78,13 +81,8 @@ def user_resolver_ac_test_db_init():
         db_session.add(test_user_write_role)
         db_session.commit()
 
-    yield
-
-    with app.app_context():
-        User_affiliations.query.delete()
-        Organizations.query.delete()
-        Users.query.delete()
-        db_session.commit()
+        yield
+        cleanup()
 
 
 @pytest.mark.usefixtures("user_resolver_ac_test_db_init")
@@ -263,7 +261,7 @@ class TestUserResolverAccessControl(TestCase):
             )
 
     # User read tests
-    def test_get_user_user_read(self):
+    def test_get_reader_can_access_their_own_info(self):
         """
         Test to see if user resolver access control to ensure users with user
         write access cannot access this query
@@ -289,7 +287,7 @@ class TestUserResolverAccessControl(TestCase):
             environ.update(HTTP_AUTHORIZATION=token)
             request_headers = Request(environ)
 
-            executed = client.execute(
+            results = client.execute(
                 """
                 {
                     user(userName: "testuserread@testemail.ca") {
@@ -300,9 +298,4 @@ class TestUserResolverAccessControl(TestCase):
                 context_value=request_headers,
                 backend=backend,
             )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"]
-                == "Error, you do not have permission to view this users information"
-            )
+            assert results == {"data": {"user": [{"displayName": "testuserread"}]}}

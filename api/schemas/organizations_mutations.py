@@ -1,14 +1,10 @@
 import graphene
-
 from graphql import GraphQLError
-
 from app import app
 from db import db_session
-
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin
 from functions.input_validators import cleanse_input
-
 from models import (
     Organizations,
     User_affiliations,
@@ -20,7 +16,6 @@ from models import (
     Dkim_scans,
     Dmarc_scans,
     Mx_scans,
-
 )
 
 from scalars.organization_acronym import Acronym
@@ -30,69 +25,61 @@ class CreateOrganization(graphene.Mutation):
     """
     Mutation allows the creation of an organization inside the database.
     """
+
     class Arguments:
-        acronym = Acronym(
-            description="Acronym of organization.",
-            required=True
-        )
-        description = graphene.String(
-            description="Full name of organization.",
-            required=True
-        )
+        acronym = Acronym(description="Acronym of organization.", required=True)
+        name = graphene.String(description="Full name of organization.", required=True)
         zone = graphene.String(
-            description="The zone which the organization belongs to.",
-            required=True
+            description="The zone which the organization belongs to.", required=True
         )
         sector = graphene.String(
-            description="The sector which the organization belongs to.",
-            required=True
+            description="The sector which the organization belongs to.", required=True
         )
         province = graphene.String(
             description="The province in which the organization is located in.",
-            required=True
+            required=True,
         )
         city = graphene.String(
             description="The city in which the organization is located in.",
-            required=True
+            required=True,
         )
 
     # If the update passed or failed
     status = graphene.Boolean()
 
     with app.app_context():
+
         @require_token
         def mutate(self, info, **kwargs):
-            user_roles = kwargs.get('user_roles')
-            acronym = cleanse_input(kwargs.get('acronym'))
-            description = cleanse_input(kwargs.get('description'))
-            zone = cleanse_input(kwargs.get('zone'))
-            sector = cleanse_input(kwargs.get('sector'))
-            province = cleanse_input(kwargs.get('province'))
-            city = cleanse_input(kwargs.get('city'))
+            user_roles = kwargs.get("user_roles")
+            name = cleanse_input(kwargs.get("name"))
+            acronym = cleanse_input(kwargs.get("acronym"))
+            zone = cleanse_input(kwargs.get("zone"))
+            sector = cleanse_input(kwargs.get("sector"))
+            province = cleanse_input(kwargs.get("province"))
+            city = cleanse_input(kwargs.get("city"))
 
             if is_super_admin(user_role=user_roles):
                 # Check to see if organization already exists
-                org_orm = db_session.query(Organizations).filter(
-                    Organizations.acronym == acronym
-                ).first()
+                org_orm = (
+                    db_session.query(Organizations)
+                    .filter(Organizations.acronym == acronym)
+                    .first()
+                )
 
                 if org_orm is not None:
-                    raise GraphQLError("Error, Organization alredy exists")
+                    raise GraphQLError("Error, Organization already exists")
 
                 # Generate org tags
                 org_tags = {
-                    "description": description,
                     "zone": zone,
                     "sector": sector,
                     "province": province,
-                    "city": city
+                    "city": city,
                 }
 
                 # Create new org entry in db
-                new_org = Organizations(
-                    acronym=acronym,
-                    org_tags=org_tags
-                )
+                new_org = Organizations(name=name, acronym=acronym, org_tags=org_tags)
 
                 # Add new org entry into the session
                 db_session.add(new_org)
@@ -114,89 +101,82 @@ class CreateOrganization(graphene.Mutation):
 class UpdateOrganization(graphene.Mutation):
     class Arguments:
         acronym = Acronym(
-            description="Organization that will be updated.",
-            required=True
+            description="Organization that will be updated.", required=True
         )
         updated_acronym = Acronym(
-            description="Organization Acronym you would like updated",
-            required=False
+            description="Organization Acronym you would like updated", required=False
         )
-        description = graphene.String(
-            description="Full name of organization.",
-            required=False
-        )
+        name = graphene.String(description="Full name of organization.", required=False)
         zone = graphene.String(
-            description="The zone which the organization belongs to.",
-            required=False
+            description="The zone which the organization belongs to.", required=False
         )
         sector = graphene.String(
-            description="The sector which the organization belongs to.",
-            required=False
+            description="The sector which the organization belongs to.", required=False
         )
         province = graphene.String(
             description="The province in which the organization is located in.",
-            required=False
+            required=False,
         )
         city = graphene.String(
             description="The city in which the organization is located in.",
-            required=False
+            required=False,
         )
 
     # If the update passed or failed
     status = graphene.Boolean()
 
     with app.app_context():
+
         @require_token
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
-            user_roles = kwargs.get('user_roles')
-            acronym = cleanse_input(kwargs.get('acronym'))
-            updated_acronym = cleanse_input(kwargs.get('updated_acronym'))
-            description = cleanse_input(kwargs.get('description'))
-            zone = cleanse_input(kwargs.get('zone'))
-            sector = cleanse_input(kwargs.get('sector'))
-            province = cleanse_input(kwargs.get('province'))
-            city = cleanse_input(kwargs.get('city'))
+            user_roles = kwargs.get("user_roles")
+            name = cleanse_input(kwargs.get("name"))
+            acronym = cleanse_input(kwargs.get("acronym"))
+            updated_acronym = cleanse_input(kwargs.get("updated_acronym"))
+            description = cleanse_input(kwargs.get("description"))
+            zone = cleanse_input(kwargs.get("zone"))
+            sector = cleanse_input(kwargs.get("sector"))
+            province = cleanse_input(kwargs.get("province"))
+            city = cleanse_input(kwargs.get("city"))
 
+            # XXX: only the Super User can edit orgs?
             if is_super_admin(user_role=user_roles):
 
                 # Get requested org orm
-                org_orm = db_session.query(Organizations).filter(
-                    Organizations.acronym == acronym
-                ).first()
+                org_orm = (
+                    db_session.query(Organizations)
+                    .filter(Organizations.acronym == acronym)
+                    .first()
+                )
 
                 # Check to see if org exists
                 if org_orm is None:
                     raise GraphQLError("Error, organization does not exist.")
 
                 # Check to see if organization acronym already in use
-                update_org_orm = db_session.query(Organizations).filter(
-                    Organizations.acronym == updated_acronym
-                ).first()
+                update_org_orm = (
+                    db_session.query(Organizations)
+                    .filter(Organizations.acronym == updated_acronym)
+                    .first()
+                )
 
                 if update_org_orm is not None:
                     raise GraphQLError("Error, acronym already in use.")
 
-                # Generate org tags
-                org_tags = {
-                    "description": description,
-                    "zone": zone,
-                    "sector": sector,
-                    "province": province,
-                    "city": city
-                }
                 if updated_acronym is not acronym:
                     # Update orm
-                    Organizations.query.filter(
-                        Organizations.acronym == acronym
-                    ).update(
-                        {
-                            'acronym': updated_acronym,
-                            'org_tags': org_tags
-                        }
-                    )
+                    org_orm.name = name
+                    org_orm.acronym = updated_acronym
+                    org_orm.org_tags = {
+                        "zone": zone,
+                        "sector": sector,
+                        "province": province,
+                        "city": city,
+                    }
 
                 # Push update to db and return status
+
                 try:
                     db_session.commit()
                     return UpdateOrganization(status=True)
@@ -214,87 +194,83 @@ class RemoveOrganization(graphene.Mutation):
     """
     Mutation allows the removal of an organization inside the database.
     """
+
     class Arguments:
         acronym = Acronym(
-            description="The organization you wish to remove",
-            required=True
+            description="The organization you wish to remove", required=True
         )
 
     status = graphene.Boolean()
 
     with app.app_context():
+
         @require_token
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
-            user_roles = kwargs.get('user_roles')
-            acronym = cleanse_input(kwargs.get('acronym'))
+            user_roles = kwargs.get("user_roles")
+            acronym = cleanse_input(kwargs.get("acronym"))
 
             # Restrict the deletion of SA Org
             if acronym == "SA":
                 raise GraphQLError("Error, you cannot remove this organization")
 
             # Check to see if org exists
-            org_orm = db_session.query(Organizations).filter(
-                Organizations.acronym == acronym
-            ).first()
+            org_orm = (
+                db_session.query(Organizations)
+                .filter(Organizations.acronym == acronym)
+                .first()
+            )
 
             if org_orm is None:
                 raise GraphQLError("Error, organization does not exist")
 
             # Check Permissions
             if is_super_admin(user_role=user_roles):
+                # XXX shouldn't cascade delete do all of this for us?
                 try:
-                    # Get Org ID
-                    org_orm = Organizations.query.filter(
-                        Organizations.acronym == acronym
-                    ).first()
-
                     # Get All Domains
                     domain_orm = Domains.query.filter(
                         Domains.organization_id == org_orm.id
                     ).all()
 
-                    # Loop Through All Domains
-                    for domain in domain_orm:
-                        # Get All Scans
-                        scan_orm = Scans.query.filter(
-                            Scans.domain_id == domain.id
-                        ).all()
-                        # Delete All Related Scans
-                        for scan in scan_orm:
+                    if len(domain_orm) > 0:
+                        # Loop Through All Domains
+                        for domain in domain_orm:
+                            # Get All Scans
+                            scan_orm = Scans.query.filter(
+                                Scans.domain_id == domain.id
+                            ).all()
+                            # Delete All Related Scans
+                            for scan in scan_orm:
+                                try:
+                                    Dkim_scans.query.filter(
+                                        Dkim_scans.id == scan.id
+                                    ).delete()
+                                    Dmarc_scans.query.filter(
+                                        Dmarc_scans.id == scan.id
+                                    ).delete()
+                                    Https_scans.query.filter(
+                                        Https_scans.id == scan.id
+                                    ).delete()
+                                    Mx_scans.query.filter(
+                                        Mx_scans.id == scan.id
+                                    ).delete()
+                                    Spf_scans.query.filter(
+                                        Spf_scans.id == scan.id
+                                    ).delete()
+                                    Ssl_scans.query.filter(
+                                        Ssl_scans.id == scan.id
+                                    ).delete()
+                                    Scans.query.filter(Scans.id == scan.id).delete()
+                                except Exception as e:
+                                    print("Scans: " + e)
+                                    return RemoveOrganization(status=False)
+                            # Delete Domains
                             try:
-                                Dkim_scans.query.filter(
-                                    Dkim_scans.id == scan.id
-                                ).delete()
-                                Dmarc_scans.query.filter(
-                                    Dmarc_scans.id == scan.id
-                                ).delete()
-                                Https_scans.query.filter(
-                                    Https_scans.id == scan.id
-                                ).delete()
-                                Mx_scans.query.filter(
-                                    Mx_scans.id == scan.id
-                                ).delete()
-                                Spf_scans.query.filter(
-                                    Spf_scans.id == scan.id
-                                ).delete()
-                                Ssl_scans.query.filter(
-                                    Ssl_scans.id == scan.id
-                                ).delete()
-                                Scans.query.filter(
-                                    Scans.id == scan.id
-                                ).delete()
+                                Domains.query.filter(Domains.id == domain.id).delete()
                             except Exception as e:
-                                print("Scans: " + e)
+                                print("Domain: " + str(e))
                                 return RemoveOrganization(status=False)
-                        # Delete Domains
-                        try:
-                            Domains.query.filter(
-                                Domains.id == domain.id
-                            ).delete()
-                        except Exception as e:
-                            print("Domain: " + str(e))
-                            return RemoveOrganization(status=False)
 
                     try:
                         # Get all user aff
@@ -305,11 +281,10 @@ class RemoveOrganization(graphene.Mutation):
                         print("user_aff: " + str(e))
                         return RemoveOrganization(status=False)
 
-                    Organizations.query.filter(
-                        Organizations.acronym == acronym
-                    ).delete()
+                    db_session.delete(org_orm)
                     db_session.commit()
                     return RemoveOrganization(status=True)
+
                 except Exception as e:
                     print("organization: " + str(e))
                     db_session.rollback()
