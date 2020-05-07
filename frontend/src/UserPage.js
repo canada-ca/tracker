@@ -1,6 +1,6 @@
 import React from 'react'
 import { Formik } from 'formik'
-import { useHistory } from 'react-router-dom'
+import { useHistory , useLocation } from 'react-router-dom'
 import { string } from 'prop-types'
 import {
   Stack,
@@ -16,12 +16,12 @@ import {
 } from '@chakra-ui/core'
 import { useApolloClient, useMutation, useQuery } from '@apollo/react-hooks'
 import { PasswordConfirmation } from './PasswordConfirmation'
-import { useLocation } from 'react-router-dom'
+
 import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
 import { UPDATE_PASSWORD } from './graphql/mutations'
 
-export default function UserPage(props) {
+export default function UserPage() {
   const location = useLocation()
   const client = useApolloClient()
   const toast = useToast()
@@ -76,8 +76,8 @@ export default function UserPage(props) {
           actions.setSubmitting(false)
         }}
       >
-        {(props) => (
-          <form onSubmit={props.handleSubmit}>
+        {({handleSubmit, handleChange, values}) => (
+          <form onSubmit={handleSubmit}>
             <Stack p={25} spacing={4}>
               <Text fontSize="2xl" fontWeight="bold" textAlign="center">
                 User Profile
@@ -89,8 +89,8 @@ export default function UserPage(props) {
                   id="displayName"
                   name="displayName"
                   type="text"
-                  onChange={props.handleChange}
-                  value={props.values.displayName}
+                  onChange={handleChange}
+                  value={values.displayName}
                 />
               </Stack>
 
@@ -100,8 +100,8 @@ export default function UserPage(props) {
                   id="email"
                   name="email"
                   type="email"
-                  onChange={props.handleChange}
-                  value={props.values.email}
+                  onChange={handleChange}
+                  value={values.email}
                 />
               </Stack>
 
@@ -112,8 +112,8 @@ export default function UserPage(props) {
                   name="lang"
                   type="text"
                   placeholder="Select option"
-                  onChange={props.handleChange}
-                  value={props.values.lang}
+                  onChange={handleChange}
+                  value={values.lang}
                 >
                   <option value="en">English</option>
                   <option value="fr">French</option>
@@ -150,7 +150,7 @@ export default function UserPage(props) {
             onClick={() => {
               history.push('/two-factor-code')
             }}
-            isDisabled={location.state ? true : false}
+            isDisabled={!!location.state}
           >
             Enable 2FA
           </Button>
@@ -180,7 +180,7 @@ export default function UserPage(props) {
               isClosable: true,
             })
           }}
-          isDisabled={location.state ? true : false}
+          isDisabled={!!location.state}
         >
           Sign Out
         </Button>

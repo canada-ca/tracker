@@ -1,5 +1,4 @@
 import React from 'react'
-import equal from 'fast-deep-equal'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 
 import { UserStateProvider, UserState, useUserState } from '../UserState'
@@ -79,7 +78,7 @@ describe('<UserStateProvider/>', () => {
           const { getByTestId } = render(
             <UserStateProvider initialState={initialState}>
               <UserState>
-                {({ currentUser, login, logout }) => {
+                {({ currentUser, login }) => {
                   return (
                     <div>
                       <p data-testid="username">{currentUser.userName}</p>
@@ -87,7 +86,6 @@ describe('<UserStateProvider/>', () => {
                         data-testid="loginbutton"
                         onClick={() => login(testUser)}
                       />
-                      }
                     </div>
                   )
                 }}
