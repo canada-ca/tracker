@@ -4,11 +4,12 @@ from graphene.test import Client
 from unittest import TestCase
 from werkzeug.test import create_environ
 from app import app
-from db import db_session
+from db import DB
 from models import Organizations, Domains, Users, User_affiliations
 from queries import schema
 from backend.security_check import SecurityAnalysisBackend
 
+_, cleanup, db_session = DB()
 
 @pytest.fixture(scope="class")
 def domain_test_db_init():
@@ -58,14 +59,9 @@ def domain_test_db_init():
         db_session.add(domain)
         db_session.commit()
 
-    yield
+        yield
 
-    with app.app_context():
-        Domains.query.delete()
-        User_affiliations.query.delete()
-        Organizations.query.delete()
-        Users.query.delete()
-        db_session.commit()
+        cleanup()
 
 
 @pytest.mark.usefixtures("domain_test_db_init")

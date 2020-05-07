@@ -30,11 +30,11 @@ class Organization(SQLAlchemyObjectType):
             "domains",
             "users"
         )
+    name = graphene.String(
+        description="The full name of the organization."
+    )
     acronym = Acronym(
         description="The acronym of the organization."
-    )
-    description = graphene.String(
-        description="The full name of the organization."
     )
     zone = graphene.String(
         description="The zone which the organization belongs to."
@@ -61,20 +61,20 @@ class Organization(SQLAlchemyObjectType):
         def resolve_acronym(self: OrgModel, info):
             return self.acronym
 
-        def resolve_description(self: OrgModel, info):
-            return self.org_tags["description"]
+        def resolve_name(self: OrgModel, info):
+            return self.name
 
         def resolve_zone(self: OrgModel, info):
-            return self.org_tags["zone"]
+            return self.org_tags.get("zone", None)
 
         def resolve_sector(self: OrgModel, info):
-            return self.org_tags["sector"]
+            return self.org_tags.get("sector", None)
 
         def resolve_province(self: OrgModel, info):
-            return self.org_tags["province"]
+            return self.org_tags.get("province", None)
 
         def resolve_city(self: OrgModel, info):
-            return self.org_tags["city"]
+            return self.org_tags.get("city", None)
 
         def resolve_domains(self: OrgModel, info):
             query = DomainsSchema.get_query(info)

@@ -3,7 +3,7 @@ from app import app
 from models import Users, User_affiliations, Organizations
 from db import DB
 
-s, cleanup, _ = DB()
+s, cleanup, session = DB()
 
 
 @pytest.fixture
@@ -43,6 +43,20 @@ def test_user_model_encrypts_the_user_password():
     assert len(user.password) is 60
 
 
+def test_user_is_admin_on_their_default_org():
+    acceptable_password = "twelvechars!"
+    user = Users(
+        user_name="foo",
+        display_name="Foo",
+        preferred_lang="English",
+        password=acceptable_password,
+    )
+
+    for affiliation in user.user_affiliation:
+        assert affiliation.permission is "admin"
+        assert affiliation.user_organization.acronym == "FOO"
+
+
 def test_users_roles_can_be_accessed_by_a_roles_method(save):
     acceptable_password = "twelvechars!"
     user = Users(
@@ -62,5 +76,5 @@ def test_users_roles_can_be_accessed_by_a_roles_method(save):
     )
 
     # Before save org_id and user_id are None
-    role = filter(lambda d: d["permission"] == "user_write", user.roles)
-    assert user.roles == [{"org_id": None, "permission": "user_write", "user_id": None}]
+    role = [r for r in user.roles if r['permission'] == "user_write"]
+    assert role == [{"org_id": None, "permission": "user_write", "user_id": None}]

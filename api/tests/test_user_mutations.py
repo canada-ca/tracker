@@ -2,12 +2,13 @@ import pyotp
 import pytest
 from graphene.test import Client
 from app import app
-from db import db_session
+from db import DB
 from queries import schema
 from models import Users
 from backend.security_check import SecurityAnalysisBackend
 from functions.error_messages import *
 
+_, cleanup, db_session = DB()
 
 @pytest.fixture(scope="class")
 def user_schema_test_db_init():
@@ -26,11 +27,9 @@ def user_schema_test_db_init():
         db_session.add(test_admin)
         db_session.commit()
 
-    yield
+        yield
+        cleanup()
 
-    with app.app_context():
-        Users.query.delete()
-        db_session.commit()
 
 
 ##

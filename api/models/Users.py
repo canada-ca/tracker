@@ -1,9 +1,13 @@
 from sqlalchemy.types import Integer, Boolean, Float
+from slugify import slugify
 from functions.orm_to_dict import orm_to_dict
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy import event
 from app import bcrypt
+from models.Organizations import Organizations
+from models.User_affiliations import User_affiliations
 from sqlalchemy.orm import relationship, validates
+from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from db import Base
 
@@ -20,8 +24,23 @@ class Users(Base):
     failed_login_attempt_time = Column(Float, default=0, nullable=True)
     tfa_validated = Column(Boolean, default=False)
     user_affiliation = relationship(
-        "User_affiliations", back_populates="user", cascade="all, delete"
+        "User_affiliations", back_populates="user", passive_deletes=True,
     )
+
+    def __init__(self, **kwargs):
+        super(Users, self).__init__(**kwargs)
+        # XXX: This is gross but matches the expections of the
+        # Acronym scalar type.
+        acronym = slugify(self.user_name).upper()[:10]
+        self.user_affiliation.append(
+            User_affiliations(
+                permission="admin",
+                user_organization=Organizations(
+                    name=self.user_name,
+                    acronym=acronym,
+                )
+            )
+        )
 
     @hybrid_method
     def find_by_user_name(self, user_name):

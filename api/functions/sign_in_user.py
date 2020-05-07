@@ -56,11 +56,13 @@ def sign_in_user(user_name, password):
                 }
                 user_roles.append(temp_dict)
         else:
+            # XXX: Roles is [] || [""] || [{}]?
+            # why not just []?
             user_roles = ["none"]
         try:
             payload = {
                 "exp": datetime.datetime.utcnow()
-                + datetime.timedelta(days=0, seconds=1800),
+                + datetime.timedelta(days=0, seconds=1800), # XXX: too short
                 "iat": datetime.datetime.utcnow(),
                 "user_id": user.id,
                 "roles": user_roles,

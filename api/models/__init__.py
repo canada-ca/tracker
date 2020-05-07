@@ -12,7 +12,7 @@ from models.Organizations import Organizations
 class Domains(Base):
     __tablename__ = "domains"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     domain = Column(String)
     last_run = Column(DateTime)
     organization_id = Column(Integer, ForeignKey("organizations.id"))
@@ -41,7 +41,7 @@ class Dmarc_Reports(Base):
 class Scans(Base):
     __tablename__ = "scans"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     domain_id = Column(Integer, ForeignKey("domains.id"))
     scan_date = Column(DateTime)
     initiated_by = Column(Integer, ForeignKey("users.id"))
