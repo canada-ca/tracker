@@ -4,4 +4,3 @@ PyJWT
 requests>=2.18.4
 graphene
 Flask-SQLAlchemy
-pybase64

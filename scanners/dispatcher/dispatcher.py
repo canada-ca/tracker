@@ -1,6 +1,5 @@
 import os
 import sys
-import pybase64
 import logging
 import requests
 import jwt
@@ -11,7 +10,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = Flask(__name__)
 
-TOKEN_SECRET = os.getenv("TOKEN_KEY")
+TOKEN_KEY = os.getenv("TOKEN_KEY")
 
 hosts = ['http://https-scanner.tracker.svc.cluster.local',
          'http://ssl-scanner.tracker.svc.cluster.local',
@@ -33,12 +32,11 @@ def receive():
 
     payload = {}
     dkim_flag = False
-    token_key = pybase64.standard_b64decode(TOKEN_SECRET)
 
     try:
         decoded_payload = jwt.decode(
             request.headers.get('Data'),
-            token_key,
+            TOKEN_KEY,
             algorithm=['HS256']
         )
 
@@ -51,7 +49,7 @@ def receive():
 
         encrypted_payload = jwt.encode(
             payload,
-            token_key,
+            TOKEN_KEY,
             algorithm='HS256'
         ).decode('utf-8')
 

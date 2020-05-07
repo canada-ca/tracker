@@ -1,6 +1,5 @@
 import os
 import sys
-import pybase64
 import requests
 import logging
 import json
@@ -35,19 +34,18 @@ destination = "http://result-processor.tracker.svc.cluster.local"
 
 app = Flask(__name__)
 
-TOKEN_SECRET = os.getenv("TOKEN_KEY")
+TOKEN_KEY = os.getenv("TOKEN_KEY")
 
 
 @app.route('/receive', methods=['GET', 'POST'])
 def receive():
 
     logging.info("Event received\n")
-    token_key = pybase64.standard_b64decode(TOKEN_SECRET)
 
     try:
         decoded_payload = jwt.decode(
             request.headers.get("Data"),
-            token_key,
+            TOKEN_KEY,
             algorithm=['HS256']
         )
 
@@ -72,7 +70,7 @@ def receive():
 
         headers["Token"] = jwt.encode(
             token,
-            token_key,
+            TOKEN_KEY,
             algorithm='HS256'
         ).decode('utf-8')
 
