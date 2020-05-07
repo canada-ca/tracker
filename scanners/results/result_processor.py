@@ -7,20 +7,24 @@ import jwt
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from models import *
-from database import *
 from utils import *
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-app = Flask(__name__)
+TOKEN_KEY = os.getenv("TOKEN_KEY")
+DB_USER = os.getenv('DB_USER')
+DB_PASS = os.getenv('DB_PASS')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
+DB_NAME = os.getenv('DB_NAME')
 
+app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db = SQLAlchemy(app)
 
 MIN_HSTS_AGE = 31536000 # one year
-
-TOKEN_KEY = os.getenv("TOKEN_KEY")
 
 
 @app.route('/receive', methods=['GET', 'POST'])
