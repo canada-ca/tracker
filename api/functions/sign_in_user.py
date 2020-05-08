@@ -1,5 +1,6 @@
 import jwt
 import datetime
+from json_web_token import tokenize
 import os
 from graphql import GraphQLError
 from app import bcrypt
@@ -39,40 +40,12 @@ def sign_in_user(user_name, password):
 
     # If the given user credentials are valid
     if email_match and password_match:
-        # Fetch user's role from the database and include it as claims on the JWT being generated
-        user_affs = User_affiliations.query.filter(
-            User_affiliations.user_id == user.id
-        ).all()
-        user_affs = orm_to_dict(user_affs)
-        if len(user_affs):
-            user_roles = []
-            for user_aff in user_affs:
-                temp_dict = {
-                    "user_id": user_aff["user_id"],
-                    "org_id": user_aff["organization_id"],
-                    "permission": user_aff["permission"],
-                }
-                user_roles.append(temp_dict)
-        else:
-            # XXX: Roles is [] || [""] || [{}]?
-            # why not just []?
-            user_roles = ["none"]
-        try:
-            payload = {
-                "exp": datetime.datetime.utcnow()
-                + datetime.timedelta(days=0, seconds=1800),  # XXX: too short
-                "iat": datetime.datetime.utcnow(),
-                "user_id": user.id,
-                "roles": user_roles,
-            }
-            token = jwt.encode(
-                payload, str(os.getenv("SUPER_SECRET_SALT")), algorithm="HS256"
-            ).decode("utf-8")
-        except Exception as e:
-            raise GraphQLError("Token Generation Error: " + str(e))
 
         # A temporary dictionary that will be returned to the graphql resolver
-        temp_dict = {"auth_token": token, "user": user}
+        temp_dict = {
+            "auth_token": tokenize(user_id=user.id, roles=user.roles),
+            "user": user,
+        }
 
         Users.query.filter(Users.user_name == user_name).update(
             {"failed_login_attempts": 0, "failed_login_attempt_time": 0}
