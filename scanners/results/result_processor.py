@@ -432,7 +432,7 @@ def insert(report, scan_type, scan_id):
 
             # If public key has been in use for a year or more, recommend update
             for previous_scan in previous_scans:
-                if (scan.scan_date - previous_scan.scan_date).TotalDays >= 365:
+                if (scan.scan_date - previous_scan.scan_date).days >= 365:
                     historical_dkim = Dkim_scans.query.filter(Dkim_scans.id == previous_scan.id)
                     if report["public_key_modulus"] == historical_dkim.dkim_scan["dkim"]["public_key_modulus"]:
                         update_recommended = True
