@@ -22,28 +22,6 @@ from functions.auth_wrappers import require_token
 class Organization(SQLAlchemyObjectType):
     class Meta:
         model = OrgModel
-<<<<<<< HEAD
-        interfaces = (relay.Node, )
-        exclude_fields = (
-            "id",
-            "acronym",
-            "org_tags",
-            "domains",
-            "users"
-        )
-    name = graphene.String(
-        description="The full name of the organization."
-    )
-    acronym = Acronym(
-        description="The acronym of the organization."
-    )
-    zone = graphene.String(
-        description="The zone which the organization belongs to."
-    )
-    sector = graphene.String(
-        description="The sector which the organizaion belongs to."
-    )
-=======
         interfaces = (relay.Node,)
         exclude_fields = ("id", "acronym", "org_tags", "domains", "users")
 
@@ -51,7 +29,7 @@ class Organization(SQLAlchemyObjectType):
     description = graphene.String(description="The full name of the organization.")
     zone = graphene.String(description="The zone which the organization belongs to.")
     sector = graphene.String(description="The sector which the organizaion belongs to.")
->>>>>>> 96fa53ee... Forgot these files in the last commit, these have just been ran through black
+
     province = graphene.String(
         description="The province in which the organization resides."
     )

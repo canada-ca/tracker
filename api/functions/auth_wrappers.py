@@ -44,19 +44,10 @@ def check_user_claims(user_claims):
     elif user_claims:
         user_id = user_claims[0]["user_id"]
         with app.app_context():
-<<<<<<< HEAD
             # XXX: affiliations should have been eager loaded with joinedload
             # when user was initally pulled from the db.
-            user_aff = User_affiliations.query.filter(
-=======
             user_affs = User_affiliations.query.filter(
-<<<<<<< HEAD
->>>>>>> 5a1d2cbc... Pluralized user roles argument, user affiliations
                 User_affiliations.user_id == user_id).all()
-=======
-                User_affiliations.user_id == user_id
-            ).all()
->>>>>>> ae6acc16... Ran modified files through black
             user_affs = orm_to_dict(user_affs)
         if user_affs:
             for select in user_affs:
