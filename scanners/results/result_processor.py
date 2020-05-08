@@ -14,12 +14,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 TOKEN_KEY = os.getenv("TOKEN_KEY")
 DB_USER = os.getenv('DB_USER')
 DB_PASS = os.getenv('DB_PASS')
-DB_HOST = os.getenv('DB_HOST')
 DB_PORT = os.getenv('DB_PORT')
 DB_NAME = os.getenv('DB_NAME')
+DB_HOST = "postgres.api.svc.cluster.local"
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@postgres.api.svc.cluster.local:{DB_PORT}/{DB_NAME}'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
@@ -412,16 +412,19 @@ def process_results(results, scan_type, scan_id):
 def insert(report, scan_type, scan_id):
 
     scan = Scans.query.filter(Scans.id == scan_id).first()
+    logging.info("Retrieved corresponding scan from database")
 
     try:
 
         if scan_type is "https":
             result_obj = Https_scans(https_scan={"https": report}, id=scan.id)
             db.session.add(result_obj)
+            logging.info("HTTPS Scan inserted into database")
 
         elif scan_type is "ssl":
             result_obj = Ssl_scans(ssl_scan={"ssl": report}, id=scan.id)
             db.session.add(result_obj)
+            logging.info("SSL Scan inserted into database")
 
         elif scan_type is "dmarc":
             dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": report["dmarc"]}, id=scan.id)
@@ -430,6 +433,7 @@ def insert(report, scan_type, scan_id):
             db.session.add(dmarc_obj)
             db.session.add(mx_obj)
             db.session.add(spf_obj)
+            logging.info("DMARC/MX/SPF Scans inserted into database")
 
         elif scan_type is "dkim":
             # Check for previous dkim scans on this domain
@@ -452,8 +456,10 @@ def insert(report, scan_type, scan_id):
             report["update-recommended"] = update_recommended
             result_obj = Dkim_scans(dkim_scan={"dkim": report}, id=scan.id)
             db.session.add(result_obj)
+            logging.info("DKIM Scan inserted into database")
 
         db.session.commit()
+        logging.info("Committing to database...")
 
     except Exception as e:
         db.session.rollback()
