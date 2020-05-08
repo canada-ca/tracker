@@ -50,10 +50,29 @@ steps:
       - NOTIFICATION_API_KEY=$_NOTIFICATION_API_KEY
       - NOTIFICATION_API_URL=$_NOTIFICATION_API_URL
 
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-if-master
+    entrypoint: 'bash'
+    dir: frontend
+    args:
+    - '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA .
+      else
+        exit 0
+      fi
 
   - name: 'gcr.io/cloud-builders/docker'
-    id: build
-    dir: api
-    args: ['build', '-t','gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA', '.']
-
-images: ['gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA']
+    id: push-if-master
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker push gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA
+      else
+        exit 0
+      fi
