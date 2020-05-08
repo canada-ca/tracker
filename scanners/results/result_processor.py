@@ -4,6 +4,7 @@ import json
 import logging
 import traceback
 import jwt
+import psycopg2
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from utils import formatted_dictionary
@@ -36,6 +37,17 @@ class Domains(db.Model):
     organization = db.relationship("Organizations", back_populates="domains", cascade="all, delete")
     scans = db.relationship("Scans", back_populates="domain", cascade="all, delete")
     dmarc_reports = db.relationship("Dmarc_Reports", back_populates="domain", cascade="all, delete")
+
+
+class Dmarc_Reports(db.Model):
+    __tablename__ = "dmarc_reports"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    domain_id = db.Column(db.Integer, db.ForeignKey("domains.id"))
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
+    report = db.Column(db.JSON)
+    domain = db.relationship("Domains", back_populates="dmarc_reports", cascade="all, delete")
 
 
 class Organizations(db.Model):
