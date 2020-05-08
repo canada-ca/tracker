@@ -48,9 +48,7 @@ def receive():
 
     try:
         decoded_payload = jwt.decode(
-            request.headers.get("Data"),
-            TOKEN_KEY,
-            algorithm=['HS256']
+            request.headers.get("Data"), TOKEN_KEY, algorithm=["HS256"]
         )
 
         test_flag = request.headers.get("Test")
@@ -75,11 +73,9 @@ def receive():
                 % scan_id
             )
 
-        headers["Token"] = jwt.encode(
-            token,
-            TOKEN_KEY,
-            algorithm='HS256'
-        ).decode('utf-8')
+        headers["Token"] = jwt.encode(token, TOKEN_KEY, algorithm="HS256").decode(
+            "utf-8"
+        )
 
         # Dispatch results to result-processor asynchronously
         th = threading.Thread(target=dispatch, args=[scan_id, payload])
@@ -101,7 +97,9 @@ def dispatch(scan_id, payload):
     """
     try:
         # Post request to result-handling service
-        response = requests.post(destination + "/receive", headers=headers, data=payload)
+        response = requests.post(
+            destination + "/receive", headers=headers, data=payload
+        )
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
         return str(response.text)

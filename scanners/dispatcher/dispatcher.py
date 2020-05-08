@@ -13,22 +13,30 @@ app = Flask(__name__)
 TOKEN_KEY = os.getenv("TOKEN_KEY")
 
 
-hosts = ['http://https-scanner.tracker.svc.cluster.local',
-         'http://ssl-scanner.tracker.svc.cluster.local',
-         'http://dmarc-scanner.tracker.svc.cluster.local']
+hosts = [
+    "http://https-scanner.tracker.svc.cluster.local",
+    "http://ssl-scanner.tracker.svc.cluster.local",
+    "http://dmarc-scanner.tracker.svc.cluster.local",
+]
 
-dkim_flagged_hosts = ['http://dkim-scanner.tracker.svc.cluster.local',
-                      'http://dmarc-scanner.tracker.svc.cluster.local']
+dkim_flagged_hosts = [
+    "http://dkim-scanner.tracker.svc.cluster.local",
+    "http://dmarc-scanner.tracker.svc.cluster.local",
+]
 
-manual_scan_hosts = ['http://https-scanner-manual.tracker.svc.cluster.local',
-                     'http://ssl-scanner-manual.tracker.svc.cluster.local',
-                     'http://dmarc-scanner-manual.tracker.svc.cluster.local']
+manual_scan_hosts = [
+    "http://https-scanner-manual.tracker.svc.cluster.local",
+    "http://ssl-scanner-manual.tracker.svc.cluster.local",
+    "http://dmarc-scanner-manual.tracker.svc.cluster.local",
+]
 
-manual_scan_dkim_flagged_hosts = ['http://dkim-scanner-manual.tracker.svc.cluster.local',
-                                  'http://dmarc-scanner-manual.tracker.svc.cluster.local']
+manual_scan_dkim_flagged_hosts = [
+    "http://dkim-scanner-manual.tracker.svc.cluster.local",
+    "http://dmarc-scanner-manual.tracker.svc.cluster.local",
+]
 
 
-@app.route('/receive', methods=['GET', 'POST'])
+@app.route("/receive", methods=["GET", "POST"])
 def receive():
 
     payload = {}
@@ -36,9 +44,7 @@ def receive():
 
     try:
         decoded_payload = jwt.decode(
-            request.headers.get('Data'),
-            TOKEN_KEY,
-            algorithm=['HS256']
+            request.headers.get("Data"), TOKEN_KEY, algorithm=["HS256"]
         )
 
         test_flag = request.headers.get("Test")
@@ -51,11 +57,9 @@ def receive():
         user_initialized = decoded_payload["user_init"]
         scan_id = decoded_payload["scan_id"]
 
-        encrypted_payload = jwt.encode(
-            payload,
-            TOKEN_KEY,
-            algorithm='HS256'
-        ).decode('utf-8')
+        encrypted_payload = jwt.encode(payload, TOKEN_KEY, algorithm="HS256").decode(
+            "utf-8"
+        )
 
         if test_flag == "true":
             res = dispatch(
@@ -114,7 +118,9 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
         if dkim_flag is True:
             for host in dkim_flagged_hosts:
                 try:
-                    dispatched[scan_id][host] = requests.post(host + "/receive", headers=headers)
+                    dispatched[scan_id][host] = requests.post(
+                        host + "/receive", headers=headers
+                    )
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error(
@@ -124,7 +130,9 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
         else:
             for host in hosts:
                 try:
-                    dispatched[scan_id][host] = requests.post(host + "/receive", headers=headers)
+                    dispatched[scan_id][host] = requests.post(
+                        host + "/receive", headers=headers
+                    )
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error(
@@ -137,7 +145,9 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
         if dkim_flag is True:
             for host in manual_scan_dkim_flagged_hosts:
                 try:
-                    dispatched[scan_id][host] = requests.post(host + "/receive", headers=headers)
+                    dispatched[scan_id][host] = requests.post(
+                        host + "/receive", headers=headers
+                    )
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error(
@@ -147,7 +157,9 @@ def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
         else:
             for host in manual_scan_hosts:
                 try:
-                    dispatched[scan_id][host] = requests.post(host + "/receive", headers=headers)
+                    dispatched[scan_id][host] = requests.post(
+                        host + "/receive", headers=headers
+                    )
                     logging.info("Scan %s dispatched...\n" % scan_id)
                 except Exception as e:
                     logging.error(
