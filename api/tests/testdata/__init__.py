@@ -52,5 +52,3 @@ accurateplastics_report = {
         }
     ],
 }
-
-

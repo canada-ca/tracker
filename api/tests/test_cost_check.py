@@ -11,6 +11,7 @@ from backend.security_check import SecurityAnalysisBackend
 
 _, cleanup, db_session = DB()
 
+
 @pytest.fixture(scope="class")
 def user_schema_test_db_init():
     with app.app_context():
@@ -25,7 +26,6 @@ def user_schema_test_db_init():
 
         yield
         cleanup()
-
 
 
 ##

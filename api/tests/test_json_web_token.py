@@ -6,7 +6,7 @@ from os import environ
 
 
 def test_that_it_generates_a_token():
-    test_roles = [{'user_id': 2, 'org_id': 652, 'permission': 'admin'}]
+    test_roles = [{"user_id": 2, "org_id": 652, "permission": "admin"}]
 
     token = tokenize(user_id=1, roles=test_roles, secret="secret")
 
@@ -17,7 +17,7 @@ def test_that_it_generates_a_token():
 
 
 def test_tokens_expire_in_one_hour_by_default():
-    test_roles = [{'user_id': 2, 'org_id': 652, 'permission': 'admin'}]
+    test_roles = [{"user_id": 2, "org_id": 652, "permission": "admin"}]
 
     token = tokenize(user_id=1, roles=test_roles, secret="secret")
     decoded = jwt.decode(token, "secret", algorithms=["HS256"])

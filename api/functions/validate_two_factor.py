@@ -25,11 +25,12 @@ def validate_two_factor(user_name, otp_code):
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
 
-    valid_code = pyotp.totp.TOTP(os.getenv('BASE32_SECRET')).verify(otp_code)
+    valid_code = pyotp.totp.TOTP(os.getenv("BASE32_SECRET")).verify(otp_code)
 
     if valid_code:
-        user = User.query.filter(User.user_name == user_name) \
-            .update({'tfa_validated': True})
+        user = User.query.filter(User.user_name == user_name).update(
+            {"tfa_validated": True}
+        )
 
         db_session.commit()
 

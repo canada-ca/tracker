@@ -23,6 +23,7 @@ from models import (
 
 save, cleanup, session = DB()
 
+
 @pytest.fixture(scope="class")
 def domain_test_db_init():
     with app.app_context():
@@ -36,10 +37,8 @@ def domain_test_db_init():
             user_name="testuserread@testemail.ca",
             password="testpassword123",
             user_affiliation=[
-                User_affiliations(
-                    user_organization=org1, permission="user_read"
-                )
-            ]
+                User_affiliations(user_organization=org1, permission="user_read")
+            ],
         )
         save(test_read)
         test_super_admin = Users(
@@ -47,10 +46,8 @@ def domain_test_db_init():
             user_name="testsuperadmin@testemail.ca",
             password="testpassword123",
             user_affiliation=[
-                User_affiliations(
-                    user_organization=org2, permission="super_admin"
-                )
-            ]
+                User_affiliations(user_organization=org2, permission="super_admin")
+            ],
         )
         save(test_super_admin)
         test_admin = Users(
@@ -58,10 +55,8 @@ def domain_test_db_init():
             user_name="testadmin@testemail.ca",
             password="testpassword123",
             user_affiliation=[
-                User_affiliations(
-                    user_organization=org1, permission="admin"
-                )
-            ]
+                User_affiliations(user_organization=org1, permission="admin")
+            ],
         )
         save(test_admin)
         test_admin2 = Users(
@@ -69,10 +64,8 @@ def domain_test_db_init():
             user_name="testadmin2@testemail.ca",
             password="testpassword123",
             user_affiliation=[
-                User_affiliations(
-                    user_organization=org2, permission="admin"
-                )
-            ]
+                User_affiliations(user_organization=org2, permission="admin")
+            ],
         )
         save(test_admin2)
         test_write = Users(
@@ -80,10 +73,8 @@ def domain_test_db_init():
             user_name="testuserwrite@testemail.ca",
             password="testpassword123",
             user_affiliation=[
-                User_affiliations(
-                    user_organization=org1, permission="user_write"
-                )
-            ]
+                User_affiliations(user_organization=org1, permission="user_write")
+            ],
         )
         save(test_write)
         test_write2 = Users(
@@ -91,29 +82,34 @@ def domain_test_db_init():
             user_name="testuserwrite2@testemail.ca",
             password="testpassword123",
             user_affiliation=[
-                User_affiliations(
-                    user_organization=org2, permission="user_write"
-                )
-            ]
+                User_affiliations(user_organization=org2, permission="user_write")
+            ],
         )
         save(test_write2)
 
-
-        sa_update_domain = Domains(domain="sa.update.domain.ca", organization_id=org1.id)
+        sa_update_domain = Domains(
+            domain="sa.update.domain.ca", organization_id=org1.id
+        )
         session.add(sa_update_domain)
-        sa_remove_domain = Domains(domain="sa.remove.domain.ca", organization_id=org1.id)
+        sa_remove_domain = Domains(
+            domain="sa.remove.domain.ca", organization_id=org1.id
+        )
         session.add(sa_remove_domain)
         org_admin_update_domain = Domains(
             domain="admin.update.domain.ca", organization_id=org1.id
         )
         session.add(org_admin_update_domain)
-        org_admin_domain = Domains(domain="admin.remove.domain.ca", organization_id=org1.id)
+        org_admin_domain = Domains(
+            domain="admin.remove.domain.ca", organization_id=org1.id
+        )
         session.add(org_admin_domain)
         org_admin_update_domain2 = Domains(
             domain="admin2.update.domain.ca", organization_id=org1.id
         )
         session.add(org_admin_update_domain2)
-        org_admin_domain2 = Domains(domain="admin2.remove.domain.ca", organization_id=org1.id)
+        org_admin_domain2 = Domains(
+            domain="admin2.remove.domain.ca", organization_id=org1.id
+        )
         session.add(org_admin_domain2)
         user_write_update_domain = Domains(
             domain="user.write.update.domain.ca", organization_id=org1.id
@@ -208,7 +204,6 @@ def domain_test_db_init():
 
         yield
         cleanup()
-
 
 
 @pytest.mark.usefixtures("domain_test_db_init")

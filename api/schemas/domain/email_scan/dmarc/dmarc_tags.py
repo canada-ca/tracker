@@ -9,16 +9,15 @@ from models import Dmarc_scans
 class DmarcTags(SQLAlchemyObjectType):
     """
     """
+
     class Meta:
         model = Dmarc_scans
-        exclude_fields = (
-            "id",
-            "dmarc_scan"
-        )
+        exclude_fields = ("id", "dmarc_scan")
 
     value = graphene.String(description="Important tags retrieved during scan")
 
     with app.app_context():
+
         def resolve_value(self: Dmarc_scans, info):
             tags = {}
 
@@ -39,7 +38,9 @@ class DmarcTags(SQLAlchemyObjectType):
             if self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] == 100:
                 tags.update({"dmarc7": "PCT-100"})
             elif 100 > self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] > 0:
-                pct_string = "PCT-" + str(self.dmarc_scan["dmarc"]["tags"]["pct"]["value"])
+                pct_string = "PCT-" + str(
+                    self.dmarc_scan["dmarc"]["tags"]["pct"]["value"]
+                )
                 tags.update({"dmarc8": pct_string})
             elif self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] == "invalid":
                 tags.update({"dmarc9": "PCT-invalid"})

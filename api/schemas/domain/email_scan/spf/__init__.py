@@ -22,32 +22,28 @@ class SPF(SQLAlchemyObjectType):
     authorize the hosts that are allowed to use their domain names, and a
     receiving host can check such authorization.
     """
+
     class Meta:
         model = Spf_scans
-        exclude_fields = (
-            "id",
-            "spf_scan"
-        )
+        exclude_fields = ("id", "spf_scan")
+
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
-    lookups = graphene.Int(
-        description="The current amount of DNS lookups"
-    )
+    lookups = graphene.Int(description="The current amount of DNS lookups")
     record = graphene.String(
-        description="SPF record retrieved during the scan of the "
-                    "given domain "
+        description="SPF record retrieved during the scan of the " "given domain "
     )
     spf_default = graphene.String(
         description="Instruction of what a recipient should do if there is "
-                    "not a match to your SPF record. "
+        "not a match to your SPF record. "
     )
     spf_guidance_tags = graphene.List(
-        lambda: SPFTags,
-        description="Key tags found during SPF scan"
+        lambda: SPFTags, description="Key tags found during SPF scan"
     )
 
     with app.app_context():
+
         def resolve_domain(self: Spf_scans, info):
             return get_domain(self, info)
 

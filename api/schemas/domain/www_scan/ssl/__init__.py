@@ -13,15 +13,14 @@ from functions.get_timestamp import get_timestamp
 class SSL(SQLAlchemyObjectType):
     class Meta:
         model = Ssl_scans
-        exclude_fields = (
-            "id",
-            "ssl_scan"
-        )
+        exclude_fields = ("id", "ssl_scan")
+
     id = graphene.ID()
     domain = URL()
     timestamp = graphene.DateTime()
 
     with app.app_context():
+
         def resolve_domain(self, info):
             return get_domain(self, info)
 

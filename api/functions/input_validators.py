@@ -22,7 +22,7 @@ def cleanse_input(input_string):
     :return input_string:  Ths string after all cleansing functions are done on it.
     """
     if input_string is None:
-        input_string = ''
+        input_string = ""
     input_string = input_string.strip()
     input_string = html.escape(input_string)
     return input_string

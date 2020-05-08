@@ -25,6 +25,7 @@ from models import (
 
 s, cleanup, session = DB()
 
+
 def auth_header(token):
     env = create_environ()
     env.update(HTTP_AUTHORIZATION=token)
@@ -210,7 +211,9 @@ def test_mutation_removeOrganization_fails_for_admin_users(save):
 
 def test_mutation_removeOrganization_fails_for_write_users(save):
     write_user = Users(
-        display_name="writer", user_name="write_user@example.com", password="testpassword123",
+        display_name="writer",
+        user_name="write_user@example.com",
+        password="testpassword123",
     )
 
     write_user.user_affiliation.append(
@@ -239,7 +242,9 @@ def test_mutation_removeOrganization_fails_for_write_users(save):
 
     if "errors" not in result:
         fail(
-            "expected removeOrganization to fail for write users. Instead: {}".format(result)
+            "expected removeOrganization to fail for write users. Instead: {}".format(
+                result
+            )
         )
 
     errors, data = result.values()
@@ -281,7 +286,9 @@ def test_mutation_removeOrganization_fails_for_read_users(save):
 
     if "errors" not in result:
         fail(
-            "expected removeOrganization to fail for read users. Instead: {}".format(result)
+            "expected removeOrganization to fail for read users. Instead: {}".format(
+                result
+            )
         )
 
     errors, data = result.values()

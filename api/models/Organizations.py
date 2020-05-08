@@ -15,7 +15,9 @@ class Organizations(Base):
     slug = Column(String, index=True)
     acronym = Column(String)
     org_tags = Column(JSONB)
-    domains = relationship("Domains", back_populates="organization", cascade="all, delete")
+    domains = relationship(
+        "Domains", back_populates="organization", cascade="all, delete"
+    )
     users = relationship(
         "User_affiliations", back_populates="user_organization", passive_deletes=True
     )

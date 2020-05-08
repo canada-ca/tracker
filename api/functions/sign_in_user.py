@@ -60,7 +60,7 @@ def sign_in_user(user_name, password):
         try:
             payload = {
                 "exp": datetime.datetime.utcnow()
-                + datetime.timedelta(days=0, seconds=1800), # XXX: too short
+                + datetime.timedelta(days=0, seconds=1800),  # XXX: too short
                 "iat": datetime.datetime.utcnow(),
                 "user_id": user.id,
                 "roles": user_roles,
