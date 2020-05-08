@@ -27,3 +27,4 @@ resources:
 - api-namespace.yaml
 - frontend-namespace.yaml
 - istio-system-namespace.yaml
+- tracker-namespace.yaml
