@@ -136,6 +136,21 @@ spec:
             secretKeyRef:
               name: api
               key: NOTIFICATION_API_URL
+        - name: SA_USER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SA_USER_NAME
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SA_PASSWORD
+        - name: SA_DISPLAY_NAME
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: SA_DISPLAY_NAME
         - name: TOKEN_KEY
           valueFrom:
             secretKeyRef:
