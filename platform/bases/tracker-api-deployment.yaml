@@ -79,11 +79,6 @@ spec:
             secretKeyRef:
               name: api
               key: TOKEN_KEY
-        - name: ISTIO_INGRESS
-          valueFrom:
-            secretKeyRef:
-              name: api
-              key: ISTIO_INGRESS
         - name: DB_HOST
           value: postgres
         - name: DB_PORT
@@ -146,11 +141,6 @@ spec:
             secretKeyRef:
               name: api
               key: TOKEN_KEY
-        - name: ISTIO_INGRESS
-          valueFrom:
-            secretKeyRef:
-              name: api
-              key: ISTIO_INGRESS
         - name: DB_HOST
           value: postgres
         - name: DB_PORT
