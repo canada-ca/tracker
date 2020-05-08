@@ -6,6 +6,7 @@ import json
 import dkim
 import threading
 import jwt
+import base64
 from dkim import dnsplug, crypto
 from dkim.crypto import *
 from flask import Flask, request
