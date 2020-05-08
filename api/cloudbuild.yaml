@@ -53,7 +53,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: build-if-master
     entrypoint: 'bash'
-    dir: frontend
+    dir: api
     args:
     - '-c'
     - |
