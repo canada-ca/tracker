@@ -14,10 +14,8 @@ from schemas.domain.www_scan.https.https_tags import HTTPSTags
 class HTTPS(SQLAlchemyObjectType):
     class Meta:
         model = Https_scans
-        exclude_fields = (
-            "id",
-            "https_scan"
-        )
+        exclude_fields = ("id", "https_scan")
+
     id = graphene.ID(description="The ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
@@ -29,6 +27,7 @@ class HTTPS(SQLAlchemyObjectType):
     https_guidance_tags = graphene.List(lambda: HTTPSTags)
 
     with app.app_context():
+
         def resole_domain(self: Https_scans, info):
             return get_domain(self, info)
 

@@ -10,8 +10,8 @@ from db import db_session
 
 from models import Scans, Domains
 
-TOKEN_KEY = os.getenv('TOKEN_KEY')
-DISPATCHER_URL = os.getenv('ISTIO_INGRESS')
+TOKEN_KEY = os.getenv("TOKEN_KEY")
+DISPATCHER_URL = os.getenv("ISTIO_INGRESS")
 
 
 def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
@@ -28,54 +28,39 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
     scan_datetime = datetime.datetime.utcnow()
 
     # Create Scan Object
-    new_scan = Scans(
-        domain_id=domain_id,
-        scan_date=scan_datetime,
-        initiated_by=user_id
-    )
+    new_scan = Scans(domain_id=domain_id, scan_date=scan_datetime, initiated_by=user_id)
     db_session.add(new_scan)
 
     # Update Domain Tables Last Run
-    Domains.query.filter(
-        Domains.id == domain_id
-    ).update({'last_run': scan_datetime})
+    Domains.query.filter(Domains.id == domain_id).update({"last_run": scan_datetime})
 
     db_session.commit()
 
     # Get latest scan entry
-    scan_orm = db_session.query(Scans).order_by(
-        Scans.id.desc()
-    ).first()
+    scan_orm = db_session.query(Scans).order_by(Scans.id.desc()).first()
     scan_id = scan_orm.id
 
     payload = {
-        'exp': datetime.datetime.utcnow()+datetime.timedelta(days=0, seconds=10),
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=10),
         "scan_id": scan_id,
         "domain": url,
         "dkim": dkim,
-        "user_init": True
+        "user_init": True,
     }
 
-    encoded_payload = jwt.encode(
-        payload,
-        TOKEN_KEY,
-        algorithm='HS256'
-    ).decode('utf-8')
+    encoded_payload = jwt.encode(payload, TOKEN_KEY, algorithm="HS256").decode("utf-8")
 
     headers = {
-        'Content-Type': 'application/json',
-        'Host': 'dispatcher.tracker.example.com',
-        'Data': encoded_payload
+        "Content-Type": "application/json",
+        "Host": "dispatcher.tracker.example.com",
+        "Data": encoded_payload,
     }
 
     if test:
-        headers['Test'] = 'true'
+        headers["Test"] = "true"
     else:
-        headers['Test'] = 'false'
+        headers["Test"] = "false"
 
-    status = requests.post(
-        DISPATCHER_URL + "/receive",
-        headers=headers
-    )
+    status = requests.post(DISPATCHER_URL + "/receive", headers=headers)
 
     return str(status.text)

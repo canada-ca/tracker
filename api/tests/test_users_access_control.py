@@ -27,7 +27,7 @@ def users_resolver_test_db_init():
             password="testpassword123",
             user_affiliation=[
                 User_affiliations(user_organization=org1, permission="user_read")
-            ]
+            ],
         )
         super_admin = Users(
             display_name="testsuperadmin",
@@ -35,7 +35,7 @@ def users_resolver_test_db_init():
             password="testpassword123",
             user_affiliation=[
                 User_affiliations(user_organization=org2, permission="super_admin")
-            ]
+            ],
         )
         org1_admin = Users(
             display_name="testadmin",
@@ -43,7 +43,7 @@ def users_resolver_test_db_init():
             password="testpassword123",
             user_affiliation=[
                 User_affiliations(user_organization=org1, permission="admin")
-            ]
+            ],
         )
         org2_admin = Users(
             display_name="testadmin2",
@@ -51,7 +51,7 @@ def users_resolver_test_db_init():
             password="testpassword123",
             user_affiliation=[
                 User_affiliations(user_organization=org2, permission="admin")
-            ]
+            ],
         )
         writer = Users(
             display_name="testuserwrite",
@@ -59,7 +59,7 @@ def users_resolver_test_db_init():
             password="testpassword123",
             user_affiliation=[
                 User_affiliations(user_organization=org1, permission="user_write")
-            ]
+            ],
         )
         save(reader)
         save(super_admin)
@@ -67,10 +67,8 @@ def users_resolver_test_db_init():
         save(org2_admin)
         save(writer)
 
-
         yield
         cleanup()
-
 
 
 @pytest.mark.usefixtures("users_resolver_test_db_init")

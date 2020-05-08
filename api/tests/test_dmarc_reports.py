@@ -2,9 +2,8 @@ from pytest import fail
 from app import app
 from sqlalchemy import exc
 from db import db_session
-from models import (
-    Dmarc_Reports,
-)
+from models import Dmarc_Reports
+
 
 def test_should_save_without_raising_an_error():
     with app.app_context():

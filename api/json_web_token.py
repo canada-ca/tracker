@@ -20,6 +20,7 @@ def tokenize(
         algorithm="HS256",
     ).decode("utf-8")
 
+
 def auth_header(token):
     env = create_environ()
     env.update(HTTP_AUTHORIZATION=token)

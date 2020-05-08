@@ -76,5 +76,5 @@ def test_users_roles_can_be_accessed_by_a_roles_method(save):
     )
 
     # Before save org_id and user_id are None
-    role = [r for r in user.roles if r['permission'] == "user_write"]
+    role = [r for r in user.roles if r["permission"] == "user_write"]
     assert role == [{"org_id": None, "permission": "user_write", "user_id": None}]

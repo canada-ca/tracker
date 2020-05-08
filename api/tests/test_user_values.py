@@ -11,6 +11,7 @@ from backend.security_check import SecurityAnalysisBackend
 
 save, cleanup, session = DB()
 
+
 @pytest.fixture(scope="class")
 def user_resolver_test_db_init():
 
@@ -24,10 +25,8 @@ def user_resolver_test_db_init():
             preferred_lang="English",
             tfa_validated=False,
             user_affiliation=[
-                User_affiliations(
-                    user_organization=org1, permission="user_read"
-                )
-            ]
+                User_affiliations(user_organization=org1, permission="user_read")
+            ],
         )
         save(test_user)
         session.add(test_user)
@@ -36,16 +35,13 @@ def user_resolver_test_db_init():
             user_name="testsuperadmin@testemail.ca",
             password="testpassword123",
             user_affiliation=[
-                User_affiliations(
-                    user_organization=org1, permission="super_admin"
-                )
-            ]
+                User_affiliations(user_organization=org1, permission="super_admin")
+            ],
         )
         save(test_super_admin)
 
         yield
         cleanup()
-
 
 
 @pytest.mark.usefixtures("user_resolver_test_db_init")

@@ -17,21 +17,19 @@ class WWWScan(SQLAlchemyObjectType):
     """
     Results of HTTPS and SSL scans on domain
     """
+
     class Meta:
         model = Scans
         interfaces = (relay.Node,)
-        exclude_fields = (
-            "id",
-            "domain_id",
-            "scan_date",
-            "initiated_by"
-        )
+        exclude_fields = ("id", "domain_id", "scan_date", "initiated_by")
+
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
     https = graphene.List(lambda: HTTPS)
     ssl = graphene.List(lambda: SSL)
 
     with app.app_context():
+
         def resolve_domain(self: Scans, info):
             return get_domain(self, info)
 

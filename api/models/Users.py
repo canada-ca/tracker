@@ -35,10 +35,7 @@ class Users(Base):
         self.user_affiliation.append(
             User_affiliations(
                 permission="admin",
-                user_organization=Organizations(
-                    name=self.user_name,
-                    acronym=acronym,
-                )
+                user_organization=Organizations(name=self.user_name, acronym=acronym,),
             )
         )
 

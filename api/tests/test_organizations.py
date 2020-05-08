@@ -5,6 +5,7 @@ from db import DB
 
 s, cleanup, _ = DB()
 
+
 @pytest.fixture
 def save():
     with app.app_context():
