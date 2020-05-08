@@ -380,9 +380,7 @@ def process_results(results, scan_type, scan_id):
     except Exception as e:
         return {"status": False, "info": traceback.format_exc()}
 
-    finalized_report = json.JSONEncoder().encode(str(report))
-
-    insert(finalized_report, scan_type, scan_id)
+    insert(report, scan_type, scan_id)
 
     logging.info("(SCAN: %s) - Successfully parsed results" % scan_id)
     return {"status": True, "info": "Results processed successfully"}
@@ -391,30 +389,40 @@ def process_results(results, scan_type, scan_id):
 def insert(report, scan_type, scan_id):
 
     scan = Scans.query.filter(Scans.id == scan_id).first()
-    logging.info("Retrieved corresponding scan from database")
+    logging.info("Retrieved corresponding scan from database: %s" % str(scan))
 
     try:
 
         if scan_type == "https":
-            result_obj = Https_scans(https_scan={"https": report}, id=scan.id)
+            finalized_report = json.JSONEncoder().encode(str(report))
+
+            result_obj = Https_scans(https_scan={"https": finalized_report}, id=scan.id)
             db.session.add(result_obj)
             logging.info("HTTPS Scan inserted into database")
 
         elif scan_type == "ssl":
-            result_obj = Ssl_scans(ssl_scan={"ssl": report}, id=scan.id)
+            finalized_report = json.JSONEncoder().encode(str(report))
+
+            result_obj = Ssl_scans(ssl_scan={"ssl": finalized_report}, id=scan.id)
             db.session.add(result_obj)
             logging.info("SSL Scan inserted into database")
 
         elif scan_type == "dmarc":
-            dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": report["dmarc"]}, id=scan.id)
-            mx_obj = Mx_scans(mx_scan={"mx": report["mx"]}, id=scan.id)
-            spf_obj = Spf_scans(spf_scan={"spf": report["spf"]}, id=scan.id)
+            finalized_dmarc_report = json.JSONEncoder().encode(str(report["dmarc"]))
+            finalized_mx_report = json.JSONEncoder().encode(str(report["mx"]))
+            finalized_spf_report = json.JSONEncoder().encode(str(report["spf"]))
+
+            dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": finalized_dmarc_report}, id=scan.id)
+            mx_obj = Mx_scans(mx_scan={"mx": finalized_mx_report}, id=scan.id)
+            spf_obj = Spf_scans(spf_scan={"spf": finalized_spf_report}, id=scan.id)
             db.session.add(dmarc_obj)
             db.session.add(mx_obj)
             db.session.add(spf_obj)
             logging.info("DMARC/MX/SPF Scans inserted into database")
 
         elif scan_type == "dkim":
+            finalized_report = json.JSONEncoder().encode(str(report))
+
             # Check for previous dkim scans on this domain
             previous_scans = Scans.query.filter(
                 Scans.domain_id == scan.domain_id
@@ -430,7 +438,7 @@ def insert(report, scan_type, scan_id):
                         update_recommended = True
 
             report["update-recommended"] = update_recommended
-            result_obj = Dkim_scans(dkim_scan={"dkim": report}, id=scan.id)
+            result_obj = Dkim_scans(dkim_scan={"dkim": finalized_report}, id=scan.id)
             db.session.add(result_obj)
             logging.info("DKIM Scan inserted into database")
 
