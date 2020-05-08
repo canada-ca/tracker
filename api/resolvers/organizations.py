@@ -25,9 +25,9 @@ def resolve_organization(self: Organization, info, **kwargs):
     :return: Filtered Organization SQLAlchemyObject Type
     """
     # Get Information from kwargs
-    org = kwargs.get('org')
-    user_roles = kwargs.get('user_roles')
-    user_id = kwargs.get('user_id')
+    org = kwargs.get("org")
+    user_roles = kwargs.get("user_roles")
+    user_id = kwargs.get("user_id")
 
     # Generate user Org ID list
     org_id_list = []
@@ -38,9 +38,9 @@ def resolve_organization(self: Organization, info, **kwargs):
     query = Organization.get_query(info)
 
     # Get org orm to gather its id
-    org_orm = db_session.query(Organizations).filter(
-        Organizations.acronym == org
-    ).first()
+    org_orm = (
+        db_session.query(Organizations).filter(Organizations.acronym == org).first()
+    )
 
     # if org cannot be found
     if not org_orm:
@@ -49,11 +49,11 @@ def resolve_organization(self: Organization, info, **kwargs):
 
     # Check to ensure user has access to given org
     if is_user_read(user_role=user_roles, org_id=org_id):
-        query_rtn = query.filter(
-            Organizations.acronym == org
-        ).all()
+        query_rtn = query.filter(Organizations.acronym == org).all()
     else:
-        raise GraphQLError("Error, you do not have permission to view that organization")
+        raise GraphQLError(
+            "Error, you do not have permission to view that organization"
+        )
 
     return query_rtn
 
@@ -70,9 +70,9 @@ def resolve_organizations(self, info, **kwargs):
     :return: Filtered Organization SQLAlchemyObject Type
     """
     # Get Information from kwargs
-    user_id = kwargs.get('user_id')
-    org = kwargs.get('org')
-    user_roles = kwargs.get('user_roles')
+    user_id = kwargs.get("user_id")
+    org = kwargs.get("org")
+    user_roles = kwargs.get("user_roles")
 
     # Generate user Org ID list
     org_id_list = []
@@ -95,9 +95,7 @@ def resolve_organizations(self, info, **kwargs):
         query_rtr = []
         for org_id in org_id_list:
             if is_user_read(user_role=user_roles, org_id=org_id):
-                tmp_query = query.filter(
-                    Organizations.id == org_id
-                ).first()
+                tmp_query = query.filter(Organizations.id == org_id).first()
                 query_rtr.append(tmp_query)
         if not query_rtr:
             raise GraphQLError("Error, no organizations to display")

@@ -63,4 +63,3 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
     status = requests.post(DISPATCHER_URL + "/receive", headers=headers)
 
     return str(status.text)
-

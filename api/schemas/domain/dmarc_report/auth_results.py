@@ -8,31 +8,28 @@ class AuthResults(graphene.ObjectType):
     """
     DKIM and SPF domain results
     """
-    dkim = graphene.List(
-        lambda: DkimReport,
-        description="DKIM domain raw results"
-    )
-    spf = graphene.List(
-        lambda: SpfReport,
-        description='SPF domain raw results'
-    )
+
+    dkim = graphene.List(lambda: DkimReport, description="DKIM domain raw results")
+    spf = graphene.List(lambda: SpfReport, description="SPF domain raw results")
 
     def resolve_dkim(self: dict, info):
         rtr_list = []
-        for dkim_record in self['dkim']:
-            rtr_list.append(DkimReport(
-                dkim_record['domain'],
-                dkim_record['selector'],
-                dkim_record['result']
-            ))
+        for dkim_record in self["dkim"]:
+            rtr_list.append(
+                DkimReport(
+                    dkim_record["domain"],
+                    dkim_record["selector"],
+                    dkim_record["result"],
+                )
+            )
         return rtr_list
 
     def resolve_spf(self: dict, info):
         rtr_list = []
-        for spf_record in self['spf']:
-            rtr_list.append(SpfReport(
-                spf_record['domain'],
-                spf_record['scope'],
-                spf_record['result']
-            ))
+        for spf_record in self["spf"]:
+            rtr_list.append(
+                SpfReport(
+                    spf_record["domain"], spf_record["scope"], spf_record["result"]
+                )
+            )
         return rtr_list

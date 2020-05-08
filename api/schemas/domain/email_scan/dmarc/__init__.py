@@ -21,42 +21,38 @@ class DMARC(SQLAlchemyObjectType):
     message validation, disposition, and reporting, that a mail-receiving
     organization can use to improve mail handling.
     """
+
     class Meta:
         model = Dmarc_scans
-        exclude_fields = (
-            "id",
-            "dmarc_scan"
-        )
+        exclude_fields = ("id", "dmarc_scan")
+
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="Time when scan was initiated")
-    dmarc_phase = graphene.Int(
-        description="DMARC Phase found when running scan"
-    )
+    dmarc_phase = graphene.Int(description="DMARC Phase found when running scan")
     record = graphene.String(
-        description="DMARC record retrieved during the scan of the "
-                    "given domain "
+        description="DMARC record retrieved during the scan of the " "given domain "
     )
     p_policy = graphene.String(
         description="The requested policy you wish mailbox providers to apply "
-                    "when your email fails DMARC authentication and alignment"
-                    " checks. "
+        "when your email fails DMARC authentication and alignment"
+        " checks. "
     )
     sp_policy = graphene.String(
         description="This tag is used to indicate a requested policy for all "
-                    "subdomains where mail is failing the DMARC "
-                    "authentication and alignment checks. "
+        "subdomains where mail is failing the DMARC "
+        "authentication and alignment checks. "
     )
     pct = graphene.Int(
         description="The percentage of messages to which the DMARC policy is "
-                    "to be applied. "
+        "to be applied. "
     )
     dmarc_guidance_tags = graphene.List(
-        lambda: DmarcTags,
-        description="Key tags found during DMARC Scan"
+        lambda: DmarcTags, description="Key tags found during DMARC Scan"
     )
 
     with app.app_context():
+
         def resolve_domain(self: Dmarc_scans, info):
             return get_domain(self, info)
 

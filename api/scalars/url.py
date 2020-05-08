@@ -5,7 +5,7 @@ from graphql import GraphQLError
 
 from functions.error_messages import *
 
-URL_REGEX = r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)'
+URL_REGEX = r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
 
 URL_REGEX_CHECK = compile(URL_REGEX)
 
@@ -40,7 +40,8 @@ class URL(Scalar):
     def parse_literal(node):
         if not isinstance(node, ast.StringValue):
             raise GraphQLError(
-                scalar_error_only_types("strings", "URLs", str(type(node))))
+                scalar_error_only_types("strings", "URLs", str(type(node)))
+            )
 
         if not URL_REGEX_CHECK.search(node.value):
             raise GraphQLError(scalar_error_type("URL", node.value))

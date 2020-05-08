@@ -16,31 +16,46 @@ from db import (
 )
 
 from functions.db_seeding import (
-    seed_ciphers, remove_ciphers,
-    seed_classification, remove_classification,
-    seed_dkim, remove_dkim,
-    seed_dmarc, remove_dmarc,
-    seed_domains, remove_domains,
-    seed_guidance, remove_guidance,
-    seed_http, remove_http,
-    seed_org, remove_org,
-    seed_scans, remove_scans,
-    seed_spf, remove_spf,
-    seed_ssl, remove_ssl,
-    seed_user_aff, remove_user_aff,
-    seed_users, remove_users
+    seed_ciphers,
+    remove_ciphers,
+    seed_classification,
+    remove_classification,
+    seed_dkim,
+    remove_dkim,
+    seed_dmarc,
+    remove_dmarc,
+    seed_domains,
+    remove_domains,
+    seed_guidance,
+    remove_guidance,
+    seed_http,
+    remove_http,
+    seed_org,
+    remove_org,
+    seed_scans,
+    remove_scans,
+    seed_spf,
+    remove_spf,
+    seed_ssl,
+    remove_ssl,
+    seed_user_aff,
+    remove_user_aff,
+    seed_users,
+    remove_users,
 )
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config[
+    "SQLALCHEMY_DATABASE_URI"
+] = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+app.config["SQLALCHEMY_COMMIT_ON_TEARDOWN"] = True
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 db.init_app(app)
 migrate_app = Migrate(app, db)
 
 manager = Manager(app)
-manager.add_command('db', MigrateCommand)
+manager.add_command("db", MigrateCommand)
 
 
 @manager.command
@@ -79,5 +94,5 @@ def remove_seed():
     remove_guidance(db, app)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     manager.run()
