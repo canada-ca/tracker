@@ -395,17 +395,17 @@ def insert(report, scan_type, scan_id):
 
     try:
 
-        if scan_type is "https":
+        if scan_type == "https":
             result_obj = Https_scans(https_scan={"https": report}, id=scan.id)
             db.session.add(result_obj)
             logging.info("HTTPS Scan inserted into database")
 
-        elif scan_type is "ssl":
+        elif scan_type == "ssl":
             result_obj = Ssl_scans(ssl_scan={"ssl": report}, id=scan.id)
             db.session.add(result_obj)
             logging.info("SSL Scan inserted into database")
 
-        elif scan_type is "dmarc":
+        elif scan_type == "dmarc":
             dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": report["dmarc"]}, id=scan.id)
             mx_obj = Mx_scans(mx_scan={"mx": report["mx"]}, id=scan.id)
             spf_obj = Spf_scans(spf_scan={"spf": report["spf"]}, id=scan.id)
@@ -414,7 +414,7 @@ def insert(report, scan_type, scan_id):
             db.session.add(spf_obj)
             logging.info("DMARC/MX/SPF Scans inserted into database")
 
-        elif scan_type is "dkim":
+        elif scan_type == "dkim":
             # Check for previous dkim scans on this domain
             previous_scans = Scans.query.filter(
                 Scans.domain_id == scan.domain_id
