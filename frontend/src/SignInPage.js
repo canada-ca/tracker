@@ -85,9 +85,9 @@ export default function SignInPage() {
           })
         }}
       >
-        {(props) => (
+        {({handleSubmit, isSubmitting}) => (
           <form
-            onSubmit={props.handleSubmit}
+            onSubmit={handleSubmit}
             role="form"
             aria-label="form"
             name="form"
@@ -120,7 +120,7 @@ export default function SignInPage() {
             <Stack mt={6} spacing={4} isInline>
               <Button
                 variantColor="teal"
-                isLoading={props.isSubmitting}
+                isLoading={isSubmitting}
                 type="submit"
               >
                 <Trans>Sign In</Trans>

@@ -1,4 +1,5 @@
 import React, { useContext, useReducer } from 'react'
+import { object, node } from 'prop-types'
 import equal from 'fast-deep-equal'
 
 const UserStateContext = React.createContext()
@@ -26,6 +27,11 @@ export function UserStateProvider({ initialState, children }) {
   }
 
   return <Provider value={userState}>{children}</Provider>
+}
+
+UserStateProvider.propTypes = {
+  initialState: object.isRequired,
+  children: node.isRequired,
 }
 
 export const UserState = Consumer

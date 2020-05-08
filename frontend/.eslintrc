@@ -11,6 +11,7 @@
     "jest/globals": true
   },
   "rules": {
+    "react/no-unescaped-entities": ["off", {}],
     "comma-dangle": ["error", "always-multiline"],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",

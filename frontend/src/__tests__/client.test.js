@@ -69,7 +69,6 @@ describe('client', () => {
             variables: { name: 'bar' },
           })
 
-          debugger
           expect(cache.data).toMatchObject({
             data: {
               ROOT_QUERY: { userName: 'bar' },
