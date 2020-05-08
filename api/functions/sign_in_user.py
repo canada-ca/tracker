@@ -3,8 +3,6 @@ import datetime
 import os
 from graphql import GraphQLError
 from app import bcrypt
-from flask import current_app as app
-from sqlalchemy.orm import load_only
 from functions.input_validators import *
 from functions.error_messages import *
 from functions.orm_to_dict import orm_to_dict
@@ -16,7 +14,7 @@ from db import db_session
 def sign_in_user(user_name, password):
     """
     This function will perform the sign in functionality and return an access token to be used in later requests.
-    :param email: The email address of the user you hope to sign in.
+    :param user_name: The email address of the user you hope to sign in.
     :param password: The password of the user you hope to sign in.
     :return temp_dict: A dictionary containing both the user object and the auth token
     """
@@ -42,17 +40,17 @@ def sign_in_user(user_name, password):
     # If the given user credentials are valid
     if email_match and password_match:
         # Fetch user's role from the database and include it as claims on the JWT being generated
-        user_aff = User_affiliations.query.filter(
+        user_affs = User_affiliations.query.filter(
             User_affiliations.user_id == user.id
         ).all()
-        user_aff = orm_to_dict(user_aff)
-        if len(user_aff):
+        user_affs = orm_to_dict(user_affs)
+        if len(user_affs):
             user_roles = []
-            for select in user_aff:
+            for user_aff in user_affs:
                 temp_dict = {
-                    "user_id": select["user_id"],
-                    "org_id": select["organization_id"],
-                    "permission": select["permission"],
+                    "user_id": user_aff["user_id"],
+                    "org_id": user_aff["organization_id"],
+                    "permission": user_aff["permission"],
                 }
                 user_roles.append(temp_dict)
         else:

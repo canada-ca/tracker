@@ -35,3 +35,6 @@ scanner/logs
 
 # IDE Files
 .idea/
+
+# jupyter File
+api/.ipynb

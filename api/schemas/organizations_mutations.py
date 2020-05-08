@@ -59,7 +59,7 @@ class CreateOrganization(graphene.Mutation):
             province = cleanse_input(kwargs.get("province"))
             city = cleanse_input(kwargs.get("city"))
 
-            if is_super_admin(user_role=user_roles):
+            if is_super_admin(user_roles=user_roles):
                 # Check to see if organization already exists
                 org_orm = (
                     db_session.query(Organizations)
@@ -141,7 +141,7 @@ class UpdateOrganization(graphene.Mutation):
             city = cleanse_input(kwargs.get("city"))
 
             # XXX: only the Super User can edit orgs?
-            if is_super_admin(user_role=user_roles):
+            if is_super_admin(user_roles=user_roles):
 
                 # Get requested org orm
                 org_orm = (
@@ -225,7 +225,7 @@ class RemoveOrganization(graphene.Mutation):
                 raise GraphQLError("Error, organization does not exist")
 
             # Check Permissions
-            if is_super_admin(user_role=user_roles):
+            if is_super_admin(user_roles=user_roles):
                 # XXX shouldn't cascade delete do all of this for us?
                 try:
                     # Get All Domains
