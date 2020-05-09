@@ -4,14 +4,15 @@ from werkzeug.test import create_environ
 import pytest
 from unittest import TestCase
 from app import app
-from db import db_session
+from db import DB
 from queries import schema
 from models import Users, User_affiliations, Organizations
 from functions.error_messages import error_not_an_admin
 from backend.security_check import SecurityAnalysisBackend
 
+_, cleanup, db_session = DB()
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def user_role_test_db_init():
     with app.app_context():
         test_user = Users(
@@ -42,14 +43,8 @@ def user_role_test_db_init():
         db_session.add(test_admin_role)
         db_session.commit()
 
-    yield
-
-    with app.app_context():
-        User_affiliations.query.delete()
-        Organizations.query.delete()
-        Users.query.delete()
-        db_session.commit()
-
+        yield
+        cleanup()
 
 @pytest.mark.usefixtures("user_role_test_db_init")
 class TestUserUpdateWriteRole(TestCase):

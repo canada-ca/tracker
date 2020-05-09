@@ -10,8 +10,8 @@ from functions.error_messages import *
 
 _, cleanup, db_session = DB()
 
-
-@pytest.fixture(scope="class")
+# XXX: convert this to pytest style
+@pytest.fixture(scope="function")
 def user_schema_test_db_init():
     with app.app_context():
         test_user = Users(
@@ -35,104 +35,58 @@ def user_schema_test_db_init():
 ##
 # This class of tests works within the 'createUser' api endpoint
 @pytest.mark.usefixtures("user_schema_test_db_init")
-class TestCreateUser:
-    def test_successful_creation(self):
-        """Test that ensures a user can be created successfully using the api endpoint"""
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            executed = client.execute(
-                """
-                mutation{
-                    createUser(displayName:"user-test", userName:"different-email@testemail.ca",
-                        password:"testpassword123", confirmPassword:"testpassword123"){
-                        user{
-                            userName
-                            displayName
-                        }
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert executed["data"]
-            assert executed["data"]["createUser"]
-            assert executed["data"]["createUser"]["user"]
-            assert (
-                executed["data"]["createUser"]["user"]["userName"]
-                == "different-email@testemail.ca"
-            )
-            assert executed["data"]["createUser"]["user"]["displayName"] == "user-test"
-
-    def test_email_address_in_use(self):
-        """Test that ensures each user has a unique email address"""
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            executed_first = client.execute(
-                """
-                mutation{
-                    createUser(displayName:"testuser", userName:"testuser@testemail.ca",
-                        password:"testpassword123", confirmPassword:"testpassword123"){
-                        user{
-                            userName
-                        }
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            executed = client.execute(
-                """
-                mutation{
-                    createUser(displayName:"testuser", userName:"testuser@testemail.ca",
-                        password:"testpassword123", confirmPassword:"testpassword123"){
-                        user{
-                            userName
-                        }
-                    }
-                }
-                """,
-                backend=backend,
-            )
-
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert executed["errors"][0]["message"] == error_email_in_use()
-
-    def test_password_too_short(self):
-        """Test that ensure that a user's password meets the valid length requirements"""
+def test_successful_creation():
+    """Test that ensures a user can be created successfully using the api endpoint"""
+    with app.app_context():
         backend = SecurityAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             """
             mutation{
-                createUser(displayName:"testuser", userName:"test@test-email.ca", password:"test", confirmPassword:"test"){
+                createUser(displayName:"user-test", userName:"different-email@testemail.ca",
+                    password:"testpassword123", confirmPassword:"testpassword123"){
                     user{
                         userName
+                        displayName
                     }
                 }
             }
             """,
             backend=backend,
         )
-
-        assert executed["errors"]
-        assert executed["errors"][0]
+        assert executed["data"]
+        assert executed["data"]["createUser"]
+        assert executed["data"]["createUser"]["user"]
         assert (
-            executed["errors"][0]["message"]
-            == error_password_does_not_meet_requirements()
+            executed["data"]["createUser"]["user"]["userName"]
+            == "different-email@testemail.ca"
         )
+        assert executed["data"]["createUser"]["user"]["displayName"] == "user-test"
 
-    def test_passwords_do_not_match(self):
-        """Test to ensure that user password matches their password confirmation"""
+@pytest.mark.usefixtures("user_schema_test_db_init")
+def test_email_address_in_use():
+    """Test that ensures each user has a unique email address"""
+    with app.app_context():
         backend = SecurityAnalysisBackend()
         client = Client(schema)
+        executed_first = client.execute(
+            """
+            mutation{
+                createUser(displayName:"testuser", userName:"testuser@testemail.ca",
+                    password:"testpassword123", confirmPassword:"testpassword123"){
+                    user{
+                        userName
+                    }
+                }
+            }
+            """,
+            backend=backend,
+        )
         executed = client.execute(
             """
             mutation{
-                createUser(displayName:"testuser", userName:"test@test-email.ca", password:"A-Val1d-Pa$$word",
-                    confirmPassword:"also-A-Val1d-Pa$$word"){
+                createUser(displayName:"testuser", userName:"testuser@testemail.ca",
+                    password:"testpassword123", confirmPassword:"testpassword123"){
                     user{
                         userName
                     }
@@ -144,55 +98,73 @@ class TestCreateUser:
 
         assert executed["errors"]
         assert executed["errors"][0]
-        assert executed["errors"][0]["message"] == error_passwords_do_not_match()
+        assert executed["errors"][0]["message"] == error_email_in_use()
+
+@pytest.mark.usefixtures("user_schema_test_db_init")
+def test_password_too_short():
+    """Test that ensure that a user's password meets the valid length requirements"""
+    backend = SecurityAnalysisBackend()
+    client = Client(schema)
+    executed = client.execute(
+        """
+        mutation{
+            createUser(displayName:"testuser", userName:"test@test-email.ca", password:"test", confirmPassword:"test"){
+                user{
+                    userName
+                }
+            }
+        }
+        """,
+        backend=backend,
+    )
+
+    assert executed["errors"]
+    assert executed["errors"][0]
+    assert (
+        executed["errors"][0]["message"]
+        == error_password_does_not_meet_requirements()
+    )
+
+@pytest.mark.usefixtures("user_schema_test_db_init")
+def test_passwords_do_not_match():
+    """Test to ensure that user password matches their password confirmation"""
+    backend = SecurityAnalysisBackend()
+    client = Client(schema)
+    executed = client.execute(
+        """
+        mutation{
+            createUser(displayName:"testuser", userName:"test@test-email.ca", password:"A-Val1d-Pa$$word",
+                confirmPassword:"also-A-Val1d-Pa$$word"){
+                user{
+                    userName
+                }
+            }
+        }
+        """,
+        backend=backend,
+    )
+
+    assert executed["errors"]
+    assert executed["errors"][0]
+    assert executed["errors"][0]["message"] == error_passwords_do_not_match()
 
 
 ##
 # This class of tests works within the 'updatePassword' api endpoint
 @pytest.mark.usefixtures("user_schema_test_db_init")
-class TestUpdatePassword:
-    def test_update_password_success(self):
-        """Test to ensure that a user is returned when their password is updated successfully"""
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            executed = client.execute(
-                """
-                mutation {
-                    updatePassword(userName: "testuser@testemail.ca", password: "another-super-long-password",
-                        confirmPassword: "another-super-long-password") {
-                        user {
-                            userName
-                            displayName
-                        }
-                    }
-                }
-                """,
-                backend=backend,
-            )
-
-            assert executed["data"]
-            assert executed["data"]["updatePassword"]
-            assert executed["data"]["updatePassword"]["user"]
-            assert (
-                executed["data"]["updatePassword"]["user"]["userName"]
-                == "testuser@testemail.ca"
-            )
-            assert (
-                executed["data"]["updatePassword"]["user"]["displayName"] == "testuser"
-            )
-
-    def test_updated_passwords_do_not_match(self):
-        """Test to ensure that user's new password matches their password confirmation"""
+def test_update_password_success():
+    """Test to ensure that a user is returned when their password is updated successfully"""
+    with app.app_context():
         backend = SecurityAnalysisBackend()
         client = Client(schema)
         executed = client.execute(
             """
             mutation {
-                updatePassword(userName: "test@test-email.ca", password: "a-super-long-password",
+                updatePassword(userName: "testuser@testemail.ca", password: "another-super-long-password",
                     confirmPassword: "another-super-long-password") {
                     user {
                         userName
+                        displayName
                     }
                 }
             }
@@ -200,134 +172,168 @@ class TestUpdatePassword:
             backend=backend,
         )
 
-        assert executed["errors"]
-        assert executed["errors"][0]
-        assert executed["errors"][0]["message"] == error_passwords_do_not_match()
-
-    def test_updated_password_too_short(self):
-        """Test that ensure that a user's password meets the valid length requirements"""
-        backend = SecurityAnalysisBackend()
-        client = Client(schema)
-        executed = client.execute(
-            """
-            mutation {
-                updatePassword(userName: "test@test-email.ca", password: "password", confirmPassword: "password") {
-                    user {
-                        userName
-                    }
-                }
-            }
-            """,
-            backend=backend,
-        )
-
-        assert executed["errors"]
-        assert executed["errors"][0]
+        assert executed["data"]
+        assert executed["data"]["updatePassword"]
+        assert executed["data"]["updatePassword"]["user"]
         assert (
-            executed["errors"][0]["message"]
-            == error_password_does_not_meet_requirements()
+            executed["data"]["updatePassword"]["user"]["userName"]
+            == "testuser@testemail.ca"
+        )
+        assert (
+            executed["data"]["updatePassword"]["user"]["displayName"] == "testuser"
         )
 
-    def test_updated_password_no_user_email(self):
-        """Test that ensures an empty string submitted as email will not be accepted"""
-        backend = SecurityAnalysisBackend()
-        client = Client(schema)
-        executed = client.execute(
-            """
-            mutation {
-                updatePassword(userName: "", password: "valid-password", confirmPassword: "valid-password") {
-                    user {
-                        userName
-                    }
+@pytest.mark.usefixtures("user_schema_test_db_init")
+def test_updated_passwords_do_not_match():
+    """Test to ensure that user's new password matches their password confirmation"""
+    backend = SecurityAnalysisBackend()
+    client = Client(schema)
+    executed = client.execute(
+        """
+        mutation {
+            updatePassword(userName: "test@test-email.ca", password: "a-super-long-password",
+                confirmPassword: "another-super-long-password") {
+                user {
+                    userName
                 }
             }
-            """,
-            backend=backend,
-        )
+        }
+        """,
+        backend=backend,
+    )
 
-        assert executed["errors"]
-        assert executed["errors"][0]
-        assert executed["errors"][0]["message"] == scalar_error_type(
-            "email address", ""
-        )
+    assert executed["errors"]
+    assert executed["errors"][0]
+    assert executed["errors"][0]["message"] == error_passwords_do_not_match()
+
+@pytest.mark.usefixtures("user_schema_test_db_init")
+def test_updated_password_too_short():
+    """Test that ensure that a user's password meets the valid length requirements"""
+    backend = SecurityAnalysisBackend()
+    client = Client(schema)
+    executed = client.execute(
+        """
+        mutation {
+            updatePassword(userName: "test@test-email.ca", password: "password", confirmPassword: "password") {
+                user {
+                    userName
+                }
+            }
+        }
+        """,
+        backend=backend,
+    )
+
+    assert executed["errors"]
+    assert executed["errors"][0]
+    assert (
+        executed["errors"][0]["message"]
+        == error_password_does_not_meet_requirements()
+    )
 
 
-##
+@pytest.mark.usefixtures("user_schema_test_db_init")
+def test_updated_password_no_user_email():
+    """Test that ensures an empty string submitted as email will not be accepted"""
+    backend = SecurityAnalysisBackend()
+    client = Client(schema)
+    executed = client.execute(
+        """
+        mutation {
+            updatePassword(userName: "", password: "valid-password", confirmPassword: "valid-password") {
+                user {
+                    userName
+                }
+            }
+        }
+        """,
+        backend=backend,
+    )
+
+    assert executed["errors"]
+    assert executed["errors"][0]
+    assert executed["errors"][0]["message"] == scalar_error_type(
+        "email address", ""
+    )
+
+
 # This class of tests works within the 'authenticateTwoFactor' api endpoint
 @pytest.mark.usefixtures("user_schema_test_db_init")
-class TestValidateTwoFactor:
-    def test_successful_validation(self):
-        """Test that ensures a validation is successful when all params are proper"""
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            totp = pyotp.TOTP("base32secret3232")
-            otp_code = (
-                totp.now()
-            )  # Generates a code that is valid for 30s. Plenty of time to execute the query
+def test_successful_validation():
+    """Test that ensures a validation is successful when all params are proper"""
+    with app.app_context():
+        backend = SecurityAnalysisBackend()
+        totp = pyotp.TOTP("base32secret3232")
+        otp_code = (
+            totp.now()
+        )  # Generates a code that is valid for 30s. Plenty of time to execute the query
 
-            client = Client(schema)
-            executed = client.execute(
-                '''
-                mutation {
-                    authenticateTwoFactor(userName: "testuser@testemail.ca", otpCode: "'''
-                + otp_code
-                + """") {
-                        user {
-                            userName
-                        }
+        client = Client(schema)
+        executed = client.execute(
+            '''
+            mutation {
+                authenticateTwoFactor(userName: "testuser@testemail.ca", otpCode: "'''
+            + otp_code
+            + """") {
+                    user {
+                        userName
                     }
                 }
-                """,
-                backend=backend,
-            )
-            assert executed["data"]
-            assert executed["data"]["authenticateTwoFactor"]
-            assert executed["data"]["authenticateTwoFactor"]["user"]
-            assert (
-                executed["data"]["authenticateTwoFactor"]["user"]["userName"]
-                == "testuser@testemail.ca"
-            )
+            }
+            """,
+            backend=backend,
+        )
+        assert executed["data"]
+        assert executed["data"]["authenticateTwoFactor"]
+        assert executed["data"]["authenticateTwoFactor"]["user"]
+        assert (
+            executed["data"]["authenticateTwoFactor"]["user"]["userName"]
+            == "testuser@testemail.ca"
+        )
 
-    def test_user_does_not_exist(self):
-        """Test that an error is raised if the user specified does not exist"""
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            executed = client.execute(
-                """
-                mutation {
-                    authenticateTwoFactor(userName: "anotheruser@testemail.ca", otpCode: "000000") {
-                        user {
-                            userName
-                        }
+@pytest.mark.usefixtures("user_schema_test_db_init")
+def test_user_does_not_exist():
+    """Test that an error is raised if the user specified does not exist"""
+    with app.app_context():
+        backend = SecurityAnalysisBackend()
+        client = Client(schema)
+        executed = client.execute(
+            """
+            mutation {
+                authenticateTwoFactor(userName: "anotheruser@testemail.ca", otpCode: "000000") {
+                    user {
+                        userName
                     }
                 }
-                """,
-                backend=backend,
-            )
+            }
+            """,
+            backend=backend,
+        )
 
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert executed["errors"][0]["message"] == error_user_does_not_exist()
+        assert executed["errors"]
+        assert executed["errors"][0]
+        assert executed["errors"][0]["message"] == error_user_does_not_exist()
 
-    def test_invalid_otp_code(self):
-        """Test that an error is raised if the user specified does not exist"""
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            executed = client.execute(
-                """
-                mutation {
-                    authenticateTwoFactor(userName: "testuser@testemail.ca", otpCode: "000000") {
-                        user {
-                            userName
-                        }
+
+@pytest.mark.usefixtures("user_schema_test_db_init")
+def test_invalid_otp_code():
+    """Test that an error is raised if the user specified does not exist"""
+    with app.app_context():
+        backend = SecurityAnalysisBackend()
+        client = Client(schema)
+        executed = client.execute(
+            """
+            mutation {
+                authenticateTwoFactor(userName: "testuser@testemail.ca", otpCode: "000000") {
+                    user {
+                        userName
                     }
                 }
-                """,
-                backend=backend,
-            )
+            }
+            """,
+            backend=backend,
+        )
 
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert executed["errors"][0]["message"] == error_otp_code_is_invalid()
+        assert executed["errors"]
+        assert executed["errors"][0]
+        assert executed["errors"][0]["message"] == error_otp_code_is_invalid()

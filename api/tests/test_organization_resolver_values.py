@@ -14,7 +14,7 @@ from backend.security_check import SecurityAnalysisBackend
 save, cleanup, db_session = DB()
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def org_perm_test_db_init():
     with app.app_context():
         org1 = Organizations(

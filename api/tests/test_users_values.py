@@ -10,7 +10,7 @@ from queries import schema
 from backend.security_check import SecurityAnalysisBackend
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def users_resolver_test_db_init():
 
     with app.app_context():
