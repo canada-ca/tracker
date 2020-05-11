@@ -69,4 +69,6 @@ class Users(Base):
         if len(password) < 12:
             raise ValueError("Password must be greater than 12 characters")
         else:
-            self.user_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8')
+            self.user_password = bcrypt.hashpw(
+                password.encode("utf8"), bcrypt.gensalt()
+            ).decode("utf8")

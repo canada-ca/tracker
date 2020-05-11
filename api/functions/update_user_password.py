@@ -33,7 +33,9 @@ def update_password(user_name, password, confirm_password):
 
     user = User.query.filter(User.user_name == user_name).update(
         {
-            "user_password": bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8'),
+            "user_password": bcrypt.hashpw(
+                password.encode("utf8"), bcrypt.gensalt()
+            ).decode("utf8"),
             "failed_login_attempts": 0,
             "failed_login_attempt_time": 0,
         }
