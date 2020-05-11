@@ -1,8 +1,10 @@
-import datetime
+from datetime import datetime
 import pyotp
+from json import dumps
 import pytest
+from pytest import fail
 from graphene.test import Client
-from db import db_session
+from db import DB
 from app import app
 from queries import schema
 from models import Users
@@ -14,188 +16,201 @@ from functions.error_messages import (
 )
 
 
-@pytest.fixture(scope="class")
-def user_schema_test_db_init():
+def json(j):
+    return dumps(j, indent=2)
+
+
+s, cleanup, session = DB()
+
+
+@pytest.fixture
+def save():
     with app.app_context():
-        test_user = Users(
-            display_name="testuser",
-            user_name="testuser@testemail.ca",
-            password="testpassword123",
-            failed_login_attempt_time=datetime.datetime.now().timestamp()
-            + 1920,  # This mocks that the user is accessing the service 32 mins after their last failed login attempt
+        yield s
+        cleanup()
+
+
+def test_sign_in_with_valid_credentials(save):
+    """
+    Test that ensures a user can be signed in successfully
+    """
+    user = Users(
+        display_name="testuser",
+        user_name="testuser@testemail.ca",
+        password="testpassword123",
+        # This mocks that the user is accessing the service 32 mins after their
+        # last failed login attempt
+        failed_login_attempt_time=datetime.now().timestamp() + 1920,
+    )
+    save(user)
+
+    actual = Client(schema).execute(
+        """
+        mutation{
+            signIn(userName:"testuser@testemail.ca",
+                    password:"testpassword123"){
+                user{
+                    userName
+                }
+            }
+        }
+        """,
+    )
+    if "errors" in actual:
+        fail(
+            "expected signin for a normal user to succeed. Instead:"
+            "{}".format(json(actual))
         )
-        db_session.add(test_user)
+    [username] = actual["data"]["signIn"]["user"].values()
+    assert username == "testuser@testemail.ca"
 
-        test_already_failed_user = Users(
-            display_name="test_failed_user",
-            user_name="test_already_failed_user@testemail.ca",
-            password="testpassword123",
-            failed_login_attempts=3,
-            failed_login_attempt_time=datetime.datetime.now().timestamp()
-            + 1920,  # This mocks that the user is accessing the service 32 mins after their last failed login attempt
+
+def test_signin_with_invalid_credentials_fails(save):
+    """
+    Test that ensures a user can be signed in successfully
+    """
+    user = Users(
+        display_name="testuser",
+        user_name="testuser@testemail.ca",
+        password="testpassword123",
+        # This mocks that the user is accessing the service 32 mins after their
+        # last failed login attempt
+        failed_login_attempt_time=datetime.now().timestamp() + 1920,
+    )
+    save(user)
+
+    actual = Client(schema).execute(
+        """
+        mutation{
+            signIn(userName:"testuser@testemail.ca",
+                    password:"invalidpassword"){
+                user{
+                    userName
+                }
+            }
+        }
+        """,
+    )
+    if "errors" not in actual:
+        fail(
+            "expected signin with invalid credentials to raise an error. Instead:"
+            "{}".format(json(actual))
         )
-        db_session.add(test_already_failed_user)
+    [err] = actual["errors"]
+    [message, _line, _field] = err.values()
+    assert message == "Incorrect email or password"
 
-        test_too_many_failed_user = Users(
-            display_name="test_too_many_fails_user",
-            user_name="test_too_many_failed_user@testemail.ca",
-            password="testpassword123",
-            failed_login_attempts=30,
-            failed_login_attempt_time=0,
+
+def test_failed_login_attempts_are_recorded(save):
+    user = Users(
+        display_name="testuser",
+        user_name="testuser@testemail.ca",
+        password="testpassword123",
+    )
+    save(user)
+
+    actual = Client(schema).execute(
+        """
+        mutation{
+          signIn(userName:"testuser@testemail.ca" password:"invalidpassword"){
+            user{
+              userName
+            }
+          }
+        }
+        """
+    )
+    if "errors" not in actual:
+        fail(
+            "expected signin with invalid credentials to raise an error. Instead:"
+            "{}".format(json(actual))
         )
-        db_session.add(test_too_many_failed_user)
 
-        db_session.commit()
-
-    yield
-
-    with app.app_context():
-        Users.query.delete()
-        db_session.commit()
+    session.refresh(user)
+    assert user.failed_login_attempts == 1
+    assert user.failed_login_attempt_time is not 0
 
 
-##
-# This class of tests works within the 'signIn' api endpoint
-@pytest.mark.usefixtures("user_schema_test_db_init")
-class TestSignInUser:
-    def test_successful_sign_in(self):
+def test_successful_login_sets_failed_attempts_to_zero(save):
+    """
+    Test that ensures a user can be signed in, and that when they do, their
+    user count is updated to be 0.
+    """
+    user = Users(
+        display_name="test_failed_user",
+        user_name="failedb4@example.com",
+        password="testpassword123",
+        failed_login_attempts=3,
+        failed_login_attempt_time=datetime.now().timestamp() + 1920,
+    )
+    save(user)
+    actual = Client(schema).execute(
         """
-        Test that ensures a user can be signed in successfully
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            executed = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuser@testemail.ca",
-                            password:"testpassword123"){
-                        user{
-                            userName
-                        }
-                    }
+        mutation{
+            signIn(userName:"failedb4@example.com",
+             password:"testpassword123"){
+                user{
+                    userName
                 }
-                """,
-                backend=backend,
-            )
-            assert executed["data"]
-            assert executed["data"]["signIn"]
-            assert executed["data"]["signIn"]["user"]
-            assert (
-                executed["data"]["signIn"]["user"]["userName"]
-                == "testuser@testemail.ca"
-            )
-
-    def test_invalid_credentials(self):
+            }
+        }
         """
-        Test that ensures invalid credential errors are caught,
-         and failed login attempts are incremented.
+    )
+
+    session.refresh(user)
+    assert user.failed_login_attempts == 0
+    assert user.failed_login_attempt_time == 0
+
+
+def test_too_many_failed_attempts(save):
+    user = Users(
+        display_name="failed2much",
+        user_name="failed2much@example.com",
+        password="testpassword123",
+        failed_login_attempts=30,
+        failed_login_attempt_time=0,
+    )
+    save(user)
+    actual = Client(schema).execute(
         """
-        with app.app_context():
-            client = Client(schema)
-            executed = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuser@testemail.ca",
-                            password:"testpassword1234"){
-                        user{
-                            userName
-                        }
-                    }
+        mutation{
+            signIn(userName:"failed2much@example.com",
+             password:"testpassword123"){
+                user{
+                    userName
                 }
-                """
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert executed["errors"][0]["message"]
-            assert executed["errors"][0]["message"] == error_invalid_credentials()
+            }
+        }
+        """,
+    )
+    if "errors" not in actual:
+        fail(
+            "expected signin with invalid credentials to raise an error. Instead:"
+            "{}".format(json(actual))
+        )
+    [err] = actual["errors"]
+    [message, _line, _field] = err.values()
+    assert message == error_too_many_failed_login_attempts()
 
-            failed_user = Users.query.filter(
-                Users.user_name == "testuser@testemail.ca"
-            ).first()
 
-            assert failed_user is not None
-            assert failed_user.failed_login_attempts == 1
-            assert failed_user.failed_login_attempt_time is not 0
-
-    def test_successful_login_sets_failed_attempts_to_zero(self):
+def test_signing_in_with_unknown_users_returns_error(save):
+    actual = Client(schema).execute(
         """
-        Test that ensures a user can be signed in, and that when they do, their
-        user count is updated to be 0.
-        """
-        with app.app_context():
-            client = Client(schema)
-            executed = client.execute(
-                """
-                mutation{
-                    signIn(userName:"test_already_failed_user@testemail.ca",
-                     password:"testpassword123"){
-                        user{
-                            userName
-                        }
-                    }
+        mutation{
+            signIn(userName:"null@example.com",
+             password:"testpassword123"){
+                user{
+                    userName
                 }
-                """
-            )
-
-            user = Users.query.filter(
-                Users.user_name == "test_already_failed_user@testemail.ca"
-            ).first()
-
-            assert user is not None
-            assert user.failed_login_attempts == 0
-            assert user.failed_login_attempt_time == 0
-
-            assert executed["data"]
-            assert executed["data"]["signIn"]
-            assert (
-                executed["data"]["signIn"]["user"]["userName"]
-                == "test_already_failed_user@testemail.ca"
-            )
-
-    def test_too_many_failed_attempts(self):
-        """Test that ensures a user can be signed in"""
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            executed = client.execute(
-                """
-                mutation{
-                    signIn(userName:"test_too_many_failed_user@testemail.ca",
-                     password:"testpassword123"){
-                        user{
-                            userName
-                        }
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert executed["errors"][0]["message"]
-            assert (
-                executed["errors"][0]["message"]
-                == error_too_many_failed_login_attempts()
-            )
-
-    def test_no_such_user(self):
-        """Test that ensures error message is sent if user does not exist"""
-        with app.app_context():
-            client = Client(schema)
-            executed = client.execute(
-                """
-                mutation{
-                    signIn(userName:"nouser@testemail.ca",
-                     password:"testpassword123"){
-                        user{
-                            userName
-                        }
-                    }
-                }
-                """
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert executed["errors"][0]["message"]
-            assert executed["errors"][0]["message"] == error_user_does_not_exist()
+            }
+        }
+        """,
+    )
+    if "errors" not in actual:
+        fail(
+            "expected signin with invalid credentials to raise an error. Instead:"
+            "{}".format(json(actual))
+        )
+    [err] = actual["errors"]
+    [message, _line, _field] = err.values()
+    assert message == error_user_does_not_exist()

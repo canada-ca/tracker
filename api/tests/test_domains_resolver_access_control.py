@@ -12,7 +12,7 @@ from backend.security_check import SecurityAnalysisBackend
 _, cleanup, db_session = DB()
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def domain_test_db_init():
     with app.app_context():
         test_user = Users(
