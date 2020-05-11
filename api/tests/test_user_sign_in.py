@@ -20,10 +20,11 @@ def json(j):
     return dumps(j, indent=2)
 
 
-@pytest.fixture(scope="function")
+s, cleanup, session = DB()
+
+@pytest.fixture
 def save():
     with app.app_context():
-        s, cleanup, session = DB()
         yield s
         cleanup()
 
