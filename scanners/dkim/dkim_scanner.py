@@ -6,6 +6,7 @@ import json
 import dkim
 import threading
 import jwt
+import base64
 from dkim import dnsplug, crypto
 from dkim.crypto import *
 from flask import Flask, request
@@ -14,7 +15,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 headers = {"Content-Type": "application/json"}
 
-destination = "result-processor.tracker.svc.cluster.local"
+destination = "http://result-processor.tracker.svc.cluster.local"
 
 app = Flask(__name__)
 
@@ -77,7 +78,9 @@ def dispatch(scan_id, payload):
     """
     try:
         # Post request to result-handling service
-        response = requests.post(destination, headers=headers, data=payload)
+        response = requests.post(
+            destination + "/receive", headers=headers, data=payload
+        )
         logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
         logging.info(str(response.text))
         return str(response.text)

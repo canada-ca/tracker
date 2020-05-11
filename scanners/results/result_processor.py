@@ -4,29 +4,185 @@ import json
 import logging
 import traceback
 import jwt
+import psycopg2
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from models import *
-from database import *
-from utils import *
+from utils import formatted_dictionary
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-app = Flask(__name__)
+TOKEN_KEY = os.getenv("TOKEN_KEY")
+DB_USER = os.getenv("DB_USER")
+DB_PASS = os.getenv("DB_PASS")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
+DB_HOST = "postgres.api.svc.cluster.local"
 
+app = Flask(__name__)
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 app.config["SQLALCHEMY_COMMIT_ON_TEARDOWN"] = True
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+db = SQLAlchemy(app)
 
 MIN_HSTS_AGE = 31536000  # one year
 
-TOKEN_KEY = os.getenv("TOKEN_KEY")
+
+class Domains(db.Model):
+    __tablename__ = "domains"
+
+    id = db.Column(db.Integer, primary_key=True)
+    domain = db.Column(db.String())
+    last_run = db.Column(db.DateTime)
+    organization_id = db.Column(db.Integer, db.ForeignKey("organizations.id"))
+    organization = db.relationship(
+        "Organizations", back_populates="domains", cascade="all, delete"
+    )
+    scans = db.relationship("Scans", back_populates="domain", cascade="all, delete")
+    dmarc_reports = db.relationship(
+        "Dmarc_Reports", back_populates="domain", cascade="all, delete"
+    )
+
+
+class Dmarc_Reports(db.Model):
+    __tablename__ = "dmarc_reports"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    domain_id = db.Column(db.Integer, db.ForeignKey("domains.id"))
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
+    report = db.Column(db.JSON)
+    domain = db.relationship(
+        "Domains", back_populates="dmarc_reports", cascade="all, delete"
+    )
+
+
+class Organizations(db.Model):
+    __tablename__ = "organizations"
+
+    id = db.Column(db.Integer, primary_key=True)
+    acronym = db.Column(db.String())
+    org_tags = db.Column(db.JSON)
+    domains = db.relationship(
+        "Domains", back_populates="organization", cascade="all, delete"
+    )
+    users = db.relationship(
+        "User_affiliations", back_populates="user_organization", cascade="all, delete"
+    )
+
+
+class Users(db.Model):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_name = db.Column(db.String())
+    display_name = db.Column(db.String())
+    user_password = db.Column(db.String())
+    preferred_lang = db.Column(db.String())
+    failed_login_attempts = db.Column(db.Integer, default=0)
+    failed_login_attempt_time = db.Column(db.Float, default=0, nullable=True)
+    tfa_validated = db.Column(db.Boolean, default=False)
+    user_affiliation = db.relationship(
+        "User_affiliations", back_populates="user", cascade="all, delete"
+    )
+
+
+class User_affiliations(db.Model):
+    __tablename__ = "user_affiliations"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    organization_id = db.Column(db.Integer, db.ForeignKey("organizations.id"))
+    permission = db.Column(db.String())
+    user = db.relationship(
+        "Users", back_populates="user_affiliation", cascade="all, delete"
+    )
+    user_organization = db.relationship(
+        "Organizations", back_populates="users", cascade="all, delete"
+    )
+
+
+class Scans(db.Model):
+    __tablename__ = "scans"
+
+    id = db.Column(db.Integer, primary_key=True)
+    domain_id = db.Column(db.Integer, db.ForeignKey("domains.id"))
+    scan_date = db.Column(db.DateTime)
+    initiated_by = db.Column(db.Integer, db.ForeignKey("users.id"))
+    domain = db.relationship("Domains", back_populates="scans", cascade="all, delete")
+
+
+class Dmarc_scans(db.Model):
+    __tablename__ = "dmarc_scans"
+
+    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
+    dmarc_phase = db.Column(db.Integer)
+    dmarc_scan = db.Column(db.JSON)
+
+
+class Dkim_scans(db.Model):
+    __tablename__ = "dkim_scans"
+
+    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
+    dkim_scan = db.Column(db.JSON)
+
+
+class Mx_scans(db.Model):
+    __tablename__ = "mx_scans"
+
+    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
+    mx_scan = db.Column(db.JSON)
+
+
+class Spf_scans(db.Model):
+    __tablename__ = "spf_scans"
+
+    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
+    spf_scan = db.Column(db.JSON)
+
+
+class Https_scans(db.Model):
+    __tablename__ = "https_scans"
+
+    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
+    https_scan = db.Column(db.JSON)
+
+
+class Ssl_scans(db.Model):
+    __tablename__ = "ssl_scans"
+
+    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
+    ssl_scan = db.Column(db.JSON)
+
+
+class Ciphers(db.Model):
+    __tablename__ = "ciphers"
+
+    id = db.Column(db.Integer, primary_key=True)
+    cipher_type = db.Column(db.String())
+
+
+class Guidance(db.Model):
+    __tablename__ = "guidance"
+
+    id = db.Column(db.Integer, primary_key=True)
+    tag_name = db.Column(db.String())
+    guidance = db.Column(db.String())
+    ref_links = db.Column(db.String())
+
+
+class Classification(db.Model):
+    __tablename__ = "Classification"
+
+    id = db.Column(db.Integer, primary_key=True)
+    UNCLASSIFIED = db.Column(db.String())
 
 
 @app.route("/receive", methods=["GET", "POST"])
 def receive():
+
+    logging.info("Results received\n")
 
     try:
         decoded_token = jwt.decode(
@@ -231,7 +387,7 @@ def process_results(results, scan_type, scan_id):
                 heartbleed = results.get("is_vulnerable_to_heartbleed", False)
                 ccs_injection = results.get("is_vulnerable_to_ccs_injection", False)
 
-                if results["signature_algorithm"] is "SHA256" or "SHA384" or "AEAD":
+                if results["signature_algorithm"] in ["SHA256", "SHA384", "AEAD"]:
                     good_cert = True
                 else:
                     good_cert = False
@@ -240,11 +396,13 @@ def process_results(results, scan_type, scan_id):
                 acceptable_ciphers = []
                 weak_ciphers = []
                 for cipher in results["TLS"]["accepted_cipher_list"]:
-                    if ("RC4" or "3DES") in cipher:
+                    if "RC4" in cipher or "3DES" in cipher:
                         weak_ciphers.append(cipher)
-                    elif ("ECDHE" in cipher) and ("GCM" or "CHACHA20") in cipher:
+                    elif ("ECDHE" in cipher) and (
+                        "GCM" in cipher or "CHACHA20" in cipher
+                    ):
                         strong_ciphers.append(cipher)
-                    elif ("ECDHE" or "DHE") in cipher:
+                    elif "ECDHE" in cipher or "DHE" in cipher:
                         acceptable_ciphers.append(cipher)
                     else:
                         weak_ciphers.append(cipher)
@@ -263,9 +421,7 @@ def process_results(results, scan_type, scan_id):
     except Exception as e:
         return {"status": False, "info": traceback.format_exc()}
 
-    finalized_report = json.JSONEncoder().encode(str(report))
-
-    insert(finalized_report, scan_type, scan_id)
+    insert(report, scan_type, scan_id)
 
     logging.info("(SCAN: %s) - Successfully parsed results" % scan_id)
     return {"status": True, "info": "Results processed successfully"}
@@ -274,26 +430,42 @@ def process_results(results, scan_type, scan_id):
 def insert(report, scan_type, scan_id):
 
     scan = Scans.query.filter(Scans.id == scan_id).first()
+    logging.info("Retrieved corresponding scan from database: %s" % str(scan))
 
     try:
 
-        if scan_type is "https":
-            result_obj = Https_scans(https_scan={"https": report}, id=scan.id)
-            db.session.add(result_obj)
+        if scan_type == "https":
+            finalized_report = json.JSONEncoder().encode(str(report))
 
-        elif scan_type is "ssl":
-            result_obj = Ssl_scans(ssl_scan={"ssl": report}, id=scan.id)
+            result_obj = Https_scans(https_scan={"https": finalized_report}, id=scan.id)
             db.session.add(result_obj)
+            logging.info("HTTPS Scan inserted into database")
 
-        elif scan_type is "dmarc":
-            dmarc_obj = Dmarc_scans(dmarc_scan={"dmarc": report["dmarc"]}, id=scan.id)
-            mx_obj = Mx_scans(mx_scan={"mx": report["mx"]}, id=scan.id)
-            spf_obj = Spf_scans(spf_scan={"spf": report["spf"]}, id=scan.id)
+        elif scan_type == "ssl":
+            finalized_report = json.JSONEncoder().encode(str(report))
+
+            result_obj = Ssl_scans(ssl_scan={"ssl": finalized_report}, id=scan.id)
+            db.session.add(result_obj)
+            logging.info("SSL Scan inserted into database")
+
+        elif scan_type == "dmarc":
+            finalized_dmarc_report = json.JSONEncoder().encode(str(report["dmarc"]))
+            finalized_mx_report = json.JSONEncoder().encode(str(report["mx"]))
+            finalized_spf_report = json.JSONEncoder().encode(str(report["spf"]))
+
+            dmarc_obj = Dmarc_scans(
+                dmarc_scan={"dmarc": finalized_dmarc_report}, id=scan.id
+            )
+            mx_obj = Mx_scans(mx_scan={"mx": finalized_mx_report}, id=scan.id)
+            spf_obj = Spf_scans(spf_scan={"spf": finalized_spf_report}, id=scan.id)
             db.session.add(dmarc_obj)
             db.session.add(mx_obj)
             db.session.add(spf_obj)
+            logging.info("DMARC/MX/SPF Scans inserted into database")
 
-        elif scan_type is "dkim":
+        elif scan_type == "dkim":
+            finalized_report = json.JSONEncoder().encode(str(report))
+
             # Check for previous dkim scans on this domain
             previous_scans = Scans.query.filter(Scans.domain_id == scan.domain_id)
 
@@ -301,7 +473,7 @@ def insert(report, scan_type, scan_id):
 
             # If public key has been in use for a year or more, recommend update
             for previous_scan in previous_scans:
-                if (scan.scan_date - previous_scan.scan_date).TotalDays >= 365:
+                if (scan.scan_date - previous_scan.scan_date).days >= 365:
                     historical_dkim = Dkim_scans.query.filter(
                         Dkim_scans.id == previous_scan.id
                     )
@@ -312,10 +484,12 @@ def insert(report, scan_type, scan_id):
                         update_recommended = True
 
             report["update-recommended"] = update_recommended
-            result_obj = Dkim_scans(dkim_scan={"dkim": report}, id=scan.id)
+            result_obj = Dkim_scans(dkim_scan={"dkim": finalized_report}, id=scan.id)
             db.session.add(result_obj)
+            logging.info("DKIM Scan inserted into database")
 
         db.session.commit()
+        logging.info("Committing to database...")
 
     except Exception as e:
         db.session.rollback()
