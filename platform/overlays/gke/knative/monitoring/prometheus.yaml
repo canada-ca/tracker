@@ -105,7 +105,7 @@ data:
     - name: DKIM Alert
       rules:
       - alert: DKIMScannerHighTraffic
-        expr: queue_requests_per_second{http_inprogress_requests{serving_knative_dev_service="dkim-scanner"} > 10
+        expr: queue_requests_per_second{serving_knative_dev_service="dkim-scanner"} > 10
         for: 20s
         labels:
           severity: Medium
@@ -170,6 +170,9 @@ data:
         - role: pod
 
         relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_label_app]
+          regex: scanners
+          action: keep
         - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
           action: keep
           regex: true
@@ -193,13 +196,16 @@ data:
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus-deployment
   namespace: scan-monitoring
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-server
   template:
     metadata:
       labels:
