@@ -39,7 +39,6 @@ def validate_two_factor(user_name, otp_code):
         if not user:
             raise GraphQLError(error_user_not_updated())
         else:
-            print(user)
             return user
 
     else:

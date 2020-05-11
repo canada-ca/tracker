@@ -22,6 +22,7 @@ def json(j):
 
 s, cleanup, session = DB()
 
+
 @pytest.fixture
 def save():
     with app.app_context():
@@ -111,14 +112,13 @@ def test_failed_login_attempts_are_recorded(save):
     actual = Client(schema).execute(
         """
         mutation{
-            signIn(userName:"testuser@testemail.ca",
-                    password:"invalidpassword"){
-                user{
-                    userName
-                }
+          signIn(userName:"testuser@testemail.ca" password:"invalidpassword"){
+            user{
+              userName
             }
+          }
         }
-        """,
+        """
     )
     if "errors" not in actual:
         fail(
@@ -126,27 +126,24 @@ def test_failed_login_attempts_are_recorded(save):
             "{}".format(json(actual))
         )
 
-    failed_user = Users.query.filter(Users.user_name == "testuser@testemail.ca").first()
-
-    assert failed_user is not None
-    assert failed_user.failed_login_attempts == 1
-    assert failed_user.failed_login_attempt_time is not 0
+    session.refresh(user)
+    assert user.failed_login_attempts == 1
+    assert user.failed_login_attempt_time is not 0
 
 
 def test_successful_login_sets_failed_attempts_to_zero(save):
-    save(
-        Users(
-            display_name="test_failed_user",
-            user_name="failedb4@example.com",
-            password="testpassword123",
-            failed_login_attempts=3,
-            failed_login_attempt_time=datetime.now().timestamp() + 1920,
-        )
-    )
     """
     Test that ensures a user can be signed in, and that when they do, their
     user count is updated to be 0.
     """
+    user = Users(
+        display_name="test_failed_user",
+        user_name="failedb4@example.com",
+        password="testpassword123",
+        failed_login_attempts=3,
+        failed_login_attempt_time=datetime.now().timestamp() + 1920,
+    )
+    save(user)
     actual = Client(schema).execute(
         """
         mutation{
@@ -160,9 +157,7 @@ def test_successful_login_sets_failed_attempts_to_zero(save):
         """
     )
 
-    user = Users.query.filter(Users.user_name == "failedb4@example.com").first()
-
-    assert user is not None
+    session.refresh(user)
     assert user.failed_login_attempts == 0
     assert user.failed_login_attempt_time == 0
 

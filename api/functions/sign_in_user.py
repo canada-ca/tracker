@@ -42,29 +42,24 @@ def sign_in_user(user_name, password):
     # If the given user credentials are valid
     if email_match and password_match:
 
-        # A temporary dictionary that will be returned to the graphql resolver
-        temp_dict = {
+        user.failed_login_attempts = 0
+        user.failed_login_attempt_time = 0
+        db_session.add(user)
+        db_session.commit()
+
+        return {
             "auth_token": tokenize(user_id=user.id, roles=user.roles),
             "user": user,
         }
 
-        Users.query.filter(Users.user_name == user_name).update(
-            {"failed_login_attempts": 0, "failed_login_attempt_time": 0}
-        )
-        db_session.commit()
-
-        return temp_dict
     else:
         # Increment the user's failed login count and raise an appropriate error
         # Generate a timestamp and also add that to the user update.
         time_stamp = datetime.datetime.now().timestamp()
 
-        Users.query.filter(Users.user_name == user_name).update(
-            {
-                "failed_login_attempts": Users.failed_login_attempts + 1,
-                "failed_login_attempt_time": time_stamp,
-            }
-        )
+        user.failed_login_attempts = user.failed_login_attempts + 1
+        user.failed_login_attempt_time = time_stamp
+        db_session.add(user)
         db_session.commit()
 
         raise GraphQLError(error_invalid_credentials())
