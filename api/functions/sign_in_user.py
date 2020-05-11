@@ -1,9 +1,8 @@
-import jwt
 import datetime
+import bcrypt
+
 from json_web_token import tokenize
-import os
 from graphql import GraphQLError
-from app import bcrypt
 from functions.input_validators import *
 from functions.error_messages import *
 from functions.orm_to_dict import orm_to_dict
@@ -36,7 +35,9 @@ def sign_in_user(user_name, password):
         raise GraphQLError(error_too_many_failed_login_attempts())
 
     email_match = user_name == user.user_name
-    password_match = bcrypt.check_password_hash(user.user_password, password)
+    password_match = bcrypt.checkpw(
+        password.encode("utf8"), user.password.encode("utf8")
+    )
 
     # If the given user credentials are valid
     if email_match and password_match:

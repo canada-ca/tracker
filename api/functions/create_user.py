@@ -36,9 +36,8 @@ def create_user(display_name, password, confirm_password, user_name):
             user_name=user_name,
             display_name=display_name,
             preferred_lang="English",
-            user_password=password,
+            password=password,
         )
-
         db_session.add(user)
         try:
             db_session.commit()

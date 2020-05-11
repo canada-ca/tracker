@@ -1,9 +1,10 @@
+import bcrypt
+
 from sqlalchemy.types import Integer, Boolean, Float
 from slugify import slugify
 from functions.orm_to_dict import orm_to_dict
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy import event
-from app import bcrypt
 from models.Organizations import Organizations
 from models.User_affiliations import User_affiliations
 from sqlalchemy.orm import relationship, validates
@@ -68,4 +69,6 @@ class Users(Base):
         if len(password) < 12:
             raise ValueError("Password must be greater than 12 characters")
         else:
-            self.user_password = bcrypt.generate_password_hash(password).decode("UTF-8")
+            self.user_password = bcrypt.hashpw(
+                password.encode("utf8"), bcrypt.gensalt()
+            ).decode("utf8")
