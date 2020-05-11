@@ -12,39 +12,35 @@ from backend.security_check import SecurityAnalysisBackend
 
 _, cleanup, db_session = DB()
 
+
 @pytest.fixture(scope="function")
 def user_role_test_db_init():
     with app.app_context():
+        org1 = Organizations(acronym="ORG1")
         test_user = Users(
-            id=1,
             display_name="testuserread",
             user_name="testuserread@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(user_organization=org1, permission="user_read")
+            ],
         )
-        db_session.add(test_user)
+
         test_super_admin = Users(
-            id=2,
             display_name="testsuperadmin",
             user_name="testsuperadmin@testemail.ca",
             password="testpassword123",
+            user_affiliation=[
+                User_affiliations(user_organization=org1, permission="super_admin")
+            ],
         )
+        db_session.add(test_user)
         db_session.add(test_super_admin)
-        org = Organizations(
-            id=1, acronym="ORG1", org_tags={"description": "Organization 1"}
-        )
-        db_session.add(org)
-        test_admin_role = User_affiliations(
-            user_id=1, organization_id=1, permission="user_read"
-        )
-        db_session.add(test_admin_role)
-        test_admin_role = User_affiliations(
-            user_id=2, organization_id=1, permission="super_admin"
-        )
-        db_session.add(test_admin_role)
         db_session.commit()
 
         yield
         cleanup()
+
 
 @pytest.mark.usefixtures("user_role_test_db_init")
 class TestUserUpdateWriteRole(TestCase):
