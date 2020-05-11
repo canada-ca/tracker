@@ -1,6 +1,6 @@
-import datetime
+import bcrypt
+
 from graphql import GraphQLError
-from app import bcrypt
 from functions.input_validators import *
 from functions.error_messages import *
 from models import Users as User
@@ -33,7 +33,7 @@ def update_password(user_name, password, confirm_password):
 
     user = User.query.filter(User.user_name == user_name).update(
         {
-            "user_password": bcrypt.generate_password_hash(password).decode("UTF-8"),
+            "user_password": bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8'),
             "failed_login_attempts": 0,
             "failed_login_attempt_time": 0,
         }

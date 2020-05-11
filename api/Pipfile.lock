@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "466060c557e96174eeb5361e5953eae7ed6188e509a40e9888954b1b29da5191"
+            "sha256": "ba23da45632af21cb4a45c605d0a756e12ec70d67a9fe5885c4376e6a02c3164"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -57,6 +57,7 @@
                 "sha256:d7bdc26475679dd073ba0ed2766445bb5b20ca4793ca0db32b399dccc6bc84b7",
                 "sha256:ff032765bb8716d9387fd5376d987a937254b0619eff0972779515b5c98820bc"
             ],
+            "index": "pypi",
             "version": "==3.1.7"
         },
         "certifi": {
@@ -126,13 +127,6 @@
             ],
             "index": "pypi",
             "version": "==1.1.2"
-        },
-        "flask-bcrypt": {
-            "hashes": [
-                "sha256:d71c8585b2ee1c62024392ebdbc447438564e2c8c02b4e57b56a4cafd8d13c5f"
-            ],
-            "index": "pypi",
-            "version": "==0.7.1"
         },
         "flask-graphql": {
             "hashes": [
@@ -403,11 +397,11 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:0e5b30f5cb04e887b91b1ee519fa3d89049595f428c1db76e73bd7f17b09b172",
-                "sha256:84dde37075b8805f3d1f392cc47e38a0e59518fb46a431cfdaf7cf1ce805f970"
+                "sha256:95c710d0a72d91c13fae35dce195633c929c3792f54125919847fdcdf7caa0d3",
+                "sha256:eb2b5e935f6a019317e455b6da83dd8650ac9ffd2ee73a7b657a30873d67a698"
             ],
             "index": "pypi",
-            "version": "==5.4.1"
+            "version": "==5.4.2"
         },
         "python-dateutil": {
             "hashes": [
@@ -684,11 +678,11 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:0e5b30f5cb04e887b91b1ee519fa3d89049595f428c1db76e73bd7f17b09b172",
-                "sha256:84dde37075b8805f3d1f392cc47e38a0e59518fb46a431cfdaf7cf1ce805f970"
+                "sha256:95c710d0a72d91c13fae35dce195633c929c3792f54125919847fdcdf7caa0d3",
+                "sha256:eb2b5e935f6a019317e455b6da83dd8650ac9ffd2ee73a7b657a30873d67a698"
             ],
             "index": "pypi",
-            "version": "==5.4.1"
+            "version": "==5.4.2"
         },
         "pytest-cov": {
             "hashes": [
