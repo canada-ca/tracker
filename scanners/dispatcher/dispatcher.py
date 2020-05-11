@@ -12,7 +12,6 @@ app = Flask(__name__)
 
 TOKEN_KEY = os.getenv("TOKEN_KEY")
 
-
 hosts = [
     "http://https-scanner.tracker.svc.cluster.local",
     "http://ssl-scanner.tracker.svc.cluster.local",
