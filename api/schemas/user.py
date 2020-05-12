@@ -39,7 +39,7 @@ class User(SQLAlchemyObjectType):
             "tfa_validated",
             "user_affiliation",
             "user_password",
-            "password"
+            "password",
         )
 
     user_name = EmailAddress(description="Email that the user signed up with")

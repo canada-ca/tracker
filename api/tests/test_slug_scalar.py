@@ -18,19 +18,13 @@ def test_valid_slug_serializer():
 
 def test_invalid_slug_serializer_value():
     invalid_slug = "just some text"
-    with pytest.raises(
-        GraphQLError,
-        match=scalar_error_type("Slug", invalid_slug)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("Slug", invalid_slug)):
         Slug.serialize(invalid_slug)
 
 
 def test_invalid_slug_serializer_type():
     invalid_type = 123
-    with pytest.raises(
-        GraphQLError,
-        match=scalar_error_type("String", invalid_type)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("String", invalid_type)):
         Slug.serialize(invalid_type)
 
 
@@ -42,19 +36,13 @@ def test_valid_slug_parse_value():
 
 def test_invalid_slug_parse_value_value():
     invalid_slug = "this is not a slug"
-    with pytest.raises(
-        GraphQLError,
-        match=scalar_error_type("Slug", invalid_slug)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("Slug", invalid_slug)):
         Slug.parse_value(invalid_slug)
 
 
 def test_invalid_slug_parse_value_type():
     invalid_type = 456
-    with pytest.raises(
-        GraphQLError,
-        match=scalar_error_type("String", invalid_type)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("String", invalid_type)):
         Slug.parse_value(invalid_type)
 
 
@@ -67,8 +55,7 @@ def test_valid_slug_parse_literal():
 def test_invalid_slug_parse_literal_value():
     invalid_slug_ast = ast.StringValue(value="this cant be a slug")
     with pytest.raises(
-        GraphQLError,
-        match=scalar_error_type("Slug", invalid_slug_ast.value)
+        GraphQLError, match=scalar_error_type("Slug", invalid_slug_ast.value)
     ):
         Slug.parse_literal(invalid_slug_ast)
 
@@ -77,6 +64,6 @@ def test_invalid_slug_parse_literal_type():
     invalid_type_ast = ast.IntValue(value="789")
     with pytest.raises(
         GraphQLError,
-        match=scalar_error_only_types("Strings", "Slug", str(type(invalid_type_ast)))
+        match=scalar_error_only_types("Strings", "Slug", str(type(invalid_type_ast))),
     ):
         Slug.parse_literal(invalid_type_ast)

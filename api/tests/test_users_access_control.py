@@ -345,9 +345,7 @@ def test_get_users_user_write(save):
             }
         }
         """,
-        context_value=auth_header(
-            tokenize(user_id=writer.id, roles=writer.roles)
-        ),
+        context_value=auth_header(tokenize(user_id=writer.id, roles=writer.roles)),
     )
     if "errors" not in actual:
         fail(
@@ -425,9 +423,7 @@ def test_get_users_user_read(save):
             }
         }
         """,
-        context_value=auth_header(
-            tokenize(user_id=reader.id, roles=reader.roles)
-        ),
+        context_value=auth_header(tokenize(user_id=reader.id, roles=reader.roles)),
     )
     if "errors" not in actual:
         fail(
@@ -437,4 +433,3 @@ def test_get_users_user_read(save):
     [err] = actual["errors"]
     [message, _, _] = err.values()
     assert message == "Error, you do not have access to view this organization"
-

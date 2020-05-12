@@ -9,6 +9,7 @@ from models import Organizations
 from schemas.organizations import Organization
 from functions.input_validators import cleanse_input
 
+
 @require_token
 def resolve_organization(self: Organization, info, **kwargs):
     """
@@ -29,9 +30,7 @@ def resolve_organization(self: Organization, info, **kwargs):
     query = Organization.get_query(info)
 
     # Get org orm to gather its id
-    org_orm = (
-        db_session.query(Organizations).filter(Organizations.slug == slug).first()
-    )
+    org_orm = db_session.query(Organizations).filter(Organizations.slug == slug).first()
 
     # if org cannot be found
     if not org_orm:

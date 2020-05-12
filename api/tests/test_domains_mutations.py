@@ -533,9 +533,7 @@ def test_domain_modification_org_admin():
             context_value=request_headers,
             backend=backend,
         )
-        result_refr = {
-            "data": {"domain": [{"url": "updated.admin.update.domain.ca"}]}
-        }
+        result_refr = {"data": {"domain": [{"url": "updated.admin.update.domain.ca"}]}}
         assert result_refr == executed
 
 
@@ -731,8 +729,9 @@ def test_domain_removal_diff_org_admin():
             == "Error, you do not have permission to remove domains."
         )
 
-
     # User Write Tests
+
+
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_creation_user_write():
     """
@@ -787,6 +786,7 @@ def test_domain_creation_user_write():
         )
         result_refr = {"data": {"domain": [{"url": "user.write.create.domain.ca"}]}}
         assert result_refr == executed
+
 
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_modification_user_write():
