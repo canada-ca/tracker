@@ -24,7 +24,7 @@ class Organization(SQLAlchemyObjectType):
     class Meta:
         model = OrgModel
         interfaces = (relay.Node,)
-        exclude_fields = ("id", "acronym", "org_tags", "domains", "users", "slug")
+        exclude_fields = ("id", "acronym", "org_tags", "domains", "users", "slug", "name")
 
     acronym = Acronym(description="The acronym of the organization.")
     name = graphene.String(description="The full name of the organization.")
