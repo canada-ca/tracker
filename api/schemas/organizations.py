@@ -10,6 +10,7 @@ from schemas.domain import Domain as DomainsSchema
 from schemas.user_affiliations import UserAffClass
 
 from scalars.organization_acronym import Acronym
+from scalars.slug import Slug
 
 from models import Domains as DomainsModel
 from models import Organizations as OrgModel
@@ -23,13 +24,13 @@ class Organization(SQLAlchemyObjectType):
     class Meta:
         model = OrgModel
         interfaces = (relay.Node,)
-        exclude_fields = ("id", "acronym", "org_tags", "domains", "users")
+        exclude_fields = ("id", "acronym", "org_tags", "domains", "users", "slug")
 
     acronym = Acronym(description="The acronym of the organization.")
-    description = graphene.String(description="The full name of the organization.")
+    name = graphene.String(description="The full name of the organization.")
+    slug = Slug(description="Slug of the organizations name")
     zone = graphene.String(description="The zone which the organization belongs to.")
     sector = graphene.String(description="The sector which the organizaion belongs to.")
-
     province = graphene.String(
         description="The province in which the organization resides."
     )
@@ -50,6 +51,9 @@ class Organization(SQLAlchemyObjectType):
 
         def resolve_name(self: OrgModel, info):
             return self.name
+
+        def resolve_slug(self: OrgModel, info):
+            return self.slug
 
         def resolve_zone(self: OrgModel, info):
             return self.org_tags.get("zone", None)

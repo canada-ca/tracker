@@ -5,6 +5,7 @@ from graphene_sqlalchemy.types import ORMField
 
 from app import app
 from models import Domains, Scans
+from scalars.slug import Slug
 from scalars.url import URL
 
 from resolvers.dmarc_report import resolve_dmarc_reports
@@ -26,9 +27,11 @@ class Domain(SQLAlchemyObjectType):
             "organization_id",
             "organization",
             "scans",
+            "slug",
         )
 
     url = URL(description="The domain the scan was run on")
+    slug = Slug(description="Slug of the url")
     last_ran = graphene.DateTime(
         description="The last time that a scan was ran on this domain"
     )
@@ -50,6 +53,9 @@ class Domain(SQLAlchemyObjectType):
 
         def resolve_url(self: Domains, info):
             return self.domain
+
+        def resolve_slug(self: Domains, info):
+            return self.slug
 
         def resolve_last_ran(self: Domains, info):
             return self.last_run
