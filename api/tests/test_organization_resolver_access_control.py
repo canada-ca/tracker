@@ -5,6 +5,8 @@ from json_web_token import tokenize, auth_header
 from graphene.test import Client
 from unittest import TestCase
 from werkzeug.test import create_environ
+from pytest import fail
+
 from app import app
 from db import DB
 from models import Organizations, Users, User_affiliations
@@ -63,7 +65,7 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
     result = Client(schema).execute(
         """
         {
-            organization(org: "ORG1") {
+            organization(slug: "org1") {
                 edges {
                     node {
                         acronym
@@ -207,7 +209,7 @@ def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
     result = Client(schema).execute(
         """
         {
-            organization(org: "ORG2") {
+            organization(slug: "org2") {
                 edges {
                     node {
                         name

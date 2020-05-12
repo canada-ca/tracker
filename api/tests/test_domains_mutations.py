@@ -27,8 +27,8 @@ save, cleanup, session = DB()
 @pytest.fixture(scope="function")
 def domain_test_db_init():
     with app.app_context():
-        org1 = Organizations(acronym="ORG1")
-        org2 = Organizations(acronym="ORG2")
+        org1 = Organizations(acronym="ORG1", name="Organization 1")
+        org2 = Organizations(acronym="ORG2", name="Organization 2")
         save(org1)
         save(org2)
 
@@ -234,7 +234,7 @@ def test_domain_creation_super_admin():
         executed = client.execute(
             """
             mutation{
-                createDomain(org: "ORG1", url: "sa.create.domain.ca") {
+                createDomain(orgSlug: "organization-1", url: "sa.create.domain.ca") {
                     status
                 }
             }
@@ -250,7 +250,7 @@ def test_domain_creation_super_admin():
         executed = client.execute(
             """
             {
-                domain(url: "sa.create.domain.ca") {
+                domain(urlSlug: "sa-create-domain-ca") {
                     url
                 }
             }
@@ -309,7 +309,7 @@ def test_domain_modification_super_admin():
         executed = client.execute(
             """
             {
-                domain(url: "updated.sa.update.domain.ca") {
+                domain(urlSlug: "updated-sa-update-domain-ca") {
                     url
                 }
             }
@@ -319,6 +319,7 @@ def test_domain_modification_super_admin():
         )
         result_refr = {"data": {"domain": [{"url": "updated.sa.update.domain.ca"}]}}
         assert result_refr == executed
+
 
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_removal_super_admin():
@@ -403,7 +404,7 @@ def test_domain_creation_super_admin_acronym_sa():
         executed = client.execute(
             """
             mutation{
-                createDomain(org: "SA", url: "sa.create.domain.ca") {
+                createDomain(orgSlug: "super-admin", url: "sa.create.domain.ca") {
                     status
                 }
             }
@@ -449,7 +450,7 @@ def test_domain_creation_org_admin():
         executed = client.execute(
             """
             mutation{
-                createDomain(org: "ORG1", url: "admin.create.domain.ca") {
+                createDomain(orgSlug: "organization-1", url: "admin.create.domain.ca") {
                     status
                 }
             }
@@ -465,7 +466,7 @@ def test_domain_creation_org_admin():
         executed = client.execute(
             """
             {
-                domain(url: "admin.create.domain.ca") {
+                domain(urlSlug: "admin-create-domain-ca") {
                     url
                 }
             }
@@ -524,7 +525,7 @@ def test_domain_modification_org_admin():
         executed = client.execute(
             """
             {
-                domain(url: "updated.admin.update.domain.ca") {
+                domain(urlSlug: "updated-admin-update-domain-ca") {
                     url
                 }
             }
@@ -592,6 +593,7 @@ def test_domain_removal_org_admin():
         assert not session.query(Ssl_scans).filter(Ssl_scans.id == 2).all()
         assert not session.query(Spf_scans).filter(Spf_scans.id == 2).all()
 
+
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_creation_diff_org_admin():
     """
@@ -620,7 +622,7 @@ def test_domain_creation_diff_org_admin():
         executed = client.execute(
             """
             mutation{
-                createDomain(org: "ORG1", url: "admin2.create.domain.ca") {
+                createDomain(orgSlug: "organization-1", url: "admin2.create.domain.ca") {
                     status
                 }
             }
@@ -729,6 +731,7 @@ def test_domain_removal_diff_org_admin():
             == "Error, you do not have permission to remove domains."
         )
 
+
     # User Write Tests
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_creation_user_write():
@@ -758,7 +761,7 @@ def test_domain_creation_user_write():
         executed = client.execute(
             """
             mutation{
-                createDomain(org: "ORG1", url: "user.write.create.domain.ca") {
+                createDomain(orgSlug: "organization-1", url: "user.write.create.domain.ca") {
                     status
                 }
             }
@@ -774,7 +777,7 @@ def test_domain_creation_user_write():
         executed = client.execute(
             """
             {
-                domain(url: "user.write.create.domain.ca") {
+                domain(urlSlug: "user-write-create-domain-ca") {
                     url
                 }
             }
@@ -832,7 +835,7 @@ def test_domain_modification_user_write():
         executed = client.execute(
             """
             {
-                domain(url: "updated.user.write.update.domain.ca") {
+                domain(urlSlug: "updated-user-write-update-domain-ca") {
                     url
                 }
             }
@@ -844,6 +847,7 @@ def test_domain_modification_user_write():
             "data": {"domain": [{"url": "updated.user.write.update.domain.ca"}]}
         }
         assert result_refr == executed
+
 
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_removal_user_write():
@@ -889,7 +893,7 @@ def test_domain_removal_user_write():
         executed = client.execute(
             """
             {
-                domain(url: "user.write.remove.domain.ca") {
+                domain(urlSlug: "user-write-remove-domain-ca") {
                     url
                 }
             }
@@ -945,7 +949,7 @@ def test_domain_creation_diff_org_user_write():
         executed = client.execute(
             """
             mutation{
-                createDomain(org: "ORG1", url: "admin2.create.domain.ca") {
+                createDomain(orgSlug: "organization-1", url: "admin2.create.domain.ca") {
                     status
                 }
             }
@@ -960,6 +964,7 @@ def test_domain_creation_diff_org_user_write():
             executed["errors"][0]["message"]
             == "Error, you do not have permission to create a domain for that organization"
         )
+
 
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_modification_diff_org_user_write():
@@ -1008,6 +1013,7 @@ def test_domain_modification_diff_org_user_write():
             == "Error, you do not have permission to edit domains belonging to another organization"
         )
 
+
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_removal_diff_org_user_write():
     """
@@ -1052,6 +1058,7 @@ def test_domain_removal_diff_org_user_write():
             == "Error, you do not have permission to remove domains."
         )
 
+
 # Different Org User Read
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_creation_org_user_read():
@@ -1081,7 +1088,7 @@ def test_domain_creation_org_user_read():
         executed = client.execute(
             """
             mutation{
-                createDomain(org: "ORG1", url: "user.read.create.domain.ca") {
+                createDomain(orgSlug: "organization-1", url: "user.read.create.domain.ca") {
                     status
                 }
             }
@@ -1096,6 +1103,7 @@ def test_domain_creation_org_user_read():
             executed["errors"][0]["message"]
             == "Error, you do not have permission to create a domain for that organization"
         )
+
 
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_modification_org_user_read():
@@ -1143,6 +1151,7 @@ def test_domain_modification_org_user_read():
             executed["errors"][0]["message"]
             == "Error, you do not have permission to edit domains belonging to another organization"
         )
+
 
 @pytest.mark.usefixtures("domain_test_db_init")
 def test_domain_removal_org_user_read():

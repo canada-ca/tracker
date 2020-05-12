@@ -7,7 +7,7 @@ from functions.auth_functions import is_super_admin, is_user_read
 from models import Organizations
 
 from schemas.organizations import Organization
-
+from functions.input_validators import cleanse_input
 
 @require_token
 def resolve_organization(self: Organization, info, **kwargs):
@@ -22,7 +22,7 @@ def resolve_organization(self: Organization, info, **kwargs):
     :return: Filtered Organization SQLAlchemyObject Type
     """
     # Get Information from kwargs
-    org = kwargs.get("org")
+    slug = cleanse_input(kwargs.get("slug"))
     user_roles = kwargs.get("user_roles")
 
     # Gather Initial Organization Query Object
@@ -30,7 +30,7 @@ def resolve_organization(self: Organization, info, **kwargs):
 
     # Get org orm to gather its id
     org_orm = (
-        db_session.query(Organizations).filter(Organizations.acronym == org).first()
+        db_session.query(Organizations).filter(Organizations.slug == slug).first()
     )
 
     # if org cannot be found
@@ -40,7 +40,7 @@ def resolve_organization(self: Organization, info, **kwargs):
 
     # Check to ensure user has access to given org
     if is_user_read(user_roles=user_roles, org_id=org_id):
-        query_rtn = query.filter(Organizations.acronym == org).all()
+        query_rtn = query.filter(Organizations.slug == slug).all()
     else:
         raise GraphQLError(
             "Error, you do not have permission to view that organization"

@@ -109,7 +109,7 @@ def test_get_org_resolvers_by_org_super_admin_single_node():
         actual = client.execute(
             """
             {
-                organization(org: "ORG1") {
+                organization(slug: "organization-1") {
                     edges {
                         node {
                             acronym
@@ -421,7 +421,7 @@ def test_get_org_resolvers_by_org_user_read_single_node():
         actual = client.execute(
             """
             {
-                organization(org: "ORG1") {
+                organization(slug: "organization-1") {
                     edges {
                         node {
                             acronym

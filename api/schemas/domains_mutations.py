@@ -7,6 +7,7 @@ from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_write
 from functions.input_validators import cleanse_input
+from functions.slugify import slugify_value
 
 from models import (
     Organizations,
@@ -20,8 +21,8 @@ from models import (
     Ssl_scans,
 )
 
-from scalars.organization_acronym import Acronym
 from scalars.url import URL
+from scalars.slug import Slug
 
 
 class CreateDomain(graphene.Mutation):
@@ -30,8 +31,8 @@ class CreateDomain(graphene.Mutation):
     """
 
     class Arguments:
-        org = Acronym(
-            description="Organizations acronym that you would like to connect "
+        org_slug = Slug(
+            description="Organizations slug that you would like to connect "
             "this domain to.",
             required=True,
         )
@@ -47,11 +48,11 @@ class CreateDomain(graphene.Mutation):
         @require_token
         def mutate(self, info, **kwargs):
             user_roles = kwargs.get("user_roles")
-            acronym = cleanse_input(kwargs.get("org"))
+            org_slug = cleanse_input(kwargs.get("org_slug"))
             domain = cleanse_input(kwargs.get("url"))
 
             # Check to see if org acronym is SA Org
-            if acronym == "SA":
+            if org_slug == "super-admin":
                 raise GraphQLError(
                     "Error, you cannot add a domain to this organization."
                 )
@@ -59,7 +60,7 @@ class CreateDomain(graphene.Mutation):
             # Check to see if org exists
             org_orm = (
                 db_session.query(Organizations)
-                .filter(Organizations.acronym == acronym)
+                .filter(Organizations.slug == org_slug)
                 .first()
             )
 
@@ -100,7 +101,7 @@ class UpdateDomain(graphene.Mutation):
 
     class Arguments:
         current_url = URL(
-            description="The current domain that is being requested to be " "updated.",
+            description="The current domain that is being requested to be updated.",
             required=True,
         )
         updated_url = URL(
@@ -127,7 +128,10 @@ class UpdateDomain(graphene.Mutation):
 
             if is_user_write(user_roles=user_roles, org_id=domain_orm.organization_id):
                 Domains.query.filter(Domains.domain == current_domain).update(
-                    {"domain": updated_domain}
+                    {
+                        "domain": updated_domain,
+                        "slug": slugify_value(updated_domain)
+                    }
                 )
 
                 try:

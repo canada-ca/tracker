@@ -24,7 +24,7 @@ def resolve_domain(self: Domain, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in via kwargs
-    url = kwargs.get("url")
+    url_slug = kwargs.get("url_slug")
     user_roles = kwargs.get("user_roles")
 
     # Get initial Domain Query Object
@@ -34,7 +34,7 @@ def resolve_domain(self: Domain, info, **kwargs):
     org_orm = (
         db_session.query(Organizations)
         .filter(Organizations.id == Domains.organization_id)
-        .filter(Domains.domain == url)
+        .filter(Domains.slug == url_slug)
         .first()
     )
 
@@ -46,7 +46,7 @@ def resolve_domain(self: Domain, info, **kwargs):
     # Check if user has read access or higher to the requested organization
     if is_user_read(user_roles=user_roles, org_id=org_id):
         query_rtn = (
-            query.filter(Domains.domain == url)
+            query.filter(Domains.slug == url_slug)
             .filter(Domains.organization_id == org_id)
             .all()
         )
@@ -68,7 +68,7 @@ def resolve_domains(self, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in from kwargs
-    organization = kwargs.get("organization")
+    org_slug = kwargs.get("org_slug")
     user_roles = kwargs.get("user_roles")
 
     # Generate list of org's the user has access to
@@ -82,12 +82,12 @@ def resolve_domains(self, info, **kwargs):
     # Retrieve information based on query
     query = Domain.get_query(info)
 
-    if organization:
+    if org_slug:
         # Retrieve org id from organization enum
         with app.app_context():
             org_orms = (
                 db_session.query(Organizations)
-                .filter(Organizations.acronym == organization)
+                .filter(Organizations.slug == org_slug)
                 .options(load_only("id"))
             )
 

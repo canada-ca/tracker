@@ -1,4 +1,7 @@
 import pytest
+import json
+
+from pytest import fail
 from flask import Request
 from json_web_token import tokenize, auth_header
 from graphene.test import Client
@@ -26,9 +29,9 @@ def test_get_users_as_super_admin(save):
     Test to see if users resolver access control allows super admin to
     request users outside of organization
     """
-    org1 = Organizations(acronym="ORG1")
-    org2 = Organizations(acronym="ORG2")
-    org3 = Organizations(acronym="ORG3")
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    org2 = Organizations(acronym="ORG2", name="Organization 2")
+    org3 = Organizations(acronym="ORG3", name="Organization 3")
 
     reader = Users(
         display_name="testuserread",
@@ -79,7 +82,7 @@ def test_get_users_as_super_admin(save):
     actual = Client(schema).execute(
         """
         {
-            users(org: "ORG1") {
+            users(orgSlug: "organization-1") {
                 edges {
                     node {
                         displayName
@@ -112,9 +115,9 @@ def test_get_users_from_same_org(save):
     Test users query to see if an admin from the corresponding org can
     retrieve the information
     """
-    org1 = Organizations(acronym="ORG1")
-    org2 = Organizations(acronym="ORG2")
-    org3 = Organizations(acronym="ORG3")
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    org2 = Organizations(acronym="ORG2", name="Organization 2")
+    org3 = Organizations(acronym="ORG3", name="Organization 3")
 
     reader = Users(
         display_name="testuserread",
@@ -165,7 +168,7 @@ def test_get_users_from_same_org(save):
     actual = Client(schema).execute(
         """
         {
-            users(org: "ORG1") {
+            users(orgSlug: "organization-1") {
                 edges {
                     node {
                         displayName
@@ -199,9 +202,9 @@ def test_get_users_admin_from_different_org(save):
     Test users query to see if an admin from anther org cannot
     retrieve the information
     """
-    org1 = Organizations(acronym="ORG1")
-    org2 = Organizations(acronym="ORG2")
-    org3 = Organizations(acronym="ORG3")
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    org2 = Organizations(acronym="ORG2", name="Organization 2")
+    org3 = Organizations(acronym="ORG3", name="Organization 3")
 
     reader = Users(
         display_name="testuserread",
@@ -252,7 +255,7 @@ def test_get_users_admin_from_different_org(save):
     actual = Client(schema).execute(
         """
         {
-            users(org: "ORG1") {
+            users(orgSlug: "organization-1") {
                 edges {
                     node {
                         displayName
@@ -280,9 +283,9 @@ def test_get_users_user_write(save):
     """
     Ensure user write cannot access this query
     """
-    org1 = Organizations(acronym="ORG1")
-    org2 = Organizations(acronym="ORG2")
-    org3 = Organizations(acronym="ORG3")
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    org2 = Organizations(acronym="ORG2", name="Organization 2")
+    org3 = Organizations(acronym="ORG3", name="Organization 3")
 
     reader = Users(
         display_name="testuserread",
@@ -333,7 +336,7 @@ def test_get_users_user_write(save):
     actual = Client(schema).execute(
         """
         {
-            users(org: "ORG1") {
+            users(orgSlug: "organization-1") {
                 edges {
                     node {
                         displayName
@@ -360,9 +363,9 @@ def test_get_users_user_read(save):
     """
     Ensure user write cannot access this query
     """
-    org1 = Organizations(acronym="ORG1")
-    org2 = Organizations(acronym="ORG2")
-    org3 = Organizations(acronym="ORG3")
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    org2 = Organizations(acronym="ORG2", name="Organization 2")
+    org3 = Organizations(acronym="ORG3", name="Organization 3")
 
     reader = Users(
         display_name="testuserread",
@@ -413,7 +416,7 @@ def test_get_users_user_read(save):
     actual = Client(schema).execute(
         """
         {
-            users(org: "ORG1") {
+            users(orgSlug: "organization-1") {
                 edges {
                     node {
                         displayName

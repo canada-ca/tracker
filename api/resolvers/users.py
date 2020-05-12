@@ -13,7 +13,7 @@ from schemas.users import Users as UsersSchema
 
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read, is_admin
-
+from functions.input_validators import cleanse_input
 
 @require_token
 def resolve_users(self, info, **kwargs):
@@ -28,14 +28,14 @@ def resolve_users(self, info, **kwargs):
 
     # Get information from kwargs
     user_roles = kwargs.get("user_roles")
-    org = kwargs.get("org", None)
+    org_slug = cleanse_input(kwargs.get("org_slug"))
 
     # Get initial query
     query = UsersSchema.get_query(info)
 
     # Get requested organization orm
     org_orm = (
-        db_session.query(Organizations).filter(Organizations.acronym == org).first()
+        db_session.query(Organizations).filter(Organizations.slug == org_slug).first()
     )
 
     # Ensure that requested orm exists

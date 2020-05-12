@@ -65,7 +65,7 @@ def test_mutation_removeOrganization_succeeds_for_super_admin(save):
     result = Client(schema).execute(
         """
          mutation {
-             removed:removeOrganization(acronym: "ORG1") {
+             removed:removeOrganization(slug: "org-one") {
                  status
              }
          }
@@ -106,7 +106,7 @@ def test_mutation_removeOrganization_does_not_remove_super_admin_org(save):
     result = Client(schema).execute(
         """
          mutation {
-             removed:removeOrganization(acronym: "SA") {
+             removed:removeOrganization(slug: "super-admin") {
                  status
              }
          }
@@ -148,7 +148,7 @@ def test_mutation_removeOrganization_fails_if_org_does_not_exist(save):
         """
          mutation {
              removeOrganization(
-                 acronym: "RANDOM"
+                 slug: "random"
              ) {
                  status
              }
@@ -189,7 +189,7 @@ def test_mutation_removeOrganization_fails_for_admin_users(save):
         """
          mutation {
              removeOrganization(
-                 acronym: "ORG1"
+                 slug: "org-one"
              ) {
                  status
              }
@@ -231,7 +231,7 @@ def test_mutation_removeOrganization_fails_for_write_users(save):
         """
          mutation {
              removeOrganization(
-                 acronym: "ORG1"
+                 slug: "org-one"
              ) {
                  status
              }
@@ -275,7 +275,7 @@ def test_mutation_removeOrganization_fails_for_read_users(save):
         """
          mutation {
              removeOrganization(
-                 acronym: "ORG1"
+                 slug: "org-one"
              ) {
                  status
              }
