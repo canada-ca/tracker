@@ -3,7 +3,9 @@ from sqlalchemy.types import Integer, Boolean, DateTime, Float
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
+
 from db import Base
+from functions.slugify import slugify_value
 from models.Users import Users
 from models.User_affiliations import User_affiliations
 from models.Organizations import Organizations
@@ -16,6 +18,7 @@ class Domains(Base):
     domain = Column(String)
     last_run = Column(DateTime)
     organization_id = Column(Integer, ForeignKey("organizations.id"))
+    slug = Column(String, index=True)
     organization = relationship(
         "Organizations", back_populates="domains", cascade="all, delete"
     )
@@ -23,6 +26,12 @@ class Domains(Base):
     dmarc_reports = relationship(
         "Dmarc_Reports", back_populates="domain", cascade="all, delete"
     )
+
+    def __init__(self, **kwargs):
+        super(Domains, self).__init__(**kwargs)
+        self.slug = slugify_value(kwargs.get("domain", ""))
+        if self.org_tags is None:
+            self.org_tags = dict()
 
 
 class Dmarc_Reports(Base):
