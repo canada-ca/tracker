@@ -9,6 +9,7 @@ from models import Organizations
 from schemas.organizations import Organization
 from functions.input_validators import cleanse_input
 
+
 @require_token
 def resolve_organization(self: Organization, info, **kwargs):
     """

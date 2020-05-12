@@ -15,6 +15,7 @@ from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read, is_admin
 from functions.input_validators import cleanse_input
 
+
 @require_token
 def resolve_users(self, info, **kwargs):
     """
