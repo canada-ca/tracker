@@ -12,7 +12,7 @@ ACRONYM_REGEX = compile(ACRONYM_REGEX)
 class Acronym(Scalar):
     """
     A field whose value is an upper case letter or an under score that has a
-    length between 1 and 10
+    length between 1 and 50
     """
 
     @staticmethod
