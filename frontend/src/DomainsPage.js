@@ -27,16 +27,21 @@ export default function DomainsPage() {
         </Heading>
         <Stack spacing={4}>
           <Stack spacing={4} direction="row" flexWrap="wrap">
-            <Text>
-              <Trans>This is the full list of domains</Trans>
-            </Text>
             <List>
               {data.domains.edges.map((edge, i) => {
-                return (
-                  <ListItem key={edge.node.url + i}>
-                    <Text>{edge.node.url}</Text>
-                  </ListItem>
-                )
+                if (edge.node) {
+                  return (
+                    <ListItem key={edge.node.url + i}>
+                      <Text>{edge.node.url}</Text>
+                    </ListItem>
+                  )
+                } else {
+                  return (
+                    <ListItem key={"edge" + i}>
+                      <Trans>No domains scanned yet.</Trans>
+                    </ListItem>
+                  )
+                }
               })}
             </List>
           </Stack>
