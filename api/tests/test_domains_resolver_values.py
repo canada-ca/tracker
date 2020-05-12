@@ -72,6 +72,7 @@ def test_get_domain_resolver_dmarc_report(save):
         {
             domain(url: "accurateplastics.com") {
                 url
+                slug
                 dmarcReport {
                     edges {
                         node {
@@ -97,6 +98,7 @@ def test_get_domain_resolver_dmarc_report(save):
             "domain": [
                 {
                     "url": "accurateplastics.com",
+                    "slug": "accurateplastics-com",
                     "dmarcReport": {
                         "edges": [
                             {
@@ -155,6 +157,7 @@ def test_get_domain_resolver_dmarc_report_in_date_range(save):
          {
              domain(url: "accurateplastics.com") {
                  url
+                 slug
                  dmarcReport(startDate: "2018-01-01" endDate: "2018-12-31") {
                      edges {
                          node {
@@ -180,6 +183,7 @@ def test_get_domain_resolver_dmarc_report_in_date_range(save):
             "domain": [
                 {
                     "url": "accurateplastics.com",
+                    "slug": "accurateplastics-com",
                     "dmarcReport": {
                         "edges": [
                             {
@@ -235,6 +239,7 @@ def test_get_domain_resolver_dmarc_report_for_date_range_with_no_reports(save):
          {
              domain(url: "accurateplastics.com") {
                  url
+                 slug
                  dmarcReport(startDate: "2019-01-01" endDate: "2019-12-31") {
                      edges {
                          node {
@@ -283,6 +288,7 @@ def test_domain_resolver_dmarc_report_for_domain_with_no_reports_will_fail(save)
          {
              domain(url: "addisonfoods.com") {
                  url
+                 slug
                  dmarcReport {
                      edges {
                          node {
@@ -346,6 +352,7 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing
          {
              domain(url: "accurateplastics.com") {
                  url
+                 slug
                  dmarcReport(endDate: "2019-12-31") {
                      edges {
                          node {
@@ -409,6 +416,7 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_end_date_is_missing(s
          {
              domain(url: "accurateplastics.com") {
                  url
+                 slug
                  dmarcReport(startDate: "2019-12-31") {
                      edges {
                          node {
