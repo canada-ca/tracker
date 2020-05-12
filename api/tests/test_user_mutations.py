@@ -1,4 +1,5 @@
 import pyotp
+import time
 import pytest
 from graphene.test import Client
 from app import app
@@ -29,6 +30,7 @@ def user_schema_test_db_init():
         db_session.commit()
 
         yield
+
         cleanup()
 
 
