@@ -14,7 +14,7 @@ spec:
             - --memcached-service=
             - --ssh-keygen-dir=/var/fluxd/keygen
             - --git-branch=master
-            - --registry-exclude-image=gcr.io/gke-release/*,gke.gcr.io/*,docker.io/istio/*,k8s.gcr.io/*
+            - --registry-exclude-image=gcr.io/gke-release/*,gke.gcr.io/*,docker.io/istio/*,k8s.gcr.io/*,gcr.io/track-compliance/scanners/*
             - --git-ci-skip
             - --git-path=platform/overlays/gke
             - --git-user=fluxcd
