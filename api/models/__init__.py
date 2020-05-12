@@ -30,8 +30,6 @@ class Domains(Base):
     def __init__(self, **kwargs):
         super(Domains, self).__init__(**kwargs)
         self.slug = slugify_value(kwargs.get("domain", ""))
-        if self.org_tags is None:
-            self.org_tags = dict()
 
 
 class Dmarc_Reports(Base):
