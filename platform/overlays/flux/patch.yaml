@@ -14,7 +14,7 @@ spec:
             - --memcached-service=
             - --ssh-keygen-dir=/var/fluxd/keygen
             - --git-branch=master
-            - --registry-exclude-image=gcr.io/gke-release/*,gke.gcr.io/*,docker.io/istio/*,k8s.gcr.io/*,gcr.io/track-compliance/scanners/*
+            - --registry-exclude-image=quay.io/kiali/*,quay.io/jetstack/*,gcr.io/gke-release/*,gke.gcr.io/*,docker.io/istio/*,k8s.gcr.io/*,gcr.io/track-compliance/scanners/*
             - --git-ci-skip
             - --git-path=platform/overlays/gke
             - --git-user=fluxcd
@@ -22,8 +22,8 @@ spec:
             - --git-url=git@github.com:canada-ca/tracker.git
           resources:
             requests:
-              cpu: 200m
+              cpu: 500m
               memory: 512Mi
             limits:
-              cpu: 200m
+              cpu: 500m
               memory: 512Mi
