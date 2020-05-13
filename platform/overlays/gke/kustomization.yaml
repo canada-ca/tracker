@@ -10,7 +10,7 @@ resources:
 - knative/monitoring/grafana/grafana.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-66315c5
+  newTag: master-93dfa96
 - name: gcr.io/track-compliance/frontend
   newTag: master-865b4d7
 patchesStrategicMerge:
