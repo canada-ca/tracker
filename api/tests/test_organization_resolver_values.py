@@ -331,7 +331,7 @@ def test_get_org_resolvers_super_admin_multi_node():
                         },
                         {
                             "node": {
-                                "acronym": "TESTUSERRE",
+                                "acronym": "TESTUSERREAD-TESTEMAIL-CA",
                                 "name": "testuserread@testemail.ca",
                                 "slug": "testuserread-testemail-ca",
                                 "zone": None,
@@ -353,7 +353,7 @@ def test_get_org_resolvers_super_admin_multi_node():
                         },
                         {
                             "node": {
-                                "acronym": "TESTSUPERA",
+                                "acronym": "TESTSUPERADMIN-TESTEMAIL-CA",
                                 "name": "testsuperadmin@testemail.ca",
                                 "slug": "testsuperadmin-testemail-ca",
                                 "zone": None,
@@ -569,7 +569,7 @@ def test_get_org_resolvers_by_org_user_read_multi_node():
                         },
                         {
                             "node": {
-                                "acronym": "TESTUSERRE",
+                                "acronym": "TESTUSERREAD-TESTEMAIL-CA",
                                 "name": "testuserread@testemail.ca",
                                 "slug": "testuserread-testemail-ca",
                                 "zone": None,

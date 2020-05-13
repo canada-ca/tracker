@@ -64,6 +64,26 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
 
     # --- Start User Queries ---
+    users = SQLAlchemyConnectionField(
+        Users._meta.connection,
+        org_slug=graphene.Argument(Slug, required=True),
+        sort=None,
+        description="Select list of users belonging to an organization.",
+    )
+    with app.app_context():
+        def resolve_users(self, info, **kwargs):
+            return resolve_users(self, info, **kwargs)
+
+    user = graphene.List(
+        lambda: User,
+        user_name=graphene.Argument(EmailAddress, required=False),
+        description="Query the currently logged in user if no user name is"
+                    "given, or query a specific user by user name.",
+    )
+    with app.app_context():
+        def resolve_user(self, info, **kwargs):
+            return resolve_user(self, info, **kwargs)
+
     user_page = user_page
 
     def resolve_user_page(self, info, **kwargs):
