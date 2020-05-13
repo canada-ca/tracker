@@ -18,8 +18,7 @@ from functions.auth_functions import is_super_admin, is_user_read, is_admin
 def resolve_user_page(self, info, **kwargs):
     """
     This function is used to resolve a users information such as user profile,
-    etc. If an email address argument is present then the user will have to be
-    an admin belonging to the same org to see the users information.
+    etc. It uses an email address to find which user profile you wish to view
     :param self: User SQLAlchemyObject type defined in the schemas directory
     :param info: Request information sent to the sever from a client
     :param kwargs: Field arguments and user_roles
