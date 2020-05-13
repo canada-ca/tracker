@@ -1,15 +1,16 @@
 import bcrypt
 
 from sqlalchemy.types import Integer, Boolean, Float
-from slugify import slugify
-from functions.orm_to_dict import orm_to_dict
-from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy import event
-from models.Organizations import Organizations
-from models.User_affiliations import User_affiliations
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import event
+
+from functions.orm_to_dict import orm_to_dict
+from functions.slugify import slugify_value
+from models.Organizations import Organizations
+from models.User_affiliations import User_affiliations
 from db import Base
 
 
@@ -32,7 +33,7 @@ class Users(Base):
         super(Users, self).__init__(**kwargs)
         # XXX: This is gross but matches the expections of the
         # Acronym scalar type.
-        acronym = slugify(self.user_name).upper()[:10]
+        acronym = slugify_value(self.user_name).upper()[:50]
         self.user_affiliation.append(
             User_affiliations(
                 permission="admin",
