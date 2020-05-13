@@ -5,7 +5,7 @@ from graphql import GraphQLError
 
 from functions.error_messages import *
 
-ACRONYM_REGEX = r"""^[A-Z0-9_]{1,50}$"""
+ACRONYM_REGEX = r"""^[A-Z0-9_-]{1,50}$"""
 ACRONYM_REGEX = compile(ACRONYM_REGEX)
 
 

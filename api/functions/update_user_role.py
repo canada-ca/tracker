@@ -42,7 +42,12 @@ def update_user_role(**kwargs):
             User_aff.query.filter(User_aff.organization_id == org_id).filter(
                 User_aff.user_id == user[0]["id"]
             ).update({"permission": new_role})
-            db_session.commit()
+            try:
+                db_session.commit()
+            except Exception as e:
+                db_session.rollback()
+                db_session.flush()
+                raise GraphQLError(error_role_not_updated())
 
     if new_role == "admin" or new_role == "super_admin":
         if is_super_admin(user_roles=user_roles):
