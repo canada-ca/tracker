@@ -49,7 +49,7 @@ def test_mutation_createOrganization_fails_for_existing_orgs(save):
                 acronym="SA",
                 org_tags={"name": "SA"},
                 name="Super Admin",
-                slug="super-admin"
+                slug="super-admin",
             ),
         )
     )

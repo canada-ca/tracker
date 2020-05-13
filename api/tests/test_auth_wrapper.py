@@ -37,9 +37,7 @@ def test_testUserClaims_accepts_admin_claim_for_admin_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="admin",
-            user_organization=Organizations(
-                acronym="ORG1", name="Organization 1"
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -77,9 +75,7 @@ def test_testUserClaims_accepts_write_claim_for_write_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_write",
-            user_organization=Organizations(
-                acronym="ORG1", name="Organization 1"
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -119,9 +115,7 @@ def test_testUserClaims_accepts_super_admin_claim_for_super_admin(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="super_admin",
-            user_organization=Organizations(
-                acronym="ORG1", name="Organization 1"
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -163,9 +157,7 @@ def test_testUserClaims_accepts_read_claim_for_read_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_read",
-            user_organization=Organizations(
-                acronym="ORG1", name="Organization 1"
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -204,9 +196,7 @@ def test_testUserClaims_rejects_super_admin_check_for_read_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_read",
-            user_organization=Organizations(
-                acronym="ORG1", name="Organization 1"
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -251,9 +241,7 @@ def test_testUserClaims_rejects_admin_check_for_read_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_read",
-            user_organization=Organizations(
-                acronym="ORG1", name="Organization 1"
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -294,9 +282,7 @@ def test_testUserClaims_rejects_super_admin_check_for_admin_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="admin",
-            user_organization=Organizations(
-                acronym="ORG1", name="Organization 1"
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -337,9 +323,7 @@ def test_testUserClaims_rejects_super_admin_check_for_write_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_write",
-            user_organization=Organizations(
-                acronym="ORG1", name="Organization 1"
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 

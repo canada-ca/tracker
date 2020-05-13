@@ -65,6 +65,7 @@ def test_successful_creation():
         )
         assert executed["data"]["createUser"]["user"]["displayName"] == "user-test"
 
+
 @pytest.mark.usefixtures("user_schema_test_db_init")
 def test_email_address_in_use():
     """Test that ensures each user has a unique email address"""
@@ -102,6 +103,7 @@ def test_email_address_in_use():
         assert executed["errors"][0]
         assert executed["errors"][0]["message"] == error_email_in_use()
 
+
 @pytest.mark.usefixtures("user_schema_test_db_init")
 def test_password_too_short():
     """Test that ensure that a user's password meets the valid length requirements"""
@@ -123,9 +125,9 @@ def test_password_too_short():
     assert executed["errors"]
     assert executed["errors"][0]
     assert (
-        executed["errors"][0]["message"]
-        == error_password_does_not_meet_requirements()
+        executed["errors"][0]["message"] == error_password_does_not_meet_requirements()
     )
+
 
 @pytest.mark.usefixtures("user_schema_test_db_init")
 def test_passwords_do_not_match():
@@ -181,9 +183,8 @@ def test_update_password_success():
             executed["data"]["updatePassword"]["user"]["userName"]
             == "testuser@testemail.ca"
         )
-        assert (
-            executed["data"]["updatePassword"]["user"]["displayName"] == "testuser"
-        )
+        assert executed["data"]["updatePassword"]["user"]["displayName"] == "testuser"
+
 
 @pytest.mark.usefixtures("user_schema_test_db_init")
 def test_updated_passwords_do_not_match():
@@ -208,6 +209,7 @@ def test_updated_passwords_do_not_match():
     assert executed["errors"][0]
     assert executed["errors"][0]["message"] == error_passwords_do_not_match()
 
+
 @pytest.mark.usefixtures("user_schema_test_db_init")
 def test_updated_password_too_short():
     """Test that ensure that a user's password meets the valid length requirements"""
@@ -229,8 +231,7 @@ def test_updated_password_too_short():
     assert executed["errors"]
     assert executed["errors"][0]
     assert (
-        executed["errors"][0]["message"]
-        == error_password_does_not_meet_requirements()
+        executed["errors"][0]["message"] == error_password_does_not_meet_requirements()
     )
 
 
@@ -254,9 +255,7 @@ def test_updated_password_no_user_email():
 
     assert executed["errors"]
     assert executed["errors"][0]
-    assert executed["errors"][0]["message"] == scalar_error_type(
-        "email address", ""
-    )
+    assert executed["errors"][0]["message"] == scalar_error_type("email address", "")
 
 
 # This class of tests works within the 'authenticateTwoFactor' api endpoint
@@ -292,6 +291,7 @@ def test_successful_validation():
             executed["data"]["authenticateTwoFactor"]["user"]["userName"]
             == "testuser@testemail.ca"
         )
+
 
 @pytest.mark.usefixtures("user_schema_test_db_init")
 def test_user_does_not_exist():

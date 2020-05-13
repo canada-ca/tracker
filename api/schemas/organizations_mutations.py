@@ -103,9 +103,7 @@ class CreateOrganization(graphene.Mutation):
 
 class UpdateOrganization(graphene.Mutation):
     class Arguments:
-        slug = Slug(
-            description="Organization that will be updated", required=True
-        )
+        slug = Slug(description="Organization that will be updated", required=True)
         acronym = Acronym(
             description="Organization Acronym you would like updated", required=False
         )
@@ -147,9 +145,7 @@ class UpdateOrganization(graphene.Mutation):
 
                 # Restrict the deletion of SA Org
                 if slug == "super-admin":
-                    raise GraphQLError(
-                        "Error, you cannot modify this organization"
-                    )
+                    raise GraphQLError("Error, you cannot modify this organization")
 
                 # Get requested org orm
                 org_orm = (
@@ -171,18 +167,22 @@ class UpdateOrganization(graphene.Mutation):
                 )
 
                 if update_org_orm is not None:
-                    raise GraphQLError(
-                        "Error, organization info already in use."
-                    )
+                    raise GraphQLError("Error, organization info already in use.")
 
                 # Update orm
-                org_orm.slug = slugify_value(name) if name != "" else slugify_value(org_orm.name)
+                org_orm.slug = (
+                    slugify_value(name) if name != "" else slugify_value(org_orm.name)
+                )
                 org_orm.name = name if name != "" else org_orm.name
                 org_orm.acronym = acronym if acronym != "" else org_orm.acronym
                 org_orm.org_tags = {
                     "zone": zone if zone != "" else org_orm.org_tags.get("zone"),
-                    "sector": sector if sector != "" else org_orm.org_tags.get("sector"),
-                    "province": province if province != "" else org_orm.org_tags.get("province"),
+                    "sector": sector
+                    if sector != ""
+                    else org_orm.org_tags.get("sector"),
+                    "province": province
+                    if province != ""
+                    else org_orm.org_tags.get("province"),
                     "city": city if city != "" else org_orm.org_tags.get("city"),
                 }
 
@@ -207,9 +207,7 @@ class RemoveOrganization(graphene.Mutation):
     """
 
     class Arguments:
-        slug = Slug(
-            description="The organization you wish to remove", required=True
-        )
+        slug = Slug(description="The organization you wish to remove", required=True)
 
     status = graphene.Boolean()
 
