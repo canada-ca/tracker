@@ -1,10 +1,8 @@
 import pytest
-import json
-
+from json import dumps
 from json_web_token import tokenize, auth_header
 from pytest import fail
 from graphene.test import Client
-
 from app import app
 from db import DB
 from queries import schema
@@ -14,12 +12,22 @@ from models import (
     User_affiliations,
 )
 
-s, cleanup, session = DB()
+
+def run(query=None, mutation=None, as_user=None):
+    return Client(schema).execute(
+        query if query else mutation,
+        context_value=auth_header(tokenize(user_id=as_user.id, roles=as_user.roles)),
+    )
+
+
+def json(j):
+    return dumps(j, indent=2)
 
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, session = DB()
         yield s
         cleanup()
 
@@ -29,66 +37,60 @@ def test_super_admin_can_see_any_user_list(save):
     """
     Test to see if super admins can view user list of different org
     """
-    sa_user = Users(
+    super_admin = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
         tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            )
+        ],
     )
-    sa_user.user_affiliation.append(
-        User_affiliations(
-            permission="super_admin",
-            user_organization=Organizations(
-                acronym="SA", name="Super Admin", slug="super-admin"
-            ),
-        )
-    )
-    save(sa_user)
+    save(super_admin)
 
-    user_read = Users(
+    reader = Users(
         display_name="testuserread",
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
         tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(
+                    acronym="ORG1", name="Organization 1", slug="organization-1"
+                ),
+            )
+        ],
     )
-    user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=Organizations(
-                acronym="ORG1", name="Organization 1", slug="organization-1"
-            ),
-        )
-    )
-    save(user_read)
+    save(reader)
 
-    token = tokenize(user_id=sa_user.id, roles=sa_user.roles)
-
-    result = Client(schema).execute(
-        """
-        {
+    result = run(
+        query="""
+          {
             userList(orgSlug: "organization-1") {
-                edges {
-                    node {
-                        userName
-                        displayName
-                        tfa
-                        admin
-                    }
+              edges {
+                node {
+                  userName
+                  displayName
+                  tfa
+                  admin
                 }
+              }
             }
-        }
+          }
         """,
-        context_value=auth_header(token),
+        as_user=super_admin,
     )
 
     if "errors" in result:
-        fail(
-            "Expected to get user details. Instead: {}".format(
-                json.dumps(result, indent=2)
-            )
-        )
+        fail("Expected to get user details. Instead: {}".format(json(result)))
 
     expected = {
         "data": {
@@ -141,32 +143,26 @@ def test_admin_can_see_user_list_in_same_org(save):
     )
     save(user_read)
 
-    token = tokenize(user_id=admin_user.id, roles=admin_user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
-            userList(orgSlug: "organization-1") {
-                edges {
-                    node {
-                        userName
-                        displayName
-                        tfa
-                        admin
-                    }
-                }
+          userList(orgSlug: "organization-1") {
+            edges {
+              node {
+                userName
+                displayName
+                tfa
+                admin
+              }
             }
+          }
         }
         """,
-        context_value=auth_header(token),
+        as_user=admin_user,
     )
 
     if "errors" in result:
-        fail(
-            "Expected to get user details. Instead: {}".format(
-                json.dumps(result, indent=2)
-            )
-        )
+        fail("Expected to get user details. Instead: {}".format(json(result)))
 
     expected = {
         "data": {
@@ -273,9 +269,7 @@ def test_admin_cant_see_user_list_in_different_org(save):
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
-        )
+        fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert (
@@ -352,38 +346,37 @@ def test_user_read_cant_see_user_list(save):
     """
     Test to see if user Read cant view user list of any org
     """
-    org_one = Organizations(acronym="ORG1", name="Organization 1")
-    save(org_one)
-    org_two = Organizations(acronym="ORG2", name="Organization 2")
-    save(org_two)
-    user_read = Users(
+    org1_reader = Users(
+        display_name="testuserread1",
+        user_name="testuserread1@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(acronym="ORG1", name="Organization 1"),
+            )
+        ],
+    )
+    save(org1_reader)
+
+    org2_reader = Users(
         display_name="testuserread2",
         user_name="testuserread2@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(acronym="ORG2", name="Organization 2"),
+            )
+        ],
     )
-    user_read.user_affiliation.append(
-        User_affiliations(permission="user_read", user_organization=org_one,)
-    )
-    save(user_read)
+    save(org2_reader)
 
-    user_read = Users(
-        display_name="testuserread",
-        user_name="testuserread@testemail.ca",
-        password="testpassword123",
-        preferred_lang="English",
-        tfa_validated=False,
-    )
-    user_read.user_affiliation.append(
-        User_affiliations(permission="user_read", user_organization=org_two,)
-    )
-    save(user_read)
-
-    token = tokenize(user_id=user_read.id, roles=user_read.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        as_user=org1_reader,
+        query="""
         {
             userList(orgSlug: "organization-2") {
                 edges {
@@ -397,15 +390,11 @@ def test_user_read_cant_see_user_list(save):
             }
         }
         """,
-        context_value=auth_header(token),
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
-        )
+        fail("Expected to get an error. Instead: {}".format(json(result)))
 
-    [error] = result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to view this user lists"
-    )
+    [err] = result["errors"]
+    [message, _location, _path] = err.values()
+    assert message == "Error, you do not have permission to view this user lists"
