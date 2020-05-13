@@ -2,16 +2,12 @@ import pytest
 import json
 
 from json_web_token import tokenize, auth_header
-from flask import Request
 from pytest import fail
 from graphene.test import Client
-from unittest import TestCase
-from werkzeug.test import create_environ
 
 from app import app
 from db import DB
 from queries import schema
-from backend.security_check import SecurityAnalysisBackend
 from models import (
     Organizations,
     Users,
