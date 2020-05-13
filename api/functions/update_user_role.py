@@ -9,7 +9,7 @@ from functions.error_messages import (
 )
 from functions.orm_to_dict import orm_to_dict
 from app import app
-from db import db_session
+from db import DB
 from models import Users as User
 from models import Organizations as Orgs
 from models import User_affiliations as User_aff
@@ -26,6 +26,8 @@ def update_user_role(**kwargs):
     new_role = kwargs.get("role")
     user_roles = kwargs.get("user_roles")
 
+    _, _, db_session = DB()
+
     with app.app_context():
         user = User.query.filter(User.user_name == user_name).all()
         user = orm_to_dict(user)
@@ -39,7 +41,7 @@ def update_user_role(**kwargs):
 
     def update_user_role_db():
         with app.app_context():
-            User_aff.query.filter(User_aff.organization_id == org_id).filter(
+            db_session.query(User_aff).filter(User_aff.organization_id == org_id).filter(
                 User_aff.user_id == user[0]["id"]
             ).update({"permission": new_role})
             try:
@@ -51,12 +53,14 @@ def update_user_role(**kwargs):
 
     if new_role == "admin" or new_role == "super_admin":
         if is_super_admin(user_roles=user_roles):
-            update_user_role_db()
+            with app.app_context():
+                update_user_role_db()
         else:
             raise GraphQLError(error_not_an_admin())
 
     elif new_role == "user_read" or new_role == "user_write":
         if is_admin(user_roles=user_roles, org_id=org_id):
-            update_user_role_db()
+            with app.app_context():
+                update_user_role_db()
         else:
             raise GraphQLError(error_not_an_admin())
