@@ -53,6 +53,7 @@ from schemas.organizations_mutations import (
 from schemas.domains_mutations import CreateDomain, UpdateDomain, RemoveDomain
 
 from schemas.user_page import user_page, resolve_user_page
+from schemas.user_list import user_list, resolve_user_item
 
 
 class Query(graphene.ObjectType):
@@ -83,6 +84,7 @@ class Query(graphene.ObjectType):
         def resolve_user(self, info, **kwargs):
             return resolve_user(self, info, **kwargs)
 
+    # User Page Query
     user_page = user_page
 
     def resolve_user_page(self, info, **kwargs):
