@@ -98,6 +98,4 @@ def resolve_user_page(self, info, **kwargs):
 
     # Give error if requesting user and requested user do not share an org
     if user_check:
-        raise GraphQLError(
-            "Error, user does not belong to any of your organizations"
-        )
+        raise GraphQLError("Error, user does not belong to any of your organizations")

@@ -38,15 +38,13 @@ def test_super_admin_can_see_other_user_in_different_org(save):
         user_name="testsuperadmin@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     sa_user.user_affiliation.append(
         User_affiliations(
             permission="super_admin",
             user_organization=Organizations(
-                acronym="SA",
-                name="Super Admin",
-                slug="super-admin"
+                acronym="SA", name="Super Admin", slug="super-admin"
             ),
         )
     )
@@ -57,15 +55,13 @@ def test_super_admin_can_see_other_user_in_different_org(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_read.user_affiliation.append(
         User_affiliations(
             permission="user_read",
             user_organization=Organizations(
-                acronym="ORG1",
-                name="Organization 1",
-                slug="organization-1"
+                acronym="ORG1", name="Organization 1", slug="organization-1"
             ),
         )
     )
@@ -106,15 +102,9 @@ def test_super_admin_can_see_other_user_in_different_org(save):
                 "lang": "English",
                 "tfa": False,
                 "userAffiliations": [
-                    {
-                        "admin": True,
-                        "organization": "TESTUSERREAD-TESTEMAIL-CA"
-                    },
-                    {
-                        "admin": False,
-                        "organization": "ORG1"
-                    },
-                ]
+                    {"admin": True, "organization": "TESTUSERREAD-TESTEMAIL-CA"},
+                    {"admin": False, "organization": "ORG1"},
+                ],
             }
         }
     }
@@ -128,9 +118,7 @@ def test_admin_can_see_user_in_same_org(save):
     Test to see that an admin can see user information from their own org
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1"
+        acronym="ORG1", name="Organization 1", slug="organization-1"
     )
     save(org_one)
     admin_user = Users(
@@ -138,13 +126,10 @@ def test_admin_can_see_user_in_same_org(save):
         user_name="testsuperadmin@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     admin_user.user_affiliation.append(
-        User_affiliations(
-            permission="admin",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="admin", user_organization=org_one,)
     )
 
     save(admin_user)
@@ -154,13 +139,10 @@ def test_admin_can_see_user_in_same_org(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_read", user_organization=org_one,)
     )
 
     save(user_read)
@@ -199,12 +181,7 @@ def test_admin_can_see_user_in_same_org(save):
                 "displayName": "testuserread",
                 "lang": "English",
                 "tfa": False,
-                "userAffiliations": [
-                    {
-                        "admin": False,
-                        "organization": "ORG1"
-                    }
-                ]
+                "userAffiliations": [{"admin": False, "organization": "ORG1"}],
             }
         }
     }
@@ -217,9 +194,7 @@ def test_admin_cant_see_user_in_different_org(save):
     Test to see that an admin can't see user in different org
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1"
+        acronym="ORG1", name="Organization 1", slug="organization-1"
     )
     save(org_one)
     admin_user = Users(
@@ -227,13 +202,9 @@ def test_admin_cant_see_user_in_different_org(save):
         user_name="testadmin@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
-    admin_user.user_affiliation.append(
-        User_affiliations(
-            permission="admin",
-        )
-    )
+    admin_user.user_affiliation.append(User_affiliations(permission="admin",))
 
     save(admin_user)
 
@@ -242,13 +213,10 @@ def test_admin_cant_see_user_in_different_org(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_read", user_organization=org_one,)
     )
 
     save(user_read)
@@ -275,13 +243,13 @@ def test_admin_cant_see_user_in_different_org(save):
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(
-                json.dumps(result, indent=2)
-            )
+            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
         )
 
     [error] = result["errors"]
-    assert error["message"] == "Error, user does not belong to any of your organizations"
+    assert (
+        error["message"] == "Error, user does not belong to any of your organizations"
+    )
 
 
 # User Write Tests
@@ -290,9 +258,7 @@ def test_user_write_cant_see_user_in_same_org(save):
     Test to see that an user write cant see user information from their own org
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1"
+        acronym="ORG1", name="Organization 1", slug="organization-1"
     )
     save(org_one)
     user_write = Users(
@@ -300,13 +266,10 @@ def test_user_write_cant_see_user_in_same_org(save):
         user_name="testuserwrite@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_write.user_affiliation.append(
-        User_affiliations(
-            permission="user_write",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_write", user_organization=org_one,)
     )
 
     save(user_write)
@@ -316,13 +279,10 @@ def test_user_write_cant_see_user_in_same_org(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_read", user_organization=org_one,)
     )
 
     save(user_read)
@@ -349,13 +309,14 @@ def test_user_write_cant_see_user_in_same_org(save):
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(
-                json.dumps(result, indent=2)
-            )
+            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
         )
 
     [error] = result["errors"]
-    assert error["message"] == "Error, you do not have permission to view this users information"
+    assert (
+        error["message"]
+        == "Error, you do not have permission to view this users information"
+    )
 
 
 def test_user_write_cant_see_user_in_different_org(save):
@@ -363,9 +324,7 @@ def test_user_write_cant_see_user_in_different_org(save):
     Test to see that an user write cant see user information from different org
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1"
+        acronym="ORG1", name="Organization 1", slug="organization-1"
     )
     save(org_one)
     user_write = Users(
@@ -373,7 +332,7 @@ def test_user_write_cant_see_user_in_different_org(save):
         user_name="testuserwrite@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     save(user_write)
 
@@ -382,13 +341,10 @@ def test_user_write_cant_see_user_in_different_org(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_read", user_organization=org_one,)
     )
 
     save(user_read)
@@ -415,13 +371,13 @@ def test_user_write_cant_see_user_in_different_org(save):
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(
-                json.dumps(result, indent=2)
-            )
+            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
         )
 
     [error] = result["errors"]
-    assert error["message"] == "Error, user does not belong to any of your organizations"
+    assert (
+        error["message"] == "Error, user does not belong to any of your organizations"
+    )
 
 
 # User Read Tests
@@ -430,9 +386,7 @@ def test_user_read_cant_see_user_in_same_org(save):
     Test to see that an user read cant see user information from their own org
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1"
+        acronym="ORG1", name="Organization 1", slug="organization-1"
     )
     save(org_one)
     user_read_2 = Users(
@@ -440,13 +394,10 @@ def test_user_read_cant_see_user_in_same_org(save):
         user_name="testuserread2@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_read_2.user_affiliation.append(
-        User_affiliations(
-            permission="user_write",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_write", user_organization=org_one,)
     )
 
     save(user_read_2)
@@ -456,13 +407,10 @@ def test_user_read_cant_see_user_in_same_org(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_read", user_organization=org_one,)
     )
 
     save(user_read)
@@ -489,13 +437,14 @@ def test_user_read_cant_see_user_in_same_org(save):
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(
-                json.dumps(result, indent=2)
-            )
+            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
         )
 
     [error] = result["errors"]
-    assert error["message"] == "Error, you do not have permission to view this users information"
+    assert (
+        error["message"]
+        == "Error, you do not have permission to view this users information"
+    )
 
 
 def test_user_read_cant_see_user_in_different_org(save):
@@ -503,9 +452,7 @@ def test_user_read_cant_see_user_in_different_org(save):
     Test to see that an user read cant see user information from different org
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1"
+        acronym="ORG1", name="Organization 1", slug="organization-1"
     )
     save(org_one)
     user_read_2 = Users(
@@ -513,7 +460,7 @@ def test_user_read_cant_see_user_in_different_org(save):
         user_name="testuserread2@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     save(user_read_2)
 
@@ -522,13 +469,10 @@ def test_user_read_cant_see_user_in_different_org(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_read", user_organization=org_one,)
     )
 
     save(user_read)
@@ -555,13 +499,13 @@ def test_user_read_cant_see_user_in_different_org(save):
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(
-                json.dumps(result, indent=2)
-            )
+            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
         )
 
     [error] = result["errors"]
-    assert error["message"] == "Error, user does not belong to any of your organizations"
+    assert (
+        error["message"] == "Error, user does not belong to any of your organizations"
+    )
 
 
 def test_user_read_and_higher_can_own_information(save):
@@ -569,9 +513,7 @@ def test_user_read_and_higher_can_own_information(save):
     Test to see that a user read can see their own information
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1"
+        acronym="ORG1", name="Organization 1", slug="organization-1"
     )
 
     user_read = Users(
@@ -579,13 +521,10 @@ def test_user_read_and_higher_can_own_information(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         preferred_lang="English",
-        tfa_validated=False
+        tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_read", user_organization=org_one,)
     )
 
     save(user_read)
@@ -625,15 +564,9 @@ def test_user_read_and_higher_can_own_information(save):
                 "lang": "English",
                 "tfa": False,
                 "userAffiliations": [
-                    {
-                        "admin": True,
-                        "organization": "TESTUSERREAD-TESTEMAIL-CA"
-                    },
-                    {
-                        "admin": False,
-                        "organization": "ORG1"
-                    }
-                ]
+                    {"admin": True, "organization": "TESTUSERREAD-TESTEMAIL-CA"},
+                    {"admin": False, "organization": "ORG1"},
+                ],
             }
         }
     }

@@ -30,25 +30,21 @@ class UserPage(SQLAlchemyObjectType):
             "password",
             "roles",
         )
-    user_name = EmailAddress(
-        description="The users email address or userName"
-    )
-    display_name = graphene.String(
-        description="The users display name"
-    )
-    lang = graphene.String(
-        description="Indicates the preferred language of this user"
-    )
+
+    user_name = EmailAddress(description="The users email address or userName")
+    display_name = graphene.String(description="The users display name")
+    lang = graphene.String(description="Indicates the preferred language of this user")
     tfa = graphene.Boolean(
         description="Indicates wether or not this user has enabled tfa"
     )
     user_affiliations = graphene.List(
         lambda: UserPageAffiliations,
         description="Indicates if this user is an admin of the organization "
-                    "specified"
+        "specified",
     )
 
     with app.app_context():
+
         def resolve_user_name(self: Users, info):
             return self.user_name
 
@@ -77,9 +73,7 @@ class UserPage(SQLAlchemyObjectType):
                         query = UserPageAffiliations.get_query(info)
                         query = query.filter(
                             User_affiliations.organization_id == role.get("org_id")
-                        ).filter(
-                            User_affiliations.user_id == self.id
-                        )
+                        ).filter(User_affiliations.user_id == self.id)
                         if query.first():
                             rtr_list.append(query.first())
                 return rtr_list

@@ -52,10 +52,7 @@ from schemas.organizations_mutations import (
 
 from schemas.domains_mutations import CreateDomain, UpdateDomain, RemoveDomain
 
-from schemas.user_page import (
-    user_page,
-    resolve_user_page
-)
+from schemas.user_page import user_page, resolve_user_page
 
 
 class Query(graphene.ObjectType):
@@ -71,6 +68,7 @@ class Query(graphene.ObjectType):
         description="Select list of users belonging to an organization.",
     )
     with app.app_context():
+
         def resolve_users(self, info, **kwargs):
             return resolve_users(self, info, **kwargs)
 
@@ -78,9 +76,10 @@ class Query(graphene.ObjectType):
         lambda: User,
         user_name=graphene.Argument(EmailAddress, required=False),
         description="Query the currently logged in user if no user name is"
-                    "given, or query a specific user by user name.",
+        "given, or query a specific user by user name.",
     )
     with app.app_context():
+
         def resolve_user(self, info, **kwargs):
             return resolve_user(self, info, **kwargs)
 

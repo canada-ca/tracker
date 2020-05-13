@@ -20,17 +20,19 @@ class UserPageAffiliations(SQLAlchemyObjectType):
             "organization_id",
             "permission",
             "user",
-            "user_organization"
+            "user_organization",
         )
+
     admin = graphene.Boolean(
         description="Indicates if this user is an admin of the organization"
     )
     organization = Acronym(
         description="Indicates which organization this users data is being "
-                    "displayed for"
+        "displayed for"
     )
 
     with app.app_context():
+
         def resolve_admin(self: User_affiliations, info):
             if self.permission == "super_admin" or self.permission == "admin":
                 return True
@@ -38,7 +40,9 @@ class UserPageAffiliations(SQLAlchemyObjectType):
                 return False
 
         def resolve_organization(self: User_affiliations, info):
-            org_orm = db_session.query(Organizations).filter(
-                Organizations.id == self.organization_id
-            ).first()
+            org_orm = (
+                db_session.query(Organizations)
+                .filter(Organizations.id == self.organization_id)
+                .first()
+            )
             return org_orm.acronym
