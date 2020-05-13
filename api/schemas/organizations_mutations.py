@@ -1,10 +1,12 @@
 import graphene
 from graphql import GraphQLError
+
 from app import app
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin
 from functions.input_validators import cleanse_input
+from functions.slugify import slugify_value
 from models import (
     Organizations,
     User_affiliations,
@@ -17,8 +19,8 @@ from models import (
     Dmarc_scans,
     Mx_scans,
 )
-
 from scalars.organization_acronym import Acronym
+from scalars.slug import Slug
 
 
 class CreateOrganization(graphene.Mutation):
@@ -61,9 +63,10 @@ class CreateOrganization(graphene.Mutation):
 
             if is_super_admin(user_roles=user_roles):
                 # Check to see if organization already exists
+                slug = slugify_value(name)
                 org_orm = (
                     db_session.query(Organizations)
-                    .filter(Organizations.acronym == acronym)
+                    .filter(Organizations.slug == slug)
                     .first()
                 )
 
@@ -100,10 +103,8 @@ class CreateOrganization(graphene.Mutation):
 
 class UpdateOrganization(graphene.Mutation):
     class Arguments:
+        slug = Slug(description="Organization that will be updated", required=True)
         acronym = Acronym(
-            description="Organization that will be updated.", required=True
-        )
-        updated_acronym = Acronym(
             description="Organization Acronym you would like updated", required=False
         )
         name = graphene.String(description="Full name of organization.", required=False)
@@ -131,10 +132,9 @@ class UpdateOrganization(graphene.Mutation):
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
             user_roles = kwargs.get("user_roles")
+            slug = cleanse_input(kwargs.get("slug"))
             name = cleanse_input(kwargs.get("name"))
             acronym = cleanse_input(kwargs.get("acronym"))
-            updated_acronym = cleanse_input(kwargs.get("updated_acronym"))
-            description = cleanse_input(kwargs.get("description"))
             zone = cleanse_input(kwargs.get("zone"))
             sector = cleanse_input(kwargs.get("sector"))
             province = cleanse_input(kwargs.get("province"))
@@ -143,10 +143,14 @@ class UpdateOrganization(graphene.Mutation):
             # XXX: only the Super User can edit orgs?
             if is_super_admin(user_roles=user_roles):
 
+                # Restrict the deletion of SA Org
+                if slug == "super-admin":
+                    raise GraphQLError("Error, you cannot modify this organization")
+
                 # Get requested org orm
                 org_orm = (
                     db_session.query(Organizations)
-                    .filter(Organizations.acronym == acronym)
+                    .filter(Organizations.slug == slug)
                     .first()
                 )
 
@@ -154,26 +158,33 @@ class UpdateOrganization(graphene.Mutation):
                 if org_orm is None:
                     raise GraphQLError("Error, organization does not exist.")
 
-                # Check to see if organization acronym already in use
+                # Check to see if organization slug already in use
                 update_org_orm = (
                     db_session.query(Organizations)
-                    .filter(Organizations.acronym == updated_acronym)
+                    .filter(Organizations.slug == slugify_value(name))
+                    .filter(Organizations.id != org_orm.id)
                     .first()
                 )
 
                 if update_org_orm is not None:
-                    raise GraphQLError("Error, acronym already in use.")
+                    raise GraphQLError("Error, organization info already in use.")
 
-                if updated_acronym is not acronym:
-                    # Update orm
-                    org_orm.name = name
-                    org_orm.acronym = updated_acronym
-                    org_orm.org_tags = {
-                        "zone": zone,
-                        "sector": sector,
-                        "province": province,
-                        "city": city,
-                    }
+                # Update orm
+                org_orm.slug = (
+                    slugify_value(name) if name != "" else slugify_value(org_orm.name)
+                )
+                org_orm.name = name if name != "" else org_orm.name
+                org_orm.acronym = acronym if acronym != "" else org_orm.acronym
+                org_orm.org_tags = {
+                    "zone": zone if zone != "" else org_orm.org_tags.get("zone"),
+                    "sector": sector
+                    if sector != ""
+                    else org_orm.org_tags.get("sector"),
+                    "province": province
+                    if province != ""
+                    else org_orm.org_tags.get("province"),
+                    "city": city if city != "" else org_orm.org_tags.get("city"),
+                }
 
                 # Push update to db and return status
 
@@ -196,9 +207,7 @@ class RemoveOrganization(graphene.Mutation):
     """
 
     class Arguments:
-        acronym = Acronym(
-            description="The organization you wish to remove", required=True
-        )
+        slug = Slug(description="The organization you wish to remove", required=True)
 
     status = graphene.Boolean()
 
@@ -208,16 +217,16 @@ class RemoveOrganization(graphene.Mutation):
         def mutate(self, info, **kwargs):
             # Get arguments from mutation
             user_roles = kwargs.get("user_roles")
-            acronym = cleanse_input(kwargs.get("acronym"))
+            slug = cleanse_input(kwargs.get("slug"))
 
             # Restrict the deletion of SA Org
-            if acronym == "SA":
+            if slug == "super-admin":
                 raise GraphQLError("Error, you cannot remove this organization")
 
             # Check to see if org exists
             org_orm = (
                 db_session.query(Organizations)
-                .filter(Organizations.acronym == acronym)
+                .filter(Organizations.slug == slug)
                 .first()
             )
 

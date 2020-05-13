@@ -58,19 +58,19 @@ def test_mutation_updateOrganization_succeeds_as_super_user(save):
 
     result = Client(schema).execute(
         """
-         mutation {
-             updateOrganization(
-                 name: "Org One"
-                 acronym: "ORG1"
-                 updatedAcronym: "O1"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
-             ) {
-                 status
-             }
-         }
+        mutation {
+            updateOrganization(
+                slug: "org-one"
+                name: "Org One"
+                acronym: "O1"
+                zone: "Test Zone"
+                sector: "Test Sector"
+                province: "Nova Scotia"
+                city: "Halifax"
+            ) {
+                status
+            }
+        }
         """,
         context_value=auth_header(token),
     )
@@ -115,9 +115,9 @@ def test_mutation_updateOrganization_fails_if_names_clash(save):
         """
          mutation {
              updateOrganization(
+                 slug: "super-admin"
                  name: "Org One"
-                 acronym: "ORG1"
-                 updatedAcronym: "SA"
+                 acronym: "SA"
                  zone: "Test Zone"
                  sector: "Test Sector"
                  province: "Nova Scotia"
@@ -140,7 +140,7 @@ def test_mutation_updateOrganization_fails_if_names_clash(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, acronym already in use."
+    assert message == "Error, you cannot modify this organization"
 
 
 def test_mutation_updateOrganization_fails_if_org_does_not_exist(save):
@@ -164,9 +164,9 @@ def test_mutation_updateOrganization_fails_if_org_does_not_exist(save):
         """
          mutation {
              updateOrganization(
+                 slug: "org-one"
                  name: "Org One"
-                 acronym: "ORG1"
-                 updatedAcronym: "O1"
+                 acronym: "O1"
                  zone: "Test Zone"
                  sector: "Test Sector"
                  province: "Nova Scotia"
@@ -212,8 +212,8 @@ def test_mutation_updateOrganization_fails_for_admin_users(save):
         """
          mutation {
              updateOrganization(
-                 acronym: "ORG1"
-                 updatedAcronym: "O1"
+                 slug: "org-one"
+                 acronym: "O1"
                  name: "Test Organization"
                  zone: "Test Zone"
                  sector: "Test Sector"
@@ -260,8 +260,8 @@ def test_mutation_updateOrganization_fails_for_write_users(save):
         """
          mutation {
              updateOrganization(
-                 acronym: "ORG1"
-                 updatedAcronym: "O1"
+                 slug: "org-one"
+                 acronym: "O1"
                  name: "Test Organization"
                  zone: "Test Zone"
                  sector: "Test Sector"
@@ -310,8 +310,8 @@ def test_mutation_updateOrganization_fails_for_read_users(save):
         """
          mutation {
              updateOrganization(
-                 acronym: "ORG1"
-                 updatedAcronym: "O1"
+                 slug: "org-one"
+                 acronym: "O1"
                  name: "Test Organization"
                  zone: "Test Zone"
                  sector: "Test Sector"

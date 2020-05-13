@@ -22,7 +22,7 @@ def update_user_role(**kwargs):
     :returns user: The newly updated user object retrieved from the DB (after the update is committed).
     """
     user_name = kwargs.get("user_name")
-    org = kwargs.get("org")
+    org_slug = kwargs.get("org_slug")
     new_role = kwargs.get("role")
     user_roles = kwargs.get("user_roles")
 
@@ -30,7 +30,7 @@ def update_user_role(**kwargs):
         user = User.query.filter(User.user_name == user_name).all()
         user = orm_to_dict(user)
 
-        org_orm = Orgs.query.filter(Orgs.acronym == org).first()
+        org_orm = Orgs.query.filter(Orgs.slug == org_slug).first()
         org_id = org_orm.id
 
     if user is None:

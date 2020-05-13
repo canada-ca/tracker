@@ -9,7 +9,7 @@ from functions.update_user_role import update_user_role
 
 from model_enums.roles import RoleEnums
 
-from scalars.organization_acronym import Acronym
+from scalars.slug import Slug
 from scalars.email_address import EmailAddress
 
 from models import User_affiliations as UserAff
@@ -55,7 +55,7 @@ class UserAffConnection(relay.Connection):
 class UpdateUserRole(graphene.Mutation):
     class Arguments:
         user_name = EmailAddress(required=True)
-        org = Acronym(required=True)
+        org_slug = Slug(required=True)
         role = RoleEnums(required=True)
 
     # user = graphene.Field(lambda: UserObject)

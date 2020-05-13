@@ -20,8 +20,8 @@ def org_perm_test_db_init():
         org1 = Organizations(
             acronym="ORG1",
             domains=[Domains(domain="somecooldomain.ca")],
+            name="Organization 1",
             org_tags={
-                "name": "Organization 1",
                 "zone": "Prov",
                 "sector": "Banking",
                 "province": "Alberta",
@@ -32,8 +32,8 @@ def org_perm_test_db_init():
         org2 = Organizations(
             acronym="ORG2",
             domains=[Domains(domain="anothercooldomain.ca")],
+            name="Organization 2",
             org_tags={
-                "name": "Organization 2",
                 "zone": "Muni",
                 "sector": "Transportation",
                 "province": "NS",
@@ -44,8 +44,8 @@ def org_perm_test_db_init():
         org3 = Organizations(
             acronym="ORG3",
             domains=[Domains(domain="somelamedomain.ca")],
+            name="Organization 3",
             org_tags={
-                "name": "Organization 3",
                 "zone": "Federal",
                 "sector": "Arts",
                 "province": "Ontario",
@@ -109,11 +109,12 @@ def test_get_org_resolvers_by_org_super_admin_single_node():
         actual = client.execute(
             """
             {
-                organization(org: "ORG1") {
+                organization(slug: "organization-1") {
                     edges {
                         node {
                             acronym
                             name
+                            slug
                             zone
                             sector
                             province
@@ -150,7 +151,8 @@ def test_get_org_resolvers_by_org_super_admin_single_node():
                         {
                             "node": {
                                 "acronym": "ORG1",
-                                "name": None,
+                                "name": "Organization 1",
+                                "slug": "organization-1",
                                 "zone": "Prov",
                                 "sector": "Banking",
                                 "province": "Alberta",
@@ -186,7 +188,7 @@ def test_get_org_resolvers_by_org_super_admin_single_node():
         if "errors" in actual:
             fail(
                 "Expected super admin to return results for all users but got: {}".format(
-                    result["errors"]
+                    actual["errors"]
                 )
             )
 
@@ -230,6 +232,7 @@ def test_get_org_resolvers_super_admin_multi_node():
                         node {
                             acronym
                             name
+                            slug
                             zone
                             sector
                             province
@@ -267,7 +270,8 @@ def test_get_org_resolvers_super_admin_multi_node():
                         {
                             "node": {
                                 "acronym": "ORG1",
-                                "name": None,
+                                "name": "Organization 1",
+                                "slug": "organization-1",
                                 "zone": "Prov",
                                 "sector": "Banking",
                                 "province": "Alberta",
@@ -298,7 +302,8 @@ def test_get_org_resolvers_super_admin_multi_node():
                         {
                             "node": {
                                 "acronym": "ORG2",
-                                "name": None,
+                                "name": "Organization 2",
+                                "slug": "organization-2",
                                 "zone": "Muni",
                                 "sector": "Transportation",
                                 "province": "NS",
@@ -312,7 +317,8 @@ def test_get_org_resolvers_super_admin_multi_node():
                         {
                             "node": {
                                 "acronym": "ORG3",
-                                "name": None,
+                                "name": "Organization 3",
+                                "slug": "organization-3",
                                 "zone": "Federal",
                                 "sector": "Arts",
                                 "province": "Ontario",
@@ -327,6 +333,7 @@ def test_get_org_resolvers_super_admin_multi_node():
                             "node": {
                                 "acronym": "TESTUSERRE",
                                 "name": "testuserread@testemail.ca",
+                                "slug": "testuserread-testemail-ca",
                                 "zone": None,
                                 "sector": None,
                                 "province": None,
@@ -348,6 +355,7 @@ def test_get_org_resolvers_super_admin_multi_node():
                             "node": {
                                 "acronym": "TESTSUPERA",
                                 "name": "testsuperadmin@testemail.ca",
+                                "slug": "testsuperadmin-testemail-ca",
                                 "zone": None,
                                 "sector": None,
                                 "province": None,
@@ -413,11 +421,12 @@ def test_get_org_resolvers_by_org_user_read_single_node():
         actual = client.execute(
             """
             {
-                organization(org: "ORG1") {
+                organization(slug: "organization-1") {
                     edges {
                         node {
                             acronym
                             name
+                            slug
                             zone
                             sector
                             province
@@ -454,7 +463,8 @@ def test_get_org_resolvers_by_org_user_read_single_node():
                         {
                             "node": {
                                 "acronym": "ORG1",
-                                "name": None,
+                                "name": "Organization 1",
+                                "slug": "organization-1",
                                 "zone": "Prov",
                                 "sector": "Banking",
                                 "province": "Alberta",
@@ -508,6 +518,7 @@ def test_get_org_resolvers_by_org_user_read_multi_node():
                         node {
                             acronym
                             name
+                            slug
                             zone
                             sector
                             province
@@ -544,7 +555,8 @@ def test_get_org_resolvers_by_org_user_read_multi_node():
                         {
                             "node": {
                                 "acronym": "ORG1",
-                                "name": None,
+                                "name": "Organization 1",
+                                "slug": "organization-1",
                                 "zone": "Prov",
                                 "sector": "Banking",
                                 "province": "Alberta",
@@ -559,6 +571,7 @@ def test_get_org_resolvers_by_org_user_read_multi_node():
                             "node": {
                                 "acronym": "TESTUSERRE",
                                 "name": "testuserread@testemail.ca",
+                                "slug": "testuserread-testemail-ca",
                                 "zone": None,
                                 "sector": None,
                                 "province": None,
@@ -582,5 +595,5 @@ def test_get_org_resolvers_by_org_user_read_multi_node():
         }
 
         if "errors" in actual:
-            fail("Expect success but errors were returned: {}".format(result["errors"]))
+            fail("Expect success but errors were returned: {}".format(actual["errors"]))
         assert actual == expected

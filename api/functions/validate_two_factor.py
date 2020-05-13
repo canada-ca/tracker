@@ -1,14 +1,12 @@
 import os
+import pyotp
 
 from graphql import GraphQLError
 
+from app import app
 from models import Users as User
-
 from functions.error_messages import *
-
 from db import db_session
-
-import pyotp
 
 
 def validate_two_factor(user_name, otp_code):
@@ -19,27 +17,23 @@ def validate_two_factor(user_name, otp_code):
     :param otp_code - The one time password (otp) that they are attempting to verify
     :returns User object if queried successfully, null if not
     """
+    with app.app_context():
+        user = db_session.query(User).filter(User.user_name == user_name)
 
-    user = User.query.filter(User.user_name == user_name).first()
+        if user.first() is None:
+            raise GraphQLError(error_user_does_not_exist())
 
-    if user is None:
-        raise GraphQLError(error_user_does_not_exist())
+        valid_code = pyotp.totp.TOTP(os.getenv("BASE32_SECRET")).verify(otp_code)
 
-    valid_code = pyotp.totp.TOTP(os.getenv("BASE32_SECRET")).verify(otp_code)
+        if valid_code:
+            user.tfa_validated = True
+            try:
+                db_session.commit()
+                return user.first()
+            except Exception as e:
+                db_session.rollback()
+                db_session.flush()
+                raise GraphQLError(error_user_not_updated())
 
-    if valid_code:
-        user = User.query.filter(User.user_name == user_name).update(
-            {"tfa_validated": True}
-        )
-
-        db_session.commit()
-
-        user = User.query.filter(User.user_name == user_name).first()
-
-        if not user:
-            raise GraphQLError(error_user_not_updated())
         else:
-            return user
-
-    else:
-        raise GraphQLError(error_otp_code_is_invalid())
+            raise GraphQLError(error_otp_code_is_invalid())

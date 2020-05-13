@@ -1,4 +1,6 @@
 import pytest
+import json
+
 from pytest import fail
 from json import dumps
 from json_web_token import tokenize, auth_header
@@ -30,8 +32,8 @@ def test_get_users_as_super_admin(save):
     """
     Test to see if users resolver will return all information to super admin
     """
-    org1 = Organizations(acronym="ORG1")
-    org2 = Organizations(acronym="ORG2")
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    org2 = Organizations(acronym="ORG2", name="Organization 2")
 
     reader = Users(
         display_name="testuserread",
@@ -75,7 +77,7 @@ def test_get_users_as_super_admin(save):
     actual = Client(schema).execute(
         """
         {
-            users(org: "ORG1") {
+            users(orgSlug: "organization-1") {
                 edges {
                     node {
                         userName
@@ -128,8 +130,8 @@ def test_get_users_as_admin(save):
     """
     Test to see if users resolver will return all information to org admin
     """
-    org1 = Organizations(acronym="ORG1")
-    org2 = Organizations(acronym="ORG2")
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    org2 = Organizations(acronym="ORG2", name="Organization 2")
 
     reader = Users(
         display_name="testuserread",
@@ -173,7 +175,7 @@ def test_get_users_as_admin(save):
     actual = Client(schema).execute(
         """
         {
-            users(org: "ORG1") {
+            users(orgSlug: "organization-1") {
                 edges {
                     node {
                         userName

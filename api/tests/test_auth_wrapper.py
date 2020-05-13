@@ -37,9 +37,7 @@ def test_testUserClaims_accepts_admin_claim_for_admin_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="admin",
-            user_organization=Organizations(
-                acronym="ORG1", org_tags={"description": "Organization 1"}
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -51,7 +49,7 @@ def test_testUserClaims_accepts_admin_claim_for_admin_user(save):
     result = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: ADMIN)
+            testUserClaims(orgSlug: "organization-1", role: ADMIN)
         }
         """,
         context_value=auth_header(token),
@@ -77,9 +75,7 @@ def test_testUserClaims_accepts_write_claim_for_write_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_write",
-            user_organization=Organizations(
-                acronym="ORG1", org_tags={"description": "Organization 1"}
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -91,7 +87,7 @@ def test_testUserClaims_accepts_write_claim_for_write_user(save):
     result = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: USER_WRITE)
+            testUserClaims(orgSlug: "organization-1", role: USER_WRITE)
         }
         """,
         context_value=auth_header(token),
@@ -119,9 +115,7 @@ def test_testUserClaims_accepts_super_admin_claim_for_super_admin(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="super_admin",
-            user_organization=Organizations(
-                acronym="ORG1", org_tags={"description": "Organization 1"}
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -133,7 +127,7 @@ def test_testUserClaims_accepts_super_admin_claim_for_super_admin(save):
     result = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: SUPER_ADMIN)
+            testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
         }
         """,
         context_value=auth_header(token),
@@ -163,9 +157,7 @@ def test_testUserClaims_accepts_read_claim_for_read_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_read",
-            user_organization=Organizations(
-                acronym="ORG1", org_tags={"description": "Organization 1"}
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -177,7 +169,7 @@ def test_testUserClaims_accepts_read_claim_for_read_user(save):
     result = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: USER_READ)
+            testUserClaims(orgSlug: "organization-1", role: USER_READ)
         }
         """,
         context_value=auth_header(token),
@@ -204,9 +196,7 @@ def test_testUserClaims_rejects_super_admin_check_for_read_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_read",
-            user_organization=Organizations(
-                acronym="ORG1", org_tags={"description": "Organization 1"}
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -218,7 +208,7 @@ def test_testUserClaims_rejects_super_admin_check_for_read_user(save):
     result = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: SUPER_ADMIN)
+            testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
         }
         """,
         context_value=auth_header(token),
@@ -251,9 +241,7 @@ def test_testUserClaims_rejects_admin_check_for_read_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_read",
-            user_organization=Organizations(
-                acronym="ORG1", org_tags={"description": "Organization 1"}
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -265,7 +253,7 @@ def test_testUserClaims_rejects_admin_check_for_read_user(save):
     result = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: ADMIN)
+            testUserClaims(orgSlug: "organization-1", role: ADMIN)
         }
         """,
         context_value=auth_header(token),
@@ -294,9 +282,7 @@ def test_testUserClaims_rejects_super_admin_check_for_admin_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="admin",
-            user_organization=Organizations(
-                acronym="ORG1", org_tags={"description": "Organization 1"}
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -308,7 +294,7 @@ def test_testUserClaims_rejects_super_admin_check_for_admin_user(save):
     result = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: SUPER_ADMIN)
+            testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
         }
         """,
         context_value=auth_header(token),
@@ -337,9 +323,7 @@ def test_testUserClaims_rejects_super_admin_check_for_write_user(save):
     user.user_affiliation.append(
         User_affiliations(
             permission="user_write",
-            user_organization=Organizations(
-                acronym="ORG1", org_tags={"description": "Organization 1"}
-            ),
+            user_organization=Organizations(acronym="ORG1", name="Organization 1"),
         )
     )
 
@@ -351,7 +335,7 @@ def test_testUserClaims_rejects_super_admin_check_for_write_user(save):
     result = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: SUPER_ADMIN)
+            testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
         }
         """,
         context_value=auth_header(token),

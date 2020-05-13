@@ -7,6 +7,7 @@ from app import app
 from scalars.email_address import EmailAddress
 from scalars.organization_acronym import Acronym
 from scalars.url import URL
+from scalars.slug import Slug
 
 from model_enums.roles import RoleEnums
 
@@ -60,7 +61,7 @@ class Query(graphene.ObjectType):
     # --- Start User Queries ---
     users = SQLAlchemyConnectionField(
         Users._meta.connection,
-        org=graphene.Argument(Acronym, required=True),
+        org_slug=graphene.Argument(Slug, required=True),
         sort=None,
         description="Select list of users belonging to an organization.",
     )
@@ -85,7 +86,7 @@ class Query(graphene.ObjectType):
     # --- Start Organization Queries ---
     organization = SQLAlchemyConnectionField(
         Organization._meta.connection,
-        org=graphene.Argument(Acronym, required=True),
+        slug=graphene.Argument(Slug, required=True),
         sort=None,
         description="Select all information on a selected organization that a "
         "user has access to.",
@@ -111,7 +112,7 @@ class Query(graphene.ObjectType):
     # --- Start Domain Queries ---
     domain = graphene.List(
         lambda: Domain,
-        url=graphene.Argument(URL, required=True),
+        url_slug=graphene.Argument(Slug, required=True),
         description="Select information on a specific domain.",
     )
     with app.app_context():
@@ -121,7 +122,7 @@ class Query(graphene.ObjectType):
 
     domains = SQLAlchemyConnectionField(
         Domain._meta.connection,
-        organization=graphene.Argument(Acronym, required=False),
+        org_slug=graphene.Argument(Slug, required=False),
         sort=None,
         description="Select information on an organizations domains, or all "
         "domains a user has access to.",
@@ -140,7 +141,7 @@ class Query(graphene.ObjectType):
     )
 
     test_user_claims = graphene.String(
-        org=graphene.Argument(Acronym, required=True),
+        org_slug=graphene.Argument(Slug, required=True),
         role=graphene.Argument(RoleEnums, required=True),
         resolver=resolve_test_user_claims,
         description="An api endpoint to view a current user's claims -- Requires an active JWT.",

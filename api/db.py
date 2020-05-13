@@ -41,6 +41,6 @@ def DB():
         meta.reflect(bind=engine)
         for table in reversed(meta.sorted_tables):
             session.execute(table.delete())
-            session.commit()
+        session.commit()
 
     return [save, cleanup, session]

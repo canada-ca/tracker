@@ -46,6 +46,7 @@ def test_get_domain_resolver_dmarc_report(save):
                 permission="user_read",
                 user_organization=Organizations(
                     acronym="ORG1",
+                    name="Organization 1",
                     domains=[
                         Domains(
                             domain="accurateplastics.com",
@@ -70,8 +71,9 @@ def test_get_domain_resolver_dmarc_report(save):
     result = Client(schema).execute(
         """
         {
-            domain(url: "accurateplastics.com") {
+            domain(urlSlug: "accurateplastics-com") {
                 url
+                slug
                 dmarcReport {
                     edges {
                         node {
@@ -97,6 +99,7 @@ def test_get_domain_resolver_dmarc_report(save):
             "domain": [
                 {
                     "url": "accurateplastics.com",
+                    "slug": "accurateplastics-com",
                     "dmarcReport": {
                         "edges": [
                             {
@@ -130,6 +133,7 @@ def test_get_domain_resolver_dmarc_report_in_date_range(save):
                 permission="user_read",
                 user_organization=Organizations(
                     acronym="ORG1",
+                    name="Organization 1",
                     domains=[
                         Domains(
                             domain="accurateplastics.com",
@@ -153,8 +157,9 @@ def test_get_domain_resolver_dmarc_report_in_date_range(save):
     result = Client(schema).execute(
         """
          {
-             domain(url: "accurateplastics.com") {
+             domain(urlSlug: "accurateplastics-com") {
                  url
+                 slug
                  dmarcReport(startDate: "2018-01-01" endDate: "2018-12-31") {
                      edges {
                          node {
@@ -180,6 +185,7 @@ def test_get_domain_resolver_dmarc_report_in_date_range(save):
             "domain": [
                 {
                     "url": "accurateplastics.com",
+                    "slug": "accurateplastics-com",
                     "dmarcReport": {
                         "edges": [
                             {
@@ -210,6 +216,7 @@ def test_get_domain_resolver_dmarc_report_for_date_range_with_no_reports(save):
                 permission="user_read",
                 user_organization=Organizations(
                     acronym="ORG1",
+                    name="Organization 1",
                     domains=[
                         Domains(
                             domain="accurateplastics.com",
@@ -233,8 +240,9 @@ def test_get_domain_resolver_dmarc_report_for_date_range_with_no_reports(save):
     result = Client(schema).execute(
         """
          {
-             domain(url: "accurateplastics.com") {
+             domain(urlSlug: "accurateplastics-com") {
                  url
+                 slug
                  dmarcReport(startDate: "2019-01-01" endDate: "2019-12-31") {
                      edges {
                          node {
@@ -281,8 +289,9 @@ def test_domain_resolver_dmarc_report_for_domain_with_no_reports_will_fail(save)
     result = Client(schema).execute(
         """
          {
-             domain(url: "addisonfoods.com") {
+             domain(urlSlug: "addisonfoods-com") {
                  url
+                 slug
                  dmarcReport {
                      edges {
                          node {
@@ -321,6 +330,7 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing
                 permission="user_read",
                 user_organization=Organizations(
                     acronym="ORG1",
+                    name="Organization 1",
                     domains=[
                         Domains(
                             domain="accurateplastics.com",
@@ -344,8 +354,9 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing
     result = Client(schema).execute(
         """
          {
-             domain(url: "accurateplastics.com") {
+             domain(urlSlug: "accurateplastics-com") {
                  url
+                 slug
                  dmarcReport(endDate: "2019-12-31") {
                      edges {
                          node {
@@ -384,6 +395,7 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_end_date_is_missing(s
                 permission="user_read",
                 user_organization=Organizations(
                     acronym="ORG1",
+                    name="Organization 1",
                     domains=[
                         Domains(
                             domain="accurateplastics.com",
@@ -407,8 +419,9 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_end_date_is_missing(s
     result = Client(schema).execute(
         """
          {
-             domain(url: "accurateplastics.com") {
+             domain(urlSlug: "accurateplastics-com") {
                  url
+                 slug
                  dmarcReport(startDate: "2019-12-31") {
                      edges {
                          node {

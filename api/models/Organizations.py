@@ -2,8 +2,9 @@ from sqlalchemy.types import Integer
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
-from slugify import slugify
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+
+from functions.slugify import slugify_value
 from db import Base
 
 
@@ -24,6 +25,6 @@ class Organizations(Base):
 
     def __init__(self, **kwargs):
         super(Organizations, self).__init__(**kwargs)
-        self.slug = slugify(kwargs.get("name", ""))
+        self.slug = slugify_value(kwargs.get("name", ""))
         if self.org_tags is None:
             self.org_tags = dict()

@@ -46,7 +46,10 @@ def test_mutation_createOrganization_fails_for_existing_orgs(save):
         User_affiliations(
             permission="super_admin",
             user_organization=Organizations(
-                acronym="SA", org_tags={"name": "SA"}, name="Super Admin"
+                acronym="SA",
+                org_tags={"name": "SA"},
+                name="Super Admin",
+                slug="super-admin",
             ),
         )
     )

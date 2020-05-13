@@ -31,15 +31,15 @@ def domain_test_db_init():
         db_session.add(test_super_admin)
 
         org = Organizations(
-            id=1, acronym="ORG1", org_tags={"description": "Organization 1"}
+            id=1, name="Organization 1", org_tags={"description": "Organization 1"}
         )
         db_session.add(org)
         org = Organizations(
-            id=2, acronym="ORG2", org_tags={"description": "Organization 2"}
+            id=2, name="Organization 2", org_tags={"description": "Organization 2"}
         )
         db_session.add(org)
         org = Organizations(
-            id=3, acronym="ORG3", org_tags={"description": "Organization 3"}
+            id=3, name="Organization 3", org_tags={"description": "Organization 3"}
         )
         db_session.add(org)
 
@@ -94,7 +94,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domain(url: "somelamedomain.ca") {
+                    domain(urlSlug: "somelamedomain-ca") {
                         url
                     }
                 }
@@ -134,7 +134,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domains(organization: "ORG2") {
+                    domains(orgSlug: "organization-2") {
                         edges {
                             node {
                                 url
@@ -179,7 +179,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domains(organization: "ORG1") {
+                    domains(orgSlug: "organization-1") {
                         edges {
                             node {
                                 url
@@ -231,7 +231,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domain(url: "google.ca") {
+                    domain(urlSlug: "google-ca") {
                         url
                     }
                 }
@@ -271,7 +271,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domains(organization: "ORG3") {
+                    domains(orgSlug: "organization-3") {
                         edges {
                             node {
                                 url
@@ -320,7 +320,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domain(url: "somecooldomain.ca") {
+                    domain(urlSlug: "somecooldomain-ca") {
                         url
                     }
                 }
@@ -360,7 +360,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domains(organization: "ORG1") {
+                    domains(orgSlug: "organization-1") {
                         edges {
                             node {
                                 url
@@ -413,7 +413,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domain(url: "somelamedomain.ca") {
+                    domain(urlSlug: "somelamedomain-ca") {
                         url
                     }
                 }
@@ -457,7 +457,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domains(organization: "ORG2") {
+                    domains(orgSlug: "organization-2") {
                         edges {
                             node {
                                 url
@@ -505,7 +505,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domain(url: "google.ca") {
+                    domain(urlSlug: "google-ca") {
                         url
                     }
                 }
@@ -546,7 +546,7 @@ class TestDomainsResolver(TestCase):
             executed = client.execute(
                 """
                 {
-                    domains(organization: "ORG3") {
+                    domains(orgSlug: "organization-3") {
                         edges {
                             node {
                                 url

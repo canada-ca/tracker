@@ -5,14 +5,13 @@ from graphql import GraphQLError
 
 from functions.error_messages import *
 
-ACRONYM_REGEX = r"""^[A-Z0-9_]{1,50}$"""
-ACRONYM_REGEX = compile(ACRONYM_REGEX)
+SLUG_REGEX = r"""^[a-z0-9]+(?:-[a-z0-9]+)*$"""
+SLUG_REGEX = compile(SLUG_REGEX)
 
 
-class Acronym(Scalar):
+class Slug(Scalar):
     """
-    A field whose value is an upper case letter or an under score that has a
-    length between 1 and 50
+    A field whos values contain numbers, letters, dashes, and underscores
     """
 
     @staticmethod
@@ -20,8 +19,8 @@ class Acronym(Scalar):
         if not isinstance(value, str):
             raise GraphQLError(scalar_error_type("String", value))
 
-        if not ACRONYM_REGEX.search(value):
-            raise GraphQLError(scalar_error_type("Acronym", value))
+        if not SLUG_REGEX.search(value):
+            raise GraphQLError(scalar_error_type("Slug", value))
         return value
 
     @staticmethod
@@ -29,17 +28,17 @@ class Acronym(Scalar):
         if not isinstance(value, str):
             raise GraphQLError(scalar_error_type("String", value))
 
-        if not ACRONYM_REGEX.search(value):
-            raise GraphQLError(scalar_error_type("Acronym", value))
+        if not SLUG_REGEX.search(value):
+            raise GraphQLError(scalar_error_type("Slug", value))
         return value
 
     @staticmethod
     def parse_literal(node):
         if not isinstance(node, ast.StringValue):
             raise GraphQLError(
-                scalar_error_only_types("strings", "acronym", str(ast.Type))
+                scalar_error_only_types("Strings", "Slug", str(ast.Type))
             )
 
-        if not ACRONYM_REGEX.search(node.value):
-            raise GraphQLError(scalar_error_type("Acronym", node.value))
+        if not SLUG_REGEX.search(node.value):
+            raise GraphQLError(scalar_error_type("Slug", node.value))
         return node.value
