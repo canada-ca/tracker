@@ -44,6 +44,7 @@ class UserPage(SQLAlchemyObjectType):
     )
 
     with app.app_context():
+
         def resolve_user_name(self: Users, info):
             return self.user_name
 

@@ -22,6 +22,7 @@ class UserPageAffiliations(SQLAlchemyObjectType):
             "user",
             "user_organization",
         )
+
     admin = graphene.Boolean(
         description="Indicates if this user is an admin of the organization"
     )
@@ -31,6 +32,7 @@ class UserPageAffiliations(SQLAlchemyObjectType):
     )
 
     with app.app_context():
+
         def resolve_admin(self: User_affiliations, info):
             if self.permission == "super_admin" or self.permission == "admin":
                 return True
