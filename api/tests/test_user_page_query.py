@@ -14,12 +14,11 @@ from models import (
     User_affiliations,
 )
 
-s, cleanup, session = DB()
-
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, session = DB()
         yield s
         cleanup()
 

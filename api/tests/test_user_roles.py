@@ -1,4 +1,7 @@
+from pytest import fail
 from graphene.test import Client
+from json import dumps
+from json_web_token import tokenize, auth_header
 from flask import Request
 from werkzeug.test import create_environ
 import pytest
@@ -10,278 +13,233 @@ from models import Users, User_affiliations, Organizations
 from functions.error_messages import error_not_an_admin
 from backend.security_check import SecurityAnalysisBackend
 
-_, cleanup, db_session = DB()
+
+def run(query=None, mutation=None, as_user=None):
+    return Client(schema).execute(
+        query if query else mutation,
+        context_value=auth_header(tokenize(user_id=as_user.id, roles=as_user.roles)),
+    )
+
+
+def json(j):
+    return dumps(j, indent=2)
 
 
 @pytest.fixture
-def save():
+def db():
     with app.app_context():
-        org1 = Organizations(acronym="ORG1", name="Organization 1")
-        test_user = Users(
-            display_name="testuserread",
-            user_name="testuserread@testemail.ca",
-            password="testpassword123",
-            user_affiliation=[
-                User_affiliations(user_organization=org1, permission="user_read")
-            ],
-        )
-
-        test_super_admin = Users(
-            display_name="testsuperadmin",
-            user_name="testsuperadmin@testemail.ca",
-            password="testpassword123",
-            user_affiliation=[
-                User_affiliations(user_organization=org1, permission="super_admin")
-            ],
-        )
-        db_session.add(test_user)
-        db_session.add(test_super_admin)
-        db_session.commit()
-
-        yield
+        save, cleanup, session = DB()
+        yield [save, session]
         cleanup()
 
 
-def test_user_claim_update_to_user_write(save):
-    backend = SecurityAnalysisBackend()
-    client = Client(schema)
-    get_token = client.execute(
-        """
-        mutation{
-            signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                authToken
-            }
+def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_write(db):
+    [save, _] = db
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(user_organization=org1, permission="super_admin")
+        ],
+    )
+    save(super_admin)
+
+    # User with read permission
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(user_organization=org1, permission="user_read")
+        ],
+    )
+    save(user)
+
+    update_result = run(
+        mutation="""
+        mutation {
+            updateUserRole(
+              orgSlug: "organization-1"
+              role: USER_WRITE
+              userName:"testuserread@testemail.ca"
+            ){
+              status
+          }
         }
         """,
-        backend=backend,
+        as_user=super_admin,
     )
-    assert get_token["data"]["signIn"]["authToken"] is not None
-    token = get_token["data"]["signIn"]["authToken"]
-    assert token is not None
+    if "errors" in update_result:
+        fail(
+            "Super admin failed when trying to update user permissions! :"
+            "{}".format(json(update))
+        )
 
-    environ = create_environ()
-    environ.update(HTTP_AUTHORIZATION=token)
-    request_headers = Request(environ)
-
-    executed = client.execute(
-        """
-        mutation{
-            updateUserRole(orgSlug: "organization-1", role: USER_WRITE, userName:"testuserread@testemail.ca"){
-                status
-            }
-        }
-        """,
-        context_value=request_headers,
-        backend=backend,
-    )
-    assert executed["data"]
-    assert executed["data"]["updateUserRole"]
-    assert executed["data"]["updateUserRole"]["status"] == "Update Successful"
-
-    client = Client(schema)
-    get_token = client.execute(
-        """
-        mutation{
-            signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                authToken
-            }
-        }
-        """,
-        backend=backend,
-    )
-    assert get_token["data"]["signIn"]["authToken"] is not None
-    token = get_token["data"]["signIn"]["authToken"]
-    assert token is not None
-
-    environ = create_environ()
-    environ.update(HTTP_AUTHORIZATION=token)
-    request_headers = Request(environ)
-
-    executed = client.execute(
-        """
+    actual = run(
+        query="""
         {
-            testUserClaims(orgSlug: "organization-1", role: USER_WRITE)
+            response:testUserClaims(orgSlug: "organization-1", role: USER_WRITE)
         }
         """,
-        context_value=request_headers,
-        backend=backend,
+        as_user=user,
     )
-    assert executed["data"]
-    assert executed["data"]["testUserClaims"]
-    assert executed["data"]["testUserClaims"] == "User Passed User Write Claim"
+
+    [response] = actual["data"].values()
+    assert response == "User Passed User Write Claim"
 
 
-def test_user_claim_update_to_admin(save):
-    backend = SecurityAnalysisBackend()
-    client = Client(schema)
-    get_token = client.execute(
-        """
-        mutation{
-            signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                authToken
-            }
+def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_admin(db):
+    [save, _] = db
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(user_organization=org1, permission="super_admin")
+        ],
+    )
+    save(super_admin)
+
+    # User with read permission
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(user_organization=org1, permission="user_read")
+        ],
+    )
+    save(user)
+
+    update_result = run(
+        mutation="""
+        mutation {
+            updateUserRole(
+              orgSlug: "organization-1"
+              role: ADMIN
+              userName:"testuserread@testemail.ca"
+            ){
+              status
+          }
         }
         """,
-        backend=backend,
+        as_user=super_admin,
     )
-    assert get_token["data"]["signIn"]["authToken"] is not None
-    token = get_token["data"]["signIn"]["authToken"]
-    assert token is not None
+    if "errors" in update_result:
+        fail(
+            "Super admin failed when trying to update user permissions! :"
+            "{}".format(json(update))
+        )
 
-    environ = create_environ()
-    environ.update(HTTP_AUTHORIZATION=token)
-    request_headers = Request(environ)
-
-    executed = client.execute(
-        """
-        mutation{
-            updateUserRole(orgSlug: "organization-1", role: ADMIN, userName:"testuserread@testemail.ca"){
-                status
-            }
-        }
-        """,
-        context_value=request_headers,
-        backend=backend,
-    )
-    assert executed["data"]
-    assert executed["data"]["updateUserRole"]
-    assert executed["data"]["updateUserRole"]["status"] == "Update Successful"
-
-    client = Client(schema)
-    get_token = client.execute(
-        """
-        mutation{
-            signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                authToken
-            }
-        }
-        """,
-        backend=backend,
-    )
-    assert get_token["data"]["signIn"]["authToken"] is not None
-    token = get_token["data"]["signIn"]["authToken"]
-    assert token is not None
-
-    environ = create_environ()
-    environ.update(HTTP_AUTHORIZATION=token)
-    request_headers = Request(environ)
-
-    executed = client.execute(
-        """
+    actual = run(
+        query="""
         {
-            testUserClaims(orgSlug: "organization-1", role: ADMIN)
+            response:testUserClaims(orgSlug: "organization-1", role: ADMIN)
         }
         """,
-        context_value=request_headers,
-        backend=backend,
+        as_user=user,
     )
-    assert executed["data"]
-    assert executed["data"]["testUserClaims"]
-    assert executed["data"]["testUserClaims"] == "User Passed Admin Claim"
+
+    [response] = actual["data"].values()
+    assert response == "User Passed Admin Claim"
 
 
-def test_user_claim_update_to_super_admin(save):
-    with app.app_context():
-        backend = SecurityAnalysisBackend()
-        client = Client(schema)
-        get_token = client.execute(
-            """
-            mutation{
-                signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                    authToken
-                }
-            }
-            """,
-            backend=backend,
-        )
-        assert get_token["data"]["signIn"]["authToken"] is not None
-        token = get_token["data"]["signIn"]["authToken"]
-        assert token is not None
+def test_sa_user_can_use_updateUserRole_annoint_another_user_a_sa(db):
+    [save, _] = db
+    org1 = Organizations(acronym="ORG1", name="Organization 1")
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(user_organization=org1, permission="super_admin")
+        ],
+    )
+    save(super_admin)
 
-        environ = create_environ()
-        environ.update(HTTP_AUTHORIZATION=token)
-        request_headers = Request(environ)
+    # User with read permission
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(user_organization=org1, permission="user_read")
+        ],
+    )
+    save(user)
 
-        executed = client.execute(
-            """
-            mutation{
-                updateUserRole(orgSlug: "organization-1", role: SUPER_ADMIN, userName:"testuserread@testemail.ca"){
-                    status
-                }
-            }
-            """,
-            context_value=request_headers,
-            backend=backend,
-        )
-        assert executed["data"]
-        assert executed["data"]["updateUserRole"]
-        assert executed["data"]["updateUserRole"]["status"] == "Update Successful"
-
-        client = Client(schema)
-        get_token = client.execute(
-            """
-            mutation{
-                signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                    authToken
-                }
-            }
-            """,
-            backend=backend,
-        )
-        assert get_token["data"]["signIn"]["authToken"] is not None
-        token = get_token["data"]["signIn"]["authToken"]
-        assert token is not None
-
-        environ = create_environ()
-        environ.update(HTTP_AUTHORIZATION=token)
-        request_headers = Request(environ)
-
-        executed = client.execute(
-            """
-            {
-                testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
-            }
-            """,
-            context_value=request_headers,
-            backend=backend,
-        )
-        assert executed["data"]
-        assert executed["data"]["testUserClaims"]
-        assert executed["data"]["testUserClaims"] == "User Passed Super Admin Claim"
-
-
-def test_user_claim_update_to_user_write(save):
-    backend = SecurityAnalysisBackend()
-    client = Client(schema)
-    get_token = client.execute(
-        """
-        mutation{
-            signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                authToken
-            }
+    update_result = run(
+        mutation="""
+        mutation {
+            updateUserRole(
+              orgSlug: "organization-1"
+              role: SUPER_ADMIN
+              userName:"testuserread@testemail.ca"
+            ){
+              status
+          }
         }
         """,
-        backend=backend,
+        as_user=super_admin,
     )
-    assert get_token["data"]["signIn"]["authToken"] is not None
-    token = get_token["data"]["signIn"]["authToken"]
-    assert token is not None
+    if "errors" in update_result:
+        fail(
+            "Super admin failed when trying to update user permissions! :"
+            "{}".format(json(update))
+        )
 
-    environ = create_environ()
-    environ.update(HTTP_AUTHORIZATION=token)
-    request_headers = Request(environ)
-
-    executed = client.execute(
-        """
-        mutation{
-            updateUserRole(orgSlug: "organization-1", role: ADMIN, userName:"testsuperadmin@testemail.ca"){
-                status
-            }
+    actual = run(
+        query="""
+        {
+            response:testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
         }
         """,
-        context_value=request_headers,
-        backend=backend,
+        as_user=user,
     )
-    assert executed["errors"]
-    assert executed["errors"][0]
-    assert executed["errors"][0]["message"] == error_not_an_admin()
+
+    [response] = actual["data"].values()
+    assert response == "User Passed Super Admin Claim"
+
+
+def test_read_user_cannot_update_their_own_permissions(db):
+    [save, _] = db
+    # User with read permission
+    user = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(
+                user_organization=Organizations(acronym="ORG1", name="Organization 1"),
+                permission="user_read",
+            )
+        ],
+    )
+    save(user)
+
+    response = run(
+        mutation="""
+        mutation {
+          updateUserRole(
+            orgSlug: "organization-1"
+            role: ADMIN
+            userName:"testsuperadmin@testemail.ca"
+          ){
+            status
+          }
+        }
+        """,
+        as_user=user,
+    )
+    if "errors" not in response:
+        fail(
+            "expected a user changing their own permissions to fail. Instead: "
+            "{}".format(json(response))
+        )
+    [err] = response["errors"]
+    print(err)
+    [message, _locations, _path] = err.values()
+    assert message == error_not_an_admin()

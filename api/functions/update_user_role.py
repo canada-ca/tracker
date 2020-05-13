@@ -9,7 +9,7 @@ from functions.error_messages import (
 )
 from functions.orm_to_dict import orm_to_dict
 from app import app
-from db import DB
+from db import db_session
 from models import Users as User
 from models import Organizations as Orgs
 from models import User_affiliations as User_aff
@@ -25,8 +25,6 @@ def update_user_role(**kwargs):
     org_slug = kwargs.get("org_slug")
     new_role = kwargs.get("role")
     user_roles = kwargs.get("user_roles")
-
-    _, _, db_session = DB()
 
     with app.app_context():
         user = User.query.filter(User.user_name == user_name).all()
