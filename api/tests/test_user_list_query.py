@@ -192,8 +192,32 @@ def test_admin_can_see_user_list_in_same_org(save):
             }
         }
     }
+    expected_2 = {
+        "data": {
+            "userList": {
+                "edges": [
+                    {
+                        "node": {
+                            "userName": "testuserread@testemail.ca",
+                            "displayName": "testuserread",
+                            "tfa": False,
+                            "admin": False,
+                        }
+                    },
+                    {
+                        "node": {
+                            "userName": "testadmin@testemail.ca",
+                            "displayName": "testadmin",
+                            "tfa": False,
+                            "admin": True,
+                        }
+                    },
+                ]
+            }
+        }
+    }
 
-    assert result == expected
+    assert result == (expected or expected_2)
 
 
 def test_admin_cant_see_user_list_in_different_org(save):
