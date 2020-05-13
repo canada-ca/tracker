@@ -141,7 +141,7 @@ class Query(graphene.ObjectType):
     )
 
     test_user_claims = graphene.String(
-        org=graphene.Argument(Acronym, required=True),
+        org_slug=graphene.Argument(Slug, required=True),
         role=graphene.Argument(RoleEnums, required=True),
         resolver=resolve_test_user_claims,
         description="An api endpoint to view a current user's claims -- Requires an active JWT.",

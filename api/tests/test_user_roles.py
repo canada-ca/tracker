@@ -16,7 +16,7 @@ _, cleanup, db_session = DB()
 @pytest.fixture
 def save():
     with app.app_context():
-        org1 = Organizations(acronym="ORG1")
+        org1 = Organizations(acronym="ORG1", name="Organization 1")
         test_user = Users(
             display_name="testuserread",
             user_name="testuserread@testemail.ca",
@@ -66,7 +66,7 @@ def test_user_claim_update_to_user_write(save):
     executed = client.execute(
         """
         mutation{
-            updateUserRole(org: "ORG1", role: USER_WRITE, userName:"testuserread@testemail.ca"){
+            updateUserRole(orgSlug: "organization-1", role: USER_WRITE, userName:"testuserread@testemail.ca"){
                 status
             }
         }
@@ -100,7 +100,7 @@ def test_user_claim_update_to_user_write(save):
     executed = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: USER_WRITE)
+            testUserClaims(orgSlug: "organization-1", role: USER_WRITE)
         }
         """,
         context_value=request_headers,
@@ -135,7 +135,7 @@ def test_user_claim_update_to_admin(save):
     executed = client.execute(
         """
         mutation{
-            updateUserRole(org: "ORG1", role: ADMIN, userName:"testuserread@testemail.ca"){
+            updateUserRole(orgSlug: "organization-1", role: ADMIN, userName:"testuserread@testemail.ca"){
                 status
             }
         }
@@ -169,7 +169,7 @@ def test_user_claim_update_to_admin(save):
     executed = client.execute(
         """
         {
-            testUserClaims(org: "ORG1", role: ADMIN)
+            testUserClaims(orgSlug: "organization-1", role: ADMIN)
         }
         """,
         context_value=request_headers,
@@ -205,7 +205,7 @@ def test_user_claim_update_to_super_admin(save):
         executed = client.execute(
             """
             mutation{
-                updateUserRole(org: "ORG1", role: SUPER_ADMIN, userName:"testuserread@testemail.ca"){
+                updateUserRole(orgSlug: "organization-1", role: SUPER_ADMIN, userName:"testuserread@testemail.ca"){
                     status
                 }
             }
@@ -239,7 +239,7 @@ def test_user_claim_update_to_super_admin(save):
         executed = client.execute(
             """
             {
-                testUserClaims(org: "ORG1", role: SUPER_ADMIN)
+                testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
             }
             """,
             context_value=request_headers,
@@ -274,7 +274,7 @@ def test_user_claim_update_to_user_write(save):
     executed = client.execute(
         """
         mutation{
-            updateUserRole(org: "ORG1", role: ADMIN, userName:"testsuperadmin@testemail.ca"){
+            updateUserRole(orgSlug: "organization-1", role: ADMIN, userName:"testsuperadmin@testemail.ca"){
                 status
             }
         }

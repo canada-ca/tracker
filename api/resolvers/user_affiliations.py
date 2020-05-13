@@ -21,9 +21,9 @@ def resolve_test_user_claims(self, info, **kwargs):
     """
     user_roles = kwargs.get("user_roles")
     test_role = kwargs.get("role")
-    org = kwargs.get("org")
+    org_slug = kwargs.get("org_slug")
 
-    org_orm = db_session.query(Orgs).filter(Orgs.acronym == org).first()
+    org_orm = db_session.query(Orgs).filter(Orgs.slug == org_slug).first()
     org_id = org_orm.id
 
     if test_role == "super_admin":
