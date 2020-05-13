@@ -23,37 +23,44 @@ class UserListItem(SQLAlchemyObjectType):
             "user",
             "user_organization",
         )
-    user_name = EmailAddress(
-        description="The users email address or userName"
-    )
-    display_name = graphene.String(
-        description="The users display name"
-    )
+
+    user_name = EmailAddress(description="The users email address or userName")
+    display_name = graphene.String(description="The users display name")
     tfa = graphene.Boolean(
         description="Indicates wether or not this user has enabled tfa"
     )
     admin = graphene.Boolean(
         description="Indicates if this user is an admin of the organization "
-                    "specified in the UserList query"
+        "specified in the UserList query"
     )
 
     with app.app_context():
+
         def resolve_user_name(self: User_affiliations, info):
-            user_orm = db_session.query(Users).filter(
-                Users.id == self.user_id
-            ).options(load_only("user_name")).first()
+            user_orm = (
+                db_session.query(Users)
+                .filter(Users.id == self.user_id)
+                .options(load_only("user_name"))
+                .first()
+            )
             return user_orm.user_name
 
         def resolve_display_name(self: User_affiliations, info):
-            user_orm = db_session.query(Users).filter(
-                Users.id == self.user_id
-            ).options(load_only("display_name")).first()
+            user_orm = (
+                db_session.query(Users)
+                .filter(Users.id == self.user_id)
+                .options(load_only("display_name"))
+                .first()
+            )
             return user_orm.display_name
 
         def resolve_tfa(self: User_affiliations, info):
-            user_orm = db_session.query(Users).filter(
-                Users.id == self.user_id
-            ).options(load_only("tfa_validated")).first()
+            user_orm = (
+                db_session.query(Users)
+                .filter(Users.id == self.user_id)
+                .options(load_only("tfa_validated"))
+                .first()
+            )
             return user_orm.tfa_validated
 
         def resolve_admin(self: User_affiliations, info):

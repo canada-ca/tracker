@@ -115,10 +115,7 @@ def test_admin_can_see_user_list_in_same_org(save):
     """
     Test to see if admin can view user list of same org
     """
-    org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1"
-    )
+    org_one = Organizations(acronym="ORG1", name="Organization 1")
     save(org_one)
     admin_user = Users(
         display_name="testadmin",
@@ -128,10 +125,7 @@ def test_admin_can_see_user_list_in_same_org(save):
         tfa_validated=False,
     )
     admin_user.user_affiliation.append(
-        User_affiliations(
-            permission="super_admin",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="super_admin", user_organization=org_one,)
     )
     save(admin_user)
 
@@ -143,10 +137,7 @@ def test_admin_can_see_user_list_in_same_org(save):
         tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_read", user_organization=org_one,)
     )
     save(user_read)
 
@@ -196,7 +187,7 @@ def test_admin_can_see_user_list_in_same_org(save):
                             "tfa": False,
                             "admin": False,
                         }
-                    }
+                    },
                 ]
             }
         }
@@ -209,15 +200,9 @@ def test_admin_cant_see_user_list_in_different_org(save):
     """
     Test to see if admin cant view user list of different org
     """
-    org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1"
-    )
+    org_one = Organizations(acronym="ORG1", name="Organization 1")
     save(org_one)
-    org_two = Organizations(
-        acronym="ORG2",
-        name="Organization 2"
-    )
+    org_two = Organizations(acronym="ORG2", name="Organization 2")
     save(org_two)
     admin_user = Users(
         display_name="testadmin",
@@ -227,10 +212,7 @@ def test_admin_cant_see_user_list_in_different_org(save):
         tfa_validated=False,
     )
     admin_user.user_affiliation.append(
-        User_affiliations(
-            permission="admin",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="admin", user_organization=org_one,)
     )
     save(admin_user)
 
@@ -242,10 +224,7 @@ def test_admin_cant_see_user_list_in_different_org(save):
         tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_two,
-        )
+        User_affiliations(permission="user_read", user_organization=org_two,)
     )
     save(user_read)
 
@@ -285,15 +264,9 @@ def test_user_write_cant_see_user_list(save):
     """
     Test to see if user write cant view user list of any org
     """
-    org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1"
-    )
+    org_one = Organizations(acronym="ORG1", name="Organization 1")
     save(org_one)
-    org_two = Organizations(
-        acronym="ORG2",
-        name="Organization 2"
-    )
+    org_two = Organizations(acronym="ORG2", name="Organization 2")
     save(org_two)
     user_write = Users(
         display_name="testuserwrite",
@@ -303,10 +276,7 @@ def test_user_write_cant_see_user_list(save):
         tfa_validated=False,
     )
     user_write.user_affiliation.append(
-        User_affiliations(
-            permission="user_write",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_write", user_organization=org_one,)
     )
     save(user_write)
 
@@ -318,10 +288,7 @@ def test_user_write_cant_see_user_list(save):
         tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_two,
-        )
+        User_affiliations(permission="user_read", user_organization=org_two,)
     )
     save(user_read)
 
@@ -361,15 +328,9 @@ def test_user_read_cant_see_user_list(save):
     """
     Test to see if user Read cant view user list of any org
     """
-    org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1"
-    )
+    org_one = Organizations(acronym="ORG1", name="Organization 1")
     save(org_one)
-    org_two = Organizations(
-        acronym="ORG2",
-        name="Organization 2"
-    )
+    org_two = Organizations(acronym="ORG2", name="Organization 2")
     save(org_two)
     user_read = Users(
         display_name="testuserread2",
@@ -379,10 +340,7 @@ def test_user_read_cant_see_user_list(save):
         tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_one,
-        )
+        User_affiliations(permission="user_read", user_organization=org_one,)
     )
     save(user_read)
 
@@ -394,10 +352,7 @@ def test_user_read_cant_see_user_list(save):
         tfa_validated=False,
     )
     user_read.user_affiliation.append(
-        User_affiliations(
-            permission="user_read",
-            user_organization=org_two,
-        )
+        User_affiliations(permission="user_read", user_organization=org_two,)
     )
     save(user_read)
 

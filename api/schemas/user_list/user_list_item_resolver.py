@@ -23,9 +23,9 @@ def resolve_user_item(self, info, **kwargs):
     user_roles = kwargs.get("user_roles")
     org_slug = kwargs.get("org_slug")
 
-    org_orm = db_session.query(Organizations).filter(
-        Organizations.slug == org_slug
-    ).first()
+    org_orm = (
+        db_session.query(Organizations).filter(Organizations.slug == org_slug).first()
+    )
 
     if org_orm is None:
         raise GraphQLError("Error, organization does not exist")
@@ -33,11 +33,7 @@ def resolve_user_item(self, info, **kwargs):
     query = UserListItem.get_query(info)
 
     if is_admin(user_roles=user_roles, org_id=org_orm.id):
-        query = query.filter(
-            User_affiliations.organization_id == org_orm.id
-        ).all()
+        query = query.filter(User_affiliations.organization_id == org_orm.id).all()
         return query
     else:
-        raise GraphQLError(
-            "Error, you do not have permission to view this user lists"
-        )
+        raise GraphQLError("Error, you do not have permission to view this user lists")
