@@ -32,7 +32,7 @@ def initiate(request):
         scan_id = decoded_payload["scan_id"]
         domain = decoded_payload["domain"]
 
-        func_dict = {"Scanners": request.headers.get("Scanner"),
+        func_dict = {"Scanners": request.headers.get("Scanners"),
                      "Results": request.headers.get("Results")
                      }
 
