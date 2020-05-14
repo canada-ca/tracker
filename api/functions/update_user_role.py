@@ -39,7 +39,7 @@ def update_user_role(**kwargs):
 
     def update_user_role_db():
         with app.app_context():
-            User_aff.query.filter(User_aff.organization_id == org_id).filter(
+            db_session.query(User_aff).filter(User_aff.organization_id == org_id).filter(
                 User_aff.user_id == user[0]["id"]
             ).update({"permission": new_role})
             try:
@@ -51,12 +51,14 @@ def update_user_role(**kwargs):
 
     if new_role == "admin" or new_role == "super_admin":
         if is_super_admin(user_roles=user_roles):
-            update_user_role_db()
+            with app.app_context():
+                update_user_role_db()
         else:
             raise GraphQLError(error_not_an_admin())
 
     elif new_role == "user_read" or new_role == "user_write":
         if is_admin(user_roles=user_roles, org_id=org_id):
-            update_user_role_db()
+            with app.app_context():
+                update_user_role_db()
         else:
             raise GraphQLError(error_not_an_admin())

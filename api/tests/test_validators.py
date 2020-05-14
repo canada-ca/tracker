@@ -2,34 +2,26 @@ import pytest
 from functions.input_validators import *
 
 
-# This class tests the password strength functions in 'input_validators.py'
+def test_is_strong_password_returns_true_on_a_good_password():
+    valid_pass = "ThisIsAVa1idPassword!"
+    assert is_strong_password(valid_pass)
 
 
-class TestPasswordValidators:
-
-    # These functions test the length requirement validator
-
-    def test_valid_password_length(self):
-        valid_pass = "ThisIsAVa1idPassword!"
-        assert is_strong_password(valid_pass)
-
-    def test_invalid_password_length(self):
-        invalid_pass = "2short"
-        assert not is_strong_password(invalid_pass)
-
-    def test_empty_password_length(self):
-        invalid_pass = ""
-        assert not is_strong_password(invalid_pass)
+def test_is_strong_password_rejects_a_short_password():
+    invalid_pass = "2short"
+    assert not is_strong_password(invalid_pass)
 
 
-# This class tests the input cleansing function in 'input_validators.py'
+def test_is_strong_password_rejects_an_empty_password():
+    invalid_pass = ""
+    assert not is_strong_password(invalid_pass)
 
 
-class TestInputCleanser:
-    def test_whitespace_strip(self):
-        output_string = cleanse_input("     strip-whitespaces     ")
-        assert output_string == "strip-whitespaces"
+def test_clense_input_strip_whitespace():
+    output_string = cleanse_input("     strip-whitespaces     ")
+    assert output_string == "strip-whitespaces"
 
-    def test_html_specials(self):
-        output_string = cleanse_input("<!>")
-        assert output_string == "&lt;!&gt;"
+
+def test_clense_input_escapes_html():
+    output_string = cleanse_input("<!>")
+    assert output_string == "&lt;!&gt;"
