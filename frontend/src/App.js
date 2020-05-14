@@ -13,6 +13,7 @@ import { Flex, Link, CSSReset } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
+import { RouteIf } from './RouteIf'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -78,11 +79,13 @@ export default function App() {
                 <DomainsPage />
               </Route>
 
-              {isLoggedIn() && (
-                <Route path="/user">
-                  <UserPage userName={currentUser.userName} />
-                </Route>
-              )}
+              <RouteIf
+                condition={isLoggedIn()}
+                consequent="/user"
+                alternate="/sign-in"
+              >
+                <UserPage userName={currentUser.userName} />
+              </RouteIf>
 
               <Route path="/sign-in" component={SignInPage} />
 
@@ -90,15 +93,21 @@ export default function App() {
                 <CreateUserPage />
               </Route>
 
-              {isLoggedIn() && (
-                <Route path="/two-factor-code">
-                  <QRcodePage userName={currentUser.userName} />
-                </Route>
-              )}
+              <RouteIf
+                condition={isLoggedIn()}
+                consequent="/two-factor-code"
+                alternate="/sign-in"
+              >
+                <QRcodePage userName={currentUser.userName} />
+              </RouteIf>
 
-              <Route path="/user-list">
+              <RouteIf
+                condition={isLoggedIn()}
+                consequent="/user-list"
+                alternate="/sign-in"
+              >
                 <UserList />
-              </Route>
+              </RouteIf>
 
               <Route component={PageNotFound} />
             </Switch>
