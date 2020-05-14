@@ -1,8 +1,9 @@
 import pytest
-from json import dumps
-from json_web_token import tokenize, auth_header
+
 from pytest import fail
 from graphene.test import Client
+
+from json_web_token import tokenize, auth_header
 from app import app
 from db import DB
 from queries import schema
@@ -11,18 +12,7 @@ from models import (
     Users,
     User_affiliations,
 )
-
-
-def run(query=None, mutation=None, as_user=None):
-    return Client(schema).execute(
-        query if query else mutation,
-        context_value=auth_header(tokenize(user_id=as_user.id, roles=as_user.roles)),
-    )
-
-
-def json(j):
-    return dumps(j, indent=2)
-
+from tests.test_functions import json, run
 
 @pytest.fixture
 def save():
