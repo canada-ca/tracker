@@ -1,6 +1,6 @@
 import React from 'react'
 import { Formik } from 'formik'
-import { useHistory , useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { string } from 'prop-types'
 import {
   Stack,
@@ -35,13 +35,24 @@ export default function UserPage() {
       error: updatePasswordError,
       data: updatePasswordData,
     },
-  ] = useMutation(UPDATE_PASSWORD)
+  ] = useMutation(UPDATE_PASSWORD, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+  })
 
   const {
     loading: queryUserLoading,
     error: queryUserError,
     data: queryUserData,
   } = useQuery(QUERY_USER, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
     variables: {
       userName: currentUser.userName,
     },
@@ -76,7 +87,7 @@ export default function UserPage() {
           actions.setSubmitting(false)
         }}
       >
-        {({handleSubmit, handleChange, values}) => (
+        {({ handleSubmit, handleChange, values }) => (
           <form onSubmit={handleSubmit}>
             <Stack p={25} spacing={4}>
               <Text fontSize="2xl" fontWeight="bold" textAlign="center">
