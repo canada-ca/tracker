@@ -120,7 +120,7 @@ describe('<SignInPage />', () => {
         initialIndex: 0,
       })
 
-      const { container, getByRole, queryByText } = render(
+      const { container, getByRole } = render(
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
@@ -128,18 +128,13 @@ describe('<SignInPage />', () => {
             <I18nProvider i18n={setupI18n()}>
               <Router history={history}>
                 <MockedProvider mocks={mocks} addTypename={false}>
-                  <App />
+                  <SignInPage />
                 </MockedProvider>
               </Router>
             </I18nProvider>
           </ThemeProvider>
         </UserStateProvider>,
       )
-      await waitFor(() => {
-        expect(
-          queryByText(/Sign in with your username and password./i),
-        ).toBeInTheDocument()
-      })
 
       const email = container.querySelector('#email')
       const password = container.querySelector('#password')
