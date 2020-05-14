@@ -55,7 +55,10 @@ def initiate(request):
         user_init = decoded_payload["user_init"]
         scan_id = decoded_payload["scan_id"]
 
-        func_dict = request.headers.get("Functions")
+        func_dict = {"Dispatcher": request.headers.get("Dispatcher"),
+                     "Scanners": request.headers.get("Scanners"),
+                     "Results": request.headers.get("Results")
+                     }
 
         encrypted_payload = jwt.encode(payload, TOKEN_KEY, algorithm="HS256").decode(
             "utf-8"
@@ -92,11 +95,12 @@ def dispatch(encrypted_payload, dkim_flag, user_init, scan_id, func_dict):
     headers = {
         "Content-Type": "application/json",
         "Data": encrypted_payload,
-        "Functions": func_dict
+        "Scanners": func_dict["Scanners"],
+        "Results": func_dict["Results"]
     }
 
     dispatched = {scan_id: {}}
-    target_func = globals()[func_dict["dispatcher"]]
+    target_func = globals()[func_dict["Dispatcher"]]
 
     try:
         if not user_init:

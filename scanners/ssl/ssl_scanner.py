@@ -34,8 +34,6 @@ class TlsVersionEnum(Enum):
     TLSV1_2 = 5
 
 
-headers = {"Content-Type": "application/json"}
-
 destination = "http://result-processor.tracker.svc.cluster.local"
 
 TOKEN_KEY = os.getenv("TOKEN_KEY")
@@ -53,7 +51,9 @@ def initiate(request):
         scan_id = decoded_payload["scan_id"]
         domain = decoded_payload["domain"]
 
-        func_dict = request.headers.get("Functions")
+        func_dict = {"Scanners": request.headers.get("Scanner"),
+                     "Results": request.headers.get("Results")
+                     }
 
         # Perform scan
         res = scan(scan_id, domain)
@@ -69,14 +69,12 @@ def initiate(request):
                 % scan_id
             )
 
-        headers["Token"] = jwt.encode(token, TOKEN_KEY, algorithm="HS256").decode(
+        encoded_token = jwt.encode(token, TOKEN_KEY, algorithm="HS256").decode(
             "utf-8"
         )
 
-        headers["Functions"] = func_dict
-
         # Dispatch results to result-processor
-        msg = dispatch(scan_id, payload, func_dict)
+        msg = dispatch(scan_id, payload, func_dict, encoded_token)
 
         return PlainTextResponse("SSL scan completed: %s", msg)
 
@@ -85,7 +83,7 @@ def initiate(request):
         return PlainTextResponse("Failed to send scan to result-handling service")
 
 
-def dispatch(scan_id, payload, func_dict):
+def dispatch(scan_id, payload, func_dict, token):
     """
     Dispatch scan results to result-processor
     :param scan_id: ID of the scan object
@@ -94,7 +92,13 @@ def dispatch(scan_id, payload, func_dict):
     """
     task = BackgroundTask()
 
-    target_func = globals()[func_dict["scanner"]]
+    headers = {
+        "Content-Type": "application/json",
+        "Results": func_dict["Results"],
+        "Token": token
+    }
+
+    target_func = globals()[func_dict["Scanners"]]
 
     try:
         # Post request to result-handling service asynchronously
@@ -109,7 +113,7 @@ def dispatch(scan_id, payload, func_dict):
     return PlainTextResponse("Scan results sent to result-processor", background=task)
 
 
-async def send(host, payload):
+async def send(host, payload, headers):
     requests.post(host + "/receive", headers=headers, data=payload)
 
 

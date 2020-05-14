@@ -194,8 +194,8 @@ def receive():
         scan_type = decoded_token["scan_type"]
         scan_id = decoded_token["scan_id"]
 
-        func_dict = request.headers.get("Functions")
-        target_func = func_dict["results"]
+        target_func_string = request.headers.get("Results")
+        target_func = globals()[target_func_string]
 
         report = process_results(result_dict, scan_type)
 
