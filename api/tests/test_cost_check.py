@@ -2,7 +2,6 @@ import pytest
 
 from db import DB
 from app import app
-from queries import schema
 from models import Users
 from tests.test_functions import json, run
 from backend.security_check import SecurityAnalysisBackend
@@ -37,7 +36,6 @@ def test_valid_cost_query(save):
             }
         """,
         as_user=test_super_admin,
-        schema=schema
     )
 
     expected = {"data": {"user": [{"displayName": "testsuperadmin"}]}}
@@ -99,7 +97,6 @@ def test_invalid_cost_query(save):
             }
         """,
         as_user=test_super_admin,
-        schema=schema,
         backend=SecurityAnalysisBackend(10, 5)
     )
 

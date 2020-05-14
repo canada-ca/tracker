@@ -1,21 +1,18 @@
 import pytest
 
-from json_web_token import tokenize, auth_header
-from graphene.test import Client
 from pytest import fail
 
 from app import app
-from queries import schema
 from models import Users, User_affiliations, Organizations
 from db import DB
 from tests.test_functions import json, run
 
-s, cleanup, session = DB()
 
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, session = DB()
         yield s
         cleanup()
 
@@ -45,8 +42,7 @@ def test_testUserClaims_accepts_admin_claim_for_admin_user(save):
                 testUserClaims(orgSlug: "organization-1", role: ADMIN)
             }
         """,
-        as_user=user,
-        schema=schema
+        as_user=user
     )
     if "errors" in result:
         fail(
@@ -83,8 +79,7 @@ def test_testUserClaims_accepts_write_claim_for_write_user(save):
                 testUserClaims(orgSlug: "organization-1", role: USER_WRITE)
             }
         """,
-        as_user=user,
-        schema=schema
+        as_user=user
     )
     if "errors" in result:
         fail(
@@ -121,8 +116,7 @@ def test_testUserClaims_accepts_super_admin_claim_for_super_admin(save):
                 testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
             }
         """,
-        as_user=user,
-        schema=schema
+        as_user=user
     )
 
     if "errors" in result:
@@ -161,8 +155,7 @@ def test_testUserClaims_accepts_read_claim_for_read_user(save):
                 testUserClaims(orgSlug: "organization-1", role: USER_READ)
             }
         """,
-        as_user=user,
-        schema=schema
+        as_user=user
     )
 
     if "errors" in result:
@@ -201,8 +194,7 @@ def test_testUserClaims_rejects_super_admin_check_for_read_user(save):
                 testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
             }
         """,
-        as_user=user,
-        schema=schema
+        as_user=user
     )
 
     if "errors" not in result:
@@ -243,8 +235,7 @@ def test_testUserClaims_rejects_admin_check_for_read_user(save):
                 testUserClaims(orgSlug: "organization-1", role: ADMIN)
             }
         """,
-        as_user=user,
-        schema=schema
+        as_user=user
     )
     if "errors" not in result:
         fail(
@@ -284,8 +275,7 @@ def test_testUserClaims_rejects_super_admin_check_for_admin_user(save):
                 testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
             }
         """,
-        as_user=user,
-        schema=schema
+        as_user=user
     )
 
     if "errors" not in result:
@@ -326,9 +316,9 @@ def test_testUserClaims_rejects_super_admin_check_for_write_user(save):
                 testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
             }
         """,
-        as_user=user,
-        schema=schema
+        as_user=user
     )
+
     if "errors" not in result:
         fail(
             "expected write user claiming super admin to error but got: {}".format(
