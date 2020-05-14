@@ -1,12 +1,7 @@
 import pytest
 
-from werkzeug.test import create_environ
-from flask import Request
-from graphene.test import Client
-
 from app import app
 from db import DB
-from queries import schema
 from models import Users
 from backend.security_check import SecurityAnalysisBackend
 from tests.test_functions import json, run
