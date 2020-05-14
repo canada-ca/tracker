@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { PasswordField } from './PasswordField'
 import { object, string } from 'yup'
@@ -31,12 +31,11 @@ export default function SignInPage() {
   const { i18n } = useLingui()
 
   const [signIn, { loading, error }] = useMutation(SIGN_IN, {
-    onError(e) {
-      console.log('Error!', e)
+    onError() {
       toast({
-        title: i18n._('An error occurred.'),
+        title: i18n._(t`An error occurred.`),
         description: i18n._(
-          'Unable to sign in to your account, please try again.',
+          t`Unable to sign in to your account, please try again.`,
         ),
         status: 'error',
         duration: 9000,
@@ -53,8 +52,8 @@ export default function SignInPage() {
       history.push('/')
       // Display a welcome message
       toast({
-        title: i18n._('Sign In.'),
-        description: i18n._('Welcome, you are successfully signed in!'),
+        title: i18n._(t`Sign In.`),
+        description: i18n._(t`Welcome, you are successfully signed in!`),
         status: 'success',
         duration: 9000,
         isClosable: true,
@@ -63,11 +62,16 @@ export default function SignInPage() {
   })
 
   const validationSchema = object().shape({
-    password: string().required(i18n._('Password cannot be empty')),
-    email: string().required(i18n._('Email cannot be empty')),
+    password: string().required(i18n._(t`Password cannot be empty`)),
+    email: string().required(i18n._(t`Email cannot be empty`)),
   })
 
-  if (loading) return <p>Loading...</p>
+  if (loading)
+    return (
+      <p>
+        <Trans>Loading...</Trans>
+      </p>
+    )
   if (error) return <p>{String(error)}</p>
 
   return (
@@ -85,7 +89,7 @@ export default function SignInPage() {
           })
         }}
       >
-        {({handleSubmit, isSubmitting}) => (
+        {({ handleSubmit, isSubmitting }) => (
           <form
             onSubmit={handleSubmit}
             role="form"
