@@ -13,5 +13,5 @@ apt-get install -y --no-install-recommends python3-setuptools python3-wheel
 # Install dependencies.
 RUN python3 -m pip install -r requirements.txt
 
-# Run the web service on container startup. Using waitress, in this case.
-CMD exec waitress-serve dispatcher:app
+# Run the web service on container startup. Using uvicorn, in this case.
+CMD exec uvicorn dispatcher:app

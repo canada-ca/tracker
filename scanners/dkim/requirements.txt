@@ -1,5 +1,5 @@
-Flask
-waitress
+starlette
+uvicorn
 PyJWT
 requests>=2.18.4
 dkimpy

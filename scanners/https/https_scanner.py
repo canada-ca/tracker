@@ -3,10 +3,12 @@ import sys
 import requests
 import logging
 import json
-import threading
 import jwt
 from scan import https
-from flask import Flask, request
+from starlette.applications import Starlette
+from starlette.routing import Route, Mount, WebSocketRoute
+from starlette.responses import PlainTextResponse
+from starlette.background import BackgroundTask
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -14,31 +16,25 @@ headers = {"Content-Type": "application/json"}
 
 destination = "http://result-processor.tracker.svc.cluster.local"
 
-app = Flask(__name__)
-
 TOKEN_KEY = os.getenv("TOKEN_KEY")
 
 
-@app.route("/receive", methods=["GET", "POST"])
-def receive():
+def initiate(request):
 
-    logging.info("Event received\n")
+    logging.info("Scan received")
 
     try:
         decoded_payload = jwt.decode(
             request.headers.get("Data"), TOKEN_KEY, algorithm=["HS256"]
         )
 
-        test_flag = request.headers.get("Test")
         scan_id = decoded_payload["scan_id"]
         domain = decoded_payload["domain"]
 
+        func_dict = request.headers.get("Functions")
+
         # Perform scan
         res = scan(scan_id, domain)
-
-        # If this was a test scan, return results
-        if test_flag == "true":
-            return str(res)
 
         # Construct request payload for result-processor
         if res is not None:
@@ -54,37 +50,48 @@ def receive():
             "utf-8"
         )
 
-        # Dispatch results to result-processor asynchronously
-        th = threading.Thread(target=dispatch, args=[scan_id, payload])
-        th.start()
+        headers["Functions"] = func_dict
 
-        return "Scan sent to result-handling service"
+        # Dispatch results to result-processor
+        msg = dispatch(scan_id, payload, func_dict)
+
+        return PlainTextResponse("HTTPS scan completed: %s", msg)
 
     except Exception as e:
         logging.error(str(e) + "\n")
         return "Failed to send scan to result-handling service"
 
 
-def dispatch(scan_id, payload):
+def dispatch(scan_id, payload, func_dict):
     """
     Dispatch scan results to result-processor
     :param scan_id: ID of the scan object
     :param payload: Dict containing scan results, encrypted by JWT
     :return: Response from result-processor service
     """
+    task = BackgroundTask()
+
+    target_func = globals()[func_dict["scanner"]]
+
     try:
-        # Post request to result-handling service
-        response = requests.post(
-            destination + "/receive", headers=headers, data=payload
-        )
-        logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
-        logging.info(str(response.text))
-        return str(response.text)
+        # Post request to result-handling service asynchronously
+        task.add_task(target_func, host=destination, headers=headers, payload=payload)
     except Exception as e:
         logging.error(
             "(SCAN: %s) - Error occurred while sending scan results: %s\n"
             % (scan_id, e)
         )
+        return PlainTextResponse("Error occurred while sending scan results: %s" % str(e))
+
+    return PlainTextResponse("Scan results sent to result-processor", background=task)
+
+
+async def send(host, payload):
+    requests.post(host + "/receive", headers=headers, data=payload)
+
+
+async def mock_send(host, payload):
+    return
 
 
 def scan(scan_id, domain):
@@ -106,5 +113,12 @@ def scan(scan_id, domain):
         return None
 
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8080)
+def startup():
+    print("ASGI server started...")
+
+
+routes = [
+    Route('/receive', initiate),
+]
+
+app = Starlette(debug=True, routes=routes, on_startup=[startup])
