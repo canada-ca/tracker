@@ -68,7 +68,7 @@ def Server(scanners={}, client=requests):
         logging.info("DKIM scan requested")
         try:
             payload = await request.json()
-            scanners["dkim"](payload, client)
+            scanners["dkim"].dispatch(payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to DKIM scanner")
@@ -77,7 +77,7 @@ def Server(scanners={}, client=requests):
         logging.info("DMARC scan requested")
         try:
             payload = await request.json()
-            scanners["dmarc"](payload, client)
+            scanners["dmarc"].dispatch(payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to DMARC scanner")
@@ -86,7 +86,7 @@ def Server(scanners={}, client=requests):
         logging.info("HTTPS scan requested")
         try:
             payload = await request.json()
-            scanners["https"](payload, client)
+            scanners["https"].dispatch(payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to HTTPS scanner")
@@ -95,7 +95,7 @@ def Server(scanners={}, client=requests):
         logging.info("SSL scan requested")
         try:
             payload = await request.json()
-            scanners["ssl"](payload, client)
+            scanners["ssl"].dispatch(payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to SSL scanner")
@@ -113,9 +113,9 @@ def Server(scanners={}, client=requests):
 
 app = Server(
     scanners={
-        "dkim": scan_dkim,
-        "dmarc": scan_dmarc,
-        "https": scan_https,
-        "ssl": scan_ssl,
+        "dkim": Scanner(scan_type=scan_dkim),
+        "dmarc": Scanner(scan_type=scan_dmarc),
+        "https": Scanner(scan_type=scan_https),
+        "ssl": Scanner(scan_type=scan_ssl),
     }
 )

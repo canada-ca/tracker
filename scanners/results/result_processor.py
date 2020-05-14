@@ -214,7 +214,12 @@ def initiate(payload):
             "http://127.0.0.1:8000/process", json=payload_dict
         )
 
-        payload_dict["results"] = process_response.json()
+        processed_results = process_response.json()
+
+        if processed_results["errors"] is None:
+            payload_dict["results"] = processed_results["report"]
+        else:
+            raise Exception(processed_results["errors"])
 
         insert_response = requests.post(
             "http://127.0.0.1:8000/insert", json=payload_dict
@@ -225,18 +230,6 @@ def initiate(payload):
     except Exception as e:
         logging.error("Failed: %s" % str(e))
         return "An error occurred while processing results: %s" % str(e)
-
-
-def process_results(results, scan_type):
-
-    report = {}
-
-    try:
-        report = globals()["process_" + scan_type](results)
-    except Exception as e:
-        logging.error(f"An error occurred while processing results: {str(e)}")
-
-    return report
 
 
 def process_https(results):
@@ -441,97 +434,118 @@ def process_dkim(results):
     return report
 
 
-async def insert_results(report, scan_type, scan_id, db):
-
+async def insert_https(report, scan_id, db):
     try:
         await db.connect()
-
         scan_query = select([Scans]).where(Scans.c.id == scan_id)
         scan = await db.fetch_one(scan_query)
         logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
+        finalized_report = json.JSONEncoder().encode(str(report))
 
-        response = await globals()["insert_" + scan_type](report, scan, db)
-
-        logging.info(response.text)
-
-    except Exception as e:
-        logging.error(f"Failed database insertion(s): {str(e)}")
+        insert_query = Https_scans.insert().values(
+            https_scan=json.dumps({"https": finalized_report}), id=scan.id
+        )
+        await db.execute(insert_query)
         await db.disconnect()
+    except Exception as e:
+        await db.disconnect()
+        return f"Failed database insertion(s): {str(e)}"
 
-    await db.disconnect()
-
-
-async def insert_https(report, scan, db):
-    finalized_report = json.JSONEncoder().encode(str(report))
-
-    insert_query = Https_scans.insert().values(
-        https_scan=json.dumps({"https": finalized_report}), id=scan.id
-    )
-    await db.execute(insert_query)
     return "HTTPS Scan inserted into database"
 
 
-async def insert_ssl(report, scan, db):
-    finalized_report = json.JSONEncoder().encode(str(report))
+async def insert_ssl(report, scan_id, db):
+    try:
+        await db.connect()
+        scan_query = select([Scans]).where(Scans.c.id == scan_id)
+        scan = await db.fetch_one(scan_query)
+        logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
+        finalized_report = json.JSONEncoder().encode(str(report))
 
-    insert_query = Ssl_scans.insert().values(
-        https_scan=json.dumps({"ssl": finalized_report}), id=scan.id
-    )
-    await db.execute(insert_query)
+        insert_query = Ssl_scans.insert().values(
+            https_scan=json.dumps({"ssl": finalized_report}), id=scan.id
+        )
+        await db.execute(insert_query)
+        await db.disconnect()
+    except Exception as e:
+        await db.disconnect()
+        return f"Failed database insertion(s): {str(e)}"
+
     return "SSL Scan inserted into database"
 
 
-async def insert_dmarc(report, scan, db):
-    finalized_dmarc_report = json.JSONEncoder().encode(str(report["dmarc"]))
-    finalized_mx_report = json.JSONEncoder().encode(str(report["mx"]))
-    finalized_spf_report = json.JSONEncoder().encode(str(report["spf"]))
+async def insert_dmarc(report, scan_id, db):
+    try:
+        await db.connect()
+        scan_query = select([Scans]).where(Scans.c.id == scan_id)
+        scan = await db.fetch_one(scan_query)
+        logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
+        finalized_dmarc_report = json.JSONEncoder().encode(str(report["dmarc"]))
+        finalized_mx_report = json.JSONEncoder().encode(str(report["mx"]))
+        finalized_spf_report = json.JSONEncoder().encode(str(report["spf"]))
 
-    dmarc_insert_query = Dmarc_scans.insert().values(
-        dmarc_scan=json.dumps({"dmarc": finalized_dmarc_report}), id=scan.id
-    )
-    mx_insert_query = Mx_scans.insert().values(
-        mx_scan=json.dumps({"mx": finalized_mx_report}), id=scan.id
-    )
-    spf_insert_query = Spf_scans.insert().values(
-        spf_scan=json.dumps({"dmarc": finalized_spf_report}), id=scan.id
-    )
+        dmarc_insert_query = Dmarc_scans.insert().values(
+            dmarc_scan=json.dumps({"dmarc": finalized_dmarc_report}), id=scan.id
+        )
+        mx_insert_query = Mx_scans.insert().values(
+            mx_scan=json.dumps({"mx": finalized_mx_report}), id=scan.id
+        )
+        spf_insert_query = Spf_scans.insert().values(
+            spf_scan=json.dumps({"dmarc": finalized_spf_report}), id=scan.id
+        )
 
-    await db.execute(dmarc_insert_query)
-    await db.execute(mx_insert_query)
-    await db.execute(spf_insert_query)
+        await db.execute(dmarc_insert_query)
+        await db.execute(mx_insert_query)
+        await db.execute(spf_insert_query)
+        await db.disconnect()
+    except Exception as e:
+        await db.disconnect()
+        return f"Failed database insertion(s): {str(e)}"
 
     return "DMARC/MX/SPF Scans inserted into database"
 
 
-async def insert_dkim(report, scan, db):
-    finalized_report = json.JSONEncoder().encode(str(report))
+async def insert_dkim(report, scan_id, db):
+    try:
+        await db.connect()
+        scan_query = select([Scans]).where(Scans.c.id == scan_id)
+        scan = await db.fetch_one(scan_query)
+        logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
+        finalized_report = json.JSONEncoder().encode(str(report))
 
-    # Check for previous dkim scans on this domain
-    previous_scan_query = select([Scans]).where(Scans.c.domain_id == scan.c.domain_id)
+        # Check for previous dkim scans on this domain
+        previous_scan_query = select([Scans]).where(
+            Scans.c.domain_id == scan.c.domain_id
+        )
 
-    previous_scans = await db.fetch_all(previous_scan_query)
+        previous_scans = await db.fetch_all(previous_scan_query)
 
-    update_recommended = False
+        update_recommended = False
 
-    # If public key has been in use for a year or more, recommend update
-    for previous_scan in previous_scans:
-        if (scan.scan_date - previous_scan.scan_date).days >= 365:
-            historical_dkim_query = select([Dkim_scans]).where(
-                Dkim_scans.c.id == previous_scan.c.id
-            )
-            historical_dkim = await db.fetch_one(historical_dkim_query)
-            if (
-                report["public_key_modulus"]
-                == historical_dkim.c.dkim_scan["dkim"]["public_key_modulus"]
-            ):
-                update_recommended = True
+        # If public key has been in use for a year or more, recommend update
+        for previous_scan in previous_scans:
+            if (scan.scan_date - previous_scan.scan_date).days >= 365:
+                historical_dkim_query = select([Dkim_scans]).where(
+                    Dkim_scans.c.id == previous_scan.c.id
+                )
+                historical_dkim = await db.fetch_one(historical_dkim_query)
+                if (
+                    report["public_key_modulus"]
+                    == historical_dkim.c.dkim_scan["dkim"]["public_key_modulus"]
+                ):
+                    update_recommended = True
 
-    report["update-recommended"] = update_recommended
-    insert_query = Dkim_scans.insert().values(
-        dkim_scan=json.dumps({"dkim": finalized_report}), id=scan.id
-    )
-    await db.execute(insert_query)
-    logging.info("DKIM Scan inserted into database")
+        report["update-recommended"] = update_recommended
+        insert_query = Dkim_scans.insert().values(
+            dkim_scan=json.dumps({"dkim": finalized_report}), id=scan.id
+        )
+        await db.execute(insert_query)
+        await db.disconnect()
+    except Exception as e:
+        await db.disconnect()
+        return f"Failed database insertion(s): {str(e)}"
+
+    return "DKIM Scan inserted into database"
 
 
 def Server(functions={}, database_uri=DATABASE_URI):
@@ -550,17 +564,23 @@ def Server(functions={}, database_uri=DATABASE_URI):
             results = payload["results"]
             scan_id = payload["scan_id"]
             scan_type = payload["scan_type"]
-            await functions["insert"](results, scan_type, scan_id, database)
+            response = await functions["insert"][scan_type].insert(
+                results, scan_id, database
+            )
+            return PlainTextResponse(f"Database insertion(s) completed: {response}")
         except Exception as e:
             return PlainTextResponse(str(e))
-        return PlainTextResponse("Database insertion(s) completed")
 
     async def process(request):
         payload = await request.json()
         logging.info("Processing results...")
-        return JSONResponse(
-            functions["process"](payload["results"], payload["scan_type"])
-        )
+        results = payload["results"]
+        scan_type = payload["scan_type"]
+        try:
+            report = functions["process"][scan_type].process(results)
+            return JSONResponse({"report": report, "error": None})
+        except Exception as e:
+            return JSONResponse({"report": {}, "error": str(e)})
 
     routes = [
         Route("/insert", insert, methods=["POST"]),
@@ -571,4 +591,33 @@ def Server(functions={}, database_uri=DATABASE_URI):
     return Starlette(debug=True, routes=routes, on_startup=[startup])
 
 
-app = Server(functions={"insert": insert_results, "process": process_results})
+def Insertor(insert_type):
+    insert_function = insert_type
+
+    def insert(results, scan_id, db):
+        return insert_function(results, scan_id, db)
+
+
+def Processor(processor_type):
+    processor_function = processor_type
+
+    def process(results, scan_type):
+        processor_function(results, scan_type)
+
+
+app = Server(
+    functions={
+        "insert": {
+            "https": Insertor(insert_https),
+            "ssl": Insertor(insert_ssl),
+            "dmarc": Insertor(insert_dmarc),
+            "dkim": Insertor(insert_dkim),
+        },
+        "process": {
+            "https": Processor(process_https),
+            "ssl": Processor(process_ssl),
+            "dmarc": Processor(process_dmarc),
+            "dkim": Processor(process_dkim),
+        },
+    }
+)
