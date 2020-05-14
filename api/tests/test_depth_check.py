@@ -1,12 +1,15 @@
+import pytest
+
 from werkzeug.test import create_environ
 from flask import Request
-import pytest
 from graphene.test import Client
+
 from app import app
 from db import DB
 from queries import schema
 from models import Users
 from backend.security_check import SecurityAnalysisBackend
+from tests.test_functions import json, run
 
 
 @pytest.fixture
@@ -25,39 +28,17 @@ def test_valid_depth_query(save):
     )
     save(test_super_admin)
 
-    backend = SecurityAnalysisBackend()
-    client = Client(schema)
-    get_token = client.execute(
-        """
-        mutation{
-            signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                authToken
-            }
-        }
-        """,
-        backend=backend,
-    )
-
-    assert get_token["data"]["signIn"]["authToken"] is not None
-    token = get_token["data"]["signIn"]["authToken"]
-    assert token is not None
-
-    environ = create_environ()
-    environ.update(HTTP_AUTHORIZATION=token)
-    request_headers = Request(environ)
-
-    results = client.execute(
-        """
+    result = run(
+        query="""
         {
             user {
                 displayName
             }
         }
         """,
-        context_value=request_headers,
-        backend=backend,
+        as_user=test_super_admin
     )
-    user = results["data"].values()
+    user = result["data"].values()
     [[details]] = user
     assert details == {"displayName": "testsuperadmin"}
 
@@ -70,10 +51,8 @@ def test_invalid_depth_query(save):
     )
     save(test_super_admin)
 
-    backend = SecurityAnalysisBackend(10)
-    client = Client(schema)
-    executed = client.execute(
-        """
+    result = run(
+        query="""
         {
           getSectorById(id: 1) {
             groups{
@@ -118,8 +97,10 @@ def test_invalid_depth_query(save):
           }
         }
         """,
-        backend=backend,
+        as_user=test_super_admin,
+        backend=SecurityAnalysisBackend(10)
     )
-    assert executed["errors"]
-    assert executed["errors"][0]
-    assert executed["errors"][0]["message"] == "Query is too complex"
+
+    assert result["errors"]
+    assert result["errors"][0]
+    assert result["errors"][0]["message"] == "Query is too complex"
