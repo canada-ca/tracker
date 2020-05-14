@@ -13,38 +13,124 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/DmarcReportGuidance.js:213
+msgid "A server configured to use the wrong \"envelope from\" address."
+msgstr "Un serveur configuré pour utiliser la mauvaise adresse \"envelope from\"."
+
+#: src/DmarcReportGuidance.js:219
+msgid "A third party sender not using a custom return path."
+msgstr "Un expéditeur tiers n'utilisant pas une voie de retour personnalisée."
+
+#: src/DmarcReportGuidance.js:323
+msgid "Add a CNAME record to refer to a DKIM record maintained by a third party sender."
+msgstr "Ajouter un enregistrement CNAME pour faire référence à un enregistrement DKIM tenu par un expéditeur tiers."
+
+#: src/DmarcReportGuidance.js:239
+msgid "Add a custom return path for athird party sender."
+msgstr "Ajoutez un chemin de retour personnalisé pour l'expéditeur tiers."
+
+#: src/DmarcReportGuidance.js:154
+msgid "Add an \"include\" clause for a third party sender."
+msgstr "Ajouter une clause \"inclure\" pour un expéditeur tiers."
+
+#: src/DmarcReportGuidance.js:464
+msgid "Adjust the policy portion of the DMARCrecord of the root domain or subdomain."
+msgstr "Ajustez la partie politique de l'enregistrement DMARC du domaine ou sous-domaine racine."
+
 #: src/UserCard.js:45
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
+
+#: src/SignInPage.js:36
+msgid "An error occurred."
+msgstr "Une erreur s'est produite."
 
 #: src/LandingPage.js:16
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre des services en ligne sécurisés. Un nouvel avis de politique vise à assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en matière de sécurité Web. Voyez comment les sites gouvernementaux deviennent plus sécuritaires."
 
-#: src/SignInPage.js:137
+#: src/DmarcReportGuidance.js:312
+msgid "Configure the server to sign outbound messages with DKIM."
+msgstr "Configurez le serveur pour signer les messages sortants avec DKIM."
+
+#: src/DmarcReportGuidance.js:159
+msgid "Configure the server to use the correct domain for the \"headerfrom\" address."
+msgstr "Configurez le serveur pour qu'il utilise le domaine correct pour l'adresse \"headerfrom\"."
+
+#: src/DmarcReportGuidance.js:233
+msgid "Configure the server to use the same domain for the \"envelope from\" and \"header from\" addresses."
+msgstr "Configurez le serveur pour qu'il utilise le même domaine pour les adresses \"envelope from\" et \"header from\"."
+
+#: src/DmarcReportGuidance.js:398
+msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
+msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
+
+#: src/SignInPage.js:139
 msgid "Create Account"
 msgstr "Créer un compte"
 
 #: src/UserList.js:47
 msgid "Create User"
-msgstr ""
+msgstr "Créer un utilisateur"
 
-#: src/App.js:69
-msgid "DMARC"
-msgstr ""
+#: src/DmarcReportGuidance.js:262
+#: src/DmarcReportGuidance.js:283
+msgid "DKIM Check Failed"
+msgstr "Échec du contrôle DKIM"
+
+#: src/DmarcReportGuidance.js:347
+#: src/DmarcReportGuidance.js:368
+msgid "DKIM Domain Alignment Failed"
+msgstr "Échec de l'alignement du domaine DKIM"
+
+#: src/DmarcReportGuidance.js:422
+#: src/DmarcReportGuidance.js:443
+msgid "DMARC Policy Applied"
+msgstr "Politique de la DMARC appliquée"
 
 #: src/App.js:53
-#: src/DomainsPage.js:18
+#: src/DomainsPage.js:36
 msgid "Domains"
 msgstr "Domaines"
+
+#: src/SignInPage.js:66
+msgid "Email cannot be empty"
+msgstr "Le courriel ne peut être vide"
 
 #: src/EmailField.js:31
 msgid "Email {0}"
 msgstr "Courriel {0}"
 
-#: src/SignInPage.js:119
+#: src/DmarcReportGuidance.js:317
+msgid "Ensure the DKIM record for thedomain and selector is present andvalid."
+msgstr "Assurez-vous que l'enregistrement DKIM pour le domaine et le sélecteur est présent et valide."
+
+#: src/DmarcReportGuidance.js:143
+msgid "Ensure the SPF record is present and valid."
+msgstr "Assurez-vous que le dossier du SPF est présent et valide."
+
+#: src/SignInPage.js:121
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
+
+#: src/DmarcReportGuidance.js:134
+#: src/DmarcReportGuidance.js:224
+#: src/DmarcReportGuidance.js:389
+msgid "Forwarding by an intermediate server."
+msgstr "Redirection par un serveur intermédiaire."
+
+#: src/DmarcReportGuidance.js:105
+#: src/DmarcReportGuidance.js:197
+#: src/DmarcReportGuidance.js:276
+#: src/DmarcReportGuidance.js:361
+#: src/DmarcReportGuidance.js:437
+#: src/DmarcReportGuidance.js:503
+msgid "Guidance"
+msgstr "Conseils"
+
+#: src/DmarcReportGuidance.js:554
+msgid "Hide Guidance"
+msgstr "Masquer les conseils"
 
 #: src/App.js:50
 #: src/QRcodePage.js:67
@@ -52,32 +138,111 @@ msgid "Home"
 msgstr "Accueil"
 
 #: src/QRcodePage.js:21
+#: src/SignInPage.js:72
 msgid "Loading..."
 msgstr "Chargement..."
+
+#: src/DmarcReportGuidance.js:488
+#: src/DmarcReportGuidance.js:510
+msgid "Messages Subject to DMARC Policy"
+msgstr "Messages soumis à la politique de la DMARC"
+
+#: src/DmarcReportGuidance.js:149
+msgid "Modify the SPF record to include the sending IP address."
+msgstr "Modifiez l'enregistrement SPF pour y inclure l'adresse IP d'envoi."
+
+#: src/DomainsPage.js:53
+#: src/DomainsPage.js:65
+msgid "No domains scanned yet."
+msgstr "Aucun domaine n'a encore été scanné."
 
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page non trouvée"
 
+#: src/SignInPage.js:65
+msgid "Password cannot be empty"
+msgstr "Le mot de passe ne peut pas être vide"
+
+#: src/DmarcReportGuidance.js:519
+msgid "Please see the SPF and DKIM causes sections."
+msgstr "Veuillez consulter les sections SPF et DKIM causes."
+
+#: src/DmarcReportGuidance.js:528
+msgid "Please see the SPF and DKIM resolutions sections."
+msgstr "Veuillez consulter les sections des résolutions SPF et DKIM."
+
+#: src/DmarcReportGuidance.js:117
+#: src/DmarcReportGuidance.js:209
+#: src/DmarcReportGuidance.js:288
+#: src/DmarcReportGuidance.js:373
+#: src/DmarcReportGuidance.js:448
+#: src/DmarcReportGuidance.js:515
+msgid "Possible Causes"
+msgstr "Causes possibles"
+
+#: src/DmarcReportGuidance.js:139
+#: src/DmarcReportGuidance.js:229
+#: src/DmarcReportGuidance.js:308
+#: src/DmarcReportGuidance.js:394
+#: src/DmarcReportGuidance.js:460
+#: src/DmarcReportGuidance.js:524
+msgid "Possible Resolutions"
+msgstr "Résolutions possibles"
+
 #: src/App.js:43
 msgid "Pre-Alpha"
 msgstr "préalpha"
 
-#: src/App.js:121
+#: src/App.js:115
 msgid "Privacy"
 msgstr "Confidentialité"
 
+#: src/DmarcReportGuidance.js:496
+msgid "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
+msgstr "Les messages reçus ont échoué à la fois au SPF et au DKIM, et donc à la DMARC. La politique du DMARC spécifiée pour le domaine a été appliquée à ces messages."
+
+#: src/DmarcReportGuidance.js:146
+msgid "Remove redundant SPF records."
+msgstr "Supprimer les enregistrements SPF redondants."
+
+#: src/DmarcReportGuidance.js:91
+#: src/DmarcReportGuidance.js:112
+msgid "SPF Check Failed"
+msgstr "Echec du contrôle du SPF"
+
+#: src/DmarcReportGuidance.js:183
+#: src/DmarcReportGuidance.js:204
+msgid "SPF Domain Alignment Failed"
+msgstr "Échec de l'alignement des domaines du SPF"
+
 #: src/QRcodePage.js:30
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
-msgstr ""
+msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
+
+#: src/DmarcReportGuidance.js:554
+msgid "Show Guidance"
+msgstr "Afficher les conseils"
+
+#: src/DmarcReportPage.js:217
+msgid "Show Less"
+msgstr "Montrer moins"
+
+#: src/DmarcReportPage.js:217
+msgid "Show More"
+msgstr "En savoir plus"
 
 #: src/App.js:62
 #: src/QRcodePage.js:58
-#: src/SignInPage.js:128
+#: src/SignInPage.js:130
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: src/SignInPage.js:76
+#: src/SignInPage.js:55
+msgid "Sign In."
+msgstr "Se connecter."
+
+#: src/SignInPage.js:80
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
@@ -89,13 +254,66 @@ msgstr "Passer au contenu principal"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Désolé, la page que vous essayiez de consulter n'existe pas."
 
-#: src/App.js:131
+#: src/App.js:125
 msgid "Terms & conditions"
 msgstr "Avis"
 
-#: src/DomainsPage.js:23
-msgid "This is the full list of domains"
-msgstr "Voici la liste complète des domaines"
+#: src/DmarcReportGuidance.js:430
+msgid "The DMARC policy (i.e. none, quarantine, orreject) that was applied to messages which failured DMARC (i.e. failed both SPF and DKIM)."
+msgstr "La politique du DMARC (none, quarentine ou reject) qui a été appliquée aux messages qui ont échoué au DMARC (c'est-à-dire qui ont échoué à la fois au SPF et au DKIM)."
+
+#: src/DmarcReportGuidance.js:121
+msgid "The SPF record for the domain is missing or invalid."
+msgstr "L'enregistrement SPF pour le domaine est manquant ou invalide."
+
+#: src/DmarcReportGuidance.js:301
+msgid "The message was modified by an intermediate server."
+msgstr "Le message a été modifié par un serveur intermédiaire."
+
+#: src/DmarcReportGuidance.js:292
+msgid "The message was not signed with DKIM."
+msgstr "Le message n'a pas été signé avec DKIM."
+
+#: src/DmarcReportGuidance.js:452
+msgid "The policy applied is based on the DMARC record of the root domain or subdomain."
+msgstr "La politique appliquée est basée sur l'enregistrement DMARC du domaine ou sous-domaine racine."
+
+#: src/DmarcReportGuidance.js:191
+msgid "The receiving server found that the domains used in the \"envelope from\" and \"header from\" email addresses did not match."
+msgstr "Le serveur de réception a constaté que les domaines utilisés dans les adresses électroniques \"envelope from\" et \"header from\" ne correspondaient pas."
+
+#: src/DmarcReportGuidance.js:355
+msgid "The receiving server found that the domains usedin the DKIM header and the \"header from\" email address did not match."
+msgstr "Le serveur de réception a constaté que les domaines utilisés dans l'en-tête DKIM et l'adresse électronique \"header from\" ne correspondaient pas."
+
+#: src/DmarcReportGuidance.js:270
+msgid "The receiving server found that the message had no DKIM signature, or that verification of the signature failed."
+msgstr "Le serveur destinataire a constaté que le message n'avait pas de signature DKIM, ou que la vérification de la signature avait échoué."
+
+#: src/DmarcReportGuidance.js:99
+msgid "The receiving server found that the sending IP address was not authorized to send mail on behalf of the domain."
+msgstr "Le serveur de réception a constaté que l'adresse IP d'envoi n'était pas autorisée à envoyer du courrier au nom du domaine."
+
+#: src/DmarcReportGuidance.js:129
+msgid "The sending IP address is not included in the SPF record."
+msgstr "L'adresse IP d'envoi n'est pas incluse dans l'enregistrement SPF."
+
+#: src/DmarcReportGuidance.js:377
+msgid "The server is configured to use a different domain for the DKIM header than for the \"header from\" address."
+msgstr "Le serveur est configuré pour utiliser un domaine différent pour l'en-tête DKIM que pour l'adresse \"header from\"."
+
+#: src/DmarcReportGuidance.js:126
+msgid "There are multiple SPF records."
+msgstr "Il existe de nombreux enregistrements SPF."
+
+#: src/DmarcReportGuidance.js:295
+#: src/DmarcReportGuidance.js:383
+msgid "There is no DKIM record for the domain and/or selector used or the record is invalid."
+msgstr "Il n'y a pas d'enregistrement DKIM pour le domaine et/ou le sélecteur utilisé ou l'enregistrement n'est pas valide."
+
+#: src/DmarcReportGuidance.js:67
+msgid "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
+msgstr "Ces notes d'orientation ont été conçues pour vous aider à résoudre les problèmes liés à l'échec de vos scanners DMARC. Veuillez lire chaque note et déterminer ce qui a provoqué l'échec d'un scan DMARC sur votre domaine."
 
 #: src/App.js:44
 msgid "This service is being developed in the open"
@@ -107,15 +325,23 @@ msgstr "Suivre la conformité en matière de sécurité Web"
 
 #: src/UserCard.js:38
 msgid "TwoFactor"
-msgstr ""
+msgstr "Deux facteurs"
+
+#: src/SignInPage.js:38
+msgid "Unable to sign in to your account, please try again."
+msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
 #: src/App.js:66
 msgid "User List"
-msgstr ""
+msgstr "Liste des utilisateurs"
 
 #: src/App.js:58
 msgid "User Profile"
-msgstr ""
+msgstr "Profil de l'utilisateur"
+
+#: src/SignInPage.js:56
+msgid "Welcome, you are successfully signed in!"
+msgstr "Bienvenue, vous êtes connecté avec succès!"
 
 #: src/QRcodePage.js:45
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
