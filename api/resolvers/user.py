@@ -78,6 +78,8 @@ def resolve_user(self, info, **kwargs):
         # Check to see if the requested user is a super admin and if true return
         if is_super_admin(user_roles=user_roles):
             return query.filter(Users.id == req_user_id)
+        elif user_id == req_user_id:
+            return query.filter(Users.id == req_user_id)
 
         # Declare return list, and check
         rtn_query = []
