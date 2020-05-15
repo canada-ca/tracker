@@ -213,7 +213,7 @@ def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
     save(reader)
 
     result = run(
-        """
+        query="""
         {
             organization(slug: "org2") {
                 edges {
