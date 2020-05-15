@@ -113,7 +113,7 @@ def test_email_address_in_use():
             )
         )
 
-    [error] = result["errors"]
+    [error] = error_result["errors"]
     assert error["message"] == error_email_in_use()
 
 
@@ -360,7 +360,7 @@ def test_user_does_not_exist():
     assert error["message"] == error_user_does_not_exist()
 
 
-def test_invalid_otp_code():
+def test_invalid_otp_code(save):
     """Test that an error is raised if the user specified does not exist"""
     test_user = Users(
         display_name="testuser",
