@@ -1,39 +1,33 @@
-from datetime import datetime
-import pyotp
-from json import dumps
 import pytest
+
+from datetime import datetime
 from pytest import fail
-from graphene.test import Client
+
 from db import DB
 from app import app
-from queries import schema
 from models import Users
-from backend.security_check import SecurityAnalysisBackend
 from functions.error_messages import (
     error_invalid_credentials,
     error_too_many_failed_login_attempts,
     error_user_does_not_exist,
 )
-
-
-def json(j):
-    return dumps(j, indent=2)
-
-
-s, cleanup, session = DB()
+from tests.test_functions import json, run
 
 
 @pytest.fixture
-def save():
+def db():
     with app.app_context():
-        yield s
+        save, cleanup, session = DB()
+        yield [save, session]
         cleanup()
 
 
-def test_sign_in_with_valid_credentials(save):
+def test_sign_in_with_valid_credentials(db):
     """
     Test that ensures a user can be signed in successfully
     """
+    save, _ = db
+
     user = Users(
         display_name="testuser",
         user_name="testuser@testemail.ca",
@@ -44,8 +38,8 @@ def test_sign_in_with_valid_credentials(save):
     )
     save(user)
 
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        mutation="""
         mutation{
             signIn(userName:"testuser@testemail.ca",
                     password:"testpassword123"){
@@ -56,19 +50,23 @@ def test_sign_in_with_valid_credentials(save):
         }
         """,
     )
+
     if "errors" in actual:
         fail(
             "expected signin for a normal user to succeed. Instead:"
             "{}".format(json(actual))
         )
+
     [username] = actual["data"]["signIn"]["user"].values()
     assert username == "testuser@testemail.ca"
 
 
-def test_signin_with_invalid_credentials_fails(save):
+def test_signin_with_invalid_credentials_fails(db):
     """
     Test that ensures a user can be signed in successfully
     """
+    save, _ = db
+
     user = Users(
         display_name="testuser",
         user_name="testuser@testemail.ca",
@@ -79,8 +77,8 @@ def test_signin_with_invalid_credentials_fails(save):
     )
     save(user)
 
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        mutation="""
         mutation{
             signIn(userName:"testuser@testemail.ca",
                     password:"invalidpassword"){
@@ -91,17 +89,21 @@ def test_signin_with_invalid_credentials_fails(save):
         }
         """,
     )
+
     if "errors" not in actual:
         fail(
             "expected signin with invalid credentials to raise an error. Instead:"
             "{}".format(json(actual))
         )
+
     [err] = actual["errors"]
     [message, _line, _field] = err.values()
     assert message == "Incorrect email or password"
 
 
-def test_failed_login_attempts_are_recorded(save):
+def test_failed_login_attempts_are_recorded(db):
+    save, session = db
+
     user = Users(
         display_name="testuser",
         user_name="testuser@testemail.ca",
@@ -109,8 +111,8 @@ def test_failed_login_attempts_are_recorded(save):
     )
     save(user)
 
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        mutation="""
         mutation{
           signIn(userName:"testuser@testemail.ca" password:"invalidpassword"){
             user{
@@ -120,6 +122,7 @@ def test_failed_login_attempts_are_recorded(save):
         }
         """
     )
+
     if "errors" not in actual:
         fail(
             "expected signin with invalid credentials to raise an error. Instead:"
@@ -131,11 +134,13 @@ def test_failed_login_attempts_are_recorded(save):
     assert user.failed_login_attempt_time is not 0
 
 
-def test_successful_login_sets_failed_attempts_to_zero(save):
+def test_successful_login_sets_failed_attempts_to_zero(db):
     """
     Test that ensures a user can be signed in, and that when they do, their
     user count is updated to be 0.
     """
+    save, session = db
+
     user = Users(
         display_name="test_failed_user",
         user_name="failedb4@example.com",
@@ -144,8 +149,9 @@ def test_successful_login_sets_failed_attempts_to_zero(save):
         failed_login_attempt_time=datetime.now().timestamp() + 1920,
     )
     save(user)
-    actual = Client(schema).execute(
-        """
+
+    actual = run(
+        mutation="""
         mutation{
             signIn(userName:"failedb4@example.com",
              password:"testpassword123"){
@@ -162,7 +168,9 @@ def test_successful_login_sets_failed_attempts_to_zero(save):
     assert user.failed_login_attempt_time == 0
 
 
-def test_too_many_failed_attempts(save):
+def test_too_many_failed_attempts(db):
+    save, _ = db
+
     user = Users(
         display_name="failed2much",
         user_name="failed2much@example.com",
@@ -171,7 +179,7 @@ def test_too_many_failed_attempts(save):
         failed_login_attempt_time=0,
     )
     save(user)
-    actual = Client(schema).execute(
+    actual = run(
         """
         mutation{
             signIn(userName:"failed2much@example.com",
@@ -183,18 +191,20 @@ def test_too_many_failed_attempts(save):
         }
         """,
     )
+
     if "errors" not in actual:
         fail(
             "expected signin with invalid credentials to raise an error. Instead:"
             "{}".format(json(actual))
         )
+
     [err] = actual["errors"]
     [message, _line, _field] = err.values()
     assert message == error_too_many_failed_login_attempts()
 
 
-def test_signing_in_with_unknown_users_returns_error(save):
-    actual = Client(schema).execute(
+def test_signing_in_with_unknown_users_returns_error():
+    actual = run(
         """
         mutation{
             signIn(userName:"null@example.com",
@@ -206,11 +216,13 @@ def test_signing_in_with_unknown_users_returns_error(save):
         }
         """,
     )
+
     if "errors" not in actual:
         fail(
             "expected signin with invalid credentials to raise an error. Instead:"
             "{}".format(json(actual))
         )
+
     [err] = actual["errors"]
     [message, _line, _field] = err.values()
     assert message == error_user_does_not_exist()
