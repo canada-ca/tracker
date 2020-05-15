@@ -3,12 +3,11 @@ from app import app
 from models import Users, User_affiliations, Organizations
 from db import DB
 
-s, cleanup, session = DB()
-
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, session = DB()
         yield s
         cleanup()
 

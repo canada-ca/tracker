@@ -48,7 +48,7 @@ def sign_in_user(user_name, password):
         db_session.commit()
 
         return {
-            "auth_token": tokenize(user_id=user.id, roles=user.roles),
+            "auth_token": tokenize(user_id=user.id),
             "user": user,
         }
 

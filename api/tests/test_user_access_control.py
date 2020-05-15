@@ -1,301 +1,338 @@
 import pytest
+
 from pytest import fail
-from flask import Request
-from graphene.test import Client
-from unittest import TestCase
-from werkzeug.test import create_environ
+
 from app import app
 from db import DB
 from models import Organizations, Users, User_affiliations
-from queries import schema
-from backend.security_check import SecurityAnalysisBackend
-
-_, cleanup, db_session = DB()
+from tests.test_functions import json, run
 
 
-@pytest.fixture(scope="function")
-def user_resolver_ac_test_db_init():
+@pytest.fixture()
+def save():
     with app.app_context():
-        test_read = Users(
-            id=1,
-            display_name="testuserread",
-            user_name="testuserread@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_read)
-        test_super_admin = Users(
-            id=2,
-            display_name="testsuperadmin",
-            user_name="testsuperadmin@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_super_admin)
-        test_admin = Users(
-            id=3,
-            display_name="testadmin",
-            user_name="testadmin@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_admin)
-        test_admin = Users(
-            id=4,
-            display_name="testadmin2",
-            user_name="testadmin2@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_admin)
-        test_write = Users(
-            id=5,
-            display_name="testuserwrite",
-            user_name="testuserwrite@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_write)
-
-        org = Organizations(id=1, acronym="ORG1")
-        db_session.add(org)
-        org = Organizations(id=2, acronym="ORG2")
-        db_session.add(org)
-        org = Organizations(id=3, acronym="ORG3")
-        db_session.add(org)
-
-        test_user_read_role = User_affiliations(
-            user_id=1, organization_id=1, permission="user_read"
-        )
-        db_session.add(test_user_read_role)
-        test_super_admin_role = User_affiliations(
-            user_id=2, organization_id=2, permission="super_admin"
-        )
-        db_session.add(test_super_admin_role)
-        test_admin_role = User_affiliations(
-            user_id=3, organization_id=1, permission="admin"
-        )
-        db_session.add(test_admin_role)
-        test_admin_role = User_affiliations(
-            user_id=4, organization_id=2, permission="admin"
-        )
-        db_session.add(test_admin_role)
-        test_user_write_role = User_affiliations(
-            user_id=5, organization_id=1, permission="user_write"
-        )
-        db_session.add(test_user_write_role)
-        db_session.commit()
-
-        yield
+        s, cleanup, db_session = DB()
+        yield s
         cleanup()
 
 
-@pytest.mark.usefixtures("user_resolver_ac_test_db_init")
-class TestUserResolverAccessControl(TestCase):
-    # Super Admin Tests
-    def test_get_user_as_super_admin(self):
-        """
-        Test to see if user resolver access control allows super admin to
-        request users inside and outside of their organization
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
+# Super Admin Tests
+def test_get_user_as_super_admin(save):
+    """
+    Test to see if user resolver access control allows super admin to
+    request users inside and outside of their organization
+    """
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            ),
+        ],
+    )
+    save(super_admin)
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=Organizations(
+                    acronym="ORG1", name="Organization 1", slug="organization-1"
+                ),
+            ),
+        ],
+    )
+    save(user_read)
+
+    result = run(
+        query="""
+        {
+            user(userName: "testuserread@testemail.ca") {
+                displayName
+            }
+        }
+        """,
+        as_user=super_admin,
+    )
+
+    if "errors" in result:
+        fail(
+            "Tried to select user info as super admin, Instead: {}".format(json(result))
+        )
+
+    expected_result = {"data": {"user": [{"displayName": "testuserread"}]}}
+
+    assert result == expected_result
+
+
+# Admin Same Org
+def test_get_user_from_same_org(save):
+    """
+    Test to see if user resolver access control allows admin to
+    request users inside and not outside of their organization
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+    org_admin = Users(
+        display_name="testadmin",
+        user_name="testadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="admin", user_organization=org_one,),
+        ],
+    )
+    save(org_admin)
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
+
+    result = run(
+        query="""
+        {
+            user(userName: "testuserread@testemail.ca") {
+                displayName
+            }
+        }
+        """,
+        as_user=org_admin,
+    )
+
+    if "errors" in result:
+        fail("Tried to get user info as org admin, instead: {}".format(json(result)))
+
+    expected_result = {"data": {"user": [{"displayName": "testuserread"}]}}
+
+    assert result == expected_result
+
+
+# Admin different org
+def test_get_user_admin_from_different_org(save):
+    """
+    Test to see if user resolver access control does not  allow  admin
+    from another organization to select them
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+    org_two = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_two)
+    org_admin = Users(
+        display_name="testadmin",
+        user_name="testadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="admin", user_organization=org_two,),
+        ],
+    )
+    save(org_admin)
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
+
+    result = run(
+        query="""
+        {
+            user(userName: "testuserread@testemail.ca") {
+                displayName
+            }
+        }
+        """,
+        as_user=org_admin,
+    )
+
+    if "errors" not in result:
+        fail(
+            "User query as different org admin should fail, instead: {}".format(
+                json(result)
             )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+        )
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    [error] = result["errors"]
+    assert (
+        error["message"] == "Error, user does not belong to any of your "
+        "organizations"
+    )
 
-            executed = client.execute(
-                """
-                {
-                    user(userName: "testuserread@testemail.ca") {
-                        displayName
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            result_refr = {"data": {"user": [{"displayName": "testuserread"}]}}
-            self.assertDictEqual(result_refr, executed)
 
-    # Admin Same Org
-    def test_get_user_from_same_org(self):
-        """
-        Test to see if user resolver access control allows admin to
-        request users inside and not outside of their organization
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+# User write tests
+def test_get_user_user_write(save):
+    """
+    Test to see if user resolver access control to ensure users with user
+    write access cannot access this query
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+    user_write = Users(
+        display_name="testuserwrite",
+        user_name="testuserwrite@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_write", user_organization=org_one,),
+        ],
+    )
+    save(user_write)
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    result = run(
+        query="""
+        {
+            user(userName: "testuserread@testemail.ca") {
+                displayName
+            }
+        }
+        """,
+        as_user=user_write,
+    )
 
-            executed = client.execute(
-                """
-                {
-                    user(userName: "testuserread@testemail.ca") {
-                        displayName
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            result_refr = {"data": {"user": [{"displayName": "testuserread"}]}}
-            self.assertDictEqual(result_refr, executed)
+    if "errors" not in result:
+        fail("User query as user write should fail, instead: {}".format(json(result)))
 
-    # Admin different org
-    def test_get_user_admin_from_different_org(self):
-        """
-        Test to see if user resolver access control does not  allow  admin
-        from another organization to select them
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testadmin2@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+    [error] = result["errors"]
+    assert (
+        error["message"] == "Error, you do not have permission to view this "
+        "users information"
+    )
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
 
-            executed = client.execute(
-                """
-                {
-                    user(userName: "testuserread@testemail.ca") {
-                        displayName
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"] == "Error, user does not "
-                "belong to any of your"
-                " organizations"
-            )
+# User read tests
+def test_get_reader_can_access_their_own_info(save):
+    """
+    Test to see if user resolver access control to ensure users with user
+    write access cannot access this query
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
 
-    # User write tests
-    def test_get_user_user_write(self):
-        """
-        Test to see if user resolver access control to ensure users with user
-        write access cannot access this query
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserwrite@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+    results = run(
+        query="""
+        {
+            user(userName: "testuserread@testemail.ca") {
+                displayName
+            }
+        }
+        """,
+        as_user=user_read,
+    )
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    if "errors" in results:
+        fail("Tried to get users own information, instead: {}".format(json(results)))
 
-            executed = client.execute(
-                """
-                {
-                    user(userName: "testuserread@testemail.ca") {
-                        displayName
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"]
-                == "Error, you do not have permission to view this users information"
-            )
+    expected_result = {"data": {"user": [{"displayName": "testuserread"}]}}
 
-    # User read tests
-    def test_get_reader_can_access_their_own_info(self):
-        """
-        Test to see if user resolver access control to ensure users with user
-        write access cannot access this query
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+    assert results == expected_result
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
 
-            results = client.execute(
-                """
-                {
-                    user(userName: "testuserread@testemail.ca") {
-                        displayName
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert results == {"data": {"user": [{"displayName": "testuserread"}]}}
+def test_get_user_user_read(save):
+    """
+    Test to see if user resolver access control to ensure users with user
+    write access cannot access this query
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+    user_read_one = Users(
+        display_name="testuserreadone",
+        user_name="testuserreadone@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read_one)
+    user_read_two = Users(
+        display_name="testuserreadtwo",
+        user_name="testuserreadtwo@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read_two)
+
+    result = run(
+        query="""
+        {
+            user(userName: "testuserreadtwo@testemail.ca") {
+                displayName
+            }
+        }
+        """,
+        as_user=user_read_one,
+    )
+
+    if "errors" not in result:
+        fail("User query as user read should fail, instead: {}".format(json(result)))
+
+    [error] = result["errors"]
+    assert (
+        error["message"] == "Error, you do not have permission to view this "
+        "users information"
+    )

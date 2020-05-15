@@ -1,28 +1,12 @@
-from pytest import fail
-from graphene.test import Client
-from json import dumps
-from json_web_token import tokenize, auth_header
-from flask import Request
-from werkzeug.test import create_environ
 import pytest
-from unittest import TestCase
+
+from pytest import fail
+
 from app import app
 from db import DB
-from queries import schema
 from models import Users, User_affiliations, Organizations
 from functions.error_messages import error_not_an_admin
-from backend.security_check import SecurityAnalysisBackend
-
-
-def run(query=None, mutation=None, as_user=None):
-    return Client(schema).execute(
-        query if query else mutation,
-        context_value=auth_header(tokenize(user_id=as_user.id, roles=as_user.roles)),
-    )
-
-
-def json(j):
-    return dumps(j, indent=2)
+from tests.test_functions import json, run
 
 
 @pytest.fixture
@@ -74,7 +58,7 @@ def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_write(db):
     if "errors" in update_result:
         fail(
             "Super admin failed when trying to update user permissions! :"
-            "{}".format(json(update))
+            "{}".format(json(update_result))
         )
 
     actual = run(
@@ -131,7 +115,7 @@ def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_admin(db):
     if "errors" in update_result:
         fail(
             "Super admin failed when trying to update user permissions! :"
-            "{}".format(json(update))
+            "{}".format(json(update_result))
         )
 
     actual = run(
@@ -188,7 +172,7 @@ def test_sa_user_can_use_updateUserRole_annoint_another_user_a_sa(db):
     if "errors" in update_result:
         fail(
             "Super admin failed when trying to update user permissions! :"
-            "{}".format(json(update))
+            "{}".format(json(update_result))
         )
 
     actual = run(

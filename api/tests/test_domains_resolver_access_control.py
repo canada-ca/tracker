@@ -1,566 +1,570 @@
 import pytest
+
+from pytest import fail
 from flask import Request
 from graphene.test import Client
 from unittest import TestCase
 from werkzeug.test import create_environ
+
 from app import app
 from db import DB
 from models import Organizations, Domains, Users, User_affiliations
-from queries import schema
-from backend.security_check import SecurityAnalysisBackend
-
-_, cleanup, db_session = DB()
+from tests.test_functions import json, run
 
 
-@pytest.fixture(scope="function")
-def domain_test_db_init():
+@pytest.fixture()
+def save():
     with app.app_context():
-        test_user = Users(
-            id=1,
-            display_name="testuserread",
-            user_name="testuserread@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_user)
-        test_super_admin = Users(
-            id=2,
-            display_name="testsuperadmin",
-            user_name="testsuperadmin@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_super_admin)
-
-        org = Organizations(
-            id=1, name="Organization 1", org_tags={"description": "Organization 1"}
-        )
-        db_session.add(org)
-        org = Organizations(
-            id=2, name="Organization 2", org_tags={"description": "Organization 2"}
-        )
-        db_session.add(org)
-        org = Organizations(
-            id=3, name="Organization 3", org_tags={"description": "Organization 3"}
-        )
-        db_session.add(org)
-
-        test_admin_role = User_affiliations(
-            user_id=1, organization_id=1, permission="user_read"
-        )
-        db_session.add(test_admin_role)
-        test_admin_role = User_affiliations(
-            user_id=2, organization_id=1, permission="super_admin"
-        )
-        db_session.add(test_admin_role)
-
-        domain = Domains(id=1, domain="somecooldomain.ca", organization_id=1)
-        db_session.add(domain)
-        domain = Domains(id=2, domain="anothercooldomain.ca", organization_id=1)
-        db_session.add(domain)
-        domain = Domains(id=3, domain="somelamedomain.ca", organization_id=2)
-        db_session.add(domain)
-        db_session.commit()
-
-        yield
-
+        s, cleanup, db_session = DB()
+        yield s
         cleanup()
 
 
-@pytest.mark.usefixtures("domain_test_db_init")
-class TestDomainsResolver(TestCase):
-    # Super Admin Tests
-    def test_get_domain_resolvers_by_url_super_admin_single_node(self):
-        """Test domain resolver by url as a super admin, single node return"""
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+def test_get_domain_resolvers_by_url_super_admin_single_node(save):
+    """
+    Test domain resolver by url as a super admin, single node return
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            ),
+        ],
+    )
+    save(super_admin)
 
-            executed = client.execute(
-                """
-                {
-                    domain(urlSlug: "somelamedomain-ca") {
-                        url
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            result_refr = {"data": {"domain": [{"url": "somelamedomain.ca"}]}}
-            self.assertDictEqual(result_refr, executed)
+    test_domain = Domains(domain="sa.test.domain.ca", organization=org_one,)
+    save(test_domain)
 
-    def test_get_domain_resolvers_by_org_super_admin_single_node(self):
-        """
-        Test domain resolver by organization as a super admin, single node
-        return
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                """
-                {
-                    domains(orgSlug: "organization-2") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            result_refr = {
-                "data": {"domains": {"edges": [{"node": {"url": "somelamedomain.ca"}}]}}
+    result = run(
+        query="""
+        {
+            domain(urlSlug: "sa-test-domain-ca") {
+                url
             }
-            self.assertDictEqual(result_refr, executed)
+        }
+        """,
+        as_user=super_admin,
+    )
 
-    def test_get_domain_resolvers_by_org_super_admin_multi_node(self):
-        """
-        Test domain resolver by organization as a super admin, multi node return
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+    if "errors" in result:
+        fail(
+            "Error occurred when trying to get a domain, error: {}".format(json(result))
+        )
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    expected_result = {"data": {"domain": [{"url": "sa.test.domain.ca"}]}}
+    assert result == expected_result
 
-            executed = client.execute(
-                """
-                {
-                    domains(orgSlug: "organization-1") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            result_refr = {
-                "data": {
-                    "domains": {
-                        "edges": [
-                            {"node": {"url": "somecooldomain.ca"}},
-                            {"node": {"url": "anothercooldomain.ca"}},
-                        ]
+
+def test_get_domain_resolvers_by_org_super_admin_single_node(save):
+    """
+    Test domain resolver by organization as a super admin, single node
+    return
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            ),
+        ],
+    )
+    save(super_admin)
+
+    test_domain = Domains(domain="sa.test.domain.ca", organization=org_one,)
+    save(test_domain)
+
+    result = run(
+        query="""
+        {
+            domains(orgSlug: "organization-1") {
+                edges {
+                    node {
+                        url
                     }
                 }
             }
-            self.assertDictEqual(result_refr, executed)
+        }
+        """,
+        as_user=super_admin,
+    )
 
-    def test_get_domain_resolvers_by_url_super_admin_invalid_domain(self):
-        """
-        Test domain resolver by url as a super admin, invalid domain
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+    if "errors" in result:
+        fail(
+            "Error occurred when trying to get a domain, error: {}".format(json(result))
+        )
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    expected_result = {
+        "data": {"domains": {"edges": [{"node": {"url": "sa.test.domain.ca"}}]}}
+    }
+    assert result == expected_result
 
-            executed = client.execute(
-                """
-                {
-                    domain(urlSlug: "google-ca") {
+
+def test_get_domain_resolvers_by_org_super_admin_multi_node(save):
+    """
+    Test domain resolver by organization as a super admin, multi node return
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            ),
+        ],
+    )
+    save(super_admin)
+
+    test_domain_1 = Domains(domain="sa.1.test.domain.ca", organization=org_one,)
+    save(test_domain_1)
+    test_domain_2 = Domains(domain="sa.2.test.domain.ca", organization=org_one,)
+    save(test_domain_2)
+
+    result = run(
+        query="""
+        {
+            domains(orgSlug: "organization-1") {
+                edges {
+                    node {
                         url
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert executed["errors"][0]["message"] == "Error, domain does not exist"
-
-    def test_get_domain_resolvers_by_org_super_admin_org_no_domains(self):
-        """
-        Test domain resolver by org as a super admin, org has no domains
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testsuperadmin@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                """
-                {
-                    domains(orgSlug: "organization-3") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"]
-                == "Error, no domains associated with that organization"
-            )
-
-    # User read tests
-    def test_get_domain_resolvers_by_url_user_read_single_node(self):
-        """
-        Test domain resolver get domain by url as user read, return as
-        single node
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                """
-                {
-                    domain(urlSlug: "somecooldomain-ca") {
-                        url
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            result_refr = {"data": {"domain": [{"url": "somecooldomain.ca"}]}}
-            self.assertDictEqual(result_refr, executed)
-
-    def test_get_domain_resolvers_by_org_user_read_multi_node(self):
-        """
-        Test domain resolver get domain by org as user read, return as
-        multi node
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
-
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
-
-            executed = client.execute(
-                """
-                {
-                    domains(orgSlug: "organization-1") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            result_refr = {
-                "data": {
-                    "domains": {
-                        "edges": [
-                            {"node": {"url": "somecooldomain.ca"}},
-                            {"node": {"url": "anothercooldomain.ca"}},
-                        ]
                     }
                 }
             }
-            self.assertDictEqual(result_refr, executed)
+        }
+        """,
+        as_user=super_admin,
+    )
 
-    def test_get_domain_resolvers_by_url_user_read_no_access(self):
-        """
-        Test domain resolver get domain by url as user read, user has no rights
-        to view domains related to that org
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+    if "errors" in result:
+        fail("Tried to get multiple domains, instead: {}".format(json(result)))
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    expected_result = {
+        "data": {
+            "domains": {
+                "edges": [
+                    {"node": {"url": "sa.1.test.domain.ca"}},
+                    {"node": {"url": "sa.2.test.domain.ca"}},
+                ]
+            }
+        }
+    }
+    assert result == expected_result
 
-            executed = client.execute(
-                """
-                {
-                    domain(urlSlug: "somelamedomain-ca") {
+
+def test_get_domain_resolvers_by_url_super_admin_invalid_domain(save):
+    """
+    Test domain resolver by url as a super admin, invalid domain
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            ),
+        ],
+    )
+    save(super_admin)
+
+    result = run(
+        query="""
+        {
+            domain(urlSlug: "google-ca") {
+                url
+            }
+        }
+        """,
+        as_user=super_admin,
+    )
+
+    if "errors" not in result:
+        fail("Expected error, instead: {}".format(json(result)))
+
+    [error] = result["errors"]
+    assert error["message"] == "Error, domain does not exist"
+
+
+def test_get_domain_resolvers_by_org_super_admin_org_no_domains(save):
+    """
+    Test domain resolver by org as a super admin, org has no domains
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            ),
+        ],
+    )
+    save(super_admin)
+
+    result = run(
+        query="""
+        {
+            domains(orgSlug: "organization-1") {
+                edges {
+                    node {
                         url
                     }
                 }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"]
-                == "Error, you do not have permission to view that domain"
-            )
+            }
+        }
+        """,
+        as_user=super_admin,
+    )
 
-    def test_get_domain_resolvers_by_org_user_read_no_access(self):
-        """
-        Test domain resolver get domain by org as user read, user has no rights
-        to view domains related to that org
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+    if "errors" not in result:
+        fail("Expected error, instead: {}".format(json(result)))
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    [error] = result["errors"]
+    assert error["message"] == "Error, no domains associated with that organization"
 
-            executed = client.execute(
-                """
-                {
-                    domains(orgSlug: "organization-2") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
-                    }
-                }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"]
-                == "Error, you do not have permission to view that organization"
-            )
 
-    def test_get_domain_resolvers_by_url_user_read_invalid_domain(self):
-        """
-        Test domain resolver get domain by url as user read, url does not
-        exist
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
-                    }
-                }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+def test_get_domain_resolvers_by_url_user_read_single_node(save):
+    """
+    Test domain resolver get domain by url as user read, return as
+    single node
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
 
-            executed = client.execute(
-                """
-                {
-                    domain(urlSlug: "google-ca") {
+    test_domain = Domains(domain="user.read.test.domain.ca", organization=org_one,)
+    save(test_domain)
+
+    result = run(
+        query="""
+        {
+            domain(urlSlug: "user-read-test-domain-ca") {
+                url
+            }
+        }
+        """,
+        as_user=user_read,
+    )
+
+    if "errors" in result:
+        fail(
+            "Error occurred when trying to get a domain, error: {}".format(json(result))
+        )
+
+    expected_result = {"data": {"domain": [{"url": "user.read.test.domain.ca"}]}}
+    assert result == expected_result
+
+
+def test_get_domain_resolvers_by_org_user_read_multi_node(save):
+    """
+    Test domain resolver get domain by org as user read, return as
+    multi node
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
+
+    test_domain_1 = Domains(domain="user.read.1.test.domain.ca", organization=org_one,)
+    save(test_domain_1)
+
+    test_domain_2 = Domains(domain="user.read.2.test.domain.ca", organization=org_one,)
+    save(test_domain_2)
+
+    result = run(
+        query="""
+        {
+            domains(orgSlug: "organization-1") {
+                edges {
+                    node {
                         url
                     }
                 }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert executed["errors"][0]["message"] == "Error, domain does not exist"
+            }
+        }
+        """,
+        as_user=user_read,
+    )
 
-    def test_get_domain_resolvers_by_org_user_read_org_no_domains(self):
-        """
-        Test domain resolver get domain by org as user read, org has no related
-        domains
-        """
-        with app.app_context():
-            backend = SecurityAnalysisBackend()
-            client = Client(schema)
-            get_token = client.execute(
-                """
-                mutation{
-                    signIn(userName:"testuserread@testemail.ca", password:"testpassword123"){
-                        authToken
+    if "errors" in result:
+        fail(
+            "Error occurred when trying to get domains, error: {}".format(json(result))
+        )
+
+    expected_result = {
+        "data": {
+            "domains": {
+                "edges": [
+                    {"node": {"url": "user.read.1.test.domain.ca"}},
+                    {"node": {"url": "user.read.2.test.domain.ca"}},
+                ]
+            }
+        }
+    }
+    assert result == expected_result
+
+
+def test_get_domain_resolvers_by_url_user_read_no_access(save):
+    """
+    Test domain resolver get domain by url as user read, user has no rights
+    to view domains related to that org
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+    org_two = Organizations(
+        acronym="ORG2", name="Organization 2", slug="organization-2"
+    )
+    save(org_two)
+
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
+
+    test_domain_1 = Domains(domain="user.read.1.test.domain.ca", organization=org_two,)
+    save(test_domain_1)
+
+    result = run(
+        query="""
+        {
+            domain(urlSlug: "user-read-1-test-domain-ca") {
+                url
+            }
+        }
+        """,
+        as_user=user_read,
+    )
+
+    if "errors" not in result:
+        fail("Expected error, instead: {}".format(json(result)))
+
+    [error] = result["errors"]
+    assert error["message"] == "Error, you do not have permission to view that domain"
+
+
+def test_get_domain_resolvers_by_org_user_read_no_access(save):
+    """
+    Test domain resolver get domain by org as user read, user has no rights
+    to view domains related to that org
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+    org_two = Organizations(
+        acronym="ORG2", name="Organization 2", slug="organization-2"
+    )
+    save(org_two)
+
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
+
+    test_domain_1 = Domains(domain="user.read.1.test.domain.ca", organization=org_two,)
+    save(test_domain_1)
+
+    result = run(
+        query="""
+        {
+            domains(orgSlug: "organization-2") {
+                edges {
+                    node {
+                        url
                     }
                 }
-                """,
-                backend=backend,
-            )
-            assert get_token["data"]["signIn"]["authToken"] is not None
-            token = get_token["data"]["signIn"]["authToken"]
-            assert token is not None
+            }
+        }
+        """,
+        as_user=user_read,
+    )
 
-            environ = create_environ()
-            environ.update(HTTP_AUTHORIZATION=token)
-            request_headers = Request(environ)
+    if "errors" not in result:
+        fail("Expected error, instead: {}".format(json(result)))
 
-            executed = client.execute(
-                """
-                {
-                    domains(orgSlug: "organization-3") {
-                        edges {
-                            node {
-                                url
-                            }
-                        }
+    [error] = result["errors"]
+    assert (
+        error["message"]
+        == "Error, you do not have permission to view that organization"
+    )
+
+
+def test_get_domain_resolvers_by_url_user_read_invalid_domain(save):
+    """
+    Test domain resolver get domain by url as user read, url does not
+    exist
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
+
+    result = run(
+        query="""
+        {
+            domain(urlSlug: "google-ca") {
+                url
+            }
+        }
+        """,
+        as_user=user_read,
+    )
+
+    if "errors" not in result:
+        fail("Expected error, instead: {}".format(json(result)))
+
+    [error] = result["errors"]
+    assert error["message"] == "Error, domain does not exist"
+
+
+def test_get_domain_resolvers_by_org_user_read_org_no_domains(save):
+    """
+    Test domain resolver get domain by org as user read, org has no related
+    domains
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    user_read = Users(
+        display_name="testuserread",
+        user_name="testuserread@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one,),
+        ],
+    )
+    save(user_read)
+
+    result = run(
+        query="""
+        {
+            domains(orgSlug: "organization-1") {
+                edges {
+                    node {
+                        url
                     }
                 }
-                """,
-                context_value=request_headers,
-                backend=backend,
-            )
-            assert executed["errors"]
-            assert executed["errors"][0]
-            assert (
-                executed["errors"][0]["message"]
-                == "Error, you do not have permission to view that organization"
-            )
+            }
+        }
+        """,
+        as_user=user_read,
+    )
+
+    if "errors" not in result:
+        fail("Expected error, instead: {}".format(json(result)))
+
+    [error] = result["errors"]
+    assert error["message"] == "Error, no domains associated with that organization"

@@ -30,7 +30,7 @@ def decode_auth_token(request):
         raise GraphQLError("Invalid token, please login again")
 
 
-def check_user_claims(user_claims):
+def check_user_claims(user_id):
     """
     This function takes the claims the user sent inside the JWT, and checks them
     against the database to see if any changes have been made since they last
@@ -38,18 +38,14 @@ def check_user_claims(user_claims):
     :param user_claims: A list of dicts that contain the users claims
     :return: Returns a valid list of user claims
     """
-    user_roles = []
-    if user_claims[0] == "none":
-        return {}
-    elif user_claims:
-        user_id = user_claims[0]["user_id"]
-        with app.app_context():
-            # XXX: affiliations should have been eager loaded with joinedload
-            # when user was initally pulled from the db.
-            user_affs = User_affiliations.query.filter(
-                User_affiliations.user_id == user_id
-            ).all()
-            user_affs = orm_to_dict(user_affs)
+    with app.app_context():
+        # XXX: affiliations should have been eager loaded with joinedload
+        # when user was initally pulled from the db.
+        user_affs = User_affiliations.query.filter(
+            User_affiliations.user_id == user_id
+        ).all()
+        user_affs = orm_to_dict(user_affs)
+        user_roles = []
         if user_affs:
             for select in user_affs:
                 temp_dict = {
@@ -58,17 +54,7 @@ def check_user_claims(user_claims):
                     "permission": select["permission"],
                 }
                 user_roles.append(temp_dict)
-
-        user_claim_diff = list(
-            itertools.filterfalse(lambda x: x in user_claims, user_roles)
-        ) + list(itertools.filterfalse(lambda x: x in user_roles, user_claims))
-        if user_claim_diff:
-            # User has a difference in their claims
-            raise GraphQLError("Error, please sign in again.")
-        else:
-            return user_claims
-    else:
-        raise GraphQLError("User has no claims, please sign in again")
+            return user_roles
 
 
 def require_token(method):
@@ -78,7 +64,7 @@ def require_token(method):
             if isinstance(auth_resp, dict):
                 kwargs["user_id"] = auth_resp["user_id"]
 
-                user_claims = check_user_claims(auth_resp["roles"])
+                user_claims = check_user_claims(auth_resp["user_id"])
                 kwargs["user_roles"] = user_claims
                 return method(self, *args, **kwargs)
             raise GraphQLError(auth_resp)

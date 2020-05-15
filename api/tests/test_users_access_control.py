@@ -1,25 +1,17 @@
 import pytest
-import json
 
 from pytest import fail
-from flask import Request
-from json_web_token import tokenize, auth_header
-from graphene.test import Client
-from unittest import TestCase
-from werkzeug.test import create_environ
+
 from app import app
 from db import DB
 from models import Organizations, Users, User_affiliations
-from queries import schema
-from backend.security_check import SecurityAnalysisBackend
-
-
-s, cleanup, db_session = DB()
+from tests.test_functions import json, run
 
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, db_session = DB()
         yield s
         cleanup()
 
@@ -79,8 +71,8 @@ def test_get_users_as_super_admin(save):
     save(org2_admin)
     save(writer)
 
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        query="""
         {
             users(orgSlug: "organization-1") {
                 edges {
@@ -91,10 +83,16 @@ def test_get_users_as_super_admin(save):
             }
         }
         """,
-        context_value=auth_header(
-            tokenize(user_id=super_admin.id, roles=super_admin.roles)
-        ),
+        as_user=super_admin,
     )
+
+    if "errors" in actual:
+        fail(
+            "Tried to get users from org as super admin, instead: {}".format(
+                json(actual)
+            )
+        )
+
     expected = {
         "data": {
             "users": {
@@ -165,8 +163,8 @@ def test_get_users_from_same_org(save):
     save(org2_admin)
     save(writer)
 
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        query="""
         {
             users(orgSlug: "organization-1") {
                 edges {
@@ -177,10 +175,14 @@ def test_get_users_from_same_org(save):
             }
         }
         """,
-        context_value=auth_header(
-            tokenize(user_id=org1_admin.id, roles=org1_admin.roles)
-        ),
+        as_user=org1_admin,
     )
+
+    if "errors" in actual:
+        fail(
+            "Tried to get users from org as org admin, instead: {}".format(json(actual))
+        )
+
     expected = {
         "data": {
             "users": {
@@ -252,8 +254,8 @@ def test_get_users_admin_from_different_org(save):
     save(org2_admin)
     save(writer)
 
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        query="""
         {
             users(orgSlug: "organization-1") {
                 edges {
@@ -264,15 +266,15 @@ def test_get_users_admin_from_different_org(save):
             }
         }
         """,
-        context_value=auth_header(
-            tokenize(user_id=org2_admin.id, roles=org2_admin.roles)
-        ),
+        as_user=org2_admin,
     )
+
     if "errors" not in actual:
         fail(
             "Expected admins in other orgs access to raise and error. Instead:"
             "{}".format(json(actual))
         )
+
     [err] = actual["errors"]
     [message, _, _] = err.values()
     assert message == "Error, you do not have access to view this organization"
@@ -333,8 +335,8 @@ def test_get_users_user_write(save):
     save(org2_admin)
     save(writer)
 
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        query="""
         {
             users(orgSlug: "organization-1") {
                 edges {
@@ -345,13 +347,15 @@ def test_get_users_user_write(save):
             }
         }
         """,
-        context_value=auth_header(tokenize(user_id=writer.id, roles=writer.roles)),
+        as_user=writer,
     )
+
     if "errors" not in actual:
         fail(
             "Expected write user not to access this query. Instead:"
             "{}".format(json(actual))
         )
+
     [err] = actual["errors"]
     [message, _, _] = err.values()
     assert message == "Error, you do not have access to view this organization"
@@ -411,8 +415,8 @@ def test_get_users_user_read(save):
     save(org2_admin)
     save(writer)
 
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        query="""
         {
             users(orgSlug: "organization-1") {
                 edges {
@@ -423,13 +427,15 @@ def test_get_users_user_read(save):
             }
         }
         """,
-        context_value=auth_header(tokenize(user_id=reader.id, roles=reader.roles)),
+        as_user=reader,
     )
+
     if "errors" not in actual:
         fail(
             "Expected read user not to access this query. Instead:"
             "{}".format(json(actual))
         )
+
     [err] = actual["errors"]
     [message, _, _] = err.values()
     assert message == "Error, you do not have access to view this organization"

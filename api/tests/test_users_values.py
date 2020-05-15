@@ -1,29 +1,17 @@
 import pytest
-import json
 
 from pytest import fail
-from json import dumps
-from json_web_token import tokenize, auth_header
-from flask import Request
-from graphene.test import Client
-from werkzeug.test import create_environ
+
 from app import app
 from db import DB
 from models import Organizations, Users, User_affiliations
-from queries import schema
-from backend.security_check import SecurityAnalysisBackend
-
-
-def json(j):
-    return dumps(j, indent=2)
-
-
-s, cleanup, db_session = DB()
+from tests.test_functions import json, run
 
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, db_session = DB()
         yield s
         cleanup()
 
@@ -72,10 +60,8 @@ def test_get_users_as_super_admin(save):
     save(org1_admin)
     save(writer)
 
-    token = tokenize(user_id=super_admin.id, roles=super_admin.roles)
-
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        query="""
         {
             users(orgSlug: "organization-1") {
                 edges {
@@ -88,8 +74,11 @@ def test_get_users_as_super_admin(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=super_admin,
     )
+
+    if "errors" in actual:
+        fail("Expected query to succeed. Instead:" "{}".format(json(actual)))
 
     expected = {
         "data": {
@@ -121,8 +110,6 @@ def test_get_users_as_super_admin(save):
         }
     }
 
-    if "errors" in actual:
-        fail("Expected query to succeed. Instead:" "{}".format(json(actual)))
     assert actual == expected
 
 
@@ -170,10 +157,8 @@ def test_get_users_as_admin(save):
     save(org1_admin)
     save(writer)
 
-    token = tokenize(user_id=org1_admin.id, roles=org1_admin.roles)
-
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        query="""
         {
             users(orgSlug: "organization-1") {
                 edges {
@@ -186,8 +171,16 @@ def test_get_users_as_admin(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=org1_admin,
     )
+
+    if "errors" in actual:
+        fail(
+            "Tried to get user info from org as org admin, instead: {}".format(
+                json(actual)
+            )
+        )
+
     expected = {
         "data": {
             "users": {

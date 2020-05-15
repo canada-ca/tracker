@@ -1,25 +1,16 @@
 import pytest
-import json
-from flask import Request
-from json_web_token import tokenize, auth_header
-from graphene.test import Client
-from unittest import TestCase
-from werkzeug.test import create_environ
 from pytest import fail
 
 from app import app
 from db import DB
 from models import Organizations, Users, User_affiliations
-from queries import schema
-from backend.security_check import SecurityAnalysisBackend
-
-
-s, cleanup, session = DB()
+from tests.test_functions import json, run
 
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, session = DB()
         yield s
         cleanup()
 
@@ -38,11 +29,6 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
         name="Org3", acronym="ORG3", org_tags={"name": "Organization 3"}
     )
 
-    reader = Users(
-        display_name="testuserread",
-        user_name="testuserread@testemail.ca",
-        password="testpassword123",
-    )
     super_admin = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
@@ -53,17 +39,9 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
         User_affiliations(permission="super_admin", user_organization=org1)
     )
 
-    reader.user_affiliation.append(
-        User_affiliations(permission="user_read", user_organization=org1)
-    )
-
-    save(reader)
     save(super_admin)
-
-    token = tokenize(user_id=super_admin.id, roles=super_admin.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             organization(slug: "org1") {
                 edges {
@@ -74,11 +52,17 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=super_admin,
     )
-    assert result == {
+
+    if "errors" in result:
+        fail("Tried to select org, instead: {}".format(json(result)))
+
+    expected_result = {
         "data": {"organization": {"edges": [{"node": {"acronym": "ORG1"}}]}}
     }
+
+    assert result == expected_result
 
 
 def test_org_resolvers_returns_all_orgs_to_super_admin(save):
@@ -107,10 +91,8 @@ def test_org_resolvers_returns_all_orgs_to_super_admin(save):
     save(reader)
     save(super_admin)
 
-    token = tokenize(user_id=super_admin.id, roles=super_admin.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             organizations {
                 edges {
@@ -121,9 +103,13 @@ def test_org_resolvers_returns_all_orgs_to_super_admin(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=super_admin,
     )
-    assert result == {
+
+    if "errors" in result:
+        fail("Tried to retrieve org names, instead: {}".format(json(result)))
+
+    expected_result = {
         "data": {
             "organizations": {
                 "edges": [
@@ -134,6 +120,8 @@ def test_org_resolvers_returns_all_orgs_to_super_admin(save):
             }
         }
     }
+
+    assert result == expected_result
 
 
 def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save):
@@ -161,10 +149,8 @@ def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save
     save(reader)
     save(super_admin)
 
-    token = tokenize(user_id=reader.id, roles=reader.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             organizations {
                 edges {
@@ -175,9 +161,13 @@ def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=reader,
     )
-    assert result == {
+
+    if "errors" in result:
+        fail("Tried to get org names as user read, instead: {}".format(json(result)))
+
+    expected_result = {
         "data": {
             "organizations": {
                 "edges": [
@@ -187,6 +177,8 @@ def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save
             }
         }
     }
+
+    assert result == expected_result
 
 
 def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
@@ -204,10 +196,8 @@ def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
 
     save(reader)
 
-    token = tokenize(user_id=reader.id, roles=reader.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             organization(slug: "org2") {
                 edges {
@@ -218,7 +208,7 @@ def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=reader,
     )
     if "errors" not in result:
         fail(
