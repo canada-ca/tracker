@@ -32,6 +32,7 @@ def save():
         session.rollback()
         cleanup()
 
+
 @pytest.mark.skip
 def test_get_domain_resolver_dmarc_report(save):
     """
@@ -119,6 +120,7 @@ def test_get_domain_resolver_dmarc_report(save):
     }
     assert expected == result
 
+
 @pytest.mark.skip
 def test_get_domain_resolver_dmarc_report_in_date_range(save):
     """
@@ -205,6 +207,7 @@ def test_get_domain_resolver_dmarc_report_in_date_range(save):
     }
     assert expected == result
 
+
 @pytest.mark.skip
 def test_get_domain_resolver_dmarc_report_for_date_range_with_no_reports(save):
     user = Users(
@@ -267,6 +270,7 @@ def test_get_domain_resolver_dmarc_report_for_date_range_with_no_reports(save):
             )
         )
 
+
 @pytest.mark.skip
 def test_domain_resolver_dmarc_report_for_domain_with_no_reports_will_fail(save):
     user = Users(
@@ -318,6 +322,7 @@ def test_domain_resolver_dmarc_report_for_domain_with_no_reports_will_fail(save)
 
     [error] = result["errors"]
     assert error["message"] == "Error, no reports for that domain."
+
 
 @pytest.mark.skip
 def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing(save):
@@ -383,6 +388,7 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing
 
     [error] = result["errors"]
     assert error["message"] == "Error, both start and end dates are required."
+
 
 @pytest.mark.skip
 def test_get_domain_resolver_dmarc_report_returns_error_if_end_date_is_missing(save):

@@ -46,10 +46,7 @@ def test_get_domain_resolvers_by_url_super_admin_single_node(save):
     )
     save(super_admin)
 
-    test_domain = Domains(
-        domain="sa.test.domain.ca",
-        organization=org_one,
-    )
+    test_domain = Domains(domain="sa.test.domain.ca", organization=org_one,)
     save(test_domain)
 
     result = run(
@@ -60,14 +57,12 @@ def test_get_domain_resolvers_by_url_super_admin_single_node(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in result:
         fail(
-            "Error occurred when trying to get a domain, error: {}".format(
-                json(result)
-            )
+            "Error occurred when trying to get a domain, error: {}".format(json(result))
         )
 
     expected_result = {"data": {"domain": [{"url": "sa.test.domain.ca"}]}}
@@ -101,10 +96,7 @@ def test_get_domain_resolvers_by_org_super_admin_single_node(save):
     )
     save(super_admin)
 
-    test_domain = Domains(
-        domain="sa.test.domain.ca",
-        organization=org_one,
-    )
+    test_domain = Domains(domain="sa.test.domain.ca", organization=org_one,)
     save(test_domain)
 
     result = run(
@@ -119,14 +111,12 @@ def test_get_domain_resolvers_by_org_super_admin_single_node(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in result:
         fail(
-            "Error occurred when trying to get a domain, error: {}".format(
-                json(result)
-            )
+            "Error occurred when trying to get a domain, error: {}".format(json(result))
         )
 
     expected_result = {
@@ -161,15 +151,9 @@ def test_get_domain_resolvers_by_org_super_admin_multi_node(save):
     )
     save(super_admin)
 
-    test_domain_1 = Domains(
-        domain="sa.1.test.domain.ca",
-        organization=org_one,
-    )
+    test_domain_1 = Domains(domain="sa.1.test.domain.ca", organization=org_one,)
     save(test_domain_1)
-    test_domain_2 = Domains(
-        domain="sa.2.test.domain.ca",
-        organization=org_one,
-    )
+    test_domain_2 = Domains(domain="sa.2.test.domain.ca", organization=org_one,)
     save(test_domain_2)
 
     result = run(
@@ -184,15 +168,11 @@ def test_get_domain_resolvers_by_org_super_admin_multi_node(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in result:
-        fail(
-            "Tried to get multiple domains, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Tried to get multiple domains, instead: {}".format(json(result)))
 
     expected_result = {
         "data": {
@@ -241,18 +221,14 @@ def test_get_domain_resolvers_by_url_super_admin_invalid_domain(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected error, instead: {}".format(json(result))
-        )
+        fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, domain does not exist"
-    )
+    assert error["message"] == "Error, domain does not exist"
 
 
 def test_get_domain_resolvers_by_org_super_admin_org_no_domains(save):
@@ -293,18 +269,14 @@ def test_get_domain_resolvers_by_org_super_admin_org_no_domains(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected error, instead: {}".format(json(result))
-        )
+        fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, no domains associated with that organization"
-    )
+    assert error["message"] == "Error, no domains associated with that organization"
 
 
 def test_get_domain_resolvers_by_url_user_read_single_node(save):
@@ -324,18 +296,12 @@ def test_get_domain_resolvers_by_url_user_read_single_node(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
 
-    test_domain = Domains(
-        domain="user.read.test.domain.ca",
-        organization=org_one,
-    )
+    test_domain = Domains(domain="user.read.test.domain.ca", organization=org_one,)
     save(test_domain)
 
     result = run(
@@ -346,14 +312,12 @@ def test_get_domain_resolvers_by_url_user_read_single_node(save):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" in result:
         fail(
-            "Error occurred when trying to get a domain, error: {}".format(
-                json(result)
-            )
+            "Error occurred when trying to get a domain, error: {}".format(json(result))
         )
 
     expected_result = {"data": {"domain": [{"url": "user.read.test.domain.ca"}]}}
@@ -377,24 +341,15 @@ def test_get_domain_resolvers_by_org_user_read_multi_node(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
 
-    test_domain_1 = Domains(
-        domain="user.read.1.test.domain.ca",
-        organization=org_one,
-    )
+    test_domain_1 = Domains(domain="user.read.1.test.domain.ca", organization=org_one,)
     save(test_domain_1)
 
-    test_domain_2 = Domains(
-        domain="user.read.2.test.domain.ca",
-        organization=org_one,
-    )
+    test_domain_2 = Domains(domain="user.read.2.test.domain.ca", organization=org_one,)
     save(test_domain_2)
 
     result = run(
@@ -409,14 +364,12 @@ def test_get_domain_resolvers_by_org_user_read_multi_node(save):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" in result:
         fail(
-            "Error occurred when trying to get domains, error: {}".format(
-                json(result)
-            )
+            "Error occurred when trying to get domains, error: {}".format(json(result))
         )
 
     expected_result = {
@@ -453,18 +406,12 @@ def test_get_domain_resolvers_by_url_user_read_no_access(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
 
-    test_domain_1 = Domains(
-        domain="user.read.1.test.domain.ca",
-        organization=org_two,
-    )
+    test_domain_1 = Domains(domain="user.read.1.test.domain.ca", organization=org_two,)
     save(test_domain_1)
 
     result = run(
@@ -475,18 +422,14 @@ def test_get_domain_resolvers_by_url_user_read_no_access(save):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected error, instead: {}".format(json(result))
-        )
+        fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to view that domain"
-    )
+    assert error["message"] == "Error, you do not have permission to view that domain"
 
 
 def test_get_domain_resolvers_by_org_user_read_no_access(save):
@@ -510,18 +453,12 @@ def test_get_domain_resolvers_by_org_user_read_no_access(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
 
-    test_domain_1 = Domains(
-        domain="user.read.1.test.domain.ca",
-        organization=org_two,
-    )
+    test_domain_1 = Domains(domain="user.read.1.test.domain.ca", organization=org_two,)
     save(test_domain_1)
 
     result = run(
@@ -536,17 +473,16 @@ def test_get_domain_resolvers_by_org_user_read_no_access(save):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected error, instead: {}".format(json(result))
-        )
+        fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert (
-        error["message"] == "Error, you do not have permission to view that organization"
+        error["message"]
+        == "Error, you do not have permission to view that organization"
     )
 
 
@@ -567,10 +503,7 @@ def test_get_domain_resolvers_by_url_user_read_invalid_domain(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
@@ -583,19 +516,14 @@ def test_get_domain_resolvers_by_url_user_read_invalid_domain(save):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected error, instead: {}".format(json(result))
-        )
+        fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error[
-            "message"] == "Error, domain does not exist"
-    )
+    assert error["message"] == "Error, domain does not exist"
 
 
 def test_get_domain_resolvers_by_org_user_read_org_no_domains(save):
@@ -615,10 +543,7 @@ def test_get_domain_resolvers_by_org_user_read_org_no_domains(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
@@ -635,16 +560,11 @@ def test_get_domain_resolvers_by_org_user_read_org_no_domains(save):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected error, instead: {}".format(json(result))
-        )
+        fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error[
-            "message"] == "Error, no domains associated with that organization"
-    )
+    assert error["message"] == "Error, no domains associated with that organization"

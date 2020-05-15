@@ -97,7 +97,7 @@ def test_invalid_cost_query(save):
             }
         """,
         as_user=test_super_admin,
-        backend=SecurityAnalysisBackend(10, 5)
+        backend=SecurityAnalysisBackend(10, 5),
     )
 
     assert result["errors"]

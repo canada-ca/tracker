@@ -51,18 +51,12 @@ def test_remove_domain_super_admin(db):
                     acronym="SA", name="Super Admin", slug="super-admin"
                 ),
             ),
-            User_affiliations(
-                permission="admin",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="admin", user_organization=org_one,),
         ],
     )
     save(super_admin)
 
-    test_domain = Domains(
-        domain="sa.remove.domain.ca",
-        organization_id=org_one.id,
-    )
+    test_domain = Domains(domain="sa.remove.domain.ca", organization_id=org_one.id,)
     save(test_domain)
     test_scan = Scans(domain_id=test_domain.id)
     scan_id = test_scan.id
@@ -90,17 +84,15 @@ def test_remove_domain_super_admin(db):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in remove_result:
-        fail(
-            "Expected to remove a domain, instead: {}".format(
-                json(remove_result)
-            )
-        )
+        fail("Expected to remove a domain, instead: {}".format(json(remove_result)))
 
-    assert not session.query(Domains).filter(Domains.domain == "sa.remove.domain.ca").all()
+    assert (
+        not session.query(Domains).filter(Domains.domain == "sa.remove.domain.ca").all()
+    )
     assert not session.query(Scans).filter(Scans.id == scan_id).all()
     assert not session.query(Dkim_scans).filter(Dkim_scans.id == scan_id).all()
     assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == scan_id).all()
@@ -127,18 +119,12 @@ def test_remove_domain_org_admin(db):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="admin",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="admin", user_organization=org_one,),
         ],
     )
     save(org_admin)
 
-    test_domain = Domains(
-        domain="admin.remove.domain.ca",
-        organization_id=org_one.id,
-    )
+    test_domain = Domains(domain="admin.remove.domain.ca", organization_id=org_one.id,)
     save(test_domain)
     test_scan = Scans(domain_id=test_domain.id)
     scan_id = test_scan.id
@@ -166,17 +152,15 @@ def test_remove_domain_org_admin(db):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
     if "errors" in remove_result:
-        fail(
-            "Expected to remove a domain, instead: {}".format(
-                json(remove_result)
-            )
-        )
+        fail("Expected to remove a domain, instead: {}".format(json(remove_result)))
 
-    assert not session.query(Domains).filter(Domains.domain == "sa.remove.domain.ca").all()
+    assert (
+        not session.query(Domains).filter(Domains.domain == "sa.remove.domain.ca").all()
+    )
     assert not session.query(Scans).filter(Scans.id == scan_id).all()
     assert not session.query(Dkim_scans).filter(Dkim_scans.id == scan_id).all()
     assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == scan_id).all()
@@ -207,18 +191,12 @@ def test_remove_domain_org_admin_cant_remove_diff_org(db):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="admin",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="admin", user_organization=org_one,),
         ],
     )
     save(org_admin)
 
-    test_domain = Domains(
-        domain="admin.remove.domain.ca",
-        organization_id=org_two.id,
-    )
+    test_domain = Domains(domain="admin.remove.domain.ca", organization_id=org_two.id,)
     save(test_domain)
 
     remove_result = run(
@@ -231,20 +209,14 @@ def test_remove_domain_org_admin_cant_remove_diff_org(db):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
     if "errors" not in remove_result:
-        fail(
-            "Expected to generate an error, instead: {}".format(
-                json(remove_result)
-            )
-        )
+        fail("Expected to generate an error, instead: {}".format(json(remove_result)))
 
     [error] = remove_result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to remove domains."
-    )
+    assert error["message"] == "Error, you do not have permission to remove domains."
 
 
 def test_remove_domain_user_write(db):
@@ -264,17 +236,13 @@ def test_remove_domain_user_write(db):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_write",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_write", user_organization=org_one,),
         ],
     )
     save(user_write)
 
     test_domain = Domains(
-        domain="user.write.remove.domain.ca",
-        organization_id=org_one.id,
+        domain="user.write.remove.domain.ca", organization_id=org_one.id,
     )
     save(test_domain)
     test_scan = Scans(domain_id=test_domain.id)
@@ -303,17 +271,15 @@ def test_remove_domain_user_write(db):
             }
         }
         """,
-        as_user=user_write
+        as_user=user_write,
     )
 
     if "errors" in remove_result:
-        fail(
-            "Expected to remove a domain, instead: {}".format(
-                json(remove_result)
-            )
-        )
+        fail("Expected to remove a domain, instead: {}".format(json(remove_result)))
 
-    assert not session.query(Domains).filter(Domains.domain == "sa.remove.domain.ca").all()
+    assert (
+        not session.query(Domains).filter(Domains.domain == "sa.remove.domain.ca").all()
+    )
     assert not session.query(Scans).filter(Scans.id == scan_id).all()
     assert not session.query(Dkim_scans).filter(Dkim_scans.id == scan_id).all()
     assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == scan_id).all()
@@ -344,17 +310,13 @@ def test_remove_domain_user_write_cant_remove_diff_org(db):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_write",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_write", user_organization=org_one,),
         ],
     )
     save(user_write)
 
     test_domain = Domains(
-        domain="user.write.remove.domain.ca",
-        organization_id=org_two.id,
+        domain="user.write.remove.domain.ca", organization_id=org_two.id,
     )
     save(test_domain)
 
@@ -368,20 +330,14 @@ def test_remove_domain_user_write_cant_remove_diff_org(db):
             }
         }
         """,
-        as_user=user_write
+        as_user=user_write,
     )
 
     if "errors" not in remove_result:
-        fail(
-            "Expected to generate an error, instead: {}".format(
-                json(remove_result)
-            )
-        )
+        fail("Expected to generate an error, instead: {}".format(json(remove_result)))
 
     [error] = remove_result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to remove domains."
-    )
+    assert error["message"] == "Error, you do not have permission to remove domains."
 
 
 def test_remove_domain_user_read_cant_remove_domains(db):
@@ -401,17 +357,13 @@ def test_remove_domain_user_read_cant_remove_domains(db):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
 
     test_domain = Domains(
-        domain="user.read.remove.domain.ca",
-        organization_id=org_one.id,
+        domain="user.read.remove.domain.ca", organization_id=org_one.id,
     )
     save(test_domain)
 
@@ -425,17 +377,11 @@ def test_remove_domain_user_read_cant_remove_domains(db):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" not in remove_result:
-        fail(
-            "Expected to generate an error, instead: {}".format(
-                json(remove_result)
-            )
-        )
+        fail("Expected to generate an error, instead: {}".format(json(remove_result)))
 
     [error] = remove_result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to remove domains."
-    )
+    assert error["message"] == "Error, you do not have permission to remove domains."

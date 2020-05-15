@@ -58,11 +58,7 @@ def test_get_another_users_information(save):
     )
 
     if "errors" in actual:
-        fail(
-            "Tried to get user info as super admin, instead: {}".format(
-                json(actual)
-            )
-        )
+        fail("Tried to get user info as super admin, instead: {}".format(json(actual)))
 
     expected = {
         "data": {
@@ -163,11 +159,7 @@ def test_get_own_user_information(save):
     )
 
     if "errors" in result:
-        fail(
-            "Tried to grab users own information, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Tried to grab users own information, instead: {}".format(json(result)))
 
     expected_result = {
         "data": {

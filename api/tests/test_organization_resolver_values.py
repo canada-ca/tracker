@@ -91,7 +91,7 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     expected_result = {
@@ -114,9 +114,7 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
                                 "edges": [
                                     {
                                         "node": {
-                                            "user": {
-                                                "displayName": "testsuperadmin"
-                                            },
+                                            "user": {"displayName": "testsuperadmin"},
                                             "permission": "SUPER_ADMIN",
                                         }
                                     },
@@ -240,7 +238,7 @@ def test_get_org_resolvers_super_admin_multi_node(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     expected_result = {
@@ -269,9 +267,7 @@ def test_get_org_resolvers_super_admin_multi_node(save):
                                     },
                                     {
                                         "node": {
-                                            "user": {
-                                                "displayName": "testsuperadmin"
-                                            },
+                                            "user": {"displayName": "testsuperadmin"},
                                             "permission": "SUPER_ADMIN",
                                         }
                                     },
@@ -345,9 +341,7 @@ def test_get_org_resolvers_super_admin_multi_node(save):
                                 "edges": [
                                     {
                                         "node": {
-                                            "user": {
-                                                "displayName": "testsuperadmin"
-                                            },
+                                            "user": {"displayName": "testsuperadmin"},
                                             "permission": "ADMIN",
                                         }
                                     }
@@ -445,7 +439,7 @@ def test_get_org_resolvers_by_org_user_read_single_node(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     expected_result = {
@@ -537,7 +531,7 @@ def test_get_org_resolvers_by_org_user_read_multi_node(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
     expected_result = {
         "data": {

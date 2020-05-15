@@ -78,11 +78,7 @@ def test_get_users_as_super_admin(save):
     )
 
     if "errors" in actual:
-        fail(
-            "Expected query to succeed. Instead:" "{}".format(
-                json(actual)
-            )
-        )
+        fail("Expected query to succeed. Instead:" "{}".format(json(actual)))
 
     expected = {
         "data": {

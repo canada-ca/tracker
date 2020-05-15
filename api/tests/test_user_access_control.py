@@ -63,14 +63,12 @@ def test_get_user_as_super_admin(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in result:
         fail(
-            "Tried to select user info as super admin, Instead: {}".format(
-                json(result)
-            )
+            "Tried to select user info as super admin, Instead: {}".format(json(result))
         )
 
     expected_result = {"data": {"user": [{"displayName": "testuserread"}]}}
@@ -95,10 +93,7 @@ def test_get_user_from_same_org(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="admin",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="admin", user_organization=org_one,),
         ],
     )
     save(org_admin)
@@ -109,10 +104,7 @@ def test_get_user_from_same_org(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
@@ -125,15 +117,11 @@ def test_get_user_from_same_org(save):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
     if "errors" in result:
-        fail(
-            "Tried to get user info as org admin, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Tried to get user info as org admin, instead: {}".format(json(result)))
 
     expected_result = {"data": {"user": [{"displayName": "testuserread"}]}}
 
@@ -161,10 +149,7 @@ def test_get_user_admin_from_different_org(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="admin",
-                user_organization=org_two,
-            ),
+            User_affiliations(permission="admin", user_organization=org_two,),
         ],
     )
     save(org_admin)
@@ -175,10 +160,7 @@ def test_get_user_admin_from_different_org(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
@@ -191,7 +173,7 @@ def test_get_user_admin_from_different_org(save):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
     if "errors" not in result:
@@ -204,7 +186,7 @@ def test_get_user_admin_from_different_org(save):
     [error] = result["errors"]
     assert (
         error["message"] == "Error, user does not belong to any of your "
-                            "organizations"
+        "organizations"
     )
 
 
@@ -225,10 +207,7 @@ def test_get_user_user_write(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_write",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_write", user_organization=org_one,),
         ],
     )
     save(user_write)
@@ -239,10 +218,7 @@ def test_get_user_user_write(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
@@ -255,20 +231,16 @@ def test_get_user_user_write(save):
             }
         }
         """,
-        as_user=user_write
+        as_user=user_write,
     )
 
     if "errors" not in result:
-        fail(
-            "User query as user write should fail, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("User query as user write should fail, instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert (
         error["message"] == "Error, you do not have permission to view this "
-                            "users information"
+        "users information"
     )
 
 
@@ -289,10 +261,7 @@ def test_get_reader_can_access_their_own_info(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
@@ -305,15 +274,11 @@ def test_get_reader_can_access_their_own_info(save):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" in results:
-        fail(
-            "Tried to get users own information, instead: {}".format(
-                json(results)
-            )
-        )
+        fail("Tried to get users own information, instead: {}".format(json(results)))
 
     expected_result = {"data": {"user": [{"displayName": "testuserread"}]}}
 
@@ -336,10 +301,7 @@ def test_get_user_user_read(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read_one)
@@ -350,10 +312,7 @@ def test_get_user_user_read(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read_two)
@@ -366,18 +325,14 @@ def test_get_user_user_read(save):
             }
         }
         """,
-        as_user=user_read_one
+        as_user=user_read_one,
     )
 
     if "errors" not in result:
-        fail(
-            "User query as user read should fail, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("User query as user read should fail, instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert (
         error["message"] == "Error, you do not have permission to view this "
-                            "users information"
+        "users information"
     )

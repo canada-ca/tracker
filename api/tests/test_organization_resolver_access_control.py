@@ -52,26 +52,14 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in result:
-        fail(
-            "Tried to select org, instead: {}".format(json(result))
-        )
+        fail("Tried to select org, instead: {}".format(json(result)))
 
     expected_result = {
-        "data": {
-            "organization": {
-                "edges": [
-                    {
-                        "node": {
-                            "acronym": "ORG1"
-                        }
-                    }
-                ]
-            }
-        }
+        "data": {"organization": {"edges": [{"node": {"acronym": "ORG1"}}]}}
     }
 
     assert result == expected_result
@@ -115,13 +103,11 @@ def test_org_resolvers_returns_all_orgs_to_super_admin(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in result:
-        fail(
-            "Tried to retrieve org names, instead: {}".format(json(result))
-        )
+        fail("Tried to retrieve org names, instead: {}".format(json(result)))
 
     expected_result = {
         "data": {
@@ -175,13 +161,11 @@ def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save
             }
         }
         """,
-        as_user=reader
+        as_user=reader,
     )
 
     if "errors" in result:
-        fail(
-            "Tried to get org names as user read, instead: {}".format(json(result))
-        )
+        fail("Tried to get org names as user read, instead: {}".format(json(result)))
 
     expected_result = {
         "data": {
@@ -224,7 +208,7 @@ def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
             }
         }
         """,
-        as_user=reader
+        as_user=reader,
     )
     if "errors" not in result:
         fail(

@@ -61,7 +61,7 @@ def test_mutation_createOrganization_fails_for_existing_orgs(save):
                 }
             }
         """,
-        as_user=sa_user
+        as_user=sa_user,
     )
 
     if "errors" not in result:
@@ -107,7 +107,7 @@ def test_mutation_createOrganization_as_super_user(save):
             }
         }
         """,
-        as_user=sa_user
+        as_user=sa_user,
     )
 
     if "errors" in result:
@@ -154,7 +154,7 @@ def test_mutation_createOrganization_fails_for_write_users(save):
              }
          }
         """,
-        as_user=write_user
+        as_user=write_user,
     )
 
     if "errors" not in result:
@@ -192,7 +192,7 @@ def test_mutation_createOrganization_fails_for_admin_users(save):
              }
          }
         """,
-        as_user=admin
+        as_user=admin,
     )
 
     if "errors" not in result:
@@ -239,7 +239,7 @@ def test_mutation_createOrganization_fails_for_read_users(save):
              }
          }
         """,
-        as_user=reader
+        as_user=reader,
     )
 
     if "errors" not in result:
@@ -277,7 +277,7 @@ def test_mutation_createOrganization_fails_for_admin_users(save):
              }
          }
         """,
-        as_user=admin
+        as_user=admin,
     )
 
     if "errors" not in result:

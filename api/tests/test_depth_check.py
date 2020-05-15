@@ -31,7 +31,7 @@ def test_valid_depth_query(save):
             }
         }
         """,
-        as_user=test_super_admin
+        as_user=test_super_admin,
     )
     user = result["data"].values()
     [[details]] = user
@@ -93,7 +93,7 @@ def test_invalid_depth_query(save):
         }
         """,
         as_user=test_super_admin,
-        backend=SecurityAnalysisBackend(10)
+        backend=SecurityAnalysisBackend(10),
     )
 
     assert result["errors"]

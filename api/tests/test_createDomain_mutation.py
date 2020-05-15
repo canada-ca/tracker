@@ -55,23 +55,13 @@ def test_domain_creation_super_admin(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in create_result:
-        fail(
-            "Expected to create a domain, instead: {}".format(
-                json(create_result)
-            )
-        )
+        fail("Expected to create a domain, instead: {}".format(json(create_result)))
 
-    create_result_expected = {
-        "data": {
-            "createDomain": {
-                "status": True
-            }
-        }
-    }
+    create_result_expected = {"data": {"createDomain": {"status": True}}}
 
     assert create_result == create_result_expected
 
@@ -83,18 +73,10 @@ def test_domain_creation_super_admin(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
-    result_expected = {
-        "data": {
-            "domain": [
-                {
-                    "url": "sa.create.domain.ca"
-                }
-            ]
-        }
-    }
+    result_expected = {"data": {"domain": [{"url": "sa.create.domain.ca"}]}}
 
     assert result == result_expected
 
@@ -128,20 +110,14 @@ def test_domain_creation_super_admin_cant_create_in_sa_org(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" not in create_result:
-        fail(
-            "Expected to generate error, instead: {}".format(
-                json(create_result)
-            )
-        )
+        fail("Expected to generate error, instead: {}".format(json(create_result)))
 
     [error] = create_result["errors"]
-    assert (
-        error["message"] == "Error, you cannot add a domain to this organization."
-    )
+    assert error["message"] == "Error, you cannot add a domain to this organization."
 
 
 def test_domain_creation_org_admin(save):
@@ -173,23 +149,13 @@ def test_domain_creation_org_admin(save):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
     if "errors" in create_result:
-        fail(
-            "Expected to create a domain, instead: {}".format(
-                json(create_result)
-            )
-        )
+        fail("Expected to create a domain, instead: {}".format(json(create_result)))
 
-    create_result_expected = {
-        "data": {
-            "createDomain": {
-                "status": True
-            }
-        }
-    }
+    create_result_expected = {"data": {"createDomain": {"status": True}}}
 
     assert create_result == create_result_expected
 
@@ -201,18 +167,10 @@ def test_domain_creation_org_admin(save):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
-    result_expected = {
-        "data": {
-            "domain": [
-                {
-                    "url": "admin.create.domain.ca"
-                }
-            ]
-        }
-    }
+    result_expected = {"data": {"domain": [{"url": "admin.create.domain.ca"}]}}
 
     assert result == result_expected
 
@@ -221,7 +179,9 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save):
     """
     Test to ensure that org admins cant create domains in different org
     """
-    org_two = Organizations(acronym="ORG2", name="Organization 2", slug="organization-2")
+    org_two = Organizations(
+        acronym="ORG2", name="Organization 2", slug="organization-2"
+    )
     save(org_two)
 
     org_admin = Users(
@@ -249,20 +209,16 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
     if "errors" not in create_result:
-        fail(
-            "Expected to generate error, instead: {}".format(
-                json(create_result)
-            )
-        )
+        fail("Expected to generate error, instead: {}".format(json(create_result)))
 
     [error] = create_result["errors"]
     assert (
         error["message"] == "Error, you do not have permission to create a "
-                            "domain for that organization"
+        "domain for that organization"
     )
 
 
@@ -295,23 +251,13 @@ def test_domain_creation_user_write(save):
             }
         }
         """,
-        as_user=user_write
+        as_user=user_write,
     )
 
     if "errors" in create_result:
-        fail(
-            "Expected to create a domain, instead: {}".format(
-                json(create_result)
-            )
-        )
+        fail("Expected to create a domain, instead: {}".format(json(create_result)))
 
-    create_result_expected = {
-        "data": {
-            "createDomain": {
-                "status": True
-            }
-        }
-    }
+    create_result_expected = {"data": {"createDomain": {"status": True}}}
 
     assert create_result == create_result_expected
 
@@ -323,18 +269,10 @@ def test_domain_creation_user_write(save):
             }
         }
         """,
-        as_user=user_write
+        as_user=user_write,
     )
 
-    result_expected = {
-        "data": {
-            "domain": [
-                {
-                    "url": "user.write.create.domain.ca"
-                }
-            ]
-        }
-    }
+    result_expected = {"data": {"domain": [{"url": "user.write.create.domain.ca"}]}}
 
     assert result == result_expected
 
@@ -343,7 +281,9 @@ def test_domain_creation_user_write_cant_create_in_different_org(save):
     """
     Test to ensure that user write cant create domains in different org
     """
-    org_two = Organizations(acronym="ORG2", name="Organization 2", slug="organization-2")
+    org_two = Organizations(
+        acronym="ORG2", name="Organization 2", slug="organization-2"
+    )
     save(org_two)
 
     user_write = Users(
@@ -371,20 +311,16 @@ def test_domain_creation_user_write_cant_create_in_different_org(save):
             }
         }
         """,
-        as_user=user_write
+        as_user=user_write,
     )
 
     if "errors" not in create_result:
-        fail(
-            "Expected to generate error, instead: {}".format(
-                json(create_result)
-            )
-        )
+        fail("Expected to generate error, instead: {}".format(json(create_result)))
 
     [error] = create_result["errors"]
     assert (
         error["message"] == "Error, you do not have permission to create a "
-                            "domain for that organization"
+        "domain for that organization"
     )
 
 
@@ -418,19 +354,14 @@ def test_domain_creation_user_read_cant_create_domain(save):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" not in create_result:
-        fail(
-            "Expected to generate error, instead: {}".format(
-                json(create_result)
-            )
-        )
+        fail("Expected to generate error, instead: {}".format(json(create_result)))
 
     [error] = create_result["errors"]
     assert (
         error["message"] == "Error, you do not have permission to create a "
-                            "domain for that organization"
+        "domain for that organization"
     )
-

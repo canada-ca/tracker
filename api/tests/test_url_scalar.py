@@ -26,9 +26,7 @@ def test_invalid_url_serialize_not_url():
 
 def test_invalid_url_serialize_wrong_type():
     test_value = 1234
-    with pytest.raises(
-        GraphQLError, match=scalar_error_type("String", test_value)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("String", test_value)):
         URL.serialize(test_value)
 
 
@@ -40,17 +38,13 @@ def test_invalid_url_parse_value_not_url():
 
 def test_invalid_url_parse_value_wrong_type():
     test_value = 1234
-    with pytest.raises(
-        GraphQLError, match=scalar_error_type("String", test_value)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("String", test_value)):
         URL.parse_value(test_value)
 
 
 def test_invalid_url_parse_literal_not_url():
     test_value = ast.StringValue(value="This Will Fail")
-    with pytest.raises(
-        GraphQLError, match=scalar_error_type("URL", test_value.value)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("URL", test_value.value)):
         URL.parse_literal(test_value)
 
 

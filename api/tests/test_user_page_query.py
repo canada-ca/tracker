@@ -74,15 +74,11 @@ def test_super_admin_can_see_other_user_in_different_org(save):
             }
         }
         """,
-        as_user=sa_user
+        as_user=sa_user,
     )
 
     if "errors" in result:
-        fail(
-            "Expected to get user details. Instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Expected to get user details. Instead: {}".format(json(result)))
 
     expected = {
         "data": {
@@ -156,11 +152,7 @@ def test_admin_can_see_user_in_same_org(save):
     )
 
     if "errors" in result:
-        fail(
-            "Expected to get user details. Instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Expected to get user details. Instead: {}".format(json(result)))
 
     expected = {
         "data": {
@@ -228,9 +220,7 @@ def test_admin_cant_see_user_in_different_org(save):
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to get an error. Instead: {}".format(json(result))
-        )
+        fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert (
@@ -292,9 +282,7 @@ def test_user_write_cant_see_user_in_same_org(save):
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to get an error. Instead: {}".format(json(result))
-        )
+        fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert (
@@ -352,9 +340,7 @@ def test_user_write_cant_see_user_in_different_org(save):
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to get an error. Instead: {}".format(json(result))
-        )
+        fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert (
@@ -416,9 +402,7 @@ def test_user_read_cant_see_user_in_same_org(save):
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to get an error. Instead: {}".format(json(result))
-        )
+        fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert (
@@ -476,9 +460,7 @@ def test_user_read_cant_see_user_in_different_org(save):
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to get an error. Instead: {}".format(json(result))
-        )
+        fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert (
@@ -526,11 +508,7 @@ def test_user_read_and_higher_can_own_information(save):
     )
 
     if "errors" in result:
-        fail(
-            "Expected to get user details. Instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Expected to get user details. Instead: {}".format(json(result)))
 
     expected = {
         "data": {

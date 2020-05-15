@@ -43,18 +43,12 @@ def test_domain_update_super_admin(save):
                     acronym="SA", name="Super Admin", slug="super-admin"
                 ),
             ),
-            User_affiliations(
-                permission="admin",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="admin", user_organization=org_one,),
         ],
     )
     save(super_admin)
 
-    test_domain = Domains(
-        domain="sa.update.domain.ca",
-        organization=org_one,
-    )
+    test_domain = Domains(domain="sa.update.domain.ca", organization=org_one,)
     save(test_domain)
 
     update_result = run(
@@ -68,23 +62,13 @@ def test_domain_update_super_admin(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in update_result:
-        fail(
-            "Expected to update a domain, instead: {}".format(
-                json(update_result)
-            )
-        )
+        fail("Expected to update a domain, instead: {}".format(json(update_result)))
 
-    update_result_expected = {
-        "data": {
-            "updateDomain": {
-                "status": True
-            }
-        }
-    }
+    update_result_expected = {"data": {"updateDomain": {"status": True}}}
 
     assert update_result == update_result_expected
 
@@ -96,18 +80,10 @@ def test_domain_update_super_admin(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
-    result_expected = {
-        "data": {
-            "domain": [
-                {
-                    "url": "updated.sa.update.domain.ca"
-                }
-            ]
-        }
-    }
+    result_expected = {"data": {"domain": [{"url": "updated.sa.update.domain.ca"}]}}
 
     assert result == result_expected
 
@@ -128,18 +104,12 @@ def test_domain_update_org_admin(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="admin",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="admin", user_organization=org_one,),
         ],
     )
     save(org_admin)
 
-    test_domain = Domains(
-        domain="admin.update.domain.ca",
-        organization=org_one,
-    )
+    test_domain = Domains(domain="admin.update.domain.ca", organization=org_one,)
     save(test_domain)
 
     update_result = run(
@@ -153,23 +123,13 @@ def test_domain_update_org_admin(save):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
     if "errors" in update_result:
-        fail(
-            "Expected to update a domain, instead: {}".format(
-                json(update_result)
-            )
-        )
+        fail("Expected to update a domain, instead: {}".format(json(update_result)))
 
-    update_result_expected = {
-        "data": {
-            "updateDomain": {
-                "status": True
-            }
-        }
-    }
+    update_result_expected = {"data": {"updateDomain": {"status": True}}}
 
     assert update_result == update_result_expected
 
@@ -181,18 +141,10 @@ def test_domain_update_org_admin(save):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
-    result_expected = {
-        "data": {
-            "domain": [
-                {
-                    "url": "updated.admin.create.domain.ca"
-                }
-            ]
-        }
-    }
+    result_expected = {"data": {"domain": [{"url": "updated.admin.create.domain.ca"}]}}
 
     assert result == result_expected
 
@@ -201,7 +153,9 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save):
     """
     Test to ensure that org admins cant create domains in different org
     """
-    org_two = Organizations(acronym="ORG2", name="Organization 2", slug="organization-2")
+    org_two = Organizations(
+        acronym="ORG2", name="Organization 2", slug="organization-2"
+    )
     save(org_two)
 
     org_admin = Users(
@@ -221,10 +175,7 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save):
     )
     save(org_admin)
 
-    test_domain = Domains(
-        domain="admin2.update.domain.ca",
-        organization=org_two,
-    )
+    test_domain = Domains(domain="admin2.update.domain.ca", organization=org_two,)
     save(test_domain)
 
     update_result = run(
@@ -238,20 +189,16 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save):
             }
         }
         """,
-        as_user=org_admin
+        as_user=org_admin,
     )
 
     if "errors" not in update_result:
-        fail(
-            "Expected to generate error, instead: {}".format(
-                json(update_result)
-            )
-        )
+        fail("Expected to generate error, instead: {}".format(json(update_result)))
 
     [error] = update_result["errors"]
     assert (
         error["message"] == "Error, you do not have permission to edit "
-                            "domains belonging to another organization"
+        "domains belonging to another organization"
     )
 
 
@@ -271,18 +218,12 @@ def test_domain_update_user_write(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_write",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_write", user_organization=org_one,),
         ],
     )
     save(user_write)
 
-    test_domain = Domains(
-        domain="user.write.domain.ca",
-        organization=org_one,
-    )
+    test_domain = Domains(domain="user.write.domain.ca", organization=org_one,)
     save(test_domain)
 
     update_result = run(
@@ -296,23 +237,13 @@ def test_domain_update_user_write(save):
             }
         }
         """,
-        as_user=user_write
+        as_user=user_write,
     )
 
     if "errors" in update_result:
-        fail(
-            "Expected to update a domain, instead: {}".format(
-                json(update_result)
-            )
-        )
+        fail("Expected to update a domain, instead: {}".format(json(update_result)))
 
-    update_result_expected = {
-        "data": {
-            "updateDomain": {
-                "status": True
-            }
-        }
-    }
+    update_result_expected = {"data": {"updateDomain": {"status": True}}}
 
     assert update_result == update_result_expected
 
@@ -324,18 +255,10 @@ def test_domain_update_user_write(save):
             }
         }
         """,
-        as_user=user_write
+        as_user=user_write,
     )
 
-    result_expected = {
-        "data": {
-            "domain": [
-                {
-                    "url": "updated.user.write.domain.ca"
-                }
-            ]
-        }
-    }
+    result_expected = {"data": {"domain": [{"url": "updated.user.write.domain.ca"}]}}
 
     assert result == result_expected
 
@@ -344,7 +267,9 @@ def test_domain_creation_user_write_cant_update_in_different_org(save):
     """
     Test to ensure that user write cant update domains in different org
     """
-    org_two = Organizations(acronym="ORG2", name="Organization 2", slug="organization-2")
+    org_two = Organizations(
+        acronym="ORG2", name="Organization 2", slug="organization-2"
+    )
     save(org_two)
 
     user_write = Users(
@@ -364,10 +289,7 @@ def test_domain_creation_user_write_cant_update_in_different_org(save):
     )
     save(user_write)
 
-    test_domain = Domains(
-        domain="user.write.domain.ca",
-        organization=org_two,
-    )
+    test_domain = Domains(domain="user.write.domain.ca", organization=org_two,)
     save(test_domain)
 
     update_result = run(
@@ -381,20 +303,16 @@ def test_domain_creation_user_write_cant_update_in_different_org(save):
             }
         }
         """,
-        as_user=user_write
+        as_user=user_write,
     )
 
     if "errors" not in update_result:
-        fail(
-            "Expected to generate error, instead: {}".format(
-                json(update_result)
-            )
-        )
+        fail("Expected to generate error, instead: {}".format(json(update_result)))
 
     [error] = update_result["errors"]
     assert (
         error["message"] == "Error, you do not have permission to edit "
-                            "domains belonging to another organization"
+        "domains belonging to another organization"
     )
 
 
@@ -414,18 +332,12 @@ def test_domain_creation_user_read_cant_update_domain(save):
         preferred_lang="English",
         tfa_validated=False,
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one,
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one,),
         ],
     )
     save(user_read)
 
-    test_domain = Domains(
-        domain="user.read.domain.ca",
-        organization=org_one
-    )
+    test_domain = Domains(domain="user.read.domain.ca", organization=org_one)
     save(test_domain)
 
     update_result = run(
@@ -439,19 +351,14 @@ def test_domain_creation_user_read_cant_update_domain(save):
             }
         }
         """,
-        as_user=user_read
+        as_user=user_read,
     )
 
     if "errors" not in update_result:
-        fail(
-            "Expected to generate error, instead: {}".format(
-                json(update_result)
-            )
-        )
+        fail("Expected to generate error, instead: {}".format(json(update_result)))
 
     [error] = update_result["errors"]
     assert (
         error["message"] == "Error, you do not have permission to edit "
-                            "domains belonging to another organization"
+        "domains belonging to another organization"
     )
-

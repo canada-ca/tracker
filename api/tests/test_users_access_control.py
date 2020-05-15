@@ -83,7 +83,7 @@ def test_get_users_as_super_admin(save):
             }
         }
         """,
-        as_user=super_admin
+        as_user=super_admin,
     )
 
     if "errors" in actual:
@@ -175,14 +175,12 @@ def test_get_users_from_same_org(save):
             }
         }
         """,
-        as_user=org1_admin
+        as_user=org1_admin,
     )
 
     if "errors" in actual:
         fail(
-            "Tried to get users from org as org admin, instead: {}".format(
-                json(actual)
-            )
+            "Tried to get users from org as org admin, instead: {}".format(json(actual))
         )
 
     expected = {

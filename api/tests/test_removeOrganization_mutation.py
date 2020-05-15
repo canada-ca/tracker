@@ -49,7 +49,7 @@ def test_mutation_removeOrganization_succeeds_for_super_admin(save):
              }
          }
         """,
-        as_user=sa_user
+        as_user=sa_user,
     )
 
     if "errors" in result:
@@ -129,7 +129,7 @@ def test_mutation_removeOrganization_fails_if_org_does_not_exist(save):
              }
          }
         """,
-        as_user=sa_user
+        as_user=sa_user,
     )
 
     if "errors" not in result:
@@ -210,7 +210,7 @@ def test_mutation_removeOrganization_fails_for_write_users(save):
              }
          }
         """,
-        as_user=write_user
+        as_user=write_user,
     )
 
     if "errors" not in result:
@@ -252,7 +252,7 @@ def test_mutation_removeOrganization_fails_for_read_users(save):
              }
          }
         """,
-        as_user=reader
+        as_user=reader,
     )
 
     if "errors" not in result:

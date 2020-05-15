@@ -47,8 +47,7 @@ def test_password_reset_email_sent_successfully():
 
         # Checks that the correct user name is sent.
         assert (
-            "Hello testuser,"
-            in result["data"]["sendPasswordReset"]["content"]["body"]
+            "Hello testuser," in result["data"]["sendPasswordReset"]["content"]["body"]
         )
 
         # Checks that the correct URL is sent

@@ -8,7 +8,6 @@ from db import DB
 from tests.test_functions import json, run
 
 
-
 @pytest.fixture
 def save():
     with app.app_context():
@@ -42,14 +41,10 @@ def test_testUserClaims_accepts_admin_claim_for_admin_user(save):
                 testUserClaims(orgSlug: "organization-1", role: ADMIN)
             }
         """,
-        as_user=user
+        as_user=user,
     )
     if "errors" in result:
-        fail(
-            "expected admin's ADMIN check to pass but got: {}".format(
-                json(result)
-            )
-        )
+        fail("expected admin's ADMIN check to pass but got: {}".format(json(result)))
 
     [testUserClaims] = result["data"].values()
     assert testUserClaims == "User Passed Admin Claim"
@@ -79,7 +74,7 @@ def test_testUserClaims_accepts_write_claim_for_write_user(save):
                 testUserClaims(orgSlug: "organization-1", role: USER_WRITE)
             }
         """,
-        as_user=user
+        as_user=user,
     )
     if "errors" in result:
         fail(
@@ -116,7 +111,7 @@ def test_testUserClaims_accepts_super_admin_claim_for_super_admin(save):
                 testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
             }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -155,7 +150,7 @@ def test_testUserClaims_accepts_read_claim_for_read_user(save):
                 testUserClaims(orgSlug: "organization-1", role: USER_READ)
             }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -194,7 +189,7 @@ def test_testUserClaims_rejects_super_admin_check_for_read_user(save):
                 testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
             }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" not in result:
@@ -235,7 +230,7 @@ def test_testUserClaims_rejects_admin_check_for_read_user(save):
                 testUserClaims(orgSlug: "organization-1", role: ADMIN)
             }
         """,
-        as_user=user
+        as_user=user,
     )
     if "errors" not in result:
         fail(
@@ -275,7 +270,7 @@ def test_testUserClaims_rejects_super_admin_check_for_admin_user(save):
                 testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
             }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" not in result:
@@ -316,7 +311,7 @@ def test_testUserClaims_rejects_super_admin_check_for_write_user(save):
                 testUserClaims(orgSlug: "organization-1", role: SUPER_ADMIN)
             }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" not in result:

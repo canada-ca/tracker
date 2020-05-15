@@ -14,6 +14,7 @@ from models import (
 )
 from tests.test_functions import json, run
 
+
 @pytest.fixture
 def save():
     with app.app_context():

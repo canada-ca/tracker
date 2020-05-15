@@ -17,17 +17,13 @@ def test_valid_acronym_serialize():
 
 def test_invalid_acronym_serialize():
     test_value = "fdsaf"
-    with pytest.raises(
-        GraphQLError, match=scalar_error_type("Acronym", test_value)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("Acronym", test_value)):
         Acronym.serialize(test_value)
 
 
 def test_invalid_value_acronym_serialize():
     test_value = 3213
-    with pytest.raises(
-        GraphQLError, match=scalar_error_type("String", test_value)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("String", test_value)):
         Acronym.serialize(test_value)
 
 
@@ -38,17 +34,13 @@ def test_valid_acronym_parse_value():
 
 def test_invalid_acronym_parse_value():
     test_value = "fdasf"
-    with pytest.raises(
-        GraphQLError, match=scalar_error_type("Acronym", test_value)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("Acronym", test_value)):
         Acronym.parse_value(test_value)
 
 
 def test_invalid_value_acronym_parse_value():
     test_value = 654645
-    with pytest.raises(
-        GraphQLError, match=scalar_error_type("String", test_value)
-    ):
+    with pytest.raises(GraphQLError, match=scalar_error_type("String", test_value)):
         Acronym.parse_value(test_value)
 
 

@@ -16,6 +16,7 @@ def save():
     yield s
     cleanup()
 
+
 # XXX: convert this to pytest style
 @pytest.fixture(scope="function")
 def user_schema_test_db_init():
@@ -58,18 +59,14 @@ def test_successful_creation(save):
     )
 
     if "errors" in result:
-        fail(
-            "Tried to create a user, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Tried to create a user, instead: {}".format(json(result)))
 
     expected_result = {
         "data": {
             "createUser": {
                 "user": {
                     "userName": "different-email@testemail.ca",
-                    "displayName": "user-test"
+                    "displayName": "user-test",
                 }
             }
         }
@@ -94,11 +91,7 @@ def test_email_address_in_use():
     )
 
     if "errors" in result:
-        fail(
-            "Error should create user, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Error should create user, instead: {}".format(json(result)))
 
     error_result = run(
         mutation="""
@@ -201,15 +194,11 @@ def test_update_password_success(save):
             }
         }
         """,
-        as_user=test_user
+        as_user=test_user,
     )
 
     if "errors" in result:
-        fail(
-            "Tried to update password, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Tried to update password, instead: {}".format(json(result)))
 
     expected_result = {
         "data": {
@@ -335,19 +324,11 @@ def test_successful_validation(save):
     )
 
     if "errors" in result:
-        fail(
-            "Tried to validate account, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Tried to validate account, instead: {}".format(json(result)))
 
     expected_result = {
         "data": {
-            "authenticateTwoFactor": {
-                "user": {
-                    "userName": "testuser@testemail.ca"
-                }
-            }
+            "authenticateTwoFactor": {"user": {"userName": "testuser@testemail.ca"}}
         }
     }
 
@@ -401,11 +382,7 @@ def test_invalid_otp_code():
     )
 
     if "errors" not in result:
-        fail(
-            "Tried to validate with invalid code, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Tried to validate with invalid code, instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert error["message"] == error_otp_code_is_invalid()
