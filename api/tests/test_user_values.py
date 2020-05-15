@@ -1,26 +1,17 @@
 import pytest
+
 from pytest import fail
-from json import dumps
-from flask import Request
-from json_web_token import tokenize, auth_header
-from graphene.test import Client
-from unittest import TestCase
-from werkzeug.test import create_environ
+
 from app import app
 from db import DB
 from models import Organizations, Users, User_affiliations
-from queries import schema
-
-s, cleanup, session = DB()
-
-
-def json(j):
-    return dumps(j, indent=2)
+from tests.test_functions import json, run
 
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, session = DB()
         yield s
         cleanup()
 
@@ -52,10 +43,8 @@ def test_get_another_users_information(save):
     )
     save(super_admin)
 
-    token = tokenize(user_id=super_admin.id, roles=super_admin.roles)
-
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        query="""
         {
             user(userName: "testuserread@testemail.ca") {
                 userName
@@ -65,8 +54,15 @@ def test_get_another_users_information(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=super_admin,
     )
+
+    if "errors" in actual:
+        fail(
+            "Tried to get user info as super admin, instead: {}".format(
+                json(actual)
+            )
+        )
 
     expected = {
         "data": {
@@ -110,24 +106,23 @@ def test_get_another_users_information_user_does_not_exist(save):
     )
     save(super_admin)
 
-    token = tokenize(user_id=super_admin.id, roles=super_admin.roles)
-
-    actual = Client(schema).execute(
-        """
+    actual = run(
+        query="""
         {
             user(userName: "IdontThinkSo@testemail.ca") {
                 userName
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=super_admin,
     )
 
     if "errors" not in actual:
         fail(
-            "Expected retrieval of not existant user to fail. Instead:"
+            "Expected retrieval of non-existent user to fail. Instead:"
             "{}".format(json(actual))
         )
+
     [err] = actual["errors"]
     [message, _, _] = err.values()
     assert message == "Error, user cannot be found"
@@ -153,10 +148,8 @@ def test_get_own_user_information(save):
     )
     save(user)
 
-    token = tokenize(user_id=user.id, roles=user.roles)
-
-    executed = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             user {
                 userName
@@ -166,9 +159,17 @@ def test_get_own_user_information(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=user,
     )
-    result_refr = {
+
+    if "errors" in result:
+        fail(
+            "Tried to grab users own information, instead: {}".format(
+                json(result)
+            )
+        )
+
+    expected_result = {
         "data": {
             "user": [
                 {
@@ -180,4 +181,4 @@ def test_get_own_user_information(save):
             ]
         }
     }
-    assert result_refr == executed
+    assert result == expected_result
