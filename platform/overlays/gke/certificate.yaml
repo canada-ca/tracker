@@ -11,6 +11,7 @@ spec:
   issuerRef:
     name: letsencrypt
     kind: Issuer
-  commonName: istio.actually.works
+  commonName: pulse.alpha.canada.ca
   dnsNames:
-  - istio.actually.works
+  - pulse.alpha.canada.ca
+  - pouls.alpha.canada.ca
