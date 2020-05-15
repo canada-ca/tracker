@@ -1,6 +1,6 @@
 starlette
 uvicorn
-PyJWT
+emoji
 requests>=2.18.4
 dkimpy
 dnspython

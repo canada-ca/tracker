@@ -494,5 +494,9 @@ def insert(report, scan_type, scan_id):
         logging.error("Failed database insertion: %s\n" % str(e))
 
 
+def mock_insert(report, scan_type, scan_id):
+    return
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8080)
