@@ -16,23 +16,23 @@ describe('<UserList />', () => {
       {
         request: {
           query: QUERY_USERLIST,
+          variables: { slug: 'testuser-testemail-gc-ca' },
         },
         result: {
           data: {
             userList: {
-              organization: 'TEST',
               pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
+                hasNextPage: false,
+                hasPreviousPage: false,
               },
               edges: [
                 {
                   node: {
-                    id: 'ODY0MDEzMTE1NA==',
+                    id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
                     userName: 'testuser@testemail.gc.ca',
-                    admin: false,
+                    admin: true,
                     tfa: false,
-                    displayName: 'Test User',
+                    displayName: 'Test User Esq.',
                   },
                 },
               ],
@@ -45,7 +45,11 @@ describe('<UserList />', () => {
     // Set the inital history item to user-list
     const { getAllByText } = render(
       <UserStateProvider
-        initialState={{ userName: 'test', jwt: 'string', tfa: false }}
+        initialState={{
+          userName: 'testuser@testemail.gc.ca',
+          jwt: 'string',
+          tfa: false,
+        }}
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
@@ -72,23 +76,23 @@ describe('<UserList />', () => {
       {
         request: {
           query: QUERY_USERLIST,
+          variables: { slug: 'testuser-testemail-gc-ca' },
         },
         result: {
           data: {
             userList: {
-              organization: 'TEST',
               pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
+                hasNextPage: false,
+                hasPreviousPage: false,
               },
               edges: [
                 {
                   node: {
-                    id: 'ODY0MDEzMTE1NA==',
+                    id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
                     userName: 'testuser@testemail.gc.ca',
-                    admin: false,
+                    admin: true,
                     tfa: false,
-                    displayName: 'Test User',
+                    displayName: 'Test User Esq.',
                   },
                 },
               ],
@@ -101,14 +105,18 @@ describe('<UserList />', () => {
     // create a history object and inject it so we can inspect it afterwards
     // for the side effects of our form submission (a redirect to /!).
     const history = createMemoryHistory({
-      initialEntries: ['user-list'],
+      initialEntries: ['/user-list'],
       initialIndex: 0,
     })
 
     // Set the inital history item to user-list
     const { getAllByText } = render(
       <UserStateProvider
-        initialState={{ userName: 'test', jwt: 'string', tfa: false }}
+        initialState={{
+          userName: 'testuser@testemail.gc.ca',
+          jwt: 'string',
+          tfa: false,
+        }}
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>

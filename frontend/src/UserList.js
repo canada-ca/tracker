@@ -15,6 +15,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
 import { useUserState } from './UserState'
+import { slugify } from './slugify'
 
 export default function UserList() {
   const { currentUser } = useUserState()
@@ -25,11 +26,15 @@ export default function UserList() {
         authorization: currentUser.jwt,
       },
     },
+    variables: {
+      slug: slugify(currentUser.userName),
+    },
   })
   if (loading) {
     return <p>Loading...</p>
   }
   if (error) {
+    console.log(error)
     return <p>Error :(</p>
   }
 
@@ -54,19 +59,17 @@ export default function UserList() {
         </Button>
       </SimpleGrid>
       <Divider />
-      {data
-        ? data.userList.edges.map((edge) => {
-            return (
-              <UserCard
-                key={edge.node.id}
-                userName={edge.node.userName}
-                tfa={edge.node.tfa}
-                admin={edge.node.admin}
-                displayName={edge.node.displayName}
-              />
-            )
-          })
-        : null}
+      {data.userList.edges.map(({ node }) => {
+        return (
+          <UserCard
+            key={node.id}
+            userName={node.userName}
+            tfa={node.tfa}
+            admin={node.admin}
+            displayName={node.displayName}
+          />
+        )
+      })}
       <PaginationButtons
         next={data.userList.pageInfo.hasNextPage}
         previous={data.userList.pageInfo.hasPreviousPage}
