@@ -1,8 +1,7 @@
 import pytest
 from pytest import fail
-from json_web_token import tokenize, auth_header
-from flask import Request
 from graphene.test import Client
+
 from app import app
 from db import DB
 from queries import schema
@@ -12,28 +11,20 @@ from models import (
     Users,
     User_affiliations,
     Dmarc_Reports,
-    Scans,
-    Dkim_scans,
-    Dmarc_scans,
-    Https_scans,
-    Mx_scans,
-    Spf_scans,
-    Ssl_scans,
 )
 from tests.testdata import accurateplastics_report
-
-s, cleanup, session = DB()
+from tests.test_functions import json, run
 
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, session = DB()
         yield s
         session.rollback()
         cleanup()
 
 
-@pytest.mark.skip
 def test_get_domain_resolver_dmarc_report(save):
     """
     Test to see if all values appear
@@ -67,10 +58,8 @@ def test_get_domain_resolver_dmarc_report(save):
     )
     save(user)
 
-    token = tokenize(user_id=user.id, roles=user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             domain(urlSlug: "accurateplastics-com") {
                 url
@@ -89,11 +78,11 @@ def test_get_domain_resolver_dmarc_report(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=user,
     )
 
     if "errors" in result:
-        fail("Expected dmarcReport query to succeed. Instead: {}".format(result))
+        fail("Expected dmarcReport query to succeed. Instead: {}".format(json(result)))
 
     expected = {
         "data": {
@@ -118,10 +107,10 @@ def test_get_domain_resolver_dmarc_report(save):
             ]
         }
     }
+
     assert expected == result
 
 
-@pytest.mark.skip
 def test_get_domain_resolver_dmarc_report_in_date_range(save):
     """
     Test to see if all values appear
@@ -154,10 +143,8 @@ def test_get_domain_resolver_dmarc_report_in_date_range(save):
     )
     save(user)
 
-    token = tokenize(user_id=user.id, roles=user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
          {
              domain(urlSlug: "accurateplastics-com") {
                  url
@@ -176,11 +163,11 @@ def test_get_domain_resolver_dmarc_report_in_date_range(save):
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=user,
     )
 
     if "errors" in result:
-        fail("Expected dmarcReport query to succeed. Instead: {}".format(result))
+        fail("Expected dmarcReport query to succeed. Instead: {}".format(json(result)))
 
     expected = {
         "data": {
@@ -208,7 +195,6 @@ def test_get_domain_resolver_dmarc_report_in_date_range(save):
     assert expected == result
 
 
-@pytest.mark.skip
 def test_get_domain_resolver_dmarc_report_for_date_range_with_no_reports(save):
     user = Users(
         display_name="testuserread",
@@ -238,10 +224,8 @@ def test_get_domain_resolver_dmarc_report_for_date_range_with_no_reports(save):
     )
     save(user)
 
-    token = tokenize(user_id=user.id, roles=user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
          {
              domain(urlSlug: "accurateplastics-com") {
                  url
@@ -260,18 +244,17 @@ def test_get_domain_resolver_dmarc_report_for_date_range_with_no_reports(save):
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=user,
     )
 
     if "errors" not in result:
         fail(
             "Expected dmarcReport query for report dates we don't have to fail. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
 
-@pytest.mark.skip
 def test_domain_resolver_dmarc_report_for_domain_with_no_reports_will_fail(save):
     user = Users(
         display_name="testuserread",
@@ -288,10 +271,8 @@ def test_domain_resolver_dmarc_report_for_domain_with_no_reports_will_fail(save)
     )
     save(user)
 
-    token = tokenize(user_id=user.id, roles=user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
          {
              domain(urlSlug: "addisonfoods-com") {
                  url
@@ -310,13 +291,13 @@ def test_domain_resolver_dmarc_report_for_domain_with_no_reports_will_fail(save)
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=user,
     )
 
     if "errors" not in result:
         fail(
             "Expected dmarcReport query for report dates we don't have to fail. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -324,7 +305,6 @@ def test_domain_resolver_dmarc_report_for_domain_with_no_reports_will_fail(save)
     assert error["message"] == "Error, no reports for that domain."
 
 
-@pytest.mark.skip
 def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing(save):
     user = Users(
         display_name="testuserread",
@@ -354,10 +334,8 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing
     )
     save(user)
 
-    token = tokenize(user_id=user.id, roles=user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
          {
              domain(urlSlug: "accurateplastics-com") {
                  url
@@ -376,13 +354,13 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=user,
     )
 
     if "errors" not in result:
         fail(
             "Expected dmarcReport query with no start date to fail. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -390,7 +368,6 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_start_date_is_missing
     assert error["message"] == "Error, both start and end dates are required."
 
 
-@pytest.mark.skip
 def test_get_domain_resolver_dmarc_report_returns_error_if_end_date_is_missing(save):
     user = Users(
         display_name="testuserread",
@@ -420,10 +397,8 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_end_date_is_missing(s
     )
     save(user)
 
-    token = tokenize(user_id=user.id, roles=user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
          {
              domain(urlSlug: "accurateplastics-com") {
                  url
@@ -442,13 +417,13 @@ def test_get_domain_resolver_dmarc_report_returns_error_if_end_date_is_missing(s
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=user,
     )
 
     if "errors" not in result:
         fail(
             "Expected dmarcReport query with no start date to fail. Instead: {}".format(
-                result
+                json(result)
             )
         )
 

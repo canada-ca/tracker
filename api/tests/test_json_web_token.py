@@ -31,10 +31,7 @@ def test_tokens_expire_in_one_hour_by_default():
 def test_accepts_an_iat_and_exp_argument_to_allow_custom_expiry_dates():
     now = dt.utcnow()
     token = tokenize(
-        user_id=1,
-        secret="secret",
-        iat=now,
-        exp=now + timedelta(seconds=100),
+        user_id=1, secret="secret", iat=now, exp=now + timedelta(seconds=100),
     )
     decoded = jwt.decode(token, "secret", algorithms=["HS256"])
 
