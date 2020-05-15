@@ -1,12 +1,9 @@
 import pytest
 
 from pytest import fail
-from graphene.test import Client
 
-from json_web_token import tokenize, auth_header
 from app import app
 from db import DB
-from queries import schema
 from models import (
     Organizations,
     Users,
@@ -239,9 +236,7 @@ def test_admin_cant_see_user_list_in_different_org(save):
     )
     save(user_read)
 
-    token = tokenize(user_id=admin_user.id, roles=admin_user.roles)
-
-    result = Client(schema).execute(
+    result = run(
         """
         {
             userList(orgSlug: "organization-2") {
@@ -256,7 +251,7 @@ def test_admin_cant_see_user_list_in_different_org(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=admin_user,
     )
 
     if "errors" not in result:
@@ -301,10 +296,8 @@ def test_user_write_cant_see_user_list(save):
     )
     save(user_read)
 
-    token = tokenize(user_id=user_write.id, roles=user_write.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             userList(orgSlug: "organization-2") {
                 edges {
@@ -318,7 +311,7 @@ def test_user_write_cant_see_user_list(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=user_write,
     )
 
     if "errors" not in result:
