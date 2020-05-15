@@ -4,7 +4,6 @@ from pytest import fail
 
 from app import app
 from db import DB
-from queries import schema
 from models import (
     Organizations,
     Users,
@@ -56,7 +55,7 @@ def test_mutation_removeOrganization_succeeds_for_super_admin(save):
     if "errors" in result:
         fail(
             "expected removeOrganization to succeed for SA user. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -95,7 +94,7 @@ def test_mutation_removeOrganization_does_not_remove_super_admin_org(save):
     if "errors" not in result:
         fail(
             "expected removing the SA org to fail, even for SA user. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -136,7 +135,7 @@ def test_mutation_removeOrganization_fails_if_org_does_not_exist(save):
     if "errors" not in result:
         fail(
             "expected removeOrganization to fail for orgs that don't exist. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -174,7 +173,9 @@ def test_mutation_removeOrganization_fails_for_admin_users(save):
 
     if "errors" not in result:
         fail(
-            "expected removeOrganization to fail for admins. Instead: {}".format(result)
+            "expected removeOrganization to fail for admins. Instead: {}".format(
+                json(result)
+            )
         )
 
     errors, data = result.values()
@@ -215,7 +216,7 @@ def test_mutation_removeOrganization_fails_for_write_users(save):
     if "errors" not in result:
         fail(
             "expected removeOrganization to fail for write users. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -257,7 +258,7 @@ def test_mutation_removeOrganization_fails_for_read_users(save):
     if "errors" not in result:
         fail(
             "expected removeOrganization to fail for read users. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
