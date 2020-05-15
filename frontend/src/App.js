@@ -75,38 +75,41 @@ export default function App() {
                 <LandingPage />
               </Route>
 
-              <Route path="/domains">
-                <DomainsPage />
-              </Route>
-
-              <RouteIf
-                condition={isLoggedIn()}
-                consequent="/user"
-                alternate="/sign-in"
-              >
-                <UserPage userName={currentUser.userName} />
-              </RouteIf>
-
-              <Route path="/sign-in" component={SignInPage} />
-
               <Route path="/create-user">
                 <CreateUserPage />
               </Route>
 
+              <Route path="/sign-in" component={SignInPage} />
+
               <RouteIf
                 condition={isLoggedIn()}
-                consequent="/two-factor-code"
                 alternate="/sign-in"
+                path="/user-list"
               >
-                <QRcodePage userName={currentUser.userName} />
+                <UserList />
+              </RouteIf>
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
+                path="/domains"
+              >
+                <DomainsPage />
               </RouteIf>
 
               <RouteIf
                 condition={isLoggedIn()}
-                consequent="/user-list"
                 alternate="/sign-in"
+                path="/user"
               >
-                <UserList />
+                <UserPage userName={currentUser.userName} />
+              </RouteIf>
+
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
+                path="/two-factor-code"
+              >
+                <QRcodePage userName={currentUser.userName} />
               </RouteIf>
 
               <Route component={PageNotFound} />
