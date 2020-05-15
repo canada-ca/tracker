@@ -1,34 +1,21 @@
 import pytest
-from json_web_token import tokenize, auth_header
-from flask import Request
+
 from pytest import fail
-from graphene.test import Client
-from unittest import TestCase
-from werkzeug.test import create_environ
+
 from app import app
 from db import DB
-from queries import schema
-from backend.security_check import SecurityAnalysisBackend
 from models import (
     Organizations,
-    Domains,
     Users,
     User_affiliations,
-    Scans,
-    Dkim_scans,
-    Dmarc_scans,
-    Https_scans,
-    Mx_scans,
-    Spf_scans,
-    Ssl_scans,
 )
-
-s, cleanup, session = DB()
+from tests.test_functions import json, run
 
 
 @pytest.fixture
 def save():
     with app.app_context():
+        s, cleanup, session = DB()
         yield s
         cleanup()
 
@@ -54,10 +41,8 @@ def test_mutation_updateOrganization_succeeds_as_super_user(save):
 
     save(sa_user)
 
-    token = tokenize(user_id=sa_user.id, roles=sa_user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        mutation="""
         mutation {
             updateOrganization(
                 slug: "org-one"
@@ -72,13 +57,13 @@ def test_mutation_updateOrganization_succeeds_as_super_user(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=sa_user,
     )
 
     if "errors" in result:
         fail(
             "expected updateOrganization to succeed for super admin. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -109,10 +94,8 @@ def test_mutation_updateOrganization_fails_if_names_clash(save):
 
     save(sa_user)
 
-    token = tokenize(user_id=sa_user.id, roles=sa_user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        mutation="""
          mutation {
              updateOrganization(
                  slug: "super-admin"
@@ -127,13 +110,13 @@ def test_mutation_updateOrganization_fails_if_names_clash(save):
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=sa_user,
     )
 
     if "errors" not in result:
         fail(
             "expected updateOrganization to fail when renaming clashes. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -158,10 +141,8 @@ def test_mutation_updateOrganization_fails_if_org_does_not_exist(save):
 
     save(sa_user)
 
-    token = tokenize(user_id=sa_user.id, roles=sa_user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        mutation="""
          mutation {
              updateOrganization(
                  slug: "org-one"
@@ -176,13 +157,13 @@ def test_mutation_updateOrganization_fails_if_org_does_not_exist(save):
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=sa_user,
     )
 
     if "errors" not in result:
         fail(
             "expected updateOrganization to fail for orgs that don't exist. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -206,10 +187,8 @@ def test_mutation_updateOrganization_fails_for_admin_users(save):
 
     save(admin)
 
-    token = tokenize(user_id=admin.id, roles=admin.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        mutation="""
          mutation {
              updateOrganization(
                  slug: "org-one"
@@ -224,12 +203,14 @@ def test_mutation_updateOrganization_fails_for_admin_users(save):
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=admin,
     )
 
     if "errors" not in result:
         fail(
-            "expected createOrganization to fail for admins. Instead: {}".format(result)
+            "expected createOrganization to fail for admins. Instead: {}".format(
+                json(result)
+            )
         )
 
     errors, data = result.values()
@@ -254,10 +235,8 @@ def test_mutation_updateOrganization_fails_for_write_users(save):
 
     save(write_user)
 
-    token = tokenize(user_id=write_user.id, roles=write_user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        mutation="""
          mutation {
              updateOrganization(
                  slug: "org-one"
@@ -272,13 +251,13 @@ def test_mutation_updateOrganization_fails_for_write_users(save):
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=write_user,
     )
 
     if "errors" not in result:
         fail(
             "expected createOrganization to fail for write users. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
@@ -304,10 +283,8 @@ def test_mutation_updateOrganization_fails_for_read_users(save):
 
     save(reader)
 
-    token = tokenize(user_id=reader.id, roles=reader.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        mutation="""
          mutation {
              updateOrganization(
                  slug: "org-one"
@@ -322,13 +299,13 @@ def test_mutation_updateOrganization_fails_for_read_users(save):
              }
          }
         """,
-        context_value=auth_header(token),
+        as_user=reader,
     )
 
     if "errors" not in result:
         fail(
             "expected createOrganization to fail for read users. Instead: {}".format(
-                result
+                json(result)
             )
         )
 
