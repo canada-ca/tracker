@@ -12,7 +12,7 @@ describe('<RouteIf/>', () => {
           <Switch>
             <RouteIf
               condition={true}
-              consequent="/protected"
+              path="/protected"
               alternate="/somewhere-else"
             >
               <p>protected</p>
@@ -26,7 +26,7 @@ describe('<RouteIf/>', () => {
       })
     })
 
-    it('sets the url to consequent path', async () => {
+    it('sets the url to the provided path', async () => {
       // create a history object so we can inspect it afterwards for the side effects of components operations
       const history = createMemoryHistory({
         initialEntries: ['/protected'],
@@ -39,7 +39,7 @@ describe('<RouteIf/>', () => {
           <Switch>
             <RouteIf
               condition={true}
-              consequent="/protected"
+              path="/protected"
               alternate="/somewhere-else"
             >
               <p>protected</p>
@@ -66,7 +66,7 @@ describe('<RouteIf/>', () => {
           <Switch>
             <RouteIf
               condition={false}
-              consequent="/protected"
+              path="/protected"
               alternate="/somewhere-else"
             >
               <p>protected</p>

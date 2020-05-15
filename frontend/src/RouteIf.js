@@ -2,10 +2,10 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { bool, string, node } from 'prop-types'
 
-export function RouteIf({ children, condition, consequent, alternate }) {
+export function RouteIf({ children, alternate, condition, ...rest }) {
   return (
     <Route
-      path={consequent}
+      {...rest}
       render={({ location }) =>
         condition ? (
           children
@@ -25,6 +25,5 @@ export function RouteIf({ children, condition, consequent, alternate }) {
 RouteIf.propTypes = {
   children: node.isRequired,
   condition: bool.isRequired,
-  consequent: string.isRequired,
   alternate: string.isRequired,
 }
