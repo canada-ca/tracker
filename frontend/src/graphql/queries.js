@@ -22,9 +22,8 @@ export const GENERATE_OTP_URL = gql`
 `
 
 export const QUERY_USERLIST = gql`
-  {
-    userList(organizaion: "NS") {
-      organization
+  query UserList($slug: Slug!) {
+    userList(orgSlug: $slug) {
       pageInfo {
         hasNextPage
         hasPreviousPage
