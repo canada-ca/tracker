@@ -1,5 +1,4 @@
 import React from 'react'
-
 import {
   Stack,
   SimpleGrid,
@@ -10,16 +9,23 @@ import {
   InputLeftElement,
   Input,
 } from '@chakra-ui/core'
-
 import { Trans } from '@lingui/macro'
 import { QUERY_USERLIST } from './graphql/queries'
 import { useQuery } from '@apollo/react-hooks'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
+import { useUserState } from './UserState'
 
 export default function UserList() {
+  const { currentUser } = useUserState()
   // This function generates the URL when the page loads
-  const { loading, error, data } = useQuery(QUERY_USERLIST)
+  const { loading, error, data } = useQuery(QUERY_USERLIST, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+  })
   if (loading) {
     return <p>Loading...</p>
   }

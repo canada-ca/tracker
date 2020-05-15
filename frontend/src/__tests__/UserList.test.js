@@ -6,6 +6,7 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { createMemoryHistory } from 'history'
+import { UserStateProvider } from '../UserState'
 import { QUERY_USERLIST } from '../graphql/queries'
 import { setupI18n } from '@lingui/core'
 
@@ -43,15 +44,19 @@ describe('<UserList />', () => {
 
     // Set the inital history item to user-list
     const { getAllByText } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
-          <MemoryRouter initialEntries={['/']}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <UserList />
-            </MockedProvider>
-          </MemoryRouter>
-        </I18nProvider>
-      </ThemeProvider>,
+      <UserStateProvider
+        initialState={{ userName: 'test', jwt: 'string', tfa: false }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={setupI18n()}>
+            <MemoryRouter initialEntries={['/']}>
+              <MockedProvider mocks={mocks} addTypename={false}>
+                <UserList />
+              </MockedProvider>
+            </MemoryRouter>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
 
     //
@@ -102,15 +107,19 @@ describe('<UserList />', () => {
 
     // Set the inital history item to user-list
     const { getAllByText } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
-          <Router history={history}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <UserList />
-            </MockedProvider>
-          </Router>
-        </I18nProvider>
-      </ThemeProvider>,
+      <UserStateProvider
+        initialState={{ userName: 'test', jwt: 'string', tfa: false }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={setupI18n()}>
+            <Router history={history}>
+              <MockedProvider mocks={mocks} addTypename={false}>
+                <UserList />
+              </MockedProvider>
+            </Router>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
 
     // Get all of the mocked user cards, and expect there to be only one entry.
