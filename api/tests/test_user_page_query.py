@@ -1,18 +1,15 @@
 import pytest
-import json
 
-from json_web_token import tokenize, auth_header
 from pytest import fail
-from graphene.test import Client
 
 from app import app
 from db import DB
-from queries import schema
 from models import (
     Organizations,
     Users,
     User_affiliations,
 )
+from tests.test_functions import json, run
 
 
 @pytest.fixture
@@ -62,10 +59,8 @@ def test_super_admin_can_see_other_user_in_different_org(save):
     )
     save(user_read)
 
-    token = tokenize(user_id=sa_user.id, roles=sa_user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             userPage(userName: "testuserread@testemail.ca") {
                 userName
@@ -79,13 +74,13 @@ def test_super_admin_can_see_other_user_in_different_org(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=sa_user
     )
 
     if "errors" in result:
         fail(
             "Expected to get user details. Instead: {}".format(
-                json.dumps(result, indent=2)
+                json(result)
             )
         )
 
@@ -142,10 +137,8 @@ def test_admin_can_see_user_in_same_org(save):
 
     save(user_read)
 
-    token = tokenize(user_id=admin_user.id, roles=admin_user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             userPage(userName: "testuserread@testemail.ca") {
                 userName
@@ -159,13 +152,13 @@ def test_admin_can_see_user_in_same_org(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=admin_user,
     )
 
     if "errors" in result:
         fail(
             "Expected to get user details. Instead: {}".format(
-                json.dumps(result, indent=2)
+                json(result)
             )
         )
 
@@ -216,10 +209,8 @@ def test_admin_cant_see_user_in_different_org(save):
 
     save(user_read)
 
-    token = tokenize(user_id=admin_user.id, roles=admin_user.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             userPage(userName: "testuserread@testemail.ca") {
                 userName
@@ -233,12 +224,12 @@ def test_admin_cant_see_user_in_different_org(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=admin_user,
     )
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
+            "Expected to get an error. Instead: {}".format(json(result))
         )
 
     [error] = result["errors"]
@@ -282,10 +273,8 @@ def test_user_write_cant_see_user_in_same_org(save):
 
     save(user_read)
 
-    token = tokenize(user_id=user_write.id, roles=user_write.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             userPage(userName: "testuserread@testemail.ca") {
                 userName
@@ -299,12 +288,12 @@ def test_user_write_cant_see_user_in_same_org(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=user_write,
     )
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
+            "Expected to get an error. Instead: {}".format(json(result))
         )
 
     [error] = result["errors"]
@@ -344,10 +333,8 @@ def test_user_write_cant_see_user_in_different_org(save):
 
     save(user_read)
 
-    token = tokenize(user_id=user_write.id, roles=user_write.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             userPage(userName: "testuserread@testemail.ca") {
                 userName
@@ -361,12 +348,12 @@ def test_user_write_cant_see_user_in_different_org(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=user_write,
     )
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
+            "Expected to get an error. Instead: {}".format(json(result))
         )
 
     [error] = result["errors"]
@@ -410,10 +397,8 @@ def test_user_read_cant_see_user_in_same_org(save):
 
     save(user_read)
 
-    token = tokenize(user_id=user_read_2.id, roles=user_read_2.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             userPage(userName: "testuserread@testemail.ca") {
                 userName
@@ -427,12 +412,12 @@ def test_user_read_cant_see_user_in_same_org(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=user_read_2,
     )
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
+            "Expected to get an error. Instead: {}".format(json(result))
         )
 
     [error] = result["errors"]
@@ -472,10 +457,8 @@ def test_user_read_cant_see_user_in_different_org(save):
 
     save(user_read)
 
-    token = tokenize(user_id=user_read_2.id, roles=user_read_2.roles)
-
-    result = Client(schema).execute(
-        """
+    result = run(
+        query="""
         {
             userPage(userName: "testuserread@testemail.ca") {
                 userName
@@ -489,12 +472,12 @@ def test_user_read_cant_see_user_in_different_org(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=user_read_2,
     )
 
     if "errors" not in result:
         fail(
-            "Expected to get an error. Instead: {}".format(json.dumps(result, indent=2))
+            "Expected to get an error. Instead: {}".format(json(result))
         )
 
     [error] = result["errors"]
@@ -524,9 +507,7 @@ def test_user_read_and_higher_can_own_information(save):
 
     save(user_read)
 
-    token = tokenize(user_id=user_read.id, roles=user_read.roles)
-
-    result = Client(schema).execute(
+    result = run(
         """
         {
             userPage(userName: "testuserread@testemail.ca") {
@@ -541,13 +522,13 @@ def test_user_read_and_higher_can_own_information(save):
             }
         }
         """,
-        context_value=auth_header(token),
+        as_user=user_read,
     )
 
     if "errors" in result:
         fail(
             "Expected to get user details. Instead: {}".format(
-                json.dumps(result, indent=2)
+                json(result)
             )
         )
 
