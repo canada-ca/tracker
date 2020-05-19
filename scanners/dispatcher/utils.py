@@ -2,7 +2,7 @@ from starlette.responses import PlainTextResponse
 from starlette.background import BackgroundTask
 
 
-def scan_dkim(payload, client):
+async def scan_dkim(payload, client):
     headers = {
         "Content-Type": "application/json"
     }
@@ -10,7 +10,7 @@ def scan_dkim(payload, client):
     return PlainTextResponse("Domain dispatched to DKIM scanner", background=task)
 
 
-def scan_dmarc(payload, client):
+async def scan_dmarc(payload, client):
     headers = {
         "Content-Type": "application/json"
     }
@@ -18,7 +18,7 @@ def scan_dmarc(payload, client):
     return PlainTextResponse("Domain dispatched to DMARC scanner", background=task)
 
 
-def scan_https(payload, client):
+async def scan_https(payload, client):
     headers = {
         "Content-Type": "application/json"
     }
@@ -26,7 +26,7 @@ def scan_https(payload, client):
     return PlainTextResponse("Domain dispatched to HTTPS scanner", background=task)
 
 
-def scan_ssl(payload, client):
+async def scan_ssl(payload, client):
     headers = {
         "Content-Type": "application/json"
     }
@@ -34,7 +34,7 @@ def scan_ssl(payload, client):
     return PlainTextResponse("Domain dispatched to SSL scanner", background=task)
 
 
-def manual_scan_dkim(payload, client):
+async def manual_scan_dkim(payload, client):
     headers = {
         "Content-Type": "application/json"
     }
@@ -42,7 +42,7 @@ def manual_scan_dkim(payload, client):
     return PlainTextResponse("Domain dispatched to DKIM scanner (User-initiated scan)", background=task)
 
 
-def manual_scan_dmarc(payload, client):
+async def manual_scan_dmarc(payload, client):
     headers = {
         "Content-Type": "application/json"
     }
@@ -50,7 +50,7 @@ def manual_scan_dmarc(payload, client):
     return PlainTextResponse("Domain dispatched to DMARC scanner (User-initiated scan)", background=task)
 
 
-def manual_scan_https(payload, client):
+async def manual_scan_https(payload, client):
     headers = {
         "Content-Type": "application/json"
     }
@@ -58,7 +58,7 @@ def manual_scan_https(payload, client):
     return PlainTextResponse("Domain dispatched to HTTPS scanner (User-initiated scan)", background=task)
 
 
-def manual_scan_ssl(payload, client):
+async def manual_scan_ssl(payload, client):
     headers = {
         "Content-Type": "application/json"
     }

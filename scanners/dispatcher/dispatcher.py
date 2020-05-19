@@ -26,12 +26,12 @@ def initiate(received_payload, scan_type):
         }
 
         if scan_type == "web":
-            requests.get('http://127.0.0.1:8000/https', data=payload)
-            requests.get('http://127.0.0.1:8000/dmarc', data=payload)
-            requests.get('http://127.0.0.1:8000/ssl', data=payload)
+            requests.post('http://127.0.0.1:8000/https', data=payload)
+            requests.post('http://127.0.0.1:8000/dmarc', data=payload)
+            requests.post('http://127.0.0.1:8000/ssl', data=payload)
         elif scan_type == "mail":
-            requests.get('http://127.0.0.1:8000/dkim', data=payload)
-            requests.get('http://127.0.0.1:8000/dmarc', data=payload)
+            requests.post('http://127.0.0.1:8000/dkim', data=payload)
+            requests.post('http://127.0.0.1:8000/dmarc', data=payload)
         else:
             raise Exception("Invalid Scan-Type provided")
 
@@ -50,26 +50,26 @@ def Server(scanners={}, client=requests):
 
     def dkim(request):
         logging.info("DKIM scan requested")
-        return scanners["dkim"](request.json(), client)
+        await scanners["dkim"](request.json(), client)
 
     def dmarc(request):
         logging.info("DMARC scan requested")
-        return scanners["dmarc"](request.json(), client)
+        await scanners["dmarc"](request.json(), client)
 
     def https(request):
         logging.info("HTTPS scan requested")
-        return scanners["https"](request.json(), client)
+        await scanners["https"](request.json(), client)
 
     def ssl(request):
         logging.info("SSL scan requested")
-        return scanners["ssl"](request.json(), client)
+        await scanners["ssl"](request.json(), client)
 
     routes = [
-        Route('/dkim', dkim),
-        Route('/dmarc', dmarc),
-        Route('/https', https),
-        Route('/ssl', ssl),
-        Route('/receive', receive),
+        Route('/dkim', dkim, methods=['POST']),
+        Route('/dmarc', dmarc, methods=['POST']),
+        Route('/https', https, methods=['POST']),
+        Route('/ssl', ssl, methods=['POST']),
+        Route('/receive', receive, methods=['POST']),
     ]
 
     return Starlette(debug=True, routes=routes, on_startup=[startup])
