@@ -200,6 +200,7 @@ class Query(graphene.ObjectType):
 
 class Mutation(graphene.ObjectType):
     """The central gathering point for all of the GraphQL mutations."""
+
     update_password = UpdateUserPassword.Field()
     authenticate_two_factor = ValidateTwoFactor.Field()
     update_user_role = UpdateUserRole.Field()
@@ -221,12 +222,9 @@ class Mutation(graphene.ObjectType):
     )
     request_scan = RequestScan.Field()
     authenticate = Authenticate.Field(
-        description="Allows users to give their credentials and be "
-                    "authenticated"
+        description="Allows users to give their credentials and be " "authenticated"
     )
-    sign_up = SignUp.Field(
-        description="Allows users to sign up to our service"
-    )
+    sign_up = SignUp.Field(description="Allows users to sign up to our service")
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

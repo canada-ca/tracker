@@ -4,7 +4,9 @@ from graphene_sqlalchemy import SQLAlchemyConnectionField
 
 from scalars.slug import Slug
 from schemas.user_list.user_list_item import UserListItem
-from schemas.user_list.user_list_item_resolver import resolve_user_item as resolve_user_list
+from schemas.user_list.user_list_item_resolver import (
+    resolve_user_item as resolve_user_list,
+)
 
 user_list = SQLAlchemyConnectionField(
     UserListItem._meta.connection,

@@ -13,12 +13,12 @@ def tokenize(
     # TODO: SUPER_SECRET_SALT isn't actually a salt! Give this a better name.
     secret=environ.get("SUPER_SECRET_SALT", ""),
 ):
-    if not iat: iat=dt.timestamp(dt.utcnow())
-    if not exp: exp=dt.timestamp(dt.utcnow() + timedelta(hours=1))
+    if not iat:
+        iat = dt.timestamp(dt.utcnow())
+    if not exp:
+        exp = dt.timestamp(dt.utcnow() + timedelta(hours=1))
     return jwt.encode(
-        {"exp": exp, "iat": iat, "user_id": user_id},
-        secret,
-        algorithm="HS256",
+        {"exp": exp, "iat": iat, "user_id": user_id}, secret, algorithm="HS256",
     ).decode("utf-8")
 
 

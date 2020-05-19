@@ -39,6 +39,7 @@ def user_schema_test_db_init():
 
         cleanup()
 
+
 def test_update_password_success(save):
     """
     Test to ensure that a user is returned when their password is updated

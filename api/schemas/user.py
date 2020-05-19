@@ -7,6 +7,7 @@ from functions.validate_two_factor import validate_two_factor
 from scalars.email_address import EmailAddress
 
 from schemas.User.user import User
+
 # class User(SQLAlchemyObjectType):
 #     """
 #     This object can be queried to retrieve the current logged in users

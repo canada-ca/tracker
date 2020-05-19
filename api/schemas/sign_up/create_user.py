@@ -42,10 +42,7 @@ def create_user(display_name, password, confirm_password, user_name):
         try:
             db_session.commit()
             auth_token = tokenize(user_id=user.id)
-            return {
-                "auth_token": auth_token,
-                "user": user
-            }
+            return {"auth_token": auth_token, "user": user}
         except Exception as e:
             db_session.rollback()
             db_session.flush()

@@ -9,9 +9,7 @@ from functions.auth_functions import is_user_write
 from functions.input_validators import cleanse_input
 from functions.slugify import slugify_value
 
-from models import (
-    Domains,
-)
+from models import Domains
 
 from scalars.url import URL
 

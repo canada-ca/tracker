@@ -10,6 +10,7 @@ class SignUp(graphene.Mutation):
     """
     This method allows for new users to sign up for our sites services.
     """
+
     # Define mutation arguments
     class Arguments:
         display_name = graphene.String(
@@ -17,24 +18,21 @@ class SignUp(graphene.Mutation):
             required=True,
         )
         user_name = EmailAddress(
-            description="Email address that the user will use to authenticate "
-                        "with",
+            description="Email address that the user will use to authenticate " "with",
             required=True,
         )
         password = graphene.String(
-            description="The password the user will authenticate with",
-            required=True,
+            description="The password the user will authenticate with", required=True,
         )
         confirm_password = graphene.String(
             description="A confirmation that the user submitted the correct "
-                        "password",
+            "password",
             required=True,
         )
 
     # Define mutation fields
     auth_result = graphene.Field(
-        lambda: AuthResult,
-        description="Users information, and JWT",
+        lambda: AuthResult, description="Users information, and JWT",
     )
 
     # Define mutation functionality
@@ -51,13 +49,10 @@ class SignUp(graphene.Mutation):
             user_name=user_name,
             display_name=display_name,
             password=password,
-            confirm_password=confirm_password
+            confirm_password=confirm_password,
         )
 
         # Return information to user
         return SignUp(
-            AuthResult(
-                str(user_info.get("auth_token")),
-                user_info.get("user")
-            )
+            AuthResult(str(user_info.get("auth_token")), user_info.get("user"))
         )
