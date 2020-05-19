@@ -1,9 +1,9 @@
 import os
+import json
 import emoji
 import sys
 import logging
 import requests
-import uvicorn
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse
@@ -13,43 +13,42 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def startup():
-    logging.info(emoji.emojize("ASGI server started... :rocket:"))
+    logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate(request):
+def initiate(received_payload, scan_type):
 
     logging.info("Request received")
 
     try:
-        received_payload = request.headers.get("Data")
-        scan_type = request.headers.get("Scan-Type")
+        received_dict = json.loads(received_payload)
 
         payload = {
-            "scan_id": received_payload["scan_id"],
-            "domain": received_payload["domain"],
+            "scan_id": received_dict["scan_id"],
+            "domain": received_dict["domain"],
         }
 
         if scan_type == "web":
-            requests.post('/https', data=payload)
-            requests.post('/dmarc', data=payload)
-            requests.post('/ssl', data=payload)
+            requests.get('/https', data=payload)
+            requests.get('/dmarc', data=payload)
+            requests.get('/ssl', data=payload)
         elif scan_type == "mail":
-            requests.post('/dkim', data=payload)
-            requests.post('/dmarc', data=payload)
+            requests.get('/dkim', data=payload)
+            requests.get('/dmarc', data=payload)
         else:
             raise Exception("Invalid Scan-Type provided")
 
-        return PlainTextResponse("Scan request parsed successfully")
+        return "Scan request parsed successfully"
 
     except Exception as e:
         logging.error("Failed: %s\n" % str(e))
-        return PlainTextResponse("Failed to dispatch domain to designated scanner(s): %s" % str(e))
+        return "Failed to dispatch domain to designated scanner(s): %s" % str(e)
 
 
 def Server(scanners={}, client=requests):
 
     def receive(request):
-        return PlainTextResponse(initiate(request))
+        return PlainTextResponse(initiate(request.headers.get("Data"), request.headers.get("Scan-Type")))
 
     def dkim(request):
         return PlainTextResponse(scanners["scan_dkim"](request.json(), client))

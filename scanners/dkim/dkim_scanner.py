@@ -17,7 +17,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def startup():
-    logging.info(emoji.emojize("ASGI server started... :rocket:"))
+    logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
 def initiate(request):
