@@ -1,6 +1,6 @@
 """
 A field whose value is an upper case letter or an under score that has a
-length between 1 and 10
+length between 1 and 50
 """
 scalar Acronym @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
 
@@ -19,6 +19,24 @@ type Alignment {
 
   """Is DMARC aligned"""
   dmarc: Boolean
+}
+
+"""
+This mutation allows users to give their credentials and retrieve a token
+that gives them access to restricted content.
+"""
+type Authenticate {
+  """User info who just signed in, and their JWT"""
+  authResult: AuthResult
+}
+
+"""A type used to return information when users sign up or authenticate"""
+type AuthResult {
+  """JWT used for accessing, controlled content."""
+  authToken: String
+
+  """User that has just been created or signed in"""
+  user: User
 }
 
 """DKIM and SPF domain results"""
@@ -45,10 +63,6 @@ type CreateDomain {
 """Mutation allows the creation of an organization inside the database."""
 type CreateOrganization {
   status: Boolean
-}
-
-type CreateUser {
-  user: User
 }
 
 """
@@ -137,6 +151,9 @@ message validation, disposition, and reporting, that a mail-receiving
 organization can use to improve mail handling.
 """
 type DMARC {
+  """DMARC Phase found when running scan"""
+  dmarcPhase: Int
+
   """ID of the object"""
   id: ID
 
@@ -275,6 +292,8 @@ type DmarcReportEdge {
 
 """    """
 type DmarcTags {
+  dmarcPhase: Int
+
   """Important tags retrieved during scan"""
   value: String
     @examples(
@@ -299,6 +318,12 @@ type Domain implements Node {
 
   """The domain the scan was run on"""
   url: URL @fake(type: domainName)
+
+  """Slug of the url"""
+  slug: Slug
+
+  """The last time that a scan was ran on this domain"""
+  lastRan: DateTime
 
   """DKIM, DMARC, and SPF scan results"""
   email(before: String, after: String, first: Int, last: Int): EmailScanConnection
@@ -412,7 +437,6 @@ type Identifiers {
       ]
     )
 
-
   """"Envelope Recipient" in the email header"""
   envelopeTo: String
     @examples(
@@ -424,17 +448,9 @@ type Identifiers {
 
 """The central gathering point for all of the GraphQL mutations."""
 type Mutation {
-  createUser(confirmPassword: String!, displayName: String!, password: String!, userName: EmailAddress!): CreateUser
-  signIn(
-    """Users's password"""
-    password: String!
-
-    """User's email"""
-    userName: EmailAddress!
-  ): SignInUser
   updatePassword(confirmPassword: String!, password: String!, userName: EmailAddress!): UpdateUserPassword
   authenticateTwoFactor(otpCode: String!, userName: EmailAddress!): ValidateTwoFactor
-  updateUserRole(org: Acronym!, role: RoleEnums!, userName: EmailAddress!): UpdateUserRole
+  updateUserRole(orgSlug: Slug!, role: RoleEnums!, userName: EmailAddress!): UpdateUserRole
 
   """Allows the creation of an organization inside the database."""
   createOrganization(
@@ -445,7 +461,7 @@ type Mutation {
     city: String!
 
     """Full name of organization."""
-    description: String!
+    name: String!
 
     """The province in which the organization is located in."""
     province: String!
@@ -459,14 +475,14 @@ type Mutation {
 
   """Allows modification of an organization inside the database."""
   updateOrganization(
-    """Organization that will be updated."""
-    acronym: Acronym!
+    """Organization Acronym you would like updated"""
+    acronym: Acronym
 
     """The city in which the organization is located in."""
     city: String
 
     """Full name of organization."""
-    description: String
+    name: String
 
     """The province in which the organization is located in."""
     province: String
@@ -474,8 +490,8 @@ type Mutation {
     """The sector which the organization belongs to."""
     sector: String
 
-    """Organization Acronym you would like updated"""
-    updatedAcronym: Acronym
+    """Organization that will be updated"""
+    slug: Slug!
 
     """The zone which the organization belongs to."""
     zone: String
@@ -484,13 +500,13 @@ type Mutation {
   """Allows the removal of an organization inside the database"""
   removeOrganization(
     """The organization you wish to remove"""
-    acronym: Acronym!
+    slug: Slug!
   ): RemoveOrganization
 
   """Allows the creation of domains for a given organization"""
   createDomain(
-    """Organizations acronym that you would like to connect this domain to."""
-    org: Acronym!
+    """Organizations slug that you would like to connect this domain to."""
+    orgSlug: Slug!
 
     """URL that you would like to be added to database."""
     url: URL!
@@ -510,6 +526,42 @@ type Mutation {
     """URL of domain that is being removed"""
     url: URL!
   ): RemoveDomain
+
+  """This mutation is used to send a domain to the scanners to be scanned"""
+  requestScan(
+    """If this is a DKIM scan please set to true."""
+    dkim: Boolean
+
+    """If this scan if for testing purposes set to true."""
+    test: Boolean
+
+    """The domain that you would like the scan to be ran on."""
+    url: URL
+  ): RequestScan
+
+  """Allows users to give their credentials and be authenticated"""
+  authenticate(
+    """Users password"""
+    password: String!
+
+    """User email that they signed up with."""
+    userName: String!
+  ): Authenticate
+
+  """Allows users to sign up to our service"""
+  signUp(
+    """A confirmation that the user submitted the correct password"""
+    confirmPassword: String!
+
+    """The name that will be displayed to other users."""
+    displayName: String!
+
+    """The password the user will authenticate with"""
+    password: String!
+
+    """Email address that the user will use to authenticate with"""
+    userName: EmailAddress!
+  ): SignUp
 }
 
 """An object with an ID"""
@@ -539,7 +591,10 @@ type Organization implements Node {
   acronym: Acronym
 
   """The full name of the organization."""
-  description: String
+  name: String
+
+  """Slug of the organizations name"""
+  slug: Slug
 
   """The zone which the organization belongs to."""
   zone: String
@@ -689,32 +744,45 @@ type PolicyPublished {
 
 """The central gathering point for all of the GraphQL queries."""
 type Query {
+  """
+  An graphql object that will be used to populate a userList component in the front end
+  """
+  userList(orgSlug: Slug!, before: String, after: String, first: Int, last: Int): UserListItemConnection
+
+  """
+  An graphql object that will be used to populate a userPage component in the front end
+  """
+  userPage(
+    """Users user name/email address"""
+    userName: EmailAddress
+  ): UserPage
+
   """The ID of the object"""
   node(id: ID!): Node
 
   """Select list of users belonging to an organization."""
-  users(org: Acronym!, before: String, after: String, first: Int, last: Int): UsersConnection
+  users(orgSlug: Slug!, before: String, after: String, first: Int, last: Int): UsersConnection
 
   """
   Query the currently logged in user if no user name isgiven, or query a specific user by user name.
   """
-  user(userName: EmailAddress): User
+  user(userName: EmailAddress): [User]
 
   """
   Select all information on a selected organization that a user has access to.
   """
-  organization(org: Acronym!, before: String, after: String, first: Int, last: Int): OrganizationConnection
+  organization(slug: Slug!, before: String, after: String, first: Int, last: Int): OrganizationConnection
 
   """Select all information on all organizations that a user has access to."""
   organizations(before: String, after: String, first: Int, last: Int): OrganizationConnection
 
   """Select information on a specific domain."""
-  domain(url: URL!): [Domain]
+  domain(urlSlug: Slug!): [Domain]
 
   """
   Select information on an organizations domains, or all domains a user has access to.
   """
-  domains(organization: Acronym, before: String, after: String, first: Int, last: Int): DomainConnection
+  domains(orgSlug: Slug, before: String, after: String, first: Int, last: Int): DomainConnection
 
   """
   An api endpoint used to generate a OTP url used for two factor authentication.
@@ -724,7 +792,7 @@ type Query {
   """
   An api endpoint to view a current user's claims -- Requires an active JWT.
   """
-  testUserClaims(org: Acronym!, role: RoleEnums!): String
+  testUserClaims(orgSlug: Slug!, role: RoleEnums!): String
 
   """
   An api endpoint that will send an email to a given email address so a user can reset their password for the web app.
@@ -735,27 +803,12 @@ type Query {
   An api endpoint that will send a verification email to a given email address.
   """
   sendValidationEmail(email: EmailAddress!): NotificationEmail
-
-  """
-  An api endpoint that will be used to populate a userList component in the front end.
-  """
-  userList(organizaion: Acronym!): UserList
-
-  """
-  An api endpoint that will be used to populate a userPage component in the front end.
-  """
-  userPage(userName: EmailAddress!): UserPage
-
-  """
-  An api endpoint that will be used to populate a DmarcReportPage component in the front end.
-  """
-  queryDmarcReport(reportId: String!): QueryDmarcReport
 }
 
 """DMARC aggregate report record"""
 type Record {
   count: Int
-    @examples(
+   @examples(
       values: [
         1
       ]
@@ -787,6 +840,11 @@ type RemoveOrganization {
   status: Boolean
 }
 
+"""This mutation is used to send a domain to the scanners to be scanned"""
+type RequestScan {
+  status: String
+}
+
 enum RoleEnums {
   """A user who has been given access to view results"""
   USER_READ
@@ -803,12 +861,14 @@ enum RoleEnums {
   SUPER_ADMIN
 }
 
-type SignInUser {
-  user: User
-
-  """Token returned to user"""
-  authToken: String
+"""This method allows for new users to sign up for our sites services."""
+type SignUp {
+  """Users information, and JWT"""
+  authResult: AuthResult
 }
+
+"""A field whos values contain numbers, letters, dashes, and underscores"""
+scalar Slug
 
 """Domain information"""
 type Source {
@@ -1036,6 +1096,73 @@ type UserAffClassEdge {
   cursor: String!
 }
 
+type UserListItem implements Node {
+  """The ID of the object."""
+  id: ID!
+
+  """The users email address or userName"""
+  userName: EmailAddress @fake(type: email)
+
+  """The users display name"""
+  displayName: String @fake(type: firstName)
+
+  """Indicates wether or not this user has enabled tfa"""
+  tfa: Boolean @examples(values: [true, false])
+
+  """
+  Indicates if this user is an admin of the organization specified in the UserList query
+  """
+  admin: Boolean @examples(values: [true, false])
+}
+
+type UserListItemConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [UserListItemEdge]!
+}
+
+"""A Relay edge containing a `UserListItem` and its cursor."""
+type UserListItemEdge {
+  """The item at the end of the edge"""
+  node: UserListItem
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type UserPage implements Node {
+  """The ID of the object."""
+  id: ID!
+
+  """The users email address or userName"""
+  userName: EmailAddress @fake(type: email)
+
+  """The users display name"""
+  displayName: String @fake(type: firstName)
+
+  """Indicates the preferred language of this user"""
+  lang: String @examples(values: ["English", "French"])
+
+  """Indicates wether or not this user has enabled tfa"""
+  tfa: Boolean
+
+  """Indicates if this user is an admin of the organization specified"""
+  userAffiliations: [UserPageAffiliations]
+}
+
+type UserPageAffiliations implements Node {
+  """The ID of the object."""
+  id: ID!
+
+  """Indicates if this user is an admin of the organization"""
+  admin: Boolean @examples(values: [true, false])
+
+  """Indicates which organization this users data is being displayed for"""
+  organization: Acronym @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
+}
+
 """
 This object is used to return a list of users with their user name, display
 name and their permission for the requested organization
@@ -1104,118 +1231,4 @@ type WWWScanEdge {
 
   """A cursor for use in pagination"""
   cursor: String!
-}
-
-"""
-This custom object is used to populate the userList componenet in the front end.
-"""
-type UserList {
-  """ Indicates which organization this list is being queried for."""
-  organization: Acronym!
-
-  """Pagination data for this connection."""
-  pageInfo: PageInfo!
-
-  """Contains the nodes in this connection.  Aka: A list of userItems that will make up the list on the front end."""
-  edges: [UserItemEdge]!
-}
-
-type UserListItem implements Node {
-    """The ID of the object."""
-    id: ID!
-
-    """ The users email address or userName """
-    userName: EmailAddress! @fake(type: email)
-
-    """ The users display name"""
-    displayName: String! @fake(type: firstName)
-
-    """ Indicates wether or not this user has enabled two factor authentication"""
-    tfa: Boolean! @examples(values: [true, false])
-
-    """ Indicates if this user is an admin of the organization specified in UserList query."""
-    admin: Boolean! @examples(values: [true, false])
-}
-
-"""A Relay edge containing a `UserItem` and its cursor."""
-type UserItemEdge {
-  """The item at the end of the edge"""
-  node: UserListItem!
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
-"""
-This custom gql object is used to populate a userPage component in the front end.
-"""
-type UserPage{
-    """ The users email address or userName"""
-    userName: EmailAddress! @fake(type: email)
-
-    """ The users display name"""
-    displayName: String! @fake(type: firstName)
-
-    """ Indicates the preferred language of this user."""
-    lang: String! @examples(values: ["English, "French])
-
-    """ Indicates wether or not this user has enabled two factor authentication"""
-    tfa: Boolean! @examples(values: [true, false])
-
-    """ Indicates if this user is an admin of the organization specified."""
-    userAffiliations: [UserPageAffiliations]!
-}
-
-type UserPageAffiliations{
-    """ Indicates if this user is an admin of the organization"""
-    admin: Boolean! @examples(values: [true, false])
-
-    """ Indicates which organization this users data is being displayed for."""
-    organization: Acronym! @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
-}
-
-"""A custom type used to query a DmarcReport for the front end."""
-
-type QueryDmarcReport {
-  reportId: String!
-  orgName: String!
-  endDate: String!
-  dmarcResult: Boolean! @examples(values: [true, false])
-  dkimResult: Boolean! @examples(values: [true, false])
-  spfResult: Boolean! @examples(values: [true, false])
-  
-  passDmarcPercentage: Int! @examples(values: [10,20,30,40,50,60,70,80,90,100])
-  passArcPercentage: Int! @examples(values: [10,20,30,40,50,60,70,80,90,100])
-  failDmarcPercentage: Int! @examples(values: [10,20,30])
-  failDkimPercentage: Int! @examples(values: [10,20,30])
-  failSpfPercentage: Int! @examples(values: [10,20,30])
-
-  count: Int! @examples(values: [1,2,3])
-  dkim: [queryDkimResult]!  
-  spf: [querySpfResult]!
-  source: queryReportSource!
-  identifiers: queryReportIdentifiers!
-}
-
-type queryDkimResult{
-  domain: String!
-  selector: String!
-  result: Boolean! @examples(values: [true, false])
-}
-
-type querySpfResult{
-  domain: String!
-  scope: String!
-  result: Boolean! @examples(values: [true, false])
-}
-
-type queryReportSource{
-  ipAddress: String!
-  country: String!
-  reverseDns: String!
-  baseDomain: String!
-}
-
-type queryReportIdentifiers{
-  headerFrom: String!
 }
