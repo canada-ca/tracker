@@ -28,6 +28,12 @@ from schemas.user_list import user_list, resolve_user_list
 from schemas.user_page import user_page, resolve_user_page
 
 # Need to be updated
+from schemas.users import Users
+from resolvers.users import resolve_users
+
+from schemas.User.user import User
+from resolvers.user import resolve_user
+
 from resolvers.notification_emails import (
     resolve_send_password_reset,
     resolve_send_validation_email,
@@ -77,6 +83,29 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
 
     # --- Start User Queries ---
+
+    users = SQLAlchemyConnectionField(
+        Users._meta.connection,
+        org_slug=graphene.Argument(Slug, required=True),
+        sort=None,
+        description="Select list of users belonging to an organization.",
+    )
+    with app.app_context():
+
+        def resolve_users(self, info, **kwargs):
+            return resolve_users(self, info, **kwargs)
+
+    user = graphene.List(
+        lambda: User,
+        user_name=graphene.Argument(EmailAddress, required=False),
+        description="Query the currently logged in user if no user name is"
+        "given, or query a specific user by user name.",
+    )
+    with app.app_context():
+
+        def resolve_user(self, info, **kwargs):
+            return resolve_user(self, info, **kwargs)
+
     # User Page Query
     user_page = user_page
 
