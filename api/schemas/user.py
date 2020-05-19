@@ -75,21 +75,6 @@ from schemas.User.user import User
 #         node = User
 
 
-class CreateUser(graphene.Mutation):
-    class Arguments:
-        display_name = graphene.String(required=True)
-        password = graphene.String(required=True)
-        confirm_password = graphene.String(required=True)
-        user_name = EmailAddress(required=True)
-
-    user = graphene.Field(lambda: User)
-
-    @staticmethod
-    def mutate(self, info, display_name, password, confirm_password, user_name):
-        user = create_user(display_name, password, confirm_password, user_name)
-        return CreateUser(user=user)
-
-
 class UpdateUserPassword(graphene.Mutation):
     class Arguments:
         password = graphene.String(required=True)
