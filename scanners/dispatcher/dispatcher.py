@@ -50,19 +50,19 @@ def Server(scanners={}, client=requests):
 
     def dkim(request):
         logging.info("DKIM scan requested")
-        return scanners["scan_dkim"](request.json(), client)
+        return scanners["dkim"](request.json(), client)
 
     def dmarc(request):
         logging.info("DMARC scan requested")
-        return scanners["scan_dmarc"](request.json(), client)
+        return scanners["dmarc"](request.json(), client)
 
     def https(request):
         logging.info("HTTPS scan requested")
-        return scanners["scan_https"](request.json(), client)
+        return scanners["https"](request.json(), client)
 
     def ssl(request):
         logging.info("SSL scan requested")
-        return scanners["scan_ssl"](request.json(), client)
+        return scanners["ssl"](request.json(), client)
 
     routes = [
         Route('/dkim', dkim),
