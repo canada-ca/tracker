@@ -14,7 +14,7 @@ def create_sa():
         new_user = Users(
             user_name=SA_USER_NAME,
             display_name=SA_DISPLAY_NAME,
-            user_password=SA_PASSWORD,
+            password=SA_PASSWORD,
             preferred_lang="English",
             failed_login_attempt_time=0,
             failed_login_attempts=0,

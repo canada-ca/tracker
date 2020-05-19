@@ -5,8 +5,6 @@ from graphene_sqlalchemy import SQLAlchemyConnectionField
 from app import app
 
 from scalars.email_address import EmailAddress
-from scalars.organization_acronym import Acronym
-from scalars.url import URL
 from scalars.slug import Slug
 
 from enums.roles import RoleEnums
@@ -23,16 +21,12 @@ from resolvers.user import resolve_generate_otp_url
 
 from schemas.notification_email import NotificationEmail
 
-
+from schemas.User.user import User
 from schemas.user import (
-    User,
-    CreateUser,
-    SignInUser,
     UpdateUserPassword,
     ValidateTwoFactor,
 )
 from resolvers.user import resolve_user
-
 
 from schemas.domain import Domain
 from resolvers.domains import resolve_domain, resolve_domains
@@ -54,6 +48,9 @@ from schemas.domains_mutations import CreateDomain, UpdateDomain, RemoveDomain
 
 from schemas.user_page import user_page, resolve_user_page
 from schemas.user_list import user_list, resolve_user_list
+
+from schemas.authenticate import Authenticate
+from schemas.sign_up.sign_up import SignUp
 
 
 class Query(graphene.ObjectType):
@@ -179,8 +176,6 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     """The central gathering point for all of the GraphQL mutations."""
 
-    create_user = CreateUser.Field()
-    sign_in = SignInUser.Field()
     update_password = UpdateUserPassword.Field()
     authenticate_two_factor = ValidateTwoFactor.Field()
     update_user_role = UpdateUserRole.Field()
@@ -201,6 +196,13 @@ class Mutation(graphene.ObjectType):
         description="Allows the removal of a given domain"
     )
     request_scan = RequestScan.Field()
+    authenticate = Authenticate.Field(
+        description="Allows users to give their credentials and be "
+                    "authenticated"
+    )
+    sign_up = SignUp.Field(
+        description="Allows users to sign up to our service"
+    )
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
