@@ -1,5 +1,4 @@
-import os
-import json
+import ast
 import emoji
 import sys
 import logging
@@ -18,10 +17,8 @@ def startup():
 
 def initiate(received_payload, scan_type):
 
-    logging.info("Request received")
-
     try:
-        received_dict = json.loads(received_payload)
+        received_dict = ast.literal_eval(received_payload)
 
         payload = {
             "scan_id": received_dict["scan_id"],
@@ -29,12 +26,12 @@ def initiate(received_payload, scan_type):
         }
 
         if scan_type == "web":
-            requests.get('/https', data=payload)
-            requests.get('/dmarc', data=payload)
-            requests.get('/ssl', data=payload)
+            requests.get('http://127.0.0.1:8000/https', data=payload)
+            requests.get('http://127.0.0.1:8000/dmarc', data=payload)
+            requests.get('http://127.0.0.1:8000/ssl', data=payload)
         elif scan_type == "mail":
-            requests.get('/dkim', data=payload)
-            requests.get('/dmarc', data=payload)
+            requests.get('http://127.0.0.1:8000/dkim', data=payload)
+            requests.get('http://127.0.0.1:8000/dmarc', data=payload)
         else:
             raise Exception("Invalid Scan-Type provided")
 
@@ -48,19 +45,24 @@ def initiate(received_payload, scan_type):
 def Server(scanners={}, client=requests):
 
     def receive(request):
+        logging.info("Request received")
         return PlainTextResponse(initiate(request.headers.get("Data"), request.headers.get("Scan-Type")))
 
     def dkim(request):
-        return PlainTextResponse(scanners["scan_dkim"](request.json(), client))
+        logging.info("DKIM scan requested")
+        return scanners["scan_dkim"](request.json(), client)
 
     def dmarc(request):
-        return PlainTextResponse(scanners["scan_dmarc"](request.json(), client))
+        logging.info("DMARC scan requested")
+        return scanners["scan_dmarc"](request.json(), client)
 
     def https(request):
-        return PlainTextResponse(scanners["scan_https"](request.json(), client))
+        logging.info("HTTPS scan requested")
+        return scanners["scan_https"](request.json(), client)
 
     def ssl(request):
-        return PlainTextResponse(scanners["scan_ssl"](request.json(), client))
+        logging.info("SSL scan requested")
+        return scanners["scan_ssl"](request.json(), client)
 
     routes = [
         Route('/dkim', dkim),

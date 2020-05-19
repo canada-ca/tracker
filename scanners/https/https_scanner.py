@@ -17,11 +17,9 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate(request):
+def initiate(received_payload):
 
     logging.info("Scan received")
-
-    received_payload = request.json()
 
     try:
         scan_id = received_payload["scan_id"]
@@ -42,16 +40,14 @@ def initiate(request):
         # Dispatch results to result-processor
         requests.post('/dispatch', data=payload)
 
-        return PlainTextResponse("HTTPS scan completed. Results dispatched for processing")
+        return "HTTPS scan completed. Results dispatched for processing"
 
     except Exception as e:
         logging.error(str(e))
-        return PlainTextResponse("An error occurred while attempting to perform HTTPS scan: %s" % str(e))
+        return "An error occurred while attempting to perform HTTPS scan: %s" % str(e)
 
 
-def dispatch_results(request, client):
-
-    payload = request.json()
+def dispatch_results(payload, client):
 
     headers = {
         "Content-Type": "application/json",
@@ -84,10 +80,10 @@ def scan_https(payload):
 def Server(functions={}, client=requests):
 
     def receive(request):
-        return PlainTextResponse(initiate(request))
+        return PlainTextResponse(initiate(request.json()))
 
     def dispatch(request):
-        return PlainTextResponse(functions["dispatch"](request.json()))
+        return PlainTextResponse(functions["dispatch"](request.json(), client))
 
     def scan(request):
         return PlainTextResponse(functions["scan"](request.json(), client))
