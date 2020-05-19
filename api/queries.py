@@ -9,7 +9,7 @@ from scalars.organization_acronym import Acronym
 from scalars.url import URL
 from scalars.slug import Slug
 
-from model_enums.roles import RoleEnums
+from enums.roles import RoleEnums
 
 from schemas.user_affiliations import UpdateUserRole
 

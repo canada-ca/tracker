@@ -13,7 +13,7 @@ from models import Organizations
 
 from scalars.email_address import EmailAddress
 
-from model_enums.roles import RoleEnums
+from enums.roles import RoleEnums
 
 
 class Users(SQLAlchemyObjectType):
