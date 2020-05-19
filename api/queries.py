@@ -1,7 +1,10 @@
+# Utility Imports
 import graphene
+
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField
 
+# Local Utility Imports
 from app import app
 
 from scalars.email_address import EmailAddress
@@ -9,8 +12,22 @@ from scalars.slug import Slug
 
 from enums.roles import RoleEnums
 
-from schemas.user_affiliations import UpdateUserRole
+# --- Query Imports ---
+# Domain Imports
+from schemas.domain import Domain
+from resolvers.domains import resolve_domain, resolve_domains
 
+# Organization Imports
+from schemas.organizations import Organization
+from resolvers.organizations import resolve_organization, resolve_organizations
+
+# User List Imports
+from schemas.user_list import user_list, resolve_user_list
+
+# User Page Imports
+from schemas.user_page import user_page, resolve_user_page
+
+# Need to be updated
 from resolvers.notification_emails import (
     resolve_send_password_reset,
     resolve_send_validation_email,
@@ -21,36 +38,37 @@ from resolvers.user import resolve_generate_otp_url
 
 from schemas.notification_email import NotificationEmail
 
-from schemas.User.user import User
+# --- End Query Imports ---
+
+
+# --- Mutation Imports ---
+# Authentication Mutations
+from schemas.authenticate import Authenticate
+from schemas.sign_up.sign_up import SignUp
+
+# Domain Mutations
+from schemas.create_domain import CreateDomain
+from schemas.remove_domain import RemoveDomain
+from schemas.update_domain import UpdateDomain
+
+# Organization Mutations
+from schemas.create_organization import CreateOrganization
+from schemas.remove_organization import RemoveOrganization
+from schemas.update_organization import UpdateOrganization
+
+# Request Scan Mutation
+from schemas.scans_mutation import RequestScan
+
+# Update User Role Mutation
+from schemas.user_affiliations import UpdateUserRole
+
+# Need to be updated
 from schemas.user import (
     UpdateUserPassword,
     ValidateTwoFactor,
 )
-from resolvers.user import resolve_user
 
-from schemas.domain import Domain
-from resolvers.domains import resolve_domain, resolve_domains
-
-from schemas.organizations import Organization
-from resolvers.organizations import resolve_organization, resolve_organizations
-
-from schemas.users import Users
-from resolvers.users import resolve_users
-from schemas.scans_mutation import RequestScan
-
-from schemas.organizations_mutations import (
-    CreateOrganization,
-    UpdateOrganization,
-    RemoveOrganization,
-)
-
-from schemas.domains_mutations import CreateDomain, UpdateDomain, RemoveDomain
-
-from schemas.user_page import user_page, resolve_user_page
-from schemas.user_list import user_list, resolve_user_list
-
-from schemas.authenticate import Authenticate
-from schemas.sign_up.sign_up import SignUp
+# --- End Mutation Imports ---
 
 
 class Query(graphene.ObjectType):
@@ -59,28 +77,6 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
 
     # --- Start User Queries ---
-    users = SQLAlchemyConnectionField(
-        Users._meta.connection,
-        org_slug=graphene.Argument(Slug, required=True),
-        sort=None,
-        description="Select list of users belonging to an organization.",
-    )
-    with app.app_context():
-
-        def resolve_users(self, info, **kwargs):
-            return resolve_users(self, info, **kwargs)
-
-    user = graphene.List(
-        lambda: User,
-        user_name=graphene.Argument(EmailAddress, required=False),
-        description="Query the currently logged in user if no user name is"
-        "given, or query a specific user by user name.",
-    )
-    with app.app_context():
-
-        def resolve_user(self, info, **kwargs):
-            return resolve_user(self, info, **kwargs)
-
     # User Page Query
     user_page = user_page
 
@@ -175,7 +171,6 @@ class Query(graphene.ObjectType):
 
 class Mutation(graphene.ObjectType):
     """The central gathering point for all of the GraphQL mutations."""
-
     update_password = UpdateUserPassword.Field()
     authenticate_two_factor = ValidateTwoFactor.Field()
     update_user_role = UpdateUserRole.Field()
