@@ -5,6 +5,7 @@ from functions.error_messages import *
 from models import Users as User
 from db import db_session
 from json_web_token import tokenize
+from schemas.sign_up.send_verification_email import send_verification_email
 
 
 def create_user(display_name, password, confirm_password, user_name, preferred_lang):
@@ -43,6 +44,7 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
         db_session.add(user)
         try:
             db_session.commit()
+            send_verification_email(user=user)
             auth_token = tokenize(user_id=user.id)
             return {"auth_token": auth_token, "user": user}
         except Exception as e:
