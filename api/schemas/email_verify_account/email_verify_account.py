@@ -42,9 +42,15 @@ class EmailVerifyAccount(graphene.Mutation):
         user_id = payload.get("user_id")
 
         with app.app_context():
-            db_session.query(Users).filter(
+            # Check to see if user exists
+            user = db_session.query(Users).filter(
                 Users.id == user_id
-            ).update(
+            )
+
+            if not user.first():
+                raise GraphQLError("Error, User does not exist")
+
+            user.update(
                 {
                     "email_validated": True
                 }
