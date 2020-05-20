@@ -47,12 +47,6 @@ spec:
       containers:
         - name: https-scanner
           image: gcr.io/track-compliance/scanners/https:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -100,11 +94,6 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_NAME
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -132,12 +121,6 @@ spec:
       containers:
         - name: ssl-scanner
           image: gcr.io/track-compliance/scanners/ssl:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -165,12 +148,6 @@ spec:
       containers:
         - name: dmarc-scanner
           image: gcr.io/track-compliance/scanners/dmarc:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -198,12 +175,6 @@ spec:
       containers:
         - name: dkim-scanner
           image: gcr.io/track-compliance/scanners/dkim:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -231,12 +202,6 @@ spec:
       containers:
         - name: ssl-scanner
           image: gcr.io/track-compliance/scanners/ssl:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -264,12 +229,6 @@ spec:
       containers:
         - name: dmarc-scanner
           image: gcr.io/track-compliance/scanners/dmarc:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -297,12 +256,6 @@ spec:
       containers:
         - name: dkim-scanner
           image: gcr.io/track-compliance/scanners/dkim:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -330,12 +283,6 @@ spec:
       containers:
         - name: https-scanner
           image: gcr.io/track-compliance/scanners/https:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -365,12 +312,6 @@ spec:
       containers:
         - name: dispatcher
           image: gcr.io/track-compliance/scanners/dispatcher:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
