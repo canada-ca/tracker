@@ -26,12 +26,12 @@ def initiate(received_payload, scan_type):
         }
 
         if scan_type == "web":
-            requests.post('http://127.0.0.1:8000/https', data=payload)
-            requests.post('http://127.0.0.1:8000/dmarc', data=payload)
-            requests.post('http://127.0.0.1:8000/ssl', data=payload)
+            requests.post('http://127.0.0.1:8000/https', json=payload)
+            requests.post('http://127.0.0.1:8000/dmarc', json=payload)
+            requests.post('http://127.0.0.1:8000/ssl', json=payload)
         elif scan_type == "mail":
-            requests.post('http://127.0.0.1:8000/dkim', data=payload)
-            requests.post('http://127.0.0.1:8000/dmarc', data=payload)
+            requests.post('http://127.0.0.1:8000/dkim', json=payload)
+            requests.post('http://127.0.0.1:8000/dmarc', json=payload)
         else:
             raise Exception("Invalid Scan-Type provided")
 
