@@ -28,6 +28,7 @@ class Users(Base):
     user_affiliation = relationship(
         "User_affiliations", back_populates="user", passive_deletes=True,
     )
+    email_validated = Column(Boolean, default=False)
 
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
