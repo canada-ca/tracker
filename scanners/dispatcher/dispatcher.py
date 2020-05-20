@@ -48,21 +48,29 @@ def Server(scanners={}, client=requests):
         logging.info("Request received")
         return PlainTextResponse(initiate(request.headers.get("Data"), request.headers.get("Scan-Type")))
 
-    def dkim(request):
+    async def dkim(request):
         logging.info("DKIM scan requested")
-        await scanners["dkim"](request.json(), client)
+        payload = await request.json()
+        response = scanners["dkim"](payload, client)
+        return PlainTextResponse(response.text)
 
-    def dmarc(request):
+    async def dmarc(request):
         logging.info("DMARC scan requested")
-        await scanners["dmarc"](request.json(), client)
+        payload = await request.json()
+        response = scanners["dmarc"](payload, client)
+        return PlainTextResponse(response.text)
 
-    def https(request):
+    async def https(request):
         logging.info("HTTPS scan requested")
-        await scanners["https"](request.json(), client)
+        payload = await request.json()
+        response = scanners["https"](payload, client)
+        return PlainTextResponse(response.text)
 
-    def ssl(request):
+    async def ssl(request):
         logging.info("SSL scan requested")
-        await scanners["ssl"](request.json(), client)
+        payload = await request.json()
+        response = scanners["ssl"](payload, client)
+        return PlainTextResponse(response.text)
 
     routes = [
         Route('/dkim', dkim, methods=['POST']),
