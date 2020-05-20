@@ -51,7 +51,7 @@ def initiate(received_payload):
 
 def dispatch_results(payload, client):
     # Post results to result-handling service
-    client.post(url="http://result-processor.tracker.svc.cluster.local", json=payload)
+    client.post(url="http://result-processor.tracker.svc.cluster.local/receive", json=payload)
 
 
 def bitsize(x):
