@@ -39,14 +39,15 @@ def initiate(received_payload, scan_type):
             raise Exception("Invalid Scan-Type provided")
 
         for key, val in dispatched.items():
-            if val is not f'Dispatched to {key} scanner':
+            if val.text is not f'Dispatched to {key} scanner':
+                logging.info(val.text)
                 raise Exception(f'Failed to dispatch scan to {key} scanner')
 
-        return PlainTextResponse("Successfully dispatched all scans to designated scanners")
+        return "All scans successfully dispatched to designated scanners"
 
     except Exception as e:
         logging.error("Failed: %s\n" % str(e))
-        return f'Failed to dispatch domain to designated scanner(s): {str(e)}'
+        return f'Failed to dispatch scan to designated scanner(s): {str(e)}'
 
 
 def Server(scanners={}, client=requests):
