@@ -65,6 +65,9 @@ from schemas.update_organization import UpdateOrganization
 # Request Scan Mutation
 from schemas.scans_mutation import RequestScan
 
+# Verify Account Through Email
+from schemas.email_verify_account.email_verify_account import EmailVerifyAccount
+
 # Update User Role Mutation
 from schemas.user_affiliations import UpdateUserRole
 
@@ -225,6 +228,9 @@ class Mutation(graphene.ObjectType):
         description="Allows users to give their credentials and be " "authenticated"
     )
     sign_up = SignUp.Field(description="Allows users to sign up to our service")
+    email_verify_account = EmailVerifyAccount.Field(
+        description="Allows users to use token sent through email to verify their account."
+    )
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
