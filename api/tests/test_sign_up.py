@@ -17,7 +17,7 @@ def save():
         cleanup()
 
 
-def test_successful_creation(save):
+def test_successful_creation_english(save):
     """
     Test that ensures a user can be created successfully using the api endpoint
     """
@@ -29,11 +29,13 @@ def test_successful_creation(save):
                 userName: "different-email@testemail.ca"
                 password: "testpassword123"
                 confirmPassword: "testpassword123"
+                preferredLang: ENGLISH
             ) {
                 authResult {
                     user {
                         userName
                         displayName
+                        lang
                     }
                 }
             }
@@ -51,6 +53,53 @@ def test_successful_creation(save):
                     "user": {
                         "userName": "different-email@testemail.ca",
                         "displayName": "user-test",
+                        "lang": "english",
+                    }
+                }
+            }
+        }
+    }
+
+    assert result == expected_result
+
+
+def test_successful_creation_french(save):
+    """
+    Test that ensures a user can be created successfully using the api endpoint
+    """
+    result = run(
+        mutation="""
+        mutation {
+            signUp(
+                displayName: "user-test"
+                userName: "different-email@testemail.ca"
+                password: "testpassword123"
+                confirmPassword: "testpassword123"
+                preferredLang: FRENCH
+            ) {
+                authResult {
+                    user {
+                        userName
+                        displayName
+                        lang
+                    }
+                }
+            }
+        }
+        """,
+    )
+
+    if "errors" in result:
+        fail("Tried to create a user, instead: {}".format(json(result)))
+
+    expected_result = {
+        "data": {
+            "signUp": {
+                "authResult": {
+                    "user": {
+                        "userName": "different-email@testemail.ca",
+                        "displayName": "user-test",
+                        "lang": "french",
                     }
                 }
             }
@@ -77,6 +126,7 @@ def test_email_address_in_use(save):
                 userName: "testuser@testemail.ca"
                 password: "testpassword123"
                 confirmPassword: "testpassword123"
+                preferredLang: ENGLISH
             ) {
                 authResult {
                     user {
@@ -112,6 +162,7 @@ def test_password_too_short(save):
                 userName: "testuser@testemail.ca"
                 password: "test"
                 confirmPassword: "test"
+                preferredLang: FRENCH
             ) {
                 authResult {
                     user {
@@ -145,6 +196,7 @@ def test_passwords_do_not_match():
                 userName: "testuser@testemail.ca"
                 password: "testpassword123"
                 confirmPassword: "passwordtest123"
+                preferredLang: ENGLISH
             ) {
                 authResult {
                     user {
