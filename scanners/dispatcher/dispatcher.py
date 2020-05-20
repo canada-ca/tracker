@@ -40,7 +40,6 @@ def initiate(received_payload, scan_type):
 
         for key, val in dispatched.items():
             if val.text is not f'Dispatched to {key} scanner':
-                logging.info(val.text)
                 raise Exception(f'Failed to dispatch scan to {key} scanner')
 
         return "All scans successfully dispatched to designated scanners"
@@ -60,7 +59,7 @@ def Server(scanners={}, client=requests):
         logging.info("DKIM scan requested")
         try:
             payload = await request.json()
-            await scanners["dkim"](payload, client)
+            scanners["dkim"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to DKIM scanner")
@@ -69,7 +68,7 @@ def Server(scanners={}, client=requests):
         logging.info("DMARC scan requested")
         try:
             payload = await request.json()
-            await scanners["dmarc"](payload, client)
+            scanners["dmarc"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to DMARC scanner")
@@ -78,7 +77,7 @@ def Server(scanners={}, client=requests):
         logging.info("HTTPS scan requested")
         try:
             payload = await request.json()
-            await scanners["https"](payload, client)
+            scanners["https"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to HTTPS scanner")
@@ -87,7 +86,7 @@ def Server(scanners={}, client=requests):
         logging.info("SSL scan requested")
         try:
             payload = await request.json()
-            await scanners["ssl"](payload, client)
+            scanners["ssl"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to SSL scanner")

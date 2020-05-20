@@ -1,30 +1,30 @@
-async def scan_dkim(payload, client):
+def scan_dkim(payload, client):
     client.post(url='http://dkim-scanner.tracker.svc.cluster.local', json=payload)
 
 
-async def scan_dmarc(payload, client):
+def scan_dmarc(payload, client):
     client.post(url='http://dmarc-scanner.tracker.svc.cluster.local', json=payload)
 
 
-async def scan_https(payload, client):
+def scan_https(payload, client):
     client.post(url='http://https-scanner.tracker.svc.cluster.local', json=payload)
 
 
-async def scan_ssl(payload, client):
+def scan_ssl(payload, client):
     client.post(url='http://ssl-scanner.tracker.svc.cluster.local', json=payload)
 
 
-async def manual_scan_dkim(payload, client):
+def manual_scan_dkim(payload, client):
     client.post(url='http://dkim-scanner-manual.tracker.svc.cluster.local', json=payload)
 
 
-async def manual_scan_dmarc(payload, client):
+def manual_scan_dmarc(payload, client):
     client.post(url='http://dmarc-scanner-manual.tracker.svc.cluster.local', json=payload)
 
 
-async def manual_scan_https(payload, client):
+def manual_scan_https(payload, client):
     client.post(url='http://https-scanner-manual.tracker.svc.cluster.local', json=payload)
 
 
-async def manual_scan_ssl(payload, client):
+def manual_scan_ssl(payload, client):
     client.post(url='http://ssl-scanner-manual.tracker.svc.cluster.local', json=payload)

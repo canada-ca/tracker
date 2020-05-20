@@ -8,8 +8,7 @@ import tldextract
 from checkdmarc import *
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
-from starlette.responses import PlainTextResponse
-from starlette.background import BackgroundTask
+from starlette.responses import PlainTextResponse, JSONResponse
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -28,9 +27,9 @@ def initiate(received_payload):
         domain = ext.registered_domain
 
         # Perform scan
-        response = requests.post('/scan', data={"domain": domain})
+        scan_response = requests.post('http://127.0.0.1:8000/scan', data={"domain": domain})
 
-        scan_results = response.json()
+        scan_results = scan_response.json()
 
         # Construct request payload for result-processor
         if scan_results is not None:
@@ -40,9 +39,9 @@ def initiate(received_payload):
             raise Exception("DMARC scan not completed")
 
         # Dispatch results to result-processor
-        requests.post('/dispatch', data=payload)
+        dispatch_response = requests.post('http://127.0.0.1:8000/dispatch', data=payload)
 
-        return "DMARC scan completed. Results dispatched for processing"
+        return f'DMARC scan completed. {dispatch_response.text}'
 
     except Exception as e:
         logging.error(str(e))
@@ -50,18 +49,8 @@ def initiate(received_payload):
 
 
 def dispatch_results(payload, client):
-
-    headers = {
-        "Content-Type": "application/json",
-    }
-
-    # Post request to result-handling service asynchronously
-    task = BackgroundTask(client.post,
-                          url="http://result-processor.tracker.svc.cluster.local",
-                          headers=headers,
-                          payload=payload)
-
-    return PlainTextResponse("Scan results sent to result-processor", background=task)
+    # Post results to result-handling service
+    client.post(url="http://result-processor.tracker.svc.cluster.local", json=payload)
 
 
 def scan_dmarc(payload):
@@ -93,15 +82,19 @@ def Server(functions={}, client=requests):
         return PlainTextResponse(initiate(request.json()))
 
     def dispatch(request):
-        return PlainTextResponse(functions["dispatch"](request.json(), client))
+        try:
+            functions["dispatch"](request.json(), client)
+        except Exception as e:
+            return PlainTextResponse(str(e))
+        return PlainTextResponse("Scan results sent to result-processor")
 
     def scan(request):
-        return PlainTextResponse(functions["scan"](request.json(), client))
+        return JSONResponse(functions["scan"](request.json(), client))
 
     routes = [
-        Route('/dispatch', dispatch),
-        Route('/scan', scan),
-        Route('/receive', receive),
+        Route('/dispatch', dispatch, methods=['POST']),
+        Route('/scan', scan, methods=['POST']),
+        Route('/receive', receive, methods=['POST']),
     ]
 
     return Starlette(debug=True, routes=routes, on_startup=[startup])
