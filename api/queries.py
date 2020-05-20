@@ -1,17 +1,38 @@
+# Utility Imports
 import graphene
+
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField
 
+# Local Utility Imports
 from app import app
 
 from scalars.email_address import EmailAddress
-from scalars.organization_acronym import Acronym
-from scalars.url import URL
 from scalars.slug import Slug
 
 from enums.roles import RoleEnums
 
-from schemas.user_affiliations import UpdateUserRole
+# --- Query Imports ---
+# Domain Imports
+from schemas.domain import Domain
+from resolvers.domains import resolve_domain, resolve_domains
+
+# Organization Imports
+from schemas.organizations import Organization
+from resolvers.organizations import resolve_organization, resolve_organizations
+
+# User List Imports
+from schemas.user_list import user_list, resolve_user_list
+
+# User Page Imports
+from schemas.user_page import user_page, resolve_user_page
+
+# Need to be updated
+from schemas.users import Users
+from resolvers.users import resolve_users
+
+from schemas.User.user import User
+from resolvers.user import resolve_user
 
 from resolvers.notification_emails import (
     resolve_send_password_reset,
@@ -23,37 +44,37 @@ from resolvers.user import resolve_generate_otp_url
 
 from schemas.notification_email import NotificationEmail
 
+# --- End Query Imports ---
 
+
+# --- Mutation Imports ---
+# Authentication Mutations
+from schemas.authenticate import Authenticate
+from schemas.sign_up.sign_up import SignUp
+
+# Domain Mutations
+from schemas.create_domain import CreateDomain
+from schemas.remove_domain import RemoveDomain
+from schemas.update_domain import UpdateDomain
+
+# Organization Mutations
+from schemas.create_organization import CreateOrganization
+from schemas.remove_organization import RemoveOrganization
+from schemas.update_organization import UpdateOrganization
+
+# Request Scan Mutation
+from schemas.scans_mutation import RequestScan
+
+# Update User Role Mutation
+from schemas.user_affiliations import UpdateUserRole
+
+# Need to be updated
 from schemas.user import (
-    User,
-    CreateUser,
-    SignInUser,
     UpdateUserPassword,
     ValidateTwoFactor,
 )
-from resolvers.user import resolve_user
 
-
-from schemas.domain import Domain
-from resolvers.domains import resolve_domain, resolve_domains
-
-from schemas.organizations import Organization
-from resolvers.organizations import resolve_organization, resolve_organizations
-
-from schemas.users import Users
-from resolvers.users import resolve_users
-from schemas.scans_mutation import RequestScan
-
-from schemas.organizations_mutations import (
-    CreateOrganization,
-    UpdateOrganization,
-    RemoveOrganization,
-)
-
-from schemas.domains_mutations import CreateDomain, UpdateDomain, RemoveDomain
-
-from schemas.user_page import user_page, resolve_user_page
-from schemas.user_list import user_list, resolve_user_list
+# --- End Mutation Imports ---
 
 
 class Query(graphene.ObjectType):
@@ -62,6 +83,7 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
 
     # --- Start User Queries ---
+
     users = SQLAlchemyConnectionField(
         Users._meta.connection,
         org_slug=graphene.Argument(Slug, required=True),
@@ -179,8 +201,6 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     """The central gathering point for all of the GraphQL mutations."""
 
-    create_user = CreateUser.Field()
-    sign_in = SignInUser.Field()
     update_password = UpdateUserPassword.Field()
     authenticate_two_factor = ValidateTwoFactor.Field()
     update_user_role = UpdateUserRole.Field()
@@ -201,6 +221,10 @@ class Mutation(graphene.ObjectType):
         description="Allows the removal of a given domain"
     )
     request_scan = RequestScan.Field()
+    authenticate = Authenticate.Field(
+        description="Allows users to give their credentials and be " "authenticated"
+    )
+    sign_up = SignUp.Field(description="Allows users to sign up to our service")
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

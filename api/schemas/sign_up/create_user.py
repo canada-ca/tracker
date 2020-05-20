@@ -2,9 +2,9 @@ from graphql import GraphQLError
 
 from functions.input_validators import *
 from functions.error_messages import *
-
 from models import Users as User
 from db import db_session
+from json_web_token import tokenize
 
 
 def create_user(display_name, password, confirm_password, user_name):
@@ -41,7 +41,8 @@ def create_user(display_name, password, confirm_password, user_name):
         db_session.add(user)
         try:
             db_session.commit()
-            return user
+            auth_token = tokenize(user_id=user.id)
+            return {"auth_token": auth_token, "user": user}
         except Exception as e:
             db_session.rollback()
             db_session.flush()

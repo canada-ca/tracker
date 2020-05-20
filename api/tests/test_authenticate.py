@@ -22,7 +22,7 @@ def db():
         cleanup()
 
 
-def test_sign_in_with_valid_credentials(db):
+def test_authenticate_with_valid_credentials(db):
     """
     Test that ensures a user can be signed in successfully
     """
@@ -41,10 +41,14 @@ def test_sign_in_with_valid_credentials(db):
     actual = run(
         mutation="""
         mutation{
-            signIn(userName:"testuser@testemail.ca",
-                    password:"testpassword123"){
-                user{
-                    userName
+            authenticate(
+                userName:"testuser@testemail.ca",
+                password:"testpassword123"
+            ) {
+                authResult {
+                    user {
+                        userName
+                    }
                 }
             }
         }
@@ -57,11 +61,11 @@ def test_sign_in_with_valid_credentials(db):
             "{}".format(json(actual))
         )
 
-    [username] = actual["data"]["signIn"]["user"].values()
+    [username] = actual["data"]["authenticate"]["authResult"]["user"].values()
     assert username == "testuser@testemail.ca"
 
 
-def test_signin_with_invalid_credentials_fails(db):
+def test_authenticate_with_invalid_credentials_fails(db):
     """
     Test that ensures a user can be signed in successfully
     """
@@ -79,11 +83,15 @@ def test_signin_with_invalid_credentials_fails(db):
 
     actual = run(
         mutation="""
-        mutation{
-            signIn(userName:"testuser@testemail.ca",
-                    password:"invalidpassword"){
-                user{
-                    userName
+        mutation {
+            authenticate(
+                userName:"testuser@testemail.ca",
+                password:"invalidpassword"
+            ){
+                authResult {
+                    user {
+                        userName
+                    }
                 }
             }
         }
@@ -101,7 +109,7 @@ def test_signin_with_invalid_credentials_fails(db):
     assert message == "Incorrect email or password"
 
 
-def test_failed_login_attempts_are_recorded(db):
+def test_authenticate_failed_login_attempts_are_recorded(db):
     save, session = db
 
     user = Users(
@@ -113,12 +121,17 @@ def test_failed_login_attempts_are_recorded(db):
 
     actual = run(
         mutation="""
-        mutation{
-          signIn(userName:"testuser@testemail.ca" password:"invalidpassword"){
-            user{
-              userName
+        mutation {
+            authenticate(
+                userName:"testuser@testemail.ca"
+                password:"invalidpassword"
+            ){
+                authResult {
+                    user {
+                        userName
+                    }
+                }
             }
-          }
         }
         """
     )
@@ -134,7 +147,7 @@ def test_failed_login_attempts_are_recorded(db):
     assert user.failed_login_attempt_time is not 0
 
 
-def test_successful_login_sets_failed_attempts_to_zero(db):
+def test_authenticate_successful_login_sets_failed_attempts_to_zero(db):
     """
     Test that ensures a user can be signed in, and that when they do, their
     user count is updated to be 0.
@@ -152,11 +165,15 @@ def test_successful_login_sets_failed_attempts_to_zero(db):
 
     actual = run(
         mutation="""
-        mutation{
-            signIn(userName:"failedb4@example.com",
-             password:"testpassword123"){
-                user{
-                    userName
+        mutation {
+            authenticate(
+                userName:"failedb4@example.com",
+                password:"testpassword123"
+            ){
+                authResult {
+                    user {
+                        userName
+                    }
                 }
             }
         }
@@ -168,7 +185,7 @@ def test_successful_login_sets_failed_attempts_to_zero(db):
     assert user.failed_login_attempt_time == 0
 
 
-def test_too_many_failed_attempts(db):
+def test_authenticate_too_many_failed_attempts(db):
     save, _ = db
 
     user = Users(
@@ -182,10 +199,14 @@ def test_too_many_failed_attempts(db):
     actual = run(
         """
         mutation{
-            signIn(userName:"failed2much@example.com",
-             password:"testpassword123"){
-                user{
-                    userName
+            authenticate(
+                userName:"failed2much@example.com",
+                password:"testpassword123"
+            ){
+                authResult {
+                    user {
+                        userName
+                    }
                 }
             }
         }
@@ -203,14 +224,18 @@ def test_too_many_failed_attempts(db):
     assert message == error_too_many_failed_login_attempts()
 
 
-def test_signing_in_with_unknown_users_returns_error():
+def test_authenticating_in_with_unknown_users_returns_error():
     actual = run(
         """
         mutation{
-            signIn(userName:"null@example.com",
-             password:"testpassword123"){
-                user{
-                    userName
+            authenticate(
+                userName:"null@example.com",
+                password:"testpassword123"
+            ){
+                authResult {
+                    user {
+                        userName
+                    }
                 }
             }
         }

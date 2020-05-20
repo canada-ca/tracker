@@ -39,9 +39,9 @@ def update_user_role(**kwargs):
 
     def update_user_role_db():
         with app.app_context():
-            db_session.query(User_aff).filter(User_aff.organization_id == org_id).filter(
-                User_aff.user_id == user[0]["id"]
-            ).update({"permission": new_role})
+            db_session.query(User_aff).filter(
+                User_aff.organization_id == org_id
+            ).filter(User_aff.user_id == user[0]["id"]).update({"permission": new_role})
             try:
                 db_session.commit()
             except Exception as e:

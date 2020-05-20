@@ -5,9 +5,7 @@ from json_web_token import tokenize
 from graphql import GraphQLError
 from functions.input_validators import *
 from functions.error_messages import *
-from functions.orm_to_dict import orm_to_dict
 from models import Users
-from models import User_affiliations
 from db import db_session
 
 
