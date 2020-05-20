@@ -1,4 +1,5 @@
 from graphql import GraphQLError
+from requests import HTTPError
 
 from functions.input_validators import *
 from functions.error_messages import *
@@ -43,10 +44,15 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
         )
         db_session.add(user)
         try:
-            db_session.commit()
             send_verification_email(user=user)
             auth_token = tokenize(user_id=user.id)
+            db_session.commit()
             return {"auth_token": auth_token, "user": user}
+
+        except HTTPError:
+            raise GraphQLError(
+                "Error, when sending verification email, please try again")
+
         except Exception as e:
             db_session.rollback()
             db_session.flush()

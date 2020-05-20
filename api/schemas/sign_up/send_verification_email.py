@@ -32,20 +32,17 @@ def send_verification_email(user):
     url = str(request.url_root) + "validate/" + str(token)
 
     # Send Email
-    response = notify_client.send_email_notification(
-        email_address=user.user_name,
-        template_id=email_template_id,
-        personalisation={
-            "user": "",
-            "verify_email_url": url
-        }
-    )
-
-    if type(response) == HTTPError:
-        raise GraphQLError(
-            "Error, status code: {}, error: {}, error message: {}".format(
-                response.status_code,
-                response[0].get("error"),
-                response[0].get("message")
-            )
+    try:
+        response = notify_client.send_email_notification(
+            email_address=user.user_name,
+            template_id=email_template_id,
+            personalisation={
+                "user": "",
+                "verify_email_url": url
+            }
         )
+
+    except HTTPError:
+        raise GraphQLError("Error, when sending verification email, please try again")
+
+    return response
