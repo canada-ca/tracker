@@ -5,6 +5,7 @@ resources:
 - cert-manager.yaml
 - certificate.yaml
 - letsencrypt-issuer.yaml
+- knative/config/domain-config.yaml
 - knative/config/config.yaml
 - knative/monitoring/prometheus.yaml
 - knative/monitoring/grafana/grafana.yaml

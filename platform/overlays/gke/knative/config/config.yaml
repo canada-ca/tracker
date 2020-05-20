@@ -6,23 +6,6 @@ metadata:
 
 ---
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config-domain
-  namespace: knative-serving
-data:
-  # svc.cluster.local will be used for routes having app=prod.
-  svc.cluster.local: |
-    selector:
-      app: scanners
-  # Default value for domain, for routes that does not have app=prod labels.
-  # Although it will match all routes, it is the least-specific rule so it
-  # will only be used if no other domain matches.
-  example.com: ""
-
----
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:

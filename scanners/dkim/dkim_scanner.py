@@ -143,17 +143,21 @@ def scan_dkim(payload):
 def Server(functions={}, client=requests):
 
     def receive(request):
-        return PlainTextResponse(initiate(request.json()))
+        logging.info("Request received")
+        payload = await request.json()
+        return PlainTextResponse(initiate(payload))
 
     def dispatch(request):
         try:
-            functions["dispatch"](request.json(), client)
+            payload = await request.json()
+            functions["dispatch"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Scan results sent to result-processor")
 
     def scan(request):
-        return JSONResponse(functions["scan"](request.json(), client))
+        payload = await request.json()
+        return JSONResponse(functions["scan"](payload, client))
 
     routes = [
         Route('/dispatch', dispatch, methods=['POST']),
