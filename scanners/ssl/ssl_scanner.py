@@ -220,15 +220,15 @@ def scan_ssl(payload):
                     "preferred_cipher"
                 ] = result.cipher_suite_preferred_by_server.cipher_suite.name
 
-        elif name is "openssl_ccs_injection":
+        elif name == "openssl_ccs_injection":
             res[
                 "is_vulnerable_to_ccs_injection"
             ] = result.is_vulnerable_to_ccs_injection
 
-        elif name is "heartbleed":
+        elif name == "heartbleed":
             res["is_vulnerable_to_heartbleed"] = result.is_vulnerable_to_heartbleed
 
-        elif name is "certificate_info":
+        elif name == "certificate_info":
             res["signature_algorithm"] = (
                 result.certificate_deployments[0]
                 .verified_certificate_chain[0]

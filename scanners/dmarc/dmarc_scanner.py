@@ -81,7 +81,7 @@ def scan_dmarc(payload):
         )
         return None
 
-    if scan_result["dmarc"]["record"] is "null":
+    if scan_result["dmarc"]["record"] == "null":
         return None
     else:
         return scan_result
