@@ -25,7 +25,7 @@ def initiate(received_payload):
         domain = received_payload["domain"]
 
         # Perform scan
-        scan_response = requests.post('http://127.0.0.1:8000/scan', json={"domain": domain})
+        scan_response = requests.post('http://127.0.0.1:8000/scan', data=domain)
 
         scan_results = scan_response.json()
 
@@ -51,9 +51,7 @@ def dispatch_results(payload, client):
     client.post(url="http://result-processor.tracker.svc.cluster.local/receive", json=payload)
 
 
-def scan_https(payload):
-
-    domain = payload["domain"]
+def scan_https(domain):
 
     try:
         # Run https-scanner
@@ -82,8 +80,8 @@ def Server(functions={}, client=requests):
         return PlainTextResponse("Scan results sent to result-processor")
 
     async def scan(request):
-        payload = await request.json()
-        return JSONResponse(functions["scan"](payload, client))
+        domain = request.data
+        return JSONResponse(functions["scan"](domain))
 
     routes = [
         Route('/dispatch', dispatch, methods=['POST']),

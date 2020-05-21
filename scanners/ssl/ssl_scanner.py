@@ -135,9 +135,8 @@ def get_supported_tls(highest_supported, domain):
     return supported
 
 
-def scan_ssl(payload):
+def scan_ssl(domain):
 
-    domain = payload["domain"]
     server_info = get_server_info(domain)
 
     if server_info is None:
@@ -257,8 +256,8 @@ def Server(functions={}, client=requests):
         return PlainTextResponse("Scan results sent to result-processor")
 
     async def scan(request):
-        payload = await request.json()
-        return JSONResponse(functions["scan"](payload, client))
+        domain = request.data
+        return JSONResponse(functions["scan"](domain))
 
     routes = [
         Route('/dispatch', dispatch, methods=['POST']),

@@ -28,7 +28,7 @@ def initiate(received_payload):
         domain = received_payload["domain"]
 
         # Perform scan
-        scan_response = requests.post('http://127.0.0.1:8000/scan', data={"domain": domain})
+        scan_response = requests.post('http://127.0.0.1:8000/scan', data=domain)
 
         scan_results = scan_response.json()
 
@@ -40,7 +40,7 @@ def initiate(received_payload):
             raise Exception("DKIM scan not completed")
 
         # Dispatch results to result-processor
-        dispatch_response = requests.post('http://127.0.0.1:8000/dispatch', data=payload)
+        dispatch_response = requests.post('http://127.0.0.1:8000/dispatch', json=payload)
 
         return f'DKIM scan completed. {dispatch_response.text}'
 
@@ -97,10 +97,9 @@ def load_pk(name, s=None):
     return pk, keysize, ktag
 
 
-def scan_dkim(payload):
+def scan_dkim(domain):
 
     record = {}
-    domain = payload["domain"]
 
     try:
         # Retrieve public key from DNS
@@ -156,8 +155,8 @@ def Server(functions={}, client=requests):
         return PlainTextResponse("Scan results sent to result-processor")
 
     async def scan(request):
-        payload = await request.json()
-        return JSONResponse(functions["scan"](payload, client))
+        domain = request.data
+        return JSONResponse(functions["scan"](domain))
 
     routes = [
         Route('/dispatch', dispatch, methods=['POST']),

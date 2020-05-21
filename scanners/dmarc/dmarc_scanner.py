@@ -53,9 +53,8 @@ def dispatch_results(payload, client):
     client.post(url="http://result-processor.tracker.svc.cluster.local/receive", json=payload)
 
 
-def scan_dmarc(payload):
+def scan_dmarc(domain):
 
-    domain = payload["domain"]
     # Single-item list to pass off to check_domains function
     domain_list = list()
     domain_list.append(domain)
@@ -92,8 +91,8 @@ def Server(functions={}, client=requests):
         return PlainTextResponse("Scan results sent to result-processor")
 
     async def scan(request):
-        payload = await request.json()
-        return JSONResponse(functions["scan"](payload, client))
+        domain = request.data
+        return JSONResponse(functions["scan"](domain))
 
     routes = [
         Route('/dispatch', dispatch, methods=['POST']),
