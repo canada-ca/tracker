@@ -47,7 +47,7 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
         try:
             email_response = send_verification_email(user=user)
 
-            if email_response == "Email Send Error":
+            if email_response.__contains__("Email Send Error"):
                 raise GraphQLError(
                     "Error, when sending verification email, please try "
                     "signing up again"

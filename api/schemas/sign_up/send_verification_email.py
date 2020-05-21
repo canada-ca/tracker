@@ -47,13 +47,15 @@ def send_verification_email(user):
         raise GraphQLError(
             "Error, when sending verification email, error: {}".format(HTTPError)
         )
-
+    # XXX This is really not ideal, but using external services that send emails take time
+    # Will revisit
+    time.sleep(0.5)
     email_status = notify_client.get_notification_by_id(response.get("id")) \
         .get("status")
 
-    if email_status != "delivered" \
-        and email_status != "sending" \
-        and email_status != "created":
-        response = "Email Send Error"
+    if email_status == "permanent-failure" \
+        or email_status == "temporary-failure" \
+        or email_status == "technical-failure":
+        response = "Email Send Error: {}".format(email_status)
 
     return response

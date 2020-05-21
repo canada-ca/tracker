@@ -47,27 +47,12 @@ class EmailVerifyAccount(graphene.Mutation):
             # Check to see if user exists
             user = db_session.query(Users).filter(
                 Users.user_name == user_name
-            )
+            ).first()
 
-            if not user.first():
+            if not user:
                 raise GraphQLError("Error, User does not exist")
 
-            user.update(
-                {
-                    "email_validated": True
-                }
-            )
-
-            # Create user sandbox after they have been verified
-            acronym = slugify_value(user.first().user_name).upper()[:50]
-            new_user_org = Organizations(name=user.first().user_name, acronym=acronym,)
-            new_user_aff = User_affiliations(
-                permission="admin",
-                user=user.first(),
-                user_organization=new_user_org
-            )
-            db_session.add(new_user_org)
-            db_session.add(new_user_aff)
+            user.verify_account()
 
             try:
                 db_session.commit()

@@ -5,8 +5,11 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from sqlalchemy import Column, String
 
-from functions.orm_to_dict import orm_to_dict
 from db import Base
+from functions.orm_to_dict import orm_to_dict
+from functions.slugify import slugify_value
+from models.Organizations import Organizations
+from models.User_affiliations import User_affiliations
 
 
 class Users(Base):
@@ -57,3 +60,13 @@ class Users(Base):
             self.user_password = bcrypt.hashpw(
                 password.encode("utf8"), bcrypt.gensalt()
             ).decode("utf8")
+
+    @hybrid_method
+    def verify_account(self):
+        acronym = slugify_value(self.user_name).upper()[:50]
+        self.user_affiliation.append(
+            User_affiliations(
+                permission="admin",
+                user_organization=Organizations(name=self.user_name, acronym=acronym,),
+            )
+        )
