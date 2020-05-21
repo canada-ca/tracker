@@ -63,6 +63,10 @@ class Users(Base):
 
     @hybrid_method
     def verify_account(self):
+        # Set user email_validated field to true0
+        self.email_validated = True
+
+        # Create users sandbox org
         acronym = slugify_value(self.user_name).upper()[:50]
         self.user_affiliation.append(
             User_affiliations(

@@ -49,7 +49,7 @@ def send_verification_email(user):
         )
 
     # Sleep to wait and see if email was successful
-    time.sleep(1)
+    time.sleep(1.5)
     email_status = notify_client.get_notification_by_id(response.get("id")) \
         .get("status")
 
