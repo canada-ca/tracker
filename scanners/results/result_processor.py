@@ -167,9 +167,9 @@ def initiate(payload):
 
     try:
 
-        processed_results = requests.post('http://127.0.0.1:8000/process', json=payload)
+        process_response = requests.post('http://127.0.0.1:8000/process', json=payload)
 
-        payload["results"] = processed_results
+        payload["results"] = process_response.json()
 
         insert_response = requests.post('http://127.0.0.1:8000/insert', json=payload)
 
@@ -489,7 +489,7 @@ def Server(functions={}, database_uri=DATABASE_URI):
 
     async def process(request):
         payload = await request.json()
-        logging.info("Performing scan...")
+        logging.info("Processing results...")
         return JSONResponse(functions["process"](payload["scan_type"], payload["results"]))
 
     routes = [

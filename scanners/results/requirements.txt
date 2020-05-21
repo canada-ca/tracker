@@ -5,4 +5,3 @@ requests>=2.18.4
 graphene
 SQLAlchemy
 databases[postgresql]
-psycopg2-binary
