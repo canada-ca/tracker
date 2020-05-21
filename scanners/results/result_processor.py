@@ -161,13 +161,11 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate(request):
+def initiate(payload):
 
     logging.info("Results received")
 
     try:
-
-        payload = request.get_json()
 
         processed_results = requests.post('http://127.0.0.1:8000/process', json=payload)
 
