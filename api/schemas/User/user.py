@@ -38,6 +38,7 @@ class User(SQLAlchemyObjectType):
             "user_password",
             "password",
             "roles",
+            "email_validated"
         )
 
     user_name = EmailAddress(description="Email that the user signed up with")
@@ -45,6 +46,9 @@ class User(SQLAlchemyObjectType):
     lang = graphene.String(description="Users preferred language")
     tfa = graphene.Boolean(
         description="Has the user completed two factor authentication"
+    )
+    email_validated = graphene.Boolean(
+        description="Has the user verified their account"
     )
     affiliations = graphene.ConnectionField(
         UserAffClass._meta.connection, description="Users access to organizations"
@@ -63,6 +67,9 @@ class User(SQLAlchemyObjectType):
 
         def resolve_tfa(self: UserModel, info):
             return self.tfa_validated
+
+        def resolve_email_validated(self: UserModel, info):
+            return self.email_validated
 
         @require_token
         def resolve_affiliations(self: UserModel, info, **kwargs):

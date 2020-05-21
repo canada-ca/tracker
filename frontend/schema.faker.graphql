@@ -398,6 +398,15 @@ type EmailScanEdge {
   cursor: String!
 }
 
+"""
+Mutation that allows the user to verify their account through a token
+sent in an email
+"""
+type EmailVerifyAccount {
+  """Informs user if account was successfully verified."""
+  status: Boolean
+}
+
 type HTTPS {
   """The ID of the object"""
   id: ID
@@ -444,6 +453,14 @@ type Identifiers {
         "fastmail.fm"
       ]
     )
+}
+
+enum LanguageEnums {
+  """Used for defining if English is the preferred language"""
+  ENGLISH
+
+  """Used for defining if French is the preferred language"""
+  FRENCH
 }
 
 """The central gathering point for all of the GraphQL mutations."""
@@ -559,12 +576,27 @@ type Mutation {
     """The password the user will authenticate with"""
     password: String!
 
+    """Used to set users preferred language"""
+    preferredLang: LanguageEnums!
+
     """Email address that the user will use to authenticate with"""
     userName: EmailAddress!
 
     """Preferred language of the user"""
     preferredLang: LanguageEnums!
   ): SignUp
+
+  """Allows users to use token sent through email to verify their account."""
+  emailVerifyAccount(
+    """Token in sent via email, and located in url"""
+    tokenString: String!
+  ): EmailVerifyAccount
+
+  """Allows users to resend verification if failed during sign-up"""
+  sendEmailVerification(
+    """The users email address used for sending email"""
+    userName: EmailAddress!
+  ): SendEmailVerification
 }
 
 """An object with an ID"""
@@ -867,6 +899,14 @@ enum RoleEnums {
 enum LanguageEnums {
   ENGLISH
   FRENCH
+
+"""
+This mutation is used for re-sending a verification email if it failed
+during user creation
+"""
+type SendEmailVerification {
+  """If email is successfully sent status will be true"""
+  status: Boolean
 }
 
 """This method allows for new users to sign up for our sites services."""
@@ -1067,6 +1107,9 @@ type User implements Node {
   """Has the user completed two factor authentication"""
   tfa: Boolean @examples(values: [false, true])
 
+  """Has the user verified their account"""
+  emailValidated: Boolean
+
   """Users access to organizations"""
   affiliations(before: String, after: String, first: Int, last: Int): UserAffClassConnection
 }
@@ -1155,6 +1198,9 @@ type UserPage implements Node {
 
   """Indicates wether or not this user has enabled tfa"""
   tfa: Boolean
+
+  """Has the user verified their account"""
+  emailValidated: Boolean
 
   """Indicates if this user is an admin of the organization specified"""
   userAffiliations: [UserPageAffiliations]
