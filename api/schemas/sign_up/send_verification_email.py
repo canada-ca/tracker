@@ -43,6 +43,16 @@ def send_verification_email(user):
         )
 
     except HTTPError:
-        raise GraphQLError("Error, when sending verification email, please try again")
+        raise GraphQLError(
+            "Error, when sending verification email, please try again"
+        )
+
+    email_status = notify_client.get_notification_by_id(response.get("id")) \
+        .get("status")
+
+    if email_status != "sending" or email_status != "delivered":
+        raise GraphQLError(
+            "Error, when sending verification email, please try signing up again"
+        )
 
     return response
