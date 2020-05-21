@@ -79,6 +79,8 @@ def test_org_resolvers_returns_all_orgs_to_super_admin(save):
             User_affiliations(permission="user_read", user_organization=org1)
         ],
     )
+    reader.verify_account()
+
     super_admin = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
@@ -87,6 +89,7 @@ def test_org_resolvers_returns_all_orgs_to_super_admin(save):
             User_affiliations(permission="super_admin", user_organization=org1)
         ],
     )
+    super_admin.verify_account()
 
     save(reader)
     save(super_admin)
@@ -136,6 +139,8 @@ def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save
             User_affiliations(permission="user_read", user_organization=org1)
         ],
     )
+    reader.verify_account()
+
     super_admin = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
@@ -145,6 +150,7 @@ def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save
             User_affiliations(permission="super_admin", user_organization=org2),
         ],
     )
+    super_admin.verify_account()
 
     save(reader)
     save(super_admin)

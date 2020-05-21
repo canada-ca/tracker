@@ -1,12 +1,6 @@
 import pytest
-import json
 from pytest import fail
-from flask import Request
-from graphene.test import Client
-from unittest import TestCase
-from werkzeug.test import create_environ
 
-from app import app
 from db import DB
 from models import Organizations, Domains, Users, User_affiliations
 from tests.test_functions import json, run
@@ -189,18 +183,22 @@ def test_get_org_resolvers_super_admin_multi_node(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(user_organization=org1, permission="user_read")
+            User_affiliations(user_organization=org1, permission="user_read"),
+
         ],
     )
+    user.verify_account()
     save(user)
+
     super_admin = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(user_organization=org1, permission="super_admin")
+            User_affiliations(user_organization=org1, permission="super_admin"),
         ],
     )
+    super_admin.verify_account()
     save(super_admin)
 
     result = run(
@@ -491,9 +489,11 @@ def test_get_org_resolvers_by_org_user_read_multi_node(save):
         user_name="testuserread@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(user_organization=org1, permission="user_read")
+            User_affiliations(user_organization=org1, permission="user_read"),
+
         ],
     )
+    user.verify_account()
     save(user)
 
     result = run(

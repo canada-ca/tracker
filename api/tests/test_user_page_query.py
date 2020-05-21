@@ -57,6 +57,7 @@ def test_super_admin_can_see_other_user_in_different_org(save):
             ),
         )
     )
+    user_read.verify_account()
     save(user_read)
 
     result = run(
@@ -88,8 +89,8 @@ def test_super_admin_can_see_other_user_in_different_org(save):
                 "lang": "English",
                 "tfa": False,
                 "userAffiliations": [
-                    {"admin": True, "organization": "TESTUSERREAD-TESTEMAIL-CA"},
                     {"admin": False, "organization": "ORG1"},
+                    {"admin": True, "organization": "TESTUSERREAD-TESTEMAIL-CA"},
                 ],
             }
         }
@@ -468,7 +469,7 @@ def test_user_read_cant_see_user_in_different_org(save):
     )
 
 
-def test_user_read_and_higher_can_own_information(save):
+def test_user_read_can_see_own_information(save):
     """
     Test to see that a user read can see their own information
     """
@@ -486,7 +487,7 @@ def test_user_read_and_higher_can_own_information(save):
     user_read.user_affiliation.append(
         User_affiliations(permission="user_read", user_organization=org_one,)
     )
-
+    user_read.verify_account()
     save(user_read)
 
     result = run(
@@ -518,8 +519,8 @@ def test_user_read_and_higher_can_own_information(save):
                 "lang": "English",
                 "tfa": False,
                 "userAffiliations": [
-                    {"admin": True, "organization": "TESTUSERREAD-TESTEMAIL-CA"},
                     {"admin": False, "organization": "ORG1"},
+                    {"admin": True, "organization": "TESTUSERREAD-TESTEMAIL-CA"},
                 ],
             }
         }

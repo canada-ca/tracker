@@ -20,7 +20,6 @@ def test_valid_cost_query(save):
     Test cost check function operates normally with valid query
     """
     test_super_admin = Users(
-        id=2,
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
         password="testpassword123",
