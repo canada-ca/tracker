@@ -1,10 +1,6 @@
-import pytest
-
-from graphql import GraphQLError
-
 from app import app
 from models.Users import Users
-from schemas.sign_up.send_verification_email import send_verification_email
+from functions.verification_email import send_verification_email
 
 
 def test_successful_send_verification_email():
