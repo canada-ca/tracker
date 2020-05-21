@@ -1,33 +1,38 @@
 import gql from 'graphql-tag'
 
-export const CREATE_USER = gql`
-  mutation CreateUser(
+export const SIGN_UP = gql`
+  mutation signUp(
     $displayName: String!
     $userName: EmailAddress!
     $password: String!
     $confirmPassword: String!
   ) {
-    createUser(
+    signUp(
       displayName: $displayName
       userName: $userName
       password: $password
       confirmPassword: $confirmPassword
     ) {
-      user {
-        userName
+      authResult {
+          authToken
+          user {
+              userName
+         }
       }
     }
   }
 `
 
-export const SIGN_IN = gql`
-  mutation SignIn($userName: EmailAddress!, $password: String!) {
-    signIn(userName: $userName, password: $password) {
-      user {
-        userName
-        tfa
+export const AUTHENTICATE = gql`
+  mutation authenticate($userName: EmailAddress!, $password: String!) {
+    authenticate(userName: $userName, password: $password) {
+      authResult {
+          authToken
+          user {
+              userName
+              tfa
+          }
       }
-      authToken
     }
   }
 `

@@ -4,39 +4,66 @@ import { useMutation } from '@apollo/react-hooks'
 import { object, string } from 'yup'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { Formik } from 'formik'
-import { CREATE_USER } from './graphql/mutations'
+import { SIGN_UP } from './graphql/mutations'
+import { useUserState } from './UserState'
 import { EmailField } from './EmailField'
 import { PasswordConfirmation } from './PasswordConfirmation'
-
-const validationSchema = object().shape({
-  email: string().required('cannot be empty'),
-  password: string().required('cannot be empty'),
-  confirmPassword: string().required('cannot be empty'),
-})
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export default function CreateUserPage() {
-  const [createUser, { loading, error, data }] = useMutation(CREATE_USER)
-
+  const { login } = useUserState()
   const history = useHistory()
   const toast = useToast()
+  const { i18n } = useLingui()
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>{String(error)}</p>
+  const validationSchema = object().shape({
+    email: string().required('cannot be empty'),
+    password: string().required('cannot be empty'),
+    confirmPassword: string().required('cannot be empty'),
+  })
 
-  if (data) {
-    if (data.error) {
-      // Switch statement to handle the errors that we expect could come back from the API.
-    } else {
-      history.push('/')
+  const [signUp, { loading, error }] = useMutation(SIGN_UP, {
+    onError() {
+      console.log(error)
       toast({
-        title: 'Account created.',
-        description: "We've created your account for you, please sign in!",
+        title: i18n._(t`An error occurred.`),
+        description: i18n._(
+          t`Unable to create your account, please try again.`,
+        ),
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+    onCompleted({ signUp }) {
+      login({
+        jwt: signUp.authResult.authToken,
+        tfa: signUp.authResult.user.tfa,
+        userName: signUp.authResult.user.userName,
+      })
+      // redirect to the home page.
+      history.push('/')
+      // Display a welcome message
+      toast({
+        title: i18n._(t`Account created.`),
+        description: i18n._(
+          t`Welcome, you are successfully signed in to your new account!`,
+        ),
         status: 'success',
         duration: 9000,
         isClosable: true,
       })
-    }
-  }
+    },
+  })
+
+  if (loading)
+    return (
+      <p>
+        <Trans>Loading...</Trans>
+      </p>
+    )
+  if (error) return <p>{String(error)}</p>
 
   return (
     <Stack spacing={2} mx="auto">
@@ -46,9 +73,8 @@ export default function CreateUserPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '', confirmPassword: '' }}
-        onSubmit={async (values) => {
-          console.log('values', values)
-          createUser({
+        onSubmit={async (values, _actions) => {
+          await signUp({
             variables: {
               userName: values.email,
               password: values.password,

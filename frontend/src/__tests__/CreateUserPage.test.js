@@ -4,14 +4,14 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import CreateUserPage from '../CreateUserPage'
-import { CREATE_USER } from '../graphql/mutations'
+import { SIGN_UP } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
 const mocks = [
   {
     request: {
-      query: CREATE_USER,
+      query: SIGN_UP,
     },
     result: {
       data: {
