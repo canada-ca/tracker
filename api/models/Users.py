@@ -1,16 +1,11 @@
 import bcrypt
 
 from sqlalchemy.types import Integer, Boolean, Float
-from sqlalchemy.orm import relationship, validates
-from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
-from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy import event
+from sqlalchemy import Column, String
 
 from functions.orm_to_dict import orm_to_dict
-from functions.slugify import slugify_value
-from models.Organizations import Organizations
-from models.User_affiliations import User_affiliations
 from db import Base
 
 
