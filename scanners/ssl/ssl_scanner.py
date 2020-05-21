@@ -47,7 +47,7 @@ def initiate(received_payload):
         domain = received_payload["domain"]
 
         # Perform scan
-        scan_response = requests.post('http://127.0.0.1:8000/scan', json={"domain": domain})
+        scan_response = requests.post('http://127.0.0.1:8000/scan', data=domain)
 
         scan_results = scan_response.json()
 
