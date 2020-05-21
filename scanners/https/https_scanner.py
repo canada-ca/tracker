@@ -80,9 +80,9 @@ def Server(functions={}, client=requests):
         return PlainTextResponse("Scan results sent to result-processor")
 
     async def scan(request):
-        domain = request.data
+        domain = await request.body()
         logging.info("Performing scan...")
-        return JSONResponse(functions["scan"](domain))
+        return JSONResponse(functions["scan"](str(domain)))
 
     routes = [
         Route('/dispatch', dispatch, methods=['POST']),
