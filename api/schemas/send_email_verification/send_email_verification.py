@@ -14,10 +14,10 @@ class SendEmailVerification(graphene.Mutation):
     This mutation is used for re-sending a verification email if it failed
     during user creation
     """
+
     class Arguments:
         user_name = EmailAddress(
-            description="The users email address used for sending email",
-            required=True,
+            description="The users email address used for sending email", required=True,
         )
 
     status = graphene.Boolean(
@@ -30,9 +30,7 @@ class SendEmailVerification(graphene.Mutation):
         user_name = cleanse_input(kwargs.get("user_name"))
 
         # Find user
-        user = db_session.query(Users).filter(
-            Users.user_name == user_name
-        ).first()
+        user = db_session.query(Users).filter(Users.user_name == user_name).first()
 
         # Check to see if user is found, or if they are already validated
         if user is None:

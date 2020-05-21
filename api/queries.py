@@ -69,7 +69,9 @@ from schemas.scans_mutation import RequestScan
 from schemas.email_verify_account.email_verify_account import EmailVerifyAccount
 
 # Re-send verification email
-from schemas.send_email_verification.send_email_verification import SendEmailVerification
+from schemas.send_email_verification.send_email_verification import (
+    SendEmailVerification,
+)
 
 # Update User Role Mutation
 from schemas.user_affiliations import UpdateUserRole

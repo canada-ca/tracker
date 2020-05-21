@@ -44,19 +44,9 @@ def test_successful_send_verification_email_mutation(save):
         )
 
     if "errors" in result:
-        fail(
-            "Expected to send verification email, instead: {}".format(
-                json(result)
-            )
-        )
+        fail("Expected to send verification email, instead: {}".format(json(result)))
 
-    expected_result = {
-        "data": {
-            "sendEmailVerification": {
-                "status": True
-            }
-        }
-    }
+    expected_result = {"data": {"sendEmailVerification": {"status": True}}}
 
     assert result == expected_result
 

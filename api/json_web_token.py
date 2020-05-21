@@ -12,7 +12,7 @@ def tokenize(
     exp=None,
     # TODO: SUPER_SECRET_SALT isn't actually a salt! Give this a better name.
     secret=environ.get("SUPER_SECRET_SALT", ""),
-    exp_period=1
+    exp_period=1,
 ):
     if not iat:
         iat = dt.timestamp(dt.utcnow())

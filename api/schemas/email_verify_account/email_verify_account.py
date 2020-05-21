@@ -17,10 +17,10 @@ class EmailVerifyAccount(graphene.Mutation):
     """
 
     """
+
     class Arguments:
         token_string = graphene.String(
-            description="Token in sent via email, and located in url",
-            required=True
+            description="Token in sent via email, and located in url", required=True
         )
 
     status = graphene.Boolean(
@@ -33,9 +33,7 @@ class EmailVerifyAccount(graphene.Mutation):
 
         try:
             payload = jwt.decode(
-                token_string,
-                os.getenv("SUPER_SECRET_SALT"),
-                algorithms=["HS256"]
+                token_string, os.getenv("SUPER_SECRET_SALT"), algorithms=["HS256"]
             )
         except jwt.ExpiredSignatureError:
             raise GraphQLError("Signature expired, please login again")
@@ -45,9 +43,7 @@ class EmailVerifyAccount(graphene.Mutation):
 
         with app.app_context():
             # Check to see if user exists
-            user = db_session.query(Users).filter(
-                Users.user_name == user_name
-            ).first()
+            user = db_session.query(Users).filter(Users.user_name == user_name).first()
 
             if not user:
                 raise GraphQLError("Error, User does not exist")

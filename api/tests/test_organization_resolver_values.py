@@ -184,7 +184,6 @@ def test_get_org_resolvers_super_admin_multi_node(save):
         password="testpassword123",
         user_affiliation=[
             User_affiliations(user_organization=org1, permission="user_read"),
-
         ],
     )
     user.verify_account()
@@ -490,7 +489,6 @@ def test_get_org_resolvers_by_org_user_read_multi_node(save):
         password="testpassword123",
         user_affiliation=[
             User_affiliations(user_organization=org1, permission="user_read"),
-
         ],
     )
     user.verify_account()

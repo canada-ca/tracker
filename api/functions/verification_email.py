@@ -19,7 +19,7 @@ def send_verification_email(user):
     # Create Notify Client
     notify_client = NotificationsAPIClient(
         api_key=os.getenv("NOTIFICATION_API_KEY"),
-        base_url=os.getenv("NOTIFICATION_API_URL")
+        base_url=os.getenv("NOTIFICATION_API_URL"),
     )
 
     # Check to see if users preferred lang is English or French
@@ -37,10 +37,7 @@ def send_verification_email(user):
         response = notify_client.send_email_notification(
             email_address=user.user_name,
             template_id=email_template_id,
-            personalisation={
-                "user": "",
-                "verify_email_url": url
-            }
+            personalisation={"user": "", "verify_email_url": url},
         )
 
     except HTTPError:
@@ -50,12 +47,15 @@ def send_verification_email(user):
 
     # Sleep to wait and see if email was successful
     time.sleep(1.5)
-    email_status = notify_client.get_notification_by_id(response.get("id")) \
-        .get("status")
+    email_status = notify_client.get_notification_by_id(response.get("id")).get(
+        "status"
+    )
 
-    if email_status == "permanent-failure" \
-        or email_status == "temporary-failure" \
-        or email_status == "technical-failure":
+    if (
+        email_status == "permanent-failure"
+        or email_status == "temporary-failure"
+        or email_status == "technical-failure"
+    ):
         return "Email Send Error: {}".format(email_status)
     else:
         return email_status
