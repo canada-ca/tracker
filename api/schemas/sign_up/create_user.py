@@ -45,16 +45,16 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
         db_session.add(user)
 
         try:
+            # Add User to db
+            db_session.commit()
+
             email_response = send_verification_email(user=user)
 
             if email_response.__contains__("Email Send Error"):
                 raise GraphQLError(
-                    "Error, when sending verification email, please try "
-                    "signing up again"
+                    "Error, when sending verification email, please try go to "
+                    "user page to verify account"
                 )
-
-            # Add User to db
-            db_session.commit()
 
             # Get user id
             user_id = db_session.query(User).filter(User.user_name == user_name).first().id

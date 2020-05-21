@@ -47,8 +47,8 @@ def send_verification_email(user):
         raise GraphQLError(
             "Error, when sending verification email, error: {}".format(HTTPError)
         )
-    # XXX This is really not ideal, but using external services that send emails take time
-    # Will revisit
+
+    # Sleep to wait and see if email was successful
     time.sleep(1)
     email_status = notify_client.get_notification_by_id(response.get("id")) \
         .get("status")
