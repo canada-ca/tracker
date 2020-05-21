@@ -38,15 +38,13 @@ export function PasswordConfirmation() {
   /* A function for the Formik to validate fields in the form */
   function validateConfirmPassword(value) {
     setConfirmIcon('spinner')
-    setTimeout(() => {
-      if (value === '') {
-        setConfirmIcon('close')
-      } else if (value !== document.getElementById('password').value) {
-        setConfirmIcon('close')
-      } else {
-        setConfirmIcon('check')
-      }
-    }, 600)
+    if (value === '') {
+      setConfirmIcon('close')
+    } else if (value !== document.getElementById('password').value) {
+      setConfirmIcon('close')
+    } else {
+      setConfirmIcon('check')
+    }
     if (value === '') {
       return ' cannot be empty'
     } else if (value !== document.getElementById('password').value) {
