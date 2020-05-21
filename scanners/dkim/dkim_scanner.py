@@ -156,6 +156,7 @@ def Server(functions={}, client=requests):
 
     async def scan(request):
         domain = request.data
+        logging.info("Performing scan...")
         return JSONResponse(functions["scan"](domain))
 
     routes = [
