@@ -43,6 +43,7 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
             password=password,
         )
         db_session.add(user)
+
         try:
             email_response = send_verification_email(user=user)
 
@@ -52,8 +53,13 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
                     "signing up again"
                 )
 
-            auth_token = tokenize(user_id=user.id)
+            # Add User to db
             db_session.commit()
+
+            # Get user id
+            user_id = db_session.query(User).filter(User.user_name == user_name).first().id
+            auth_token = tokenize(user_id=user_id)
+
             return {"auth_token": auth_token, "user": user}
 
         except HTTPError:

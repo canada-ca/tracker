@@ -30,18 +30,6 @@ class Users(Base):
     )
     email_validated = Column(Boolean, default=False)
 
-    def __init__(self, **kwargs):
-        super(Users, self).__init__(**kwargs)
-        # XXX: This is gross but matches the expections of the
-        # Acronym scalar type.
-        acronym = slugify_value(self.user_name).upper()[:50]
-        self.user_affiliation.append(
-            User_affiliations(
-                permission="admin",
-                user_organization=Organizations(name=self.user_name, acronym=acronym,),
-            )
-        )
-
     @hybrid_method
     def find_by_user_name(self, user_name):
         return self.query.filter(self.user_name == user_name).first()

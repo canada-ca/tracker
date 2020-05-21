@@ -29,7 +29,7 @@ def send_verification_email(user):
         email_template_id = "6e3368a7-0d75-47b1-b4b2-878234e554c9"
 
     # URL Generation
-    token = tokenize(user_id=user.id, exp_period=24)
+    token = tokenize(user_id=user.user_name, exp_period=24)
     url = str(request.url_root) + "validate/" + str(token)
 
     # Send Email

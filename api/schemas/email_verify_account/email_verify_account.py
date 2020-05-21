@@ -7,7 +7,10 @@ from graphql import GraphQLError
 from app import app
 from db import db_session
 from functions.input_validators import cleanse_input
+from functions.slugify import slugify_value
+from models.Organizations import Organizations
 from models.Users import Users
+from models.User_affiliations import User_affiliations
 
 
 class EmailVerifyAccount(graphene.Mutation):
@@ -38,13 +41,12 @@ class EmailVerifyAccount(graphene.Mutation):
             raise GraphQLError("Signature expired, please login again")
         except jwt.InvalidTokenError:
             raise GraphQLError("Invalid token, please login again")
-
-        user_id = payload.get("user_id")
+        user_name = payload.get("user_id")
 
         with app.app_context():
             # Check to see if user exists
             user = db_session.query(Users).filter(
-                Users.id == user_id
+                Users.user_name == user_name
             )
 
             if not user.first():
@@ -55,6 +57,17 @@ class EmailVerifyAccount(graphene.Mutation):
                     "email_validated": True
                 }
             )
+
+            # Create user sandbox after they have been verified
+            acronym = slugify_value(user.first().user_name).upper()[:50]
+            new_user_org = Organizations(name=user.first().user_name, acronym=acronym,)
+            new_user_aff = User_affiliations(
+                permission="admin",
+                user=user.first(),
+                user_organization=new_user_org
+            )
+            db_session.add(new_user_org)
+            db_session.add(new_user_aff)
 
             try:
                 db_session.commit()
