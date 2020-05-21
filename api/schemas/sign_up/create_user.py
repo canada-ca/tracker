@@ -6,7 +6,7 @@ from functions.error_messages import *
 from models import Users as User
 from db import db_session
 from json_web_token import tokenize
-from schemas.sign_up.send_verification_email import send_verification_email
+from functions.verification_email import send_verification_email
 
 
 def create_user(display_name, password, confirm_password, user_name, preferred_lang):
