@@ -142,12 +142,12 @@ def scan_dkim(payload):
 
 def Server(functions={}, client=requests):
 
-    def receive(request):
+    async def receive(request):
         logging.info("Request received")
         payload = await request.json()
         return PlainTextResponse(initiate(payload))
 
-    def dispatch(request):
+    async def dispatch(request):
         try:
             payload = await request.json()
             functions["dispatch"](payload, client)
@@ -155,7 +155,7 @@ def Server(functions={}, client=requests):
             return PlainTextResponse(str(e))
         return PlainTextResponse("Scan results sent to result-processor")
 
-    def scan(request):
+    async def scan(request):
         payload = await request.json()
         return JSONResponse(functions["scan"](payload, client))
 
