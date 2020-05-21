@@ -46,7 +46,7 @@ def initiate(received_payload):
 
     except Exception as e:
         logging.error(str(e))
-        return "An error occurred while attempting to perform DKIM scan: %s" % str(e)
+        return f'An error occurred while attempting to perform DKIM scan: {str(e)}'
 
 
 def dispatch_results(payload, client):
@@ -114,7 +114,7 @@ def scan_dkim(domain):
         record["t_value"] = None
 
         for key in pub:
-            if key.decode("ascii") is "t":
+            if key.decode("ascii") == "t":
                 record["t_value"] = pub[key]
 
         txt_record = {}

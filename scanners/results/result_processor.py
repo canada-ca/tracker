@@ -2,206 +2,180 @@ import os
 import sys
 import json
 import logging
-import traceback
-import jwt
-import psycopg2
-from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
-from utils import formatted_dictionary
+import requests
+import emoji
+import sqlalchemy
+from sqlalchemy.sql import select
+import databases
+from starlette.applications import Starlette
+from starlette.routing import Route, Mount, WebSocketRoute
+from starlette.responses import PlainTextResponse, JSONResponse
+from starlette.config import Config
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-TOKEN_KEY = os.getenv("TOKEN_KEY")
+MIN_HSTS_AGE = 31536000  # one year
+
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
-DB_HOST = "postgres.api.svc.cluster.local"
+DB_HOST = os.getenv("DB_HOST")
 
-app = Flask(__name__)
-app.config[
-    "SQLALCHEMY_DATABASE_URI"
-] = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-app.config["SQLALCHEMY_COMMIT_ON_TEARDOWN"] = True
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-db = SQLAlchemy(app)
+config = Config('.env')
+DATABASE_URI = f"postgresql+psycopg2://{Config('DB_USER')}:{Config(DB_PASS)}@{Config(DB_HOST)}:{Config(DB_PORT)}/{Config(DB_NAME)}"
 
-MIN_HSTS_AGE = 31536000  # one year
+metadata = sqlalchemy.MetaData()
 
+Domains = sqlalchemy.Table(
+    "domains",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("domain", sqlalchemy.String),
+    sqlalchemy.Column("last_run", sqlalchemy.DateTime),
+    sqlalchemy.Column("organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")),
+)
 
-class Domains(db.Model):
-    __tablename__ = "domains"
+Dmarc_Reports = sqlalchemy.Table(
+    "dmarc_reports",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
+    sqlalchemy.Column("domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")),
+    sqlalchemy.Column("start_date", sqlalchemy.DateTime),
+    sqlalchemy.Column("end_date", sqlalchemy.DateTime),
+    sqlalchemy.Column("report", sqlalchemy.JSON),
+    sqlalchemy.Column("organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")),
+)
 
-    id = db.Column(db.Integer, primary_key=True)
-    domain = db.Column(db.String())
-    last_run = db.Column(db.DateTime)
-    organization_id = db.Column(db.Integer, db.ForeignKey("organizations.id"))
-    organization = db.relationship(
-        "Organizations", back_populates="domains", cascade="all, delete"
-    )
-    scans = db.relationship("Scans", back_populates="domain", cascade="all, delete")
-    dmarc_reports = db.relationship(
-        "Dmarc_Reports", back_populates="domain", cascade="all, delete"
-    )
+Organizations = sqlalchemy.Table(
+    "organizations",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("name", sqlalchemy.String),
+    sqlalchemy.Column("slug", sqlalchemy.String, index=True),
+    sqlalchemy.Column("acronym", sqlalchemy.String),
+    sqlalchemy.Column("org_tags", sqlalchemy.JSON),
+)
 
+Users = sqlalchemy.Table(
+    "users",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
+    sqlalchemy.Column("user_name", sqlalchemy.String),
+    sqlalchemy.Column("display_name", sqlalchemy.String),
+    sqlalchemy.Column("user_password", sqlalchemy.String),
+    sqlalchemy.Column("preferred_lang", sqlalchemy.String),
+    sqlalchemy.Column("failed_login_attempts", sqlalchemy.Integer, default=0),
+    sqlalchemy.Column("failed_login_attempt_time", sqlalchemy.Float, default=0, nullable=True),
+    sqlalchemy.Column("tfa_validated", sqlalchemy.Boolean, default=False),
+)
 
-class Dmarc_Reports(db.Model):
-    __tablename__ = "dmarc_reports"
+User_affiliations = sqlalchemy.Table(
+    "users",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
+    sqlalchemy.Column("user_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id", onupdate="CASCADE", ondelete="CASCADE", name="user_affiliations_users_id_fkey"), primary_key=True),
+    sqlalchemy.Column("organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id", onupdate="CASCADE", ondelete="CASCADE", name="user_affiliations_organization_id_fkey")),
+    sqlalchemy.Column("permission", sqlalchemy.String),
+)
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    domain_id = db.Column(db.Integer, db.ForeignKey("domains.id"))
-    start_date = db.Column(db.DateTime)
-    end_date = db.Column(db.DateTime)
-    report = db.Column(db.JSON)
-    domain = db.relationship(
-        "Domains", back_populates="dmarc_reports", cascade="all, delete"
-    )
+Scans = sqlalchemy.Table(
+    "scans",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")),
+    sqlalchemy.Column("scan_date", sqlalchemy.DateTime),
+    sqlalchemy.Column("initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")),
+    sqlalchemy.Column("org_tags", sqlalchemy.JSON),
+)
 
+Dmarc_scans = sqlalchemy.Table(
+    "dmarc_scans",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column("dmarc_phase", sqlalchemy.Integer),
+    sqlalchemy.Column("dmarc_scan", sqlalchemy.JSON),
+)
 
-class Organizations(db.Model):
-    __tablename__ = "organizations"
+Dkim_scans = sqlalchemy.Table(
+    "dkim_scans",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column("dkim_scan", sqlalchemy.JSON),
+)
 
-    id = db.Column(db.Integer, primary_key=True)
-    acronym = db.Column(db.String())
-    org_tags = db.Column(db.JSON)
-    domains = db.relationship(
-        "Domains", back_populates="organization", cascade="all, delete"
-    )
-    users = db.relationship(
-        "User_affiliations", back_populates="user_organization", cascade="all, delete"
-    )
+Mx_scans = sqlalchemy.Table(
+    "mx_scans",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column("mx_scan", sqlalchemy.JSON),
+)
 
+Spf_scans = sqlalchemy.Table(
+    "spf_scans",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column("spf_scan", sqlalchemy.JSON),
+)
 
-class Users(db.Model):
-    __tablename__ = "users"
+Https_scans = sqlalchemy.Table(
+    "https_scans",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column("https_scan", sqlalchemy.JSON),
+)
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_name = db.Column(db.String())
-    display_name = db.Column(db.String())
-    user_password = db.Column(db.String())
-    preferred_lang = db.Column(db.String())
-    failed_login_attempts = db.Column(db.Integer, default=0)
-    failed_login_attempt_time = db.Column(db.Float, default=0, nullable=True)
-    tfa_validated = db.Column(db.Boolean, default=False)
-    user_affiliation = db.relationship(
-        "User_affiliations", back_populates="user", cascade="all, delete"
-    )
+Ssl_scans = sqlalchemy.Table(
+    "ssl_scans",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column("ssl_scan", sqlalchemy.JSON),
+)
 
+Ciphers = sqlalchemy.Table(
+    "ciphers",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("cipher_type", sqlalchemy.String),
+)
 
-class User_affiliations(db.Model):
-    __tablename__ = "user_affiliations"
+Guidance = sqlalchemy.Table(
+    "guidance",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("tag_name", sqlalchemy.String),
+    sqlalchemy.Column("guidance", sqlalchemy.String),
+    sqlalchemy.Column("ref_links", sqlalchemy.String),
+)
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
-    organization_id = db.Column(db.Integer, db.ForeignKey("organizations.id"))
-    permission = db.Column(db.String())
-    user = db.relationship(
-        "Users", back_populates="user_affiliation", cascade="all, delete"
-    )
-    user_organization = db.relationship(
-        "Organizations", back_populates="users", cascade="all, delete"
-    )
-
-
-class Scans(db.Model):
-    __tablename__ = "scans"
-
-    id = db.Column(db.Integer, primary_key=True)
-    domain_id = db.Column(db.Integer, db.ForeignKey("domains.id"))
-    scan_date = db.Column(db.DateTime)
-    initiated_by = db.Column(db.Integer, db.ForeignKey("users.id"))
-    domain = db.relationship("Domains", back_populates="scans", cascade="all, delete")
-
-
-class Dmarc_scans(db.Model):
-    __tablename__ = "dmarc_scans"
-
-    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
-    dmarc_phase = db.Column(db.Integer)
-    dmarc_scan = db.Column(db.JSON)
-
-
-class Dkim_scans(db.Model):
-    __tablename__ = "dkim_scans"
-
-    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
-    dkim_scan = db.Column(db.JSON)
-
-
-class Mx_scans(db.Model):
-    __tablename__ = "mx_scans"
-
-    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
-    mx_scan = db.Column(db.JSON)
-
-
-class Spf_scans(db.Model):
-    __tablename__ = "spf_scans"
-
-    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
-    spf_scan = db.Column(db.JSON)
-
-
-class Https_scans(db.Model):
-    __tablename__ = "https_scans"
-
-    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
-    https_scan = db.Column(db.JSON)
-
-
-class Ssl_scans(db.Model):
-    __tablename__ = "ssl_scans"
-
-    id = db.Column(db.Integer, db.ForeignKey("scans.id"), primary_key=True)
-    ssl_scan = db.Column(db.JSON)
+Classification = sqlalchemy.Table(
+    "classification",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("UNCLASSIFIED", sqlalchemy.String),
+)
 
 
-class Ciphers(db.Model):
-    __tablename__ = "ciphers"
-
-    id = db.Column(db.Integer, primary_key=True)
-    cipher_type = db.Column(db.String())
+def startup():
+    logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-class Guidance(db.Model):
-    __tablename__ = "guidance"
-
-    id = db.Column(db.Integer, primary_key=True)
-    tag_name = db.Column(db.String())
-    guidance = db.Column(db.String())
-    ref_links = db.Column(db.String())
-
-
-class Classification(db.Model):
-    __tablename__ = "Classification"
-
-    id = db.Column(db.Integer, primary_key=True)
-    UNCLASSIFIED = db.Column(db.String())
-
-
-@app.route("/receive", methods=["GET", "POST"])
-def receive():
+def initiate(request):
 
     logging.info("Results received")
 
     try:
-        decoded_token = jwt.decode(
-            request.headers.get("Token"), TOKEN_KEY, algorithm=["HS256"]
-        )
 
         payload = request.get_json()
-        result_dict = formatted_dictionary(payload["results"])
-        scan_type = decoded_token["scan_type"]
-        scan_id = decoded_token["scan_id"]
 
-        target_func_string = request.headers.get("Results")
-        target_func = globals()[target_func_string]
+        processed_results = requests.post('http://127.0.0.1:8000/process', json=payload)
 
-        report = process_results(result_dict, scan_type)
+        payload["results"] = processed_results
 
-        target_func(report, scan_type, scan_id)
+        insert_response = requests.post('http://127.0.0.1:8000/insert', json=payload)
 
-        return "Results processed successfully"
+        return f'Results processed successfully: {insert_response.text}'
 
     except Exception as e:
         logging.error("Failed: %s" % str(e))
@@ -424,25 +398,26 @@ def process_results(results, scan_type):
     return report
 
 
-def insert(report, scan_type, scan_id):
+async def insert_results(report, scan_type, scan_id, db):
 
-    scan = Scans.query.filter(Scans.id == scan_id).first()
-    logging.info("Retrieved corresponding scan from database: %s" % str(scan))
+    scan_query = select(Scans).where(Scans.c.id == scan_id)
+    scan = await db.fetch_one(scan_query)
+    logging.info(f'Retrieved corresponding scan from database: {str(scan)}')
 
     try:
 
         if scan_type == "https":
             finalized_report = json.JSONEncoder().encode(str(report))
 
-            result_obj = Https_scans(https_scan={"https": finalized_report}, id=scan.id)
-            db.session.add(result_obj)
+            insert_query = Https_scans.insert().values(https_scan=json.dumps({"https": finalized_report}), id=scan.id)
+            await db.execute(insert_query)
             logging.info("HTTPS Scan inserted into database")
 
         elif scan_type == "ssl":
             finalized_report = json.JSONEncoder().encode(str(report))
 
-            result_obj = Ssl_scans(ssl_scan={"ssl": finalized_report}, id=scan.id)
-            db.session.add(result_obj)
+            insert_query = Ssl_scans.insert().values(https_scan=json.dumps({"ssl": finalized_report}), id=scan.id)
+            await db.execute(insert_query)
             logging.info("SSL Scan inserted into database")
 
         elif scan_type == "dmarc":
@@ -450,53 +425,78 @@ def insert(report, scan_type, scan_id):
             finalized_mx_report = json.JSONEncoder().encode(str(report["mx"]))
             finalized_spf_report = json.JSONEncoder().encode(str(report["spf"]))
 
-            dmarc_obj = Dmarc_scans(
-                dmarc_scan={"dmarc": finalized_dmarc_report}, id=scan.id
-            )
-            mx_obj = Mx_scans(mx_scan={"mx": finalized_mx_report}, id=scan.id)
-            spf_obj = Spf_scans(spf_scan={"spf": finalized_spf_report}, id=scan.id)
-            db.session.add(dmarc_obj)
-            db.session.add(mx_obj)
-            db.session.add(spf_obj)
+            dmarc_insert_query = Dmarc_scans.insert().values(dmarc_scan=json.dumps({"dmarc": finalized_dmarc_report}), id=scan.id)
+            mx_insert_query = Mx_scans.insert().values(mx_scan=json.dumps({"mx": finalized_mx_report}), id=scan.id)
+            spf_insert_query = Spf_scans.insert().values(spf_scan=json.dumps({"dmarc": finalized_spf_report}), id=scan.id)
+
+            await db.execute(dmarc_insert_query)
+            await db.execute(mx_insert_query)
+            await db.execute(spf_insert_query)
+
             logging.info("DMARC/MX/SPF Scans inserted into database")
 
         elif scan_type == "dkim":
             finalized_report = json.JSONEncoder().encode(str(report))
 
             # Check for previous dkim scans on this domain
-            previous_scans = Scans.query.filter(Scans.domain_id == scan.domain_id)
+            previous_scan_query = select(Scans).where(Scans.c.domain_id == scan.c.domain_id)
+
+            previous_scans = await db.fetch_all(previous_scan_query)
 
             update_recommended = False
 
             # If public key has been in use for a year or more, recommend update
             for previous_scan in previous_scans:
                 if (scan.scan_date - previous_scan.scan_date).days >= 365:
-                    historical_dkim = Dkim_scans.query.filter(
-                        Dkim_scans.id == previous_scan.id
-                    )
+                    historical_dkim_query = select(Dkim_scans).where(Dkim_scans.c.id == previous_scan.c.id)
+                    historical_dkim = await db.fetch_one(historical_dkim_query)
                     if (
                         report["public_key_modulus"]
-                        == historical_dkim.dkim_scan["dkim"]["public_key_modulus"]
+                        == historical_dkim.c.dkim_scan["dkim"]["public_key_modulus"]
                     ):
                         update_recommended = True
 
             report["update-recommended"] = update_recommended
-            result_obj = Dkim_scans(dkim_scan={"dkim": finalized_report}, id=scan.id)
-            db.session.add(result_obj)
+            insert_query = Dkim_scans.insert().values(dkim_scan=json.dumps({"dkim": finalized_report}), id=scan.id)
+            await db.execute(insert_query)
             logging.info("DKIM Scan inserted into database")
 
-        db.session.commit()
-        logging.info("Committing to database...")
-
     except Exception as e:
-        db.session.rollback()
-        db.session.flush()
-        logging.error("Failed database insertion: %s\n" % str(e))
+        logging.error(f'Failed database insertion(s): {str(e)}')
 
 
-def mock_insert(report, scan_type, scan_id):
-    return
+def Server(functions={}, database_uri=DATABASE_URI):
+
+    database = databases.Database(database_uri)
+
+    async def receive(request):
+        logging.info("Request received")
+        payload = await request.json()
+        return PlainTextResponse(initiate(payload))
+
+    async def insert(request):
+        try:
+            payload = await request.json()
+            results = payload["results"]
+            scan_id = payload["scan_id"]
+            scan_type = payload["scan_type"]
+            functions["insert"](results, scan_type, scan_id, database)
+        except Exception as e:
+            return PlainTextResponse(str(e))
+        return PlainTextResponse("Database insertion(s) completed")
+
+    async def process(request):
+        payload = await request.json()
+        logging.info("Performing scan...")
+        return JSONResponse(functions["process"](payload["scan_type"], payload["results"]))
+
+    routes = [
+        Route('/insert', insert, methods=['POST']),
+        Route('/process', process, methods=['POST']),
+        Route('/receive', receive, methods=['POST']),
+    ]
+
+    return Starlette(debug=True, routes=routes, on_startup=[startup])
 
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8080)
+app = Server(functions={"insert": insert_results, "process": process_results})

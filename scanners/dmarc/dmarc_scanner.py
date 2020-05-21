@@ -45,7 +45,7 @@ def initiate(received_payload):
 
     except Exception as e:
         logging.error(str(e))
-        return "An error occurred while attempting to perform DMARC scan: %s" % str(e)
+        return f'An error occurred while attempting to perform DMARC scan: {str(e)}'
 
 
 def dispatch_results(payload, client):

@@ -12,5 +12,5 @@ apt-get install -y --no-install-recommends python3-setuptools python3-wheel
 
 RUN python3 -m pip install -r requirements.txt
 
-# Run the web service on container startup. Using waitress, in this case.
+# Run the web service on container startup. Using uvicorn, in this case.
 CMD exec uvicorn dkim_scanner:app
