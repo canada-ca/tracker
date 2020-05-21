@@ -82,7 +82,7 @@ def Server(functions={}, client=requests):
     async def scan(request):
         domain = await request.body()
         logging.info("Performing scan...")
-        return JSONResponse(functions["scan"](str(domain)))
+        return JSONResponse(functions["scan"](domain.decode("utf-8")))
 
     routes = [
         Route('/dispatch', dispatch, methods=['POST']),
