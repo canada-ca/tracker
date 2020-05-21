@@ -1,5 +1,6 @@
 import graphene
 
+from enums.languages import LanguageEnums
 from functions.input_validators import cleanse_input
 from scalars.email_address import EmailAddress
 from schemas.auth_result.auth_result import AuthResult
@@ -29,6 +30,10 @@ class SignUp(graphene.Mutation):
             "password",
             required=True,
         )
+        preferred_lang = LanguageEnums(
+            description="Used to set users preferred language",
+            required=True,
+        )
 
     # Define mutation fields
     auth_result = graphene.Field(
@@ -43,6 +48,7 @@ class SignUp(graphene.Mutation):
         display_name = cleanse_input(kwargs.get("display_name"))
         password = cleanse_input(kwargs.get("password"))
         confirm_password = cleanse_input(kwargs.get("confirm_password"))
+        preferred_lang = cleanse_input(kwargs.get("preferred_lang"))
 
         # Create user and JWT
         user_info = create_user(
@@ -50,6 +56,7 @@ class SignUp(graphene.Mutation):
             display_name=display_name,
             password=password,
             confirm_password=confirm_password,
+            preferred_lang=preferred_lang,
         )
 
         # Return information to user
