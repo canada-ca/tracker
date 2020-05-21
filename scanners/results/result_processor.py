@@ -72,7 +72,7 @@ Users = sqlalchemy.Table(
 )
 
 User_affiliations = sqlalchemy.Table(
-    "users",
+    "user_affiliations",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
     sqlalchemy.Column("user_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id", onupdate="CASCADE", ondelete="CASCADE", name="user_affiliations_users_id_fkey"), primary_key=True),
