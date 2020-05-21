@@ -3,6 +3,7 @@
 platform/**/*.json
 frontend/public
 api/schema.json
+api/api.current.graphql
 
 **/node_modules
 

@@ -7,17 +7,14 @@ from graphql import GraphQLError
 from app import app
 from db import db_session
 from functions.input_validators import cleanse_input
-from functions.slugify import slugify_value
-from models.Organizations import Organizations
 from models.Users import Users
-from models.User_affiliations import User_affiliations
 
 
 class EmailVerifyAccount(graphene.Mutation):
     """
-
+    Mutation that allows the user to verify their account through a token
+    sent in an email
     """
-
     class Arguments:
         token_string = graphene.String(
             description="Token in sent via email, and located in url", required=True
