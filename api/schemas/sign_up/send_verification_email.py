@@ -49,7 +49,7 @@ def send_verification_email(user):
         )
     # XXX This is really not ideal, but using external services that send emails take time
     # Will revisit
-    time.sleep(0.5)
+    time.sleep(1)
     email_status = notify_client.get_notification_by_id(response.get("id")) \
         .get("status")
 
