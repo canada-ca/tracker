@@ -1,4 +1,5 @@
 import os
+import time
 
 from flask import request
 from graphql import GraphQLError
@@ -44,15 +45,15 @@ def send_verification_email(user):
 
     except HTTPError:
         raise GraphQLError(
-            "Error, when sending verification email, please try again"
+            "Error, when sending verification email, error: {}".format(HTTPError)
         )
 
     email_status = notify_client.get_notification_by_id(response.get("id")) \
         .get("status")
 
-    if email_status != "sending" or email_status != "delivered":
-        raise GraphQLError(
-            "Error, when sending verification email, please try signing up again"
-        )
+    if email_status != "delivered" \
+        and email_status != "sending" \
+        and email_status != "created":
+        response = "Email Send Error"
 
     return response

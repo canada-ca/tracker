@@ -44,7 +44,14 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
         )
         db_session.add(user)
         try:
-            send_verification_email(user=user)
+            email_response = send_verification_email(user=user)
+
+            if email_response == "Email Send Error":
+                raise GraphQLError(
+                    "Error, when sending verification email, please try "
+                    "signing up again"
+                )
+
             auth_token = tokenize(user_id=user.id)
             db_session.commit()
             return {"auth_token": auth_token, "user": user}
@@ -56,7 +63,8 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
         except Exception as e:
             db_session.rollback()
             db_session.flush()
-            raise GraphQLError(error_creating_account())
+            # raise GraphQLError(error_creating_account())
+            raise GraphQLError(str(e))
     else:
         # Ensure that users have unique email addresses
         raise GraphQLError(error_email_in_use())
