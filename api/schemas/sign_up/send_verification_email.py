@@ -56,6 +56,6 @@ def send_verification_email(user):
     if email_status == "permanent-failure" \
         or email_status == "temporary-failure" \
         or email_status == "technical-failure":
-        response = "Email Send Error: {}".format(email_status)
-
-    return response
+        return "Email Send Error: {}".format(email_status)
+    else:
+        return email_status
