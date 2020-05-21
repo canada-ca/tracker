@@ -24,7 +24,7 @@ DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
 
 config = Config('.env')
-DATABASE_URI = f"postgresql+psycopg2://{Config('DB_USER')}:{Config(DB_PASS)}@{Config(DB_HOST)}:{Config(DB_PORT)}/{Config(DB_NAME)}"
+DATABASE_URI = f"postgresql://{Config('DB_USER')}:{Config(DB_PASS)}@{Config(DB_HOST)}:{Config(DB_PORT)}/{Config(DB_NAME)}"
 
 metadata = sqlalchemy.MetaData()
 
@@ -400,11 +400,12 @@ def process_results(results, scan_type):
 
 async def insert_results(report, scan_type, scan_id, db):
 
-    scan_query = select(Scans).where(Scans.c.id == scan_id)
-    scan = await db.fetch_one(scan_query)
-    logging.info(f'Retrieved corresponding scan from database: {str(scan)}')
-
     try:
+        await db.connect()
+
+        scan_query = select(Scans).where(Scans.c.id == scan_id)
+        scan = await db.fetch_one(scan_query)
+        logging.info(f'Retrieved corresponding scan from database: {str(scan)}')
 
         if scan_type == "https":
             finalized_report = json.JSONEncoder().encode(str(report))
@@ -463,6 +464,9 @@ async def insert_results(report, scan_type, scan_id, db):
 
     except Exception as e:
         logging.error(f'Failed database insertion(s): {str(e)}')
+        await db.disconnect()
+
+    await db.disconnect()
 
 
 def Server(functions={}, database_uri=DATABASE_URI):
