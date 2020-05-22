@@ -490,10 +490,9 @@ def Server(functions={}, database_uri=DATABASE_URI):
         return PlainTextResponse("Database insertion(s) completed")
 
     async def process(request):
-        payload_json = await request.json()
-        payload_dict = formatted_dictionary(payload_json)
+        payload = await request.json()
         logging.info("Processing results...")
-        return JSONResponse(functions["process"](payload_dict["scan_type"], payload_dict["results"]))
+        return JSONResponse(functions["process"](payload["scan_type"], payload["results"]))
 
     routes = [
         Route('/insert', insert, methods=['POST']),
