@@ -11,6 +11,7 @@ from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse, JSONResponse
 from starlette.config import Config
+from utils import formatted_dictionary
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -166,12 +167,13 @@ def initiate(payload):
     logging.info("Results received")
 
     try:
+        payload_dict = formatted_dictionary(payload)
 
-        process_response = requests.post('http://127.0.0.1:8000/process', json=payload)
+        process_response = requests.post('http://127.0.0.1:8000/process', json=payload_dict)
 
-        payload["results"] = process_response.json()
+        payload_dict["results"] = process_response.json()
 
-        insert_response = requests.post('http://127.0.0.1:8000/insert', json=payload)
+        insert_response = requests.post('http://127.0.0.1:8000/insert', json=payload_dict)
 
         return f'Results processed successfully: {insert_response.text}'
 
@@ -488,9 +490,10 @@ def Server(functions={}, database_uri=DATABASE_URI):
         return PlainTextResponse("Database insertion(s) completed")
 
     async def process(request):
-        payload = await request.json()
+        payload_json = await request.json()
+        payload_dict = formatted_dictionary(payload_json)
         logging.info("Processing results...")
-        return JSONResponse(functions["process"](payload["scan_type"], payload["results"]))
+        return JSONResponse(functions["process"](payload_dict["scan_type"], payload_dict["results"]))
 
     routes = [
         Route('/insert', insert, methods=['POST']),
