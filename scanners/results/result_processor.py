@@ -10,7 +10,6 @@ import databases
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse, JSONResponse
-from starlette.config import Config
 from utils import formatted_dictionary
 
 
@@ -24,8 +23,7 @@ DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
 
-config = Config('.env')
-DATABASE_URI = f"postgresql://{Config('DB_USER')}:{Config(DB_PASS)}@{Config(DB_HOST)}:{Config(DB_PORT)}/{Config(DB_NAME)}"
+DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 metadata = sqlalchemy.MetaData()
 
