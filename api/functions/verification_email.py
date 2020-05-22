@@ -1,26 +1,24 @@
-import os
 import time
 
 from flask import request
 from graphql import GraphQLError
+from notifications_python_client.notifications import NotificationsAPIClient
 from requests import HTTPError
 
 from json_web_token import tokenize
-from notifications_python_client.notifications import NotificationsAPIClient
+from models import Users
 
 
-def send_verification_email(user):
+def send_verification_email(user: Users, client: NotificationsAPIClient):
     """
     This function allows a user object to be passed in during account creation
     and send an email to be used for verifying accounts
     :param user: A instance of /models/User.py
+    :param client: An instance of NotificationsAPIClient
     :return: None
     """
     # Create Notify Client
-    notify_client = NotificationsAPIClient(
-        api_key=os.getenv("NOTIFICATION_API_KEY"),
-        base_url=os.getenv("NOTIFICATION_API_URL"),
-    )
+    notify_client = client
 
     # Check to see if users preferred lang is English or French
     if user.preferred_lang == "french":

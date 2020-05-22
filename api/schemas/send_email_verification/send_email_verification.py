@@ -1,6 +1,8 @@
 import graphene
+import os
 
 from graphql import GraphQLError
+from notifications_python_client.notifications import NotificationsAPIClient
 
 from db import db_session
 from functions.input_validators import cleanse_input
@@ -39,7 +41,13 @@ class SendEmailVerification(graphene.Mutation):
             raise GraphQLError("Error, user is already validated.")
 
         # Send validation email
-        email_status = send_verification_email(user=user)
+        email_status = send_verification_email(
+            user=user,
+            client=NotificationsAPIClient(
+                api_key=os.getenv("NOTIFICATION_API_KEY"),
+                base_url=os.getenv("NOTIFICATION_API_URL"),
+            )
+        )
 
         if email_status.__contains__("Email Send Error"):
             raise GraphQLError(
