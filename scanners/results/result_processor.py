@@ -187,7 +187,7 @@ def process_results(results, scan_type):
     report = {}
 
     try:
-        report = globals()["process_"+scan_type](results, scan_type)
+        report = globals()["process_"+scan_type](results)
     except Exception as e:
         logging.error(f'An error occurred while processing results: {str(e)}')
 
@@ -197,7 +197,7 @@ def process_results(results, scan_type):
 def process_https(results):
     report = {}
 
-    if results is None:
+    if results is None or results is {}:
         report = {"missing": True}
 
     else:
@@ -310,7 +310,7 @@ def process_ssl(results):
 
     # Get cipher/protocol data via sslyze for a host.
 
-    if results is None:
+    if results is None or results is {}:
         report = {"missing": True}
 
     else:
@@ -377,7 +377,7 @@ def process_ssl(results):
 
 def process_dmarc(results):
 
-    if results is not None:
+    if results is not None and results is not {}:
         report = {
             "dmarc": results["dmarc"],
             "spf": results["spf"],
@@ -395,7 +395,7 @@ def process_dmarc(results):
 
 def process_dkim(results):
 
-    if results is not None:
+    if results is not None and results is not {}:
         report = results
     else:
         report = {"missing": True}
