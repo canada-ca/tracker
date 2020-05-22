@@ -507,7 +507,7 @@ def Server(functions={}, database_uri=DATABASE_URI):
     async def process(request):
         payload = await request.json()
         logging.info("Processing results...")
-        return JSONResponse(functions["process"](payload["scan_type"], payload["results"]))
+        return JSONResponse(functions["process"](payload["results"], payload["scan_type"]))
 
     routes = [
         Route('/insert', insert, methods=['POST']),
