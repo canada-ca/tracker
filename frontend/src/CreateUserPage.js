@@ -8,6 +8,7 @@ import { SIGN_UP } from './graphql/mutations'
 import { useUserState } from './UserState'
 import { EmailField } from './EmailField'
 import { PasswordConfirmation } from './PasswordConfirmation'
+import { LanguageSelect } from './LanguageSelect'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -68,18 +69,20 @@ export default function CreateUserPage() {
   return (
     <Stack spacing={2} mx="auto">
       <Text mb={4} fontSize="2xl">
-        Create an account by entering an email and password.
+      {i18n._(t`Create an account by entering an email and password.`)}
       </Text>
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '', confirmPassword: '' }}
         onSubmit={async (values, _actions) => {
+          console.log('values', values)
           await signUp({
             variables: {
               userName: values.email,
               password: values.password,
               confirmPassword: values.confirmPassword,
               displayName: values.email,
+              preferredLang: values.lang,
             },
           })
         }}
@@ -90,6 +93,8 @@ export default function CreateUserPage() {
 
             <PasswordConfirmation />
 
+            <LanguageSelect name="lang" />
+
             <Stack mt={6} spacing={4} isInline>
               <Button
                 variantColor="teal"
@@ -97,7 +102,7 @@ export default function CreateUserPage() {
                 type="submit"
                 id="submitBtn"
               >
-                Create Account
+                {i18n._(t`Create Account`)}
               </Button>
 
               <Button
@@ -106,7 +111,7 @@ export default function CreateUserPage() {
                 variantColor="teal"
                 variant="outline"
               >
-                Back
+                {i18n._(t`Back`)}
               </Button>
             </Stack>
           </form>

@@ -26,7 +26,7 @@ export default function UserPage() {
   const client = useApolloClient()
   const toast = useToast()
   const history = useHistory()
-  const { currentUser } = useUserState()
+  const { currentUser, logout } = useUserState()
 
   const [
     updatePassword,
@@ -181,7 +181,7 @@ export default function UserPage() {
           w={'50%'}
           onClick={() => {
             // This clears the JWT, essentially logging the user out in one go
-            client.writeData({ data: { jwt: null, tfa: null, userName: null } }) // How is this done?
+            logout()
             history.push('/')
             toast({
               title: 'Sign Out.',

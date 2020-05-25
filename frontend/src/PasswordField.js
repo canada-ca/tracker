@@ -37,7 +37,7 @@ export function PasswordField({ name, ...props }) {
         />
         <InputRightElement width="4.5rem">
           <Button id="showButton" h="1.75rem" size="sm" onClick={handleClick}>
-            {show ? i18n._('Hide') : i18n._('Show')}
+            <Icon name={show ? 'view-off' : 'view'} />
           </Button>
         </InputRightElement>
       </InputGroup>
