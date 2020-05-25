@@ -15,8 +15,9 @@ export function LanguageSelect({ name, ...props }) {
           {...props}
           {...field}
           id="lang"
-          placeholder={i18n._(t`Select Preferred Language`)}
+          // placeholder={i18n._(t`Select Preferred Language`)}
         >
+          <option hidden value=''>{i18n._(t`Select Preferred Language`)}</option>
           <option value="ENGLISH">English</option>
           <option value="FRENCH">Français</option>
         </Select>
