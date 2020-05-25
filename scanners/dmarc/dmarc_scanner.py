@@ -69,7 +69,7 @@ def scan_dmarc(domain):
         )
         return None
 
-    if scan_result["dmarc"]["record"] == "null":
+    if scan_result["dmarc"].get("record", "null") == "null":
         return None
     else:
         return scan_result
