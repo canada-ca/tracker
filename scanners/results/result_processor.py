@@ -406,7 +406,7 @@ async def insert_results(report, scan_type, scan_id, db):
     try:
         await db.connect()
 
-        scan_query = select(Scans).where(Scans.c.id == scan_id)
+        scan_query = select([Scans]).where(Scans.c.id == scan_id)
         scan = await db.fetch_one(scan_query)
         logging.info(f'Retrieved corresponding scan from database: {str(scan)}')
 
@@ -458,7 +458,7 @@ async def insert_dkim(report, scan, db):
     finalized_report = json.JSONEncoder().encode(str(report))
 
     # Check for previous dkim scans on this domain
-    previous_scan_query = select(Scans).where(Scans.c.domain_id == scan.c.domain_id)
+    previous_scan_query = select([Scans]).where(Scans.c.domain_id == scan.c.domain_id)
 
     previous_scans = await db.fetch_all(previous_scan_query)
 
@@ -467,7 +467,7 @@ async def insert_dkim(report, scan, db):
     # If public key has been in use for a year or more, recommend update
     for previous_scan in previous_scans:
         if (scan.scan_date - previous_scan.scan_date).days >= 365:
-            historical_dkim_query = select(Dkim_scans).where(Dkim_scans.c.id == previous_scan.c.id)
+            historical_dkim_query = select([Dkim_scans]).where(Dkim_scans.c.id == previous_scan.c.id)
             historical_dkim = await db.fetch_one(historical_dkim_query)
             if (
                 report["public_key_modulus"]
