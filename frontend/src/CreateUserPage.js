@@ -69,7 +69,7 @@ export default function CreateUserPage() {
   return (
     <Stack spacing={2} mx="auto">
       <Text mb={4} fontSize="2xl">
-      {i18n._(t`Create an account by entering an email and password.`)}
+        {i18n._(t`Create an account by entering an email and password.`)}
       </Text>
       <Formik
         validationSchema={validationSchema}
