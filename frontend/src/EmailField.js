@@ -18,7 +18,6 @@ export function EmailField({ name, ...props }) {
       mt={4}
       mb={4}
       isInvalid={meta.error && meta.touched}
-      isRequired
     >
       <InputGroup>
         <InputLeftElement>

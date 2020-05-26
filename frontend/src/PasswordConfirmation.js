@@ -60,7 +60,6 @@ export function PasswordConfirmation() {
             mt={4}
             mb={4}
             isInvalid={form.errors.password && form.touched.password}
-            isRequired
           >
             <InputGroup>
               <InputLeftElement>
@@ -110,7 +109,6 @@ export function PasswordConfirmation() {
             isInvalid={
               form.errors.confirmPassword && form.touched.confirmPassword
             }
-            isRequired
           >
             <InputGroup>
               <InputLeftElement>

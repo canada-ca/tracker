@@ -82,7 +82,12 @@ export default function CreateUserPage() {
       </Text>
       <Formik
         validationSchema={validationSchema}
-        initialValues={{ email: '', password: '', confirmPassword: '' }}
+        initialValues={{
+          email: '',
+          password: '',
+          confirmPassword: '',
+          lang: '',
+        }}
         onSubmit={async (values) => {
           signUp({
             variables: {
@@ -119,7 +124,7 @@ export default function CreateUserPage() {
                 variantColor="teal"
                 variant="outline"
               >
-                {i18n._(t`Back`)}
+                <Trans>Back</Trans>
               </Button>
             </Stack>
           </form>

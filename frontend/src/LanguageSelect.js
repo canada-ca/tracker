@@ -13,7 +13,6 @@ export function LanguageSelect({ name, ...props }) {
     <FormControl
       mt={4}
       mb={4}
-      isRequired
       isInvalid={meta.error && meta.touched}
     >
       <Stack>
