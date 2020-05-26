@@ -21,7 +21,7 @@ msgstr "Un serveur configuré pour utiliser la mauvaise adresse \"envelope from\
 msgid "A third party sender not using a custom return path."
 msgstr "Un expéditeur tiers n'utilisant pas une voie de retour personnalisée."
 
-#: src/CreateUserPage.js:56
+#: src/CreateUserPage.js:60
 msgid "Account created."
 msgstr ""
 
@@ -45,12 +45,12 @@ msgstr "Ajustez la partie politique de l'enregistrement DMARC du domaine ou sous
 msgid "Admin"
 msgstr "Admin"
 
-#: src/CreateUserPage.js:37
+#: src/CreateUserPage.js:41
 #: src/SignInPage.js:39
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
-#: src/CreateUserPage.js:119
+#: src/CreateUserPage.js:123
 msgid "Back"
 msgstr "Retour"
 
@@ -74,7 +74,7 @@ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour les adres
 msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/CreateUserPage.js:110
+#: src/CreateUserPage.js:114
 #: src/SignInPage.js:137
 msgid "Create Account"
 msgstr "Créer un compte"
@@ -83,7 +83,7 @@ msgstr "Créer un compte"
 msgid "Create User"
 msgstr "Créer un utilisateur"
 
-#: src/CreateUserPage.js:78
+#: src/CreateUserPage.js:82
 msgid "Create an account by entering an email and password."
 msgstr "Créez un compte en entrant un courriel et un mot de passe."
 
@@ -156,7 +156,7 @@ msgstr "Accueil"
 msgid "Invalid email"
 msgstr ""
 
-#: src/CreateUserPage.js:70
+#: src/CreateUserPage.js:74
 #: src/QRcodePage.js:21
 #: src/SignInPage.js:70
 msgid "Loading..."
@@ -253,7 +253,7 @@ msgstr "Échec de l'alignement des domaines du SPF"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
-#: src/LanguageSelect.js:21
+#: src/LanguageSelect.js:19
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
@@ -364,7 +364,7 @@ msgstr "Suivre la conformité en matière de sécurité Web"
 msgid "TwoFactor"
 msgstr "Deux facteurs"
 
-#: src/CreateUserPage.js:39
+#: src/CreateUserPage.js:43
 msgid "Unable to create your account, please try again."
 msgstr ""
 
@@ -380,7 +380,7 @@ msgstr "Liste des utilisateurs"
 msgid "User Profile"
 msgstr "Profil de l'utilisateur"
 
-#: src/CreateUserPage.js:58
+#: src/CreateUserPage.js:62
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr ""
 
@@ -393,6 +393,6 @@ msgid "Your 2FA app will then have a valid code that you can use when you sign i
 msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez."
 
 #: src/EmailField.js:31
-#: src/LanguageSelect.js:29
+#: src/LanguageSelect.js:27
 msgid "{0}"
 msgstr ""

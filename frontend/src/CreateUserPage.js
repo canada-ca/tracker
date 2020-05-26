@@ -28,6 +28,9 @@ export default function CreateUserPage() {
     confirmPassword: string()
       .required(i18n._(t`Password confirmation cannot be empty`))
       .oneOf([ref('password')], i18n._(t`Passwords must match`)),
+    lang: string()
+      .oneOf(['ENGLISH', 'FRENCH'])
+      .required('Please choose your preferred language'),
   })
 
   const [signUp, { loading, error }] = useMutation(SIGN_UP, {

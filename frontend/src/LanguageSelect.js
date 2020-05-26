@@ -8,15 +8,16 @@ import { t, Trans } from '@lingui/macro'
 export function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
+
   return (
-    <FormControl mt={4} mb={4} isRequired>
+    <FormControl
+      mt={4}
+      mb={4}
+      isRequired
+      isInvalid={meta.error && meta.touched}
+    >
       <Stack>
-        <Select
-          {...props}
-          {...field}
-          id="lang"
-          // placeholder={i18n._(t`Select Preferred Language`)}
-        >
+        <Select {...props} {...field} id="lang">
           <option hidden value="">
             {i18n._(t`Select Preferred Language`)}
           </option>
