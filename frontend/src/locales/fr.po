@@ -21,6 +21,10 @@ msgstr "Un serveur configuré pour utiliser la mauvaise adresse \"envelope from\
 msgid "A third party sender not using a custom return path."
 msgstr "Un expéditeur tiers n'utilisant pas une voie de retour personnalisée."
 
+#: src/CreateUserPage.js:56
+msgid "Account created."
+msgstr ""
+
 #: src/DmarcReportGuidance.js:323
 msgid "Add a CNAME record to refer to a DKIM record maintained by a third party sender."
 msgstr "Ajouter un enregistrement CNAME pour faire référence à un enregistrement DKIM tenu par un expéditeur tiers."
@@ -41,9 +45,14 @@ msgstr "Ajustez la partie politique de l'enregistrement DMARC du domaine ou sous
 msgid "Admin"
 msgstr "Admin"
 
-#: src/SignInPage.js:36
+#: src/CreateUserPage.js:37
+#: src/SignInPage.js:39
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
+
+#: src/CreateUserPage.js:119
+msgid "Back"
+msgstr "Retour"
 
 #: src/LandingPage.js:16
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
@@ -65,13 +74,18 @@ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour les adres
 msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/SignInPage.js:139
+#: src/CreateUserPage.js:110
+#: src/SignInPage.js:137
 msgid "Create Account"
 msgstr "Créer un compte"
 
-#: src/UserList.js:47
+#: src/UserList.js:58
 msgid "Create User"
 msgstr "Créer un utilisateur"
+
+#: src/CreateUserPage.js:78
+msgid "Create an account by entering an email and password."
+msgstr "Créez un compte en entrant un courriel et un mot de passe."
 
 #: src/DmarcReportGuidance.js:262
 #: src/DmarcReportGuidance.js:283
@@ -88,18 +102,19 @@ msgstr "Échec de l'alignement du domaine DKIM"
 msgid "DMARC Policy Applied"
 msgstr "Politique de la DMARC appliquée"
 
-#: src/App.js:53
+#: src/App.js:54
 #: src/DomainsPage.js:36
 msgid "Domains"
 msgstr "Domaines"
 
-#: src/SignInPage.js:66
+#: src/CreateUserPage.js:23
+#: src/SignInPage.js:33
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
 #: src/EmailField.js:31
-msgid "Email {0}"
-msgstr "Courriel {0}"
+#~ msgid "Email {0}"
+#~ msgstr "Courriel {0}"
 
 #: src/DmarcReportGuidance.js:317
 msgid "Ensure the DKIM record for thedomain and selector is present andvalid."
@@ -109,7 +124,7 @@ msgstr "Assurez-vous que l'enregistrement DKIM pour le domaine et le sélecteur 
 msgid "Ensure the SPF record is present and valid."
 msgstr "Assurez-vous que le dossier du SPF est présent et valide."
 
-#: src/SignInPage.js:121
+#: src/SignInPage.js:119
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -132,13 +147,18 @@ msgstr "Conseils"
 msgid "Hide Guidance"
 msgstr "Masquer les conseils"
 
-#: src/App.js:50
+#: src/App.js:51
 #: src/QRcodePage.js:67
 msgid "Home"
 msgstr "Accueil"
 
+#: src/CreateUserPage.js:24
+msgid "Invalid email"
+msgstr ""
+
+#: src/CreateUserPage.js:70
 #: src/QRcodePage.js:21
-#: src/SignInPage.js:72
+#: src/SignInPage.js:70
 msgid "Loading..."
 msgstr "Chargement..."
 
@@ -160,9 +180,22 @@ msgstr "Aucun domaine n'a encore été scanné."
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: src/SignInPage.js:65
+#: src/CreateUserPage.js:26
+#: src/SignInPage.js:32
 msgid "Password cannot be empty"
 msgstr "Le mot de passe ne peut pas être vide"
+
+#: src/CreateUserPage.js:29
+msgid "Password confirmation cannot be empty"
+msgstr ""
+
+#: src/CreateUserPage.js:27
+msgid "Password must be at least 12 characters long"
+msgstr ""
+
+#: src/CreateUserPage.js:30
+msgid "Passwords must match"
+msgstr ""
 
 #: src/DmarcReportGuidance.js:519
 msgid "Please see the SPF and DKIM causes sections."
@@ -190,11 +223,11 @@ msgstr "Causes possibles"
 msgid "Possible Resolutions"
 msgstr "Résolutions possibles"
 
-#: src/App.js:43
+#: src/App.js:44
 msgid "Pre-Alpha"
 msgstr "préalpha"
 
-#: src/App.js:115
+#: src/App.js:127
 msgid "Privacy"
 msgstr "Confidentialité"
 
@@ -220,6 +253,10 @@ msgstr "Échec de l'alignement des domaines du SPF"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
+#: src/LanguageSelect.js:21
+msgid "Select Preferred Language"
+msgstr "Sélectionnez votre langue préférée"
+
 #: src/DmarcReportGuidance.js:554
 msgid "Show Guidance"
 msgstr "Afficher les conseils"
@@ -232,21 +269,21 @@ msgstr "Montrer moins"
 msgid "Show More"
 msgstr "En savoir plus"
 
-#: src/App.js:62
+#: src/App.js:63
 #: src/QRcodePage.js:58
-#: src/SignInPage.js:130
+#: src/SignInPage.js:128
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: src/SignInPage.js:55
+#: src/SignInPage.js:58
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/SignInPage.js:80
+#: src/SignInPage.js:78
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/App.js:41
+#: src/App.js:42
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -254,7 +291,7 @@ msgstr "Passer au contenu principal"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Désolé, la page que vous essayiez de consulter n'existe pas."
 
-#: src/App.js:125
+#: src/App.js:137
 msgid "Terms & conditions"
 msgstr "Avis"
 
@@ -315,7 +352,7 @@ msgstr "Il n'y a pas d'enregistrement DKIM pour le domaine et/ou le sélecteur u
 msgid "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
 msgstr "Ces notes d'orientation ont été conçues pour vous aider à résoudre les problèmes liés à l'échec de vos scanners DMARC. Veuillez lire chaque note et déterminer ce qui a provoqué l'échec d'un scan DMARC sur votre domaine."
 
-#: src/App.js:44
+#: src/App.js:45
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
@@ -327,19 +364,27 @@ msgstr "Suivre la conformité en matière de sécurité Web"
 msgid "TwoFactor"
 msgstr "Deux facteurs"
 
-#: src/SignInPage.js:38
+#: src/CreateUserPage.js:39
+msgid "Unable to create your account, please try again."
+msgstr ""
+
+#: src/SignInPage.js:41
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
-#: src/App.js:66
+#: src/App.js:67
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
-#: src/App.js:58
+#: src/App.js:59
 msgid "User Profile"
 msgstr "Profil de l'utilisateur"
 
-#: src/SignInPage.js:56
+#: src/CreateUserPage.js:58
+msgid "Welcome, you are successfully signed in to your new account!"
+msgstr ""
+
+#: src/SignInPage.js:59
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
@@ -347,18 +392,7 @@ msgstr "Bienvenue, vous êtes connecté avec succès!"
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
 msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez."
 
-#: src/LanguageSelect.js:23
-msgid "Select Preferred Language"
-msgstr "Sélectionnez votre langue préférée"
-
-#: src/CreateUserPage.js:46
-msgid "Create an account by entering an email and password."
-msgstr "Créez un compte en entrant un courriel et un mot de passe."
-
-#: src/CreateUserPage.js:80
-msgid "Create Account"
-msgstr "Créer un compte"
-
-#: src/CreateUserPage.js:89
-msgid "Back"
-msgstr "Retour"
+#: src/EmailField.js:31
+#: src/LanguageSelect.js:29
+msgid "{0}"
+msgstr ""

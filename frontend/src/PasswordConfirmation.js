@@ -36,11 +36,6 @@ export function PasswordConfirmation() {
         setIcon('check')
       }
     }, 600)
-    if (value === '') {
-      return ' cannot be empty'
-    } else if (String(value).length < 11) {
-      return ' must be 12 chars long'
-    }
   }
 
   /* A function for the Formik to validate fields in the form */
@@ -55,11 +50,6 @@ export function PasswordConfirmation() {
         setConfirmIcon('check')
       }
     }, 600)
-    if (value === '') {
-      return ' cannot be empty'
-    } else if (value !== document.getElementById('password').value) {
-      return ' must match password'
-    }
   }
 
   return (
@@ -107,7 +97,7 @@ export function PasswordConfirmation() {
                 </Button>
               </InputRightElement>
             </InputGroup>
-            <FormErrorMessage>Password {form.errors.password}</FormErrorMessage>
+            <FormErrorMessage>{form.errors.password}</FormErrorMessage>
           </FormControl>
         )}
       </Field>
@@ -158,9 +148,7 @@ export function PasswordConfirmation() {
               </InputRightElement>
             </InputGroup>
 
-            <FormErrorMessage>
-              Confirm Password {form.errors.confirmPassword}
-            </FormErrorMessage>
+            <FormErrorMessage>{form.errors.confirmPassword}</FormErrorMessage>
           </FormControl>
         )}
       </Field>

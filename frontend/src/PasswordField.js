@@ -1,5 +1,4 @@
 import React from 'react'
-import { useLingui } from '@lingui/react'
 import { string } from 'prop-types'
 import {
   FormControl,

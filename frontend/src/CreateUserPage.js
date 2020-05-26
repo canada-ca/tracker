@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Stack, Text, useToast } from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
-import { object, string } from 'yup'
+import { object, string, ref } from 'yup'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { Formik } from 'formik'
 import { SIGN_UP } from './graphql/mutations'
@@ -19,9 +19,15 @@ export default function CreateUserPage() {
   const { i18n } = useLingui()
 
   const validationSchema = object().shape({
-    email: string().required('cannot be empty'),
-    password: string().required('cannot be empty'),
-    confirmPassword: string().required('cannot be empty'),
+    email: string()
+      .required(i18n._(t`Email cannot be empty`))
+      .email(i18n._(t`Invalid email`)),
+    password: string()
+      .required(i18n._(t`Password cannot be empty`))
+      .min(12, i18n._(t`Password must be at least 12 characters long`)),
+    confirmPassword: string()
+      .required(i18n._(t`Password confirmation cannot be empty`))
+      .oneOf([ref('password')], i18n._(t`Passwords must match`)),
   })
 
   const [signUp, { loading, error }] = useMutation(SIGN_UP, {
@@ -101,7 +107,7 @@ export default function CreateUserPage() {
                 type="submit"
                 id="submitBtn"
               >
-                {i18n._(t`Create Account`)}
+                <Trans>Create Account</Trans>
               </Button>
 
               <Button

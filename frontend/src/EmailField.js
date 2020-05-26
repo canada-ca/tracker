@@ -28,7 +28,7 @@ export function EmailField({ name, ...props }) {
       </InputGroup>
 
       <FormErrorMessage>
-        <Trans>Email {meta.error}</Trans>
+        <Trans>{meta.error}</Trans>
       </FormErrorMessage>
     </FormControl>
   )
