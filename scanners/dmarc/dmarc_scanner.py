@@ -27,30 +27,38 @@ def initiate(received_payload):
         domain = ext.registered_domain
 
         # Perform scan
-        scan_response = requests.post('http://127.0.0.1:8000/scan', data={"domain": domain})
+        scan_response = requests.post(
+            "http://127.0.0.1:8000/scan", data={"domain": domain}
+        )
 
         scan_results = scan_response.json()
 
         # Construct request payload for result-processor
         if scan_results is not None:
-            payload = json.dumps({"results": scan_results, "scan_type": "dmarc", "scan_id": scan_id})
+            payload = json.dumps(
+                {"results": scan_results, "scan_type": "dmarc", "scan_id": scan_id}
+            )
             logging.info(str(scan_results))
         else:
             raise Exception("DMARC scan not completed")
 
         # Dispatch results to result-processor
-        dispatch_response = requests.post('http://127.0.0.1:8000/dispatch', data=payload)
+        dispatch_response = requests.post(
+            "http://127.0.0.1:8000/dispatch", data=payload
+        )
 
-        return f'DMARC scan completed. {dispatch_response.text}'
+        return f"DMARC scan completed. {dispatch_response.text}"
 
     except Exception as e:
         logging.error(str(e))
-        return f'An error occurred while attempting to perform DMARC scan: {str(e)}'
+        return f"An error occurred while attempting to perform DMARC scan: {str(e)}"
 
 
 def dispatch_results(payload, client):
     # Post results to result-handling service
-    client.post(url="http://result-processor.tracker.svc.cluster.local/receive", json=payload)
+    client.post(
+        url="http://result-processor.tracker.svc.cluster.local/receive", json=payload
+    )
 
 
 def scan_dmarc(domain):
@@ -64,8 +72,7 @@ def scan_dmarc(domain):
         scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True)))
     except (DNSException, SPFError, DMARCError) as e:
         logging.error(
-            "Failed to check the given domains for DMARC/SPF records: %s"
-            % str(e)
+            "Failed to check the given domains for DMARC/SPF records: %s" % str(e)
         )
         return None
 
@@ -76,7 +83,6 @@ def scan_dmarc(domain):
 
 
 def Server(functions={}, client=requests):
-
     async def receive(request):
         logging.info("Request received")
         payload = await request.json()
@@ -96,9 +102,9 @@ def Server(functions={}, client=requests):
         return JSONResponse(functions["scan"](domain.decode("utf-8")))
 
     routes = [
-        Route('/dispatch', dispatch, methods=['POST']),
-        Route('/scan', scan, methods=['POST']),
-        Route('/receive', receive, methods=['POST']),
+        Route("/dispatch", dispatch, methods=["POST"]),
+        Route("/scan", scan, methods=["POST"]),
+        Route("/receive", receive, methods=["POST"]),
     ]
 
     return Starlette(debug=True, routes=routes, on_startup=[startup])

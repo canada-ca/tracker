@@ -25,30 +25,36 @@ def initiate(received_payload):
         domain = received_payload["domain"]
 
         # Perform scan
-        scan_response = requests.post('http://127.0.0.1:8000/scan', data=domain)
+        scan_response = requests.post("http://127.0.0.1:8000/scan", data=domain)
 
         scan_results = scan_response.json()
 
         # Construct request payload for result-processor
         if scan_results is not {}:
-            payload = json.dumps({"results": scan_results, "scan_type": "https", "scan_id": scan_id})
+            payload = json.dumps(
+                {"results": scan_results, "scan_type": "https", "scan_id": scan_id}
+            )
             logging.info(str(scan_results))
         else:
             raise Exception("HTTPS scan not completed")
 
         # Dispatch results to result-processor
-        dispatch_response = requests.post('http://127.0.0.1:8000/dispatch', json=payload)
+        dispatch_response = requests.post(
+            "http://127.0.0.1:8000/dispatch", json=payload
+        )
 
-        return f'HTTPS scan completed. {dispatch_response.text}'
+        return f"HTTPS scan completed. {dispatch_response.text}"
 
     except Exception as e:
         logging.error(str(e))
-        return f'An error occurred while attempting to perform HTTPS scan: {str(e)}'
+        return f"An error occurred while attempting to perform HTTPS scan: {str(e)}"
 
 
 def dispatch_results(payload, client):
     # Post results to result-handling service
-    client.post(url="http://result-processor.tracker.svc.cluster.local/receive", json=payload)
+    client.post(
+        url="http://result-processor.tracker.svc.cluster.local/receive", json=payload
+    )
 
 
 def scan_https(domain):
@@ -65,7 +71,6 @@ def scan_https(domain):
 
 
 def Server(functions={}, client=requests):
-
     async def receive(request):
         logging.info("Request received")
         payload = await request.json()
@@ -85,9 +90,9 @@ def Server(functions={}, client=requests):
         return JSONResponse(functions["scan"](domain.decode("utf-8")))
 
     routes = [
-        Route('/dispatch', dispatch, methods=['POST']),
-        Route('/scan', scan, methods=['POST']),
-        Route('/receive', receive, methods=['POST']),
+        Route("/dispatch", dispatch, methods=["POST"]),
+        Route("/scan", scan, methods=["POST"]),
+        Route("/receive", receive, methods=["POST"]),
     ]
 
     return Starlette(debug=True, routes=routes, on_startup=[startup])

@@ -29,31 +29,40 @@ def initiate(received_payload, scan_type):
 
         dispatched = {}
         if scan_type == "web":
-            dispatched["https"] = requests.post('http://127.0.0.1:8000/https', json=payload)
-            dispatched["dmarc"] = requests.post('http://127.0.0.1:8000/dmarc', json=payload)
-            dispatched["ssl"] = requests.post('http://127.0.0.1:8000/ssl', json=payload)
+            dispatched["https"] = requests.post(
+                "http://127.0.0.1:8000/https", json=payload
+            )
+            dispatched["dmarc"] = requests.post(
+                "http://127.0.0.1:8000/dmarc", json=payload
+            )
+            dispatched["ssl"] = requests.post("http://127.0.0.1:8000/ssl", json=payload)
         elif scan_type == "mail":
-            dispatched["dkim"] = requests.post('http://127.0.0.1:8000/dkim', json=payload)
-            dispatched["dmarc"] = requests.post('http://127.0.0.1:8000/dmarc', json=payload)
+            dispatched["dkim"] = requests.post(
+                "http://127.0.0.1:8000/dkim", json=payload
+            )
+            dispatched["dmarc"] = requests.post(
+                "http://127.0.0.1:8000/dmarc", json=payload
+            )
         else:
             raise Exception("Invalid Scan-Type provided")
 
         for key, val in dispatched.items():
-            if val.text is not f'Dispatched to {key} scanner':
-                raise Exception(f'Failed to dispatch scan to {key} scanner')
+            if val.text is not f"Dispatched to {key} scanner":
+                raise Exception(f"Failed to dispatch scan to {key} scanner")
 
         return "All scans successfully dispatched to designated scanners"
 
     except Exception as e:
         logging.error("Failed: %s\n" % str(e))
-        return f'Failed to dispatch scan to designated scanner(s): {str(e)}'
+        return f"Failed to dispatch scan to designated scanner(s): {str(e)}"
 
 
 def Server(scanners={}, client=requests):
-
     def receive(request):
         logging.info("Request received")
-        return PlainTextResponse(initiate(request.headers.get("Data"), request.headers.get("Scan-Type")))
+        return PlainTextResponse(
+            initiate(request.headers.get("Data"), request.headers.get("Scan-Type"))
+        )
 
     async def dkim(request):
         logging.info("DKIM scan requested")
@@ -92,17 +101,21 @@ def Server(scanners={}, client=requests):
         return PlainTextResponse("Dispatched to SSL scanner")
 
     routes = [
-        Route('/dkim', dkim, methods=['POST']),
-        Route('/dmarc', dmarc, methods=['POST']),
-        Route('/https', https, methods=['POST']),
-        Route('/ssl', ssl, methods=['POST']),
-        Route('/receive', receive, methods=['POST']),
+        Route("/dkim", dkim, methods=["POST"]),
+        Route("/dmarc", dmarc, methods=["POST"]),
+        Route("/https", https, methods=["POST"]),
+        Route("/ssl", ssl, methods=["POST"]),
+        Route("/receive", receive, methods=["POST"]),
     ]
 
     return Starlette(debug=True, routes=routes, on_startup=[startup])
 
 
-app = Server(scanners={"dkim": scan_dkim,
-                       "dmarc": scan_dmarc,
-                       "https": scan_https,
-                       "ssl": scan_ssl})
+app = Server(
+    scanners={
+        "dkim": scan_dkim,
+        "dmarc": scan_dmarc,
+        "https": scan_https,
+        "ssl": scan_ssl,
+    }
+)

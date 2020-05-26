@@ -33,18 +33,24 @@ Domains = sqlalchemy.Table(
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("domain", sqlalchemy.String),
     sqlalchemy.Column("last_run", sqlalchemy.DateTime),
-    sqlalchemy.Column("organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")),
+    sqlalchemy.Column(
+        "organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")
+    ),
 )
 
 Dmarc_Reports = sqlalchemy.Table(
     "dmarc_reports",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
-    sqlalchemy.Column("domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")),
+    sqlalchemy.Column(
+        "domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")
+    ),
     sqlalchemy.Column("start_date", sqlalchemy.DateTime),
     sqlalchemy.Column("end_date", sqlalchemy.DateTime),
     sqlalchemy.Column("report", sqlalchemy.JSON),
-    sqlalchemy.Column("organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")),
+    sqlalchemy.Column(
+        "organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")
+    ),
 )
 
 Organizations = sqlalchemy.Table(
@@ -66,7 +72,9 @@ Users = sqlalchemy.Table(
     sqlalchemy.Column("user_password", sqlalchemy.String),
     sqlalchemy.Column("preferred_lang", sqlalchemy.String),
     sqlalchemy.Column("failed_login_attempts", sqlalchemy.Integer, default=0),
-    sqlalchemy.Column("failed_login_attempt_time", sqlalchemy.Float, default=0, nullable=True),
+    sqlalchemy.Column(
+        "failed_login_attempt_time", sqlalchemy.Float, default=0, nullable=True
+    ),
     sqlalchemy.Column("tfa_validated", sqlalchemy.Boolean, default=False),
 )
 
@@ -74,8 +82,27 @@ User_affiliations = sqlalchemy.Table(
     "user_affiliations",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
-    sqlalchemy.Column("user_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id", onupdate="CASCADE", ondelete="CASCADE", name="user_affiliations_users_id_fkey"), primary_key=True),
-    sqlalchemy.Column("organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id", onupdate="CASCADE", ondelete="CASCADE", name="user_affiliations_organization_id_fkey")),
+    sqlalchemy.Column(
+        "user_id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey(
+            "users.id",
+            onupdate="CASCADE",
+            ondelete="CASCADE",
+            name="user_affiliations_users_id_fkey",
+        ),
+        primary_key=True,
+    ),
+    sqlalchemy.Column(
+        "organization_id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey(
+            "organizations.id",
+            onupdate="CASCADE",
+            ondelete="CASCADE",
+            name="user_affiliations_organization_id_fkey",
+        ),
+    ),
     sqlalchemy.Column("permission", sqlalchemy.String),
 )
 
@@ -83,16 +110,22 @@ Scans = sqlalchemy.Table(
     "scans",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")),
+    sqlalchemy.Column(
+        "domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")
+    ),
     sqlalchemy.Column("scan_date", sqlalchemy.DateTime),
-    sqlalchemy.Column("initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")),
+    sqlalchemy.Column(
+        "initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")
+    ),
     sqlalchemy.Column("org_tags", sqlalchemy.JSON),
 )
 
 Dmarc_scans = sqlalchemy.Table(
     "dmarc_scans",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column(
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+    ),
     sqlalchemy.Column("dmarc_phase", sqlalchemy.Integer),
     sqlalchemy.Column("dmarc_scan", sqlalchemy.JSON),
 )
@@ -100,35 +133,45 @@ Dmarc_scans = sqlalchemy.Table(
 Dkim_scans = sqlalchemy.Table(
     "dkim_scans",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column(
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+    ),
     sqlalchemy.Column("dkim_scan", sqlalchemy.JSON),
 )
 
 Mx_scans = sqlalchemy.Table(
     "mx_scans",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column(
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+    ),
     sqlalchemy.Column("mx_scan", sqlalchemy.JSON),
 )
 
 Spf_scans = sqlalchemy.Table(
     "spf_scans",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column(
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+    ),
     sqlalchemy.Column("spf_scan", sqlalchemy.JSON),
 )
 
 Https_scans = sqlalchemy.Table(
     "https_scans",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column(
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+    ),
     sqlalchemy.Column("https_scan", sqlalchemy.JSON),
 )
 
 Ssl_scans = sqlalchemy.Table(
     "ssl_scans",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True),
+    sqlalchemy.Column(
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+    ),
     sqlalchemy.Column("ssl_scan", sqlalchemy.JSON),
 )
 
@@ -167,13 +210,17 @@ def initiate(payload):
     try:
         payload_dict = formatted_dictionary(payload)
 
-        process_response = requests.post('http://127.0.0.1:8000/process', json=payload_dict)
+        process_response = requests.post(
+            "http://127.0.0.1:8000/process", json=payload_dict
+        )
 
         payload_dict["results"] = process_response.json()
 
-        insert_response = requests.post('http://127.0.0.1:8000/insert', json=payload_dict)
+        insert_response = requests.post(
+            "http://127.0.0.1:8000/insert", json=payload_dict
+        )
 
-        return f'Results processed successfully: {insert_response.text}'
+        return f"Results processed successfully: {insert_response.text}"
 
     except Exception as e:
         logging.error("Failed: %s" % str(e))
@@ -185,9 +232,9 @@ def process_results(results, scan_type):
     report = {}
 
     try:
-        report = globals()["process_"+scan_type](results)
+        report = globals()["process_" + scan_type](results)
     except Exception as e:
-        logging.error(f'An error occurred while processing results: {str(e)}')
+        logging.error(f"An error occurred while processing results: {str(e)}")
 
     return report
 
@@ -205,9 +252,7 @@ def process_https(results):
         else:
             if results["Valid HTTPS"]:
                 https = "Valid HTTPS"  # Yes
-            elif (
-                results["HTTPS Bad Chain"] and not results["HTTPS Bad Hostname"]
-            ):
+            elif results["HTTPS Bad Chain"] and not results["HTTPS Bad Hostname"]:
                 https = "Bad Chain"  # Yes
             else:
                 https = "Bad Hostname"  # No
@@ -233,10 +278,7 @@ def process_https(results):
                 behavior = "Strict"  # Yes (Strict)
 
             # "Moderate" means HTTP eventually redirects to HTTPS.
-            elif (
-                not results["Strictly Forces HTTPS"]
-                and results["Defaults to HTTPS"]
-            ):
+            elif not results["Strictly Forces HTTPS"] and results["Defaults to HTTPS"]:
                 behavior = "Moderate"  # Yes
 
             # Either both are False, or just 'Strict Force' is True,
@@ -350,9 +392,7 @@ def process_ssl(results):
         for cipher in results["TLS"]["accepted_cipher_list"]:
             if "RC4" in cipher or "3DES" in cipher:
                 weak_ciphers.append(cipher)
-            elif ("ECDHE" in cipher) and (
-                "GCM" in cipher or "CHACHA20" in cipher
-            ):
+            elif ("ECDHE" in cipher) and ("GCM" in cipher or "CHACHA20" in cipher):
                 strong_ciphers.append(cipher)
             elif "ECDHE" in cipher or "DHE" in cipher:
                 acceptable_ciphers.append(cipher)
@@ -408,14 +448,14 @@ async def insert_results(report, scan_type, scan_id, db):
 
         scan_query = select([Scans]).where(Scans.c.id == scan_id)
         scan = await db.fetch_one(scan_query)
-        logging.info(f'Retrieved corresponding scan from database: {str(scan)}')
+        logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
 
-        response = await globals()["insert_"+scan_type](report, scan, db)
+        response = await globals()["insert_" + scan_type](report, scan, db)
 
         logging.info(response.text)
 
     except Exception as e:
-        logging.error(f'Failed database insertion(s): {str(e)}')
+        logging.error(f"Failed database insertion(s): {str(e)}")
         await db.disconnect()
 
     await db.disconnect()
@@ -424,7 +464,9 @@ async def insert_results(report, scan_type, scan_id, db):
 async def insert_https(report, scan, db):
     finalized_report = json.JSONEncoder().encode(str(report))
 
-    insert_query = Https_scans.insert().values(https_scan=json.dumps({"https": finalized_report}), id=scan.id)
+    insert_query = Https_scans.insert().values(
+        https_scan=json.dumps({"https": finalized_report}), id=scan.id
+    )
     await db.execute(insert_query)
     return "HTTPS Scan inserted into database"
 
@@ -432,7 +474,9 @@ async def insert_https(report, scan, db):
 async def insert_ssl(report, scan, db):
     finalized_report = json.JSONEncoder().encode(str(report))
 
-    insert_query = Ssl_scans.insert().values(https_scan=json.dumps({"ssl": finalized_report}), id=scan.id)
+    insert_query = Ssl_scans.insert().values(
+        https_scan=json.dumps({"ssl": finalized_report}), id=scan.id
+    )
     await db.execute(insert_query)
     return "SSL Scan inserted into database"
 
@@ -442,10 +486,15 @@ async def insert_dmarc(report, scan, db):
     finalized_mx_report = json.JSONEncoder().encode(str(report["mx"]))
     finalized_spf_report = json.JSONEncoder().encode(str(report["spf"]))
 
-    dmarc_insert_query = Dmarc_scans.insert().values(dmarc_scan=json.dumps({"dmarc": finalized_dmarc_report}),
-                                                     id=scan.id)
-    mx_insert_query = Mx_scans.insert().values(mx_scan=json.dumps({"mx": finalized_mx_report}), id=scan.id)
-    spf_insert_query = Spf_scans.insert().values(spf_scan=json.dumps({"dmarc": finalized_spf_report}), id=scan.id)
+    dmarc_insert_query = Dmarc_scans.insert().values(
+        dmarc_scan=json.dumps({"dmarc": finalized_dmarc_report}), id=scan.id
+    )
+    mx_insert_query = Mx_scans.insert().values(
+        mx_scan=json.dumps({"mx": finalized_mx_report}), id=scan.id
+    )
+    spf_insert_query = Spf_scans.insert().values(
+        spf_scan=json.dumps({"dmarc": finalized_spf_report}), id=scan.id
+    )
 
     await db.execute(dmarc_insert_query)
     await db.execute(mx_insert_query)
@@ -467,7 +516,9 @@ async def insert_dkim(report, scan, db):
     # If public key has been in use for a year or more, recommend update
     for previous_scan in previous_scans:
         if (scan.scan_date - previous_scan.scan_date).days >= 365:
-            historical_dkim_query = select([Dkim_scans]).where(Dkim_scans.c.id == previous_scan.c.id)
+            historical_dkim_query = select([Dkim_scans]).where(
+                Dkim_scans.c.id == previous_scan.c.id
+            )
             historical_dkim = await db.fetch_one(historical_dkim_query)
             if (
                 report["public_key_modulus"]
@@ -476,7 +527,9 @@ async def insert_dkim(report, scan, db):
                 update_recommended = True
 
     report["update-recommended"] = update_recommended
-    insert_query = Dkim_scans.insert().values(dkim_scan=json.dumps({"dkim": finalized_report}), id=scan.id)
+    insert_query = Dkim_scans.insert().values(
+        dkim_scan=json.dumps({"dkim": finalized_report}), id=scan.id
+    )
     await db.execute(insert_query)
     logging.info("DKIM Scan inserted into database")
 
@@ -505,12 +558,14 @@ def Server(functions={}, database_uri=DATABASE_URI):
     async def process(request):
         payload = await request.json()
         logging.info("Processing results...")
-        return JSONResponse(functions["process"](payload["results"], payload["scan_type"]))
+        return JSONResponse(
+            functions["process"](payload["results"], payload["scan_type"])
+        )
 
     routes = [
-        Route('/insert', insert, methods=['POST']),
-        Route('/process', process, methods=['POST']),
-        Route('/receive', receive, methods=['POST']),
+        Route("/insert", insert, methods=["POST"]),
+        Route("/process", process, methods=["POST"]),
+        Route("/receive", receive, methods=["POST"]),
     ]
 
     return Starlette(debug=True, routes=routes, on_startup=[startup])
