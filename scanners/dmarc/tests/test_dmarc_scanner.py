@@ -2,7 +2,7 @@ import pytest
 from pretend import stub
 from starlette.testclient import TestClient
 from starlette.responses import PlainTextResponse
-from ..dmarc import Server, scan_dmarc, Scan, dispatch_results, Dispatcher
+from ..dmarc_scanner import Server, scan_dmarc, Scan, dispatch_results, Dispatcher
 
 
 def test_scan():

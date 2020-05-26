@@ -2,7 +2,7 @@ import pytest
 from pretend import stub
 from starlette.testclient import TestClient
 from starlette.responses import PlainTextResponse
-from ..https import Server, scan_https, Scan, dispatch_results, Dispatcher
+from ..https_scanner import Server, scan_https, Scan, dispatch_results, Dispatcher
 
 
 def test_scan():

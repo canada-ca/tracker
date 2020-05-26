@@ -2,7 +2,7 @@ import pytest
 from pretend import stub
 from starlette.testclient import TestClient
 from starlette.responses import PlainTextResponse
-from ..dkim import Server, scan_dkim, Scan, dispatch_results, Dispatcher
+from ..dkim_scanner import Server, scan_dkim, Scan, dispatch_results, Dispatcher
 
 
 def test_scan():

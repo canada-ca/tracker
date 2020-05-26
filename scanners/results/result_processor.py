@@ -441,47 +441,50 @@ def process_dkim(results):
     return report
 
 
-async def insert_results(report, scan_type, scan_id, db):
-
+async def insert_results(report, scan_id, db, target_function):
     try:
-        await db.connect()
-
-        scan_query = select([Scans]).where(Scans.c.id == scan_id)
-        scan = await db.fetch_one(scan_query)
-        logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
-
-        response = await globals()["insert_" + scan_type](report, scan, db)
-
-        logging.info(response.text)
-
+        response = await target_function(report, scan_id, db)
+        return response
     except Exception as e:
-        logging.error(f"Failed database insertion(s): {str(e)}")
         await db.disconnect()
+        logging.error(f"Failed database insertion(s): {str(e)}")
 
-    await db.disconnect()
 
-
-async def insert_https(report, scan, db):
+async def insert_https(report, scan_id, db):
+    await db.connect()
+    scan_query = select([Scans]).where(Scans.c.id == scan_id)
+    scan = await db.fetch_one(scan_query)
+    logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
     finalized_report = json.JSONEncoder().encode(str(report))
 
     insert_query = Https_scans.insert().values(
         https_scan=json.dumps({"https": finalized_report}), id=scan.id
     )
     await db.execute(insert_query)
+    await db.disconnect()
     return "HTTPS Scan inserted into database"
 
 
-async def insert_ssl(report, scan, db):
+async def insert_ssl(report, scan_id, db):
+    await db.connect()
+    scan_query = select([Scans]).where(Scans.c.id == scan_id)
+    scan = await db.fetch_one(scan_query)
+    logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
     finalized_report = json.JSONEncoder().encode(str(report))
 
     insert_query = Ssl_scans.insert().values(
         https_scan=json.dumps({"ssl": finalized_report}), id=scan.id
     )
     await db.execute(insert_query)
+    await db.disconnect()
     return "SSL Scan inserted into database"
 
 
-async def insert_dmarc(report, scan, db):
+async def insert_dmarc(report, scan_id, db):
+    await db.connect()
+    scan_query = select([Scans]).where(Scans.c.id == scan_id)
+    scan = await db.fetch_one(scan_query)
+    logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
     finalized_dmarc_report = json.JSONEncoder().encode(str(report["dmarc"]))
     finalized_mx_report = json.JSONEncoder().encode(str(report["mx"]))
     finalized_spf_report = json.JSONEncoder().encode(str(report["spf"]))
@@ -499,11 +502,15 @@ async def insert_dmarc(report, scan, db):
     await db.execute(dmarc_insert_query)
     await db.execute(mx_insert_query)
     await db.execute(spf_insert_query)
-
+    await db.disconnect()
     return "DMARC/MX/SPF Scans inserted into database"
 
 
-async def insert_dkim(report, scan, db):
+async def insert_dkim(report, scan_id, db):
+    await db.connect()
+    scan_query = select([Scans]).where(Scans.c.id == scan_id)
+    scan = await db.fetch_one(scan_query)
+    logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
     finalized_report = json.JSONEncoder().encode(str(report))
 
     # Check for previous dkim scans on this domain
@@ -531,7 +538,8 @@ async def insert_dkim(report, scan, db):
         dkim_scan=json.dumps({"dkim": finalized_report}), id=scan.id
     )
     await db.execute(insert_query)
-    logging.info("DKIM Scan inserted into database")
+    await db.disconnect()
+    return "DKIM Scan inserted into database"
 
 
 def Server(functions={}, database_uri=DATABASE_URI):
@@ -550,16 +558,17 @@ def Server(functions={}, database_uri=DATABASE_URI):
             results = payload["results"]
             scan_id = payload["scan_id"]
             scan_type = payload["scan_type"]
-            await functions["insert"](results, scan_type, scan_id, database)
+            target_function = functions[scan_type].insert
+            response = await insert_results(results, scan_id, database, target_function)
         except Exception as e:
             return PlainTextResponse(str(e))
-        return PlainTextResponse("Database insertion(s) completed")
+        return PlainTextResponse(f"Database insertion(s) completed: {response}")
 
     async def process(request):
         payload = await request.json()
         logging.info("Processing results...")
         return JSONResponse(
-            functions["process"](payload["results"], payload["scan_type"])
+            functions["process"].insert((payload["results"], payload["scan_type"]))
         )
 
     routes = [
@@ -571,4 +580,18 @@ def Server(functions={}, database_uri=DATABASE_URI):
     return Starlette(debug=True, routes=routes, on_startup=[startup])
 
 
-app = Server(functions={"insert": insert_results, "process": process_results})
+def Insertor(insert_type):
+    insert_function = insert_type
+
+    def insert(results, scan_id, db):
+        return insert_function(results, scan_id, db)
+
+
+def Processor(processor_type):
+    processor_function = processor_type
+
+    def process(results, scan_type):
+        processor_function(results, scan_type)
+
+
+app = Server(functions={"https": Insertor(insert_https), "ssl": Insertor(insert_ssl), "dmarc": Insertor(insert_dmarc), "dkim": Insertor(insert_dkim), "process": Processor(process_results)})

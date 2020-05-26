@@ -110,15 +110,15 @@ def Server(functions={}, client=requests):
     return Starlette(debug=True, routes=routes, on_startup=[startup])
 
 
-def Scan(scan_function):
-    scan_function = scan_function
+def Scan(scan_type):
+    scan_function = scan_type
 
     def scan(domain):
         return scan_function(domain)
 
 
-def Dispatcher(dispatch_function):
-    dispatch_function = dispatch_function
+def Dispatcher(dispatch_type):
+    dispatch_function = dispatch_type
 
     def dispatch(payload, client):
         dispatch_function(payload, client)
