@@ -29,7 +29,7 @@ export const Navigation = ({ children, ...props }) => {
           alignItems="center"
           flexGrow={1}
         >
-          {React.Children.map(children, child => {
+          {React.Children.map(children, (child) => {
             return React.cloneElement(child, {
               as: ReactRouterLink,
               mt: { base: 4, md: 0 },

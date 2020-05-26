@@ -13,7 +13,11 @@ export function TwoFactorNotificationBar() {
       >
         <Text>
           You have not enabled Two Factor Authentication. To maximize your
-          account&lsquo;s security, <Link textDecoration="underline" as={RouteLink} to="/two-factor-code">please enable 2FA</Link>.
+          account&lsquo;s security,{' '}
+          <Link textDecoration="underline" as={RouteLink} to="/two-factor-code">
+            please enable 2FA
+          </Link>
+          .
         </Text>
       </Flex>
     </Box>

@@ -3,8 +3,8 @@ import { useLingui } from '@lingui/react'
 import { locales, activate } from './i18n.config'
 import { Box, PseudoBox, VisuallyHidden } from '@chakra-ui/core'
 
-const Toggler = props => {
-	const { locale } = props // eslint-disable-line
+const Toggler = (props) => {
+  const { locale } = props // eslint-disable-line
   return (
     <PseudoBox
       as="button"
