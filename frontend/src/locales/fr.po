@@ -74,6 +74,10 @@ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour les adres
 msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
+#: src/PasswordConfirmation.js:139
+msgid "Confirm password"
+msgstr "Confirmer le mot de passe"
+
 #: src/CreateUserPage.js:118
 #: src/SignInPage.js:109
 msgid "Create Account"
@@ -106,6 +110,10 @@ msgstr "Politique de la DMARC appliquée"
 #: src/DomainsPage.js:36
 msgid "Domains"
 msgstr "Domaines"
+
+#: src/EmailField.js:25
+msgid "Email"
+msgstr "Courriel"
 
 #: src/CreateUserPage.js:23
 #: src/SignInPage.js:22
@@ -180,6 +188,11 @@ msgstr "Aucun domaine n'a encore été scanné."
 msgid "Page not found"
 msgstr "Page non trouvée"
 
+#: src/PasswordConfirmation.js:90
+#: src/PasswordField.js:36
+msgid "Password"
+msgstr "Mot de passe"
+
 #: src/CreateUserPage.js:26
 #: src/SignInPage.js:21
 msgid "Password cannot be empty"
@@ -187,7 +200,7 @@ msgstr "Le mot de passe ne peut pas être vide"
 
 #: src/CreateUserPage.js:29
 msgid "Password confirmation cannot be empty"
-msgstr ""
+msgstr "La confirmation du mot de passe ne peut pas être vide"
 
 #: src/CreateUserPage.js:27
 msgid "Password must be at least 12 characters long"
@@ -199,7 +212,7 @@ msgstr "Les mots de passe doivent correspondre"
 
 #: src/CreateUserPage.js:33
 msgid "Please choose your preferred language"
-msgstr ""
+msgstr "Veuillez choisir votre langue préférée"
 
 #: src/DmarcReportGuidance.js:519
 msgid "Please see the SPF and DKIM causes sections."

@@ -1,5 +1,7 @@
 import React from 'react'
 import { string } from 'prop-types'
+import { useLingui } from '@lingui/react'
+import { t } from '@lingui/macro'
 import {
   FormControl,
   Input,
@@ -15,6 +17,7 @@ import { useField } from 'formik'
 export function PasswordField({ name, ...props }) {
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
+  const { i18n } = useLingui()
   const handleClick = () => setShow(!show)
 
   return (
@@ -30,7 +33,7 @@ export function PasswordField({ name, ...props }) {
           isInvalid={meta.error}
           pr="4.5rem"
           type={show ? 'text' : 'password'}
-          placeholder="Password"
+          placeholder={i18n._(t`Password`)}
           id="password"
         />
         <InputRightElement width="4.5rem">

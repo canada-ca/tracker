@@ -74,6 +74,10 @@ msgstr "Configure the server to use the same domain for the \"envelope from\" an
 msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 msgstr "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 
+#: src/PasswordConfirmation.js:139
+msgid "Confirm password"
+msgstr "Confirm password"
+
 #: src/CreateUserPage.js:118
 #: src/SignInPage.js:109
 msgid "Create Account"
@@ -106,6 +110,10 @@ msgstr "DMARC Policy Applied"
 #: src/DomainsPage.js:36
 msgid "Domains"
 msgstr "Domains"
+
+#: src/EmailField.js:25
+msgid "Email"
+msgstr "Email"
 
 #: src/CreateUserPage.js:23
 #: src/SignInPage.js:22
@@ -179,6 +187,11 @@ msgstr "No domains scanned yet."
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page not found"
+
+#: src/PasswordConfirmation.js:90
+#: src/PasswordField.js:36
+msgid "Password"
+msgstr "Password"
 
 #: src/CreateUserPage.js:26
 #: src/SignInPage.js:21

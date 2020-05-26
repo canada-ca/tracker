@@ -87,7 +87,7 @@ export default function SignInPage() {
 
             <PasswordField name="password" />
 
-            <Link as={RouteLink} to="/forgot-password">
+            <Link as={RouteLink} to="/forgot-password" color="teal.500">
               <Trans>Forgot your password?</Trans>
             </Link>
 

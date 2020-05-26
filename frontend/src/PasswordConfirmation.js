@@ -1,5 +1,6 @@
 import React from 'react'
-
+import { useLingui } from '@lingui/react'
+import { t } from '@lingui/macro'
 import {
   FormControl,
   FormErrorMessage,
@@ -15,6 +16,8 @@ import {
 import { Field } from 'formik'
 
 export function PasswordConfirmation() {
+  const { i18n } = useLingui()
+
   const [icon, setIcon] = React.useState('lock')
   const [confirmIcon, setConfirmIcon] = React.useState('lock')
 
@@ -24,7 +27,7 @@ export function PasswordConfirmation() {
   const [confirmShow, setConfirmShow] = React.useState(false)
   const handleConfirmShow = () => setConfirmShow(!confirmShow)
 
-  // TODO: Is there another place to valid this?
+  // TODO: Is there another place to validate this?
   /* A function for the Formik to validate fields in the form */
   function validatePassword(value) {
     setIcon('spinner')
@@ -39,7 +42,7 @@ export function PasswordConfirmation() {
     }, 600)
   }
 
-  // TODO: Is there another place to valid this?
+  // TODO: Is there another place to validate this?
   /* A function for the Formik to validate fields in the form */
   function validateConfirmPassword(value) {
     setConfirmIcon('spinner')
@@ -84,7 +87,7 @@ export function PasswordConfirmation() {
               <Input
                 {...field}
                 id="password"
-                placeholder="Password"
+                placeholder={i18n._(t`Password`)}
                 type={passwordShow ? 'text' : 'password'}
               />
               <InputRightElement width="4.5rem">
@@ -133,7 +136,7 @@ export function PasswordConfirmation() {
               <Input
                 {...field}
                 id="confirmPassword"
-                placeholder="Confirm password"
+                placeholder={i18n._(t`Confirm password`)}
                 type={confirmShow ? 'text' : 'password'}
               />
               <InputRightElement width="4.5rem">
