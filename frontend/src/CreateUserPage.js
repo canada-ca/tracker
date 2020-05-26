@@ -69,14 +69,13 @@ export default function CreateUserPage() {
   return (
     <Stack spacing={2} mx="auto">
       <Text mb={4} fontSize="2xl">
-        {i18n._(t`Create an account by entering an email and password.`)}
+        <Trans>Create an account by entering an email and password.</Trans>
       </Text>
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '', confirmPassword: '' }}
-        onSubmit={async (values, _actions) => {
-          console.log('values', values)
-          await signUp({
+        onSubmit={async (values) => {
+          signUp({
             variables: {
               userName: values.email,
               password: values.password,
