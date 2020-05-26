@@ -3,18 +3,14 @@ import { useField } from 'formik'
 import { string } from 'prop-types'
 import { Stack, Select, FormControl, FormErrorMessage } from '@chakra-ui/core'
 import { useLingui } from '@lingui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 
 export function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
 
   return (
-    <FormControl
-      mt={4}
-      mb={4}
-      isInvalid={meta.error && meta.touched}
-    >
+    <FormControl mt={4} mb={4} isInvalid={meta.error && meta.touched}>
       <Stack>
         <Select {...props} {...field} id="lang">
           <option hidden value="">
@@ -25,9 +21,7 @@ export function LanguageSelect({ name, ...props }) {
         </Select>
       </Stack>
 
-      <FormErrorMessage>
-        <Trans>{meta.error}</Trans>
-      </FormErrorMessage>
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
 }

@@ -46,11 +46,11 @@ msgid "Admin"
 msgstr "Admin"
 
 #: src/CreateUserPage.js:40
-#: src/SignInPage.js:39
+#: src/SignInPage.js:28
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
-#: src/CreateUserPage.js:122
+#: src/CreateUserPage.js:127
 msgid "Back"
 msgstr "Retour"
 
@@ -74,8 +74,8 @@ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour les adres
 msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/CreateUserPage.js:113
-#: src/SignInPage.js:137
+#: src/CreateUserPage.js:118
+#: src/SignInPage.js:109
 msgid "Create Account"
 msgstr "Créer un compte"
 
@@ -108,7 +108,7 @@ msgid "Domains"
 msgstr "Domaines"
 
 #: src/CreateUserPage.js:23
-#: src/SignInPage.js:33
+#: src/SignInPage.js:22
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
@@ -124,7 +124,7 @@ msgstr "Assurez-vous que l'enregistrement DKIM pour le domaine et le sélecteur 
 msgid "Ensure the SPF record is present and valid."
 msgstr "Assurez-vous que le dossier du SPF est présent et valide."
 
-#: src/SignInPage.js:119
+#: src/SignInPage.js:91
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -154,11 +154,11 @@ msgstr "Accueil"
 
 #: src/CreateUserPage.js:24
 msgid "Invalid email"
-msgstr ""
+msgstr "Courriel non valide"
 
 #: src/CreateUserPage.js:73
 #: src/QRcodePage.js:21
-#: src/SignInPage.js:70
+#: src/SignInPage.js:59
 msgid "Loading..."
 msgstr "Chargement..."
 
@@ -181,7 +181,7 @@ msgid "Page not found"
 msgstr "Page non trouvée"
 
 #: src/CreateUserPage.js:26
-#: src/SignInPage.js:32
+#: src/SignInPage.js:21
 msgid "Password cannot be empty"
 msgstr "Le mot de passe ne peut pas être vide"
 
@@ -191,10 +191,14 @@ msgstr ""
 
 #: src/CreateUserPage.js:27
 msgid "Password must be at least 12 characters long"
-msgstr ""
+msgstr "Le mot de passe doit comporter au moins 12 caractères"
 
 #: src/CreateUserPage.js:30
 msgid "Passwords must match"
+msgstr "Les mots de passe doivent correspondre"
+
+#: src/CreateUserPage.js:33
+msgid "Please choose your preferred language"
 msgstr ""
 
 #: src/DmarcReportGuidance.js:519
@@ -253,7 +257,7 @@ msgstr "Échec de l'alignement des domaines du SPF"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
-#: src/LanguageSelect.js:21
+#: src/LanguageSelect.js:17
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
@@ -271,15 +275,15 @@ msgstr "En savoir plus"
 
 #: src/App.js:63
 #: src/QRcodePage.js:58
-#: src/SignInPage.js:128
+#: src/SignInPage.js:100
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: src/SignInPage.js:58
+#: src/SignInPage.js:47
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/SignInPage.js:78
+#: src/SignInPage.js:67
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
@@ -366,9 +370,9 @@ msgstr "Deux facteurs"
 
 #: src/CreateUserPage.js:42
 msgid "Unable to create your account, please try again."
-msgstr ""
+msgstr "Impossible de créer votre compte, veuillez réessayer"
 
-#: src/SignInPage.js:41
+#: src/SignInPage.js:30
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
@@ -382,17 +386,16 @@ msgstr "Profil de l'utilisateur"
 
 #: src/CreateUserPage.js:61
 msgid "Welcome, you are successfully signed in to your new account!"
-msgstr ""
+msgstr "Veuillez choisir votre langue préférée"
 
-#: src/SignInPage.js:59
+#: src/SignInPage.js:48
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
+
+#: src/CreateUserPage.js:61
+#~ msgid "Welcome, you have successfully signed in to your new account!"
+#~ msgstr "Bienvenue, vous avez réussi à vous connecter à votre nouveau compte"
 
 #: src/QRcodePage.js:45
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
 msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez."
-
-#: src/EmailField.js:30
-#: src/LanguageSelect.js:29
-msgid "{0}"
-msgstr ""

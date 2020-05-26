@@ -24,6 +24,7 @@ export function PasswordConfirmation() {
   const [confirmShow, setConfirmShow] = React.useState(false)
   const handleConfirmShow = () => setConfirmShow(!confirmShow)
 
+  // TODO: Is there another place to valid this?
   /* A function for the Formik to validate fields in the form */
   function validatePassword(value) {
     setIcon('spinner')
@@ -38,6 +39,7 @@ export function PasswordConfirmation() {
     }, 600)
   }
 
+  // TODO: Is there another place to valid this?
   /* A function for the Formik to validate fields in the form */
   function validateConfirmPassword(value) {
     setConfirmIcon('spinner')

@@ -30,7 +30,7 @@ export default function CreateUserPage() {
       .oneOf([ref('password')], i18n._(t`Passwords must match`)),
     lang: string()
       .oneOf(['ENGLISH', 'FRENCH'])
-      .required('Please choose your preferred language'),
+      .required(i18n._(t`Please choose your preferred language`)),
   })
 
   const [signUp, { loading, error }] = useMutation(SIGN_UP, {

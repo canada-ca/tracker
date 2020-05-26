@@ -3,24 +3,13 @@ import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { PasswordField } from './PasswordField'
 import { object, string } from 'yup'
-import {
-  Text,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Icon,
-  FormErrorMessage,
-  FormControl,
-  Stack,
-  Button,
-  Link,
-  useToast,
-} from '@chakra-ui/core'
+import { Text, Stack, Button, Link, useToast } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
-import { Formik, Field } from 'formik'
+import { Formik } from 'formik'
 import { useUserState } from './UserState'
 import { AUTHENTICATE } from './graphql/mutations'
+import { EmailField } from './EmailField'
 
 export default function SignInPage() {
   const { login } = useUserState()
@@ -94,24 +83,7 @@ export default function SignInPage() {
             aria-label="form"
             name="form"
           >
-            <Field name="email">
-              {({ field, form }) => (
-                <FormControl
-                  mt={4}
-                  mb={4}
-                  isInvalid={form.errors.email && form.touched.email}
-                  isRequired
-                >
-                  <InputGroup>
-                    <InputLeftElement>
-                      <Icon name="email" color="gray.300" />
-                    </InputLeftElement>
-                    <Input {...field} id="email" placeholder="Email" />
-                  </InputGroup>
-                  <FormErrorMessage>Email{form.errors.email}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+            <EmailField name="email" />
 
             <PasswordField name="password" />
 

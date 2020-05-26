@@ -1,6 +1,5 @@
 import React from 'react'
 import { string } from 'prop-types'
-import { Trans } from '@lingui/macro'
 import {
   FormControl,
   Input,
@@ -14,11 +13,7 @@ import { useField } from 'formik'
 export function EmailField({ name, ...props }) {
   const [field, meta] = useField(name)
   return (
-    <FormControl
-      mt={4}
-      mb={4}
-      isInvalid={meta.error && meta.touched}
-    >
+    <FormControl mt={4} mb={4} isInvalid={meta.error && meta.touched}>
       <InputGroup>
         <InputLeftElement>
           <Icon name="email" color="gray.300" />
@@ -26,9 +21,7 @@ export function EmailField({ name, ...props }) {
         <Input {...props} {...field} id="email" placeholder="Email" />
       </InputGroup>
 
-      <FormErrorMessage>
-        <Trans>{meta.error}</Trans>
-      </FormErrorMessage>
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
 }
