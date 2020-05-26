@@ -1,3 +1,10 @@
+def Scanner(scan_type):
+    dispatch_function = scan_type
+
+    def dispatch(payload, client):
+        dispatch_function(payload, client)
+
+
 def scan_dkim(payload, client):
     client.post(
         url="http://dkim-scanner.tracker.svc.cluster.local/receive", json=payload
@@ -45,4 +52,4 @@ def manual_scan_https(payload, client):
 def manual_scan_ssl(payload, client):
     client.post(
         url="http://ssl-scanner-manual.tracker.svc.cluster.local/receive", json=payload
-    )
+)

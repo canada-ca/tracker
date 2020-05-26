@@ -1,0 +1,233 @@
+steps:
+  - name: 'gcr.io/track-compliance/ci'
+    id: install-dispatcher
+    dir: dispatcher/
+    entrypoint: pip
+    args: ['install', '-r', 'requirements.txt']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-dispatcher
+    dir: dispatcher/
+    entrypoint: python
+    args: ['-m', 'pytest']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: install-dkim
+    dir: dkim/
+    entrypoint: pip
+    args: ['install', '-r', 'requirements.txt']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-dkim
+    dir: dkim/
+    entrypoint: python
+    args: ['-m', 'pytest']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: install-dmarc
+    dir: dmarc/
+    entrypoint: pip
+    args: ['install', '-r', 'requirements.txt']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-dmarc
+    dir: dmarc/
+    entrypoint: python
+    args: ['-m', 'pytest']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: install-https
+    dir: https/
+    entrypoint: pip
+    args: ['install', '-r', 'requirements.txt']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-https
+    dir: https/
+    entrypoint: python
+    args: ['-m', 'pytest']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: install-results
+    dir: results/
+    entrypoint: pip
+    args: ['install', '-r', 'requirements.txt']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-results
+    dir: results/
+    entrypoint: python
+    args: ['-m', 'pytest']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: install-ssl
+    dir: ssl/
+    entrypoint: pip
+    args: ['install', '-r', 'requirements.txt']
+​
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-ssl
+    dir: ssl/
+    entrypoint: python
+    args: ['-m', 'pytest']
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-dispatcher-if-master
+    entrypoint: 'bash'
+    dir: .
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/dispatcher:$BRANCH_NAME-$SHORT_SHA dispatcher/
+      else
+        exit 0
+      fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-dkim-if-master
+    entrypoint: 'bash'
+    dir: .
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/dkim:$BRANCH_NAME-$SHORT_SHA dkim/
+      else
+        exit 0
+      fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-dmarc-if-master
+    entrypoint: 'bash'
+    dir: .
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/dmarc:$BRANCH_NAME-$SHORT_SHA dmarc/
+      else
+        exit 0
+      fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-https-if-master
+    entrypoint: 'bash'
+    dir: .
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/https:$BRANCH_NAME-$SHORT_SHA https/
+      else
+        exit 0
+      fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-results-if-master
+    entrypoint: 'bash'
+    dir: .
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/results:$BRANCH_NAME-$SHORT_SHA results/
+      else
+        exit 0
+      fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-ssl-if-master
+    entrypoint: 'bash'
+    dir: .
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/ssl:$BRANCH_NAME-$SHORT_SHA ssl/
+      else
+        exit 0
+      fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-dispatcher-if-master
+    entrypoint: 'bash'
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         docker push gcr.io/$PROJECT_ID/dispatcher:$BRANCH_NAME-$SHORT_SHA
+       else
+         exit 0
+       fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-dkim-if-master
+    entrypoint: 'bash'
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         docker push gcr.io/$PROJECT_ID/dkim:$BRANCH_NAME-$SHORT_SHA
+       else
+         exit 0
+       fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-dmarc-if-master
+    entrypoint: 'bash'
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         docker push gcr.io/$PROJECT_ID/dmarc:$BRANCH_NAME-$SHORT_SHA
+       else
+         exit 0
+       fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-https-if-master
+    entrypoint: 'bash'
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         docker push gcr.io/$PROJECT_ID/https:$BRANCH_NAME-$SHORT_SHA
+       else
+         exit 0
+       fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-results-if-master
+    entrypoint: 'bash'
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         docker push gcr.io/$PROJECT_ID/results:$BRANCH_NAME-$SHORT_SHA
+       else
+         exit 0
+       fi
+​
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-ssl-if-master
+    entrypoint: 'bash'
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         docker push gcr.io/$PROJECT_ID/ssl:$BRANCH_NAME-$SHORT_SHA
+       else
+         exit 0

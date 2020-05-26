@@ -255,7 +255,7 @@ def Server(functions={}, client=requests):
     async def dispatch(request):
         try:
             payload = await request.json()
-            functions["dispatch"](payload, client)
+            functions["dispatch"].dispatch(payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Scan results sent to result-processor")
@@ -263,7 +263,7 @@ def Server(functions={}, client=requests):
     async def scan(request):
         domain = await request.body()
         logging.info("Performing scan...")
-        return JSONResponse(functions["scan"](domain.decode("utf-8")))
+        return JSONResponse(functions["scan"].scan(domain.decode("utf-8")))
 
     routes = [
         Route("/dispatch", dispatch, methods=["POST"]),
@@ -274,4 +274,18 @@ def Server(functions={}, client=requests):
     return Starlette(debug=True, routes=routes, on_startup=[startup])
 
 
-app = Server(functions={"dispatch": dispatch_results, "scan": scan_ssl})
+def Scan(scan_function):
+    scan_function = scan_function
+
+    def scan(domain):
+        return scan_function(domain)
+
+
+def Dispatcher(dispatch_function):
+    dispatch_function = dispatch_function
+
+    def dispatch(payload, client):
+        dispatch_function(payload, client)
+
+
+app = Server(functions={"dispatch": Dispatcher(dispatch_results), "scan": Scan(scan_https)})
