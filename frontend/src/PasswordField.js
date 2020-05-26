@@ -14,7 +14,6 @@ import {
 import { useField } from 'formik'
 
 export function PasswordField({ name, ...props }) {
-  const { i18n } = useLingui()
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
