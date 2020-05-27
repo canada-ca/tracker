@@ -3,3 +3,4 @@ uvicorn
 emoji
 pytest
 requests>=2.18.4
+pretend

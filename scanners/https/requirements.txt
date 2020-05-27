@@ -12,3 +12,4 @@ pyopenssl>=17.5.0
 python-dateutil>=2.7.3
 pytz>=2018.5
 publicsuffix2
+pretend
