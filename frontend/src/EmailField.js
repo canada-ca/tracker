@@ -11,7 +11,7 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
-import WithPseudoBox from './withPseudoBox'
+import WithPseudoBox, { withPseudoBoxPropTypes } from './withPseudoBox'
 
 function EmailField({ name, ...props }) {
   const [field, meta] = useField(name)
@@ -37,6 +37,7 @@ function EmailField({ name, ...props }) {
 }
 
 EmailField.propTypes = {
+  ...withPseudoBoxPropTypes,
   name: string.isRequired,
 }
 

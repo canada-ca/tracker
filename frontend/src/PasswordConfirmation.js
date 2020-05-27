@@ -14,8 +14,9 @@ import {
   Box,
   Stack,
 } from '@chakra-ui/core'
-import WithPseudoBox from './withPseudoBox'
+import WithPseudoBox, { withPseudoBoxPropTypes } from './withPseudoBox'
 import { Field } from 'formik'
+import { string } from 'prop-types'
 
 function PasswordConfirmation({ ...props }) {
   const { i18n } = useLingui()
@@ -159,6 +160,11 @@ function PasswordConfirmation({ ...props }) {
       </Box>
     </Stack>
   )
+}
+
+PasswordConfirmation.propTypes = {
+  ...withPseudoBoxPropTypes,
+  spacing: string,
 }
 
 export default WithPseudoBox(PasswordConfirmation)
