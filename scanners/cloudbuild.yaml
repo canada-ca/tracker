@@ -3,37 +3,37 @@ steps:
     id: test-dispatcher
     dir: scanners/dispatcher
     entrypoint: /bin/sh
-    args: ["-c", "install -r requirements.txt && python -m pytest"]
+    args: ["-c", "pip install -r requirements.txt && python -m pytest"]
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-dkim
     dir: scanners/dkim
     entrypoint: /bin/sh
-    args: ["-c", "install -r requirements.txt && python -m pytest"]
+    args: ["-c", "pip install -r requirements.txt && python -m pytest"]
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-dmarc
     dir: scanners/dmarc
     entrypoint: /bin/sh
-    args: ["-c", "install -r requirements.txt && python -m pytest"]
+    args: ["-c", "pip install -r requirements.txt && python -m pytest"]
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-https
     dir: scanners/https
     entrypoint: /bin/sh
-    args: ["-c", "install -r requirements.txt && python -m pytest"]
+    args: ["-c", "pip install -r requirements.txt && python -m pytest"]
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-results
     dir: scanners/results
     entrypoint: /bin/sh
-    args: ["-c", "install -r requirements.txt && python -m pytest"]
+    args: ["-c", "pip install -r requirements.txt && python -m pytest"]
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-ssl
     dir: scanners/ssl
     entrypoint: /bin/sh
-    args: ["-c", "install -r requirements.txt && python -m pytest"]
+    args: ["-c", "pip install -r requirements.txt && python -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-dispatcher-if-master
