@@ -2,7 +2,7 @@ import React from 'react'
 import { object, string } from 'yup'
 import { waitFor, render, fireEvent } from '@testing-library/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
-import { EmailField } from '../EmailField'
+import EmailField from '../EmailField'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -24,7 +24,7 @@ describe('<EmailField />', () => {
                 email: '',
               }}
             >
-              <EmailField dataTestId="emailfield" name="email" />
+              {() => <EmailField data-testid="emailfield" name="email" />}
             </Formik>
           </ThemeProvider>
         </I18nProvider>,

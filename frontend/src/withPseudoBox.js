@@ -11,10 +11,10 @@ export const withPseudoBoxPropTypes = {
 
 const WithPseudoBox = (WrappedComponent) => {
   return function WrappedWithPseudoBox(props) {
-    // eslint-disable-next-line no-unused-vars,react/prop-types
-    const { withPseudoBoxPropTypes, ...passThroughProps } = props
+    // eslint-disable-next-line react/prop-types
+    const { mb, ml, mt, mr, ...passThroughProps } = props
     return (
-      <PseudoBox {...props}>
+      <PseudoBox mb={mb} ml={ml} mt={mt} mr={mr}>
         <WrappedComponent {...passThroughProps} />
       </PseudoBox>
     )

@@ -4,7 +4,7 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { LanguageSelect } from '../LanguageSelect'
+import LanguageSelect from '../LanguageSelect'
 
 describe('<LanguageSelect />', () => {
   describe('by default', () => {
@@ -17,7 +17,9 @@ describe('<LanguageSelect />', () => {
                 lang: '',
               }}
             >
-              {() => <LanguageSelect dataTestId="languageselect" name="lang" />}
+              {() => (
+                <LanguageSelect data-testid="languageselect" name="lang" />
+              )}
             </Formik>
           </ThemeProvider>
         </I18nProvider>,

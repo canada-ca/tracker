@@ -18,7 +18,7 @@ function EmailField({ name, ...props }) {
   const { i18n } = useLingui()
 
   return (
-    <FormControl {...props} isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched}>
       <InputGroup>
         <InputLeftElement>
           <Icon name="email" color="gray.300" />

@@ -2,7 +2,7 @@ import React from 'react'
 import { object, string } from 'yup'
 import { waitFor, render, fireEvent } from '@testing-library/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
-import { PasswordField } from '../PasswordField'
+import PasswordField from '../PasswordField'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -23,7 +23,7 @@ describe('<PasswordField />', () => {
                 password: '',
               }}
             >
-              {() => <PasswordField dataTestId="pwfield" name="password" />}
+              {() => <PasswordField data-testid="pwfield" name="password" />}
             </Formik>
           </ThemeProvider>
         </I18nProvider>,
@@ -47,7 +47,7 @@ describe('<PasswordField />', () => {
                 password: '',
               }}
             >
-              {() => <PasswordField dataTestId="pwfield" name="password" />}
+              {() => <PasswordField data-testid="pwfield" name="password" />}
             </Formik>
           </ThemeProvider>
         </I18nProvider>,

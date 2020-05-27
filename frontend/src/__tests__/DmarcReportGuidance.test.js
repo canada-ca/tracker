@@ -15,6 +15,5 @@ describe('<DmarcReportGuidance />', () => {
       </ThemeProvider>,
     )
     await waitFor(() => getAllByText(/Guidance/i))
-
   })
 })
