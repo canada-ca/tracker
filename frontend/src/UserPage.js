@@ -194,7 +194,6 @@ export default function UserPage() {
             initialValues={{ password: '', confirmPassword: '' }}
             onSubmit={async (values) => {
               // Submit GraphQL mutation
-              console.log(values)
               await updatePassword({
                 variables: {
                   userName: currentUser.userName,

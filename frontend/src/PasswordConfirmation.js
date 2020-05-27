@@ -93,7 +93,7 @@ export function PasswordConfirmation({ ...props }) {
                 />
                 <InputRightElement width="4.5rem">
                   <Button
-                    id="showButton"
+                    id="passShowButton"
                     h="1.75rem"
                     size="sm"
                     onClick={handlePasswordShow}
@@ -142,7 +142,7 @@ export function PasswordConfirmation({ ...props }) {
                 />
                 <InputRightElement width="4.5rem">
                   <Button
-                    id="showButton"
+                    id="confShowButton"
                     h="1.75rem"
                     size="sm"
                     onClick={handleConfirmShow}
