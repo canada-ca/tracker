@@ -36,7 +36,7 @@ export function PasswordConfirmation({ ...props }) {
     setTimeout(() => {
       if (value === '') {
         setIcon('close')
-      } else if (String(value).length < 11) {
+      } else if (String(value).length < 12) {
         setIcon('close')
       } else {
         setIcon('check')
