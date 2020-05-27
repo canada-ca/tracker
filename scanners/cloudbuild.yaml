@@ -1,73 +1,73 @@
 steps:
   - name: 'gcr.io/track-compliance/ci'
     id: install-dispatcher
-    dir: dispatcher/
+    dir: scanners/dispatcher
     entrypoint: pip
     args: ['install', '-r', 'requirements.txt']
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-dispatcher
-    dir: dispatcher/
+    dir: scanners/dispatcher
     entrypoint: python
     args: ['-m', 'pytest']
 
   - name: 'gcr.io/track-compliance/ci'
     id: install-dkim
-    dir: dkim/
+    dir: scanners/dkim
     entrypoint: pip
     args: ['install', '-r', 'requirements.txt']
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-dkim
-    dir: dkim/
+    dir: scanners/dkim
     entrypoint: python
     args: ['-m', 'pytest']
 
   - name: 'gcr.io/track-compliance/ci'
     id: install-dmarc
-    dir: dmarc/
+    dir: scanners/dmarc
     entrypoint: pip
     args: ['install', '-r', 'requirements.txt']
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-dmarc
-    dir: dmarc/
+    dir: scanners/dmarc
     entrypoint: python
     args: ['-m', 'pytest']
 
   - name: 'gcr.io/track-compliance/ci'
     id: install-https
-    dir: https/
+    dir: scanners/https
     entrypoint: pip
     args: ['install', '-r', 'requirements.txt']
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-https
-    dir: https/
+    dir: scanners/https
     entrypoint: python
     args: ['-m', 'pytest']
 
   - name: 'gcr.io/track-compliance/ci'
     id: install-results
-    dir: results/
+    dir: scanners/results
     entrypoint: pip
     args: ['install', '-r', 'requirements.txt']
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-results
-    dir: results/
+    dir: scanners/results
     entrypoint: python
     args: ['-m', 'pytest']
 
   - name: 'gcr.io/track-compliance/ci'
     id: install-ssl
-    dir: ssl/
+    dir: scanners/ssl
     entrypoint: pip
     args: ['install', '-r', 'requirements.txt']
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-ssl
-    dir: ssl/
+    dir: scanners/ssl
     entrypoint: python
     args: ['-m', 'pytest']
 
