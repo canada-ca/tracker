@@ -4,19 +4,16 @@ import { string } from 'prop-types'
 import { Stack, Select, FormControl, FormErrorMessage } from '@chakra-ui/core'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
+import WithPseudoBox from './withPseudoBox'
 
-export function LanguageSelect({ name, dataTestId, ...props }) {
+function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
 
   return (
-    <FormControl {...props} isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched}>
       <Stack>
-        <Select
-          data-testid={dataTestId !== 'undefined' && dataTestId}
-          {...field}
-          id="lang"
-        >
+        <Select {...field} {...props} id="lang">
           <option hidden value="">
             {i18n._(t`Select Preferred Language`)}
           </option>
@@ -32,5 +29,5 @@ export function LanguageSelect({ name, dataTestId, ...props }) {
 
 LanguageSelect.propTypes = {
   name: string.isRequired,
-  dataTestId: string,
 }
+export default WithPseudoBox(LanguageSelect)

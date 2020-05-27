@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { PasswordField } from './PasswordField'
+import PasswordField from './PasswordField'
 import { object, string } from 'yup'
 import { Text, Stack, Button, Link, useToast, Box } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
@@ -9,7 +9,7 @@ import { useMutation } from '@apollo/react-hooks'
 import { Formik } from 'formik'
 import { useUserState } from './UserState'
 import { AUTHENTICATE } from './graphql/mutations'
-import { EmailField } from './EmailField'
+import EmailField from './EmailField'
 
 export default function SignInPage() {
   const { login } = useUserState()

@@ -13,15 +13,16 @@ import {
   Button,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
+import WithPseudoBox from './withPseudoBox.js'
 
-export function PasswordField({ name, dataTestId, ...props }) {
+function PasswordField({ name, ...props }) {
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
   const { i18n } = useLingui()
   const handleClick = () => setShow(!show)
 
   return (
-    <FormControl {...props} isInvalid={meta.error && meta.touched}>
+    <FormControl isInvalid={meta.error && meta.touched}>
       <InputGroup size="md">
         <InputLeftElement>
           <Icon name="lock" color="gray.300" />
@@ -29,7 +30,7 @@ export function PasswordField({ name, dataTestId, ...props }) {
 
         <Input
           {...field}
-          data-testid={dataTestId !== 'undefined' && dataTestId}
+          {...props}
           pr="4.5rem"
           type={show ? 'text' : 'password'}
           placeholder={i18n._(t`Password`)}
@@ -46,4 +47,8 @@ export function PasswordField({ name, dataTestId, ...props }) {
   )
 }
 
-PasswordField.propTypes = { name: string.isRequired, dataTestId: string }
+PasswordField.propTypes = {
+  name: string.isRequired,
+}
+
+export default WithPseudoBox(PasswordField)

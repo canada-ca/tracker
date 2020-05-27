@@ -14,10 +14,10 @@ import {
   Box,
   Stack,
 } from '@chakra-ui/core'
-
+import WithPseudoBox from './withPseudoBox'
 import { Field } from 'formik'
 
-export function PasswordConfirmation({ ...props }) {
+function PasswordConfirmation({ ...props }) {
   const { i18n } = useLingui()
 
   const [icon, setIcon] = React.useState('lock')
@@ -160,3 +160,5 @@ export function PasswordConfirmation({ ...props }) {
     </Stack>
   )
 }
+
+export default WithPseudoBox(PasswordConfirmation)

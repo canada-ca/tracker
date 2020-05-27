@@ -11,8 +11,9 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
+import WithPseudoBox from './withPseudoBox'
 
-export function EmailField({ name, dataTestId, ...props }) {
+function EmailField({ name, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
 
@@ -23,8 +24,8 @@ export function EmailField({ name, dataTestId, ...props }) {
           <Icon name="email" color="gray.300" />
         </InputLeftElement>
         <Input
-          data-testid={dataTestId !== 'undefined' && dataTestId}
           {...field}
+          {...props}
           id="email"
           placeholder={i18n._(t`Email`)}
         />
@@ -37,5 +38,6 @@ export function EmailField({ name, dataTestId, ...props }) {
 
 EmailField.propTypes = {
   name: string.isRequired,
-  dataTestId: string,
 }
+
+export default WithPseudoBox(EmailField)
