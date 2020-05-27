@@ -124,4 +124,6 @@ def Dispatcher(dispatch_type):
         dispatch_function(payload, client)
 
 
-app = Server(functions={"dispatch": Dispatcher(dispatch_results), "scan": Scan(scan_https)})
+app = Server(
+    functions={"dispatch": Dispatcher(dispatch_results), "scan": Scan(scan_https)}
+)

@@ -6,12 +6,13 @@ from ..ssl_scanner import Server, scan_ssl, Scan, dispatch_results, Dispatcher
 
 
 def test_scan():
-    dispatch_stub = stub(dispatch=lambda payload, client: PlainTextResponse("Scan results sent to result-processor"))
+    dispatch_stub = stub(
+        dispatch=lambda payload, client: PlainTextResponse(
+            "Scan results sent to result-processor"
+        )
+    )
 
-    test_app = Server(functions={
-        "dispatch": dispatch_stub,
-        "scan": Scan(scan_ssl),
-    })
+    test_app = Server(functions={"dispatch": dispatch_stub, "scan": Scan(scan_ssl),})
 
     test_client = TestClient(test_app)
 
@@ -23,11 +24,9 @@ def test_scan():
 
 
 def test_dispatch():
-    test_app = Server(functions={
-        "dispatch": Dispatcher(dispatch_results),
-        "scan": Scan(scan_ssl),
-        },
-        client=stub(post=lambda url, json: None)
+    test_app = Server(
+        functions={"dispatch": Dispatcher(dispatch_results), "scan": Scan(scan_ssl),},
+        client=stub(post=lambda url, json: None),
     )
 
     test_client = TestClient(test_app)

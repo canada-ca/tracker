@@ -52,4 +52,4 @@ def manual_scan_https(payload, client):
 def manual_scan_ssl(payload, client):
     client.post(
         url="http://ssl-scanner-manual.tracker.svc.cluster.local/receive", json=payload
-)
+    )

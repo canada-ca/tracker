@@ -2,38 +2,269 @@ import pytest
 from pretend import stub
 from starlette.testclient import TestClient
 from starlette.responses import PlainTextResponse
-from ..result_processor import Server, insert_results, insert_dkim, insert_dmarc, insert_https, insert_ssl, Insertor, process_results, Processor
+from ..result_processor import (
+    Server,
+    insert_dkim,
+    insert_dmarc,
+    insert_https,
+    insert_ssl,
+    Insertor,
+    process_https,
+    process_dkim,
+    process_dmarc,
+    process_ssl,
+    Processor,
+)
+from test_data import *
 
 
 def test_insert_https():
-    test_https = stub(insert=lambda results, scan_type, scan_id, database: PlainTextResponse("Scan results sent to result-processor"))
+    test_https = stub(
+        insert=lambda results, scan_id, database: PlainTextResponse(
+            "HTTPS Scan inserted into database"
+        )
+    )
 
-    test_app = Server(functions={
-        "dispatch": dispatch_stub,
-        "scan": Scan(scan_https),
-    })
-
-    test_client = TestClient(test_app)
-
-    test_payload = {"scan_id": 1, "domain": "cyber.gc.ca"}
-
-    res = test_client.post("/receive", payload=test_payload)
-
-    assert res.text == "HTTPS scan completed. Scan results sent to result-processor"
-
-
-def test_process():
-    test_app = Server(functions={
-        "dispatch": Dispatcher(dispatch_results),
-        "scan": Scan(scan_https),
-        },
-        client=stub(post=lambda url, json: None)
+    test_app = Server(
+        functions={
+            "insert": {
+                "https": test_https,
+                "ssl": Insertor(insert_ssl),
+                "dmarc": Insertor(insert_dmarc),
+                "dkim": Insertor(insert_dkim),
+            },
+            "process": {
+                "https": Processor(process_https),
+                "ssl": Processor(process_ssl),
+                "dmarc": Processor(process_dmarc),
+                "dkim": Processor(process_dkim),
+            },
+        }
     )
 
     test_client = TestClient(test_app)
 
-    test_payload = {"results": 1}
+    test_payload = {"results": {"results": 1}, "scan_id": 1, "scan_type": "https"}
 
-    res = test_client.post("/dispatch", payload=test_payload)
+    res = test_client.post("/insert", payload=test_payload)
 
-    assert res.text == "Scan results sent to result-processor"
+    assert (
+        res.text == "Database insertion(s) completed: HTTPS Scan inserted into database"
+    )
+
+
+def test_insert_ssl():
+    test_ssl = stub(
+        insert=lambda results, scan_id, database: PlainTextResponse(
+            "SSL Scan inserted into database"
+        )
+    )
+
+    test_app = Server(
+        functions={
+            "insert": {
+                "https": Insertor(insert_https),
+                "ssl": test_ssl,
+                "dmarc": Insertor(insert_dmarc),
+                "dkim": Insertor(insert_dkim),
+            },
+            "process": {
+                "https": Processor(process_https),
+                "ssl": Processor(process_ssl),
+                "dmarc": Processor(process_dmarc),
+                "dkim": Processor(process_dkim),
+            },
+        }
+    )
+
+    test_client = TestClient(test_app)
+
+    test_payload = {"results": {"results": 1}, "scan_id": 1, "scan_type": "ssl"}
+
+    res = test_client.post("/insert", payload=test_payload)
+
+    assert (
+        res.text == "Database insertion(s) completed: SSL Scan inserted into database"
+    )
+
+
+def test_insert_dmarc():
+    test_dmarc = stub(
+        insert=lambda results, scan_id, database: PlainTextResponse(
+            "DMARC Scan inserted into database"
+        )
+    )
+
+    test_app = Server(
+        functions={
+            "insert": {
+                "https": Insertor(insert_https),
+                "ssl": Insertor(insert_ssl),
+                "dmarc": test_dmarc,
+                "dkim": Insertor(insert_dkim),
+            },
+            "process": {
+                "https": Processor(process_https),
+                "ssl": Processor(process_ssl),
+                "dmarc": Processor(process_dmarc),
+                "dkim": Processor(process_dkim),
+            },
+        }
+    )
+
+    test_client = TestClient(test_app)
+
+    test_payload = {"results": {"results": 1}, "scan_id": 1, "scan_type": "dmarc"}
+
+    res = test_client.post("/insert", payload=test_payload)
+
+    assert (
+        res.text == "Database insertion(s) completed: DMARC Scan inserted into database"
+    )
+
+
+def test_insert_dkim():
+    test_dkim = stub(
+        insert=lambda results, scan_id, database: PlainTextResponse(
+            "DKIM Scan inserted into database"
+        )
+    )
+
+    test_app = Server(
+        functions={
+            "insert": {
+                "https": Insertor(insert_https),
+                "ssl": Insertor(insert_ssl),
+                "dmarc": Insertor(insert_dmarc),
+                "dkim": test_dkim,
+            },
+            "process": {
+                "https": Processor(process_https),
+                "ssl": Processor(process_ssl),
+                "dmarc": Processor(process_dmarc),
+                "dkim": Processor(process_dkim),
+            },
+        }
+    )
+
+    test_client = TestClient(test_app)
+
+    test_payload = {"results": {"results": 1}, "scan_id": 1, "scan_type": "dkim"}
+
+    res = test_client.post("/insert", payload=test_payload)
+
+    assert (
+        res.text == "Database insertion(s) completed: DKIM Scan inserted into database"
+    )
+
+
+def test_process_https():
+    test_app = Server(
+        functions={
+            "insert": {
+                "https": Insertor(insert_https),
+                "ssl": Insertor(insert_ssl),
+                "dmarc": Insertor(insert_dmarc),
+                "dkim": Insertor(insert_dkim),
+            },
+            "process": {
+                "https": Processor(process_https),
+                "ssl": Processor(process_ssl),
+                "dmarc": Processor(process_dmarc),
+                "dkim": Processor(process_dkim),
+            },
+        }
+    )
+
+    test_client = TestClient(test_app)
+
+    test_payload = {"results": https_result_data, "scan_type": "https"}
+
+    res = test_client.post("/process", payload=test_payload)
+    res_dict = res.json()
+
+    assert res_dict["error"] is None
+
+
+def test_process_ssl():
+    test_app = Server(
+        functions={
+            "insert": {
+                "https": Insertor(insert_https),
+                "ssl": Insertor(insert_ssl),
+                "dmarc": Insertor(insert_dmarc),
+                "dkim": Insertor(insert_dkim),
+            },
+            "process": {
+                "https": Processor(process_https),
+                "ssl": Processor(process_ssl),
+                "dmarc": Processor(process_dmarc),
+                "dkim": Processor(process_dkim),
+            },
+        }
+    )
+
+    test_client = TestClient(test_app)
+
+    test_payload = {"results": ssl_result_data, "scan_type": "ssl"}
+
+    res = test_client.post("/process", payload=test_payload)
+    res_dict = res.json()
+
+    assert res_dict["error"] is None
+
+
+def test_process_dmarc():
+    test_app = Server(
+        functions={
+            "insert": {
+                "https": Insertor(insert_https),
+                "ssl": Insertor(insert_ssl),
+                "dmarc": Insertor(insert_dmarc),
+                "dkim": Insertor(insert_dkim),
+            },
+            "process": {
+                "https": Processor(process_https),
+                "ssl": Processor(process_ssl),
+                "dmarc": Processor(process_dmarc),
+                "dkim": Processor(process_dkim),
+            },
+        }
+    )
+
+    test_client = TestClient(test_app)
+
+    test_payload = {"results": dmarc_result_data, "scan_type": "dmarc"}
+
+    res = test_client.post("/process", payload=test_payload)
+    res_dict = res.json()
+
+    assert res_dict["error"] is None
+
+
+def test_process_dkim():
+    test_app = Server(
+        functions={
+            "insert": {
+                "https": Insertor(insert_https),
+                "ssl": Insertor(insert_ssl),
+                "dmarc": Insertor(insert_dmarc),
+                "dkim": Insertor(insert_dkim),
+            },
+            "process": {
+                "https": Processor(process_https),
+                "ssl": Processor(process_ssl),
+                "dmarc": Processor(process_dmarc),
+                "dkim": Processor(process_dkim),
+            },
+        }
+    )
+
+    test_client = TestClient(test_app)
+
+    test_payload = {"results": dkim_result_data, "scan_type": "dkim"}
+
+    res = test_client.post("/process", payload=test_payload)
+    res_dict = res.json()
+
+    assert res_dict["error"] is None
