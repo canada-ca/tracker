@@ -3,10 +3,13 @@ import sys
 import requests
 import logging
 import json
-import threading
-import jwt
+import emoji
 from enum import Enum
 from OpenSSL import SSL
+from starlette.applications import Starlette
+from starlette.routing import Route, Mount, WebSocketRoute
+from starlette.responses import PlainTextResponse, JSONResponse
+from starlette.background import BackgroundTask
 from sslyze.server_connectivity import ServerConnectivityTester
 from sslyze.errors import ConnectionToServerFailed
 from sslyze.plugins.scan_commands import ScanCommand
@@ -17,7 +20,6 @@ from sslyze.server_setting import (
     ServerNetworkLocationViaDirectConnection,
     ServerNetworkConfiguration,
 )
-from flask import Flask, request
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -32,88 +34,54 @@ class TlsVersionEnum(Enum):
     TLSV1_2 = 5
 
 
-headers = {"Content-Type": "application/json"}
-
-destination = "http://result-processor.tracker.svc.cluster.local"
-
-app = Flask(__name__)
-
-TOKEN_KEY = os.getenv("TOKEN_KEY")
+def startup():
+    logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-@app.route("/receive", methods=["GET", "POST"])
-def receive():
+def initiate(received_payload):
 
-    logging.info("Event received\n")
+    logging.info("Scan received")
 
     try:
-        decoded_payload = jwt.decode(
-            request.headers.get("Data"), TOKEN_KEY, algorithm=["HS256"]
-        )
-
-        test_flag = request.headers.get("Test")
-        scan_id = decoded_payload["scan_id"]
-        domain = decoded_payload["domain"]
+        scan_id = received_payload["scan_id"]
+        domain = received_payload["domain"]
 
         # Perform scan
-        res = scan(scan_id, domain)
+        scan_response = requests.post("http://127.0.0.1:8000/scan", data=domain)
 
-        # If this was a test scan, return results
-        if test_flag == "true":
-            return str(res)
+        scan_results = scan_response.json()
 
         # Construct request payload for result-processor
-        if res is not None:
-            payload = json.dumps({"results": str(res)})
-            token = {"scan_type": "ssl", "scan_id": scan_id}
-            logging.info(str(res) + "\n")
-        else:
-            raise Exception(
-                "(SCAN: %s) - An error occurred while attempting to establish SSL connection"
-                % scan_id
+        if scan_results is not {}:
+            payload = json.dumps(
+                {"results": scan_results, "scan_type": "ssl", "scan_id": scan_id}
             )
+            logging.info(str(scan_results))
+        else:
+            raise Exception("SSL scan not completed")
 
-        headers["Token"] = jwt.encode(token, TOKEN_KEY, algorithm="HS256").decode(
-            "utf-8"
+        # Dispatch results to result-processor
+        dispatch_response = requests.post(
+            "http://127.0.0.1:8000/dispatch", json=payload
         )
 
-        # Dispatch results to result-processor asynchronously
-        th = threading.Thread(target=dispatch, args=[scan_id, payload])
-        th.start()
-
-        return "Scan sent to result-handling service"
+        return f"SSL scan completed. {dispatch_response.text}"
 
     except Exception as e:
-        logging.error(str(e) + "\n")
-        return "Failed to send scan to result-handling service"
+        logging.error(str(e))
+        return f"An error occurred while attempting to perform SSL scan: {str(e)}"
 
 
-def dispatch(scan_id, payload):
-    """
-    Dispatch scan results to result-processor
-    :param scan_id: ID of the scan object
-    :param payload: Dict containing scan results, encrypted by JWT
-    :return: Response from result-processor service
-    """
-    try:
-        # Post request to result-handling service
-        response = requests.post(
-            destination + "/receive", headers=headers, data=payload
-        )
-        logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
-        logging.info(str(response.text))
-        return str(response.text)
-    except Exception as e:
-        logging.error(
-            "(SCAN: %s) - Error occurred while sending scan results: %s\n"
-            % (scan_id, e)
-        )
+def dispatch_results(payload, client):
+    # Post results to result-handling service
+    client.post(
+        url="http://result-processor.tracker.svc.cluster.local/receive", json=payload
+    )
 
 
-def get_server_info(scan_id, domain):
+def get_server_info(domain):
     """
     Retrieve server connectivity info by performing a connection test
-    :param scan_id: ID of the scan object
     :param domain: Domain to be assessed
     :return: Server connectivity information
     """
@@ -126,20 +94,18 @@ def get_server_info(scan_id, domain):
         server_tester = ServerConnectivityTester()
 
         logging.info(
-            "\n(SCAN: %s) - Testing connectivity with %s:%s..."
-            % (scan_id, server_location.hostname, server_location.port)
+            "\nTesting connectivity with %s:%s..."
+            % (server_location.hostname, server_location.port)
         )
         # Test connection to server and retrieve info
         server_info = server_tester.perform(server_location)
-        logging.info("(SCAN: %s) - Server Info %s\n" % (scan_id, server_info))
+        logging.info("Server Info %s\n" % server_info)
 
         return server_info
 
     except ConnectionToServerFailed as e:
-
-        server_info = None
         # Could not establish a TLS connection to the server
-        return server_info
+        return None
 
 
 def get_supported_tls(highest_supported, domain):
@@ -175,17 +141,12 @@ def get_supported_tls(highest_supported, domain):
     return supported
 
 
-def scan(scan_id, domain):
-    """
-    Scan domain to assess SSL/TLS configuration
-    :param scan_id: ID of the scan object
-    :param domain: Domain to be scanned
-    :return: Scan results for provided domain
-    """
-    server_info = get_server_info(scan_id, domain)
+def scan_ssl(domain):
+
+    server_info = get_server_info(domain)
 
     if server_info is None:
-        return None
+        return {}
     else:
         # Retrieve highest TLS supported from retrieved server info
         highest_tls_supported = str(
@@ -254,15 +215,15 @@ def scan(scan_id, domain):
                     "preferred_cipher"
                 ] = result.cipher_suite_preferred_by_server.cipher_suite.name
 
-        elif name is "openssl_ccs_injection":
+        elif name == "openssl_ccs_injection":
             res[
                 "is_vulnerable_to_ccs_injection"
             ] = result.is_vulnerable_to_ccs_injection
 
-        elif name is "heartbleed":
+        elif name == "heartbleed":
             res["is_vulnerable_to_heartbleed"] = result.is_vulnerable_to_heartbleed
 
-        elif name is "certificate_info":
+        elif name == "certificate_info":
             res["signature_algorithm"] = (
                 result.certificate_deployments[0]
                 .verified_certificate_chain[0]
@@ -285,5 +246,32 @@ def scan(scan_id, domain):
     return res
 
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8080)
+def Server(functions={}, client=requests):
+    async def receive(request):
+        logging.info("Request received")
+        payload = await request.json()
+        return PlainTextResponse(initiate(payload))
+
+    async def dispatch(request):
+        try:
+            payload = await request.json()
+            functions["dispatch"](payload, client)
+        except Exception as e:
+            return PlainTextResponse(str(e))
+        return PlainTextResponse("Scan results sent to result-processor")
+
+    async def scan(request):
+        domain = await request.body()
+        logging.info("Performing scan...")
+        return JSONResponse(functions["scan"](domain.decode("utf-8")))
+
+    routes = [
+        Route("/dispatch", dispatch, methods=["POST"]),
+        Route("/scan", scan, methods=["POST"]),
+        Route("/receive", receive, methods=["POST"]),
+    ]
+
+    return Starlette(debug=True, routes=routes, on_startup=[startup])
+
+
+app = Server(functions={"dispatch": dispatch_results, "scan": scan_ssl})

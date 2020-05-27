@@ -1,4 +1,4 @@
-Flask
-waitress
-PyJWT
+starlette
+uvicorn
+emoji
 requests>=2.18.4

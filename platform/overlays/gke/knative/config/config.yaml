@@ -6,23 +6,6 @@ metadata:
 
 ---
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config-domain
-  namespace: knative-serving
-data:
-  # svc.cluster.local will be used for routes having app=prod.
-  svc.cluster.local: |
-    selector:
-      app: scanners
-  # Default value for domain, for routes that does not have app=prod labels.
-  # Although it will match all routes, it is the least-specific rule so it
-  # will only be used if no other domain matches.
-  example.com: ""
-
----
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
@@ -47,12 +30,6 @@ spec:
       containers:
         - name: https-scanner
           image: gcr.io/track-compliance/scanners/https:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -100,11 +77,6 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_NAME
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -132,12 +104,6 @@ spec:
       containers:
         - name: ssl-scanner
           image: gcr.io/track-compliance/scanners/ssl:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -165,12 +131,6 @@ spec:
       containers:
         - name: dmarc-scanner
           image: gcr.io/track-compliance/scanners/dmarc:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -198,12 +158,6 @@ spec:
       containers:
         - name: dkim-scanner
           image: gcr.io/track-compliance/scanners/dkim:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -231,12 +185,6 @@ spec:
       containers:
         - name: ssl-scanner
           image: gcr.io/track-compliance/scanners/ssl:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -264,12 +212,6 @@ spec:
       containers:
         - name: dmarc-scanner
           image: gcr.io/track-compliance/scanners/dmarc:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -297,12 +239,6 @@ spec:
       containers:
         - name: dkim-scanner
           image: gcr.io/track-compliance/scanners/dkim:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -330,12 +266,6 @@ spec:
       containers:
         - name: https-scanner
           image: gcr.io/track-compliance/scanners/https:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 
@@ -365,12 +295,6 @@ spec:
       containers:
         - name: dispatcher
           image: gcr.io/track-compliance/scanners/dispatcher:latest # The URL to the image of the app
-          env:
-            - name: TOKEN_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: TOKEN_KEY
 
 ---
 

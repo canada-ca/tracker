@@ -25,9 +25,6 @@ class RequestScan(graphene.Mutation):
         dkim = graphene.Boolean(
             description="If this is a DKIM scan please set to true."
         )
-        test = graphene.Boolean(
-            description="If this scan if for testing purposes set to true."
-        )
 
     status = graphene.String()
 
@@ -46,7 +43,6 @@ class RequestScan(graphene.Mutation):
             user_roles = kwargs.get("user_roles")
             url = cleanse_input(kwargs.get("url"))
             dkim = kwargs.get("dkim")
-            test = kwargs.get("test", False)
 
             # Get Domain ORM related to requested domain
             domain_orm = db_session.query(Domains).filter(Domains.domain == url).first()
@@ -61,7 +57,7 @@ class RequestScan(graphene.Mutation):
             if is_user_write(user_roles=user_roles, org_id=org_id):
                 # Fire scan and get status from request
                 status = fire_scan(
-                    user_id=user_id, domain_id=domain_id, url=url, dkim=dkim, test=test
+                    user_id=user_id, domain_id=domain_id, url=url, dkim=dkim
                 )
 
                 # Return status information to user

@@ -4,91 +4,60 @@ import requests
 import logging
 import json
 import dkim
-import threading
-import jwt
 import base64
+import emoji
 from dkim import dnsplug, crypto
 from dkim.crypto import *
-from flask import Flask, request
+from starlette.applications import Starlette
+from starlette.routing import Route, Mount, WebSocketRoute
+from starlette.responses import PlainTextResponse, JSONResponse
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-headers = {"Content-Type": "application/json"}
 
-destination = "http://result-processor.tracker.svc.cluster.local"
-
-app = Flask(__name__)
-
-TOKEN_KEY = os.getenv("TOKEN_KEY")
+def startup():
+    logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-@app.route("/receive", methods=["GET", "POST"])
-def receive():
+def initiate(received_payload):
 
-    logging.info("Event received\n")
+    logging.info("Scan received")
 
     try:
-        decoded_payload = jwt.decode(
-            request.headers.get("Data"), TOKEN_KEY, algorithm=["HS256"]
-        )
-
-        test_flag = request.headers.get("Test")
-        scan_id = decoded_payload["scan_id"]
-        domain = decoded_payload["domain"]
+        scan_id = received_payload["scan_id"]
+        domain = received_payload["domain"]
 
         # Perform scan
-        res = scan(scan_id, domain)
+        scan_response = requests.post("http://127.0.0.1:8000/scan", data=domain)
 
-        # If this was a test scan, return results
-        if test_flag == "true":
-            return str(res)
+        scan_results = scan_response.json()
 
         # Construct request payload for result-processor
-        if res is not None:
-            payload = json.dumps({"results": str(res)})
-            token = {"scan_type": "dkim", "scan_id": scan_id}
-            logging.info(str(res) + "\n")
-        else:
-            raise Exception(
-                "(SCAN: %s) - An error occurred while attempting to perform dkim scan"
-                % scan_id
+        if scan_results is not None:
+            payload = json.dumps(
+                {"results": scan_results, "scan_type": "dkim", "scan_id": scan_id}
             )
+            logging.info(str(scan_results))
+        else:
+            raise Exception("DKIM scan not completed")
 
-        headers["Token"] = jwt.encode(token, TOKEN_KEY, algorithm="HS256").decode(
-            "utf-8"
+        # Dispatch results to result-processor
+        dispatch_response = requests.post(
+            "http://127.0.0.1:8000/dispatch", json=payload
         )
 
-        # Dispatch results to result-processor asynchronously
-        th = threading.Thread(target=dispatch, args=[scan_id, payload])
-        th.start()
-
-        return "Scan sent to result-handling service"
+        return f"DKIM scan completed. {dispatch_response.text}"
 
     except Exception as e:
-        logging.error(str(e) + "\n")
-        return "Failed to send scan to result-handling service"
+        logging.error(str(e))
+        return f"An error occurred while attempting to perform DKIM scan: {str(e)}"
 
 
-def dispatch(scan_id, payload):
-    """
-    Dispatch scan results to result-processor
-    :param scan_id: ID of the scan object
-    :param payload: Dict containing scan results, encrypted by JWT
-    :return: Response from result-processor service
-    """
-    try:
-        # Post request to result-handling service
-        response = requests.post(
-            destination + "/receive", headers=headers, data=payload
-        )
-        logging.info("Scan %s completed. Results queued for processing...\n" % scan_id)
-        logging.info(str(response.text))
-        return str(response.text)
-    except Exception as e:
-        logging.error(
-            "(SCAN: %s) - Error occurred while sending scan results: %s\n"
-            % (scan_id, e)
-        )
+def dispatch_results(payload, client):
+    # Post results to result-handling service
+    client.post(
+        url="http://result-processor.tracker.svc.cluster.local/receive", json=payload
+    )
 
 
 def bitsize(x):
@@ -134,13 +103,8 @@ def load_pk(name, s=None):
     return pk, keysize, ktag
 
 
-def scan(scan_id, domain):
-    """
-    Scan domain to assess DomainKeys Identified Mail (DKIM) record and key strength
-    :param scan_id: ID of the scan object
-    :param domain: Domain to be scanned
-    :return: Scan results for provided domain
-    """
+def scan_dkim(domain):
+
     record = {}
 
     try:
@@ -156,7 +120,7 @@ def scan(scan_id, domain):
         record["t_value"] = None
 
         for key in pub:
-            if key.decode("ascii") is "t":
+            if key.decode("ascii") == "t":
                 record["t_value"] = pub[key]
 
         txt_record = {}
@@ -173,13 +137,40 @@ def scan(scan_id, domain):
 
     except Exception as e:
         logging.error(
-            "(SCAN: %s) - Failed to perform DomainKeys Identified Mail scan on given domain: %s"
-            % (scan_id, e)
+            "Failed to perform DomainKeys Identified Mail scan on given domain: %s"
+            % str(e)
         )
         return None
 
     return json.dumps(record)
 
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8080)
+def Server(functions={}, client=requests):
+    async def receive(request):
+        logging.info("Request received")
+        payload = await request.json()
+        return PlainTextResponse(initiate(payload))
+
+    async def dispatch(request):
+        try:
+            payload = await request.json()
+            functions["dispatch"](payload, client)
+        except Exception as e:
+            return PlainTextResponse(str(e))
+        return PlainTextResponse("Scan results sent to result-processor")
+
+    async def scan(request):
+        domain = await request.body()
+        logging.info("Performing scan...")
+        return JSONResponse(functions["scan"](domain.decode("utf-8")))
+
+    routes = [
+        Route("/dispatch", dispatch, methods=["POST"]),
+        Route("/scan", scan, methods=["POST"]),
+        Route("/receive", receive, methods=["POST"]),
+    ]
+
+    return Starlette(debug=True, routes=routes, on_startup=[startup])
+
+
+app = Server(functions={"dispatch": dispatch_results, "scan": scan_dkim})

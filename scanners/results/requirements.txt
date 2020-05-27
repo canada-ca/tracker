@@ -1,7 +1,7 @@
-Flask
-waitress
-PyJWT
+starlette
+uvicorn
+emoji
 requests>=2.18.4
 graphene
-Flask-SQLAlchemy
-psycopg2-binary
+SQLAlchemy
+databases[postgresql]
