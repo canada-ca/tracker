@@ -1,14 +1,13 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
 import SignInPage from '../SignInPage'
+import { AUTHENTICATE } from '../graphql/mutations'
 import { Router, MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { render, waitFor, fireEvent, getByText } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
-import gql from 'graphql-tag'
 import { UserStateProvider } from '../UserState'
-import App from '../App'
 import { setupI18n } from '@lingui/core'
 
 describe('<SignInPage />', () => {
@@ -83,17 +82,7 @@ describe('<SignInPage />', () => {
       const mocks = [
         {
           request: {
-            query: gql`
-              mutation SignIn($userName: EmailAddress!, $password: String!) {
-                signIn(userName: $userName, password: $password) {
-                  user {
-                    userName
-                    tfa
-                  }
-                  authToken
-                }
-              }
-            `,
+            query: AUTHENTICATE,
             variables: {
               userName: values.email,
               password: values.password,
@@ -101,12 +90,14 @@ describe('<SignInPage />', () => {
           },
           result: {
             data: {
-              signIn: {
-                user: {
-                  userName: 'Thalia.Rosenbaum@gmail.com',
-                  tfa: false,
+              authenticate: {
+                authResult: {
+                  user: {
+                    userName: 'Thalia.Rosenbaum@gmail.com',
+                    tfa: false,
+                  },
+                  authToken: 'test123stringJWT',
                 },
-                authToken: 'test123stringJWT',
               },
             },
           },

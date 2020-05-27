@@ -5,9 +5,11 @@ import {
   FormErrorMessage,
   Input,
   InputLeftElement,
+  InputRightElement,
   InputGroup,
   Icon,
   Spinner,
+  Button,
 } from '@chakra-ui/core'
 
 import { Field } from 'formik'
@@ -15,6 +17,12 @@ import { Field } from 'formik'
 export function PasswordConfirmation() {
   const [icon, setIcon] = React.useState('lock')
   const [confirmIcon, setConfirmIcon] = React.useState('lock')
+
+  const [passwordShow, setPasswordShow] = React.useState(false)
+  const handlePasswordShow = () => setPasswordShow(!passwordShow)
+
+  const [confirmShow, setConfirmShow] = React.useState(false)
+  const handleConfirmShow = () => setConfirmShow(!confirmShow)
 
   /* A function for the Formik to validate fields in the form */
   function validatePassword(value) {
@@ -80,9 +88,24 @@ export function PasswordConfirmation() {
                   />
                 )}
               </InputLeftElement>
-              <Input {...field} id="password" placeholder="Password" />
+              <Input
+                {...field}
+                id="password"
+                placeholder="Password"
+                type={passwordShow ? 'text' : 'password'}
+              />
+              <InputRightElement width="4.5rem">
+                <Button
+                  id="showButton"
+                  h="1.75rem"
+                  size="sm"
+                  onClick={handlePasswordShow}
+                >
+                  <Icon name={passwordShow ? 'view-off' : 'view'} />
+                </Button>
+              </InputRightElement>
             </InputGroup>
-            <FormErrorMessage>Password{form.errors.password}</FormErrorMessage>
+            <FormErrorMessage>Password {form.errors.password}</FormErrorMessage>
           </FormControl>
         )}
       </Field>
@@ -119,11 +142,22 @@ export function PasswordConfirmation() {
                 {...field}
                 id="confirmPassword"
                 placeholder="Confirm password"
+                type={confirmShow ? 'text' : 'password'}
               />
+              <InputRightElement width="4.5rem">
+                <Button
+                  id="showButton"
+                  h="1.75rem"
+                  size="sm"
+                  onClick={handleConfirmShow}
+                >
+                  <Icon name={confirmShow ? 'view-off' : 'view'} />
+                </Button>
+              </InputRightElement>
             </InputGroup>
 
             <FormErrorMessage>
-              Confirm Password{form.errors.confirmPassword}
+              Confirm Password {form.errors.confirmPassword}
             </FormErrorMessage>
           </FormControl>
         )}

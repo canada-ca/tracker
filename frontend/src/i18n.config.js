@@ -16,7 +16,7 @@ export async function activate(locale) {
     )
   } catch (e) {
     // this fails only during tests due to webpack errors.
-    catalog = {messages: {}}
+    catalog = { messages: {} }
   }
 
   i18n.load(locale, catalog.messages)

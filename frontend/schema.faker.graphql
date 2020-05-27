@@ -545,7 +545,7 @@ type Mutation {
     password: String!
 
     """User email that they signed up with."""
-    userName: String!
+    userName: EmailAddress!
   ): Authenticate
 
   """Allows users to sign up to our service"""
@@ -561,6 +561,9 @@ type Mutation {
 
     """Email address that the user will use to authenticate with"""
     userName: EmailAddress!
+
+    """Preferred language of the user"""
+    preferredLang: LanguageEnums!
   ): SignUp
 }
 
@@ -859,6 +862,11 @@ enum RoleEnums {
 
   """A user who has the same access as an admin, but can define new admins"""
   SUPER_ADMIN
+}
+
+enum LanguageEnums {
+  ENGLISH
+  FRENCH
 }
 
 """This method allows for new users to sign up for our sites services."""

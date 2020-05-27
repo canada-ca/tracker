@@ -14,7 +14,6 @@ import {
 import { useField } from 'formik'
 
 export function PasswordField({ name, ...props }) {
-  const { i18n } = useLingui()
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
   const handleClick = () => setShow(!show)
@@ -37,7 +36,7 @@ export function PasswordField({ name, ...props }) {
         />
         <InputRightElement width="4.5rem">
           <Button id="showButton" h="1.75rem" size="sm" onClick={handleClick}>
-            {show ? i18n._('Hide') : i18n._('Show')}
+            <Icon name={show ? 'view-off' : 'view'} />
           </Button>
         </InputRightElement>
       </InputGroup>

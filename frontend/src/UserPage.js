@@ -7,15 +7,15 @@ import {
   SimpleGrid,
   Button,
   Text,
-  Select,
   Input,
   Divider,
   Checkbox,
   CheckboxGroup,
   useToast,
 } from '@chakra-ui/core'
-import { useApolloClient, useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import { PasswordConfirmation } from './PasswordConfirmation'
+import { LanguageSelect } from './LanguageSelect'
 
 import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
@@ -23,10 +23,9 @@ import { UPDATE_PASSWORD } from './graphql/mutations'
 
 export default function UserPage() {
   const location = useLocation()
-  const client = useApolloClient()
   const toast = useToast()
   const history = useHistory()
-  const { currentUser } = useUserState()
+  const { currentUser, logout } = useUserState()
 
   const [
     updatePassword,
@@ -116,20 +115,7 @@ export default function UserPage() {
                 />
               </Stack>
 
-              <Stack>
-                <Text fontSize="xl">Language:</Text>
-                <Select
-                  id="lang"
-                  name="lang"
-                  type="text"
-                  placeholder="Select option"
-                  onChange={handleChange}
-                  value={values.lang}
-                >
-                  <option value="en">English</option>
-                  <option value="fr">French</option>
-                </Select>
-              </Stack>
+              <LanguageSelect name="lang" />
               <Button type="submit" variantColor="teal" w={'50%'} mt={5}>
                 Save Changes
               </Button>
@@ -181,7 +167,7 @@ export default function UserPage() {
           w={'50%'}
           onClick={() => {
             // This clears the JWT, essentially logging the user out in one go
-            client.writeData({ data: { jwt: null, tfa: null, userName: null } }) // How is this done?
+            logout()
             history.push('/')
             toast({
               title: 'Sign Out.',

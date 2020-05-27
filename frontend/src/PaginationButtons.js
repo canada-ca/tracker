@@ -2,7 +2,7 @@ import React from 'react'
 import { Stack, IconButton } from '@chakra-ui/core'
 import { bool } from 'prop-types'
 
-export function PaginationButtons({previous, next}) {
+export function PaginationButtons({ previous, next }) {
   return (
     <Stack isInline justifyContent="end">
       <IconButton
@@ -32,4 +32,7 @@ export function PaginationButtons({previous, next}) {
     </Stack>
   )
 }
-PaginationButtons.propTypes = { next: bool.isRequired, previous: bool.isRequired }
+PaginationButtons.propTypes = {
+  next: bool.isRequired,
+  previous: bool.isRequired,
+}

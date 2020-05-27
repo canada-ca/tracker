@@ -4,14 +4,15 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import CreateUserPage from '../CreateUserPage'
-import { CREATE_USER } from '../graphql/mutations'
+import { SIGN_UP } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 
 const mocks = [
   {
     request: {
-      query: CREATE_USER,
+      query: SIGN_UP,
     },
     result: {
       data: {
@@ -29,15 +30,19 @@ describe('<CreateUserPage />', () => {
       describe('email field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={setupI18n()}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider mocks={mocks}>
-                    <CreateUserPage />
-                  </MockedProvider>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>,
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfa: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={setupI18n()}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <MockedProvider mocks={mocks}>
+                      <CreateUserPage />
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
           )
 
           const email = container.querySelector('#email')
@@ -55,15 +60,19 @@ describe('<CreateUserPage />', () => {
       describe('password field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={setupI18n()}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider mocks={mocks}>
-                    <CreateUserPage />
-                  </MockedProvider>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>,
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfa: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={setupI18n()}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <MockedProvider mocks={mocks}>
+                      <CreateUserPage />
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
           )
 
           const password = container.querySelector('#password')
@@ -84,15 +93,19 @@ describe('<CreateUserPage />', () => {
       describe('confirm password field', () => {
         it('displays an error message', async () => {
           const { container, queryByText } = render(
-            <ThemeProvider theme={theme}>
-              <I18nProvider i18n={setupI18n()}>
-                <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider mocks={mocks}>
-                    <CreateUserPage />
-                  </MockedProvider>
-                </MemoryRouter>
-              </I18nProvider>
-            </ThemeProvider>,
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfa: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={setupI18n()}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <MockedProvider mocks={mocks}>
+                      <CreateUserPage />
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
           )
 
           const confirmPassword = container.querySelector('#confirmPassword')
@@ -104,6 +117,39 @@ describe('<CreateUserPage />', () => {
             // doesn't! The message is displayed but we can only get partial
             // match for some reason.
             expect(queryByText(/Confirm Password/)).toBeInTheDocument(),
+          )
+        })
+      })
+
+      describe('language selection', () => {
+        it('displays required message', async () => {
+          const { container, queryByText } = render(
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfa: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={setupI18n()}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <MockedProvider mocks={mocks}>
+                      <CreateUserPage />
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
+          )
+
+          const languageSelect = container.querySelector('#lang')
+
+          await waitFor(() => fireEvent.blur(languageSelect))
+
+          await waitFor(() =>
+            // This should work exactly like the email field above, but it
+            // doesn't! The message is displayed but we can only get partial
+            // match for some reason.
+            expect(
+              queryByText(/Select Preferred Language/),
+            ).toBeInTheDocument(),
           )
         })
       })

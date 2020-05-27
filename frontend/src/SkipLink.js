@@ -20,7 +20,11 @@ const makeInvisible = css`
   }
 `
 export const SkipLink = ({ invisible, ...rest }) => (
-  <Link backgroundColor="white" css={invisible ? makeInvisible : null} {...rest} />
+  <Link
+    backgroundColor="white"
+    css={invisible ? makeInvisible : null}
+    {...rest}
+  />
 )
 
 SkipLink.defaultProps = {

@@ -20,17 +20,20 @@ import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
 import { Formik, Field } from 'formik'
 import { useUserState } from './UserState'
-import { SIGN_IN } from './graphql/mutations'
+import { AUTHENTICATE } from './graphql/mutations'
 
 export default function SignInPage() {
   const { login } = useUserState()
   const history = useHistory()
-
   const toast = useToast()
-
   const { i18n } = useLingui()
 
-  const [signIn, { loading, error }] = useMutation(SIGN_IN, {
+  const validationSchema = object().shape({
+    password: string().required(i18n._(t`Password cannot be empty`)),
+    email: string().required(i18n._(t`Email cannot be empty`)),
+  })
+
+  const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
     onError() {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -42,11 +45,11 @@ export default function SignInPage() {
         isClosable: true,
       })
     },
-    onCompleted({ signIn }) {
+    onCompleted({ authenticate }) {
       login({
-        jwt: signIn.authToken,
-        tfa: signIn.user.tfa,
-        userName: signIn.user.userName,
+        jwt: authenticate.authResult.authToken,
+        tfa: authenticate.authResult.user.tfa,
+        userName: authenticate.authResult.user.userName,
       })
       // redirect to the home page.
       history.push('/')
@@ -59,11 +62,6 @@ export default function SignInPage() {
         isClosable: true,
       })
     },
-  })
-
-  const validationSchema = object().shape({
-    password: string().required(i18n._(t`Password cannot be empty`)),
-    email: string().required(i18n._(t`Email cannot be empty`)),
   })
 
   if (loading)
@@ -83,8 +81,8 @@ export default function SignInPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}
-        onSubmit={async (values, _actions) => {
-          await signIn({
+        onSubmit={async (values) => {
+          authenticate({
             variables: { userName: values.email, password: values.password },
           })
         }}
