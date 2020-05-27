@@ -2,7 +2,7 @@ import pytest
 from pretend import stub
 from starlette.testclient import TestClient
 from starlette.responses import PlainTextResponse
-from ..result_processor import (
+from result_processor import (
     Server,
     insert_dkim,
     insert_dmarc,

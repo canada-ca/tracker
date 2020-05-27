@@ -2,8 +2,8 @@ import pytest
 from pretend import stub
 from starlette.testclient import TestClient
 from starlette.responses import PlainTextResponse
-from ..dispatcher import Server
-from ..utils import *
+from dispatcher import Server
+from utils import *
 
 
 def test_web_scan():
