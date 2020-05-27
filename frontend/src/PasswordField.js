@@ -30,7 +30,6 @@ export function PasswordField({ name, dataTestId, ...props }) {
         <Input
           {...field}
           data-testid={dataTestId !== 'undefined' && dataTestId}
-          isInvalid={meta.error}
           pr="4.5rem"
           type={show ? 'text' : 'password'}
           placeholder={i18n._(t`Password`)}
