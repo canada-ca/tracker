@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 
-export function EmailField({ name, ...props }) {
+export function EmailField({ name, dataTestId, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
 
@@ -22,8 +22,12 @@ export function EmailField({ name, ...props }) {
         <InputLeftElement>
           <Icon name="email" color="gray.300" />
         </InputLeftElement>
-        <Input {...field} id="email" placeholder={i18n._(t`Email`)} />
-        {console.log({...field})}
+        <Input
+          data-testid={dataTestId !== 'undefined' && dataTestId}
+          {...field}
+          id="email"
+          placeholder={i18n._(t`Email`)}
+        />
       </InputGroup>
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -33,4 +37,5 @@ export function EmailField({ name, ...props }) {
 
 EmailField.propTypes = {
   name: string.isRequired,
+  dataTestId: string,
 }

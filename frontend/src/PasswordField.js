@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 
-export function PasswordField({ name, ...props }) {
+export function PasswordField({ name, dataTestId, ...props }) {
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
   const { i18n } = useLingui()
@@ -29,6 +29,7 @@ export function PasswordField({ name, ...props }) {
 
         <Input
           {...field}
+          data-testid={dataTestId !== 'undefined' && dataTestId}
           isInvalid={meta.error}
           pr="4.5rem"
           type={show ? 'text' : 'password'}
@@ -46,4 +47,4 @@ export function PasswordField({ name, ...props }) {
   )
 }
 
-PasswordField.propTypes = { name: string.isRequired }
+PasswordField.propTypes = { name: string.isRequired, dataTestId: string }

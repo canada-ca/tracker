@@ -24,7 +24,7 @@ describe('<EmailField />', () => {
                 email: '',
               }}
             >
-              {() => <EmailField data-testid="emailfield" name="email" />}
+              <EmailField dataTestId="emailfield" name="email" />
             </Formik>
           </ThemeProvider>
         </I18nProvider>,

@@ -17,9 +17,7 @@ describe('<LanguageSelect />', () => {
                 lang: '',
               }}
             >
-              {() => (
-                <LanguageSelect data-testid="languageselect" name="lang" />
-              )}
+              {() => <LanguageSelect dataTestId="languageselect" name="lang" />}
             </Formik>
           </ThemeProvider>
         </I18nProvider>,

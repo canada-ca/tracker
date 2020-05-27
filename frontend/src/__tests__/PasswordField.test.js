@@ -23,7 +23,7 @@ describe('<PasswordField />', () => {
                 password: '',
               }}
             >
-              {() => <PasswordField data-testid="pwfield" name="password" />}
+              {() => <PasswordField dataTestId="pwfield" name="password" />}
             </Formik>
           </ThemeProvider>
         </I18nProvider>,
@@ -47,7 +47,7 @@ describe('<PasswordField />', () => {
                 password: '',
               }}
             >
-              {() => <PasswordField data-testid="pwfield" name="password" />}
+              {() => <PasswordField dataTestId="pwfield" name="password" />}
             </Formik>
           </ThemeProvider>
         </I18nProvider>,
