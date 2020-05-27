@@ -1,179 +1,121 @@
-import os
+import ast
+import emoji
 import sys
 import logging
 import requests
-import jwt
-import threading
-from flask import Flask, request
+from starlette.applications import Starlette
+from starlette.routing import Route, Mount, WebSocketRoute
+from starlette.responses import PlainTextResponse
+from utils import *
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-app = Flask(__name__)
 
-TOKEN_KEY = os.getenv("TOKEN_KEY")
-
-hosts = [
-    "http://https-scanner.tracker.svc.cluster.local",
-    "http://ssl-scanner.tracker.svc.cluster.local",
-    "http://dmarc-scanner.tracker.svc.cluster.local",
-]
-
-dkim_flagged_hosts = [
-    "http://dkim-scanner.tracker.svc.cluster.local",
-    "http://dmarc-scanner.tracker.svc.cluster.local",
-]
-
-manual_scan_hosts = [
-    "http://https-scanner-manual.tracker.svc.cluster.local",
-    "http://ssl-scanner-manual.tracker.svc.cluster.local",
-    "http://dmarc-scanner-manual.tracker.svc.cluster.local",
-]
-
-manual_scan_dkim_flagged_hosts = [
-    "http://dkim-scanner-manual.tracker.svc.cluster.local",
-    "http://dmarc-scanner-manual.tracker.svc.cluster.local",
-]
+def startup():
+    logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-@app.route("/receive", methods=["GET", "POST"])
-def receive():
-
-    payload = {}
-    dkim_flag = False
+def initiate(received_payload, scan_type):
 
     try:
-        decoded_payload = jwt.decode(
-            request.headers.get("Data"), TOKEN_KEY, algorithm=["HS256"]
-        )
-
-        test_flag = request.headers.get("Test")
+        received_dict = ast.literal_eval(received_payload)
 
         payload = {
-            "scan_id": decoded_payload["scan_id"],
-            "domain": decoded_payload["domain"],
+            "scan_id": received_dict["scan_id"],
+            "domain": received_dict["domain"],
         }
-        dkim_flag = decoded_payload["dkim"]
-        user_initialized = decoded_payload["user_init"]
-        scan_id = decoded_payload["scan_id"]
 
-        encrypted_payload = jwt.encode(payload, TOKEN_KEY, algorithm="HS256").decode(
-            "utf-8"
-        )
+        logging.info("Scan request parsed successfully")
 
-        if test_flag == "true":
-            res = dispatch(
-                encrypted_payload, dkim_flag, user_initialized, scan_id, test_flag
+        dispatched = {}
+        if scan_type == "web":
+            dispatched["https"] = requests.post(
+                "http://127.0.0.1:8000/https", json=payload
             )
-            return str(res)
+            dispatched["dmarc"] = requests.post(
+                "http://127.0.0.1:8000/dmarc", json=payload
+            )
+            dispatched["ssl"] = requests.post("http://127.0.0.1:8000/ssl", json=payload)
+        elif scan_type == "mail":
+            dispatched["dkim"] = requests.post(
+                "http://127.0.0.1:8000/dkim", json=payload
+            )
+            dispatched["dmarc"] = requests.post(
+                "http://127.0.0.1:8000/dmarc", json=payload
+            )
         else:
-            th = threading.Thread(
-                target=dispatch,
-                args=[
-                    encrypted_payload,
-                    dkim_flag,
-                    user_initialized,
-                    scan_id,
-                    test_flag,
-                ],
-            )
-            th.start()
+            raise Exception("Invalid Scan-Type provided")
 
-        return "Domain dispatched to designated scanner(s)"
+        for key, val in dispatched.items():
+            if val.text is not f"Dispatched to {key} scanner":
+                raise Exception(f"Failed to dispatch scan to {key} scanner")
 
-    except jwt.ExpiredSignatureError as e:
-        logging.error("Failed (Expired Signature - 406): %s\n" % str(e))
-        return "Failed to dispatch domain to designated scanner(s)"
-
-    except jwt.InvalidTokenError as e:
-        logging.error("Failed (Invalid Token - 401): %s\n" % str(e))
-        return "Failed to dispatch domain to designated scanner(s)"
+        return "All scans successfully dispatched to designated scanners"
 
     except Exception as e:
         logging.error("Failed: %s\n" % str(e))
-        return "Failed to dispatch domain to designated scanner(s)"
+        return f"Failed to dispatch scan to designated scanner(s): {str(e)}"
 
 
-def dispatch(encrypted_payload, dkim_flag, manual, scan_id, test_flag):
-    """
-    Dispatch scans to designated scanners
-    :param encrypted_payload: Dict containing scan info, encrypted by JWT
-    :param dkim_flag: Flag indicating whether this is a dkim scan
-    :param manual: Flag indicating whether this is a user-initiated scan
-    :param scan_id: ID of the scan object
-    :param test_flag: Flag indicating whether this is a test scan
-    :return: If test_flag, return results. Else, return nothing
-    """
+def Server(scanners={}, client=requests):
+    def receive(request):
+        logging.info("Request received")
+        return PlainTextResponse(
+            initiate(request.headers.get("Data"), request.headers.get("Scan-Type"))
+        )
 
-    headers = {
-        "Content-Type": "application/json",
-        "Data": encrypted_payload,
-        "Test": test_flag,
+    async def dkim(request):
+        logging.info("DKIM scan requested")
+        try:
+            payload = await request.json()
+            scanners["dkim"](payload, client)
+        except Exception as e:
+            return PlainTextResponse(str(e))
+        return PlainTextResponse("Dispatched to DKIM scanner")
+
+    async def dmarc(request):
+        logging.info("DMARC scan requested")
+        try:
+            payload = await request.json()
+            scanners["dmarc"](payload, client)
+        except Exception as e:
+            return PlainTextResponse(str(e))
+        return PlainTextResponse("Dispatched to DMARC scanner")
+
+    async def https(request):
+        logging.info("HTTPS scan requested")
+        try:
+            payload = await request.json()
+            scanners["https"](payload, client)
+        except Exception as e:
+            return PlainTextResponse(str(e))
+        return PlainTextResponse("Dispatched to HTTPS scanner")
+
+    async def ssl(request):
+        logging.info("SSL scan requested")
+        try:
+            payload = await request.json()
+            scanners["ssl"](payload, client)
+        except Exception as e:
+            return PlainTextResponse(str(e))
+        return PlainTextResponse("Dispatched to SSL scanner")
+
+    routes = [
+        Route("/dkim", dkim, methods=["POST"]),
+        Route("/dmarc", dmarc, methods=["POST"]),
+        Route("/https", https, methods=["POST"]),
+        Route("/ssl", ssl, methods=["POST"]),
+        Route("/receive", receive, methods=["POST"]),
+    ]
+
+    return Starlette(debug=True, routes=routes, on_startup=[startup])
+
+
+app = Server(
+    scanners={
+        "dkim": scan_dkim,
+        "dmarc": scan_dmarc,
+        "https": scan_https,
+        "ssl": scan_ssl,
     }
-
-    dispatched = {scan_id: {}}
-
-    if not manual:
-
-        if dkim_flag is True:
-            for host in dkim_flagged_hosts:
-                try:
-                    dispatched[scan_id][host] = requests.post(
-                        host + "/receive", headers=headers
-                    )
-                    logging.info("Scan %s dispatched...\n" % scan_id)
-                except Exception as e:
-                    logging.error(
-                        "(SCAN: %s) - Error occurred while sending scan results: %s\n"
-                        % (scan_id, e)
-                    )
-        else:
-            for host in hosts:
-                try:
-                    dispatched[scan_id][host] = requests.post(
-                        host + "/receive", headers=headers
-                    )
-                    logging.info("Scan %s dispatched...\n" % scan_id)
-                except Exception as e:
-                    logging.error(
-                        "(SCAN: %s) - Error occurred while sending scan results: %s\n"
-                        % (scan_id, e)
-                    )
-
-    else:
-
-        if dkim_flag is True:
-            for host in manual_scan_dkim_flagged_hosts:
-                try:
-                    dispatched[scan_id][host] = requests.post(
-                        host + "/receive", headers=headers
-                    )
-                    logging.info("Scan %s dispatched...\n" % scan_id)
-                except Exception as e:
-                    logging.error(
-                        "(SCAN: %s) - Error occurred while sending scan results: %s\n"
-                        % (scan_id, e)
-                    )
-        else:
-            for host in manual_scan_hosts:
-                try:
-                    dispatched[scan_id][host] = requests.post(
-                        host + "/receive", headers=headers
-                    )
-                    logging.info("Scan %s dispatched...\n" % scan_id)
-                except Exception as e:
-                    logging.error(
-                        "(SCAN: %s) - Error occurred while sending scan results: %s\n"
-                        % (scan_id, e)
-                    )
-
-    if test_flag == "true":
-        results = {}
-        for key, req in dispatched[scan_id].items():
-            results[key] = str(req.text)
-            logging.info("Scan %s results for %s: %s\n" % (scan_id, key, req.text))
-
-        return results
-
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8080)
+)

@@ -153,6 +153,39 @@ describe('<CreateUserPage />', () => {
           )
         })
       })
+
+      describe('language selection', () => {
+        it('displays required message', async () => {
+          const { container, queryByText } = render(
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfa: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={setupI18n()}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <MockedProvider mocks={mocks}>
+                      <CreateUserPage />
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
+          )
+
+          const languageSelect = container.querySelector('#lang')
+
+          await waitFor(() => fireEvent.blur(languageSelect))
+
+          await waitFor(() =>
+            // This should work exactly like the email field above, but it
+            // doesn't! The message is displayed but we can only get partial
+            // match for some reason.
+            expect(
+              queryByText(/Select Preferred Language/),
+            ).toBeInTheDocument(),
+          )
+        })
+      })
     })
   })
 })

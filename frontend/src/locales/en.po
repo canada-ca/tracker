@@ -409,3 +409,19 @@ msgstr "Welcome, you are successfully signed in!"
 #: src/QRcodePage.js:45
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
 msgstr "Your 2FA app will then have a valid code that you can use when you sign in."
+
+#: src/LanguageSelect.js:23
+msgid "Select Preferred Language"
+msgstr "Select Preferred Language"
+
+#: src/CreateUserPage.js:46
+msgid "Create an account by entering an email and password."
+msgstr "Create an account by entering an email and password."
+
+#: src/CreateUserPage.js:80
+msgid "Create Account"
+msgstr "Create Account"
+
+#: src/CreateUserPage.js:89
+msgid "Back"
+msgstr "Back"

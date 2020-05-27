@@ -2,19 +2,14 @@ import requests
 import jwt
 import os
 import datetime
-
-from flask import request
-
 from app import app
 from db import db_session
-
 from models import Scans, Domains
 
-TOKEN_KEY = os.getenv("TOKEN_KEY")
 DISPATCHER_URL = "http://dispatcher.tracker.svc.cluster.local"
 
 
-def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
+def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool):
     """
     Functionality to send request to scanners and request a domain to get scanned
     :param user_id: The id of the requesting user
@@ -44,22 +39,20 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool, test: bool):
         "exp": datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=10),
         "scan_id": scan_id,
         "domain": url,
-        "dkim": dkim,
         "user_init": True,
     }
 
-    encoded_payload = jwt.encode(payload, TOKEN_KEY, algorithm="HS256").decode("utf-8")
+    if dkim is True:
+        scan_type = "mail"
+    else:
+        scan_type = "web"
 
     headers = {
         "Content-Type": "application/json",
-        "Data": encoded_payload,
+        "Data": payload,
+        "Scan-Type": scan_type,
     }
 
-    if test:
-        headers["Test"] = "true"
-    else:
-        headers["Test"] = "false"
-
-    status = requests.post(DISPATCHER_URL + "/receive", headers=headers)
+    status = requests.post(DISPATCHER_URL + "/receive", headers=headers, data=payload)
 
     return str(status.text)
