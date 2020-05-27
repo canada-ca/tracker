@@ -46,11 +46,11 @@ msgid "Admin"
 msgstr "Admin"
 
 #: src/CreateUserPage.js:40
-#: src/SignInPage.js:28
+#: src/SignInPage.js:30
 msgid "An error occurred."
 msgstr "An error occurred."
 
-#: src/CreateUserPage.js:127
+#: src/CreateUserPage.js:130
 msgid "Back"
 msgstr "Back"
 
@@ -74,12 +74,12 @@ msgstr "Configure the server to use the same domain for the \"envelope from\" an
 msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 msgstr "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 
-#: src/PasswordConfirmation.js:139
+#: src/PasswordConfirmation.js:140
 msgid "Confirm password"
 msgstr "Confirm password"
 
-#: src/CreateUserPage.js:118
-#: src/SignInPage.js:109
+#: src/CreateUserPage.js:121
+#: src/SignInPage.js:113
 msgid "Create Account"
 msgstr "Create Account"
 
@@ -87,7 +87,7 @@ msgstr "Create Account"
 msgid "Create User"
 msgstr "Create User"
 
-#: src/CreateUserPage.js:81
+#: src/CreateUserPage.js:103
 msgid "Create an account by entering an email and password."
 msgstr "Create an account by entering an email and password."
 
@@ -111,12 +111,12 @@ msgstr "DMARC Policy Applied"
 msgid "Domains"
 msgstr "Domains"
 
-#: src/EmailField.js:25
+#: src/EmailField.js:29
 msgid "Email"
 msgstr "Email"
 
 #: src/CreateUserPage.js:23
-#: src/SignInPage.js:22
+#: src/SignInPage.js:23
 msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
 
@@ -132,7 +132,7 @@ msgstr "Ensure the DKIM record for thedomain and selector is present andvalid."
 msgid "Ensure the SPF record is present and valid."
 msgstr "Ensure the SPF record is present and valid."
 
-#: src/SignInPage.js:91
+#: src/SignInPage.js:94
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
@@ -161,12 +161,13 @@ msgid "Home"
 msgstr "Home"
 
 #: src/CreateUserPage.js:24
+#: src/SignInPage.js:24
 msgid "Invalid email"
 msgstr "Invalid email"
 
 #: src/CreateUserPage.js:73
 #: src/QRcodePage.js:21
-#: src/SignInPage.js:59
+#: src/SignInPage.js:61
 msgid "Loading..."
 msgstr "Loading..."
 
@@ -188,8 +189,8 @@ msgstr "No domains scanned yet."
 msgid "Page not found"
 msgstr "Page not found"
 
-#: src/PasswordConfirmation.js:90
-#: src/PasswordField.js:36
+#: src/PasswordConfirmation.js:91
+#: src/PasswordField.js:35
 msgid "Password"
 msgstr "Password"
 
@@ -270,7 +271,7 @@ msgstr "SPF Domain Alignment Failed"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 
-#: src/LanguageSelect.js:17
+#: src/LanguageSelect.js:21
 msgid "Select Preferred Language"
 msgstr "Select Preferred Language"
 
@@ -288,15 +289,15 @@ msgstr "Show More"
 
 #: src/App.js:63
 #: src/QRcodePage.js:58
-#: src/SignInPage.js:100
+#: src/SignInPage.js:104
 msgid "Sign In"
 msgstr "Sign In"
 
-#: src/SignInPage.js:47
+#: src/SignInPage.js:49
 msgid "Sign In."
 msgstr "Sign In."
 
-#: src/SignInPage.js:67
+#: src/SignInPage.js:85
 msgid "Sign in with your username and password."
 msgstr "Sign in with your username and password."
 
@@ -385,7 +386,7 @@ msgstr "TwoFactor"
 msgid "Unable to create your account, please try again."
 msgstr "Unable to create your account, please try again."
 
-#: src/SignInPage.js:30
+#: src/SignInPage.js:32
 msgid "Unable to sign in to your account, please try again."
 msgstr "Unable to sign in to your account, please try again."
 
@@ -401,7 +402,7 @@ msgstr "User Profile"
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Welcome, you are successfully signed in to your new account!"
 
-#: src/SignInPage.js:48
+#: src/SignInPage.js:50
 msgid "Welcome, you are successfully signed in!"
 msgstr "Welcome, you are successfully signed in!"
 

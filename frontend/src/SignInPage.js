@@ -19,7 +19,9 @@ export default function SignInPage() {
 
   const validationSchema = object().shape({
     password: string().required(i18n._(t`Password cannot be empty`)),
-    email: string().required(i18n._(t`Email cannot be empty`)),
+    email: string()
+      .required(i18n._(t`Email cannot be empty`))
+      .email(i18n._(t`Invalid email`)),
   })
 
   const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {

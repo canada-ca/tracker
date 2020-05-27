@@ -46,11 +46,11 @@ msgid "Admin"
 msgstr "Admin"
 
 #: src/CreateUserPage.js:40
-#: src/SignInPage.js:28
+#: src/SignInPage.js:30
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
-#: src/CreateUserPage.js:127
+#: src/CreateUserPage.js:130
 msgid "Back"
 msgstr "Retour"
 
@@ -74,12 +74,12 @@ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour les adres
 msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/PasswordConfirmation.js:139
+#: src/PasswordConfirmation.js:140
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: src/CreateUserPage.js:118
-#: src/SignInPage.js:109
+#: src/CreateUserPage.js:121
+#: src/SignInPage.js:113
 msgid "Create Account"
 msgstr "Créer un compte"
 
@@ -87,7 +87,7 @@ msgstr "Créer un compte"
 msgid "Create User"
 msgstr "Créer un utilisateur"
 
-#: src/CreateUserPage.js:81
+#: src/CreateUserPage.js:103
 msgid "Create an account by entering an email and password."
 msgstr "Créez un compte en entrant un courriel et un mot de passe."
 
@@ -111,12 +111,12 @@ msgstr "Politique de la DMARC appliquée"
 msgid "Domains"
 msgstr "Domaines"
 
-#: src/EmailField.js:25
+#: src/EmailField.js:29
 msgid "Email"
 msgstr "Courriel"
 
 #: src/CreateUserPage.js:23
-#: src/SignInPage.js:22
+#: src/SignInPage.js:23
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
@@ -132,7 +132,7 @@ msgstr "Assurez-vous que l'enregistrement DKIM pour le domaine et le sélecteur 
 msgid "Ensure the SPF record is present and valid."
 msgstr "Assurez-vous que le dossier du SPF est présent et valide."
 
-#: src/SignInPage.js:91
+#: src/SignInPage.js:94
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -161,12 +161,13 @@ msgid "Home"
 msgstr "Accueil"
 
 #: src/CreateUserPage.js:24
+#: src/SignInPage.js:24
 msgid "Invalid email"
 msgstr "Courriel non valide"
 
 #: src/CreateUserPage.js:73
 #: src/QRcodePage.js:21
-#: src/SignInPage.js:59
+#: src/SignInPage.js:61
 msgid "Loading..."
 msgstr "Chargement..."
 
@@ -188,8 +189,8 @@ msgstr "Aucun domaine n'a encore été scanné."
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: src/PasswordConfirmation.js:90
-#: src/PasswordField.js:36
+#: src/PasswordConfirmation.js:91
+#: src/PasswordField.js:35
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -270,7 +271,7 @@ msgstr "Échec de l'alignement des domaines du SPF"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
-#: src/LanguageSelect.js:17
+#: src/LanguageSelect.js:21
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
@@ -288,15 +289,15 @@ msgstr "En savoir plus"
 
 #: src/App.js:63
 #: src/QRcodePage.js:58
-#: src/SignInPage.js:100
+#: src/SignInPage.js:104
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: src/SignInPage.js:47
+#: src/SignInPage.js:49
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/SignInPage.js:67
+#: src/SignInPage.js:85
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
@@ -385,7 +386,7 @@ msgstr "Deux facteurs"
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
-#: src/SignInPage.js:30
+#: src/SignInPage.js:32
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
@@ -401,7 +402,7 @@ msgstr "Profil de l'utilisateur"
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Veuillez choisir votre langue préférée"
 
-#: src/SignInPage.js:48
+#: src/SignInPage.js:50
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
