@@ -21,14 +21,13 @@ export function PasswordField({ name, ...props }) {
   const handleClick = () => setShow(!show)
 
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
+    <FormControl {...props} isInvalid={meta.error && meta.touched}>
       <InputGroup size="md">
         <InputLeftElement>
           <Icon name="lock" color="gray.300" />
         </InputLeftElement>
 
         <Input
-          {...props}
           {...field}
           isInvalid={meta.error}
           pr="4.5rem"

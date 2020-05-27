@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Stack, Text, useToast } from '@chakra-ui/core'
+import { Button, Stack, Text, useToast, Box } from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
 import { object, string, ref } from 'yup'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
@@ -76,10 +76,7 @@ export default function CreateUserPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Stack spacing={2} mx="auto">
-      <Text mb={4} fontSize="2xl">
-        <Trans>Create an account by entering an email and password.</Trans>
-      </Text>
+    <Box mx="auto">
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -102,13 +99,19 @@ export default function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <EmailField name="email" />
+            <Text fontSize="2xl" mb="4">
+              <Trans>
+                Create an account by entering an email and password.
+              </Trans>
+            </Text>
 
-            <PasswordConfirmation />
+            <EmailField name="email" mb="4" />
 
-            <LanguageSelect name="lang" />
+            <PasswordConfirmation mb="4" spacing="4" />
 
-            <Stack mt={6} spacing={4} isInline>
+            <LanguageSelect name="lang" mb="4" />
+
+            <Stack spacing={4} isInline>
               <Button
                 variantColor="teal"
                 isLoading={isSubmitting}
@@ -130,6 +133,6 @@ export default function CreateUserPage() {
           </form>
         )}
       </Formik>
-    </Stack>
+    </Box>
   )
 }

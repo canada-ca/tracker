@@ -3,7 +3,7 @@ import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { PasswordField } from './PasswordField'
 import { object, string } from 'yup'
-import { Text, Stack, Button, Link, useToast } from '@chakra-ui/core'
+import { Text, Stack, Button, Link, useToast, Box } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
 import { Formik } from 'formik'
@@ -62,11 +62,7 @@ export default function SignInPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Stack spacing={4} mx="auto">
-      <Text fontSize="2xl">
-        <Trans>Sign in with your username and password.</Trans>
-      </Text>
-
+    <Box mx="auto">
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}
@@ -83,15 +79,21 @@ export default function SignInPage() {
             aria-label="form"
             name="form"
           >
-            <EmailField name="email" />
+            <Text fontSize="2xl" mb="4">
+              <Trans>Sign in with your username and password.</Trans>
+            </Text>
 
-            <PasswordField name="password" />
+            <EmailField name="email" mb="4" />
+
+            <PasswordField name="password" mb="1" />
 
             <Link as={RouteLink} to="/forgot-password" color="teal.500">
-              <Trans>Forgot your password?</Trans>
+              <Text mb="4">
+                <Trans>Forgot your password?</Trans>
+              </Text>
             </Link>
 
-            <Stack mt={6} spacing={4} isInline>
+            <Stack spacing={4} isInline>
               <Button
                 variantColor="teal"
                 isLoading={isSubmitting}
@@ -112,6 +114,6 @@ export default function SignInPage() {
           </form>
         )}
       </Formik>
-    </Stack>
+    </Box>
   )
 }

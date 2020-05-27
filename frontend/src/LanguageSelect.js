@@ -10,9 +10,9 @@ export function LanguageSelect({ name, ...props }) {
   const { i18n } = useLingui()
 
   return (
-    <FormControl mt={4} mb={4} isInvalid={meta.error && meta.touched}>
+    <FormControl {...props} isInvalid={meta.error && meta.touched}>
       <Stack>
-        <Select {...props} {...field} id="lang">
+        <Select {...field} id="lang">
           <option hidden value="">
             {i18n._(t`Select Preferred Language`)}
           </option>

@@ -17,12 +17,13 @@ export function EmailField({ name, ...props }) {
   const { i18n } = useLingui()
 
   return (
-    <FormControl mt={4} mb={4} isInvalid={meta.error && meta.touched}>
+    <FormControl {...props} isInvalid={meta.error && meta.touched}>
       <InputGroup>
         <InputLeftElement>
           <Icon name="email" color="gray.300" />
         </InputLeftElement>
-        <Input {...props} {...field} id="email" placeholder={i18n._(t`Email`)} />
+        <Input {...field} id="email" placeholder={i18n._(t`Email`)} />
+        {console.log({...field})}
       </InputGroup>
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
