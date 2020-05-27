@@ -84,7 +84,7 @@ steps:
       else
         exit 0
       fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: build-dkim-if-master
     entrypoint: 'bash'
@@ -98,7 +98,7 @@ steps:
       else
         exit 0
       fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: build-dmarc-if-master
     entrypoint: 'bash'
@@ -112,7 +112,7 @@ steps:
       else
         exit 0
       fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: build-https-if-master
     entrypoint: 'bash'
@@ -126,7 +126,7 @@ steps:
       else
         exit 0
       fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: build-results-if-master
     entrypoint: 'bash'
@@ -140,7 +140,7 @@ steps:
       else
         exit 0
       fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: build-ssl-if-master
     entrypoint: 'bash'
@@ -154,7 +154,7 @@ steps:
       else
         exit 0
       fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: push-dispatcher-if-master
     entrypoint: 'bash'
@@ -167,7 +167,7 @@ steps:
        else
          exit 0
        fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: push-dkim-if-master
     entrypoint: 'bash'
@@ -180,7 +180,7 @@ steps:
        else
          exit 0
        fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: push-dmarc-if-master
     entrypoint: 'bash'
@@ -193,7 +193,7 @@ steps:
        else
          exit 0
        fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: push-https-if-master
     entrypoint: 'bash'
@@ -206,7 +206,7 @@ steps:
        else
          exit 0
        fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: push-results-if-master
     entrypoint: 'bash'
@@ -219,7 +219,7 @@ steps:
        else
          exit 0
        fi
-​
+
   - name: 'gcr.io/cloud-builders/docker'
     id: push-ssl-if-master
     entrypoint: 'bash'
