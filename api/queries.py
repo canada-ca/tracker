@@ -84,11 +84,14 @@ from schemas.user import (
 
 # --- End Mutation Imports ---
 
+from schemas.yearly_dmarc_report_summary import get_yearly_dmarc_report_summaries
 
 class Query(graphene.ObjectType):
     """The central gathering point for all of the GraphQL queries."""
 
     node = relay.Node.Field()
+
+    get_yearly_dmarc_report_summaries = get_yearly_dmarc_report_summaries
 
     # --- Start User Queries ---
 
