@@ -1,4 +1,4 @@
-from gql import gql, Client
+from gql import Client
 from gql.transport.requests import RequestsHTTPTransport
 from graphql import GraphQLError
 
@@ -36,7 +36,7 @@ def create_client(api_domain, auth_token) -> Client:
     return client
 
 
-def send_request(api_domain, auth_token, request_domain, start_date, end_date) -> dict:
+def send_request(api_domain, auth_token, variables: dict, query) -> dict:
     """
     This function sends the request to the external API, with a pre-determined
     query
@@ -51,39 +51,6 @@ def send_request(api_domain, auth_token, request_domain, start_date, end_date) -
     """
     try:
         client = create_client(api_domain=api_domain, auth_token=auth_token)
-
-        variables = {
-            "domain": request_domain,
-            "startDate": start_date,
-            "endDate": end_date
-        }
-
-        query = gql('''
-            query (
-                $domain:GCURL!
-                $startDate:Date!
-                $endDate:Date!
-            ) {
-                getTotalDmarcSummaries (
-                    domain: $domain
-                    startDate: $startDate
-                    endDate: $endDate
-                ) {
-                    periods {
-                        startDate
-                        endDate
-                        categoryTotals {
-                            dmarcFailNone
-                            dmarcFailQuarantine
-                            dmarcFailReject
-                            spfFailDkimPass
-                            spfPassDkimFail
-                            spfPassDkimPass
-                        }
-                    }
-                }
-            }
-        ''')
 
         data = client.execute(query, variables)
 
