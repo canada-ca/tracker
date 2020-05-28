@@ -10,7 +10,10 @@ from models import (
     Users,
     User_affiliations,
 )
-from tests.testdata.get_yearly_dmarc_report_summaries import api_return_data, api_expected_data
+from tests.testdata.get_yearly_dmarc_report_summaries import (
+    api_return_data,
+    api_expected_data,
+)
 from tests.test_functions import run, json
 
 
@@ -30,16 +33,14 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_super_admin(save, mocker
     mocker.patch(
         "schemas.yearly_dmarc_report_summary.resolver.send_request",
         autospec=True,
-        return_value=api_return_data
+        return_value=api_return_data,
     )
 
     org_one = Organizations(
-        acronym="ORG1", name="Organization 1", slug="organization-1",
-        domains=[
-            Domains(
-                domain="test.domain.gc.ca"
-            )
-        ]
+        acronym="ORG1",
+        name="Organization 1",
+        slug="organization-1",
+        domains=[Domains(domain="test.domain.gc.ca")],
     )
     save(org_one)
 
@@ -61,7 +62,7 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_super_admin(save, mocker
     save(super_admin)
 
     result = run(
-        query='''
+        query="""
         {
             getYearlyDmarcReportSummaries (
                 domainSlug: "test-domain-gc-ca"
@@ -79,14 +80,12 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_super_admin(save, mocker
                 }
             }
         }
-        ''',
-        as_user=super_admin
+        """,
+        as_user=super_admin,
     )
 
     if "errors" in result:
-        fail(
-            "Expected to get return data, instead: {}".format(json(result))
-        )
+        fail("Expected to get return data, instead: {}".format(json(result)))
 
     assert result == api_expected_data
 
@@ -98,7 +97,7 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_org_admin(save, mocker):
     mocker.patch(
         "schemas.yearly_dmarc_report_summary.resolver.send_request",
         autospec=True,
-        return_value=api_return_data
+        return_value=api_return_data,
     )
 
     org_admin = Users(
@@ -111,12 +110,10 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_org_admin(save, mocker):
             User_affiliations(
                 permission="admin",
                 user_organization=Organizations(
-                    acronym="ORG1", name="Organization 1", slug="organization-1",
-                    domains=[
-                        Domains(
-                            domain="test.domain.gc.ca"
-                        )
-                    ]
+                    acronym="ORG1",
+                    name="Organization 1",
+                    slug="organization-1",
+                    domains=[Domains(domain="test.domain.gc.ca")],
                 ),
             ),
         ],
@@ -124,7 +121,7 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_org_admin(save, mocker):
     save(org_admin)
 
     result = run(
-        query='''
+        query="""
         {
             getYearlyDmarcReportSummaries (
                 domainSlug: "test-domain-gc-ca"
@@ -142,14 +139,12 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_org_admin(save, mocker):
                 }
             }
         }
-        ''',
-        as_user=org_admin
+        """,
+        as_user=org_admin,
     )
 
     if "errors" in result:
-        fail(
-            "Expected to get return data, instead: {}".format(json(result))
-        )
+        fail("Expected to get return data, instead: {}".format(json(result)))
 
     assert result == api_expected_data
 
@@ -161,7 +156,7 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_user_write(save, mocker)
     mocker.patch(
         "schemas.yearly_dmarc_report_summary.resolver.send_request",
         autospec=True,
-        return_value=api_return_data
+        return_value=api_return_data,
     )
 
     user_write = Users(
@@ -174,12 +169,10 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_user_write(save, mocker)
             User_affiliations(
                 permission="user_write",
                 user_organization=Organizations(
-                    acronym="ORG1", name="Organization 1", slug="organization-1",
-                    domains=[
-                        Domains(
-                            domain="test.domain.gc.ca"
-                        )
-                    ]
+                    acronym="ORG1",
+                    name="Organization 1",
+                    slug="organization-1",
+                    domains=[Domains(domain="test.domain.gc.ca")],
                 ),
             ),
         ],
@@ -187,7 +180,7 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_user_write(save, mocker)
     save(user_write)
 
     result = run(
-        query='''
+        query="""
         {
             getYearlyDmarcReportSummaries (
                 domainSlug: "test-domain-gc-ca"
@@ -205,14 +198,12 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_user_write(save, mocker)
                 }
             }
         }
-        ''',
-        as_user=user_write
+        """,
+        as_user=user_write,
     )
 
     if "errors" in result:
-        fail(
-            "Expected to get return data, instead: {}".format(json(result))
-        )
+        fail("Expected to get return data, instead: {}".format(json(result)))
 
     assert result == api_expected_data
 
@@ -224,7 +215,7 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_user_read(save, mocker):
     mocker.patch(
         "schemas.yearly_dmarc_report_summary.resolver.send_request",
         autospec=True,
-        return_value=api_return_data
+        return_value=api_return_data,
     )
 
     user_read = Users(
@@ -237,12 +228,10 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_user_read(save, mocker):
             User_affiliations(
                 permission="user_read",
                 user_organization=Organizations(
-                    acronym="ORG1", name="Organization 1", slug="organization-1",
-                    domains=[
-                        Domains(
-                            domain="test.domain.gc.ca"
-                        )
-                    ]
+                    acronym="ORG1",
+                    name="Organization 1",
+                    slug="organization-1",
+                    domains=[Domains(domain="test.domain.gc.ca")],
                 ),
             ),
         ],
@@ -250,7 +239,7 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_user_read(save, mocker):
     save(user_read)
 
     result = run(
-        query='''
+        query="""
         {
             getYearlyDmarcReportSummaries (
                 domainSlug: "test-domain-gc-ca"
@@ -268,14 +257,12 @@ def test_valid_get_yearly_dmarc_report_summary_query_as_user_read(save, mocker):
                 }
             }
         }
-        ''',
-        as_user=user_read
+        """,
+        as_user=user_read,
     )
 
     if "errors" in result:
-        fail(
-            "Expected to get return data, instead: {}".format(json(result))
-        )
+        fail("Expected to get return data, instead: {}".format(json(result)))
 
     assert result == api_expected_data
 
@@ -287,16 +274,14 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     mocker.patch(
         "schemas.yearly_dmarc_report_summary.resolver.send_request",
         autospec=True,
-        return_value=api_return_data
+        return_value=api_return_data,
     )
 
     org_one = Organizations(
-        acronym="ORG1", name="Organization 1", slug="organization-1",
-        domains=[
-            Domains(
-                domain="test.domain.gc.ca"
-            )
-        ]
+        acronym="ORG1",
+        name="Organization 1",
+        slug="organization-1",
+        domains=[Domains(domain="test.domain.gc.ca")],
     )
     save(org_one)
 
@@ -318,7 +303,7 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     save(org_admin)
 
     result = run(
-        query='''
+        query="""
         {
             getYearlyDmarcReportSummaries (
                 domainSlug: "test-domain-gc-ca"
@@ -336,14 +321,12 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
                 }
             }
         }
-        ''',
-        as_user=org_admin
+        """,
+        as_user=org_admin,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to error out, instead: {}".format(json(result))
-        )
+        fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert error["message"] == "Error, you do not have access to this domain."
@@ -356,16 +339,14 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     mocker.patch(
         "schemas.yearly_dmarc_report_summary.resolver.send_request",
         autospec=True,
-        return_value=api_return_data
+        return_value=api_return_data,
     )
 
     org_one = Organizations(
-        acronym="ORG1", name="Organization 1", slug="organization-1",
-        domains=[
-            Domains(
-                domain="test.domain.gc.ca"
-            )
-        ]
+        acronym="ORG1",
+        name="Organization 1",
+        slug="organization-1",
+        domains=[Domains(domain="test.domain.gc.ca")],
     )
     save(org_one)
 
@@ -387,7 +368,7 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     save(user_write)
 
     result = run(
-        query='''
+        query="""
         {
             getYearlyDmarcReportSummaries (
                 domainSlug: "test-domain-gc-ca"
@@ -405,14 +386,12 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
                 }
             }
         }
-        ''',
-        as_user=user_write
+        """,
+        as_user=user_write,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to error out, instead: {}".format(json(result))
-        )
+        fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert error["message"] == "Error, you do not have access to this domain."
@@ -425,16 +404,14 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     mocker.patch(
         "schemas.yearly_dmarc_report_summary.resolver.send_request",
         autospec=True,
-        return_value=api_return_data
+        return_value=api_return_data,
     )
 
     org_one = Organizations(
-        acronym="ORG1", name="Organization 1", slug="organization-1",
-        domains=[
-            Domains(
-                domain="test.domain.gc.ca"
-            )
-        ]
+        acronym="ORG1",
+        name="Organization 1",
+        slug="organization-1",
+        domains=[Domains(domain="test.domain.gc.ca")],
     )
     save(org_one)
 
@@ -456,7 +433,7 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     save(user_read)
 
     result = run(
-        query='''
+        query="""
         {
             getYearlyDmarcReportSummaries (
                 domainSlug: "test-domain-gc-ca"
@@ -474,14 +451,12 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
                 }
             }
         }
-        ''',
-        as_user=user_read
+        """,
+        as_user=user_read,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to error out, instead: {}".format(json(result))
-        )
+        fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert error["message"] == "Error, you do not have access to this domain."
@@ -494,7 +469,7 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     mocker.patch(
         "schemas.yearly_dmarc_report_summary.resolver.send_request",
         autospec=True,
-        return_value=api_return_data
+        return_value=api_return_data,
     )
 
     super_admin = Users(
@@ -515,7 +490,7 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     save(super_admin)
 
     result = run(
-        query='''
+        query="""
         {
             getYearlyDmarcReportSummaries (
                 domainSlug: "test-domain-gc-ca"
@@ -533,14 +508,12 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
                 }
             }
         }
-        ''',
-        as_user=super_admin
+        """,
+        as_user=super_admin,
     )
 
     if "errors" not in result:
-        fail(
-            "Expected to error out, instead: {}".format(json(result))
-        )
+        fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
     assert error["message"] == "Error, domain cannot be found."

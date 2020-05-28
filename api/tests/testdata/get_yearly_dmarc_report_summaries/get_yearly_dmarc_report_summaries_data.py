@@ -10,8 +10,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 333,
                     "spfPassDkimFail": 22,
-                    "spfPassDkimPass": 8733
-                }
+                    "spfPassDkimPass": 8733,
+                },
             },
             {
                 "startDate": "2020-05-01",
@@ -22,8 +22,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 281,
                     "spfPassDkimFail": 13,
-                    "spfPassDkimPass": 7070
-                }
+                    "spfPassDkimPass": 7070,
+                },
             },
             {
                 "startDate": "2020-04-01",
@@ -34,8 +34,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 362,
                     "spfPassDkimFail": 21,
-                    "spfPassDkimPass": 9862
-                }
+                    "spfPassDkimPass": 9862,
+                },
             },
             {
                 "startDate": "2020-03-01",
@@ -46,8 +46,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 586,
                     "spfPassDkimFail": 18,
-                    "spfPassDkimPass": 11942
-                }
+                    "spfPassDkimPass": 11942,
+                },
             },
             {
                 "startDate": "2020-02-01",
@@ -58,8 +58,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 507,
                     "spfPassDkimFail": 1,
-                    "spfPassDkimPass": 4427
-                }
+                    "spfPassDkimPass": 4427,
+                },
             },
             {
                 "startDate": "2020-01-01",
@@ -70,8 +70,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 1601,
                     "spfPassDkimFail": 278,
-                    "spfPassDkimPass": 3033
-                }
+                    "spfPassDkimPass": 3033,
+                },
             },
             {
                 "startDate": "2019-12-01",
@@ -82,8 +82,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 245,
                     "spfPassDkimFail": 1567,
-                    "spfPassDkimPass": 1538
-                }
+                    "spfPassDkimPass": 1538,
+                },
             },
             {
                 "startDate": "2019-11-01",
@@ -94,8 +94,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 151,
                     "spfPassDkimFail": 2318,
-                    "spfPassDkimPass": 1491
-                }
+                    "spfPassDkimPass": 1491,
+                },
             },
             {
                 "startDate": "2019-10-01",
@@ -106,8 +106,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 112,
                     "spfPassDkimFail": 2837,
-                    "spfPassDkimPass": 1508
-                }
+                    "spfPassDkimPass": 1508,
+                },
             },
             {
                 "startDate": "2019-09-01",
@@ -118,8 +118,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 32,
                     "spfPassDkimFail": 929,
-                    "spfPassDkimPass": 599
-                }
+                    "spfPassDkimPass": 599,
+                },
             },
             {
                 "startDate": "2019-08-01",
@@ -130,8 +130,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 0,
                     "spfPassDkimFail": 0,
-                    "spfPassDkimPass": 0
-                }
+                    "spfPassDkimPass": 0,
+                },
             },
             {
                 "startDate": "2019-07-01",
@@ -142,8 +142,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 0,
                     "spfPassDkimFail": 0,
-                    "spfPassDkimPass": 0
-                }
+                    "spfPassDkimPass": 0,
+                },
             },
             {
                 "startDate": "2019-06-01",
@@ -154,8 +154,8 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 0,
                     "spfPassDkimFail": 0,
-                    "spfPassDkimPass": 0
-                }
+                    "spfPassDkimPass": 0,
+                },
             },
             {
                 "startDate": "2019-05-01",
@@ -166,9 +166,9 @@ api_return_data = {
                     "dmarcFailReject": 0,
                     "spfFailDkimPass": 0,
                     "spfPassDkimFail": 0,
-                    "spfPassDkimPass": 0
-                }
-            }
+                    "spfPassDkimPass": 0,
+                },
+            },
         ]
     }
 }
