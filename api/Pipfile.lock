@@ -282,10 +282,10 @@
         },
         "notifications-python-client": {
             "hashes": [
-                "sha256:117c31c955bead0b109151600c72c977f9544fc99b2477e4ed6dc3ea1c30021d"
+                "sha256:f21e3cfb8c3c8476d65096b8ca6fb2501556996d648ba7e98b7830e19c06f472"
             ],
             "index": "pypi",
-            "version": "==5.5.1"
+            "version": "==5.6.0"
         },
         "packaging": {
             "hashes": [
