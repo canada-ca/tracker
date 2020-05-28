@@ -5,6 +5,7 @@ class CategoryTotals(graphene.ObjectType):
     """
     This object displays the total amount of messages that fit into each category
     """
+
     dmarc_fail_none = graphene.Int(
         description="Amount of messages that failed dmarc and nothing was done."
     )
@@ -23,9 +24,7 @@ class CategoryTotals(graphene.ObjectType):
     dmarc_fail_reject = graphene.Int(
         description="Amount of messages that failed DMARC and were rejected."
     )
-    total = graphene.Int(
-        description="The sum of all different categories."
-    )
+    total = graphene.Int(description="The sum of all different categories.")
 
     def resolve_dmarc_fail_none(self: dict, info):
         return self.get("dmarcFailNone")
