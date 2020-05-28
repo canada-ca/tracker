@@ -19,7 +19,7 @@ def get_verification_email_status(notify_client, response):
 
     except HTTPError:
         raise GraphQLError(
-            "Error, when sending verification email, error: {}".format(HTTPError)
+            "Error, when retrieving email status, error: {}".format(HTTPError)
         )
 
 
