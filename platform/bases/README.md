@@ -10,7 +10,40 @@ istioctl manifest generate \
   --set values.kiali.enabled=true \
   --set values.tracing.enabled=true \
   --set values.pilot.traceSampling=100 \
-  --set values.global.proxy.accessLogFile="/dev/stdout" > istio.yaml
+  --set meshConfig.accessLogFile="/dev/stdout" > istio.yaml
+```
+
+At the moment the istio service opens a few more ports than we actually want to expose, so after running the above command you will need to remove the offending ports from the service definition so the ingress gateway doesn't open them. That means editing the istio.yaml and removing the following:
+
+```bash
+ apiVersion: v1
+ kind: Service
+ metadata:
+   annotations: null
+   labels:
+     app: istio-ingressgateway
+     istio: ingressgateway
+     release: istio
+   name: istio-ingressgateway
+   namespace: istio-system
+ spec:
+   ports:
+-  - name: status-port
+-    port: 15021
+-    targetPort: 15021
+   - name: http2
+     port: 80
+     targetPort: 8080
+   - name: https
+     port: 443
+     targetPort: 8443
+-  - name: tls
+-    port: 15443
+-    targetPort: 15443
+   selector:
+     app: istio-ingressgateway
+     istio: ingressgateway
+   type: LoadBalancer
 ```
 
 There is another `istio.yaml` in the GKE overlay folder that patches this config with settings needed for our GKE environment.

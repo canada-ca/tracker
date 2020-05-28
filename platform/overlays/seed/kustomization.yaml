@@ -28,3 +28,4 @@ resources:
 - frontend-namespace.yaml
 - istio-system-namespace.yaml
 - tracker-namespace.yaml
+- knative-serving-namespace.yaml
