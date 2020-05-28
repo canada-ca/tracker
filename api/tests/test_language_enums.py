@@ -11,4 +11,3 @@ def test_english_enum():
 def test_french_enum():
     assert LanguageEnums.FRENCH == "french"
     assert LanguageEnums.FRENCH == LanguageEnums.get("french")
-

@@ -29,6 +29,7 @@ class UserPage(SQLAlchemyObjectType):
             "user_affiliation",
             "password",
             "roles",
+            "email_validated"
         )
 
     user_name = EmailAddress(description="The users email address or userName")
@@ -36,6 +37,9 @@ class UserPage(SQLAlchemyObjectType):
     lang = graphene.String(description="Indicates the preferred language of this user")
     tfa = graphene.Boolean(
         description="Indicates wether or not this user has enabled tfa"
+    )
+    email_validated = graphene.Boolean(
+        description="Has the user verified their account"
     )
     user_affiliations = graphene.List(
         lambda: UserPageAffiliations,
@@ -56,6 +60,9 @@ class UserPage(SQLAlchemyObjectType):
 
         def resolve_tfa(self: Users, info):
             return self.tfa_validated
+
+        def resolve_email_validated(self: Users, info):
+            return self.email_validated
 
         @require_token
         def resolve_user_affiliations(self: Users, info, **kwargs):

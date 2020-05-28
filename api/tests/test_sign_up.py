@@ -21,92 +21,96 @@ def test_successful_creation_english(save):
     """
     Test that ensures a user can be created successfully using the api endpoint
     """
-    result = run(
-        mutation="""
-        mutation {
-            signUp(
-                displayName: "user-test"
-                userName: "different-email@testemail.ca"
-                password: "testpassword123"
-                confirmPassword: "testpassword123"
-                preferredLang: ENGLISH
-            ) {
-                authResult {
-                    user {
-                        userName
-                        displayName
-                        lang
+    request_headers = {"Origin": "https://testserver.com"}
+    with app.test_request_context(headers=request_headers):
+        result = run(
+            mutation="""
+            mutation {
+                signUp(
+                    displayName: "user-test"
+                    userName: "different-email@testemail.ca"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    preferredLang: ENGLISH
+                ) {
+                    authResult {
+                        user {
+                            userName
+                            displayName
+                            lang
+                        }
+                    }
+                }
+            }
+            """,
+        )
+
+        if "errors" in result:
+            fail("Tried to create a user, instead: {}".format(json(result)))
+
+        expected_result = {
+            "data": {
+                "signUp": {
+                    "authResult": {
+                        "user": {
+                            "userName": "different-email@testemail.ca",
+                            "displayName": "user-test",
+                            "lang": "english",
+                        }
                     }
                 }
             }
         }
-        """,
-    )
 
-    if "errors" in result:
-        fail("Tried to create a user, instead: {}".format(json(result)))
-
-    expected_result = {
-        "data": {
-            "signUp": {
-                "authResult": {
-                    "user": {
-                        "userName": "different-email@testemail.ca",
-                        "displayName": "user-test",
-                        "lang": "english",
-                    }
-                }
-            }
-        }
-    }
-
-    assert result == expected_result
+        assert result == expected_result
 
 
 def test_successful_creation_french(save):
     """
     Test that ensures a user can be created successfully using the api endpoint
     """
-    result = run(
-        mutation="""
-        mutation {
-            signUp(
-                displayName: "user-test"
-                userName: "different-email@testemail.ca"
-                password: "testpassword123"
-                confirmPassword: "testpassword123"
-                preferredLang: FRENCH
-            ) {
-                authResult {
-                    user {
-                        userName
-                        displayName
-                        lang
+    request_headers = {"Origin": "https://testserver.com"}
+    with app.test_request_context(headers=request_headers):
+        result = run(
+            mutation="""
+            mutation {
+                signUp(
+                    displayName: "user-test"
+                    userName: "different-email@testemail.ca"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    preferredLang: FRENCH
+                ) {
+                    authResult {
+                        user {
+                            userName
+                            displayName
+                            lang
+                        }
+                    }
+                }
+            }
+            """,
+        )
+
+        if "errors" in result:
+            fail("Tried to create a user, instead: {}".format(json(result)))
+
+        expected_result = {
+            "data": {
+                "signUp": {
+                    "authResult": {
+                        "user": {
+                            "userName": "different-email@testemail.ca",
+                            "displayName": "user-test",
+                            "lang": "french",
+                        }
                     }
                 }
             }
         }
-        """,
-    )
 
-    if "errors" in result:
-        fail("Tried to create a user, instead: {}".format(json(result)))
-
-    expected_result = {
-        "data": {
-            "signUp": {
-                "authResult": {
-                    "user": {
-                        "userName": "different-email@testemail.ca",
-                        "displayName": "user-test",
-                        "lang": "french",
-                    }
-                }
-            }
-        }
-    }
-
-    assert result == expected_result
+        assert result == expected_result
 
 
 def test_email_address_in_use(save):

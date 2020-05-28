@@ -54,7 +54,7 @@ def check_user_claims(user_id):
                     "permission": select["permission"],
                 }
                 user_roles.append(temp_dict)
-            return user_roles
+        return user_roles
 
 
 def require_token(method):

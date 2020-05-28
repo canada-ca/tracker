@@ -1,10 +1,15 @@
+import os
+
 from graphql import GraphQLError
+from requests import HTTPError
+from notifications_python_client.notifications import NotificationsAPIClient
 
 from functions.input_validators import *
 from functions.error_messages import *
 from models import Users as User
 from db import db_session
 from json_web_token import tokenize
+from functions.verification_email import send_verification_email
 
 
 def create_user(display_name, password, confirm_password, user_name, preferred_lang):
@@ -41,14 +46,43 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
             password=password,
         )
         db_session.add(user)
+
         try:
+            # Add User to db
             db_session.commit()
-            auth_token = tokenize(user_id=user.id)
+
+            email_response = send_verification_email(
+                user=user,
+                client=NotificationsAPIClient(
+                    api_key=os.getenv("NOTIFICATION_API_KEY"),
+                    base_url=os.getenv("NOTIFICATION_API_URL"),
+                )
+            )
+
+            if email_response.__contains__("Email Send Error"):
+                raise GraphQLError(
+                    "Error, when sending verification email, please try go to "
+                    "user page to verify account"
+                )
+
+            # Get user id
+            user_id = (
+                db_session.query(User).filter(User.user_name == user_name).first().id
+            )
+            auth_token = tokenize(user_id=user_id)
+
             return {"auth_token": auth_token, "user": user}
+
+        except HTTPError:
+            raise GraphQLError(
+                "Error, when sending verification email, please try again"
+            )
+
         except Exception as e:
             db_session.rollback()
             db_session.flush()
-            raise GraphQLError(error_creating_account())
+            # raise GraphQLError(error_creating_account())
+            raise GraphQLError(str(e))
     else:
         # Ensure that users have unique email addresses
         raise GraphQLError(error_email_in_use())

@@ -31,8 +31,7 @@ class SignUp(graphene.Mutation):
             required=True,
         )
         preferred_lang = LanguageEnums(
-            description="Used to set users preferred language",
-            required=True,
+            description="Used to set users preferred language", required=True,
         )
 
     # Define mutation fields

@@ -1,17 +1,15 @@
 import bcrypt
 
 from sqlalchemy.types import Integer, Boolean, Float
-from sqlalchemy.orm import relationship, validates
-from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
-from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy import event
+from sqlalchemy import Column, String
 
+from db import Base
 from functions.orm_to_dict import orm_to_dict
 from functions.slugify import slugify_value
 from models.Organizations import Organizations
 from models.User_affiliations import User_affiliations
-from db import Base
 
 
 class Users(Base):
@@ -28,18 +26,7 @@ class Users(Base):
     user_affiliation = relationship(
         "User_affiliations", back_populates="user", passive_deletes=True,
     )
-
-    def __init__(self, **kwargs):
-        super(Users, self).__init__(**kwargs)
-        # XXX: This is gross but matches the expections of the
-        # Acronym scalar type.
-        acronym = slugify_value(self.user_name).upper()[:50]
-        self.user_affiliation.append(
-            User_affiliations(
-                permission="admin",
-                user_organization=Organizations(name=self.user_name, acronym=acronym,),
-            )
-        )
+    email_validated = Column(Boolean, default=False)
 
     @hybrid_method
     def find_by_user_name(self, user_name):
@@ -73,3 +60,17 @@ class Users(Base):
             self.user_password = bcrypt.hashpw(
                 password.encode("utf8"), bcrypt.gensalt()
             ).decode("utf8")
+
+    @hybrid_method
+    def verify_account(self):
+        # Set user email_validated field to true0
+        self.email_validated = True
+
+        # Create users sandbox org
+        acronym = slugify_value(self.user_name).upper()[:50]
+        self.user_affiliation.append(
+            User_affiliations(
+                permission="admin",
+                user_organization=Organizations(name=self.user_name, acronym=acronym,),
+            )
+        )
