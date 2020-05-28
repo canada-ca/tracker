@@ -1,6 +1,5 @@
 import os
 import calendar
-import graphene
 
 from datetime import datetime, timedelta
 from gql import gql
@@ -12,8 +11,6 @@ from functions.auth_functions import is_user_read
 from functions.external_graphql_api_request import send_request
 from functions.input_validators import cleanse_input
 from models import Domains
-from models.Organizations import Organizations
-from schemas.yearly_dmarc_report_summary.category_totals import CategoryTotals
 from schemas.yearly_dmarc_report_summary.yearly_dmarc_report_summary import YearlyDmarcReportSummary
 
 
@@ -22,15 +19,14 @@ DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
 
 
 @require_token
-def resolve_get_yearly_dmarc_report_summary(self, info, **kwargs):
+def resolve_get_yearly_dmarc_report_summary(self, info, **kwargs) -> list:
     """
-
-    :param self:
-    :param info:
-    :param kwargs:
-    :return:
+    This function is used to resolve the get_yearly_dmarc_report_summary query
+    :param self: A graphql field object
+    :param info: Request information
+    :param kwargs: Various Arguments passed in
+    :return: Returns a list of YearlyDmarcReportSummary
     """
-    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
     domain_slug = cleanse_input(kwargs.get("domain_slug"))
 
@@ -59,6 +55,7 @@ def resolve_get_yearly_dmarc_report_summary(self, info, **kwargs):
                 "endDate": end_date
             }
 
+            # dmarc-report-api query
             query = gql('''
                         query (
                             $domain:GCURL!
@@ -96,15 +93,21 @@ def resolve_get_yearly_dmarc_report_summary(self, info, **kwargs):
 
             rtr_list = []
 
+            # Skip first entry from return data because it is past 30 days which
+            # for this query we do not want
             iter_data = iter(data.get("getTotalDmarcSummaries").get("periods"))
             next(iter_data)
 
+            # Loop through 13 months of data, and create return list
             for data in iter_data:
                 rtr_list.append(
                     YearlyDmarcReportSummary(
+                        # Get Month Name
                         calendar.month_name[
                             int(data.get("startDate")[5:7].lstrip("0"))],
+                        # Get Year
                         data.get("startDate")[0:4].lstrip("0"),
+                        # Get Category Data
                         data.get("categoryTotals")
                     )
                 )
