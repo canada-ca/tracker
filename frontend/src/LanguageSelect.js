@@ -3,20 +3,17 @@ import { useField } from 'formik'
 import { string } from 'prop-types'
 import { Stack, Select, FormControl, FormErrorMessage } from '@chakra-ui/core'
 import { useLingui } from '@lingui/react'
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
+import WithPseudoBox, { withPseudoBoxPropTypes } from './withPseudoBox'
 
-export function LanguageSelect({ name, ...props }) {
+function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
+
   return (
-    <FormControl mt={4} mb={4} isRequired>
+    <FormControl isInvalid={meta.error && meta.touched}>
       <Stack>
-        <Select
-          {...props}
-          {...field}
-          id="lang"
-          // placeholder={i18n._(t`Select Preferred Language`)}
-        >
+        <Select {...field} {...props} id="lang">
           <option hidden value="">
             {i18n._(t`Select Preferred Language`)}
           </option>
@@ -25,13 +22,13 @@ export function LanguageSelect({ name, ...props }) {
         </Select>
       </Stack>
 
-      <FormErrorMessage>
-        <Trans>{meta.error}</Trans>
-      </FormErrorMessage>
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
 }
 
 LanguageSelect.propTypes = {
+  ...withPseudoBoxPropTypes,
   name: string.isRequired,
 }
+export default WithPseudoBox(LanguageSelect)

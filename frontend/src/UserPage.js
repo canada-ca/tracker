@@ -14,8 +14,8 @@ import {
   useToast,
 } from '@chakra-ui/core'
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import { PasswordConfirmation } from './PasswordConfirmation'
-import { LanguageSelect } from './LanguageSelect'
+import PasswordConfirmation from './PasswordConfirmation'
+import LanguageSelect from './LanguageSelect'
 
 import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
@@ -194,7 +194,6 @@ export default function UserPage() {
             initialValues={{ password: '', confirmPassword: '' }}
             onSubmit={async (values) => {
               // Submit GraphQL mutation
-              console.log(values)
               await updatePassword({
                 variables: {
                   userName: currentUser.userName,

@@ -1,6 +1,7 @@
 import React from 'react'
-import { useLingui } from '@lingui/react'
 import { string } from 'prop-types'
+import { useLingui } from '@lingui/react'
+import { t } from '@lingui/macro'
 import {
   FormControl,
   Input,
@@ -12,10 +13,12 @@ import {
   Button,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
+import WithPseudoBox, { withPseudoBoxPropTypes } from './withPseudoBox.js'
 
-export function PasswordField({ name, ...props }) {
+function PasswordField({ name, ...props }) {
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
+  const { i18n } = useLingui()
   const handleClick = () => setShow(!show)
 
   return (
@@ -26,12 +29,11 @@ export function PasswordField({ name, ...props }) {
         </InputLeftElement>
 
         <Input
-          {...props}
           {...field}
-          isInvalid={meta.error}
+          {...props}
           pr="4.5rem"
           type={show ? 'text' : 'password'}
-          placeholder="Password"
+          placeholder={i18n._(t`Password`)}
           id="password"
         />
         <InputRightElement width="4.5rem">
@@ -45,4 +47,9 @@ export function PasswordField({ name, ...props }) {
   )
 }
 
-PasswordField.propTypes = { name: string.isRequired }
+PasswordField.propTypes = {
+  ...withPseudoBoxPropTypes,
+  name: string.isRequired,
+}
+
+export default WithPseudoBox(PasswordField)

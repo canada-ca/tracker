@@ -1,14 +1,14 @@
 import React from 'react'
-import { Button, Stack, Text, useToast } from '@chakra-ui/core'
+import { Button, Stack, Text, useToast, Box } from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
-import { object, string } from 'yup'
+import { object, string, ref } from 'yup'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { Formik } from 'formik'
 import { SIGN_UP } from './graphql/mutations'
 import { useUserState } from './UserState'
-import { EmailField } from './EmailField'
-import { PasswordConfirmation } from './PasswordConfirmation'
-import { LanguageSelect } from './LanguageSelect'
+import EmailField from './EmailField'
+import PasswordConfirmation from './PasswordConfirmation'
+import LanguageSelect from './LanguageSelect'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -19,9 +19,18 @@ export default function CreateUserPage() {
   const { i18n } = useLingui()
 
   const validationSchema = object().shape({
-    email: string().required('cannot be empty'),
-    password: string().required('cannot be empty'),
-    confirmPassword: string().required('cannot be empty'),
+    email: string()
+      .required(i18n._(t`Email cannot be empty`))
+      .email(i18n._(t`Invalid email`)),
+    password: string()
+      .required(i18n._(t`Password cannot be empty`))
+      .min(12, i18n._(t`Password must be at least 12 characters long`)),
+    confirmPassword: string()
+      .required(i18n._(t`Password confirmation cannot be empty`))
+      .oneOf([ref('password')], i18n._(t`Passwords must match`)),
+    lang: string()
+      .oneOf(['ENGLISH', 'FRENCH'])
+      .required(i18n._(t`Please choose your preferred language`)),
   })
 
   const [signUp, { loading, error }] = useMutation(SIGN_UP, {
@@ -67,13 +76,15 @@ export default function CreateUserPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Stack spacing={2} mx="auto">
-      <Text mb={4} fontSize="2xl">
-        <Trans>Create an account by entering an email and password.</Trans>
-      </Text>
+    <Box mx="auto">
       <Formik
         validationSchema={validationSchema}
-        initialValues={{ email: '', password: '', confirmPassword: '' }}
+        initialValues={{
+          email: '',
+          password: '',
+          confirmPassword: '',
+          lang: '',
+        }}
         onSubmit={async (values) => {
           signUp({
             variables: {
@@ -88,20 +99,26 @@ export default function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <EmailField name="email" />
+            <Text fontSize="2xl" mb="4">
+              <Trans>
+                Create an account by entering an email and password.
+              </Trans>
+            </Text>
 
-            <PasswordConfirmation />
+            <EmailField name="email" mb="4" />
 
-            <LanguageSelect name="lang" />
+            <PasswordConfirmation mb="4" spacing="4" />
 
-            <Stack mt={6} spacing={4} isInline>
+            <LanguageSelect name="lang" mb="4" />
+
+            <Stack spacing={4} isInline>
               <Button
                 variantColor="teal"
                 isLoading={isSubmitting}
                 type="submit"
                 id="submitBtn"
               >
-                {i18n._(t`Create Account`)}
+                <Trans>Create Account</Trans>
               </Button>
 
               <Button
@@ -110,12 +127,12 @@ export default function CreateUserPage() {
                 variantColor="teal"
                 variant="outline"
               >
-                {i18n._(t`Back`)}
+                <Trans>Back</Trans>
               </Button>
             </Stack>
           </form>
         )}
       </Formik>
-    </Stack>
+    </Box>
   )
 }

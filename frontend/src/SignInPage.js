@@ -1,26 +1,15 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { PasswordField } from './PasswordField'
+import PasswordField from './PasswordField'
 import { object, string } from 'yup'
-import {
-  Text,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Icon,
-  FormErrorMessage,
-  FormControl,
-  Stack,
-  Button,
-  Link,
-  useToast,
-} from '@chakra-ui/core'
+import { Text, Stack, Button, Link, useToast, Box } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
-import { Formik, Field } from 'formik'
+import { Formik } from 'formik'
 import { useUserState } from './UserState'
 import { AUTHENTICATE } from './graphql/mutations'
+import EmailField from './EmailField'
 
 export default function SignInPage() {
   const { login } = useUserState()
@@ -30,7 +19,9 @@ export default function SignInPage() {
 
   const validationSchema = object().shape({
     password: string().required(i18n._(t`Password cannot be empty`)),
-    email: string().required(i18n._(t`Email cannot be empty`)),
+    email: string()
+      .required(i18n._(t`Email cannot be empty`))
+      .email(i18n._(t`Invalid email`)),
   })
 
   const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
@@ -73,11 +64,7 @@ export default function SignInPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Stack spacing={4} mx="auto">
-      <Text fontSize="2xl">
-        <Trans>Sign in with your username and password.</Trans>
-      </Text>
-
+    <Box mx="auto">
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}
@@ -94,32 +81,21 @@ export default function SignInPage() {
             aria-label="form"
             name="form"
           >
-            <Field name="email">
-              {({ field, form }) => (
-                <FormControl
-                  mt={4}
-                  mb={4}
-                  isInvalid={form.errors.email && form.touched.email}
-                  isRequired
-                >
-                  <InputGroup>
-                    <InputLeftElement>
-                      <Icon name="email" color="gray.300" />
-                    </InputLeftElement>
-                    <Input {...field} id="email" placeholder="Email" />
-                  </InputGroup>
-                  <FormErrorMessage>Email{form.errors.email}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+            <Text fontSize="2xl" mb="4">
+              <Trans>Sign in with your username and password.</Trans>
+            </Text>
 
-            <PasswordField name="password" />
+            <EmailField name="email" mb="4" />
 
-            <Link as={RouteLink} to="/forgot-password">
-              <Trans>Forgot your password?</Trans>
+            <PasswordField name="password" mb="1" />
+
+            <Link as={RouteLink} to="/forgot-password" color="teal.500">
+              <Text mb="4">
+                <Trans>Forgot your password?</Trans>
+              </Text>
             </Link>
 
-            <Stack mt={6} spacing={4} isInline>
+            <Stack spacing={4} isInline>
               <Button
                 variantColor="teal"
                 isLoading={isSubmitting}
@@ -140,6 +116,6 @@ export default function SignInPage() {
           </form>
         )}
       </Formik>
-    </Stack>
+    </Box>
   )
 }
