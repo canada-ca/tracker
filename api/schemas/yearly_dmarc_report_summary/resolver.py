@@ -3,23 +3,25 @@ import calendar
 import graphene
 
 from datetime import datetime, timedelta
+from gql import gql
 from graphql import GraphQLError
 
 from db import db_session
 from functions.auth_wrappers import require_token
-from functions.auth_functions import is_user_write
+from functions.auth_functions import is_user_read
+from functions.external_graphql_api_request import send_request
 from functions.input_validators import cleanse_input
 from models import Domains
 from models.Organizations import Organizations
 from schemas.yearly_dmarc_report_summary.category_totals import CategoryTotals
-from schemas.yearly_dmarc_report_summary.send_request import send_request
 from schemas.yearly_dmarc_report_summary.yearly_dmarc_report_summary import YearlyDmarcReportSummary
 
 
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
 DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
 
-# @require_token
+
+@require_token
 def resolve_get_yearly_dmarc_report_summary(self, info, **kwargs):
     """
 
@@ -30,44 +32,86 @@ def resolve_get_yearly_dmarc_report_summary(self, info, **kwargs):
     """
     user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
-    domain = cleanse_input(kwargs.get("domain"))
+    domain_slug = cleanse_input(kwargs.get("domain_slug"))
 
-    # # Get Domains org_id
-    # domain_orm = db_session.query(Domains).filter(
-    #     domain == domain
-    # ).first()
-    #
-    # if domain_orm is not None:
-    #     if is_user_write(user_roles=user_roles, org_id=domain_orm.organization_id):
-    #
-    #     else:
-    #         raise GraphQLError("Error, you do not have access to this domain.")
-    # else:
-    #     raise GraphQLError("Error, domain cannot be found.")
+    # Get Domains org_id
+    domain_orm = db_session.query(Domains).filter(
+        Domains.slug == domain_slug
+    ).first()
 
-    start_date = "{last_year}-01-01".format(last_year=(datetime.utcnow() + timedelta(days=-365)).year)
-    end_date = "{next_year}-01-01".format(next_year=(datetime.utcnow() + timedelta(days=+365)).year)
+    # Check to see if domain exists
+    if domain_orm is not None:
+        # Check to see if user can view this domain
+        if is_user_read(user_roles=user_roles, org_id=domain_orm.organization_id):
+            # Create date selection periods
+            start_date = "{last_year}-01-01".format(
+                last_year=(datetime.utcnow() + timedelta(days=-365)).year)
+            end_date = "{next_year}-01-01".format(
+                next_year=(datetime.utcnow() + timedelta(days=+365)).year)
 
-    data = send_request(
-        api_domain=DMARC_REPORT_API_URL,
-        auth_token=DMARC_REPORT_API_TOKEN,
-        request_domain=domain,
-        start_date=start_date,
-        end_date=end_date
-    )
+            # Get Domain
+            domain = domain_orm.domain
 
-    rtr_list = []
+            # Create data for request
+            variables = {
+                "domain": domain,
+                "startDate": start_date,
+                "endDate": end_date
+            }
 
-    # print(data.get("getTotalDmarcSummaries").get("periods"))
-    iter_data = iter(data.get("getTotalDmarcSummaries").get("periods"))
-    next(iter_data)
+            query = gql('''
+                        query (
+                            $domain:GCURL!
+                            $startDate:Date!
+                            $endDate:Date!
+                        ) {
+                            getTotalDmarcSummaries (
+                                domain: $domain
+                                startDate: $startDate
+                                endDate: $endDate
+                            ) {
+                                periods {
+                                    startDate
+                                    endDate
+                                    categoryTotals {
+                                        dmarcFailNone
+                                        dmarcFailQuarantine
+                                        dmarcFailReject
+                                        spfFailDkimPass
+                                        spfPassDkimFail
+                                        spfPassDkimPass
+                                    }
+                                }
+                            }
+                        }
+                    ''')
 
-    for data in iter_data:
-        rtr_list.append(
-            YearlyDmarcReportSummary(
-                calendar.month_name[int(data.get("startDate")[5:7].lstrip("0"))],
-                data.get("startDate")[0:4].lstrip("0"),
-                data.get("categoryTotals")
+            # Send request
+            data = send_request(
+                api_domain=DMARC_REPORT_API_URL,
+                auth_token=DMARC_REPORT_API_TOKEN,
+                query=query,
+                variables=variables
             )
-        )
-    return rtr_list
+
+            rtr_list = []
+
+            iter_data = iter(data.get("getTotalDmarcSummaries").get("periods"))
+            next(iter_data)
+
+            for data in iter_data:
+                rtr_list.append(
+                    YearlyDmarcReportSummary(
+                        calendar.month_name[
+                            int(data.get("startDate")[5:7].lstrip("0"))],
+                        data.get("startDate")[0:4].lstrip("0"),
+                        data.get("categoryTotals")
+                    )
+                )
+            return rtr_list
+
+        else:
+            raise GraphQLError("Error, you do not have access to this domain.")
+    else:
+        raise GraphQLError("Error, domain cannot be found.")
+
