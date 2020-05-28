@@ -1,4 +1,5 @@
 import os
+import pytest_mock
 
 from notifications_python_client import NotificationsAPIClient
 
@@ -10,7 +11,13 @@ NOTIFICATION_API_KEY = os.getenv("NOTIFICATION_API_KEY")
 NOTIFICATION_API_URL = os.getenv("NOTIFICATION_API_URL")
 
 
-def test_successful_send_verification_email():
+def test_successful_send_verification_email(mocker):
+    mocker.patch(
+        "functions.verification_email.get_verification_email_status",
+        autospec=True,
+        return_value="delivered"
+    )
+
     request_headers = {"Origin": "https://testserver.com"}
     with app.test_request_context(headers=request_headers):
         temp_user = Users(
@@ -26,7 +33,13 @@ def test_successful_send_verification_email():
         assert response == "delivered"
 
 
-def test_permanent_failure_send_verification_email():
+def test_permanent_failure_send_verification_email(mocker):
+    mocker.patch(
+        "functions.verification_email.get_verification_email_status",
+        autospec=True,
+        return_value="Email Send Error: permanent-failure"
+    )
+
     request_headers = {"Origin": "https://testserver.com"}
     with app.test_request_context(headers=request_headers):
         temp_user = Users(
@@ -42,7 +55,13 @@ def test_permanent_failure_send_verification_email():
         assert response == "Email Send Error: permanent-failure"
 
 
-def test_temporary_failure_send_verification_email():
+def test_temporary_failure_send_verification_email(mocker):
+    mocker.patch(
+        "functions.verification_email.get_verification_email_status",
+        autospec=True,
+        return_value="Email Send Error: temporary-failure"
+    )
+
     request_headers = {"Origin": "https://testserver.com"}
     with app.test_request_context(headers=request_headers):
         temp_user = Users(
