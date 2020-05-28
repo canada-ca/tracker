@@ -10,12 +10,46 @@ The `istio.yaml` file in this folder is generated with the following command:
 istioctl manifest generate --set values.kiali.enabled=true \
   --set values.tracing.enabled=true \
   --set values.pilot.traceSampling=100 \
-  --set values.global.proxy.accessLogFile="/dev/stdout" \
+  --set meshConfig.accessLogFile="/dev/stdout" \
   --set values.gateways.istio-ingressgateway.loadBalancerIP=34.95.5.243 > istio.yaml
+```
+
+Inside the config that is generated is a service definition that currently needs to be modified to ensure that unneeded ports are not opened. This means editing the istio.yaml file and making the following modification.
+
+```bash
+ apiVersion: v1
+ kind: Service
+ metadata:
+   annotations: null
+   labels:
+     app: istio-ingressgateway
+     istio: ingressgateway
+     release: istio
+   name: istio-ingressgateway
+   namespace: istio-system
+ spec:
+   ports:
+-  - name: status-port
+-    port: 15021
+-    targetPort: 15021
+   - name: http2
+     port: 80
+     targetPort: 8080
+   - name: https
+     port: 443
+     targetPort: 8443
+-  - name: tls
+-    port: 15443
+-    targetPort: 15443
+   selector:
+     app: istio-ingressgateway
+     istio: ingressgateway
+   type: LoadBalancer
 ```
 
 That patches the `istio.yaml` in the bases folder with the loadbalancer config
 needed for GKE.
+
 
 ## Creating the cluster
 
