@@ -10,7 +10,6 @@ There are a few files that will need to be created in this folder for everything
 
 ```sh
 api.env
-gcp-dns-admin.json
 kiali.env
 postgres.env
 scanners.env
@@ -46,20 +45,6 @@ POSTGRES_PASSWORD=
 username=
 passphrase=
 ```
-
-## gcp-dns-admin.json
-
-The secrets that Istio reads it's TLS certificates from are created by [Cert Manager](https://cert-manager.io/). Cert manager uses the Google Cloud DNS credentials in `gcp-dns-admin.json` to manipulate DNS settings in order to complete a [DNS-01 challenge](https://tools.ietf.org/html/rfc8555#section-8.4) using the ACME protocol. 
-
-The completion of this challenge is needed to prove domain ownership so that [Let's Encrypt](https://letsencrypt.org/) will issue a certificate which Cert Manager will then write into a Kubernetes secret specified with the `secretName` property of the [Certificate](https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1alpha3.Certificate) object.
-
-The `gcp-dns-admin.json` file can be created with the following command:
-
-```sh
-gcloud iam service-accounts keys create ./gcp-dns-admin.json --iam-account=dns-admin@track-compliance.iam.gserviceaccount.com
-```
-
-You may need to set up Google Cloud DNS as described [here](https://github.com/stefanprodan/istio-gke/blob/master/docs/istio/05-letsencrypt-setup.md). 
 
 ## api.env
 
