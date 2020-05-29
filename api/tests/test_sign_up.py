@@ -25,7 +25,7 @@ def test_successful_creation_english(save, mocker):
     mocker.patch(
         "schemas.sign_up.create_user.send_verification_email",
         autospec=True,
-        return_value="delivered"
+        return_value="delivered",
     )
 
     request_headers = {"Origin": "https://testserver.com"}
@@ -79,7 +79,7 @@ def test_successful_creation_french(save, mocker):
     mocker.patch(
         "schemas.sign_up.create_user.send_verification_email",
         autospec=True,
-        return_value="delivered"
+        return_value="delivered",
     )
 
     request_headers = {"Origin": "https://testserver.com"}

@@ -11,16 +11,13 @@ from models import Users
 
 def get_verification_email_status(notify_client, response):
     try:
-        email_status = notify_client.get_notification_by_id(
-            response.get("id")).get(
+        email_status = notify_client.get_notification_by_id(response.get("id")).get(
             "status"
         )
         return email_status
 
     except HTTPError:
-        raise GraphQLError(
-            "Error, when retrieving email status, error: HTTPError"
-        )
+        raise GraphQLError("Error, when retrieving email status, error: HTTPError")
 
 
 def send_verification_email(user: Users, client: NotificationsAPIClient):
@@ -53,14 +50,11 @@ def send_verification_email(user: Users, client: NotificationsAPIClient):
         )
 
     except HTTPError as e:
-        raise GraphQLError(
-            "Error, when sending verification email, error: HTTPError"
-        )
+        raise GraphQLError("Error, when sending verification email, error: HTTPError")
 
     # Check Email status
     email_status = get_verification_email_status(
-        notify_client=notify_client,
-        response=response,
+        notify_client=notify_client, response=response,
     )
 
     if (
