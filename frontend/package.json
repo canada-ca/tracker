@@ -38,8 +38,10 @@
     "react-dom": "^16.13.1",
     "react-minimal-pie-chart": "^8.0.1",
     "react-router-dom": "^5.2.0",
+    "react-swipe": "^6.0.4",
     "react-test-renderer": "^16.13.1",
     "recharts": "^1.8.5",
+    "swipe-js-iso": "^2.1.5",
     "yup": "^0.29.0"
   },
   "devDependencies": {

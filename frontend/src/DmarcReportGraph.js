@@ -12,9 +12,12 @@ export function DmarcReportGraph(props) {
     { name: 'Failed Dkim', value: props.failDkimPercentage },
     { name: 'Failed Spf', value: props.failSpfPercentage },
   ]
+
+  const { title, description, weak, moderate, high } = props
+
   return (
     <Flex flexDirection="column" justifyContent="center">
-      <ResponsiveContainer width="100%" height={500}>
+      <ResponsiveContainer width="100%" height={250}>
         <PieChart alignItems="center">
           <Pie
             data={data}

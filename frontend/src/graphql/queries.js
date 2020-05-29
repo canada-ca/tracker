@@ -56,6 +56,24 @@ export const QUERY_USER = gql`
   }
 `
 
+export const GET_YEARLY_REPORT = gql`
+  query GetYearlyReport($domain: Slug!) {
+    getYearlyReport(domain: $domain) {
+      month
+      category_totals {
+        spf_pass_dkim_pass
+        spf_fail_dkim_pass
+        dmarc_fail_none
+        spf_pass_dkim_fail
+        dmarc_fail_quarantine
+        dmarc_fail_reject
+        unknown
+        total
+      }
+    }
+  }
+`
+
 export const QUERY_DMARC_REPORT = gql`
   query QueryDmarcReport($reportId: String!) {
     queryDmarcReport(reportId: $reportId) {

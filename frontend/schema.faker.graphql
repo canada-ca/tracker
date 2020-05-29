@@ -650,6 +650,37 @@ type Organization implements Node {
   affiliatedUsers(before: String, after: String, first: Int, last: Int): UserAffClassConnection
 }
 
+type YearlyReport {
+  month: MonthEnums
+  category_totals: CategoryTotals
+}
+
+type CategoryTotals {
+  spf_pass_dkim_pass: Int
+  spf_fail_dkim_pass: Int
+  dmarc_fail_none: Int
+  spf_pass_dkim_fail: Int
+  dmarc_fail_quarantine: Int
+  dmarc_fail_reject: Int
+  unknown: Int
+  total: Int
+}
+
+enum MonthEnums {
+  January
+  February
+  March
+  April
+  May
+  June
+  July
+  August
+  September
+  October
+  November
+  December
+}
+
 type OrganizationConnection {
   """Pagination data for this connection."""
   pageInfo: PageInfo!
@@ -780,6 +811,11 @@ type PolicyPublished {
 """The central gathering point for all of the GraphQL queries."""
 type Query {
   """
+  Select information to create a yearly report
+  """
+  getYearlyReport(domain: Slug!): [YearlyReport] @listLength(min: 13, max: 13)
+
+  """
   An graphql object that will be used to populate a userList component in the front end
   """
   userList(orgSlug: Slug!, before: String, after: String, first: Int, last: Int): UserListItemConnection
@@ -895,10 +931,6 @@ enum RoleEnums {
   """A user who has the same access as an admin, but can define new admins"""
   SUPER_ADMIN
 }
-
-enum LanguageEnums {
-  ENGLISH
-  FRENCH
 
 """
 This mutation is used for re-sending a verification email if it failed

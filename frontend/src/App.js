@@ -14,6 +14,7 @@ import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
+import { DmarcReportPage } from './DmarcReportPage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -66,6 +67,10 @@ export default function App() {
           <Link to="/user-list">
             <Trans>User List</Trans>
           </Link>
+
+          <Link to="/dmarc-report">
+            <Trans>Report</Trans>
+          </Link>
         </Navigation>
         {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
         <Main>
@@ -111,6 +116,10 @@ export default function App() {
               >
                 <QRcodePage userName={currentUser.userName} />
               </RouteIf>
+
+              <Route path="/dmarc-report">
+                <DmarcReportPage />
+              </Route>
 
               <Route component={PageNotFound} />
             </Switch>
