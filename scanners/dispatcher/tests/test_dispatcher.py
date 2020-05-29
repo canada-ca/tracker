@@ -8,32 +8,33 @@ from utils import *
 
 def test_web_scan():
     test_dkim = stub(
-        dispatch=lambda payload, client: PlainTextResponse("Dispatched to DKIM scanner")
+        stub_function=lambda payload, client: PlainTextResponse("Dispatched to DKIM scanner")
     )
     test_dmarc = stub(
-        dispatch=lambda payload, client: PlainTextResponse(
+        stub_function=lambda payload, client: PlainTextResponse(
             "Dispatched to DMARC scanner"
         )
     )
     test_https = stub(
-        dispatch=lambda payload, client: PlainTextResponse(
+        stub_function=lambda payload, client: PlainTextResponse(
             "Dispatched to HTTPS scanner"
         )
     )
     test_ssl = stub(
-        dispatch=lambda payload, client: PlainTextResponse("Dispatched to SSL scanner")
+        stub_function=lambda payload, client: PlainTextResponse("Dispatched to SSL scanner")
     )
 
     test_app = Server(
         scanners={
-            "dkim": test_dkim,
-            "dmarc": test_dmarc,
-            "https": test_https,
-            "ssl": test_ssl,
-        }
+            "dkim": Scanner(test_dkim.stub_function),
+            "dmarc": Scanner(test_dmarc.stub_function),
+            "https": Scanner(test_https.stub_function),
+            "ssl": Scanner(test_ssl.stub_function),
+        },
     )
 
     test_client = TestClient(test_app)
+    test_app.state.client = test_client
 
     test_payload = {"scan_id": 1, "domain": "cyber.gc.ca", "user_init": False}
     headers = {
@@ -49,32 +50,33 @@ def test_web_scan():
 
 def test_mail_scan():
     test_dkim = stub(
-        dispatch=lambda payload, client: PlainTextResponse("Dispatched to DKIM scanner")
+        stub_function=lambda payload, client: PlainTextResponse("Dispatched to DKIM scanner")
     )
     test_dmarc = stub(
-        dispatch=lambda payload, client: PlainTextResponse(
+        stub_function=lambda payload, client: PlainTextResponse(
             "Dispatched to DMARC scanner"
         )
     )
     test_https = stub(
-        dispatch=lambda payload, client: PlainTextResponse(
+        stub_function=lambda payload, client: PlainTextResponse(
             "Dispatched to HTTPS scanner"
         )
     )
     test_ssl = stub(
-        dispatch=lambda payload, client: PlainTextResponse("Dispatched to SSL scanner")
+        stub_function=lambda payload, client: PlainTextResponse("Dispatched to SSL scanner")
     )
 
     test_app = Server(
         scanners={
-            "dkim": test_dkim,
-            "dmarc": test_dmarc,
-            "https": test_https,
-            "ssl": test_ssl,
-        }
+            "dkim": Scanner(test_dkim.stub_function),
+            "dmarc": Scanner(test_dmarc.stub_function),
+            "https": Scanner(test_https.stub_function),
+            "ssl": Scanner(test_ssl.stub_function),
+        },
     )
 
     test_client = TestClient(test_app)
+    test_app.state.client = test_client
 
     test_payload = {
         "scan_id": 1,
@@ -93,6 +95,8 @@ def test_mail_scan():
 
 
 def test_https_dispatch():
+    client_stub = stub(post=lambda url, json: None)
+
     test_app = Server(
         scanners={
             "dkim": Scanner(scan_type=scan_dkim),
@@ -100,7 +104,7 @@ def test_https_dispatch():
             "https": Scanner(scan_type=scan_https),
             "ssl": Scanner(scan_type=scan_ssl),
         },
-        client=stub(post=lambda url, json: None),
+        default_client=client_stub
     )
 
     test_client = TestClient(test_app)
@@ -113,6 +117,8 @@ def test_https_dispatch():
 
 
 def test_ssl_dispatch():
+    client_stub = stub(post=lambda url, json: None)
+
     test_app = Server(
         scanners={
             "dkim": Scanner(scan_type=scan_dkim),
@@ -120,7 +126,7 @@ def test_ssl_dispatch():
             "https": Scanner(scan_type=scan_https),
             "ssl": Scanner(scan_type=scan_ssl),
         },
-        client=stub(post=lambda url, json: None),
+        default_client=client_stub
     )
 
     test_client = TestClient(test_app)
@@ -133,6 +139,8 @@ def test_ssl_dispatch():
 
 
 def test_dmarc_dispatch():
+    client_stub = stub(post=lambda url, json: None)
+
     test_app = Server(
         scanners={
             "dkim": Scanner(scan_type=scan_dkim),
@@ -140,7 +148,7 @@ def test_dmarc_dispatch():
             "https": Scanner(scan_type=scan_https),
             "ssl": Scanner(scan_type=scan_ssl),
         },
-        client=stub(post=lambda url, json: None),
+        default_client=client_stub
     )
 
     test_client = TestClient(test_app)
@@ -153,6 +161,8 @@ def test_dmarc_dispatch():
 
 
 def test_dkim_dispatch():
+    client_stub = stub(post=lambda url, json: None)
+
     test_app = Server(
         scanners={
             "dkim": Scanner(scan_type=scan_dkim),
@@ -160,7 +170,7 @@ def test_dkim_dispatch():
             "https": Scanner(scan_type=scan_https),
             "ssl": Scanner(scan_type=scan_ssl),
         },
-        client=stub(post=lambda url, json: None),
+        default_client=client_stub
     )
 
     test_client = TestClient(test_app)

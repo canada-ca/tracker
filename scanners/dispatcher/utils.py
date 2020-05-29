@@ -4,6 +4,8 @@ def Scanner(scan_type):
     def dispatch(payload, client):
         dispatch_function(payload, client)
 
+    return dispatch
+
 
 def scan_dkim(payload, client):
     client.post(

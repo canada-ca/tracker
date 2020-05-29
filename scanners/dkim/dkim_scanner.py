@@ -19,7 +19,7 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate(received_payload):
+def initiate(received_payload, client):
 
     logging.info("Scan received")
 
@@ -28,7 +28,7 @@ def initiate(received_payload):
         domain = received_payload["domain"]
 
         # Perform scan
-        scan_response = requests.post("http://127.0.0.1:8000/scan", data=domain)
+        scan_response = client.post("http://127.0.0.1:8000/scan", data=domain)
 
         scan_results = scan_response.json()
 
@@ -42,7 +42,7 @@ def initiate(received_payload):
             raise Exception("DKIM scan not completed")
 
         # Dispatch results to result-processor
-        dispatch_response = requests.post(
+        dispatch_response = client.post(
             "http://127.0.0.1:8000/dispatch", json=payload
         )
 
@@ -145,16 +145,18 @@ def scan_dkim(domain):
     return json.dumps(record)
 
 
-def Server(functions={}, client=requests):
+def Server(functions={}, default_client=requests):
     async def receive(request):
         logging.info("Request received")
+        client = request.app.state.client
         payload = await request.json()
-        return PlainTextResponse(initiate(payload))
+        return PlainTextResponse(initiate(payload, client))
 
     async def dispatch(request):
         try:
+            client = request.app.state.client
             payload = await request.json()
-            functions["dispatch"].dispatch(payload, client)
+            functions["dispatch"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Scan results sent to result-processor")
@@ -162,7 +164,7 @@ def Server(functions={}, client=requests):
     async def scan(request):
         domain = await request.body()
         logging.info("Performing scan...")
-        return JSONResponse(functions["scan"].scan(domain.decode("utf-8")))
+        return JSONResponse(functions["scan"](domain.decode("utf-8")))
 
     routes = [
         Route("/dispatch", dispatch, methods=["POST"]),
@@ -170,7 +172,11 @@ def Server(functions={}, client=requests):
         Route("/receive", receive, methods=["POST"]),
     ]
 
-    return Starlette(debug=True, routes=routes, on_startup=[startup])
+    starlette_app = Starlette(debug=True, routes=routes, on_startup=[startup])
+
+    starlette_app.state.client = default_client
+
+    return starlette_app
 
 
 def Scan(scan_type):
@@ -179,12 +185,16 @@ def Scan(scan_type):
     def scan(domain):
         return scan_function(domain)
 
+    return scan
+
 
 def Dispatcher(dispatch_type):
     dispatch_function = dispatch_type
 
     def dispatch(payload, client):
         dispatch_function(payload, client)
+
+    return dispatch
 
 
 app = Server(

@@ -15,7 +15,7 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate(received_payload, scan_type):
+def initiate(received_payload, scan_type, client):
 
     try:
         received_dict = ast.literal_eval(received_payload)
@@ -29,18 +29,18 @@ def initiate(received_payload, scan_type):
 
         dispatched = {}
         if scan_type == "web":
-            dispatched["https"] = requests.post(
+            dispatched["https"] = client.post(
                 "http://127.0.0.1:8000/https", json=payload
             )
-            dispatched["dmarc"] = requests.post(
+            dispatched["dmarc"] = client.post(
                 "http://127.0.0.1:8000/dmarc", json=payload
             )
-            dispatched["ssl"] = requests.post("http://127.0.0.1:8000/ssl", json=payload)
+            dispatched["ssl"] = client.post("http://127.0.0.1:8000/ssl", json=payload)
         elif scan_type == "mail":
-            dispatched["dkim"] = requests.post(
+            dispatched["dkim"] = client.post(
                 "http://127.0.0.1:8000/dkim", json=payload
             )
-            dispatched["dmarc"] = requests.post(
+            dispatched["dmarc"] = client.post(
                 "http://127.0.0.1:8000/dmarc", json=payload
             )
         else:
@@ -57,18 +57,21 @@ def initiate(received_payload, scan_type):
         return f"Failed to dispatch scan to designated scanner(s): {str(e)}"
 
 
-def Server(scanners={}, client=requests):
+def Server(scanners={}, default_client=requests):
+
     def receive(request):
         logging.info("Request received")
+        client = request.app.state.client
         return PlainTextResponse(
-            initiate(request.headers.get("Data"), request.headers.get("Scan-Type"))
+            initiate(request.headers.get("Data"), request.headers.get("Scan-Type"), client)
         )
 
     async def dkim(request):
         logging.info("DKIM scan requested")
         try:
+            client = request.app.state.client
             payload = await request.json()
-            scanners["dkim"].dispatch(payload, client)
+            scanners["dkim"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to DKIM scanner")
@@ -76,8 +79,9 @@ def Server(scanners={}, client=requests):
     async def dmarc(request):
         logging.info("DMARC scan requested")
         try:
+            client = request.app.state.client
             payload = await request.json()
-            scanners["dmarc"].dispatch(payload, client)
+            scanners["dmarc"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to DMARC scanner")
@@ -85,8 +89,9 @@ def Server(scanners={}, client=requests):
     async def https(request):
         logging.info("HTTPS scan requested")
         try:
+            client = request.app.state.client
             payload = await request.json()
-            scanners["https"].dispatch(payload, client)
+            scanners["https"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to HTTPS scanner")
@@ -94,8 +99,9 @@ def Server(scanners={}, client=requests):
     async def ssl(request):
         logging.info("SSL scan requested")
         try:
+            client = request.app.state.client
             payload = await request.json()
-            scanners["ssl"].dispatch(payload, client)
+            scanners["ssl"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
         return PlainTextResponse("Dispatched to SSL scanner")
@@ -108,7 +114,11 @@ def Server(scanners={}, client=requests):
         Route("/receive", receive, methods=["POST"]),
     ]
 
-    return Starlette(debug=True, routes=routes, on_startup=[startup])
+    starlette_app = Starlette(debug=True, routes=routes, on_startup=[startup])
+
+    starlette_app.state.client = default_client
+
+    return starlette_app
 
 
 app = Server(

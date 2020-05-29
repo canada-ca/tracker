@@ -15,6 +15,7 @@ def test_scan():
     test_app = Server(functions={"dispatch": dispatch_stub, "scan": Scan(scan_dmarc),})
 
     test_client = TestClient(test_app)
+    test_app.state.client = test_client
 
     test_payload = {"scan_id": 1, "domain": "cyber.gc.ca"}
 
@@ -24,9 +25,11 @@ def test_scan():
 
 
 def test_dispatch():
+    client_stub = stub(post=lambda url, json: None)
+
     test_app = Server(
         functions={"dispatch": Dispatcher(dispatch_results), "scan": Scan(scan_dmarc),},
-        client=stub(post=lambda url, json: None),
+        default_client=client_stub,
     )
 
     test_client = TestClient(test_app)
