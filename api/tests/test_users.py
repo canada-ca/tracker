@@ -1,15 +1,13 @@
 import pytest
-from app import app
 from models import Users, User_affiliations, Organizations
 from db import DB
 
 
 @pytest.fixture
 def save():
-    with app.app_context():
-        s, cleanup, session = DB()
-        yield s
-        cleanup()
+    s, cleanup, session = DB()
+    yield s
+    cleanup()
 
 
 def test_find_by_user_name_returns_none():

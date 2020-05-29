@@ -1,9 +1,6 @@
 import pyotp
 import pytest
-
 from pytest import fail
-
-from app import app
 from db import DB
 from models import Users
 from functions.error_messages import *
@@ -20,24 +17,23 @@ def save():
 # XXX: convert this to pytest style
 @pytest.fixture(scope="function")
 def user_schema_test_db_init():
-    with app.app_context():
-        test_user = Users(
-            display_name="testuser",
-            user_name="testuser@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_user)
-        test_admin = Users(
-            display_name="testadmin",
-            user_name="testadmin@testemail.ca",
-            password="testpassword123",
-        )
-        db_session.add(test_admin)
-        db_session.commit()
+    test_user = Users(
+        display_name="testuser",
+        user_name="testuser@testemail.ca",
+        password="testpassword123",
+    )
+    db_session.add(test_user)
+    test_admin = Users(
+        display_name="testadmin",
+        user_name="testadmin@testemail.ca",
+        password="testpassword123",
+    )
+    db_session.add(test_admin)
+    db_session.commit()
 
-        yield
+    yield
 
-        cleanup()
+    cleanup()
 
 
 def test_update_password_success(save):

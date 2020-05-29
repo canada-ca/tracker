@@ -1,8 +1,6 @@
 import pytest
 import pytest_mock
-
 from pytest import fail
-
 from app import app
 from db import DB
 from models import Users
@@ -12,10 +10,9 @@ from tests.test_functions import json, run
 
 @pytest.fixture()
 def save():
-    with app.app_context():
-        s, cleanup, db_session = DB()
-        yield s
-        cleanup()
+    s, cleanup, db_session = DB()
+    yield s
+    cleanup()
 
 
 def test_successful_creation_english(save, mocker):

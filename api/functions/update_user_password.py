@@ -1,10 +1,8 @@
 import bcrypt
-
 from graphql import GraphQLError
 from functions.input_validators import *
 from functions.error_messages import *
 from models import Users as User
-from app import app
 from db import db_session
 
 
@@ -31,6 +29,7 @@ def update_password(user_name, password, confirm_password):
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
 
+    # TODO: move this into the User model
     user = User.query.filter(User.user_name == user_name).update(
         {
             "user_password": bcrypt.hashpw(

@@ -1,7 +1,5 @@
 import pytest
-
 from db import DB
-from app import app
 from models import Users
 from tests.test_functions import json, run
 from backend.security_check import SecurityAnalysisBackend
@@ -9,10 +7,9 @@ from backend.security_check import SecurityAnalysisBackend
 
 @pytest.fixture()
 def save():
-    with app.app_context():
-        s, cleanup, db_session = DB()
-        yield s
-        cleanup()
+    s, cleanup, db_session = DB()
+    yield s
+    cleanup()
 
 
 def test_valid_cost_query(save):

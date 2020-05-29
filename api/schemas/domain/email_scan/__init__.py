@@ -1,8 +1,6 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-
-from app import app
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
 from models import Scans, Dmarc_scans, Spf_scans, Dkim_scans
@@ -38,25 +36,23 @@ class EmailScan(SQLAlchemyObjectType):
         lambda: DKIM, description="DomainKeys Identified Mail (DKIM) Signatures"
     )
 
-    with app.app_context():
+    def resolve_domain(self: Scans, info):
+        return get_domain(self, info)
 
-        def resolve_domain(self: Scans, info):
-            return get_domain(self, info)
+    def resolve_timestamp(self: Scans, info):
+        return get_timestamp(self, info)
 
-        def resolve_timestamp(self: Scans, info):
-            return get_timestamp(self, info)
+    def resolve_dmarc(self: Scans, info):
+        query = DMARC.get_query(info)
+        return query.filter(self.id == Dmarc_scans.id).all()
 
-        def resolve_dmarc(self: Scans, info):
-            query = DMARC.get_query(info)
-            return query.filter(self.id == Dmarc_scans.id).all()
+    def resolve_spf(self: Scans, info):
+        query = SPF.get_query(info)
+        return query.filter(self.id == Spf_scans.id).all()
 
-        def resolve_spf(self: Scans, info):
-            query = SPF.get_query(info)
-            return query.filter(self.id == Spf_scans.id).all()
-
-        def resolve_dkim(self: Scans, info):
-            query = DKIM.get_query(info)
-            return query.filter(self.id == Dkim_scans.id).all()
+    def resolve_dkim(self: Scans, info):
+        query = DKIM.get_query(info)
+        return query.filter(self.id == Dkim_scans.id).all()
 
 
 class EmailScanConnection(relay.Connection):

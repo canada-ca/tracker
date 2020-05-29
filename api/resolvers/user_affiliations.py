@@ -1,6 +1,4 @@
 from graphql import GraphQLError
-
-from app import app
 from db import db_session
 from models import Organizations as Orgs
 from functions.auth_wrappers import require_token

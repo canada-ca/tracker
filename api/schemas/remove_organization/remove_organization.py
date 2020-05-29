@@ -1,7 +1,5 @@
 import graphene
 from graphql import GraphQLError
-
-from app import app
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin
@@ -31,95 +29,93 @@ class RemoveOrganization(graphene.Mutation):
 
     status = graphene.Boolean()
 
-    with app.app_context():
+    @require_token
+    def mutate(self, info, **kwargs):
+        # Get arguments from mutation
+        user_roles = kwargs.get("user_roles")
+        slug = cleanse_input(kwargs.get("slug"))
 
-        @require_token
-        def mutate(self, info, **kwargs):
-            # Get arguments from mutation
-            user_roles = kwargs.get("user_roles")
-            slug = cleanse_input(kwargs.get("slug"))
+        # Restrict the deletion of SA Org
+        if slug == "super-admin":
+            raise GraphQLError("Error, you cannot remove this organization")
 
-            # Restrict the deletion of SA Org
-            if slug == "super-admin":
-                raise GraphQLError("Error, you cannot remove this organization")
+        # Check to see if org exists
+        org_orm = (
+            db_session.query(Organizations)
+            .filter(Organizations.slug == slug)
+            .first()
+        )
 
-            # Check to see if org exists
-            org_orm = (
-                db_session.query(Organizations)
-                .filter(Organizations.slug == slug)
-                .first()
-            )
+        if org_orm is None:
+            raise GraphQLError("Error, organization does not exist")
 
-            if org_orm is None:
-                raise GraphQLError("Error, organization does not exist")
+        # Check Permissions
+        if is_super_admin(user_roles=user_roles):
+            # XXX shouldn't cascade delete do all of this for us?
+            try:
+                # Get All Domains
+                domain_orm = Domains.query.filter(
+                    Domains.organization_id == org_orm.id
+                ).all()
 
-            # Check Permissions
-            if is_super_admin(user_roles=user_roles):
-                # XXX shouldn't cascade delete do all of this for us?
-                try:
-                    # Get All Domains
-                    domain_orm = Domains.query.filter(
-                        Domains.organization_id == org_orm.id
-                    ).all()
-
-                    if len(domain_orm) > 0:
-                        # Loop Through All Domains
-                        for domain in domain_orm:
-                            # Get All Scans
-                            scan_orm = Scans.query.filter(
-                                Scans.domain_id == domain.id
-                            ).all()
-                            # Delete All Related Scans
-                            for scan in scan_orm:
-                                try:
-                                    Dkim_scans.query.filter(
-                                        Dkim_scans.id == scan.id
-                                    ).delete()
-                                    Dmarc_scans.query.filter(
-                                        Dmarc_scans.id == scan.id
-                                    ).delete()
-                                    Https_scans.query.filter(
-                                        Https_scans.id == scan.id
-                                    ).delete()
-                                    Mx_scans.query.filter(
-                                        Mx_scans.id == scan.id
-                                    ).delete()
-                                    Spf_scans.query.filter(
-                                        Spf_scans.id == scan.id
-                                    ).delete()
-                                    Ssl_scans.query.filter(
-                                        Ssl_scans.id == scan.id
-                                    ).delete()
-                                    Scans.query.filter(Scans.id == scan.id).delete()
-                                except Exception as e:
-                                    print("Scans: " + e)
-                                    return RemoveOrganization(status=False)
-                            # Delete Domains
+                if len(domain_orm) > 0:
+                    # Loop Through All Domains
+                    for domain in domain_orm:
+                        # Get All Scans
+                        scan_orm = Scans.query.filter(
+                            Scans.domain_id == domain.id
+                        ).all()
+                        # Delete All Related Scans
+                        for scan in scan_orm:
                             try:
-                                Domains.query.filter(Domains.id == domain.id).delete()
+                                Dkim_scans.query.filter(
+                                    Dkim_scans.id == scan.id
+                                ).delete()
+                                Dmarc_scans.query.filter(
+                                    Dmarc_scans.id == scan.id
+                                ).delete()
+                                Https_scans.query.filter(
+                                    Https_scans.id == scan.id
+                                ).delete()
+                                Mx_scans.query.filter(
+                                    Mx_scans.id == scan.id
+                                ).delete()
+                                Spf_scans.query.filter(
+                                    Spf_scans.id == scan.id
+                                ).delete()
+                                Ssl_scans.query.filter(
+                                    Ssl_scans.id == scan.id
+                                ).delete()
+                                Scans.query.filter(Scans.id == scan.id).delete()
                             except Exception as e:
-                                print("Domain: " + str(e))
+                                print("Scans: " + e)
                                 return RemoveOrganization(status=False)
+                        # Delete Domains
+                        try:
+                            Domains.query.filter(Domains.id == domain.id).delete()
+                        except Exception as e:
+                            print("Domain: " + str(e))
+                            return RemoveOrganization(status=False)
 
-                    try:
-                        # Get all user aff
-                        User_affiliations.query.filter(
-                            User_affiliations.organization_id == org_orm.id
-                        ).delete()
-                    except Exception as e:
-                        print("user_aff: " + str(e))
-                        return RemoveOrganization(status=False)
-
-                    db_session.delete(org_orm)
-                    db_session.commit()
-                    return RemoveOrganization(status=True)
-
+                try:
+                    # Get all user aff
+                    User_affiliations.query.filter(
+                        User_affiliations.organization_id == org_orm.id
+                    ).delete()
                 except Exception as e:
-                    print("organization: " + str(e))
-                    db_session.rollback()
-                    db_session.flush()
+                    print("user_aff: " + str(e))
                     return RemoveOrganization(status=False)
-            else:
-                raise GraphQLError(
-                    "Error, you do not have permission to remove organizations."
-                )
+
+                db_session.delete(org_orm)
+                db_session.commit()
+                return RemoveOrganization(status=True)
+
+            except Exception as e:
+                print("organization: " + str(e))
+                db_session.rollback()
+                db_session.flush()
+                return RemoveOrganization(status=False)
+        else:
+            raise GraphQLError(
+                "Error, you do not have permission to remove organizations."
+            )

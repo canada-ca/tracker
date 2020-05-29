@@ -1,11 +1,9 @@
 import os
 import pytest
-
 from graphql import GraphQLError
 from notifications_python_client import NotificationsAPIClient
 from requests import HTTPError
 from unittest.mock import MagicMock
-
 from app import app
 from models.Users import Users
 from functions.verification_email import send_verification_email

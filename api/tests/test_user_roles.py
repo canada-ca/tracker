@@ -1,8 +1,5 @@
 import pytest
-
 from pytest import fail
-
-from app import app
 from db import DB
 from models import Users, User_affiliations, Organizations
 from functions.error_messages import error_not_an_admin
@@ -11,10 +8,9 @@ from tests.test_functions import json, run
 
 @pytest.fixture
 def db():
-    with app.app_context():
-        save, cleanup, session = DB()
-        yield [save, session]
-        cleanup()
+    save, cleanup, session = DB()
+    yield [save, session]
+    cleanup()
 
 
 def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_write(db):

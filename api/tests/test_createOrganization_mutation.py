@@ -1,9 +1,6 @@
 import pytest
-
 from pytest import fail
 from graphene.test import Client
-
-from app import app
 from db import DB
 from queries import schema
 from json_web_token import tokenize, auth_header
@@ -17,10 +14,9 @@ from models import (
 
 @pytest.fixture
 def save():
-    with app.app_context():
-        s, cleanup, session = DB()
-        yield s
-        cleanup()
+    s, cleanup, session = DB()
+    yield s
+    cleanup()
 
 
 def test_mutation_createOrganization_fails_for_existing_orgs(save):

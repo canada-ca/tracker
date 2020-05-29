@@ -3,19 +3,13 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
 from graphql import ResolveInfo
-
-from app import app
-
 from schemas.domain import Domain as DomainsSchema
 from schemas.user_affiliations import UserAffClass
-
 from scalars.organization_acronym import Acronym
 from scalars.slug import Slug
-
 from models import Domains as DomainsModel
 from models import Organizations as OrgModel
 from models import User_affiliations as UserAffModel
-
 from functions.auth_functions import is_admin
 from functions.auth_wrappers import require_token
 
@@ -52,42 +46,41 @@ class Organization(SQLAlchemyObjectType):
         description="The users that have an affiliation with the organization.",
     )
 
-    with app.app_context():
 
-        def resolve_acronym(self: OrgModel, info):
-            return self.acronym
+    def resolve_acronym(self: OrgModel, info):
+        return self.acronym
 
-        def resolve_name(self: OrgModel, info):
-            return self.name
+    def resolve_name(self: OrgModel, info):
+        return self.name
 
-        def resolve_slug(self: OrgModel, info):
-            return self.slug
+    def resolve_slug(self: OrgModel, info):
+        return self.slug
 
-        def resolve_zone(self: OrgModel, info):
-            return self.org_tags.get("zone", None)
+    def resolve_zone(self: OrgModel, info):
+        return self.org_tags.get("zone", None)
 
-        def resolve_sector(self: OrgModel, info):
-            return self.org_tags.get("sector", None)
+    def resolve_sector(self: OrgModel, info):
+        return self.org_tags.get("sector", None)
 
-        def resolve_province(self: OrgModel, info):
-            return self.org_tags.get("province", None)
+    def resolve_province(self: OrgModel, info):
+        return self.org_tags.get("province", None)
 
-        def resolve_city(self: OrgModel, info):
-            return self.org_tags.get("city", None)
+    def resolve_city(self: OrgModel, info):
+        return self.org_tags.get("city", None)
 
-        def resolve_domains(self: OrgModel, info):
-            query = DomainsSchema.get_query(info)
-            return query.filter(DomainsModel.organization_id == self.id).all()
+    def resolve_domains(self: OrgModel, info):
+        query = DomainsSchema.get_query(info)
+        return query.filter(DomainsModel.organization_id == self.id).all()
 
-        @require_token
-        def resolve_affiliated_users(self: OrgModel, info, **kwargs):
-            user_roles = kwargs.get("user_roles")
-            if is_admin(user_roles=user_roles, org_id=self.id):
-                query = UserAffClass.get_query(info)
-                query = query.filter(UserAffModel.organization_id == self.id).all()
-                return query
-            else:
-                return []
+    @require_token
+    def resolve_affiliated_users(self: OrgModel, info, **kwargs):
+        user_roles = kwargs.get("user_roles")
+        if is_admin(user_roles=user_roles, org_id=self.id):
+            query = UserAffClass.get_query(info)
+            query = query.filter(UserAffModel.organization_id == self.id).all()
+            return query
+        else:
+            return []
 
 
 class OrganizationConnection(relay.Connection):

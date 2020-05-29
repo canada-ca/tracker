@@ -1,15 +1,10 @@
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
-
-from app import app
 from db import db_session
 from models import Dmarc_scans, Scans, Domains
-
 from scalars.url import URL
-
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
-
 from schemas.domain.email_scan.dmarc.dmarc_tags import DmarcTags
 
 
@@ -51,28 +46,26 @@ class DMARC(SQLAlchemyObjectType):
         lambda: DmarcTags, description="Key tags found during DMARC Scan"
     )
 
-    with app.app_context():
+    def resolve_domain(self: Dmarc_scans, info):
+        return get_domain(self, info)
 
-        def resolve_domain(self: Dmarc_scans, info):
-            return get_domain(self, info)
+    def resolve_timestamp(self: Dmarc_scans, info):
+        return get_timestamp(self, info)
 
-        def resolve_timestamp(self: Dmarc_scans, info):
-            return get_timestamp(self, info)
+    def resolve_dmarc_phase(self: Dmarc_scans, info):
+        return self.dmarc_phase
 
-        def resolve_dmarc_phase(self: Dmarc_scans, info):
-            return self.dmarc_phase
+    def resolve_record(self: Dmarc_scans, info):
+        return self.dmarc_scan["dmarc"]["record"]
 
-        def resolve_record(self: Dmarc_scans, info):
-            return self.dmarc_scan["dmarc"]["record"]
+    def resolve_p_policy(self: Dmarc_scans, info):
+        return self.dmarc_scan["dmarc"]["tags"]["p"]["value"]
 
-        def resolve_p_policy(self: Dmarc_scans, info):
-            return self.dmarc_scan["dmarc"]["tags"]["p"]["value"]
+    def resolve_sp_policy(self: Dmarc_scans, info):
+        return self.dmarc_scan["dmarc"]["tags"]["sp"]["value"]
 
-        def resolve_sp_policy(self: Dmarc_scans, info):
-            return self.dmarc_scan["dmarc"]["tags"]["sp"]["value"]
+    def resolve_pct(self: Dmarc_scans, info):
+        return self.dmarc_scan["dmarc"]["tags"]["pct"]["value"]
 
-        def resolve_pct(self: Dmarc_scans, info):
-            return self.dmarc_scan["dmarc"]["tags"]["pct"]["value"]
-
-        def resolve_dmarc_guidance_tags(self: Dmarc_scans, info):
-            return DmarcTags.get_query(info).all()
+    def resolve_dmarc_guidance_tags(self: Dmarc_scans, info):
+        return DmarcTags.get_query(info).all()

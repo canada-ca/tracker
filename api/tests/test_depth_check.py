@@ -1,6 +1,4 @@
 import pytest
-
-from app import app
 from db import DB
 from models import Users
 from backend.security_check import SecurityAnalysisBackend
@@ -9,10 +7,9 @@ from tests.test_functions import json, run
 
 @pytest.fixture
 def save():
-    with app.app_context():
-        save, cleanup, _ = DB()
-        yield save
-        cleanup()
+    save, cleanup, _ = DB()
+    yield save
+    cleanup()
 
 
 def test_valid_depth_query(save):

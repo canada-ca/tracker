@@ -1,8 +1,5 @@
 import pytest
-
 from pytest import fail
-
-from app import app
 from db import DB
 from models import (
     Organizations,
@@ -22,10 +19,9 @@ from tests.test_functions import json, run
 
 @pytest.fixture
 def db():
-    with app.app_context():
-        save, cleanup, session = DB()
-        yield [save, session]
-        cleanup()
+    save, cleanup, session = DB()
+    yield [save, session]
+    cleanup()
 
 
 def test_remove_domain_super_admin(db):

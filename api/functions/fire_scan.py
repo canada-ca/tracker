@@ -2,7 +2,6 @@ import requests
 import jwt
 import os
 import datetime
-from app import app
 from db import db_session
 from models import Scans, Domains
 
