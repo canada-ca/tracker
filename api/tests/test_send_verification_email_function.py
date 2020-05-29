@@ -31,7 +31,7 @@ def test_successful_send_verification_email(mocker):
         mock_client.send_email_notification = MagicMock(return_value={})
 
         temp_user = Users(
-            user_name="perm-fail@simulator.notify",
+            user_name="success@simulator.notify",
             password="testpassword123",
             display_name="test account"
         )
@@ -89,7 +89,7 @@ def test_temporary_failure_send_verification_email(mocker):
         mock_client.send_email_notification = MagicMock(return_value={})
 
         temp_user = Users(
-            user_name="perm-fail@simulator.notify",
+            user_name="temp-fail@simulator.notify",
             password="testpassword123",
             display_name="test account"
         )
