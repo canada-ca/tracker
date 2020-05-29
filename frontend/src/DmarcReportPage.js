@@ -1,16 +1,4 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
-import {
-  Text,
-  Stack,
-  SimpleGrid,
-  Box,
-  Button,
-  Heading,
-  Icon,
-  Flex,
-  Divider,
-} from '@chakra-ui/core'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
 import { GET_YEARLY_REPORT } from './graphql/queries'
@@ -22,7 +10,7 @@ export function DmarcReportPage() {
   const { loading, error, data } = useQuery(GET_YEARLY_REPORT, {
     context: {
       headers: {
-        // authorization: currentUser.jwt,
+        authorization: currentUser.jwt,
       },
     },
     variables: { domain: slugify('cyber.gc.ca') },
@@ -34,57 +22,60 @@ export function DmarcReportPage() {
     console.log('Show: ' + show)
   }
 
-  console.log(data)
-
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
+
+  const categoryTotals = data.getYearlyReport[0].category_totals
+
+  const strong = (({ spf_pass_dkim_pass }) => ({
+    spf_pass_dkim_pass,
+  }))(categoryTotals)
+
+  const moderate = (({ spf_fail_dkim_pass, spf_pass_dkim_fail }) => ({
+    spf_fail_dkim_pass,
+    spf_pass_dkim_fail,
+  }))(categoryTotals)
+
+  const weak = (({
+    dmarc_fail_reject,
+    dmarc_fail_none,
+    dmarc_fail_quarantine,
+  }) => ({
+    dmarc_fail_reject,
+    dmarc_fail_none,
+    dmarc_fail_quarantine,
+  }))(categoryTotals)
+
+  const unknown = (({ unknown }) => ({
+    unknown,
+  }))(categoryTotals)
+
+  const getNameQtyPair = (categoryPair) => {
+    return Object.keys(categoryPair).map((key) => {
+      return { name: key, qty: categoryPair[key] }
+    })
+  }
 
   const cardData = [
     {
       strength: 'strong',
       name: 'Pass',
-      categories: [
-        {
-          name: 'spf_pass_dkim_pass',
-          qty: Math.floor(Math.random() * 1000 + 1),
-        },
-      ],
+      categories: getNameQtyPair(strong),
     },
     {
       strength: 'moderate',
       name: 'Partial pass',
-      categories: [
-        {
-          name: 'spf_fail_dkim_pass',
-          qty: Math.floor(Math.random() * 1000 + 1),
-        },
-        {
-          name: 'spf_pass_dkim_fail',
-          qty: Math.floor(Math.random() * 1000 + 1),
-        },
-      ],
+      categories: getNameQtyPair(moderate),
     },
     {
       strength: 'weak',
       name: 'All fail',
-      categories: [
-        {
-          name: 'dmarc_fail_reject',
-          qty: Math.floor(Math.random() * 1000 + 1),
-        },
-        { name: 'dmarc_fail_none', qty: Math.floor(Math.random() * 1000 + 1) },
-        {
-          name: 'dmarc_fail_quarantine',
-          qty: Math.floor(Math.random() * 1000 + 1),
-        },
-      ],
+      categories: getNameQtyPair(weak),
     },
     {
       strength: 'unknown',
       name: 'Unknown',
-      categories: [
-        { name: 'unknown', qty: Math.floor(Math.random() * 1000 + 1) },
-      ],
+      categories: getNameQtyPair(unknown),
     },
   ]
 
