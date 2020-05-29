@@ -84,6 +84,7 @@ export function DmarcReportPage() {
       title="DMARC Report"
       description="Description of DMARC report"
       data={cardData}
+      slider={false}
     />
   )
 }

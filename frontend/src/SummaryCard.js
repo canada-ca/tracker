@@ -1,10 +1,10 @@
 import React from 'react'
 import { Text, Stack, Box, Badge, Divider } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { string, array } from 'prop-types'
+import { string, array, bool } from 'prop-types'
 
 export function SummaryCard({ ...props }) {
-  const { title, description, data } = props
+  const { title, description, data, slider } = props
 
   const reducer = (accumulator, currentValue) => {
     return accumulator + currentValue
@@ -118,62 +118,65 @@ export function SummaryCard({ ...props }) {
         <br />
 
         {/* data box */}
-        <Box bg="#444444">
-          <Box h="1" />
-          <Stack
-            isInline
-            gridTemplateColumns="10"
-            gridTemplateRows="150"
-            overflowX="scroll"
-            gridAutoFlow="columns"
-            gridAutoColumns="40%"
-          >
-            <Box />
-            {data.map((entry) => {
-              let color
-              switch (entry.strength) {
-                case 'strong':
-                  color = '#2D8133'
-                  break
-                case 'moderate':
-                  color = '#ffbf47'
-                  break
-                case 'weak':
-                  color = '#e53e3e'
-                  break
-                case 'unknown':
-                  color = '#B0B0B0'
-                  break
-              }
-              return entry.categories.map((category) => {
-                return (
-                  <Stack align="center" isInline>
-                    <Text
-                      p="1"
-                      color="#EDEDED"
-                      rounded="md"
-                      textAlign="center"
-                      as="b"
-                    >
-                      {`${category.name}: `}
-                      <br />
-                      {category.qty}
-                    </Text>
-                    <Divider orientation="vertical" borderColor="red.500" />
-                  </Stack>
-                )
-              })
-            })}
-          </Stack>
-          <Box h="1" />
-        </Box>
+        {slider && (
+          <Box bg="#444444">
+            <Box h="1" />
+            <Stack
+              isInline
+              gridTemplateColumns="10"
+              gridTemplateRows="150"
+              overflowX="scroll"
+              gridAutoFlow="columns"
+              gridAutoColumns="40%"
+            >
+              <Box />
+              {data.map((entry) => {
+                let color
+                switch (entry.strength) {
+                  case 'strong':
+                    color = '#2D8133'
+                    break
+                  case 'moderate':
+                    color = '#ffbf47'
+                    break
+                  case 'weak':
+                    color = '#e53e3e'
+                    break
+                  case 'unknown':
+                    color = '#B0B0B0'
+                    break
+                }
+                return entry.categories.map((category) => {
+                  return (
+                    <Stack align="center" isInline>
+                      <Text
+                        p="1"
+                        color="#EDEDED"
+                        rounded="md"
+                        textAlign="center"
+                        as="b"
+                      >
+                        {`${category.name}: `}
+                        <br />
+                        {category.qty}
+                      </Text>
+                      <Divider orientation="vertical" borderColor="red.500" />
+                    </Stack>
+                  )
+                })
+              })}
+            </Stack>
+            <Box h="1" />
+          </Box>
+        )}
       </Box>
     </Box>
   )
 }
 
 SummaryCard.propTypes = {
-  title: string,
-  description: string,
-  data: array,
+  title: string.isRequired,
+  description: string.isRequired,
+  data: array.isRequired,
+  slider: bool,
 }
