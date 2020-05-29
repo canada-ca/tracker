@@ -19,7 +19,7 @@ def get_verification_email_status(notify_client, response):
 
     except HTTPError:
         raise GraphQLError(
-            "Error, when retrieving email status, error: {}".format(HTTPError)
+            "Error, when retrieving email status, error: HTTPError"
         )
 
 
@@ -49,12 +49,12 @@ def send_verification_email(user: Users, client: NotificationsAPIClient):
         response = notify_client.send_email_notification(
             email_address=user.user_name,
             template_id=email_template_id,
-            personalisation={"user": "", "verify_email_url": url},
+            personalisation={"user": user.display_name, "verify_email_url": url},
         )
 
-    except HTTPError:
+    except HTTPError as e:
         raise GraphQLError(
-            "Error, when sending verification email, error: {}".format(HTTPError)
+            "Error, when sending verification email, error: HTTPError"
         )
 
     # Check Email status
