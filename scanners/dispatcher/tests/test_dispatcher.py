@@ -177,6 +177,6 @@ def test_dkim_dispatch():
 
     payload = {"scan_id": 1, "domain": "selector1._domainkey.cyber.gc.ca"}
 
-    res = test_client.post("/https", json=payload)
+    res = test_client.post("/dkim", json=payload)
 
     assert res.text == "Dispatched to DKIM scanner"
