@@ -1,4 +1,5 @@
 import pytest
+import pytest_mock
 
 from pytest import fail
 
@@ -17,10 +18,16 @@ def save():
         cleanup()
 
 
-def test_successful_creation_english(save):
+def test_successful_creation_english(save, mocker):
     """
     Test that ensures a user can be created successfully using the api endpoint
     """
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
     request_headers = {"Origin": "https://testserver.com"}
     with app.test_request_context(headers=request_headers):
         result = run(
@@ -65,10 +72,16 @@ def test_successful_creation_english(save):
         assert result == expected_result
 
 
-def test_successful_creation_french(save):
+def test_successful_creation_french(save, mocker):
     """
     Test that ensures a user can be created successfully using the api endpoint
     """
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
     request_headers = {"Origin": "https://testserver.com"}
     with app.test_request_context(headers=request_headers):
         result = run(

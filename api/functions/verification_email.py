@@ -9,6 +9,17 @@ from json_web_token import tokenize
 from models import Users
 
 
+def get_verification_email_status(notify_client, response):
+    try:
+        email_status = notify_client.get_notification_by_id(response.get("id")).get(
+            "status"
+        )
+        return email_status
+
+    except HTTPError:
+        raise GraphQLError("Error, when retrieving email status, error: HTTPError")
+
+
 def send_verification_email(user: Users, client: NotificationsAPIClient):
     """
     This function allows a user object to be passed in during account creation
@@ -35,18 +46,15 @@ def send_verification_email(user: Users, client: NotificationsAPIClient):
         response = notify_client.send_email_notification(
             email_address=user.user_name,
             template_id=email_template_id,
-            personalisation={"user": "", "verify_email_url": url},
+            personalisation={"user": user.display_name, "verify_email_url": url},
         )
 
-    except HTTPError:
-        raise GraphQLError(
-            "Error, when sending verification email, error: {}".format(HTTPError)
-        )
+    except HTTPError as e:
+        raise GraphQLError("Error, when sending verification email, error: HTTPError")
 
-    # Sleep to wait and see if email was successful
-    time.sleep(1.5)
-    email_status = notify_client.get_notification_by_id(response.get("id")).get(
-        "status"
+    # Check Email status
+    email_status = get_verification_email_status(
+        notify_client=notify_client, response=response,
     )
 
     if (
