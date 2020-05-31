@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tracker-api
+  name: tracker-api
+  namespace: api
+  annotations:
+    fluxcd.io/automated: "true"
+    fluxcd.io/tag.api: regexp:^(master-*)$
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracker-api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: tracker-api
+    spec:
+      $patch: merge
+      initContainers:
+      - name: database-migration
+        image: gcr.io/track-compliance/api
+      $patch: merge
+      containers:
+      - image: gcr.io/track-compliance/api
+        name: api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: tracker-frontend
+  name: tracker-frontend
+  namespace: frontend
+  annotations:
+    fluxcd.io/automated: "true"
+    fluxcd.io/tag.frontend: regexp:^(master-*)$
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracker-frontend
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+      creationTimestamp: null
+      labels:
+        app: tracker-frontend
+    spec:
+      $patch: merge
+      containers:
+      - image: gcr.io/track-compliance/frontend
+        name: frontend
