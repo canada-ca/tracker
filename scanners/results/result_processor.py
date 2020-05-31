@@ -203,35 +203,6 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate(payload):
-
-    logging.info("Results received")
-
-    try:
-        payload_dict = formatted_dictionary(payload)
-
-        process_response = requests.post(
-            "http://127.0.0.1:8000/process", json=payload_dict
-        )
-
-        processed_results = process_response.json()
-
-        if processed_results["errors"] is None:
-            payload_dict["results"] = processed_results["report"]
-        else:
-            raise Exception(processed_results["errors"])
-
-        insert_response = requests.post(
-            "http://127.0.0.1:8000/insert", json=payload_dict
-        )
-
-        return f"Results processed successfully: {insert_response.text}"
-
-    except Exception as e:
-        logging.error("Failed: %s" % str(e))
-        return "An error occurred while processing results: %s" % str(e)
-
-
 def process_https(results):
     report = {}
 
@@ -552,72 +523,48 @@ def Server(functions={}, database_uri=DATABASE_URI):
 
     database = databases.Database(database_uri)
 
-    async def receive(request):
-        logging.info("Request received")
-        payload = await request.json()
-        return PlainTextResponse(initiate(payload))
-
-    async def insert(request):
-        try:
-            payload = await request.json()
-            logging.info("Inserting results...")
-            results = payload["results"]
-            scan_id = payload["scan_id"]
-            scan_type = payload["scan_type"]
-            response = await functions["insert"][scan_type].insert(
-                results, scan_id, database
-            )
-            return PlainTextResponse(f"Database insertion(s) completed: {response}")
-        except Exception as e:
-            return PlainTextResponse(str(e))
-
     async def process(request):
+        logging.info("Results received")
         payload = await request.json()
-        logging.info("Processing results...")
-        results = payload["results"]
-        scan_type = payload["scan_type"]
         try:
-            report = functions["process"][scan_type].process(results)
-            return JSONResponse({"report": report, "error": None})
+            logging.info("Processing results...")
+            payload_dict = formatted_dictionary(payload)
+            results = payload_dict["results"]
+            scan_type = payload_dict["scan_type"]
+            scan_id = payload_dict["scan_id"]
+
+            report = functions["process"][scan_type](results)
+            logging.info(f"Processed results: {str(report)}")
+
+            insert_response = await functions["insert"][scan_type](results, scan_id, database)
+            logging.info("Database insertion(s) completed")
+
+            return PlainTextResponse(f"Results processed successfully: {insert_response.text}")
+
         except Exception as e:
-            return JSONResponse({"report": {}, "error": str(e)})
+            logging.error("Failed: %s" % str(e))
+            return PlainTextResponse("An error occurred while processing results: %s" % str(e))
 
     routes = [
-        Route("/insert", insert, methods=["POST"]),
         Route("/process", process, methods=["POST"]),
-        Route("/receive", receive, methods=["POST"]),
     ]
 
     return Starlette(debug=True, routes=routes, on_startup=[startup])
 
 
-def Insertor(insert_type):
-    insert_function = insert_type
-
-    def insert(results, scan_id, db):
-        return insert_function(results, scan_id, db)
-
-
-def Processor(processor_type):
-    processor_function = processor_type
-
-    def process(results, scan_type):
-        processor_function(results, scan_type)
-
-
 app = Server(
     functions={
         "insert": {
-            "https": Insertor(insert_https),
-            "ssl": Insertor(insert_ssl),
-            "dmarc": Insertor(insert_dmarc),
-            "dkim": Insertor(insert_dkim),
+            "https": insert_https,
+            "ssl": insert_ssl,
+            "dmarc": insert_dmarc,
+            "dkim": insert_dkim,
         },
         "process": {
-            "https": Processor(process_https),
-            "ssl": Processor(process_ssl),
-            "dmarc": Processor(process_dmarc),
-            "dkim": Processor(process_dkim),
+            "https": process_https,
+            "ssl": process_ssl,
+            "dmarc": process_dmarc,
+            "dkim": process_dkim,
         },
     }
 )

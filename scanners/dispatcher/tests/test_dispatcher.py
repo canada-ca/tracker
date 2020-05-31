@@ -8,20 +8,20 @@ from utils import *
 
 def test_web_scan():
     test_dkim = stub(
-        stub_function=lambda payload, client: PlainTextResponse("Dispatched to DKIM scanner")
+        stub_function=lambda payload, client: PlainTextResponse("Dispatched to dkim scanner")
     )
     test_dmarc = stub(
         stub_function=lambda payload, client: PlainTextResponse(
-            "Dispatched to DMARC scanner"
+            "Dispatched to dmarc scanner"
         )
     )
     test_https = stub(
         stub_function=lambda payload, client: PlainTextResponse(
-            "Dispatched to HTTPS scanner"
+            "Dispatched to https scanner"
         )
     )
     test_ssl = stub(
-        stub_function=lambda payload, client: PlainTextResponse("Dispatched to SSL scanner")
+        stub_function=lambda payload, client: PlainTextResponse("Dispatched to ssl scanner")
     )
 
     test_app = Server(
@@ -50,20 +50,20 @@ def test_web_scan():
 
 def test_mail_scan():
     test_dkim = stub(
-        stub_function=lambda payload, client: PlainTextResponse("Dispatched to DKIM scanner")
+        stub_function=lambda payload, client: PlainTextResponse("Dispatched to dkim scanner")
     )
     test_dmarc = stub(
         stub_function=lambda payload, client: PlainTextResponse(
-            "Dispatched to DMARC scanner"
+            "Dispatched to dmarc scanner"
         )
     )
     test_https = stub(
         stub_function=lambda payload, client: PlainTextResponse(
-            "Dispatched to HTTPS scanner"
+            "Dispatched to https scanner"
         )
     )
     test_ssl = stub(
-        stub_function=lambda payload, client: PlainTextResponse("Dispatched to SSL scanner")
+        stub_function=lambda payload, client: PlainTextResponse("Dispatched to ssl scanner")
     )
 
     test_app = Server(
@@ -113,7 +113,7 @@ def test_https_dispatch():
 
     res = test_client.post("/https", json=payload)
 
-    assert res.text == "Dispatched to HTTPS scanner"
+    assert res.text == "Dispatched to https scanner"
 
 
 def test_ssl_dispatch():
@@ -135,7 +135,7 @@ def test_ssl_dispatch():
 
     res = test_client.post("/ssl", json=payload)
 
-    assert res.text == "Dispatched to SSL scanner"
+    assert res.text == "Dispatched to ssl scanner"
 
 
 def test_dmarc_dispatch():
@@ -157,7 +157,7 @@ def test_dmarc_dispatch():
 
     res = test_client.post("/dmarc", json=payload)
 
-    assert res.text == "Dispatched to DMARC scanner"
+    assert res.text == "Dispatched to dmarc scanner"
 
 
 def test_dkim_dispatch():
@@ -179,4 +179,4 @@ def test_dkim_dispatch():
 
     res = test_client.post("/dkim", json=payload)
 
-    assert res.text == "Dispatched to DKIM scanner"
+    assert res.text == "Dispatched to dkim scanner"

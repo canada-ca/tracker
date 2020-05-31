@@ -19,44 +19,10 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate(received_payload, client):
-
-    logging.info("Scan received")
-
-    try:
-        scan_id = received_payload["scan_id"]
-        domain = received_payload["domain"]
-
-        # Perform scan
-        scan_response = client.post("http://127.0.0.1:8000/scan", data=domain)
-
-        scan_results = scan_response.json()
-
-        # Construct request payload for result-processor
-        if scan_results is not None:
-            payload = json.dumps(
-                {"results": scan_results, "scan_type": "dkim", "scan_id": scan_id}
-            )
-            logging.info(str(scan_results))
-        else:
-            raise Exception("DKIM scan not completed")
-
-        # Dispatch results to result-processor
-        dispatch_response = client.post(
-            "http://127.0.0.1:8000/dispatch", json=payload
-        )
-
-        return f"DKIM scan completed. {dispatch_response.text}"
-
-    except Exception as e:
-        logging.error(str(e))
-        return f"An error occurred while attempting to perform DKIM scan: {str(e)}"
-
-
 def dispatch_results(payload, client):
     # Post results to result-handling service
     client.post(
-        url="http://result-processor.tracker.svc.cluster.local/receive", json=payload
+        url="http://result-processor.tracker.svc.cluster.local/process", json=payload
     )
 
 
@@ -145,31 +111,35 @@ def scan_dkim(domain):
     return json.dumps(record)
 
 
-def Server(functions={}, default_client=requests):
-    async def receive(request):
-        logging.info("Request received")
-        client = request.app.state.client
-        payload = await request.json()
-        return PlainTextResponse(initiate(payload, client))
-
-    async def dispatch(request):
-        try:
-            client = request.app.state.client
-            payload = await request.json()
-            functions["dispatch"](payload, client)
-        except Exception as e:
-            return PlainTextResponse(str(e))
-        return PlainTextResponse("Scan results sent to result-processor")
+def Server(default_client=requests):
 
     async def scan(request):
-        domain = await request.body()
-        logging.info("Performing scan...")
-        return JSONResponse(functions["scan"](domain.decode("utf-8")))
+        try:
+            client = request.app.state.client
+
+            logging.info("Scan request received")
+            inbound_payload = await request.json()
+            domain = inbound_payload["domain"]
+            scan_id = inbound_payload["scan_id"]
+
+            logging.info("Performing scan...")
+            scan_results = scan_dkim(domain)
+
+            if scan_results is not None:
+                outbound_payload = json.dumps(
+                    {"results": scan_results, "scan_type": "dkim", "scan_id": scan_id}
+                )
+                logging.info(f"Scan results: {str(scan_results)}")
+            else:
+                raise Exception("DKIM scan not completed")
+            dispatch_results(outbound_payload, client)
+        except Exception as e:
+            return PlainTextResponse(f"An error occurred while attempting to process DKIM scan request: {str(e)}")
+
+        return PlainTextResponse("DKIM scan completed. Scan results dispatched to result-processor")
 
     routes = [
-        Route("/dispatch", dispatch, methods=["POST"]),
         Route("/scan", scan, methods=["POST"]),
-        Route("/receive", receive, methods=["POST"]),
     ]
 
     starlette_app = Starlette(debug=True, routes=routes, on_startup=[startup])
@@ -179,24 +149,4 @@ def Server(functions={}, default_client=requests):
     return starlette_app
 
 
-def Scan(scan_type):
-    scan_function = scan_type
-
-    def scan(domain):
-        return scan_function(domain)
-
-    return scan
-
-
-def Dispatcher(dispatch_type):
-    dispatch_function = dispatch_type
-
-    def dispatch(payload, client):
-        dispatch_function(payload, client)
-
-    return dispatch
-
-
-app = Server(
-    functions={"dispatch": Dispatcher(dispatch_results), "scan": Scan(scan_https)}
-)
+app = Server()

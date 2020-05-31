@@ -47,7 +47,7 @@ def initiate(received_payload, scan_type, client):
             raise Exception("Invalid Scan-Type provided")
 
         for key, val in dispatched.items():
-            if val.text is not f"Dispatched to {key} scanner":
+            if val.text != f"Dispatched to {key} scanner":
                 raise Exception(f"Failed to dispatch scan to {key} scanner")
 
         return "All scans successfully dispatched to designated scanners"
@@ -74,7 +74,7 @@ def Server(scanners={}, default_client=requests):
             scanners["dkim"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
-        return PlainTextResponse("Dispatched to DKIM scanner")
+        return PlainTextResponse("Dispatched to dkim scanner")
 
     async def dmarc(request):
         logging.info("DMARC scan requested")
@@ -84,7 +84,7 @@ def Server(scanners={}, default_client=requests):
             scanners["dmarc"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
-        return PlainTextResponse("Dispatched to DMARC scanner")
+        return PlainTextResponse("Dispatched to dmarc scanner")
 
     async def https(request):
         logging.info("HTTPS scan requested")
@@ -94,7 +94,7 @@ def Server(scanners={}, default_client=requests):
             scanners["https"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
-        return PlainTextResponse("Dispatched to HTTPS scanner")
+        return PlainTextResponse("Dispatched to https scanner")
 
     async def ssl(request):
         logging.info("SSL scan requested")
@@ -104,7 +104,7 @@ def Server(scanners={}, default_client=requests):
             scanners["ssl"](payload, client)
         except Exception as e:
             return PlainTextResponse(str(e))
-        return PlainTextResponse("Dispatched to SSL scanner")
+        return PlainTextResponse("Dispatched to ssl scanner")
 
     routes = [
         Route("/dkim", dkim, methods=["POST"]),
