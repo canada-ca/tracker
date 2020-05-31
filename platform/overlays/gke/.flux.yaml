@@ -1,8 +1,5 @@
 version: 1
-commandUpdated:
+patchUpdated:
   generators:
-    - command: "kustomize build ."
-  updaters:
-    - containerImage:
-        command: >-
-          kustomize edit set image "$FLUX_IMG:$FLUX_TAG"
+    - command: kustomize build .
+  patchFile: flux-patch.yaml
