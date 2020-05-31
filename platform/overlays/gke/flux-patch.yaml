@@ -21,11 +21,13 @@ spec:
       labels:
         app: tracker-api
     spec:
-      $patch: merge
+      $setElementOrder/initContainers:
+        - name: database-migration
       initContainers:
       - name: database-migration
         image: gcr.io/track-compliance/api
-      $patch: merge
+      $setElementOrder/containers:
+        - name: api
       containers:
       - image: gcr.io/track-compliance/api
         name: api
@@ -55,7 +57,8 @@ spec:
       labels:
         app: tracker-frontend
     spec:
-      $patch: merge
+      $setElementOrder/containers:
+        - name: frontend
       containers:
       - image: gcr.io/track-compliance/frontend
         name: frontend
