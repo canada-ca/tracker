@@ -9,6 +9,7 @@ resources:
 - knative/config/config.yaml
 - knative/monitoring/prometheus.yaml
 - knative/monitoring/grafana/grafana.yaml
+- http-01-challenge-destination-rule.yaml
 images:
 - name: gcr.io/track-compliance/api
   newTag: master-2397851

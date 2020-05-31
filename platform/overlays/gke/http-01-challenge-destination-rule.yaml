@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: cert-htt01-challenge
+  namespace: istio-system
+spec:
+  host: "*.istio-system.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      # keeping the same mTLS mode as  `default` DestinationRule in istio-system
+      mode: DISABLE
+    portLevelSettings:
+    - port:
+        # CertManager generate services to perform the challenge on port 8089
+        # it looks so far no other services in istio-system use this port
+        number: 8089
+      tls:
+        mode: DISABLE
