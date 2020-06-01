@@ -1,10 +1,11 @@
-import jwt
 import itertools
 import os
+
+import jwt
 from graphql import GraphQLError
 
 from functions.orm_to_dict import orm_to_dict
-from app import app, logger
+from app import logger
 from models import User_affiliations, Organizations
 
 user_admin_perm = ["super_admin", "admin"]
@@ -38,35 +39,33 @@ def check_user_claims(user_id):
     :param user_claims: A list of dicts that contain the users claims
     :return: Returns a valid list of user claims
     """
-    with app.app_context():
-        # XXX: affiliations should have been eager loaded with joinedload
-        # when user was initally pulled from the db.
-        user_affs = User_affiliations.query.filter(
-            User_affiliations.user_id == user_id
-        ).all()
-        user_affs = orm_to_dict(user_affs)
-        user_roles = []
-        if user_affs:
-            for select in user_affs:
-                temp_dict = {
-                    "user_id": select["user_id"],
-                    "org_id": select["organization_id"],
-                    "permission": select["permission"],
-                }
-                user_roles.append(temp_dict)
-        return user_roles
+    # XXX: affiliations should have been eager loaded with joinedload
+    # when user was initally pulled from the db.
+    user_affs = User_affiliations.query.filter(
+        User_affiliations.user_id == user_id
+    ).all()
+    user_affs = orm_to_dict(user_affs)
+    user_roles = []
+    if user_affs:
+        for select in user_affs:
+            temp_dict = {
+                "user_id": select["user_id"],
+                "org_id": select["organization_id"],
+                "permission": select["permission"],
+            }
+            user_roles.append(temp_dict)
+    return user_roles
 
 
 def require_token(method):
     def wrapper(self, *args, **kwargs):
-        with app.app_context():
-            auth_resp = decode_auth_token(args[0].context)
-            if isinstance(auth_resp, dict):
-                kwargs["user_id"] = auth_resp["user_id"]
+        auth_resp = decode_auth_token(args[0].context)
+        if isinstance(auth_resp, dict):
+            kwargs["user_id"] = auth_resp["user_id"]
 
-                user_claims = check_user_claims(auth_resp["user_id"])
-                kwargs["user_roles"] = user_claims
-                return method(self, *args, **kwargs)
-            raise GraphQLError(auth_resp)
+            user_claims = check_user_claims(auth_resp["user_id"])
+            kwargs["user_roles"] = user_claims
+            return method(self, *args, **kwargs)
+        raise GraphQLError(auth_resp)
 
     return wrapper

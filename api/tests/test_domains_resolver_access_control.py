@@ -1,12 +1,10 @@
 import pytest
-
 from pytest import fail
 from flask import Request
 from graphene.test import Client
 from unittest import TestCase
 from werkzeug.test import create_environ
 
-from app import app
 from db import DB
 from models import Organizations, Domains, Users, User_affiliations
 from tests.test_functions import json, run
@@ -14,10 +12,9 @@ from tests.test_functions import json, run
 
 @pytest.fixture()
 def save():
-    with app.app_context():
-        s, cleanup, db_session = DB()
-        yield s
-        cleanup()
+    s, cleanup, db_session = DB()
+    yield s
+    cleanup()
 
 
 def test_get_domain_resolvers_by_url_super_admin_single_node(save):

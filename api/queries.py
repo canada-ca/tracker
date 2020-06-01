@@ -1,15 +1,9 @@
 # Utility Imports
 import graphene
-
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField
-
-# Local Utility Imports
-from app import app
-
 from scalars.email_address import EmailAddress
 from scalars.slug import Slug
-
 from enums.roles import RoleEnums
 
 # --- Query Imports ---
@@ -33,18 +27,14 @@ from schemas.yearly_dmarc_report_summary import get_yearly_dmarc_report_summarie
 # Need to be updated
 from schemas.users import Users
 from resolvers.users import resolve_users
-
 from schemas.User.user import User
 from resolvers.user import resolve_user
-
 from resolvers.notification_emails import (
     resolve_send_password_reset,
     resolve_send_validation_email,
 )
-
 from resolvers.user_affiliations import resolve_test_user_claims
 from resolvers.user import resolve_generate_otp_url
-
 from schemas.notification_email import NotificationEmail
 
 # --- End Query Imports ---
@@ -101,10 +91,9 @@ class Query(graphene.ObjectType):
         sort=None,
         description="Select list of users belonging to an organization.",
     )
-    with app.app_context():
 
-        def resolve_users(self, info, **kwargs):
-            return resolve_users(self, info, **kwargs)
+    def resolve_users(self, info, **kwargs):
+        return resolve_users(self, info, **kwargs)
 
     user = graphene.List(
         lambda: User,
@@ -112,10 +101,9 @@ class Query(graphene.ObjectType):
         description="Query the currently logged in user if no user name is"
         "given, or query a specific user by user name.",
     )
-    with app.app_context():
 
-        def resolve_user(self, info, **kwargs):
-            return resolve_user(self, info, **kwargs)
+    def resolve_user(self, info, **kwargs):
+        return resolve_user(self, info, **kwargs)
 
     # User Page Query
     user_page = user_page
@@ -138,10 +126,9 @@ class Query(graphene.ObjectType):
         description="Select all information on a selected organization that a "
         "user has access to.",
     )
-    with app.app_context():
 
-        def resolve_organization(self, info, **kwargs):
-            return resolve_organization(self, info, **kwargs)
+    def resolve_organization(self, info, **kwargs):
+        return resolve_organization(self, info, **kwargs)
 
     organizations = SQLAlchemyConnectionField(
         Organization._meta.connection,
@@ -149,10 +136,9 @@ class Query(graphene.ObjectType):
         description="Select all information on all organizations that a user "
         "has access to.",
     )
-    with app.app_context():
 
-        def resolve_organizations(self, info, **kwargs):
-            return resolve_organizations(self, info, **kwargs)
+    def resolve_organizations(self, info, **kwargs):
+        return resolve_organizations(self, info, **kwargs)
 
     # --- End Organization Queries ---
 
@@ -162,10 +148,9 @@ class Query(graphene.ObjectType):
         url_slug=graphene.Argument(Slug, required=True),
         description="Select information on a specific domain.",
     )
-    with app.app_context():
 
-        def resolve_domain(self, info, **kwargs):
-            return resolve_domain(self, info, **kwargs)
+    def resolve_domain(self, info, **kwargs):
+        return resolve_domain(self, info, **kwargs)
 
     domains = SQLAlchemyConnectionField(
         Domain._meta.connection,
@@ -174,10 +159,9 @@ class Query(graphene.ObjectType):
         description="Select information on an organizations domains, or all "
         "domains a user has access to.",
     )
-    with app.app_context():
 
-        def resolve_domains(self, info, **kwargs):
-            return resolve_domains(self, info, **kwargs)
+    def resolve_domains(self, info, **kwargs):
+        return resolve_domains(self, info, **kwargs)
 
     # --- End Domain Queries ---
 

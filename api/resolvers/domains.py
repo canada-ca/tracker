@@ -1,14 +1,10 @@
 from graphql import GraphQLError
 from sqlalchemy.orm import load_only
 
-from app import app
 from db import db_session
-
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read
-
 from models import Domains, Organizations
-
 from schemas.domain import Domain
 
 
@@ -84,12 +80,11 @@ def resolve_domains(self, info, **kwargs):
 
     if org_slug:
         # Retrieve org id from organization enum
-        with app.app_context():
-            org_orms = (
-                db_session.query(Organizations)
-                .filter(Organizations.slug == org_slug)
-                .options(load_only("id"))
-            )
+        org_orms = (
+            db_session.query(Organizations)
+            .filter(Organizations.slug == org_slug)
+            .options(load_only("id"))
+        )
 
         # Check if org exists
         if not len(org_orms.all()):

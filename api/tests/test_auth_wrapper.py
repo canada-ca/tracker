@@ -1,8 +1,6 @@
 import pytest
-
 from pytest import fail
 
-from app import app
 from models import Users, User_affiliations, Organizations
 from db import DB
 from tests.test_functions import json, run
@@ -10,10 +8,9 @@ from tests.test_functions import json, run
 
 @pytest.fixture
 def save():
-    with app.app_context():
-        s, cleanup, session = DB()
-        yield s
-        cleanup()
+    s, cleanup, session = DB()
+    yield s
+    cleanup()
 
 
 def test_testUserClaims_accepts_admin_claim_for_admin_user(save):

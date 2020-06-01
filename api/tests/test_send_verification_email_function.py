@@ -1,6 +1,6 @@
 import os
-import pytest
 
+import pytest
 from graphql import GraphQLError
 from notifications_python_client import NotificationsAPIClient
 from requests import HTTPError

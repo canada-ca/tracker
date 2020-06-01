@@ -1,8 +1,6 @@
 import pytest
-
 from pytest import fail
 
-from app import app
 from db import DB
 from models import (
     Organizations,
@@ -19,11 +17,10 @@ from tests.test_functions import run, json
 
 @pytest.fixture
 def save():
-    with app.app_context():
-        s, cleanup, session = DB()
-        yield s
-        session.rollback()
-        cleanup()
+    s, cleanup, session = DB()
+    yield s
+    session.rollback()
+    cleanup()
 
 
 def test_valid_get_yearly_dmarc_report_summary_query_as_super_admin(save, mocker):

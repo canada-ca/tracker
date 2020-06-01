@@ -1,10 +1,8 @@
 import pytest
-
 from datetime import datetime
 from pytest import fail
 
 from db import DB
-from app import app
 from models import Users
 from functions.error_messages import (
     error_invalid_credentials,
@@ -16,10 +14,9 @@ from tests.test_functions import json, run
 
 @pytest.fixture
 def db():
-    with app.app_context():
-        save, cleanup, session = DB()
-        yield [save, session]
-        cleanup()
+    save, cleanup, session = DB()
+    yield [save, session]
+    cleanup()
 
 
 def test_authenticate_with_valid_credentials(db):
