@@ -1,7 +1,9 @@
-import requests
-import jwt
 import os
 import datetime
+
+import requests
+import jwt
+
 from db import db_session
 from models import Scans, Domains
 

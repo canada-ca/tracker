@@ -2,6 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
+
 from models import Domains, Scans
 from scalars.slug import Slug
 from scalars.url import URL

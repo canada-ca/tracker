@@ -2,6 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
+
 from functions.update_user_role import update_user_role
 from enums.roles import RoleEnums
 from scalars.slug import Slug

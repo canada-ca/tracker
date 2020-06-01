@@ -1,5 +1,6 @@
 import pytest
 from pytest import fail
+
 from db import DB
 from models import (
     Domains,

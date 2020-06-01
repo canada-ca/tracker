@@ -1,5 +1,6 @@
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
+
 from models import Dkim_scans
 from scalars.url import URL
 from functions.get_domain import get_domain

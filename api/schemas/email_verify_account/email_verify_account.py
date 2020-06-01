@@ -1,7 +1,9 @@
+import os
+
 import graphene
 import jwt
-import os
 from graphql import GraphQLError
+
 from db import db_session
 from functions.input_validators import cleanse_input
 from models.Users import Users

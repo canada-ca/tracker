@@ -1,5 +1,6 @@
 from graphql import GraphQLError
 from sqlalchemy.orm import load_only
+
 from functions.auth_functions import is_admin, is_super_admin
 from functions.error_messages import (
     error_user_does_not_exist,

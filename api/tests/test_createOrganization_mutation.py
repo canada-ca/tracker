@@ -1,6 +1,7 @@
 import pytest
 from pytest import fail
 from graphene.test import Client
+
 from db import DB
 from queries import schema
 from json_web_token import tokenize, auth_header

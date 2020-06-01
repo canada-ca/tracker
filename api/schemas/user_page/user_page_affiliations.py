@@ -1,6 +1,7 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
+
 from db import db_session
 from models.User_affiliations import User_affiliations
 from models.Organizations import Organizations

@@ -1,7 +1,9 @@
-import jwt
 import itertools
 import os
+
+import jwt
 from graphql import GraphQLError
+
 from functions.orm_to_dict import orm_to_dict
 from app import logger
 from models import User_affiliations, Organizations

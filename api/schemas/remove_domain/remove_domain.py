@@ -1,10 +1,10 @@
 import graphene
 from graphql import GraphQLError
+
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_write
 from functions.input_validators import cleanse_input
-
 from models import (
     Domains,
     Scans,
@@ -15,7 +15,6 @@ from models import (
     Spf_scans,
     Ssl_scans,
 )
-
 from scalars.url import URL
 
 

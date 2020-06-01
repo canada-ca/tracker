@@ -4,6 +4,7 @@ from flask import Request
 from graphene.test import Client
 from unittest import TestCase
 from werkzeug.test import create_environ
+
 from db import DB
 from models import Organizations, Domains, Users, User_affiliations
 from tests.test_functions import json, run

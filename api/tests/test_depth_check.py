@@ -1,4 +1,5 @@
 import pytest
+
 from db import DB
 from models import Users
 from backend.security_check import SecurityAnalysisBackend

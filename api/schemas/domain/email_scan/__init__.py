@@ -1,6 +1,7 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
+
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
 from models import Scans, Dmarc_scans, Spf_scans, Dkim_scans

@@ -1,5 +1,6 @@
 import bcrypt
 from graphql import GraphQLError
+
 from functions.input_validators import *
 from functions.error_messages import *
 from models import Users as User

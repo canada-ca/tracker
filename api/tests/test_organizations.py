@@ -1,4 +1,5 @@
 import pytest
+
 from models import Organizations
 from db import DB
 

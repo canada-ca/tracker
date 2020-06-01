@@ -1,4 +1,5 @@
 import pytest
+
 from models import Users, User_affiliations, Organizations
 from db import DB
 

@@ -1,5 +1,6 @@
 import pytest
 from pytest import fail
+
 from db import DB
 from models import Users, User_affiliations, Organizations
 from functions.error_messages import error_not_an_admin

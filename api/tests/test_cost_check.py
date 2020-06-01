@@ -1,4 +1,5 @@
 import pytest
+
 from db import DB
 from models import Users
 from tests.test_functions import json, run

@@ -1,5 +1,6 @@
 from pytest import fail
 from sqlalchemy import exc
+
 from db import db_session
 from models import Dmarc_Reports
 

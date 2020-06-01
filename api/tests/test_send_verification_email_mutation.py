@@ -1,5 +1,6 @@
 import pytest
 from pytest import fail
+
 from app import app
 from db import DB
 from models.Users import Users

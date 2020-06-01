@@ -1,6 +1,7 @@
 import pyotp
 import pytest
 from pytest import fail
+
 from db import DB
 from models import Users
 from functions.error_messages import *

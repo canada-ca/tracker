@@ -1,6 +1,7 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
+
 from functions.auth_functions import is_user_read
 from functions.auth_wrappers import require_token
 from schemas.user_affiliations import UserAffClass

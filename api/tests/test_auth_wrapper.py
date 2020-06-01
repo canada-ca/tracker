@@ -1,5 +1,6 @@
 import pytest
 from pytest import fail
+
 from models import Users, User_affiliations, Organizations
 from db import DB
 from tests.test_functions import json, run

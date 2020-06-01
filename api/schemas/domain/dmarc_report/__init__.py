@@ -1,6 +1,7 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
+
 from models import Dmarc_Reports
 from schemas.domain.dmarc_report.policy_published import PolicyPublished
 from schemas.domain.dmarc_report.records import Record

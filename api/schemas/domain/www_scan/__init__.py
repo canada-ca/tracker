@@ -1,6 +1,7 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
+
 from models import Scans, Ssl_scans, Https_scans
 from scalars.url import URL
 from functions.get_domain import get_domain

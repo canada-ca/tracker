@@ -1,6 +1,7 @@
 import graphene
 import json
 from graphene_sqlalchemy import SQLAlchemyObjectType
+
 from models import Dmarc_scans
 
 

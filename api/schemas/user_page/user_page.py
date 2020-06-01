@@ -1,12 +1,12 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
+
 from functions.auth_functions import is_admin, is_super_admin
 from functions.auth_wrappers import require_token
 from models.Users import Users
 from models.User_affiliations import User_affiliations
 from scalars.email_address import EmailAddress
-
 from schemas.user_page.user_page_affiliations import UserPageAffiliations
 
 

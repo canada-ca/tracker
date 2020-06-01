@@ -2,6 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from sqlalchemy.orm import load_only
+
 from db import db_session
 from models.Users import Users
 from models.User_affiliations import User_affiliations

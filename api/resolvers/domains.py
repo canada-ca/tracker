@@ -1,11 +1,10 @@
 from graphql import GraphQLError
 from sqlalchemy.orm import load_only
+
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read
-
 from models import Domains, Organizations
-
 from schemas.domain import Domain
 
 

@@ -1,4 +1,5 @@
 import pytest
+
 from models import Users, User_affiliations, Organizations
 from functions.auth_functions import (
     is_super_admin,

@@ -1,6 +1,8 @@
 import os
+
 import pyotp
 from graphql import GraphQLError
+
 from models import Users as User
 from functions.error_messages import *
 from db import db_session
