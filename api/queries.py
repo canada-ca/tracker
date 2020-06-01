@@ -11,6 +11,9 @@ from enums.roles import RoleEnums
 from schemas.domain import Domain
 from resolvers.domains import resolve_domain, resolve_domains
 
+# Get Dmarc Report Doughnut Data
+from schemas.dmarc_report_doughnut import get_dmarc_report_doughnut
+
 # Organization Imports
 from schemas.organizations import Organization
 from resolvers.organizations import resolve_organization, resolve_organizations
@@ -164,6 +167,11 @@ class Query(graphene.ObjectType):
         return resolve_domains(self, info, **kwargs)
 
     # --- End Domain Queries ---
+
+    # --- Start Get Dmarc Report Doughnut ---
+    get_dmarc_report_doughnut = get_dmarc_report_doughnut
+
+    # --- End Dmarc Report Doughnut ---
 
     # -- Start Dmarc Report Queries --
     get_yearly_dmarc_report_summaries = get_yearly_dmarc_report_summaries
