@@ -1,7 +1,9 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { Heading, Text, Stack, SimpleGrid } from '@chakra-ui/core'
 import { SummaryCard } from './SummaryCard'
+import { string } from 'prop-types'
 
 export function SummaryGroup({ ...props }) {
   const { name, title, description } = props
@@ -57,7 +59,6 @@ export function SummaryGroup({ ...props }) {
 
   const getReportQty = () => {
     let reportQty
-    // name === 'dashboard' ? (reportQty = 2) : (reportQty = 3)
     if (name === 'dashboard') {
       reportQty = 2
     } else if (name === 'web') {
@@ -105,4 +106,10 @@ export function SummaryGroup({ ...props }) {
       <br />
     </Stack>
   )
+}
+
+SummaryGroup.propTypes = {
+  name: string,
+  title: string,
+  description: string,
 }

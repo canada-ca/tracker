@@ -425,3 +425,27 @@ msgstr "Create Account"
 #: src/CreateUserPage.js:89
 msgid "Back"
 msgstr "Back"
+
+#: src/LandingPage.js:29
+msgid "Dashboard Overview"
+msgstr "Dashboard Overview"
+
+#: src/LandingPage.js:30
+msgid "Web and email security configuration of all domains"
+msgstr "Web and email security configuration of all domains"
+
+#: src/LandingPage.js:34
+msgid "Web Security Overview"
+msgstr "Web Security Overview"
+
+#: src/LandingPage.js:35
+msgid Key aspects of web application security of the hosts monitored by this dashboard.""
+msgstr "Key aspects of web application security of the hosts monitored by this dashboard."
+
+#: src/LandingPage.js:39
+msgid "Email Security Overview"
+msgstr "Email Security Overview"
+
+#: src/LandingPage.js:40
+msgid "Key aspects of email security of the hosts monitored by this dashboard."
+msgstr "Key aspects of email security of the hosts monitored by this dashboard."

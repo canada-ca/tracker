@@ -429,3 +429,27 @@ msgstr "Créer un compte"
 #: src/CreateUserPage.js:89
 msgid "Back"
 msgstr "Retour"
+
+#: src/LandingPage.js:29
+msgid "Dashboard Overview"
+msgstr "Vue d'ensemble du tableau de bord"
+
+#: src/LandingPage.js:30
+msgid "Web and email security configuration of all domains"
+msgstr "Configuration de la sécurité du web et du courrier électronique de tous les domaines"
+
+#: src/LandingPage.js:34
+msgid "Web Security Overview"
+msgstr "Aperçu de la sécurité du Web"
+
+#: src/LandingPage.js:35
+msgid "Key aspects of web application security of the hosts monitored by this dashboard."
+msgstr "Les principaux aspects de la sécurité des applications web des hôtes surveillés par ce tableau de bord."
+
+#: src/LandingPage.js:39
+msgid "Email Security Overview"
+msgstr "Aperçu de la sécurité du courrier électronique"
+
+#: src/LandingPage.js:40
+msgid "Key aspects of email security of the hosts monitored by this dashboard."
+msgstr "Les principaux aspects de la sécurité du courrier électronique des hôtes surveillés par ce tableau de bord."

@@ -1,10 +1,13 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { Layout } from './Layout'
 import { Heading, Text, Stack } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
 
 export function LandingPage() {
+  const { i18n } = useLingui()
+
   return (
     <Layout>
       <Stack spacing={10} shouldWrapChildren>
@@ -26,18 +29,24 @@ export function LandingPage() {
         <Stack align="center">
           <SummaryGroup
             name="dashboard"
-            title="Dashboard Overview"
-            description="Web and email security configuration of top properties"
+            title={i18n._(t`Dashboard Overview`)}
+            description={i18n._(
+              t`Web and email security configuration of all domains`,
+            )}
           />
           <SummaryGroup
             name="web"
-            title="Web Security Overview"
-            description="Key aspects of web application security of the hosts monitored by this dashboard."
+            title={i18n._(t`Web Security Overview`)}
+            description={i18n._(
+              t`Key aspects of web application security of the hosts monitored by this dashboard.`,
+            )}
           />
           <SummaryGroup
             name="email"
-            title="Email Security Overview"
-            description="Key aspects of email security of the hosts monitored by this dashboard."
+            title={i18n._(t`Email Security Overview`)}
+            description={i18n._(
+              t`Key aspects of email security of the hosts monitored by this dashboard.`,
+            )}
           />
         </Stack>
       </Stack>

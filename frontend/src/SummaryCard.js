@@ -215,9 +215,9 @@ export function SummaryCard({ ...props }) {
                       textAlign="center"
                       as="b"
                     >
-                      {`${category.name}: `}
-                      <br />
                       {category.qty}
+                      <br />
+                      {`${category.name}`}
                     </Text>
                     <Divider orientation="vertical" borderColor="red.500" />
                   </Stack>
