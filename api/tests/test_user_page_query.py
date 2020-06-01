@@ -86,8 +86,8 @@ def test_super_admin_can_see_other_user_in_different_org(save):
                 "lang": "English",
                 "tfa": False,
                 "userAffiliations": [
-                    {"admin": False, "organization": "ORG1"},
                     {"admin": True, "organization": "TESTUSERREAD-TESTEMAIL-CA"},
+                    {"admin": False, "organization": "ORG1"},
                 ],
             }
         }
@@ -516,8 +516,8 @@ def test_user_read_can_see_own_information(save):
                 "lang": "English",
                 "tfa": False,
                 "userAffiliations": [
-                    {"admin": False, "organization": "ORG1"},
                     {"admin": True, "organization": "TESTUSERREAD-TESTEMAIL-CA"},
+                    {"admin": False, "organization": "ORG1"},
                 ],
             }
         }
