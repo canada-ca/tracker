@@ -3,6 +3,7 @@ import graphene
 from functions.input_validators import cleanse_input
 from schemas.auth_result.auth_result import AuthResult
 from schemas.authenticate.sign_in_user import sign_in_user
+from scalars.email_address import EmailAddress
 
 
 class Authenticate(graphene.Mutation):
@@ -13,7 +14,7 @@ class Authenticate(graphene.Mutation):
 
     # Define mutation arguments
     class Arguments:
-        user_name = graphene.String(
+        user_name = EmailAddress(
             description="User email that they signed up with.", required=True,
         )
         password = graphene.String(description="Users password", required=True,)
