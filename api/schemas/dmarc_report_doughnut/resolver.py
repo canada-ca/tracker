@@ -45,13 +45,37 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
 
             # Create start and end date values
             if period == PeriodEnums.LAST30DAYS:
+                thirty_days = True
                 current_date = datetime.utcnow()
-                past_date = datetime.utcnow() + timedelta(days=30)
-                start_date = (
-                    f"{current_date.year}-{current_date.month}-{current_date.day}"
+                past_date = datetime.utcnow() + timedelta(days=-30)
+
+                # Generate End Date
+                if current_date.month < 10:
+                    curr_month = f"0{current_date.month}"
+                else:
+                    curr_month = current_date.month
+                if current_date.day < 10:
+                    curr_day = f"0{current_date.day}"
+                else:
+                    curr_day = current_date.day
+
+                # Generate Start Date
+                if past_date.month < 10:
+                    past_month = f"0{past_date.month}"
+                else:
+                    past_month = past_date.month
+                if past_date.day < 10:
+                    past_day = f"0{past_date.day}"
+                else:
+                    past_day = past_date.day
+
+                start_date = f"{past_date.year}-{past_month}-{past_day}"
+                end_date = (
+                    f"{current_date.year}-{curr_month}-{curr_day}"
                 )
-                end_date = f"{past_date.year}-{past_date.month}-{past_date.day}"
+
             else:
+                thirty_days = False
                 month_num = list(calendar.month_abbr).index(period)
                 if month_num < 10:
                     month_string = f"0{month_num}"
@@ -61,7 +85,12 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
                 end_date = f"{year}-{month_string}-32"
 
             # Create variable dict for request
-            variables = {"domain": domain, "startDate": start_date, "endDate": end_date}
+            variables = {
+                "domain": domain,
+                "startDate": start_date,
+                "endDate": end_date,
+                "thirtyDays": thirty_days,
+            }
 
             # dmarc-report-api query
             query = gql(
@@ -70,11 +99,13 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
                     $domain:GCURL!
                     $startDate:CustomDate!
                     $endDate:CustomDate!
+                    $thirtyDays:Boolean
                 ) {
                     getDmarcSummaryByPeriod (
                         domain: $domain
                         startDate: $startDate
                         endDate: $endDate
+                        thirtyDays: $thirtyDays
                     ) {
                         period {
                             startDate
