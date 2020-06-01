@@ -12,6 +12,7 @@ get_dmarc_report_doughnut = graphene.Field(
     domain_slug=graphene.Argument(Slug, required=True),
     period=graphene.Argument(PeriodEnums, required=True),
     year=graphene.Argument(Year, required=True),
-    description="",
+    description="A query object used to grab the data to create dmarc report "
+                "doughnuts",
     resolver=resolve_get_dmarc_report_doughnut,
 )
