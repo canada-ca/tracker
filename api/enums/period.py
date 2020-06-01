@@ -2,18 +2,18 @@ import graphene
 
 
 class PeriodEnums(graphene.Enum):
-    JANUARY = "january"
-    FEBRUARY = "february"
-    MARCH = "march"
-    APRIL = "april"
+    JANUARY = "jan"
+    FEBRUARY = "feb"
+    MARCH = "mar"
+    APRIL = "apr"
     MAY = "may"
     JUNE = "june"
     JULY = "july"
-    AUGUST = "august"
-    SEPTEMBER = "september"
-    OCTOBER = "october"
-    NOVEMBER = "november"
-    DECEMBER = "december"
+    AUGUST = "aug"
+    SEPTEMBER = "sept"
+    OCTOBER = "cot"
+    NOVEMBER = "nov"
+    DECEMBER = "dec"
     LAST30DAYS = "last30days"
 
     @property
