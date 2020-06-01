@@ -4,6 +4,9 @@ kind: Deployment
 metadata:
   name: tracker-api
   namespace: api
+  annotations:
+    fluxcd.io/automated: "true"
+    fluxcd.io/tag.api: regexp:^(master-*)$
 spec:
   template:
     metadata:
@@ -25,6 +28,9 @@ kind: Deployment
 metadata:
   name: tracker-frontend
   namespace: frontend
+  annotations:
+    fluxcd.io/automated: "true"
+    fluxcd.io/tag.frontend: regexp:^(master-*)$
 spec:
   template:
     metadata:
