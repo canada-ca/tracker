@@ -10,9 +10,7 @@ from models import (
     Users,
     User_affiliations,
 )
-from tests.testdata.get_dmarc_report_doughnut import (
-    api_return_data,
-)
+from tests.testdata.get_dmarc_report_doughnut import api_return_data
 from tests.test_functions import run, json
 
 
@@ -101,8 +99,8 @@ def test_valid_get_dmarc_report_doughnut_query_as_super_admin(save, mocker):
                     "spfPassDkimFail": 532,
                     "dmarcFailQuarantine": 56,
                     "dmarcFailReject": 74,
-                    "total": 1712
-                }
+                    "total": 1712,
+                },
             }
         }
     }
@@ -181,8 +179,8 @@ def test_valid_get_dmarc_report_doughnut_query_as_org_admin(save, mocker):
                     "spfPassDkimFail": 532,
                     "dmarcFailQuarantine": 56,
                     "dmarcFailReject": 74,
-                    "total": 1712
-                }
+                    "total": 1712,
+                },
             }
         }
     }
@@ -261,8 +259,8 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_write(save, mocker):
                     "spfPassDkimFail": 532,
                     "dmarcFailQuarantine": 56,
                     "dmarcFailReject": 74,
-                    "total": 1712
-                }
+                    "total": 1712,
+                },
             }
         }
     }
@@ -341,8 +339,8 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_read(save, mocker):
                     "spfPassDkimFail": 532,
                     "dmarcFailQuarantine": 56,
                     "dmarcFailReject": 74,
-                    "total": 1712
-                }
+                    "total": 1712,
+                },
             }
         }
     }

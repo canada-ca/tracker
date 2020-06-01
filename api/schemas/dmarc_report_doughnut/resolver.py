@@ -47,7 +47,9 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
             if period == PeriodEnums.LAST30DAYS:
                 current_date = datetime.utcnow()
                 past_date = datetime.utcnow() + timedelta(days=30)
-                start_date = f"{current_date.year}-{current_date.month}-{current_date.day}"
+                start_date = (
+                    f"{current_date.year}-{current_date.month}-{current_date.day}"
+                )
                 end_date = f"{past_date.year}-{past_date.month}-{past_date.day}"
             else:
                 month_num = list(calendar.month_abbr).index(period)
@@ -102,9 +104,7 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
             data = data.get("getDmarcSummaryByPeriod").get("period")
             return DmarcReportDoughnut(
                 # Get Month Name
-                calendar.month_name[
-                    int(data.get("startDate")[5:7].lstrip("0"))
-                ],
+                calendar.month_name[int(data.get("startDate")[5:7].lstrip("0"))],
                 # Get Year
                 data.get("startDate")[0:4].lstrip("0"),
                 # Get Category Data

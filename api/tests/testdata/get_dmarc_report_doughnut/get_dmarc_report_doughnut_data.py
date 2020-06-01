@@ -9,8 +9,8 @@ api_return_data = {
                 "dmarcFailReject": 74,
                 "spfFailDkimPass": 432,
                 "spfPassDkimFail": 532,
-                "spfPassDkimPass": 75
-            }
+                "spfPassDkimPass": 75,
+            },
         }
     }
 }
