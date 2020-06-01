@@ -28,6 +28,18 @@ class Users(Base):
     )
     email_validated = Column(Boolean, default=False)
 
+
+    def __init__(self, **kwargs):
+        super(Users, self).__init__(**kwargs)
+        acronym = slugify_value(self.user_name).upper()[:50]
+        self.user_affiliation.append(
+            User_affiliations(
+                permission="admin",
+                user_organization=Organizations(name=self.user_name, acronym=acronym,),
+            )
+        )
+
+
     @hybrid_method
     def find_by_user_name(self, user_name):
         return self.query.filter(self.user_name == user_name).first()
@@ -65,12 +77,3 @@ class Users(Base):
     def verify_account(self):
         # Set user email_validated field to true0
         self.email_validated = True
-
-        # Create users sandbox org
-        acronym = slugify_value(self.user_name).upper()[:50]
-        self.user_affiliation.append(
-            User_affiliations(
-                permission="admin",
-                user_organization=Organizations(name=self.user_name, acronym=acronym,),
-            )
-        )
