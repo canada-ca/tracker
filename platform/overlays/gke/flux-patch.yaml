@@ -11,11 +11,11 @@ spec:
     spec:
       $setElementOrder/containers:
       - name: api
-      $setElementOrder/initContainers:
-      - name: database-migration
       containers:
       - image: gcr.io/track-compliance/api:master-8b9ad74
         name: api
+      $setElementOrder/initContainers:
+      - name: database-migration
       initContainers:
       - image: gcr.io/track-compliance/api:master-8b9ad74
         name: database-migration
@@ -33,5 +33,5 @@ spec:
       $setElementOrder/containers:
       - name: frontend
       containers:
-      - image: gcr.io/track-compliance/frontend
+      - image: gcr.io/track-compliance/frontend:master-a1961df
         name: frontend
