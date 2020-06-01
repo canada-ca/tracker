@@ -4,63 +4,63 @@ from enums.period import PeriodEnums
 
 
 def test_january_enum():
-    assert PeriodEnums.JANUARY == "january"
-    assert PeriodEnums.JANUARY == PeriodEnums.get("january")
+    assert PeriodEnums.JANUARY == "Jan"
+    assert PeriodEnums.JANUARY == PeriodEnums.get("Jan")
 
 
 def test_february_enum():
-    assert PeriodEnums.FEBRUARY == "february"
-    assert PeriodEnums.FEBRUARY == PeriodEnums.get("february")
+    assert PeriodEnums.FEBRUARY == "Feb"
+    assert PeriodEnums.FEBRUARY == PeriodEnums.get("Feb")
 
 
 def test_march_enum():
-    assert PeriodEnums.MARCH == "march"
-    assert PeriodEnums.MARCH == PeriodEnums.get("march")
+    assert PeriodEnums.MARCH == "Mar"
+    assert PeriodEnums.MARCH == PeriodEnums.get("Mar")
 
 
 def test_april_enum():
-    assert PeriodEnums.APRIL == "april"
-    assert PeriodEnums.APRIL == PeriodEnums.get("april")
+    assert PeriodEnums.APRIL == "Apr"
+    assert PeriodEnums.APRIL == PeriodEnums.get("Apr")
 
 
 def test_may_enum():
-    assert PeriodEnums.MAY == "may"
-    assert PeriodEnums.MAY == PeriodEnums.get("may")
+    assert PeriodEnums.MAY == "May"
+    assert PeriodEnums.MAY == PeriodEnums.get("May")
 
 
 def test_june_enum():
-    assert PeriodEnums.JUNE == "june"
-    assert PeriodEnums.JUNE == PeriodEnums.get("june")
+    assert PeriodEnums.JUNE == "June"
+    assert PeriodEnums.JUNE == PeriodEnums.get("June")
 
 
 def test_july_enum():
-    assert PeriodEnums.JULY == "july"
-    assert PeriodEnums.JULY == PeriodEnums.get("july")
+    assert PeriodEnums.JULY == "July"
+    assert PeriodEnums.JULY == PeriodEnums.get("July")
 
 
 def test_august_enum():
-    assert PeriodEnums.AUGUST == "august"
-    assert PeriodEnums.AUGUST == PeriodEnums.get("august")
+    assert PeriodEnums.AUGUST == "Aug"
+    assert PeriodEnums.AUGUST == PeriodEnums.get("Aug")
 
 
 def test_september_enum():
-    assert PeriodEnums.SEPTEMBER == "september"
-    assert PeriodEnums.SEPTEMBER == PeriodEnums.get("september")
+    assert PeriodEnums.SEPTEMBER == "Sept"
+    assert PeriodEnums.SEPTEMBER == PeriodEnums.get("Sept")
 
 
 def test_october_enum():
-    assert PeriodEnums.OCTOBER == "october"
-    assert PeriodEnums.OCTOBER == PeriodEnums.get("october")
+    assert PeriodEnums.OCTOBER == "Oct"
+    assert PeriodEnums.OCTOBER == PeriodEnums.get("Oct")
 
 
 def test_november_enum():
-    assert PeriodEnums.NOVEMBER == "november"
-    assert PeriodEnums.NOVEMBER == PeriodEnums.get("november")
+    assert PeriodEnums.NOVEMBER == "Nov"
+    assert PeriodEnums.NOVEMBER == PeriodEnums.get("Nov")
 
 
 def test_december_enum():
-    assert PeriodEnums.DECEMBER == "december"
-    assert PeriodEnums.DECEMBER == PeriodEnums.get("december")
+    assert PeriodEnums.DECEMBER == "Dec"
+    assert PeriodEnums.DECEMBER == PeriodEnums.get("Dec")
 
 
 def test_last_30_day_enum():
