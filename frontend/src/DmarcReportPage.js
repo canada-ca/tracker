@@ -4,9 +4,13 @@ import { useQuery } from '@apollo/react-hooks'
 import { GET_YEARLY_REPORT } from './graphql/queries'
 import { slugify } from './slugify'
 import { SummaryCard } from './SummaryCard'
+import { DmarcTimeGraph } from './DmarcTimeGraph'
+import { Box, Stack } from '@chakra-ui/core'
 
 export function DmarcReportPage() {
   const { currentUser } = useUserState()
+  const [show, setShow] = React.useState(true)
+
   const { loading, error, data } = useQuery(GET_YEARLY_REPORT, {
     context: {
       headers: {
@@ -15,12 +19,6 @@ export function DmarcReportPage() {
     },
     variables: { domain: slugify('cyber.gc.ca') },
   })
-
-  const [show, setShow] = React.useState(true)
-  const handleClick = () => {
-    setShow(!show)
-    console.log('Show: ' + show)
-  }
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>{String(error)}</p>
@@ -79,12 +77,23 @@ export function DmarcReportPage() {
     },
   ]
 
+  const cloneData = [...data.getYearlyReport]
+
+  const barData = cloneData.map((entry) => {
+    return { month: entry.month, ...entry.category_totals }
+  })
+
   return (
-    <SummaryCard
-      title="DMARC Report"
-      description="Description of DMARC report"
-      data={cardData}
-      slider={false}
-    />
+    <DmarcTimeGraph data={barData} />
+    // <Stack isInline>
+    //   <SummaryCard
+    //     title="DMARC Report"
+    //     description="Description of DMARC report"
+    //     data={cardData}
+    //     slider={false}
+    //   />
+    //   <Box w="20px"></Box>
+    //
+    // </Stack>
   )
 }

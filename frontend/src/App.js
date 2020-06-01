@@ -15,6 +15,7 @@ import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
 import { DmarcReportPage } from './DmarcReportPage'
+import { ResponsiveContainer } from 'recharts'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
