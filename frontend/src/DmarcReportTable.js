@@ -8,40 +8,80 @@ import { useTable } from 'react-table'
 import { array } from 'prop-types'
 import { Box } from '@chakra-ui/core'
 
-const Styles = styled.div`
-  padding: 1rem;
+import WithPseudoBox from './withPseudoBox'
 
-  div {
-    overflow-x: auto;
-  }
+const Table = styled.table`
+width: 100%;
+border-collapse: collapse;
 
-  table {
-    border-spacing: 0;
-    border: 1px solid black;
+tr:nth-of-type(odd) {
+background: #eee;
+}
 
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
-      }
-    }
+th {
+background: #333;
+color: white;
+font-weight: bold;
+}
 
+td, th {
+padding: 6px;
+border: 1px solid #ccc;
+text-align: left;
+}
+
+.title {
+  text-align: center;
+}
+
+  @media only screen and (max-width: 760px) {
+    table,
+    thead,
+    tbody,
     th,
-    td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
-
-      :last-child {
-        border-right: 0;
-      }
+    td,
+    tr {
+      display: block;
     }
-  }
+
+    thead .category {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr { border: 1px solid #ccc; }
+
+    td:nth-of-type(1):before { content: "zzz"; }
+
+    td {
+      border: none;
+      border-bottom: 1px solid #ccc;
+      position: relative;
+      padding-left: 50%;
+    }
+
+    td: before {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    }
+
+    ${(props) =>
+      props.flatHeaders.slice(1).map((headerObj, index) => {
+        return `
+          td:nth-of-type(${index + 1}):before {
+            content: '${headerObj.Header}';
+            font-weight: bold;
+          }
+        `
+      })}
 `
 
-export function DmarcReportTable({ ...props }) {
+ function DmarcReportTable({ ...props }) {
   const { data, columns } = props
   const { currentUser } = useUserState()
 
@@ -51,42 +91,45 @@ export function DmarcReportTable({ ...props }) {
     headerGroups,
     rows,
     prepareRow,
+    flatHeaders,
   } = useTable({
     columns,
     data,
   })
 
   return (
-    <Box overflowX="scroll">
-      <Styles>
-        <table {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>
-                    {column.render('Header')}
-                  </th>
-                ))}
+    <Box overflowX="auto">
+      <Table {...getTableProps()} flatHeaders={flatHeaders}>
+        <thead>
+          <tr className="titleBar" {...headerGroups[0].getHeaderGroupProps()}>
+            <th
+              className="title"
+              {...headerGroups[0].headers[0].getHeaderProps()}
+            >
+              {headerGroups[0].headers[0].render('Header')}
+            </th>
+          </tr>
+          {headerGroups.slice(1).map((headerGroup) => (
+            <tr className="category" {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
               </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row)
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </Styles>
+            )
+          })}
+        </tbody>
+      </Table>
     </Box>
   )
 }
@@ -95,3 +138,5 @@ DmarcReportTable.propTypes = {
   data: array.isRequired,
   columns: array.isRequired,
 }
+
+export default WithPseudoBox(DmarcReportTable)

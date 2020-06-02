@@ -890,10 +890,8 @@ type Organization implements Node {
   ): UserAffClassConnection
 }
 
-scalar ip
-
 type AlignedByIp {
-  source_ip_address: ip @fake(type: ipv4Address)
+  source_ip_address: String @fake(type: ipv4Address)
   dns_domain: URL @fake(type: domainName)
   header_from: URL @fake(type: domainName)
   envelope_from: URL @fake(type: domainName)

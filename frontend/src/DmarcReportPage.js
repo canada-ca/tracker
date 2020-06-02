@@ -10,11 +10,10 @@ import {
   GET_DMARC_FAILURES,
   GET_YEARLY_REPORT,
 } from './graphql/queries'
-import { slugify } from './slugify'
-import { SummaryCard } from './SummaryCard'
-import { DmarcTimeGraph } from './DmarcTimeGraph'
+import SummaryCard from './SummaryCard'
+import DmarcTimeGraph from './DmarcTimeGraph'
 import { Box, Stack } from '@chakra-ui/core'
-import { DmarcReportTable } from './DmarcReportTable'
+import DmarcReportTable from './DmarcReportTable'
 
 export function DmarcReportPage() {
   const { currentUser } = useUserState()
@@ -319,49 +318,42 @@ export function DmarcReportPage() {
   })
 
   return (
-    <Box overflowX="hidden" >
-      <SummaryCard
-        title="DMARC Report"
-        description="Description of DMARC report"
-        data={cardData}
-        slider={false}
-      />
-      <DmarcTimeGraph data={barData} />
-      <DmarcReportTable
-        data={alignIpData.getAlignedByIp}
-        columns={alignIpColumns}
-      />
-      <DmarcReportTable
-        data={spfFailData.getSpfFailures}
-        columns={spfFailColumns}
-      />
-      <DmarcReportTable
-        data={spfMisalignData.getSpfMisalign}
-        columns={spfMisalignColumns}
-      />
-      <DmarcReportTable
-        data={dkimFailData.getDkimFailures}
-        columns={dkimFailColumns}
-      />
-      <DmarcReportTable
-        data={dkimMisalignData.getDkimMisalign}
-        columns={dkimMisalignColumns}
-      />
-      <DmarcReportTable
-        data={dmarcFailData.getDmarcFailures}
-        columns={dmarcFailColumns}
-      />
+    <Box overflowX="hidden">
+      <Stack spacing="50px">
+        <SummaryCard
+          title="DMARC Report"
+          description="Description of DMARC report"
+          data={cardData}
+          slider={false}
+          ml="auto"
+          mr="auto"
+        />
+        <DmarcTimeGraph data={barData} ml="auto" mr="auto" />
+        <DmarcReportTable
+          data={alignIpData.getAlignedByIp}
+          columns={alignIpColumns}
+        />
+        <DmarcReportTable
+          data={spfFailData.getSpfFailures}
+          columns={spfFailColumns}
+        />
+        <DmarcReportTable
+          data={spfMisalignData.getSpfMisalign}
+          columns={spfMisalignColumns}
+        />
+        <DmarcReportTable
+          data={dkimFailData.getDkimFailures}
+          columns={dkimFailColumns}
+        />
+        <DmarcReportTable
+          data={dkimMisalignData.getDkimMisalign}
+          columns={dkimMisalignColumns}
+        />
+        <DmarcReportTable
+          data={dmarcFailData.getDmarcFailures}
+          columns={dmarcFailColumns}
+        />
+      </Stack>
     </Box>
-    // <DmarcTimeGraph data={barData} />
-    // <Stack isInline>
-    //   <SummaryCard
-    //     title="DMARC Report"
-    //     description="Description of DMARC report"
-    //     data={cardData}
-    //     slider={false}
-    //   />
-    //   <Box w="20px"></Box>
-    //
-    // </Stack>
   )
 }

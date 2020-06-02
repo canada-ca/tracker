@@ -2,8 +2,9 @@ import React from 'react'
 import { Text, Stack, Box, Badge, Divider } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { string, array, bool } from 'prop-types'
+import WithPseudoBox from './withPseudoBox'
 
-export function SummaryCard({ ...props }) {
+function SummaryCard({ ...props }) {
   const { title, description, data, slider } = props
 
   const reducer = (accumulator, currentValue) => {
@@ -180,3 +181,5 @@ SummaryCard.propTypes = {
   data: array.isRequired,
   slider: bool,
 }
+
+export default WithPseudoBox(SummaryCard)

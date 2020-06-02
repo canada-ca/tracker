@@ -10,9 +10,10 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
-import { array, bool, string } from 'prop-types'
+import { array } from 'prop-types'
+import WithPseudoBox from './withPseudoBox'
 
-export function DmarcTimeGraph({ data }) {
+function DmarcTimeGraph({ data }) {
   return (
     <ResponsiveContainer width={500} height={500}>
       <BarChart
@@ -44,3 +45,5 @@ export function DmarcTimeGraph({ data }) {
 DmarcTimeGraph.propTypes = {
   data: array.isRequired,
 }
+
+export default WithPseudoBox(DmarcTimeGraph)
