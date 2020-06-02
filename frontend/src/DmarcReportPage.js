@@ -9,6 +9,7 @@ import {
   GET_DKIM_MISALIGN,
   GET_DMARC_FAILURES,
   GET_YEARLY_REPORT,
+  GET_DMARC_REPORT_DOUGHNUT,
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcTimeGraph'
@@ -19,13 +20,17 @@ export function DmarcReportPage() {
   const { currentUser } = useUserState()
   const [show, setShow] = React.useState(true)
 
-  const { loading, error, data } = useQuery(GET_YEARLY_REPORT, {
+  const {
+    loading: doughnutLoading,
+    error: doughnutError,
+    data: doughnutData,
+  } = useQuery(GET_DMARC_REPORT_DOUGHNUT, {
     context: {
       headers: {
         authorization: currentUser.jwt,
       },
     },
-    variables: { domain: 'cyber.gc.ca' },
+    variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020 },
   })
 
   const {
@@ -107,50 +112,42 @@ export function DmarcReportPage() {
   })
 
   if (
-    loading ||
     alignIpLoading ||
     spfFailLoading ||
     spfMisalignLoading ||
     dkimFailLoading ||
     dkimMisalignLoading ||
-    dmarcFailLoading
+    dmarcFailLoading ||
+    doughnutLoading
   )
     return <p>Loading...</p>
   if (
-    error ||
     alignIpError ||
     spfFailError ||
     spfFailError ||
     spfMisalignError ||
     dkimFailError ||
     dkimMisalignError ||
-    dmarcFailError
+    dmarcFailError ||
+    doughnutError
   )
-    return <p>{String(error)}</p>
+    return <p>Error</p>
 
-  const categoryTotals = data.getYearlyReport[0].category_totals
+  const categoryTotals = doughnutData.getDmarcReportDoughnut.categoryTotals
 
-  const strong = (({ spf_pass_dkim_pass }) => ({
-    spf_pass_dkim_pass,
+  const strong = (({ spfPassDkimPass }) => ({
+    spfPassDkimPass,
   }))(categoryTotals)
 
-  const moderate = (({ spf_fail_dkim_pass, spf_pass_dkim_fail }) => ({
-    spf_fail_dkim_pass,
-    spf_pass_dkim_fail,
+  const moderate = (({ spfFailDkimPass, spfPassDkimFail }) => ({
+    spfFailDkimPass,
+    spfPassDkimFail,
   }))(categoryTotals)
 
-  const weak = (({
-    dmarc_fail_reject,
-    dmarc_fail_none,
-    dmarc_fail_quarantine,
-  }) => ({
-    dmarc_fail_reject,
-    dmarc_fail_none,
-    dmarc_fail_quarantine,
-  }))(categoryTotals)
-
-  const unknown = (({ unknown }) => ({
-    unknown,
+  const weak = (({ dmarcFailNone, dmarcFailQuarantine, dmarcFailReject }) => ({
+    dmarcFailNone,
+    dmarcFailQuarantine,
+    dmarcFailReject,
   }))(categoryTotals)
 
   const getNameQtyPair = (categoryPair) => {
@@ -174,11 +171,6 @@ export function DmarcReportPage() {
       strength: 'weak',
       name: 'All fail',
       categories: getNameQtyPair(weak),
-    },
-    {
-      strength: 'unknown',
-      name: 'Unknown',
-      categories: getNameQtyPair(unknown),
     },
   ]
 
@@ -311,11 +303,11 @@ export function DmarcReportPage() {
     },
   ]
 
-  const cloneData = [...data.getYearlyReport]
-
-  const barData = cloneData.map((entry) => {
-    return { month: entry.month, ...entry.category_totals }
-  })
+  // const cloneData = [...data.getYearlyReport]
+  //
+  // const barData = cloneData.map((entry) => {
+  //   return { month: entry.month, ...entry.category_totals }
+  // })
 
   return (
     <Box width="100%">
@@ -327,7 +319,7 @@ export function DmarcReportPage() {
             data={cardData}
             slider={false}
           />
-          <DmarcTimeGraph data={barData} />
+          {/*<DmarcTimeGraph data={barData} />*/}
         </Stack>
         <DmarcReportTable
           data={alignIpData.getAlignedByIp}

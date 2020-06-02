@@ -146,18 +146,26 @@ export const GET_DMARC_FAILURES = gql`
   }
 `
 
-export const GET_YEARLY_REPORT = gql`
-  query GetYearlyReport($domain: Slug!) {
-    getYearlyReport(domain: $domain) {
+export const GET_DMARC_REPORT_DOUGHNUT = gql`
+  query GetDmarcReportDoughnut(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
+  ) {
+    getDmarcReportDoughnut(
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
+    ) {
       month
-      category_totals {
-        spf_pass_dkim_pass
-        spf_fail_dkim_pass
-        dmarc_fail_none
-        spf_pass_dkim_fail
-        dmarc_fail_quarantine
-        dmarc_fail_reject
-        unknown
+      year
+      categoryTotals {
+        dmarcFailNone
+        spfFailDkimPass
+        spfPassDkimPass
+        spfPassDkimFail
+        dmarcFailQuarantine
+        dmarcFailReject
         total
       }
     }

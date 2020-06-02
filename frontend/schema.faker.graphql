@@ -337,10 +337,10 @@ type DmarcReportConnection {
 """A query object used to grab the data to create dmarc report doughnuts"""
 type DmarcReportDoughnut {
   """Which month is the data based on."""
-  month: String
+  month: PeriodEnums
 
   """Which year the data is from."""
-  year: Int
+  year: Int @examples(values: [2019, 2020])
 
   """Category totals for building dmarc report page doughnuts."""
   categoryTotals: CategoryTotals
@@ -943,7 +943,7 @@ type AlignedByIp {
 }
 
 type SpfFailures {
-  source_ip_address: ip @fake(type: ipv4Address)
+  source_ip_address: String @fake(type: ipv4Address)
   dns_domain: URL @fake(type: domainName)
   envelope_from: URL @fake(type: domainName)
   header_from: URL @fake(type: domainName)
@@ -956,7 +956,7 @@ type SpfFailures {
 }
 
 type SpfMisalign {
-  source_ip_address: ip @fake(type: ipv4Address)
+  source_ip_address: String @fake(type: ipv4Address)
   dns_domain: URL @fake(type: domainName)
   envelope_from: URL @fake(type: domainName)
   header_from: URL @fake(type: domainName)
@@ -970,7 +970,7 @@ type SpfMisalign {
 }
 
 type DkimFailures {
-  source_ip_address: ip @fake(type: ipv4Address)
+  source_ip_address: String @fake(type: ipv4Address)
   dns_domain: URL @fake(type: domainName)
   envelope_from: URL @fake(type: domainName)
   header_from: URL @fake(type: domainName)
@@ -985,7 +985,7 @@ type DkimFailures {
 }
 
 type DkimMisalign {
-  source_ip_address: ip @fake(type: ipv4Address)
+  source_ip_address: String @fake(type: ipv4Address)
   dns_domain: URL @fake(type: domainName)
   envelope_from: URL @fake(type: domainName)
   header_from: URL @fake(type: domainName)
@@ -1001,7 +1001,7 @@ type DkimMisalign {
 }
 
 type DmarcFailures {
-  source_ip_address: ip @fake(type: ipv4Address)
+  source_ip_address: String @fake(type: ipv4Address)
   dns_domain: URL @fake(type: domainName)
   envelope_from: URL @fake(type: domainName)
   header_from: URL @fake(type: domainName)
@@ -1017,37 +1017,6 @@ type DmarcFailures {
       type: number
       options: { minNumber: 0, maxNumber: 1000, precisionNumber: 1 }
     )
-}
-
-type YearlyReport {
-  month: MonthEnums
-  category_totals: CategoryTotals
-}
-
-type CategoryTotals {
-  spf_pass_dkim_pass: Int
-  spf_fail_dkim_pass: Int
-  dmarc_fail_none: Int
-  spf_pass_dkim_fail: Int
-  dmarc_fail_quarantine: Int
-  dmarc_fail_reject: Int
-  unknown: Int
-  total: Int
-}
-
-enum MonthEnums {
-  January
-  February
-  March
-  April
-  May
-  June
-  July
-  August
-  September
-  October
-  November
-  December
 }
 
 type OrganizationConnection {
@@ -1242,11 +1211,6 @@ type Query {
   Select information to create DMARC Failures by IP Address table
   """
   getDmarcFailures(domain: Slug!): [DmarcFailures] @listLength(min: 10, max: 15)
-
-  """
-  Select information to create a yearly report
-  """
-  getYearlyReport(domain: Slug!): [YearlyReport] @listLength(min: 13, max: 13)
 
   """
   An graphql object that will be used to populate a userList component in the front end
