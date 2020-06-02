@@ -581,9 +581,6 @@ type Mutation {
 
     """Email address that the user will use to authenticate with"""
     userName: EmailAddress!
-
-    """Preferred language of the user"""
-    preferredLang: LanguageEnums!
   ): SignUp
 
   """Allows users to use token sent through email to verify their account."""
@@ -1190,7 +1187,7 @@ type UserPage implements Node {
   displayName: String @fake(type: firstName)
 
   """Indicates the preferred language of this user"""
-  lang: String @examples(values: ["English", "French"])
+  lang: String @examples(values: ["ENGLISH", "FRENCH"])
 
   """Indicates wether or not this user has enabled tfa"""
   tfa: Boolean
