@@ -5,7 +5,6 @@ class TableStructure(graphene.ObjectType):
     """
     Object that contains the fields of each detail table
     """
-
     source_ip_address = graphene.String(description="IP address of sending server")
     envelope_from = graphene.String(description="Domain from SMTP banner message")
     spf_domains = graphene.String(description="Domains used for SPF validation")
