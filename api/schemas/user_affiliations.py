@@ -3,17 +3,11 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
 
-from app import app
-
 from functions.update_user_role import update_user_role
-
 from enums.roles import RoleEnums
-
 from scalars.slug import Slug
 from scalars.email_address import EmailAddress
-
 from models import User_affiliations as UserAff
-
 from functions.auth_wrappers import require_token
 
 
@@ -38,13 +32,11 @@ class UserAffClass(SQLAlchemyObjectType):
         description="The organization this affiliation belongs to",
     )
 
-    with app.app_context():
+    def resolve_user_id(self: UserAff, info):
+        return self.user_id
 
-        def resolve_user_id(self: UserAff, info):
-            return self.user_id
-
-        def resolve_permission(self: UserAff, info):
-            return self.permission
+    def resolve_permission(self: UserAff, info):
+        return self.permission
 
 
 class UserAffConnection(relay.Connection):

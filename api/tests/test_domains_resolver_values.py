@@ -2,7 +2,6 @@ import pytest
 from pytest import fail
 from graphene.test import Client
 
-from app import app
 from db import DB
 from queries import schema
 from models import (
@@ -18,11 +17,10 @@ from tests.test_functions import json, run
 
 @pytest.fixture
 def save():
-    with app.app_context():
-        s, cleanup, session = DB()
-        yield s
-        session.rollback()
-        cleanup()
+    s, cleanup, session = DB()
+    yield s
+    session.rollback()
+    cleanup()
 
 
 def test_get_domain_resolver_dmarc_report(save):

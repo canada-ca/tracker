@@ -1,18 +1,12 @@
 import graphene
-
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from functions.auth_functions import is_user_read
 from functions.auth_wrappers import require_token
-
-from app import app
-
 from schemas.user_affiliations import UserAffClass
-
 from models import Users as UserModel
 from models import User_affiliations
-
 from scalars.email_address import EmailAddress
 
 
@@ -54,36 +48,34 @@ class User(SQLAlchemyObjectType):
         UserAffClass._meta.connection, description="Users access to organizations"
     )
 
-    with app.app_context():
+    def resolve_user_name(self: UserModel, info):
+        return self.user_name
 
-        def resolve_user_name(self: UserModel, info):
-            return self.user_name
+    def resolve_display_name(self: UserModel, info):
+        return self.display_name
 
-        def resolve_display_name(self: UserModel, info):
-            return self.display_name
+    def resolve_lang(self: UserModel, info):
+        return self.preferred_lang
 
-        def resolve_lang(self: UserModel, info):
-            return self.preferred_lang
+    def resolve_tfa(self: UserModel, info):
+        return self.tfa_validated
 
-        def resolve_tfa(self: UserModel, info):
-            return self.tfa_validated
+    def resolve_email_validated(self: UserModel, info):
+        return self.email_validated
 
-        def resolve_email_validated(self: UserModel, info):
-            return self.email_validated
+    @require_token
+    def resolve_affiliations(self: UserModel, info, **kwargs):
+        user_roles = kwargs.get("user_roles")
+        rtr_list = []
 
-        @require_token
-        def resolve_affiliations(self: UserModel, info, **kwargs):
-            user_roles = kwargs.get("user_roles")
-            rtr_list = []
-
-            for role in user_roles:
-                if is_user_read(user_roles=user_roles, org_id=role["org_id"]):
-                    query = UserAffClass.get_query(info)
-                    query = query.filter(
-                        User_affiliations.organization_id == role["org_id"]
-                    ).filter(User_affiliations.user_id == self.id)
-                    rtr_list.append(query.first())
-            return rtr_list
+        for role in user_roles:
+            if is_user_read(user_roles=user_roles, org_id=role["org_id"]):
+                query = UserAffClass.get_query(info)
+                query = query.filter(
+                    User_affiliations.organization_id == role["org_id"]
+                ).filter(User_affiliations.user_id == self.id)
+                rtr_list.append(query.first())
+        return rtr_list
 
 
 class UserConnection(relay.Connection):

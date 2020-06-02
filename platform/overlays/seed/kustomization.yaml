@@ -17,10 +17,6 @@ secretGenerator:
   - scanners.env
   name: scanners
   namespace: tracker
-- files:
-  - gcp-dns-admin.json
-  name: cert-manager-credentials
-  namespace: istio-system
 generatorOptions:
   disableNameSuffixHash: true
 resources:
@@ -28,3 +24,4 @@ resources:
 - frontend-namespace.yaml
 - istio-system-namespace.yaml
 - tracker-namespace.yaml
+- knative-serving-namespace.yaml

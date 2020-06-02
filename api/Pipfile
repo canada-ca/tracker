@@ -30,6 +30,8 @@ pyotp = "*"
 pyjwt = "*"
 python-slugify = "*"
 bcrypt = "*"
+gql = "*"
+pytest-mock = "*"
 
 [scripts]
 test = "python -m pytest"

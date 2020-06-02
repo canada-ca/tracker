@@ -10,12 +10,10 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
-    - dns01:
-        clouddns:
-          project: track-compliance
-          serviceAccountSecretRef:
-            name: cert-manager-credentials
-            key: gcp-dns-admin.json
+    - selector: {}
+      http01:
+        ingress:
+          class: istio
 ---
 apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
@@ -29,9 +27,7 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
-    - dns01:
-        clouddns:
-          project: track-compliance
-          serviceAccountSecretRef:
-            name: cert-manager-credentials
-            key: gcp-dns-admin.json
+    - selector: {}
+      http01:
+        ingress:
+          class: istio

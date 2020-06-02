@@ -69,8 +69,32 @@ type AuthResults {
 }
 
 """
-This class handles the inner nested dict given by key: 'content'.
+This object displays the total amount of messages that fit into each category
 """
+type CategoryTotals {
+  """Amount of messages that failed dmarc and nothing was done."""
+  dmarcFailNone: Int
+
+  """Amount of messages that failed SPF, but passed DKIM."""
+  spfFailDkimPass: Int
+
+  """Amount of messages that passed SPF and DKIM."""
+  spfPassDkimPass: Int
+
+  """Amount of messages that passed SPF, but failed DKIM."""
+  spfPassDkimFail: Int
+
+  """Amount of messages that failed DMARC and were quarantined."""
+  dmarcFailQuarantine: Int
+
+  """Amount of messages that failed DMARC and were rejected."""
+  dmarcFailReject: Int
+
+  """The sum of all different categories."""
+  total: Int
+}
+
+"""This class handles the inner nested dict given by key: 'content'. """
 type Content {
   body: String
   fromEmail: String
@@ -310,9 +334,19 @@ type DmarcReportConnection {
   edges: [DmarcReportEdge]!
 }
 
-"""
-A Relay edge containing a `DmarcReport` and its cursor.
-"""
+"""A query object used to grab the data to create dmarc report doughnuts"""
+type DmarcReportDoughnut {
+  """Which month is the data based on."""
+  month: String
+
+  """Which year the data is from."""
+  year: Int
+
+  """Category totals for building dmarc report page doughnuts."""
+  categoryTotals: CategoryTotals
+}
+
+"""A Relay edge containing a `DmarcReport` and its cursor."""
 type DmarcReportEdge {
   """
   The item at the end of the edge
@@ -1068,9 +1102,48 @@ type PageInfo {
   endCursor: String
 }
 
-"""
-Policies evaluated
-"""
+enum PeriodEnums {
+  """The month of January"""
+  JANUARY
+
+  """The month of February"""
+  FEBRUARY
+
+  """The month of March"""
+  MARCH
+
+  """The month of April"""
+  APRIL
+
+  """The month of May"""
+  MAY
+
+  """The month of June"""
+  JUNE
+
+  """The month of July"""
+  JULY
+
+  """The month of August"""
+  AUGUST
+
+  """The month of September"""
+  SEPTEMBER
+
+  """The month of October"""
+  OCTOBER
+
+  """The month of November"""
+  NOVEMBER
+
+  """The month of December"""
+  DECEMBER
+
+  """The last 30 days"""
+  LAST30DAYS
+}
+
+"""Policies evaluated"""
 type PolicyEvaluated {
   """
   Tells mail receivers what do do with messages that do not pass your rules
@@ -1137,6 +1210,9 @@ type PolicyPublished {
 The central gathering point for all of the GraphQL queries.
 """
 type Query {
+  """A query object used to grab the data to create dmarc report doughnuts"""
+  getDmarcReportDoughnut(domainSlug: Slug!, period: PeriodEnums!, year: Year!): DmarcReportDoughnut
+
   """
   Select information to create Fully Alligned by IP Address table
   """
@@ -1193,9 +1269,13 @@ type Query {
     userName: EmailAddress
   ): UserPage
 
-  """
-  The ID of the object
-  """
+  """Gather category totals from the dmarc-report-api"""
+  getYearlyDmarcReportSummaries(
+    """Slug of domain you want to retrieve data on"""
+    domainSlug: Slug
+  ): [YearlyDmarcReportSummary]
+
+  """The ID of the object"""
   node(id: ID!): Node
 
   """
@@ -1847,3 +1927,21 @@ type WWWScanEdge {
   """
   cursor: String!
 }
+
+"""A field that conforms to a 4 digit integer"""
+scalar Year
+
+"""
+Yearly overview of various category totals from the external dmarc report api
+"""
+type YearlyDmarcReportSummary {
+  """Which month is the data based on"""
+  month: String
+
+  """Which year the data is from"""
+  year: String
+
+  """Category totals for quick viewing"""
+  categoryTotal: CategoryTotals
+}
+

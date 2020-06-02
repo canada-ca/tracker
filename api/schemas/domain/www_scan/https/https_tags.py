@@ -1,7 +1,6 @@
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from app import app
 from models import Https_scans
 
 
@@ -12,8 +11,6 @@ class HTTPSTags(SQLAlchemyObjectType):
 
     value = graphene.String()
 
-    with app.app_context():
-
-        def resolve_value(self, info):
-            tags = {}
-            return tags
+    def resolve_value(self, info):
+        tags = {}
+        return tags

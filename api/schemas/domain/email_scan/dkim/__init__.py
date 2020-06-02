@@ -1,13 +1,10 @@
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from app import app
 from models import Dkim_scans
 from scalars.url import URL
-
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
-
 from schemas.domain.email_scan.dkim.dkim_tags import DkimTags
 
 
@@ -35,19 +32,17 @@ class DKIM(SQLAlchemyObjectType):
         lambda: DkimTags, description="Key tags found during scan"
     )
 
-    with app.app_context():
+    def resolve_domain(self, info):
+        get_domain(self, info)
 
-        def resolve_domain(self, info):
-            get_domain(self, info)
+    def resolve_timestamp(self, info):
+        get_timestamp(self, info)
 
-        def resolve_timestamp(self, info):
-            get_timestamp(self, info)
+    def resolve_record(self, info):
+        return self.dkim_scan["dkim"]["txt_record"]
 
-        def resolve_record(self, info):
-            return self.dkim_scan["dkim"]["txt_record"]
+    def resolve_key_length(self, info):
+        return self.dkim_scan["dkim"]["key_size"]
 
-        def resolve_key_length(self, info):
-            return self.dkim_scan["dkim"]["key_size"]
-
-        def resolve_dkim_guidance_tags(self, info):
-            return DkimTags.get_query(info).all()
+    def resolve_dkim_guidance_tags(self, info):
+        return DkimTags.get_query(info).all()

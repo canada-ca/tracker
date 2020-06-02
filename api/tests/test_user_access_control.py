@@ -1,8 +1,6 @@
 import pytest
-
 from pytest import fail
 
-from app import app
 from db import DB
 from models import Organizations, Users, User_affiliations
 from tests.test_functions import json, run
@@ -10,10 +8,9 @@ from tests.test_functions import json, run
 
 @pytest.fixture()
 def save():
-    with app.app_context():
-        s, cleanup, db_session = DB()
-        yield s
-        cleanup()
+    s, cleanup, db_session = DB()
+    yield s
+    cleanup()
 
 
 # Super Admin Tests

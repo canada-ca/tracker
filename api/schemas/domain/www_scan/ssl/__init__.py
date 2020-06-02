@@ -1,11 +1,8 @@
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from app import app
 from models import Ssl_scans
-
 from scalars.url import URL
-
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
 
@@ -19,10 +16,8 @@ class SSL(SQLAlchemyObjectType):
     domain = URL()
     timestamp = graphene.DateTime()
 
-    with app.app_context():
+    def resolve_domain(self, info):
+        return get_domain(self, info)
 
-        def resolve_domain(self, info):
-            return get_domain(self, info)
-
-        def resolve_timestamp(self, info):
-            return get_timestamp(self, info)
+    def resolve_timestamp(self, info):
+        return get_timestamp(self, info)

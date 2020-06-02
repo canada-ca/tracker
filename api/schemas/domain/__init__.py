@@ -3,13 +3,10 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
 
-from app import app
 from models import Domains, Scans
 from scalars.slug import Slug
 from scalars.url import URL
-
 from resolvers.dmarc_report import resolve_dmarc_reports
-
 from schemas.domain.email_scan import EmailScan
 from schemas.domain.www_scan import WWWScan
 from schemas.domain.dmarc_report import DmarcReport
@@ -49,30 +46,28 @@ class Domain(SQLAlchemyObjectType):
         description="DMARC aggregate report",
     )
 
-    with app.app_context():
+    def resolve_url(self: Domains, info):
+        return self.domain
 
-        def resolve_url(self: Domains, info):
-            return self.domain
+    def resolve_slug(self: Domains, info):
+        return self.slug
 
-        def resolve_slug(self: Domains, info):
-            return self.slug
+    def resolve_last_ran(self: Domains, info):
+        return self.last_run
 
-        def resolve_last_ran(self: Domains, info):
-            return self.last_run
+    def resolve_email(self: Domains, info):
+        query = EmailScan.get_query(info)
+        query = query.filter(Scans.domain_id == self.id)
+        return query.all()
 
-        def resolve_email(self: Domains, info):
-            query = EmailScan.get_query(info)
-            query = query.filter(Scans.domain_id == self.id)
-            return query.all()
+    def resolve_www(self: Domains, info):
+        query = WWWScan.get_query(info)
+        query = query.filter(Scans.domain_id == self.id)
+        return query.all()
 
-        def resolve_www(self: Domains, info):
-            query = WWWScan.get_query(info)
-            query = query.filter(Scans.domain_id == self.id)
-            return query.all()
-
-        def resolve_dmarc_report(self: Domains, info, **kwargs):
-            kwargs["domain"] = self.domain
-            return resolve_dmarc_reports(self, info, **kwargs)
+    def resolve_dmarc_report(self: Domains, info, **kwargs):
+        kwargs["domain"] = self.domain
+        return resolve_dmarc_reports(self, info, **kwargs)
 
 
 class DomainConnection(relay.Connection):

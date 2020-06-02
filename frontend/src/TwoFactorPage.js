@@ -50,14 +50,11 @@ export function TwoFactorPage() {
 
       <Formik
         initialValues={{ email: '', password: '', otpCode: '' }}
-        onSubmit={(values, actions) => {
-          setTimeout(() => {
-            console.log(values) // TODO: Remove when testing is done
-            validateOTP({
-              variables: { userName: values.email, otpCode: values.otpCode },
-            })
-            actions.setSubmitting(false)
-          }, 500)
+        onSubmit={async (values, actions) => {
+          validateOTP({
+            variables: { userName: values.email, otpCode: values.otpCode },
+          })
+          actions.setSubmitting(false)
         }}
       >
         {(props) => (

@@ -1,10 +1,9 @@
-import graphene
-import jwt
 import os
 
+import graphene
+import jwt
 from graphql import GraphQLError
 
-from app import app
 from db import db_session
 from functions.input_validators import cleanse_input
 from models.Users import Users
@@ -38,20 +37,19 @@ class EmailVerifyAccount(graphene.Mutation):
             raise GraphQLError("Invalid token, please login again")
         user_name = payload.get("user_id")
 
-        with app.app_context():
-            # Check to see if user exists
-            user = db_session.query(Users).filter(Users.user_name == user_name).first()
+        # Check to see if user exists
+        user = db_session.query(Users).filter(Users.user_name == user_name).first()
 
-            if not user:
-                raise GraphQLError("Error, User does not exist")
+        if not user:
+            raise GraphQLError("Error, User does not exist")
 
-            user.verify_account()
+        user.verify_account()
 
-            try:
-                db_session.commit()
-            except Exception as e:
-                db_session.rollback()
-                db_session.flush()
-                raise GraphQLError("Error, unable to verify account.")
+        try:
+            db_session.commit()
+        except Exception as e:
+            db_session.rollback()
+            db_session.flush()
+            raise GraphQLError("Error, unable to verify account.")
 
         return EmailVerifyAccount(status=True)

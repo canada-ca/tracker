@@ -1,5 +1,4 @@
 import pytest
-
 from pytest import fail
 
 from app import app
@@ -10,10 +9,9 @@ from tests.test_functions import json, run
 
 @pytest.fixture()
 def save():
-    with app.app_context():
-        s, cleanup, db_session = DB()
-        yield s
-        cleanup()
+    s, cleanup, db_session = DB()
+    yield s
+    cleanup()
 
 
 def test_successful_send_verification_email_mutation(save):

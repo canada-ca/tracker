@@ -1,6 +1,8 @@
 starlette
 uvicorn
 emoji
+pytest
 requests>=2.18.4
 checkdmarc
 tldextract
+pretend

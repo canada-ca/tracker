@@ -34,30 +34,26 @@ function PasswordConfirmation({ ...props }) {
   /* A function for the Formik to validate fields in the form */
   function validatePassword(value) {
     setIcon('spinner')
-    setTimeout(() => {
-      if (value === '') {
-        setIcon('close')
-      } else if (String(value).length < 12) {
-        setIcon('close')
-      } else {
-        setIcon('check')
-      }
-    }, 600)
+    if (value === '') {
+      setIcon('close')
+    } else if (String(value).length < 12) {
+      setIcon('close')
+    } else {
+      setIcon('check')
+    }
   }
 
   // TODO: Is there another place to validate this?
   /* A function for the Formik to validate fields in the form */
   function validateConfirmPassword(value) {
     setConfirmIcon('spinner')
-    setTimeout(() => {
-      if (value === '') {
-        setConfirmIcon('close')
-      } else if (value !== document.getElementById('password').value) {
-        setConfirmIcon('close')
-      } else {
-        setConfirmIcon('check')
-      }
-    }, 600)
+    if (value === '') {
+      setConfirmIcon('close')
+    } else if (value !== document.getElementById('password').value) {
+      setConfirmIcon('close')
+    } else {
+      setConfirmIcon('check')
+    }
   }
 
   return (
