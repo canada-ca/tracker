@@ -18,7 +18,7 @@ from test_data import *
 
 def test_process_https():
     test_https_insert = MagicMock(return_value=asyncio.Future())
-    test_https_insert.return_value.set_return_value("HTTPS Scan inserted into database")
+    test_https_insert.return_value.set_result("HTTPS Scan inserted into database")
     test_app = Server(
         functions={
             "insert": {
@@ -49,7 +49,7 @@ def test_process_https():
 
 def test_process_ssl():
     test_ssl_insert = MagicMock(return_value=asyncio.Future())
-    test_ssl_insert.return_value.set_return_value("SSL Scan inserted into database")
+    test_ssl_insert.return_value.set_result("SSL Scan inserted into database")
     test_app = Server(
         functions={
             "insert": {
@@ -80,7 +80,7 @@ def test_process_ssl():
 
 def test_process_dmarc():
     test_dmarc_insert = MagicMock(return_value=asyncio.Future())
-    test_dmarc_insert.return_value.set_return_value("DMARC Scan inserted into database")
+    test_dmarc_insert.return_value.set_result("DMARC Scan inserted into database")
     test_app = Server(
         functions={
             "insert": {
@@ -111,7 +111,7 @@ def test_process_dmarc():
 
 def test_process_dkim():
     test_dkim_insert = MagicMock(return_value=asyncio.Future())
-    test_dkim_insert.return_value.set_return_value("DKIM Scan inserted into database")
+    test_dkim_insert.return_value.set_result("DKIM Scan inserted into database")
     test_app = Server(
         functions={
             "insert": {
