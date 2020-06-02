@@ -18,7 +18,7 @@ import { RouteIf } from './RouteIf'
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
-const QRcodePage = lazy(() => './QRcodePage')
+const QRcodePage = lazy(() => import('./QRcodePage'))
 const UserPage = lazy(() => import('./UserPage'))
 const UserList = lazy(() => import('./UserList'))
 const SignInPage = lazy(() => import('./SignInPage'))
