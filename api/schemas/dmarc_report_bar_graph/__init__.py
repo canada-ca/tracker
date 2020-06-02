@@ -9,9 +9,9 @@ get_dmarc_report_bar_graph = graphene.List(
     domain_slug=graphene.Argument(
         Slug,
         description="The sluified version of the domain you wish to retrieve "
-                    "data for."
+        "data for.",
     ),
     description="A query object used to grab the data to create dmarc report "
-                "bar graph.",
+    "bar graph.",
     resolver=resolve_get_dmarc_report_bar_graph,
 )

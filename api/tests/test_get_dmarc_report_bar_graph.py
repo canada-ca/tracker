@@ -12,7 +12,7 @@ from models import (
 )
 from tests.testdata.get_dmarc_report_bar_graph import (
     dmarc_report_bar_graph_data,
-    dmarc_report_bar_graph_expected_data
+    dmarc_report_bar_graph_expected_data,
 )
 
 from tests.test_functions import run, json

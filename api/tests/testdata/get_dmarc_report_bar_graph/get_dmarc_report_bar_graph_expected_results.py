@@ -11,8 +11,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 0,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 0
-                }
+                    "total": 0,
+                },
             },
             {
                 "month": "May",
@@ -24,8 +24,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 14,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 9237
-                }
+                    "total": 9237,
+                },
             },
             {
                 "month": "April",
@@ -37,8 +37,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 21,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 10848
-                }
+                    "total": 10848,
+                },
             },
             {
                 "month": "March",
@@ -50,8 +50,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 18,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 13677
-                }
+                    "total": 13677,
+                },
             },
             {
                 "month": "February",
@@ -63,8 +63,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 1,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 5075
-                }
+                    "total": 5075,
+                },
             },
             {
                 "month": "January",
@@ -76,8 +76,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 278,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 5312
-                }
+                    "total": 5312,
+                },
             },
             {
                 "month": "December",
@@ -89,8 +89,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 1567,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 3474
-                }
+                    "total": 3474,
+                },
             },
             {
                 "month": "November",
@@ -102,8 +102,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 2318,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 4128
-                }
+                    "total": 4128,
+                },
             },
             {
                 "month": "October",
@@ -115,8 +115,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 2837,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 4788
-                }
+                    "total": 4788,
+                },
             },
             {
                 "month": "September",
@@ -128,8 +128,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 929,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 1718
-                }
+                    "total": 1718,
+                },
             },
             {
                 "month": "August",
@@ -141,8 +141,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 0,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 0
-                }
+                    "total": 0,
+                },
             },
             {
                 "month": "July",
@@ -154,8 +154,8 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 0,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 0
-                }
+                    "total": 0,
+                },
             },
             {
                 "month": "June",
@@ -167,9 +167,9 @@ dmarc_report_bar_graph_expected_data = {
                     "spfPassDkimFail": 0,
                     "dmarcFailQuarantine": 0,
                     "dmarcFailReject": 0,
-                    "total": 0
-                }
-            }
+                    "total": 0,
+                },
+            },
         ]
     }
 }

@@ -32,9 +32,7 @@ def resolve_get_dmarc_report_bar_graph(self, info, **kwargs):
     domain_slug = cleanse_input(kwargs.get("domain_slug"))
 
     # Get Domain ORM
-    domain_orm = db_session.query(Domains).filter(
-        Domains.slug == domain_slug
-    ).first()
+    domain_orm = db_session.query(Domains).filter(Domains.slug == domain_slug).first()
 
     # Check to see if domain exists
     if domain_orm is not None:
@@ -49,15 +47,11 @@ def resolve_get_dmarc_report_bar_graph(self, info, **kwargs):
             end_date = f"{future_date.year}-12-31"
 
             # Create GQL variables
-            variables = {
-                "domain": domain,
-                "startDate": start_date,
-                "endDate": end_date
-            }
+            variables = {"domain": domain, "startDate": start_date, "endDate": end_date}
 
             # Dmarc Report API query
             query = gql(
-                '''
+                """
                 query (
                     $domain:GCURL!
                     $startDate:CustomDate!
@@ -82,7 +76,7 @@ def resolve_get_dmarc_report_bar_graph(self, info, **kwargs):
                         }
                     }
                 }
-                '''
+                """
             )
 
             # Send request
