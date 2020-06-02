@@ -41,7 +41,7 @@ https_result_data = {
 ssl_result_data = {
     "TLS": {
         "supported": ["TLS_1_2"],
-        "accepted_cipher_list": {
+        "accepted_cipher_list": [
             "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
             "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
             "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
@@ -50,9 +50,9 @@ ssl_result_data = {
             "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
             "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
             "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
-        },
+        ],
         "preferred_cipher": "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
-        "rejected_cipher_list": {
+        "rejected_cipher_list": [
             "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
             "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256",
             "TLS_DH_DSS_WITH_AES_256_CBC_SHA",
@@ -201,7 +201,7 @@ ssl_result_data = {
             "TLS_DH_anon_WITH_AES_256_CBC_SHA",
             "TLS_ECDHE_ECDSA_WITH_AES_256_CCM_8",
             "TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA",
-        },
+        ],
     },
     "is_vulnerable_to_heartbleed": False,
     "is_vulnerable_to_ccs_injection": False,

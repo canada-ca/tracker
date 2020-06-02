@@ -169,11 +169,17 @@ def scan_ssl(domain):
         # If CipherSuitesScanResults
         if name.endswith("suites"):
 
+            accepted_cipher_list = list()
             for c in result.accepted_cipher_suites:
-                res["TLS"]["accepted_cipher_list"].add(c.cipher_suite.name)
+                accepted_cipher_list.append(c.cipher_suite.name)
 
+            res["TLS"]["accepted_cipher_list"] = accepted_cipher_list
+
+            rejected_cipher_list = list()
             for c in result.rejected_cipher_suites:
-                res["TLS"]["rejected_cipher_list"].add(c.cipher_suite.name)
+                rejected_cipher_list.append(c.cipher_suite.name)
+
+            res["TLS"]["rejected_cipher_list"] = rejected_cipher_list
 
             # We want the preferred cipher for the highest SSL/TLS version supported
             if str(result.tls_version_used).split(".")[1] == highest_tls_supported:
