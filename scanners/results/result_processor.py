@@ -528,7 +528,7 @@ def Server(functions={}, database_uri=DATABASE_URI):
         payload = await request.json()
         try:
             logging.info("Processing results...")
-            payload_dict = formatted_dictionary(payload)
+            payload_dict = formatted_dictionary(json.dumps(payload))
             results = payload_dict["results"]
             scan_type = payload_dict["scan_type"]
             scan_id = payload_dict["scan_id"]
