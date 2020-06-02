@@ -3,7 +3,7 @@ steps:
     id: test-dispatcher
     dir: scanners/dispatcher
     entrypoint: /bin/sh
-    args: ["-c", "pip install -r requirements.txt && python -m pytest"]
+    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-dispatcher-if-master
