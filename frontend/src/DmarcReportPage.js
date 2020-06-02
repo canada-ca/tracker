@@ -318,8 +318,7 @@ export function DmarcReportPage() {
   })
 
   return (
-    <Box overflowX="hidden">
-      <Stack spacing="50px">
+      <Box overflowX="hidden">
         <SummaryCard
           title="DMARC Report"
           description="Description of DMARC report"
@@ -328,7 +327,7 @@ export function DmarcReportPage() {
           ml="auto"
           mr="auto"
         />
-        <DmarcTimeGraph data={barData} ml="auto" mr="auto" />
+        <DmarcTimeGraph data={barData} />
         <DmarcReportTable
           data={alignIpData.getAlignedByIp}
           columns={alignIpColumns}
@@ -353,7 +352,6 @@ export function DmarcReportPage() {
           data={dmarcFailData.getDmarcFailures}
           columns={dmarcFailColumns}
         />
-      </Stack>
-    </Box>
+      </Box>
   )
 }
