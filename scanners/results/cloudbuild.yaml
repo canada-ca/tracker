@@ -1,0 +1,34 @@
+steps:
+  - name: 'gcr.io/track-compliance/ci'
+    id: test-results
+    dir: scanners/results
+    entrypoint: /bin/sh
+    args: ["-c", "pip install -r requirements.txt && python -m pytest"]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-results-if-master
+    entrypoint: 'bash'
+    dir: .
+    args:
+    -  '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/scanners/results:$BRANCH_NAME-$SHORT_SHA results/
+      else
+        exit 0
+      fi
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-results-if-master
+    entrypoint: 'bash'
+    args:
+    -  '-c'
+    -  |
+       if [[ "$BRANCH_NAME" == "master" ]]
+       then
+         docker push gcr.io/$PROJECT_ID/scanners/results:$BRANCH_NAME-$SHORT_SHA
+       else
+         exit 0
+       fi
+
