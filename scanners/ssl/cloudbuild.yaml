@@ -14,7 +14,7 @@ steps:
     - |
       if [[ "$BRANCH_NAME" == "master" ]]
       then
-        docker build -t gcr.io/$PROJECT_ID/scanners/ssl:$BRANCH_NAME-$SHORT_SHA ssl/
+        docker build -t gcr.io/$PROJECT_ID/scanners/ssl:$BRANCH_NAME-$SHORT_SHA .
       else
         exit 0
       fi
