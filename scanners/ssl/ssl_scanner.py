@@ -38,44 +38,10 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate(received_payload):
-
-    logging.info("Scan received")
-
-    try:
-        scan_id = received_payload["scan_id"]
-        domain = received_payload["domain"]
-
-        # Perform scan
-        scan_response = requests.post("http://127.0.0.1:8000/scan", data=domain)
-
-        scan_results = scan_response.json()
-
-        # Construct request payload for result-processor
-        if scan_results is not {}:
-            payload = json.dumps(
-                {"results": scan_results, "scan_type": "ssl", "scan_id": scan_id}
-            )
-            logging.info(str(scan_results))
-        else:
-            raise Exception("SSL scan not completed")
-
-        # Dispatch results to result-processor
-        dispatch_response = requests.post(
-            "http://127.0.0.1:8000/dispatch", json=payload
-        )
-
-        return f"SSL scan completed. {dispatch_response.text}"
-
-    except Exception as e:
-        logging.error(str(e))
-        return f"An error occurred while attempting to perform SSL scan: {str(e)}"
-
-
 def dispatch_results(payload, client):
     # Post results to result-handling service
     client.post(
-        url="http://result-processor.tracker.svc.cluster.local/receive", json=payload
+        url="http://result-processor.tracker.svc.cluster.local/process", json=payload
     )
 
 
@@ -203,11 +169,17 @@ def scan_ssl(domain):
         # If CipherSuitesScanResults
         if name.endswith("suites"):
 
+            accepted_cipher_list = list()
             for c in result.accepted_cipher_suites:
-                res["TLS"]["accepted_cipher_list"].add(c.cipher_suite.name)
+                accepted_cipher_list.append(c.cipher_suite.name)
 
+            res["TLS"]["accepted_cipher_list"] = accepted_cipher_list
+
+            rejected_cipher_list = list()
             for c in result.rejected_cipher_suites:
-                res["TLS"]["rejected_cipher_list"].add(c.cipher_suite.name)
+                rejected_cipher_list.append(c.cipher_suite.name)
+
+            res["TLS"]["rejected_cipher_list"] = rejected_cipher_list
 
             # We want the preferred cipher for the highest SSL/TLS version supported
             if str(result.tls_version_used).split(".")[1] == highest_tls_supported:
@@ -246,32 +218,45 @@ def scan_ssl(domain):
     return res
 
 
-def Server(functions={}, client=requests):
-    async def receive(request):
-        logging.info("Request received")
-        payload = await request.json()
-        return PlainTextResponse(initiate(payload))
-
-    async def dispatch(request):
-        try:
-            payload = await request.json()
-            functions["dispatch"](payload, client)
-        except Exception as e:
-            return PlainTextResponse(str(e))
-        return PlainTextResponse("Scan results sent to result-processor")
-
+def Server(default_client=requests):
     async def scan(request):
-        domain = await request.body()
-        logging.info("Performing scan...")
-        return JSONResponse(functions["scan"](domain.decode("utf-8")))
+        try:
+            client = request.app.state.client
+
+            logging.info("Scan request received")
+            inbound_payload = await request.json()
+            domain = inbound_payload["domain"]
+            scan_id = inbound_payload["scan_id"]
+
+            logging.info("Performing scan...")
+            scan_results = scan_ssl(domain)
+
+            if scan_results is not None:
+                outbound_payload = json.dumps(
+                    {"results": scan_results, "scan_type": "ssl", "scan_id": scan_id}
+                )
+                logging.info(f"Scan results: {str(scan_results)}")
+            else:
+                raise Exception("SSL scan not completed")
+            dispatch_results(outbound_payload, client)
+        except Exception as e:
+            return PlainTextResponse(
+                f"An error occurred while attempting to process SSL scan request: {str(e)}"
+            )
+
+        return PlainTextResponse(
+            "SSL scan completed. Scan results dispatched to result-processor"
+        )
 
     routes = [
-        Route("/dispatch", dispatch, methods=["POST"]),
         Route("/scan", scan, methods=["POST"]),
-        Route("/receive", receive, methods=["POST"]),
     ]
 
-    return Starlette(debug=True, routes=routes, on_startup=[startup])
+    starlette_app = Starlette(debug=True, routes=routes, on_startup=[startup])
+
+    starlette_app.state.client = default_client
+
+    return starlette_app
 
 
-app = Server(functions={"dispatch": dispatch_results, "scan": scan_ssl})
+app = Server()

@@ -1,6 +1,7 @@
 starlette
 uvicorn
 emoji
+pytest
 requests>=2.18.4
 sslyze
 wget>=3.2
@@ -11,3 +12,4 @@ pyopenssl>=17.5.0
 python-dateutil>=2.7.3
 pytz>=2018.5
 publicsuffix2
+pretend
