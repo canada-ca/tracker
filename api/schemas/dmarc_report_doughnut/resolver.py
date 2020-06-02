@@ -26,7 +26,7 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
     :param self: A graphql field object
     :param info: Request information
     :param kwargs: Various Arguments passed in
-    :return: Returns a list of YearlyDmarcReportSummary
+    :return: Returns a DmarcReportDoughnut
     """
     user_roles = kwargs.get("user_roles")
     domain_slug = cleanse_input(kwargs.get("domain_slug"))

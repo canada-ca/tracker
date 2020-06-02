@@ -22,11 +22,11 @@ DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
 @require_token
 def resolve_get_dmarc_report_bar_graph(self, info, **kwargs):
     """
-
-    :param self:
-    :param info:
-    :param kwargs:
-    :return:
+    This function is used to resolve the getDmarcReportBarGraph query
+    :param self: A graphql field object
+    :param info: Request information
+    :param kwargs: Various Arguments passed in
+    :return: Returns a list of DmarcReportBarGraph's
     """
     user_roles = kwargs.get("user_roles")
     domain_slug = cleanse_input(kwargs.get("domain_slug"))
