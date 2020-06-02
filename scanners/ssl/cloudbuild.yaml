@@ -8,7 +8,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: build-ssl-if-master
     entrypoint: 'bash'
-    dir: .
+    dir: scanners/ssl
     args:
     -  '-c'
     - |

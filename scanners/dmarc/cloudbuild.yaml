@@ -8,7 +8,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: build-dmarc-if-master
     entrypoint: 'bash'
-    dir: .
+    dir: scanners/dmarc
     args:
     -  '-c'
     - |
