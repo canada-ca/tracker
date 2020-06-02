@@ -1,7 +1,7 @@
 import React from 'react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Heading, Text, Stack, SimpleGrid } from '@chakra-ui/core'
+import { Text, Stack, SimpleGrid } from '@chakra-ui/core'
 import { SummaryCard } from './SummaryCard'
 import { string } from 'prop-types'
 
@@ -26,7 +26,7 @@ export function SummaryGroup({ ...props }) {
     },
     {
       title: 'HTTPS Redirection',
-      description: 'Domains that pass the HTTPS requirements',
+      description: 'Domains that pass the HTTPS Redirection requirements',
     },
     {
       title: 'HSTS',
@@ -34,7 +34,7 @@ export function SummaryGroup({ ...props }) {
     },
     {
       title: 'HSTS Preloaded',
-      description: 'Domains that pass the HSTS requirements',
+      description: 'Domains that pass the HSTS Preloaded requirements',
     },
     {
       title: 'SSL',
@@ -94,11 +94,11 @@ export function SummaryGroup({ ...props }) {
   }
 
   return (
-    <Stack align="center">
-      <Heading>{title}</Heading>
-      <Text textAlign={['center']} fontSize="lg">
-        {description}
+    <Stack textAlign={'center'} align="center">
+      <Text fontSize="3xl" fontWeight="bold">
+        {title}
       </Text>
+      <Text fontSize="lg">{description}</Text>
       <br />
       <SimpleGrid columns={{ lg: getReportQty() }} spacing="30px" width="100%">
         {createReports()}
