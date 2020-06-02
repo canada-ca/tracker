@@ -1,6 +1,4 @@
-# Node-gyp needs python 🤦 so our build image needs to include it
-FROM python:alpine as build-env
-RUN apk add -U npm gcc make g++
+FROM node:alpine as build-env
 WORKDIR /app
 # Copy in whatever isn't filtered by .dockerignore
 COPY . .
@@ -10,7 +8,7 @@ COPY . .
 RUN npm ci --production
 
 # Base the production image on something slimmer
-FROM node:14-alpine
+FROM node:alpine
 LABEL maintainer="mike.williamson@tbs-sct.gc.ca"
 
 ENV HOST 0.0.0.0
