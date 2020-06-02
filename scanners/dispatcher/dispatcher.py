@@ -37,9 +37,7 @@ def initiate(received_payload, scan_type, client):
             )
             dispatched["ssl"] = client.post("http://127.0.0.1:8000/ssl", json=payload)
         elif scan_type == "mail":
-            dispatched["dkim"] = client.post(
-                "http://127.0.0.1:8000/dkim", json=payload
-            )
+            dispatched["dkim"] = client.post("http://127.0.0.1:8000/dkim", json=payload)
             dispatched["dmarc"] = client.post(
                 "http://127.0.0.1:8000/dmarc", json=payload
             )
@@ -58,12 +56,13 @@ def initiate(received_payload, scan_type, client):
 
 
 def Server(scanners={}, default_client=requests):
-
     def receive(request):
         logging.info("Request received")
         client = request.app.state.client
         return PlainTextResponse(
-            initiate(request.headers.get("Data"), request.headers.get("Scan-Type"), client)
+            initiate(
+                request.headers.get("Data"), request.headers.get("Scan-Type"), client
+            )
         )
 
     async def dkim(request):

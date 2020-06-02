@@ -8,7 +8,9 @@ from utils import *
 
 def test_web_scan():
     test_dkim = stub(
-        stub_function=lambda payload, client: PlainTextResponse("Dispatched to dkim scanner")
+        stub_function=lambda payload, client: PlainTextResponse(
+            "Dispatched to dkim scanner"
+        )
     )
     test_dmarc = stub(
         stub_function=lambda payload, client: PlainTextResponse(
@@ -21,7 +23,9 @@ def test_web_scan():
         )
     )
     test_ssl = stub(
-        stub_function=lambda payload, client: PlainTextResponse("Dispatched to ssl scanner")
+        stub_function=lambda payload, client: PlainTextResponse(
+            "Dispatched to ssl scanner"
+        )
     )
 
     test_app = Server(
@@ -50,7 +54,9 @@ def test_web_scan():
 
 def test_mail_scan():
     test_dkim = stub(
-        stub_function=lambda payload, client: PlainTextResponse("Dispatched to dkim scanner")
+        stub_function=lambda payload, client: PlainTextResponse(
+            "Dispatched to dkim scanner"
+        )
     )
     test_dmarc = stub(
         stub_function=lambda payload, client: PlainTextResponse(
@@ -63,7 +69,9 @@ def test_mail_scan():
         )
     )
     test_ssl = stub(
-        stub_function=lambda payload, client: PlainTextResponse("Dispatched to ssl scanner")
+        stub_function=lambda payload, client: PlainTextResponse(
+            "Dispatched to ssl scanner"
+        )
     )
 
     test_app = Server(
@@ -104,7 +112,7 @@ def test_https_dispatch():
             "https": Scanner(scan_type=scan_https),
             "ssl": Scanner(scan_type=scan_ssl),
         },
-        default_client=client_stub
+        default_client=client_stub,
     )
 
     test_client = TestClient(test_app)
@@ -126,7 +134,7 @@ def test_ssl_dispatch():
             "https": Scanner(scan_type=scan_https),
             "ssl": Scanner(scan_type=scan_ssl),
         },
-        default_client=client_stub
+        default_client=client_stub,
     )
 
     test_client = TestClient(test_app)
@@ -148,7 +156,7 @@ def test_dmarc_dispatch():
             "https": Scanner(scan_type=scan_https),
             "ssl": Scanner(scan_type=scan_ssl),
         },
-        default_client=client_stub
+        default_client=client_stub,
     )
 
     test_client = TestClient(test_app)
@@ -170,7 +178,7 @@ def test_dkim_dispatch():
             "https": Scanner(scan_type=scan_https),
             "ssl": Scanner(scan_type=scan_ssl),
         },
-        default_client=client_stub
+        default_client=client_stub,
     )
 
     test_client = TestClient(test_app)

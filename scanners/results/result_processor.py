@@ -536,14 +536,20 @@ def Server(functions={}, database_uri=DATABASE_URI):
             report = functions["process"][scan_type](results)
             logging.info(f"Processed results: {str(report)}")
 
-            insert_response = await functions["insert"][scan_type](results, scan_id, database)
+            insert_response = await functions["insert"][scan_type](
+                results, scan_id, database
+            )
             logging.info("Database insertion(s) completed")
 
-            return PlainTextResponse(f"Results processed successfully: {insert_response}")
+            return PlainTextResponse(
+                f"Results processed successfully: {insert_response}"
+            )
 
         except Exception as e:
             logging.error("Failed: %s" % str(e))
-            return PlainTextResponse("An error occurred while processing results: %s" % str(e))
+            return PlainTextResponse(
+                "An error occurred while processing results: %s" % str(e)
+            )
 
     routes = [
         Route("/process", process, methods=["POST"]),

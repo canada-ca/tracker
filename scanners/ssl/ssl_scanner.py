@@ -219,7 +219,6 @@ def scan_ssl(domain):
 
 
 def Server(default_client=requests):
-
     async def scan(request):
         try:
             client = request.app.state.client
@@ -241,9 +240,13 @@ def Server(default_client=requests):
                 raise Exception("SSL scan not completed")
             dispatch_results(outbound_payload, client)
         except Exception as e:
-            return PlainTextResponse(f"An error occurred while attempting to process SSL scan request: {str(e)}")
+            return PlainTextResponse(
+                f"An error occurred while attempting to process SSL scan request: {str(e)}"
+            )
 
-        return PlainTextResponse("SSL scan completed. Scan results dispatched to result-processor")
+        return PlainTextResponse(
+            "SSL scan completed. Scan results dispatched to result-processor"
+        )
 
     routes = [
         Route("/scan", scan, methods=["POST"]),

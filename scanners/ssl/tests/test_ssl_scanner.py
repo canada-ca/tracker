@@ -5,9 +5,7 @@ from ssl_scanner import Server
 
 
 def test_scan():
-    client_stub = stub(
-        post=lambda url, json: None
-    )
+    client_stub = stub(post=lambda url, json: None)
 
     test_app = Server(default_client=client_stub)
 
@@ -18,4 +16,3 @@ def test_scan():
     res = test_client.post("/scan", json=test_payload)
 
     assert res.text == "SSL scan completed. Scan results dispatched to result-processor"
-

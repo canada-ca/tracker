@@ -36,7 +36,6 @@ def scan_https(domain):
 
 
 def Server(default_client=requests):
-
     async def scan(request):
         try:
             client = request.app.state.client
@@ -58,9 +57,13 @@ def Server(default_client=requests):
                 raise Exception("HTTPS scan not completed")
             dispatch_results(outbound_payload, client)
         except Exception as e:
-            return PlainTextResponse(f"An error occurred while attempting to process HTTPS scan request: {str(e)}")
+            return PlainTextResponse(
+                f"An error occurred while attempting to process HTTPS scan request: {str(e)}"
+            )
 
-        return PlainTextResponse("HTTPS scan completed. Scan results dispatched to result-processor")
+        return PlainTextResponse(
+            "HTTPS scan completed. Scan results dispatched to result-processor"
+        )
 
     routes = [
         Route("/scan", scan, methods=["POST"]),

@@ -73,9 +73,7 @@ def test_process_ssl():
 
     res = test_client.post("/process", json=test_payload)
 
-    assert (
-        res.text == "Results processed successfully: SSL Scan inserted into database"
-    )
+    assert res.text == "Results processed successfully: SSL Scan inserted into database"
 
 
 def test_process_dmarc():
@@ -138,4 +136,3 @@ def test_process_dkim():
     assert (
         res.text == "Results processed successfully: DKIM Scan inserted into database"
     )
-
