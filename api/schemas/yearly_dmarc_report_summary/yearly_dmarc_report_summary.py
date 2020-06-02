@@ -1,6 +1,6 @@
 import graphene
 
-from schemas.yearly_dmarc_report_summary.category_totals import CategoryTotals
+from schemas.shared_structures import CategoryTotals
 
 
 class YearlyDmarcReportSummary(graphene.ObjectType):

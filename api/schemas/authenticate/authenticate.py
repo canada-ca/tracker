@@ -1,7 +1,7 @@
 import graphene
 
 from functions.input_validators import cleanse_input
-from schemas.auth_result.auth_result import AuthResult
+from schemas.shared_structures import AuthResult
 from schemas.authenticate.sign_in_user import sign_in_user
 from scalars.email_address import EmailAddress
 

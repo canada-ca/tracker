@@ -1,3 +1,5 @@
+import json
+
 from gql import Client
 from gql.transport.requests import RequestsHTTPTransport
 from graphql import GraphQLError
@@ -54,4 +56,9 @@ def send_request(api_domain, auth_token, variables: dict, query) -> dict:
         return data
 
     except Exception as e:
-        raise GraphQLError("Error, when querying dmarc-report-api:" + str(e))
+        error_str = e.__str__().replace("\'", "\"")
+        error_dict = json.loads(error_str)
+        if error_dict.get("message", None):
+            raise GraphQLError("Error from dmarc-report-api: " + str(error_dict.get("message")))
+        else:
+            raise GraphQLError("Error, when querying dmarc-report-api: " + str(e))

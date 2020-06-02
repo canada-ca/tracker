@@ -3,7 +3,7 @@ import graphene
 from enums.languages import LanguageEnums
 from functions.input_validators import cleanse_input
 from scalars.email_address import EmailAddress
-from schemas.auth_result.auth_result import AuthResult
+from schemas.shared_structures import AuthResult
 from schemas.sign_up.create_user import create_user
 
 
