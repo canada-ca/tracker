@@ -539,7 +539,7 @@ def Server(functions={}, database_uri=DATABASE_URI):
             insert_response = await functions["insert"][scan_type](results, scan_id, database)
             logging.info("Database insertion(s) completed")
 
-            return PlainTextResponse(f"Results processed successfully: {insert_response.text}")
+            return PlainTextResponse(f"Results processed successfully: {insert_response}")
 
         except Exception as e:
             logging.error("Failed: %s" % str(e))

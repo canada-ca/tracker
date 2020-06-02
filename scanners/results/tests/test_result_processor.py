@@ -1,5 +1,6 @@
 import pytest
-from pretend import stub
+import asyncio
+from unittest.mock import MagicMock
 from starlette.testclient import TestClient
 from result_processor import (
     Server,
@@ -15,15 +16,13 @@ from result_processor import (
 from test_data import *
 
 
-def test_insert_https():
-    test_https = stub(
-        insert=lambda results, scan_id, database: "HTTPS Scan inserted into database"
-    )
-
+def test_process_https():
+    test_https_insert = MagicMock(return_value=asyncio.Future())
+    test_https_insert.return_value.set_return_value("HTTPS Scan inserted into database")
     test_app = Server(
         functions={
             "insert": {
-                "https": test_https.insert,
+                "https": test_https_insert,
                 "ssl": insert_ssl,
                 "dmarc": insert_dmarc,
                 "dkim": insert_dkim,
@@ -39,25 +38,23 @@ def test_insert_https():
 
     test_client = TestClient(test_app)
 
-    test_payload = {"results": {"results": 1}, "scan_id": 1, "scan_type": "https"}
+    test_payload = {"results": https_result_data, "scan_id": 1, "scan_type": "https"}
 
-    res = test_client.post("/process", payload=test_payload)
+    res = test_client.post("/process", json=test_payload)
 
     assert (
         res.text == "Results processed successfully: HTTPS Scan inserted into database"
     )
 
 
-def test_insert_ssl():
-    test_ssl = stub(
-        insert=lambda results, scan_id, database: "SSL Scan inserted into database"
-    )
-
+def test_process_ssl():
+    test_ssl_insert = MagicMock(return_value=asyncio.Future())
+    test_ssl_insert.return_value.set_return_value("SSL Scan inserted into database")
     test_app = Server(
         functions={
             "insert": {
                 "https": insert_https,
-                "ssl": test_ssl.insert,
+                "ssl": test_ssl_insert,
                 "dmarc": insert_dmarc,
                 "dkim": insert_dkim,
             },
@@ -72,26 +69,24 @@ def test_insert_ssl():
 
     test_client = TestClient(test_app)
 
-    test_payload = {"results": {"results": 1}, "scan_id": 1, "scan_type": "ssl"}
+    test_payload = {"results": ssl_result_data, "scan_id": 1, "scan_type": "ssl"}
 
-    res = test_client.post("/process", payload=test_payload)
+    res = test_client.post("/process", json=test_payload)
 
     assert (
         res.text == "Results processed successfully: SSL Scan inserted into database"
     )
 
 
-def test_insert_dmarc():
-    test_dmarc = stub(
-        insert=lambda results, scan_id, database: "DMARC Scan inserted into database"
-    )
-
+def test_process_dmarc():
+    test_dmarc_insert = MagicMock(return_value=asyncio.Future())
+    test_dmarc_insert.return_value.set_return_value("DMARC Scan inserted into database")
     test_app = Server(
         functions={
             "insert": {
                 "https": insert_https,
                 "ssl": insert_ssl,
-                "dmarc": test_dmarc.insert,
+                "dmarc": test_dmarc_insert,
                 "dkim": insert_dkim,
             },
             "process": {
@@ -105,27 +100,25 @@ def test_insert_dmarc():
 
     test_client = TestClient(test_app)
 
-    test_payload = {"results": {"results": 1}, "scan_id": 1, "scan_type": "dmarc"}
+    test_payload = {"results": dmarc_result_data, "scan_id": 1, "scan_type": "dmarc"}
 
-    res = test_client.post("/process", payload=test_payload)
+    res = test_client.post("/process", json=test_payload)
 
     assert (
         res.text == "Results processed successfully: DMARC Scan inserted into database"
     )
 
 
-def test_insert_dkim():
-    test_dkim = stub(
-        insert=lambda results, scan_id, database: "DKIM Scan inserted into database"
-    )
-
+def test_process_dkim():
+    test_dkim_insert = MagicMock(return_value=asyncio.Future())
+    test_dkim_insert.return_value.set_return_value("DKIM Scan inserted into database")
     test_app = Server(
         functions={
             "insert": {
                 "https": insert_https,
                 "ssl": insert_ssl,
                 "dmarc": insert_dmarc,
-                "dkim": test_dkim.insert,
+                "dkim": test_dkim_insert,
             },
             "process": {
                 "https": process_https,
@@ -138,9 +131,9 @@ def test_insert_dkim():
 
     test_client = TestClient(test_app)
 
-    test_payload = {"results": {"results": 1}, "scan_id": 1, "scan_type": "dkim"}
+    test_payload = {"results": dkim_result_data, "scan_id": 1, "scan_type": "dkim"}
 
-    res = test_client.post("/process", payload=test_payload)
+    res = test_client.post("/process", json=test_payload)
 
     assert (
         res.text == "Results processed successfully: DKIM Scan inserted into database"
