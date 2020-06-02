@@ -1237,7 +1237,7 @@ type Query {
   getYearlyDmarcReportSummaries(
     """Slug of domain you want to retrieve data on"""
     domainSlug: Slug
-  ): [YearlyDmarcReportSummary]
+  ): [YearlyDmarcReportSummary] @listLength(min:13, max:13)
 
   """The ID of the object"""
   node(id: ID!): Node
@@ -1895,15 +1895,54 @@ type WWWScanEdge {
 """A field that conforms to a 4 digit integer"""
 scalar Year
 
+"""Used to fake months"""
+enum Month {
+  """The month of January"""
+  JANUARY
+
+  """The month of February"""
+  FEBRUARY
+
+  """The month of March"""
+  MARCH
+
+  """The month of April"""
+  APRIL
+
+  """The month of May"""
+  MAY
+
+  """The month of June"""
+  JUNE
+
+  """The month of July"""
+  JULY
+
+  """The month of August"""
+  AUGUST
+
+  """The month of September"""
+  SEPTEMBER
+
+  """The month of October"""
+  OCTOBER
+
+  """The month of November"""
+  NOVEMBER
+
+  """The month of December"""
+  DECEMBER
+}
+
 """
 Yearly overview of various category totals from the external dmarc report api
 """
 type YearlyDmarcReportSummary {
   """Which month is the data based on"""
-  month: String
+  month: Month
 
   """Which year the data is from"""
-  year: String
+  year: Year @examples(values: [2019, 2020])
 
   """Category totals for quick viewing"""
   categoryTotal: CategoryTotals

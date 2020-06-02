@@ -10,6 +10,7 @@ import {
   GET_DMARC_FAILURES,
   GET_YEARLY_REPORT,
   GET_DMARC_REPORT_DOUGHNUT,
+  GET_YEARLY_DMARC_REPORT_SUMMARIES,
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcTimeGraph'
@@ -31,6 +32,19 @@ export function DmarcReportPage() {
       },
     },
     variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020 },
+  })
+
+  const {
+    loading: yearlyLoading,
+    error: yearlyError,
+    data: yearlyData,
+  } = useQuery(GET_YEARLY_DMARC_REPORT_SUMMARIES, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+    variables: { domainSlug: 'cyber.gc.ca' },
   })
 
   const {
@@ -118,7 +132,8 @@ export function DmarcReportPage() {
     dkimFailLoading ||
     dkimMisalignLoading ||
     dmarcFailLoading ||
-    doughnutLoading
+    doughnutLoading ||
+    yearlyLoading
   )
     return <p>Loading...</p>
   if (
@@ -129,7 +144,8 @@ export function DmarcReportPage() {
     dkimFailError ||
     dkimMisalignError ||
     dmarcFailError ||
-    doughnutError
+    doughnutError ||
+    yearlyError
   )
     return <p>Error</p>
 
@@ -303,11 +319,9 @@ export function DmarcReportPage() {
     },
   ]
 
-  // const cloneData = [...data.getYearlyReport]
-  //
-  // const barData = cloneData.map((entry) => {
-  //   return { month: entry.month, ...entry.category_totals }
-  // })
+  const barData = yearlyData.getYearlyDmarcReportSummaries.map((entry) => {
+    return { month: entry.month, year: entry.year, ...entry.categoryTotal }
+  })
 
   return (
     <Box width="100%">
@@ -319,7 +333,7 @@ export function DmarcReportPage() {
             data={cardData}
             slider={false}
           />
-          {/*<DmarcTimeGraph data={barData} />*/}
+          <DmarcTimeGraph data={barData} />
         </Stack>
         <DmarcReportTable
           data={alignIpData.getAlignedByIp}

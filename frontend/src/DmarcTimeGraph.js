@@ -31,12 +31,12 @@ function DmarcTimeGraph({ data }) {
           align="center"
           margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
         />
-        <Bar dataKey="spf_pass_dkim_pass" stackId="a" fill="#2D8133" />
-        <Bar dataKey="spf_fail_dkim_pass" stackId="a" fill="#ffbf47" />
-        <Bar dataKey="spf_pass_dkim_fail" stackId="a" fill="#ffbf47" />
-        <Bar dataKey="dmarc_fail_reject" stackId="a" fill="#e53e3e" />
-        <Bar dataKey="dmarc_fail_none" stackId="a" fill="#e53e3e" />
-        <Bar dataKey="dmarc_fail_quarantine" stackId="a" fill="#e53e3e" />
+        <Bar dataKey="spfPassDkimPass" stackId="a" fill="#2D8133" />
+        <Bar dataKey="spfFailDkimPass" stackId="a" fill="#ffbf47" />
+        <Bar dataKey="spfPassDkimFail" stackId="a" fill="#ffbf47" />
+        <Bar dataKey="dmarcFailNone" stackId="a" fill="#e53e3e" />
+        <Bar dataKey="dmarcFailQuarantine" stackId="a" fill="#e53e3e" />
+        <Bar dataKey="dmarcFailReject" stackId="a" fill="#e53e3e" />
       </BarChart>
     </ResponsiveContainer>
   )
