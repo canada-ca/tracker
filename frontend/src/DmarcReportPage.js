@@ -318,40 +318,48 @@ export function DmarcReportPage() {
   })
 
   return (
+    <Box width="100%">
       <Box overflowX="hidden">
-        <SummaryCard
-          title="DMARC Report"
-          description="Description of DMARC report"
-          data={cardData}
-          slider={false}
-          ml="auto"
-          mr="auto"
-        />
-        <DmarcTimeGraph data={barData} />
+        <Stack align="center">
+          <SummaryCard
+            title="DMARC Report"
+            description="Description of DMARC report"
+            data={cardData}
+            slider={false}
+          />
+          <DmarcTimeGraph data={barData} />
+        </Stack>
         <DmarcReportTable
           data={alignIpData.getAlignedByIp}
           columns={alignIpColumns}
+          mb="30px"
         />
         <DmarcReportTable
           data={spfFailData.getSpfFailures}
           columns={spfFailColumns}
+          mb="30px"
         />
         <DmarcReportTable
           data={spfMisalignData.getSpfMisalign}
           columns={spfMisalignColumns}
+          mb="30px"
         />
         <DmarcReportTable
           data={dkimFailData.getDkimFailures}
           columns={dkimFailColumns}
+          mb="30px"
         />
         <DmarcReportTable
           data={dkimMisalignData.getDkimMisalign}
           columns={dkimMisalignColumns}
+          mb="30px"
         />
         <DmarcReportTable
           data={dmarcFailData.getDmarcFailures}
           columns={dmarcFailColumns}
+          mb="30px"
         />
       </Box>
+    </Box>
   )
 }

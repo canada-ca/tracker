@@ -14,13 +14,8 @@ const Table = styled.table`
 width: 100%;
 border-collapse: collapse;
 
-tr:nth-of-type(odd) {
-background: #eee;
-}
-
 th {
-background: #333;
-color: white;
+color: black;
 font-weight: bold;
 }
 
@@ -52,8 +47,6 @@ text-align: left;
 
     tr { border: 1px solid #ccc; }
 
-    td:nth-of-type(1):before { content: "zzz"; }
-
     td {
       border: none;
       border-bottom: 1px solid #ccc;
@@ -84,7 +77,7 @@ text-align: left;
 function DmarcReportTable({ ...props }) {
   const { data, columns } = props
   const { currentUser } = useUserState()
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = React.useState(true)
 
   const handleShow = () => setShow(!show)
 
@@ -101,40 +94,42 @@ function DmarcReportTable({ ...props }) {
   })
 
   return (
-    <Box overflowX="auto">
-      <Button bg="gray.700" color="white" onClick={handleShow}>
+    <>
+      <Button bg="gray.700" color="white" onClick={handleShow} w="100%">
         {flatHeaders[0].Header}
       </Button>
-      <Collapse isOpen={show}>
-        <Table {...getTableProps()} flatHeaders={flatHeaders}>
-          <thead>
-            {headerGroups.slice(1).map((headerGroup) => (
-              <tr className="category" {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>
-                    {column.render('Header')}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row)
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
+      <Box overflowX="auto">
+        <Collapse isOpen={show}>
+          <Table {...getTableProps()} flatHeaders={flatHeaders}>
+            <thead>
+              {headerGroups.slice(1).map((headerGroup) => (
+                <tr className="category" {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th {...column.getHeaderProps()}>
+                      {column.render('Header')}
+                    </th>
+                  ))}
                 </tr>
-              )
-            })}
-          </tbody>
-        </Table>
-      </Collapse>
-    </Box>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map((row, i) => {
+                prepareRow(row)
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </Collapse>
+      </Box>
+    </>
   )
 }
 
