@@ -650,6 +650,22 @@ type Organization implements Node {
   affiliatedUsers(before: String, after: String, first: Int, last: Int): UserAffClassConnection
 }
 
+scalar ip
+
+type AlignedByIp {
+  source_ip_address: ip @fake(type: ipv4Address)
+  dns_domain: URL @fake(type: domainName)
+  header_from: URL @fake(type: domainName)
+  envelope_from: URL @fake(type: domainName)
+  spf_results: String @examples(values: ["pass", "fail"])
+  spf_aligned: String @examples(values: ["true", "false"])
+  dkim_domains: URL @fake(type: domainName)
+  dkim_selectors: String @examples(values: ["selector4", "none", "selector1"])
+  dkim_results: String @examples(values: ["pass", "fail"])
+  dkim_aligned: String @examples(values: ["true", "false"])
+  message_count: Int @fake(type: number, options: {minNumber: 0, maxNumber: 1000, precisionNumber: 1})
+}
+
 type YearlyReport {
   month: MonthEnums
   category_totals: CategoryTotals
@@ -810,6 +826,11 @@ type PolicyPublished {
 
 """The central gathering point for all of the GraphQL queries."""
 type Query {
+  """
+  Select information to create Fully Alligned by IP Address table
+  """
+  getAlignedByIp(domain: Slug!): [AlignedByIp] @listLength(min: 20, max: 30)
+
   """
   Select information to create a yearly report
   """

@@ -16,6 +16,7 @@ import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
 import { DmarcReportPage } from './DmarcReportPage'
 import { ResponsiveContainer } from 'recharts'
+import { DmarcReportTable } from './DmarcReportTable'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -78,6 +79,7 @@ export default function App() {
           <Suspense fallback={<div>Loading...</div>}>
             <Switch>
               <Route exact path="/">
+                {/*<DmarcReportTable />*/}
                 <DmarcReportPage />
                 {/*<LandingPage />*/}
               </Route>
