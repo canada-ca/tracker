@@ -73,6 +73,78 @@ export const GET_ALIGNED_BY_IP = gql`
     }
   }
 `
+export const GET_SPF_FAILURES = gql`
+  query GetSpfFailures($domain: Slug!) {
+    getSpfFailures(domain: $domain) {
+      source_ip_address
+      dns_domain
+      envelope_from
+      header_from
+      spf_results
+      message_count
+    }
+  }
+`
+export const GET_SPF_MISALIGN = gql`
+  query GetSpfMisalign($domain: Slug!) {
+    getSpfMisalign(domain: $domain) {
+      source_ip_address
+      dns_domain
+      envelope_from
+      header_from
+      spf_results
+      spf_aligned
+      message_count
+    }
+  }
+`
+export const GET_DKIM_FAILURES = gql`
+  query GetDkimFailures($domain: Slug!) {
+    getDkimFailures(domain: $domain) {
+      source_ip_address
+      dns_domain
+      envelope_from
+      header_from
+      dkim_domains
+      dkim_selectors
+      dkim_results
+      message_count
+    }
+  }
+`
+export const GET_DKIM_MISALIGN = gql`
+  query GetDkimMisalign($domain: Slug!) {
+    getDkimMisalign(domain: $domain) {
+      source_ip_address
+      dns_domain
+      envelope_from
+      header_from
+      dkim_domains
+      dkim_selectors
+      dkim_results
+      dkim_aligned
+      message_count
+    }
+  }
+`
+export const GET_DMARC_FAILURES = gql`
+  query GetDmarcFailures($domain: Slug!) {
+    getDmarcFailures(domain: $domain) {
+      source_ip_address
+      dns_domain
+      envelope_from
+      header_from
+      spf_results
+      spf_aligned
+      dkim_domains
+      dkim_selectors
+      dkim_results
+      dkim_aligned
+      disposition
+      message_count
+    }
+  }
+`
 
 export const GET_YEARLY_REPORT = gql`
   query GetYearlyReport($domain: Slug!) {

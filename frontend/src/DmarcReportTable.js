@@ -6,9 +6,14 @@ import { slugify } from './slugify'
 import { useUserState } from './UserState'
 import { useTable } from 'react-table'
 import { array } from 'prop-types'
+import { Box } from '@chakra-ui/core'
 
 const Styles = styled.div`
   padding: 1rem;
+
+  div {
+    overflow-x: auto;
+  }
 
   table {
     border-spacing: 0;
@@ -51,35 +56,38 @@ export function DmarcReportTable({ ...props }) {
     data,
   })
 
-  console.log(columns)
-  console.log(data)
-
   return (
-    <Styles>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
-            prepareRow(row)
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                })}
+    <Box overflowX="scroll">
+      <Styles>
+        <table {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps()}>
+                    {column.render('Header')}
+                  </th>
+                ))}
               </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    </Styles>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row, i) => {
+              prepareRow(row)
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </Styles>
+    </Box>
   )
 }
 
