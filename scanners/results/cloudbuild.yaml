@@ -8,7 +8,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: build-results-if-master
     entrypoint: 'bash'
-    dir: .
+    dir: scanners/results
     args:
     -  '-c'
     - |

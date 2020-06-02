@@ -8,7 +8,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: build-dkim-if-master
     entrypoint: 'bash'
-    dir: .
+    dir: scanners/dkim
     args:
     -  '-c'
     - |
