@@ -7,9 +7,9 @@ class DetailTables(graphene.ObjectType):
     """
     Object that contains the details for each category
     """
+
     full_pass = graphene.List(
-        lambda: TableStructure,
-        description="List of top senders that have full pass",
+        lambda: TableStructure, description="List of top senders that have full pass",
     )
     spf_failure = graphene.List(
         lambda: TableStructure,

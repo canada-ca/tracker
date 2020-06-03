@@ -62,10 +62,7 @@ def test_valid_get_dmarc_report_detail_tables_query_as_super_admin(save, mocker)
     )
     save(super_admin)
 
-    result = run(
-        query=test_query,
-        as_user=super_admin,
-    )
+    result = run(query=test_query, as_user=super_admin,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
@@ -103,10 +100,7 @@ def test_valid_get_dmarc_report_detail_tables_query_as_org_admin(save, mocker):
     )
     save(org_admin)
 
-    result = run(
-        query=test_query,
-        as_user=org_admin,
-    )
+    result = run(query=test_query, as_user=org_admin,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
@@ -144,10 +138,7 @@ def test_valid_get_dmarc_report_detail_tables_query_as_user_write(save, mocker):
     )
     save(user_write)
 
-    result = run(
-        query=test_query,
-        as_user=user_write,
-    )
+    result = run(query=test_query, as_user=user_write,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
@@ -185,10 +176,7 @@ def test_valid_get_dmarc_report_detail_tables_query_as_user_read(save, mocker):
     )
     save(user_read)
 
-    result = run(
-        query=test_query,
-        as_user=user_read,
-    )
+    result = run(query=test_query, as_user=user_read,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
@@ -231,10 +219,7 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     )
     save(org_admin)
 
-    result = run(
-        query=test_query,
-        as_user=org_admin,
-    )
+    result = run(query=test_query, as_user=org_admin,)
 
     if "errors" not in result:
         fail("Expected to error out, instead: {}".format(json(result)))
@@ -278,10 +263,7 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     )
     save(user_write)
 
-    result = run(
-        query=test_query,
-        as_user=user_write,
-    )
+    result = run(query=test_query, as_user=user_write,)
 
     if "errors" not in result:
         fail("Expected to error out, instead: {}".format(json(result)))
@@ -325,10 +307,7 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     )
     save(user_read)
 
-    result = run(
-        query=test_query,
-        as_user=user_read,
-    )
+    result = run(query=test_query, as_user=user_read,)
 
     if "errors" not in result:
         fail("Expected to error out, instead: {}".format(json(result)))
@@ -364,10 +343,7 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     )
     save(super_admin)
 
-    result = run(
-        query=test_query,
-        as_user=super_admin,
-    )
+    result = run(query=test_query, as_user=super_admin,)
 
     if "errors" not in result:
         fail("Expected to error out, instead: {}".format(json(result)))

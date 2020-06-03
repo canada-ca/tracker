@@ -13,7 +13,9 @@ from functions.external_graphql_api_request import send_request
 from functions.input_validators import cleanse_input
 from functions.start_end_date_generation import generate_start_end_date
 from models import Domains
-from schemas.dmarc_report_detailed_tables.dmarc_report_detailed_tables import DmarcReportDetailedTables
+from schemas.dmarc_report_detailed_tables.dmarc_report_detailed_tables import (
+    DmarcReportDetailedTables,
+)
 from schemas.dmarc_report_detailed_tables.gql_query import query_string
 
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
@@ -35,9 +37,7 @@ def resolve_dmarc_report_detailed_tables(self, info, **kwargs):
     year = cleanse_input(kwargs.get("year"))
 
     # Grab domain
-    domain_orm = db_session.query(Domains).filter(
-        Domains.slug == domain_slug
-    ).first()
+    domain_orm = db_session.query(Domains).filter(Domains.slug == domain_slug).first()
 
     # Check if domain exists
     if domain_orm is not None:
@@ -87,7 +87,7 @@ def resolve_dmarc_report_detailed_tables(self, info, **kwargs):
                 # Get Year
                 data.get("endDate")[0:4].lstrip("0"),
                 # Get Category Data
-                data.get("detailTables")
+                data.get("detailTables"),
             )
 
         else:

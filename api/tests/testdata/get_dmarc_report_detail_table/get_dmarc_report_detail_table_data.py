@@ -19,7 +19,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -35,7 +35,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -51,7 +51,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -67,7 +67,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -83,7 +83,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -99,7 +99,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -115,7 +115,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -131,7 +131,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -147,7 +147,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -163,7 +163,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -179,7 +179,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -195,7 +195,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -211,7 +211,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -227,7 +227,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -243,7 +243,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -259,7 +259,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -275,7 +275,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -291,7 +291,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -307,7 +307,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -323,8 +323,8 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
-                    }
+                        "dnsDomain": "test.dns.gc.ca",
+                    },
                 ],
                 "spfFailure": [
                     {
@@ -341,7 +341,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -357,7 +357,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -373,7 +373,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -389,7 +389,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -405,7 +405,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -421,7 +421,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -437,7 +437,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -453,7 +453,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -469,7 +469,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -485,7 +485,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -501,7 +501,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -517,7 +517,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -533,7 +533,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -549,7 +549,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -565,7 +565,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -581,7 +581,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -597,7 +597,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -613,7 +613,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -629,7 +629,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -645,8 +645,8 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
-                    }
+                        "dnsDomain": "test.dns.gc.ca",
+                    },
                 ],
                 "spfMisaligned": [
                     {
@@ -663,7 +663,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -679,7 +679,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -695,7 +695,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -711,7 +711,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -727,7 +727,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -743,7 +743,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -759,7 +759,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -775,7 +775,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -791,7 +791,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -807,7 +807,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -823,7 +823,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -839,7 +839,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -855,7 +855,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -871,7 +871,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -887,7 +887,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -903,7 +903,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -919,7 +919,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -935,7 +935,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -951,7 +951,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -967,8 +967,8 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
-                    }
+                        "dnsDomain": "test.dns.gc.ca",
+                    },
                 ],
                 "dkimFailure": [
                     {
@@ -985,7 +985,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1001,7 +1001,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1017,7 +1017,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1033,7 +1033,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1049,7 +1049,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1065,7 +1065,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1081,7 +1081,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1097,7 +1097,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1113,7 +1113,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1129,7 +1129,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1145,7 +1145,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1161,7 +1161,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1177,7 +1177,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1193,7 +1193,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1209,7 +1209,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1225,7 +1225,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1241,7 +1241,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1257,7 +1257,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1273,7 +1273,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1289,8 +1289,8 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
-                    }
+                        "dnsDomain": "test.dns.gc.ca",
+                    },
                 ],
                 "dkimMisaligned": [
                     {
@@ -1307,7 +1307,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1323,7 +1323,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1339,7 +1339,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1355,7 +1355,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1371,7 +1371,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1387,7 +1387,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1403,7 +1403,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1419,7 +1419,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1435,7 +1435,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1451,7 +1451,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1467,7 +1467,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1483,7 +1483,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1499,7 +1499,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1515,7 +1515,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1531,7 +1531,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1547,7 +1547,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1563,7 +1563,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1579,7 +1579,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1595,7 +1595,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1611,8 +1611,8 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
-                    }
+                        "dnsDomain": "test.dns.gc.ca",
+                    },
                 ],
                 "dmarcFailure": [
                     {
@@ -1629,7 +1629,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1645,7 +1645,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1661,7 +1661,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1677,7 +1677,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1693,7 +1693,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1709,7 +1709,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1725,7 +1725,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1741,7 +1741,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1757,7 +1757,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1773,7 +1773,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1789,7 +1789,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1805,7 +1805,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1821,7 +1821,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1837,7 +1837,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1853,7 +1853,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1869,7 +1869,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1885,7 +1885,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1901,7 +1901,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1917,7 +1917,7 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
+                        "dnsDomain": "test.dns.gc.ca",
                     },
                     {
                         "sourceIpAddress": "123.456.789.12",
@@ -1933,10 +1933,10 @@ dmarc_report_detail_table_return_data = {
                         "asNum": 2665,
                         "asOrg": "Some ISP",
                         "dnsHost": "dns.gc.ca",
-                        "dnsDomain": "test.dns.gc.ca"
-                    }
-                ]
-            }
+                        "dnsDomain": "test.dns.gc.ca",
+                    },
+                ],
+            },
         }
     }
 }

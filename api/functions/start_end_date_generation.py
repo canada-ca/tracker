@@ -20,8 +20,6 @@ def generate_start_end_date(current_date, past_date):
         past_day = past_date.day
 
     start_date = f"{past_date.year}-{past_month}-{past_day}"
-    end_date = (
-        f"{current_date.year}-{curr_month}-{curr_day}"
-    )
+    end_date = f"{current_date.year}-{curr_month}-{curr_day}"
 
     return start_date, end_date
