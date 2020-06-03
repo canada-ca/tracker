@@ -79,22 +79,16 @@ def resolve_dmarc_report_detailed_tables(self, info, **kwargs):
                 variables=variables,
             )
 
-            iter_data = iter(data.get("getTotalDmarcSummaries").get("periods"))
-            rtr_list = []
+            data = data.get("getDmarcSummaryByPeriod").get("period")
 
-            for data in iter_data:
-                rtr_list.append(
-                    DmarcReportDetailedTables(
-                        # Get Month Name
-                        calendar.month_name[int(data.get("startDate")[5:7].lstrip("0"))],
-                        # Get Year
-                        data.get("startDate")[0:4].lstrip("0"),
-                        # Get Category Data
-                        data.get("detailTables")
-                    )
-                )
-
-
+            return DmarcReportDetailedTables(
+                # Get Month Name
+                calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
+                # Get Year
+                data.get("endDate")[0:4].lstrip("0"),
+                # Get Category Data
+                data.get("detailTables")
+            )
 
         else:
             raise GraphQLError("Error, you do not have access to this domain.")

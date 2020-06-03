@@ -8,12 +8,13 @@ query_string = gql(
         $endDate:CustomDate!
         $thirtyDays:Boolean
     ) {
-        getTotalDmarcSummaries(
-            domain: "cyber.gc.ca"
-            startDate: "2019-01-01"
-            endDate: "2021-12-31"
+        getDmarcSummaryByPeriod(
+            domain: $domain
+            startDate: $startDate
+            endDate: $endDate
+            thirtyDays: $thirtyDays
         ) {
-            periods {
+            period {
                 startDate
                 endDate
                 detailTables {
