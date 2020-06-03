@@ -6,7 +6,7 @@ from schemas.shared_structures.detail_tables import DetailTables
 
 class DmarcReportDetailedTables(graphene.ObjectType):
     """
-
+    GraphQL object for returning data for dmarc report tables
     """
     month = graphene.String(
         description="The month in which the data is relevant to."
