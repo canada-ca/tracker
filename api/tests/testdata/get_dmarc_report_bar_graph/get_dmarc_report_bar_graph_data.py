@@ -2,18 +2,6 @@ dmarc_report_bar_graph_data = {
     "getTotalDmarcSummaries": {
         "periods": [
             {
-                "startDate": "2020-05-02",
-                "endDate": "2020-06-01",
-                "categoryTotals": {
-                    "dmarcFailNone": 466,
-                    "dmarcFailQuarantine": 0,
-                    "dmarcFailReject": 0,
-                    "spfFailDkimPass": 310,
-                    "spfPassDkimFail": 12,
-                    "spfPassDkimPass": 7858,
-                },
-            },
-            {
                 "startDate": "2020-06-01",
                 "endDate": "2020-06-30",
                 "categoryTotals": {
