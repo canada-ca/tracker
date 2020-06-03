@@ -45,10 +45,14 @@ class CategoryTotals(graphene.ObjectType):
         return self.get("dmarcFailReject")
 
     def resolve_total(self: dict, info):
-        total = self.get("dmarcFailNone")
-        total += self.get("spfFailDkimPass")
-        total += self.get("spfPassDkimPass")
-        total += self.get("spfPassDkimFail")
-        total += self.get("dmarcFailQuarantine")
-        total += self.get("dmarcFailReject")
+        total = sum(
+            (
+                self.get("dmarcFailNone"),
+                self.get("spfFailDkimPass"),
+                self.get("spfPassDkimPass"),
+                self.get("spfPassDkimFail"),
+                self.get("dmarcFailQuarantine"),
+                self.get("dmarcFailReject"),
+            )
+        )
         return total
