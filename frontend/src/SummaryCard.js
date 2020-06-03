@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, Stack, Box, Badge, Divider } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { string, array, bool } from 'prop-types'
+import { string, array, bool, number } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 
 function SummaryCard({ ...props }) {
@@ -34,61 +34,62 @@ function SummaryCard({ ...props }) {
       overflow="hidden"
       borderColor="black"
       borderWidth="1"
+      height="100%"
       width="min-content"
     >
-      <Box bg="#444444">
-        <Text
-          fontSize="xl"
-          fontWeight="semibold"
-          textAlign={['center']}
-          color="#EDEDED"
-        >
-          {title}
-        </Text>
-        <Text fontSize="md" textAlign={['center']} color="#EDEDED">
-          {description}
-        </Text>
-      </Box>
-
-      <ResponsiveContainer width={pieDiameter} height={pieDiameter}>
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius="50%"
-            outerRadius="90%"
-            paddingAngle={2}
-            dataKey="value"
+      <Stack mx="auto">
+        <Box bg="#444444">
+          <Text
+            fontSize="xl"
+            fontWeight="semibold"
+            textAlign={['center']}
+            color="#EDEDED"
           >
-            {data.map((entry) => {
-              let color
-              switch (entry.strength) {
-                case 'strong': {
-                  color = '#2D8133'
-                  break
-                }
-                case 'moderate': {
-                  color = '#ffbf47'
-                  break
-                }
-                case 'weak': {
-                  color = '#e53e3e'
-                  break
-                }
-                case 'unknown': {
-                  color = 'grey'
-                  break
-                }
-              }
-              return <Cell dataKey={entry.name} fill={color} />
-            })}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-      </ResponsiveContainer>
+            {title}
+          </Text>
+          <Text fontSize="md" textAlign={['center']} color="#EDEDED">
+            {description}
+          </Text>
+        </Box>
 
-      <Stack align="center">
+        <ResponsiveContainer height={pieDiameter} width={pieDiameter}>
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius="50%"
+              outerRadius="90%"
+              paddingAngle={2}
+              dataKey="value"
+            >
+              {data.map((entry) => {
+                let color
+                switch (entry.strength) {
+                  case 'strong': {
+                    color = '#2D8133'
+                    break
+                  }
+                  case 'moderate': {
+                    color = '#ffbf47'
+                    break
+                  }
+                  case 'weak': {
+                    color = '#e53e3e'
+                    break
+                  }
+                  case 'unknown': {
+                    color = 'grey'
+                    break
+                  }
+                }
+                return <Cell dataKey={entry.name} fill={color} />
+              })}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+
         {data.map((entry) => {
           let color
           switch (entry.strength) {
@@ -106,69 +107,60 @@ function SummaryCard({ ...props }) {
               break
           }
           return (
-            <Badge variantColor={color} variant="solid" alignItems="center">
-              <Text alignItems="center" mx="auto">
+            <Badge
+              variantColor={color}
+              variant="solid"
+              alignItems="center"
+              width="min-content"
+              mx="auto"
+            >
+              <Text alignItems="center">
                 {entry.name}: {entry.percent}%
               </Text>
             </Badge>
           )
         })}
-      </Stack>
 
-      <br />
-
-      {/* data box */}
-      {slider && (
-        <Box bg="#444444">
-          <Box h="1" />
-          <Stack
-            isInline
-            gridTemplateColumns="10"
-            gridTemplateRows="150"
-            overflowX="scroll"
-            gridAutoFlow="columns"
-            gridAutoColumns="40%"
-          >
-            <Box />
-            {data.map((entry) => {
-              let color
-              switch (entry.strength) {
-                case 'strong':
-                  color = '#2D8133'
-                  break
-                case 'moderate':
-                  color = '#ffbf47'
-                  break
-                case 'weak':
-                  color = '#e53e3e'
-                  break
-                case 'unknown':
-                  color = '#B0B0B0'
-                  break
-              }
-              return entry.categories.map((category) => {
-                return (
-                  <Stack align="center" isInline>
+        {/* data box */}
+        {slider && (
+          <Box bg="#444444">
+            <Stack isInline overflowX="auto">
+              {data.map((entry) => {
+                let color
+                switch (entry.strength) {
+                  case 'strong':
+                    color = '#2D8133'
+                    break
+                  case 'moderate':
+                    color = '#ffbf47'
+                    break
+                  case 'weak':
+                    color = '#e53e3e'
+                    break
+                  case 'unknown':
+                    color = '#B0B0B0'
+                    break
+                }
+                return entry.categories.map((category) => {
+                  return (
                     <Text
-                      p="1"
                       color="#EDEDED"
                       rounded="md"
                       textAlign="center"
                       as="b"
+                      fontSize="xs"
                     >
-                      {`${category.name}: `}
+                      {`${category.name}`}
                       <br />
                       {category.qty}
                     </Text>
-                    <Divider orientation="vertical" borderColor="red.500" />
-                  </Stack>
-                )
-              })
-            })}
-          </Stack>
-          <Box h="1" />
-        </Box>
-      )}
+                  )
+                })
+              })}
+            </Stack>
+          </Box>
+        )}
+      </Stack>
     </Box>
   )
 }
@@ -178,6 +170,7 @@ SummaryCard.propTypes = {
   description: string.isRequired,
   data: array.isRequired,
   slider: bool,
+  pieDiameter: number.isRequired,
 }
 
 export default WithPseudoBox(SummaryCard)

@@ -330,12 +330,28 @@ export function DmarcReportPage() {
           title="DMARC Report"
           description="Description of DMARC report"
           data={cardData}
-          slider={false}
-          width="50%"
+          slider={true}
+          width={
+            window.innerWidth < 500
+              ? '100%'
+              : window.innerWidth < 800
+              ? '50%'
+              : '20%'
+          }
           mx="auto"
           pieDiameter={250}
         />
-        <DmarcTimeGraph data={barData} width="50%" mx="auto"/>
+        <DmarcTimeGraph
+          data={barData}
+          width={
+            window.innerWidth < 500
+              ? '100%'
+              : window.innerWidth < 1200
+              ? '75%'
+              : '50%'
+          }
+          mx="auto"
+        />
         <DmarcReportTable
           data={alignIpData.getAlignedByIp}
           columns={alignIpColumns}
