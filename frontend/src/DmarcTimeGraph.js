@@ -15,7 +15,7 @@ import WithPseudoBox from './withPseudoBox'
 
 function DmarcTimeGraph({ data }) {
   return (
-    <ResponsiveContainer width={500} height={500}>
+    <ResponsiveContainer height={500}>
       <BarChart
         barSize="30px"
         data={data}

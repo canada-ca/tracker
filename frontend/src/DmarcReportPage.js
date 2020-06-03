@@ -325,16 +325,17 @@ export function DmarcReportPage() {
 
   return (
     <Box width="100%">
-      <Box overflowX="hidden">
-        <Stack align="center">
-          <SummaryCard
-            title="DMARC Report"
-            description="Description of DMARC report"
-            data={cardData}
-            slider={false}
-          />
-          <DmarcTimeGraph data={barData} />
-        </Stack>
+      <Box>
+        <SummaryCard
+          title="DMARC Report"
+          description="Description of DMARC report"
+          data={cardData}
+          slider={false}
+          width="50%"
+          mx="auto"
+          pieDiameter={250}
+        />
+        <DmarcTimeGraph data={barData} width="50%" mx="auto"/>
         <DmarcReportTable
           data={alignIpData.getAlignedByIp}
           columns={alignIpColumns}
