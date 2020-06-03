@@ -29,13 +29,13 @@ def test_may_enum():
 
 
 def test_june_enum():
-    assert PeriodEnums.JUNE == "June"
-    assert PeriodEnums.JUNE == PeriodEnums.get("June")
+    assert PeriodEnums.JUNE == "Jun"
+    assert PeriodEnums.JUNE == PeriodEnums.get("Jun")
 
 
 def test_july_enum():
-    assert PeriodEnums.JULY == "July"
-    assert PeriodEnums.JULY == PeriodEnums.get("July")
+    assert PeriodEnums.JULY == "Jul"
+    assert PeriodEnums.JULY == PeriodEnums.get("Jul")
 
 
 def test_august_enum():
