@@ -56,9 +56,15 @@ def send_request(api_domain, auth_token, variables: dict, query) -> dict:
         return data
 
     except Exception as e:
-        error_str = e.__str__().replace("\'", "\"")
-        error_dict = json.loads(error_str)
-        if error_dict.get("message", None):
-            raise GraphQLError("Error from dmarc-report-api: " + str(error_dict.get("message")))
-        else:
+        # Make sure the below stays like so
+        # error_str = e.__str__().replace("\'", '\"')
+        # Black will try and change it and it will break !!!
+        error_str = e.__str__().replace("\'", '\"')
+        try:
+            error_dict = json.loads(error_str)
+            if error_dict.get("message", None):
+                raise GraphQLError(
+                    "Error from dmarc-report-api: " + str(error_dict.get("message"))
+                )
+        except ValueError as ve:
             raise GraphQLError("Error, when querying dmarc-report-api: " + str(e))
