@@ -90,6 +90,7 @@ def resolve_get_dmarc_report_bar_graph(self, info, **kwargs):
 
             # Skip first entry from return data because it is past 30 days which
             # for this query we do not want
+            # TODO remove after thirty day flag is added to cosmos
             iter_data = iter(data.get("getTotalDmarcSummaries").get("periods"))
             next(iter_data)
 
