@@ -135,9 +135,9 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
             data = data.get("getDmarcSummaryByPeriod").get("period")
             return DmarcReportDoughnut(
                 # Get Month Name
-                calendar.month_name[int(data.get("startDate")[5:7].lstrip("0"))],
+                calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
                 # Get Year
-                data.get("startDate")[0:4].lstrip("0"),
+                data.get("endDate")[0:4].lstrip("0"),
                 # Get Category Data
                 data.get("categoryTotals"),
             )
