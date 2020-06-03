@@ -31,3 +31,21 @@ class DetailTables(graphene.ObjectType):
         lambda: TableStructure,
         description="List of top senders that have an dmarc failure",
     )
+
+    def resolve_full_pass(self: dict, info):
+        return self.get("fullPass")
+
+    def resolve_spf_failure(self: dict, info):
+        return self.get("spfFailure")
+
+    def resolve_spf_misaligned(self: dict, info):
+        return self.get("spfMisaligned")
+
+    def resolve_dkim_failure(self: dict, info):
+        return self.get("dkimFailure")
+
+    def resolve_dkim_misaligned(self: dict, info):
+        return self.get("dkimMisaligned")
+
+    def resolve_dmarc_failure(self: dict, info):
+        return self.get("dmarcFailure")
