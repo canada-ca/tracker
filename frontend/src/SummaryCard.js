@@ -1,11 +1,11 @@
-import React from 'react'
-import { Text, Stack, Box, Badge, Divider } from '@chakra-ui/core'
+import React, { useEffect, useRef } from 'react'
+import { Text, Stack, Box, Badge } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { string, array, bool, number } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 
 function SummaryCard({ ...props }) {
-  const { title, description, data, slider, pieDiameter } = props
+  const { title, description, data, slider } = props
 
   const reducer = (accumulator, currentValue) => {
     return accumulator + currentValue
@@ -27,17 +27,19 @@ function SummaryCard({ ...props }) {
     entry.percent = Math.round((entry.value / totalQty) * 100 * 10) / 10
   })
 
+  const ref = useRef(null)
+
+  const [parentWidth, setParentWidth] = React.useState(0)
+
+  useEffect(() => {
+    if (ref.current) {
+      setParentWidth(ref.current.offsetWidth)
+    }
+  }, [ref, setParentWidth])
+
   return (
-    <Box
-      rounded="lg"
-      bg="#EDEDED"
-      overflow="hidden"
-      borderColor="black"
-      borderWidth="1"
-      height="100%"
-      width="min-content"
-    >
-      <Stack mx="auto">
+    <Box bg="#EDEDED" rounded="lg" overflow="hidden" ref={ref}>
+      <Stack>
         <Box bg="#444444">
           <Text
             fontSize="xl"
@@ -52,7 +54,7 @@ function SummaryCard({ ...props }) {
           </Text>
         </Box>
 
-        <ResponsiveContainer height={pieDiameter} width={pieDiameter}>
+        <ResponsiveContainer width="100%" height={parentWidth}>
           <PieChart>
             <Pie
               data={data}
@@ -120,6 +122,8 @@ function SummaryCard({ ...props }) {
             </Badge>
           )
         })}
+
+        {!slider && <br />}
 
         {/* data box */}
         {slider && (

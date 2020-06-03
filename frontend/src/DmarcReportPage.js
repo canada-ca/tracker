@@ -330,12 +330,14 @@ export function DmarcReportPage() {
           title="DMARC Report"
           description="Description of DMARC report"
           data={cardData}
-          slider={true}
+          slider={false}
           width={
             window.innerWidth < 500
               ? '100%'
               : window.innerWidth < 800
               ? '50%'
+              : window.innerWidth < 1200
+              ? '35%'
               : '20%'
           }
           mx="auto"
