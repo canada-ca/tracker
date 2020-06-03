@@ -6,7 +6,6 @@ from gql import gql
 from graphql import GraphQLError
 
 from db import db_session
-from enums.period import PeriodEnums
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_read
 from functions.external_graphql_api_request import send_request
