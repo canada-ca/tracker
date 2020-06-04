@@ -3,6 +3,7 @@ import { GraphQLError } from 'graphql'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
+import { MemoryRouter } from 'react-router-dom'
 import { UserStateProvider } from '../UserState'
 import DomainsPage from '../DomainsPage'
 import { DOMAINS } from '../graphql/queries'
@@ -29,9 +30,11 @@ describe('<DomainsPage>', () => {
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
-            <MockedProvider mocks={mocks}>
-              <DomainsPage />
-            </MockedProvider>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks}>
+                <DomainsPage />
+              </MockedProvider>
+            </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>
       </UserStateProvider>,
@@ -43,7 +46,8 @@ describe('<DomainsPage>', () => {
     })
   })
 
-  it(`gracefully handles no domains being returned`, async () => {
+  it('notifies the user of errors', async () => {
+    const invalidTokenMessage = 'Invalid token, please login again'
     const mocks = [
       {
         request: {
@@ -52,7 +56,46 @@ describe('<DomainsPage>', () => {
         result: {
           data: {
             domains: {
-              edges: [{ node: null, __typename: 'DomainEdge' }],
+              edges: [
+                {
+                  node: {
+                    organization: {
+                      acronym: 'user-example-com',
+                      domains: {
+                        edges: [
+                          {
+                            node: {
+                              url: 'tbs-sct.gc.ca',
+                              slug: 'tbs-sct-gc-ca',
+                              lastRan: null,
+                              __typename: 'Domain',
+                            },
+                            __typename: 'DomainEdge',
+                          },
+                          {
+                            node: {
+                              url: 'rcmp-grc.gc.ca',
+                              slug: 'rcmp-grc-gc-ca',
+                              lastRan: null,
+                              __typename: 'Domain',
+                            },
+                            __typename: 'DomainEdge',
+                          },
+                        ],
+                        __typename: 'DomainConnection',
+                      },
+                      __typename: 'Organization',
+                    },
+                    __typename: 'Domain',
+                  },
+                  __typename: 'DomainEdge',
+                },
+              ],
+              pageInfo: {
+                endCursor: 'string',
+                hasNextPage: false,
+                __typename: 'PageInfo',
+              },
               __typename: 'DomainConnection',
             },
           },
@@ -65,17 +108,19 @@ describe('<DomainsPage>', () => {
       >
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
-            <MockedProvider mocks={mocks}>
-              <DomainsPage />
-            </MockedProvider>
+            <MemoryRouter initialEntries={['/']} initialIndex={0}>
+              <MockedProvider mocks={mocks}>
+                <DomainsPage />
+              </MockedProvider>
+            </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>
       </UserStateProvider>,
     )
 
     await waitFor(() => {
-      const domains = queryByText(/no domains scanned/i)
-      expect(domains).toBeInTheDocument()
+      const errorMessage = queryByText(invalidTokenMessage)
+      expect(errorMessage).toBeInTheDocument()
     })
   })
 })

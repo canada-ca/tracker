@@ -11,13 +11,19 @@ names. If either SPF or DKIM alignment checks pass, then the DMARC alignment
 test passes.
 """
 type Alignment {
-  """Is SPF aligned"""
+  """
+  Is SPF aligned
+  """
   spf: Boolean
 
-  """Is DKIM aligned"""
+  """
+  Is DKIM aligned
+  """
   dkim: Boolean
 
-  """Is DMARC aligned"""
+  """
+  Is DMARC aligned
+  """
   dmarc: Boolean
 }
 
@@ -26,25 +32,39 @@ This mutation allows users to give their credentials and retrieve a token
 that gives them access to restricted content.
 """
 type Authenticate {
-  """User info who just signed in, and their JWT"""
+  """
+  User info who just signed in, and their JWT
+  """
   authResult: AuthResult
 }
 
-"""A type used to return information when users sign up or authenticate"""
+"""
+A type used to return information when users sign up or authenticate
+"""
 type AuthResult {
-  """JWT used for accessing, controlled content."""
+  """
+  JWT used for accessing, controlled content.
+  """
   authToken: String
 
-  """User that has just been created or signed in"""
+  """
+  User that has just been created or signed in
+  """
   user: User
 }
 
-"""DKIM and SPF domain results"""
+"""
+DKIM and SPF domain results
+"""
 type AuthResults {
-  """DKIM domain raw results"""
+  """
+  DKIM domain raw results
+  """
   dkim: [DkimReport]
 
-  """SPF domain raw results"""
+  """
+  SPF domain raw results
+  """
   spf: [SpfReport]
 }
 
@@ -52,41 +72,61 @@ type AuthResults {
 This object displays the total amount of messages that fit into each category
 """
 type CategoryTotals {
-  """Amount of messages that failed dmarc and nothing was done."""
+  """
+  Amount of messages that failed dmarc and nothing was done.
+  """
   dmarcFailNone: Int
 
-  """Amount of messages that failed SPF, but passed DKIM."""
+  """
+  Amount of messages that failed SPF, but passed DKIM.
+  """
   spfFailDkimPass: Int
 
-  """Amount of messages that passed SPF and DKIM."""
+  """
+  Amount of messages that passed SPF and DKIM.
+  """
   spfPassDkimPass: Int
 
-  """Amount of messages that passed SPF, but failed DKIM."""
+  """
+  Amount of messages that passed SPF, but failed DKIM.
+  """
   spfPassDkimFail: Int
 
-  """Amount of messages that failed DMARC and were quarantined."""
+  """
+  Amount of messages that failed DMARC and were quarantined.
+  """
   dmarcFailQuarantine: Int
 
-  """Amount of messages that failed DMARC and were rejected."""
+  """
+  Amount of messages that failed DMARC and were rejected.
+  """
   dmarcFailReject: Int
 
-  """The sum of all different categories."""
+  """
+  The sum of all different categories.
+  """
   total: Int
 }
 
-"""This class handles the inner nested dict given by key: 'content'. """
+"""
+This class handles the inner nested dict given by key: 'content'.
+"""
 type Content {
   body: String
   fromEmail: String
   subject: String
 }
 
-"""Mutation used to create a new domain for an organization"""
+"""
+Mutation used to create a new domain for an organization
+"""
 type CreateDomain {
   status: Boolean
 }
 
-"""Mutation allows the creation of an organization inside the database."""
+"""
+Mutation allows the creation of an organization inside the database.
+"""
 type CreateOrganization {
   status: Boolean
 }
@@ -105,24 +145,38 @@ value as specified by
 """
 scalar DateTime
 
-"""Object that contains the details for each category"""
+"""
+Object that contains the details for each category
+"""
 type DetailTables {
-  """List of top senders that have full pass"""
+  """
+  List of top senders that have full pass
+  """
   fullPass: [TableStructure]
 
-  """List of top senders that have an spf failure"""
+  """
+  List of top senders that have an spf failure
+  """
   spfFailure: [TableStructure]
 
-  """List of top senders that have spf misaligned"""
+  """
+  List of top senders that have spf misaligned
+  """
   spfMisaligned: [TableStructure]
 
-  """List of top senders that have an dkim failure"""
+  """
+  List of top senders that have an dkim failure
+  """
   dkimFailure: [TableStructure]
 
-  """List of top senders that have dkim misaligned"""
+  """
+  List of top senders that have dkim misaligned
+  """
   dkimMisaligned: [TableStructure]
 
-  """List of top senders that have an dmarc failure"""
+  """
+  List of top senders that have an dmarc failure
+  """
   dmarcFailure: [TableStructure]
 }
 
@@ -134,16 +188,24 @@ message.  This can be an author's organization, an operational relay,
 or one of their agents.
 """
 type DKIM {
-  """ID of the object"""
+  """
+  ID of the object
+  """
   id: ID
 
-  """The domain the scan was run on"""
+  """
+  The domain the scan was run on
+  """
   domain: URL @fake(type: domainName)
 
-  """Time when scan was initiated"""
+  """
+  Time when scan was initiated
+  """
   timestamp: DateTime @fake(type: pastDate)
 
-  """DKIM record retrieved during the scan of the given domain """
+  """
+  DKIM record retrieved during the scan of the given domain
+  """
   record: String
     @examples(
       values: [
@@ -151,15 +213,14 @@ type DKIM {
       ]
     )
 
-  """Length of DKIM public key"""
-  keyLength: String
-    @examples(
-      values: [
-        "sub1024", "1024", "2048", "2048plus"
-      ]
-    )
+  """
+  Length of DKIM public key
+  """
+  keyLength: String @examples(values: ["sub1024", "1024", "2048", "2048plus"])
 
-  """Key tags found during scan"""
+  """
+  Key tags found during scan
+  """
   dkimGuidanceTags: [DkimTags]
     @examples(
       values: [
@@ -173,20 +234,30 @@ type DKIM {
     )
 }
 
-"""DKIM report results"""
+"""
+DKIM report results
+"""
 type DkimReport {
-  """DKIM domain"""
+  """
+  DKIM domain
+  """
   domain: String
 
-  """Selector used for DKIM authentication"""
+  """
+  Selector used for DKIM authentication
+  """
   selector: String
 
-  """DKIM raw result"""
+  """
+  DKIM raw result
+  """
   result: String
 }
 
 type DkimTags {
-  """Key tags found during scan"""
+  """
+  Key tags found during scan
+  """
   value: String
 }
 
@@ -198,19 +269,29 @@ message validation, disposition, and reporting, that a mail-receiving
 organization can use to improve mail handling.
 """
 type DMARC {
-  """DMARC Phase found when running scan"""
+  """
+  DMARC Phase found when running scan
+  """
   dmarcPhase: Int
 
-  """ID of the object"""
+  """
+  ID of the object
+  """
   id: ID
 
-  """The domain the scan was run on"""
+  """
+  The domain the scan was run on
+  """
   domain: URL @fake(type: domainName)
 
-  """Time when scan was initiated"""
+  """
+  Time when scan was initiated
+  """
   timestamp: DateTime @fake(type: pastDate)
 
-  """DMARC record retrieved during the scan of the given domain """
+  """
+  DMARC record retrieved during the scan of the given domain
+  """
   record: String
     @examples(
       values: [
@@ -222,162 +303,172 @@ type DMARC {
   """
   The requested policy you wish mailbox providers to apply when your email fails DMARC authentication and alignment checks.
   """
-  pPolicy: String
-    @examples(
-      values: [
-        "none",
-        "missing",
-        "quarantine",
-        "reject"
-      ]
-    )
+  pPolicy: String @examples(values: ["none", "missing", "quarantine", "reject"])
 
   """
   This tag is used to indicate a requested policy for all subdomains where mail
   is failing the DMARC authentication and alignment checks.
   """
   spPolicy: String
-    @examples(
-      values: [
-        "none",
-        "missing",
-        "quarantine",
-        "reject"
-      ]
-    )
+    @examples(values: ["none", "missing", "quarantine", "reject"])
 
   """
   The percentage of messages to which the DMARC policy is to be applied.
   """
-  pct: Int
-    @examples(
-      values: [
-        0,
-        20,
-        60,
-        70,
-        90,
-        100
-      ]
-    )
+  pct: Int @examples(values: [0, 20, 60, 70, 90, 100])
 
-  """Key tags found during DMARC Scan"""
+  """
+  Key tags found during DMARC Scan
+  """
   dmarcGuidanceTags: [DmarcTags]
 }
 
-"""Generated DMARC Aggregated Report's"""
+"""
+Generated DMARC Aggregated Report's
+"""
 type DmarcReport implements Node {
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """ID of the report."""
-  reportId: String
-    @examples(
-      values: [
-        "example.com:1538463741"
-      ]
-    )
+  """
+  ID of the report.
+  """
+  reportId: String @examples(values: ["example.com:1538463741"])
 
-  """The organization name the report was generated from."""
-  orgName: String
-    @examples(
-      values: [
-        "accurateplastics.com"
-      ]
-    )
+  """
+  The organization name the report was generated from.
+  """
+  orgName: String @examples(values: ["accurateplastics.com"])
 
-  """The organization email name the report was generated from."""
-  orgEmail: String
-    @examples(
-      values: [
-        "administrator@accurateplastics.com"
-      ]
-    )
+  """
+  The organization email name the report was generated from.
+  """
+  orgEmail: String @examples(values: ["administrator@accurateplastics.com"])
 
-  """Start date & time of aggregate report"""
-  startDate: DateTime
-    @examples(
-      values: [
-        "2018-10-01 13:07:12"
-      ]
-    )
+  """
+  Start date & time of aggregate report
+  """
+  startDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
 
-  """End date & time of aggregate report"""
-  endDate: DateTime
-    @examples(
-      values: [
-        "2018-10-01 13:07:12"
-      ]
-    )
+  """
+  End date & time of aggregate report
+  """
+  endDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
 
-  """Errors that occurred during the report generation"""
+  """
+  Errors that occurred during the report generation
+  """
   errors: [String]
 
-  """DMARC published policies"""
+  """
+  DMARC published policies
+  """
   policyPublished: PolicyPublished
 
-  """Aggregate report records"""
+  """
+  Aggregate report records
+  """
   records: [Record]
 }
 
-"""A query object used to grab the data to create dmarc report bar graph"""
+"""
+A query object used to grab the data to create dmarc report bar graph
+"""
 type DmarcReportBarGraph {
-  """The month that the data is related to."""
+  """
+  The month that the data is related to.
+  """
   month: String
 
-  """The year that the data is related to."""
+  """
+  The year that the data is related to.
+  """
   year: Int
 
-  """Category totals for building dmarc report page bar graph."""
+  """
+  Category totals for building dmarc report page bar graph.
+  """
   categoryTotals: CategoryTotals
 }
 
 type DmarcReportConnection {
-  """Pagination data for this connection."""
+  """
+  Pagination data for this connection.
+  """
   pageInfo: PageInfo!
 
-  """Contains the nodes in this connection."""
+  """
+  Contains the nodes in this connection.
+  """
   edges: [DmarcReportEdge]!
 }
 
-"""GraphQL object for returning data for dmarc report tables"""
+"""
+GraphQL object for returning data for dmarc report tables
+"""
 type DmarcReportDetailedTables {
-  """The month in which the data is relevant to."""
+  """
+  The month in which the data is relevant to.
+  """
   month: String
 
-  """The year in which the relevant to."""
+  """
+  The year in which the relevant to.
+  """
   year: Year
 
-  """The details used in creating tables for the dmarc report page"""
+  """
+  The details used in creating tables for the dmarc report page
+  """
   detailTables: DetailTables
 }
 
-"""A query object used to grab the data to create dmarc report doughnuts"""
+"""
+A query object used to grab the data to create dmarc report doughnuts
+"""
 type DmarcReportDoughnut {
-  """Which month is the data based on."""
+  """
+  Which month is the data based on.
+  """
   month: String
 
-  """Which year the data is from."""
+  """
+  Which year the data is from.
+  """
   year: Int
 
-  """Category totals for building dmarc report page doughnuts."""
+  """
+  Category totals for building dmarc report page doughnuts.
+  """
   categoryTotals: CategoryTotals
 }
 
-"""A Relay edge containing a `DmarcReport` and its cursor."""
+"""
+A Relay edge containing a `DmarcReport` and its cursor.
+"""
 type DmarcReportEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: DmarcReport
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
-"""    """
+"""
+
+"""
 type DmarcTags {
   dmarcPhase: Int
 
-  """Important tags retrieved during scan"""
+  """
+  Important tags retrieved during scan
+  """
   value: String
     @examples(
       values: [
@@ -394,44 +485,99 @@ type DmarcTags {
 
 type Domain implements Node {
   organization: Organization
-  dmarcReports(before: String, after: String, first: Int, last: Int): DmarcReportConnection
+  dmarcReports(
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): DmarcReportConnection
 
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """The domain the scan was run on"""
-  url: URL @fake(type: domainName)
+  """
+  The domain the scan was run on
+  """
+  url: URL
+    @examples(
+      values: [
+        "javascript:alert('XSS')"
+        "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
+        "rcmp-grc.gc.ca"
+        "tbs-sct.gc.ca"
+        "canada.ca"
+        "cra-arc.gc.ca"
+        "pm.gc.ca"
+        "cse-cst.gc.ca"
+        "forces.gc.ca"
+        "jAva&Tab;script:alert('XSS')"
+      ]
+    )
 
-  """Slug of the url"""
+  """
+  Slug of the url
+  """
   slug: Slug
 
-  """The last time that a scan was ran on this domain"""
+  """
+  The last time that a scan was ran on this domain
+  """
   lastRan: DateTime
 
-  """DKIM, DMARC, and SPF scan results"""
-  email(before: String, after: String, first: Int, last: Int): EmailScanConnection
+  """
+  DKIM, DMARC, and SPF scan results
+  """
+  email(
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): EmailScanConnection
 
-  """HTTPS, and SSL scan results"""
+  """
+  HTTPS, and SSL scan results
+  """
   www(before: String, after: String, first: Int, last: Int): WWWScanConnection
 
-  """DMARC aggregate report"""
-  dmarcReport(startDate: Date, endDate: Date, before: String, after: String, first: Int, last: Int): DmarcReportConnection
+  """
+  DMARC aggregate report
+  """
+  dmarcReport(
+    startDate: Date
+    endDate: Date
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): DmarcReportConnection
 }
 
 type DomainConnection {
-  """Pagination data for this connection."""
+  """
+  Pagination data for this connection.
+  """
   pageInfo: PageInfo!
 
-  """Contains the nodes in this connection."""
+  """
+  Contains the nodes in this connection.
+  """
   edges: [DomainEdge]!
 }
 
-"""A Relay edge containing a `Domain` and its cursor."""
+"""
+A Relay edge containing a `Domain` and its cursor.
+"""
 type DomainEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: Domain
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
@@ -441,15 +587,23 @@ https://www.w3.org/Protocols/rfc822/.
 """
 scalar EmailAddress
 
-"""Results of DKIM, DMARC, and SPF scans, on domains"""
+"""
+Results of DKIM, DMARC, and SPF scans, on domains
+"""
 type EmailScan implements Node {
-  """The domain the scan was run on"""
+  """
+  The domain the scan was run on
+  """
   domain: URL @fake(type: domainName)
 
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """The time the scan was initiated"""
+  """
+  The time the scan was initiated
+  """
   timestamp: DateTime @fake(type: pastDate)
 
   """
@@ -457,27 +611,41 @@ type EmailScan implements Node {
   """
   dmarc: [DMARC]
 
-  """Sender Policy Framework (SPF) for Authorizing Use of Domains in Email """
+  """
+  Sender Policy Framework (SPF) for Authorizing Use of Domains in Email
+  """
   spf: [SPF]
 
-  """DomainKeys Identified Mail (DKIM) Signatures"""
+  """
+  DomainKeys Identified Mail (DKIM) Signatures
+  """
   dkim: [DKIM]
 }
 
 type EmailScanConnection {
-  """Pagination data for this connection."""
+  """
+  Pagination data for this connection.
+  """
   pageInfo: PageInfo!
 
-  """Contains the nodes in this connection."""
+  """
+  Contains the nodes in this connection.
+  """
   edges: [EmailScanEdge]!
 }
 
-"""A Relay edge containing a `EmailScan` and its cursor."""
+"""
+A Relay edge containing a `EmailScan` and its cursor.
+"""
 type EmailScanEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: EmailScan
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
@@ -486,18 +654,26 @@ Mutation that allows the user to verify their account through a token
 sent in an email
 """
 type EmailVerifyAccount {
-  """Informs user if account was successfully verified."""
+  """
+  Informs user if account was successfully verified.
+  """
   status: Boolean
 }
 
 type HTTPS {
-  """The ID of the object"""
+  """
+  The ID of the object
+  """
   id: ID
 
-  """The domain the scan was run on"""
+  """
+  The domain the scan was run on
+  """
   domain: URL
 
-  """The time the scan was initiated"""
+  """
+  The time the scan was initiated
+  """
   timestamp: DateTime
   implementation: String
   enforced: String
@@ -511,180 +687,280 @@ type HTTPSTags {
   value: String
 }
 
-"""Identifiers identify a domain name to be authenticated"""
+"""
+Identifiers identify a domain name to be authenticated
+"""
 type Identifiers {
-  """the domain DMARC uses to check alignment with SPF/DKIM"""
-  headerFrom: String
-    @examples(
-      values: [
-        "example.com"
-      ]
-    )
+  """
+  the domain DMARC uses to check alignment with SPF/DKIM
+  """
+  headerFrom: String @examples(values: ["example.com"])
 
-  """SPF domain used to check alignment"""
-  envelopeFrom: String
-      @examples(
-      values: [
-        "example.com"
-      ]
-    )
+  """
+  SPF domain used to check alignment
+  """
+  envelopeFrom: String @examples(values: ["example.com"])
 
-  """"Envelope Recipient" in the email header"""
-  envelopeTo: String
-    @examples(
-      values: [
-        "fastmail.fm"
-      ]
-    )
+  """
+  "Envelope Recipient" in the email header
+  """
+  envelopeTo: String @examples(values: ["fastmail.fm"])
 }
 
 enum LanguageEnums {
-  """Used for defining if English is the preferred language"""
+  """
+  Used for defining if English is the preferred language
+  """
   ENGLISH
 
-  """Used for defining if French is the preferred language"""
+  """
+  Used for defining if French is the preferred language
+  """
   FRENCH
 }
 
-"""The central gathering point for all of the GraphQL mutations."""
+"""
+The central gathering point for all of the GraphQL mutations.
+"""
 type Mutation {
-  updatePassword(confirmPassword: String!, password: String!, userName: EmailAddress!): UpdateUserPassword
-  authenticateTwoFactor(otpCode: String!, userName: EmailAddress!): ValidateTwoFactor
-  updateUserRole(orgSlug: Slug!, role: RoleEnums!, userName: EmailAddress!): UpdateUserRole
+  updatePassword(
+    confirmPassword: String!
+    password: String!
+    userName: EmailAddress!
+  ): UpdateUserPassword
+  authenticateTwoFactor(
+    otpCode: String!
+    userName: EmailAddress!
+  ): ValidateTwoFactor
+  updateUserRole(
+    orgSlug: Slug!
+    role: RoleEnums!
+    userName: EmailAddress!
+  ): UpdateUserRole
 
-  """Allows the creation of an organization inside the database."""
+  """
+  Allows the creation of an organization inside the database.
+  """
   createOrganization(
-    """Acronym of organization."""
+    """
+    Acronym of organization.
+    """
     acronym: Acronym!
 
-    """The city in which the organization is located in."""
+    """
+    The city in which the organization is located in.
+    """
     city: String!
 
-    """Full name of organization."""
+    """
+    Full name of organization.
+    """
     name: String!
 
-    """The province in which the organization is located in."""
+    """
+    The province in which the organization is located in.
+    """
     province: String!
 
-    """The sector which the organization belongs to."""
+    """
+    The sector which the organization belongs to.
+    """
     sector: String!
 
-    """The zone which the organization belongs to."""
+    """
+    The zone which the organization belongs to.
+    """
     zone: String!
   ): CreateOrganization
 
-  """Allows modification of an organization inside the database."""
+  """
+  Allows modification of an organization inside the database.
+  """
   updateOrganization(
-    """Organization Acronym you would like updated"""
+    """
+    Organization Acronym you would like updated
+    """
     acronym: Acronym
 
-    """The city in which the organization is located in."""
+    """
+    The city in which the organization is located in.
+    """
     city: String
 
-    """Full name of organization."""
+    """
+    Full name of organization.
+    """
     name: String
 
-    """The province in which the organization is located in."""
+    """
+    The province in which the organization is located in.
+    """
     province: String
 
-    """The sector which the organization belongs to."""
+    """
+    The sector which the organization belongs to.
+    """
     sector: String
 
-    """Organization that will be updated"""
+    """
+    Organization that will be updated
+    """
     slug: Slug!
 
-    """The zone which the organization belongs to."""
+    """
+    The zone which the organization belongs to.
+    """
     zone: String
   ): UpdateOrganization
 
-  """Allows the removal of an organization inside the database"""
+  """
+  Allows the removal of an organization inside the database
+  """
   removeOrganization(
-    """The organization you wish to remove"""
+    """
+    The organization you wish to remove
+    """
     slug: Slug!
   ): RemoveOrganization
 
-  """Allows the creation of domains for a given organization"""
+  """
+  Allows the creation of domains for a given organization
+  """
   createDomain(
-    """Organizations slug that you would like to connect this domain to."""
+    """
+    Organizations slug that you would like to connect this domain to.
+    """
     orgSlug: Slug!
 
-    """URL that you would like to be added to database."""
+    """
+    URL that you would like to be added to database.
+    """
     url: URL!
   ): CreateDomain
 
-  """Allows the modification of domains"""
+  """
+  Allows the modification of domains
+  """
   updateDomain(
-    """The current domain that is being requested to be updated."""
+    """
+    The current domain that is being requested to be updated.
+    """
     currentUrl: URL!
 
-    """The new domain you wish to update the current domain to be."""
+    """
+    The new domain you wish to update the current domain to be.
+    """
     updatedUrl: URL!
   ): UpdateDomain
 
-  """Allows the removal of a given domain"""
+  """
+  Allows the removal of a given domain
+  """
   removeDomain(
-    """URL of domain that is being removed"""
+    """
+    URL of domain that is being removed
+    """
     url: URL!
   ): RemoveDomain
 
-  """This mutation is used to send a domain to the scanners to be scanned"""
+  """
+  This mutation is used to send a domain to the scanners to be scanned
+  """
   requestScan(
-    """If this is a DKIM scan please set to true."""
+    """
+    If this is a DKIM scan please set to true.
+    """
     dkim: Boolean
 
-    """If this scan if for testing purposes set to true."""
+    """
+    If this scan if for testing purposes set to true.
+    """
     test: Boolean
 
-    """The domain that you would like the scan to be ran on."""
+    """
+    The domain that you would like the scan to be ran on.
+    """
     url: URL
   ): RequestScan
 
-  """Allows users to give their credentials and be authenticated"""
+  """
+  Allows users to give their credentials and be authenticated
+  """
   authenticate(
-    """Users password"""
+    """
+    Users password
+    """
     password: String!
 
-    """User email that they signed up with."""
+    """
+    User email that they signed up with.
+    """
     userName: EmailAddress!
   ): Authenticate
 
-  """Allows users to sign up to our service"""
+  """
+  Allows users to sign up to our service
+  """
   signUp(
-    """A confirmation that the user submitted the correct password"""
+    """
+    A confirmation that the user submitted the correct password
+    """
     confirmPassword: String!
 
-    """The name that will be displayed to other users."""
+    """
+    The name that will be displayed to other users.
+    """
     displayName: String!
 
-    """The password the user will authenticate with"""
+    """
+    The password the user will authenticate with
+    """
     password: String!
 
-    """Used to set users preferred language"""
+    """
+    Used to set users preferred language
+    """
     preferredLang: LanguageEnums!
 
-    """Email address that the user will use to authenticate with"""
+    """
+    Email address that the user will use to authenticate with
+    """
     userName: EmailAddress!
 
-    """Preferred language of the user"""
+    """
+    Preferred language of the user
+    """
     preferredLang: LanguageEnums!
   ): SignUp
 
-  """Allows users to use token sent through email to verify their account."""
+  """
+  Allows users to use token sent through email to verify their account.
+  """
   emailVerifyAccount(
-    """Token in sent via email, and located in url"""
+    """
+    Token in sent via email, and located in url
+    """
     tokenString: String!
   ): EmailVerifyAccount
 
-  """Allows users to resend verification if failed during sign-up"""
+  """
+  Allows users to resend verification if failed during sign-up
+  """
   sendEmailVerification(
-    """The users email address used for sending email"""
+    """
+    The users email address used for sending email
+    """
     userName: EmailAddress!
   ): SendEmailVerification
 }
 
-"""An object with an ID"""
+"""
+An object with an ID
+"""
 interface Node {
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 }
 
@@ -702,51 +978,91 @@ type NotificationEmail {
 }
 
 type Organization implements Node {
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """The acronym of the organization."""
+  """
+  The acronym of the organization.
+  """
   acronym: Acronym
 
-  """The full name of the organization."""
+  """
+  The full name of the organization.
+  """
   name: String
 
-  """Slug of the organizations name"""
+  """
+  Slug of the organizations name
+  """
   slug: Slug
 
-  """The zone which the organization belongs to."""
+  """
+  The zone which the organization belongs to.
+  """
   zone: String
 
-  """The sector which the organizaion belongs to."""
+  """
+  The sector which the organizaion belongs to.
+  """
   sector: String
 
-  """The province in which the organization resides."""
+  """
+  The province in which the organization resides.
+  """
   province: String
 
-  """The city in which the organization resides."""
+  """
+  The city in which the organization resides.
+  """
   city: String
 
-  """The domains which belong to this organization."""
-  domains(before: String, after: String, first: Int, last: Int): DomainConnection
+  """
+  The domains which belong to this organization.
+  """
+  domains(
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): DomainConnection
 
-  """The users that have an affiliation with the organization."""
-  affiliatedUsers(before: String, after: String, first: Int, last: Int): UserAffClassConnection
+  """
+  The users that have an affiliation with the organization.
+  """
+  affiliatedUsers(
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): UserAffClassConnection
 }
 
 type OrganizationConnection {
-  """Pagination data for this connection."""
+  """
+  Pagination data for this connection.
+  """
   pageInfo: PageInfo!
 
-  """Contains the nodes in this connection."""
+  """
+  Contains the nodes in this connection.
+  """
   edges: [OrganizationEdge]!
 }
 
-"""A Relay edge containing a `Organization` and its cursor."""
+"""
+A Relay edge containing a `Organization` and its cursor.
+"""
 type OrganizationEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: Organization
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
@@ -754,200 +1070,257 @@ type OrganizationEdge {
 The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
 """
 type PageInfo {
-  """When paginating forwards, are there more items?"""
+  """
+  When paginating forwards, are there more items?
+  """
   hasNextPage: Boolean! @examples(values: [true, false])
 
-  """When paginating backwards, are there more items?"""
+  """
+  When paginating backwards, are there more items?
+  """
   hasPreviousPage: Boolean! @examples(values: [true, false])
 
-  """When paginating backwards, the cursor to continue."""
+  """
+  When paginating backwards, the cursor to continue.
+  """
   startCursor: String
 
-  """When paginating forwards, the cursor to continue."""
+  """
+  When paginating forwards, the cursor to continue.
+  """
   endCursor: String
 }
 
 enum PeriodEnums {
-  """The month of January"""
+  """
+  The month of January
+  """
   JANUARY
 
-  """The month of February"""
+  """
+  The month of February
+  """
   FEBRUARY
 
-  """The month of March"""
+  """
+  The month of March
+  """
   MARCH
 
-  """The month of April"""
+  """
+  The month of April
+  """
   APRIL
 
-  """The month of May"""
+  """
+  The month of May
+  """
   MAY
 
-  """The month of June"""
+  """
+  The month of June
+  """
   JUNE
 
-  """The month of July"""
+  """
+  The month of July
+  """
   JULY
 
-  """The month of August"""
+  """
+  The month of August
+  """
   AUGUST
 
-  """The month of September"""
+  """
+  The month of September
+  """
   SEPTEMBER
 
-  """The month of October"""
+  """
+  The month of October
+  """
   OCTOBER
 
-  """The month of November"""
+  """
+  The month of November
+  """
   NOVEMBER
 
-  """The month of December"""
+  """
+  The month of December
+  """
   DECEMBER
 
-  """The last 30 days"""
+  """
+  The last 30 days
+  """
   LAST30DAYS
 }
 
-"""Policies evaluated"""
+"""
+Policies evaluated
+"""
 type PolicyEvaluated {
   """
   Tells mail receivers what do do with messages that do not pass your rules
   """
-  disposition: String
-    @examples(
-      values: [
-        "none"
-      ]
-    )
+  disposition: String @examples(values: ["none"])
 
-  """DKIM pass/fail"""
-  dkim: String
-    @examples(
-      values: [
-        "fail"
-      ]
-    )
+  """
+  DKIM pass/fail
+  """
+  dkim: String @examples(values: ["fail"])
 
-  """SPF pass/fail"""
-  spf: String
-    @examples(
-      values: [
-        "fail"
-      ]
-    )
+  """
+  SPF pass/fail
+  """
+  spf: String @examples(values: ["fail"])
 
-  """List of policy override reasons"""
+  """
+  List of policy override reasons
+  """
   policyOverrideReasons: [String]
 }
 
-"""Domains published policy"""
+"""
+Domains published policy
+"""
 type PolicyPublished {
-  """Domain report was generated from"""
-  domain: URL
-    @examples(
-      values: [
-        "example.com"
-      ]
-    )
+  """
+  Domain report was generated from
+  """
+  domain: URL @examples(values: ["example.com"])
 
-  """DKIM alignment mode"""
-  adkim: String
-    @examples(
-      values: [
-        "r"
-      ]
-    )
+  """
+  DKIM alignment mode
+  """
+  adkim: String @examples(values: ["r"])
 
-  """SPF alignment mode"""
-  aspf: String
-    @examples(
-      values: [
-        "r"
-      ]
-    )
+  """
+  SPF alignment mode
+  """
+  aspf: String @examples(values: ["r"])
 
-  """P Policy"""
-  p: String
-    @examples(
-      values: [
-        "none"
-      ]
-    )
+  """
+  P Policy
+  """
+  p: String @examples(values: ["none"])
 
-  """SP Policy"""
-  sp: String
-    @examples(
-      values: [
-        "none"
-      ]
-    )
+  """
+  SP Policy
+  """
+  sp: String @examples(values: ["none"])
 
-  """DMARC Percentage"""
-  pct: Int
-    @examples(
-      values: [
-        0, 10, 20, 50, 100
-      ]
-    )
+  """
+  DMARC Percentage
+  """
+  pct: Int @examples(values: [0, 10, 20, 50, 100])
 
   """
   Lets mailbox providers knows if you want sample messages that failed either SPF or DKIM
   """
-  fo: Int
-    @examples(
-      values: [
-        0
-      ]
-    )
+  fo: Int @examples(values: [0])
 }
 
-"""The central gathering point for all of the GraphQL queries."""
+"""
+The central gathering point for all of the GraphQL queries.
+"""
 type Query {
-  """A query object used to grab the data to create dmarc report bar graph."""
+  """
+  A query object used to grab the data to create dmarc report bar graph.
+  """
   getDmarcReportBarGraph(
-    """The sluified version of the domain you wish to retrieve data for."""
+    """
+    The sluified version of the domain you wish to retrieve data for.
+    """
     domainSlug: Slug
   ): [DmarcReportBarGraph]
 
-  """Query used for gathering data for dmarc report detail tables."""
+  """
+  Query used for gathering data for dmarc report detail tables.
+  """
   getDmarcReportDetailedTables(
-    """The sluified version of the domain you wish to retrieve data for."""
+    """
+    The sluified version of the domain you wish to retrieve data for.
+    """
     domainSlug: Slug
 
-    """The period in which the returned data is relevant to."""
+    """
+    The period in which the returned data is relevant to.
+    """
     period: PeriodEnums
 
-    """The year in which the returned data is relevant to."""
+    """
+    The year in which the returned data is relevant to.
+    """
     year: Year
   ): DmarcReportDetailedTables
 
-  """A query object used to grab the data to create dmarc report doughnuts"""
-  getDmarcReportDoughnut(domainSlug: Slug!, period: PeriodEnums!, year: Year!): DmarcReportDoughnut
+  """
+  A query object used to grab the data to create dmarc report doughnuts
+  """
+  getDmarcReportDoughnut(
+    domainSlug: Slug!
+    period: PeriodEnums!
+    year: Year!
+  ): DmarcReportDoughnut
+
+  """
+  A query object used to grab the data to create dmarc report doughnuts
+  """
+  getDmarcReportDoughnut(
+    domainSlug: Slug!
+    period: PeriodEnums!
+    year: Year!
+  ): DmarcReportDoughnut
 
   """
   An graphql object that will be used to populate a userList component in the front end
   """
-  userList(orgSlug: Slug!, before: String, after: String, first: Int, last: Int): UserListItemConnection
+  userList(
+    orgSlug: Slug!
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): UserListItemConnection
 
   """
   An graphql object that will be used to populate a userPage component in the front end
   """
   userPage(
-    """Users user name/email address"""
+    """
+    Users user name/email address
+    """
     userName: EmailAddress
   ): UserPage
 
-  """Gather category totals from the dmarc-report-api"""
+  """
+  Gather category totals from the dmarc-report-api
+  """
   getYearlyDmarcReportSummaries(
-    """Slug of domain you want to retrieve data on"""
+    """
+    Slug of domain you want to retrieve data on
+    """
     domainSlug: Slug
   ): [YearlyDmarcReportSummary]
 
-  """The ID of the object"""
+  """
+  The ID of the object
+  """
   node(id: ID!): Node
 
-  """Select list of users belonging to an organization."""
-  users(orgSlug: Slug!, before: String, after: String, first: Int, last: Int): UsersConnection
+  """
+  Select list of users belonging to an organization.
+  """
+  users(
+    orgSlug: Slug!
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): UsersConnection
 
   """
   Query the currently logged in user if no user name isgiven, or query a specific user by user name.
@@ -957,23 +1330,49 @@ type Query {
   """
   Select all information on a selected organization that a user has access to.
   """
-  organization(slug: Slug!, before: String, after: String, first: Int, last: Int): OrganizationConnection
+  organization(
+    slug: Slug!
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): OrganizationConnection
 
-  """Select all information on all organizations that a user has access to."""
-  organizations(before: String, after: String, first: Int, last: Int): OrganizationConnection
+  """
+  Select all information on all organizations that a user has access to.
+  """
+  organizations(
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): OrganizationConnection
 
-  """Select information on a specific domain."""
+  """
+  Select information on a specific domain.
+  """
   domain(urlSlug: Slug!): [Domain]
 
   """
   Select information on an organizations domains, or all domains a user has access to.
   """
-  domains(orgSlug: Slug, before: String, after: String, first: Int, last: Int): DomainConnection
+  domains(
+    orgSlug: Slug
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): DomainConnection
 
   """
   An api endpoint used to generate a OTP url used for two factor authentication.
   """
-  generateOtpUrl(email: EmailAddress!): String @examples(values: ["otpauth://totp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App"])
+  generateOtpUrl(email: EmailAddress!): String
+    @examples(
+      values: [
+        "otpauth://totp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App"
+      ]
+    )
 
   """
   An api endpoint to view a current user's claims -- Requires an active JWT.
@@ -991,51 +1390,68 @@ type Query {
   sendValidationEmail(email: EmailAddress!): NotificationEmail
 }
 
-"""DMARC aggregate report record"""
+"""
+DMARC aggregate report record
+"""
 type Record {
-  count: Int
-   @examples(
-      values: [
-        1
-      ]
-    )
+  count: Int @examples(values: [1])
 
-  """DMARC source information"""
+  """
+  DMARC source information
+  """
   source: Source
 
-  """DMARC alignment object"""
+  """
+  DMARC alignment object
+  """
   alignment: Alignment
 
-  """DMARC policy evaluation object"""
+  """
+  DMARC policy evaluation object
+  """
   policyEvaluated: PolicyEvaluated
 
-  """Identifiers Object"""
+  """
+  Identifiers Object
+  """
   identifiers: Identifiers
 
-  """Raw DKIM, and SPF results"""
+  """
+  Raw DKIM, and SPF results
+  """
   authResults: AuthResults
 }
 
-"""This mutation allows the removal of unused domains"""
+"""
+This mutation allows the removal of unused domains
+"""
 type RemoveDomain {
   status: Boolean
 }
 
-"""Mutation allows the removal of an organization inside the database."""
+"""
+Mutation allows the removal of an organization inside the database.
+"""
 type RemoveOrganization {
   status: Boolean
 }
 
-"""This mutation is used to send a domain to the scanners to be scanned"""
+"""
+This mutation is used to send a domain to the scanners to be scanned
+"""
 type RequestScan {
   status: String
 }
 
 enum RoleEnums {
-  """A user who has been given access to view results"""
+  """
+  A user who has been given access to view results
+  """
   USER_READ
 
-  """A user who has been given access to run scans, and manage domains"""
+  """
+  A user who has been given access to run scans, and manage domains
+  """
   USER_WRITE
 
   """
@@ -1043,7 +1459,9 @@ enum RoleEnums {
   """
   ADMIN
 
-  """A user who has the same access as an admin, but can define new admins"""
+  """
+  A user who has the same access as an admin, but can define new admins
+  """
   SUPER_ADMIN
 }
 
@@ -1052,54 +1470,50 @@ This mutation is used for re-sending a verification email if it failed
 during user creation
 """
 type SendEmailVerification {
-  """If email is successfully sent status will be true"""
+  """
+  If email is successfully sent status will be true
+  """
   status: Boolean
 }
 
-"""This method allows for new users to sign up for our sites services."""
+"""
+This method allows for new users to sign up for our sites services.
+"""
 type SignUp {
-  """Users information, and JWT"""
+  """
+  Users information, and JWT
+  """
   authResult: AuthResult
 }
 
-"""A field whos values contain numbers, letters, dashes, and underscores"""
+"""
+A field whos values contain numbers, letters, dashes, and underscores
+"""
 scalar Slug
 
-"""Domain information"""
+"""
+Domain information
+"""
 type Source {
-  """Source IP Address"""
-  ipAddress: String
-    @examples(
-      values: [
-        "104.195.80.20"
-      ]
-    )
+  """
+  Source IP Address
+  """
+  ipAddress: String @examples(values: ["104.195.80.20"])
 
-  """Source Country"""
-  country: String
-    @examples(
-      values: [
-        "US"
-      ]
-    )
+  """
+  Source Country
+  """
+  country: String @examples(values: ["US"])
 
   """
   Reverse DNS (also known as rDNS) uses PTR records to associate IP addresses with domain names
   """
-  reverseDns: String
-    @examples(
-      values: [
-        null
-      ]
-    )
+  reverseDns: String @examples(values: [null])
 
-  """DMARC base domain"""
-  baseDomain: String
-      @examples(
-      values: [
-        null
-      ]
-    )
+  """
+  DMARC base domain
+  """
+  baseDomain: String @examples(values: [null])
 }
 
 """
@@ -1112,24 +1526,29 @@ authorize the hosts that are allowed to use their domain names, and a
 receiving host can check such authorization.
 """
 type SPF {
-  """ID of the object"""
+  """
+  ID of the object
+  """
   id: ID
 
-  """The domain the scan was run on"""
+  """
+  The domain the scan was run on
+  """
   domain: URL @fake(type: domainName)
 
-  """The time the scan was initiated"""
+  """
+  The time the scan was initiated
+  """
   timestamp: DateTime @fake(type: pastDate)
 
-  """The current amount of DNS lookups"""
-  lookups: Int
-    @examples(
-      values: [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-      ]
-    )
+  """
+  The current amount of DNS lookups
+  """
+  lookups: Int @examples(values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-  """SPF record retrieved during the scan of the given domain """
+  """
+  SPF record retrieved during the scan of the given domain
+  """
   record: String
     @examples(
       values: [
@@ -1142,46 +1561,41 @@ type SPF {
   Instruction of what a recipient should do if there is not a match to your SPF record.
   """
   spfDefault: String
-    @examples(
-      values: [
-        "neutral", "softfail", "include", "fail"
-      ]
-    )
+    @examples(values: ["neutral", "softfail", "include", "fail"])
 
-  """Key tags found during SPF scan"""
+  """
+  Key tags found during SPF scan
+  """
   spfGuidanceTags: [SPFTags]
 }
 
-"""SPF report results"""
+"""
+SPF report results
+"""
 type SpfReport {
-  """SPF domain"""
-  domain: String
-    @examples(
-      values: [
-        "example.com"
-      ]
-    )
+  """
+  SPF domain
+  """
+  domain: String @examples(values: ["example.com"])
 
-  """SPF domain scope (“HELP/EHLO” or “MFROM”)"""
-  scope: String
-    @examples(
-      values: [
-        "mfrom"
-      ]
-    )
+  """
+  SPF domain scope (“HELP/EHLO” or “MFROM”)
+  """
+  scope: String @examples(values: ["mfrom"])
 
-  """SPF raw result"""
-  result: String
-    @examples(
-      values: [
-        "softfail"
-      ]
-    )
+  """
+  SPF raw result
+  """
+  result: String @examples(values: ["softfail"])
 }
 
-"""Current settings of the currently configured SPF"""
+"""
+Current settings of the currently configured SPF
+"""
 type SPFTags {
-  """Important tags retrieved during scan"""
+  """
+  Important tags retrieved during scan
+  """
   value: String
     @examples(
       values: [
@@ -1200,7 +1614,9 @@ type SSL {
   timestamp: DateTime @fake(type: pastDate)
 }
 
-"""This class handles the inner nested dict given by key: 'template'. """
+"""
+This class handles the inner nested dict given by key: 'template'.
+"""
 type Template {
   id: String
   uri: String
@@ -1239,72 +1655,117 @@ information or if the user is an org or super admin they can query a user
 by their user name
 """
 type User implements Node {
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """Email that the user signed up with"""
+  """
+  Email that the user signed up with
+  """
   userName: EmailAddress @fake(type: email)
 
-  """Name displayed to other users"""
+  """
+  Name displayed to other users
+  """
   displayName: String @fake(type: firstName)
 
-  """Users preferred language"""
+  """
+  Users preferred language
+  """
   lang: String @examples(values: ["English", "French", "Spanish"])
 
-  """Has the user completed two factor authentication"""
+  """
+  Has the user completed two factor authentication
+  """
   tfa: Boolean @examples(values: [false, true])
 
-  """Has the user verified their account"""
+  """
+  Has the user verified their account
+  """
   emailValidated: Boolean
 
-  """Users access to organizations"""
-  affiliations(before: String, after: String, first: Int, last: Int): UserAffClassConnection
+  """
+  Users access to organizations
+  """
+  affiliations(
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): UserAffClassConnection
 }
 
 type UserAffClass implements Node {
   user: User
 
-  """The organization this affiliation belongs to"""
+  """
+  The organization this affiliation belongs to
+  """
   organization: Organization
 
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """User's ID"""
+  """
+  User's ID
+  """
   userId: Int
 
-  """User's level of access to a given organization"""
+  """
+  User's level of access to a given organization
+  """
   permission: RoleEnums
 }
 
 type UserAffClassConnection {
-  """Pagination data for this connection."""
+  """
+  Pagination data for this connection.
+  """
   pageInfo: PageInfo!
 
-  """Contains the nodes in this connection."""
+  """
+  Contains the nodes in this connection.
+  """
   edges: [UserAffClassEdge]!
 }
 
-"""A Relay edge containing a `UserAffClass` and its cursor."""
+"""
+A Relay edge containing a `UserAffClass` and its cursor.
+"""
 type UserAffClassEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: UserAffClass
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
 type UserListItem implements Node {
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """The users email address or userName"""
+  """
+  The users email address or userName
+  """
   userName: EmailAddress @fake(type: email)
 
-  """The users display name"""
+  """
+  The users display name
+  """
   displayName: String @fake(type: firstName)
 
-  """Indicates wether or not this user has enabled tfa"""
+  """
+  Indicates wether or not this user has enabled tfa
+  """
   tfa: Boolean @examples(values: [true, false])
 
   """
@@ -1314,53 +1775,83 @@ type UserListItem implements Node {
 }
 
 type UserListItemConnection {
-  """Pagination data for this connection."""
+  """
+  Pagination data for this connection.
+  """
   pageInfo: PageInfo!
 
-  """Contains the nodes in this connection."""
+  """
+  Contains the nodes in this connection.
+  """
   edges: [UserListItemEdge]!
 }
 
-"""A Relay edge containing a `UserListItem` and its cursor."""
+"""
+A Relay edge containing a `UserListItem` and its cursor.
+"""
 type UserListItemEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: UserListItem
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
 type UserPage implements Node {
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """The users email address or userName"""
+  """
+  The users email address or userName
+  """
   userName: EmailAddress @fake(type: email)
 
-  """The users display name"""
+  """
+  The users display name
+  """
   displayName: String @fake(type: firstName)
 
-  """Indicates the preferred language of this user"""
+  """
+  Indicates the preferred language of this user
+  """
   lang: String @examples(values: ["English", "French"])
 
-  """Indicates wether or not this user has enabled tfa"""
+  """
+  Indicates wether or not this user has enabled tfa
+  """
   tfa: Boolean
 
-  """Has the user verified their account"""
+  """
+  Has the user verified their account
+  """
   emailValidated: Boolean
 
-  """Indicates if this user is an admin of the organization specified"""
+  """
+  Indicates if this user is an admin of the organization specified
+  """
   userAffiliations: [UserPageAffiliations]
 }
 
 type UserPageAffiliations implements Node {
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """Indicates if this user is an admin of the organization"""
+  """
+  Indicates if this user is an admin of the organization
+  """
   admin: Boolean @examples(values: [true, false])
 
-  """Indicates which organization this users data is being displayed for"""
+  """
+  Indicates which organization this users data is being displayed for
+  """
   organization: Acronym @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
 }
 
@@ -1369,33 +1860,51 @@ This object is used to return a list of users with their user name, display
 name and their permission for the requested organization
 """
 type Users implements Node {
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """Email that the user signed up with"""
+  """
+  Email that the user signed up with
+  """
   userName: EmailAddress @fake(type: email)
 
-  """Name displayed to other users"""
+  """
+  Name displayed to other users
+  """
   displayName: String @fake(type: firstName)
 
-  """The level of access this user has to the requested organization"""
+  """
+  The level of access this user has to the requested organization
+  """
   permission: RoleEnums
 }
 
 type UsersConnection {
-  """Pagination data for this connection."""
+  """
+  Pagination data for this connection.
+  """
   pageInfo: PageInfo!
 
-  """Contains the nodes in this connection."""
+  """
+  Contains the nodes in this connection.
+  """
   edges: [UsersEdge]!
 }
 
-"""A Relay edge containing a `Users` and its cursor."""
+"""
+A Relay edge containing a `Users` and its cursor.
+"""
 type UsersEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: Users
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
@@ -1403,51 +1912,76 @@ type ValidateTwoFactor {
   user: User
 }
 
-"""Results of HTTPS and SSL scans on domain"""
+"""
+Results of HTTPS and SSL scans on domain
+"""
 type WWWScan implements Node {
-  """The domain the scan was run on"""
+  """
+  The domain the scan was run on
+  """
   domain: URL
 
-  """The ID of the object."""
+  """
+  The ID of the object.
+  """
   id: ID!
 
-  """The time the scan was initiated"""
+  """
+  The time the scan was initiated
+  """
   timestamp: DateTime
   https: [HTTPS]
   ssl: [SSL]
 }
 
 type WWWScanConnection {
-  """Pagination data for this connection."""
+  """
+  Pagination data for this connection.
+  """
   pageInfo: PageInfo!
 
-  """Contains the nodes in this connection."""
+  """
+  Contains the nodes in this connection.
+  """
   edges: [WWWScanEdge]!
 }
 
-"""A Relay edge containing a `WWWScan` and its cursor."""
+"""
+A Relay edge containing a `WWWScan` and its cursor.
+"""
 type WWWScanEdge {
-  """The item at the end of the edge"""
+  """
+  The item at the end of the edge
+  """
   node: WWWScan
 
-  """A cursor for use in pagination"""
+  """
+  A cursor for use in pagination
+  """
   cursor: String!
 }
 
-"""A field that conforms to a 4 digit integer"""
+"""
+A field that conforms to a 4 digit integer
+"""
 scalar Year
 
 """
 Yearly overview of various category totals from the external dmarc report api
 """
 type YearlyDmarcReportSummary {
-  """Which month is the data based on"""
+  """
+  Which month is the data based on
+  """
   month: String
 
-  """Which year the data is from"""
+  """
+  Which year the data is from
+  """
   year: String
 
-  """Category totals for quick viewing"""
+  """
+  Category totals for quick viewing
+  """
   categoryTotal: CategoryTotals
 }
-
