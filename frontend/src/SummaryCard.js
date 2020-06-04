@@ -4,12 +4,12 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { string, array } from 'prop-types'
 
 export function SummaryCard({ ...props }) {
-  const { title, description } = props
+  const { name, title, description } = props
 
-  const data = [
+  const summaryData = [
     {
       strength: 'strong',
-      name: 'Pass',
+      name: 'Fully Implemented',
       categories: [
         {
           name: 'pass_conditon',
@@ -19,21 +19,47 @@ export function SummaryCard({ ...props }) {
     },
     {
       strength: 'moderate',
-      name: 'Partial pass',
+      name: 'Partially Implemented',
       categories: [
         {
-          name: 'partial_pass1',
-          qty: Math.floor(Math.random() * 150 + 1),
-        },
-        {
-          name: 'partial_pass2',
-          qty: Math.floor(Math.random() * 150 + 1),
+          name: 'partial_pass',
+          qty: Math.floor(Math.random() * 300 + 1),
         },
       ],
     },
     {
       strength: 'weak',
-      name: 'All fail',
+      name: 'Not Implemented',
+      categories: [
+        {
+          name: 'fail_condition',
+          qty: Math.floor(Math.random() * 300 + 1),
+        },
+      ],
+    },
+    // {
+    //   strength: 'unknown',
+    //   name: 'Unknown',
+    //   categories: [
+    //     { name: 'unknown', qty: Math.floor(Math.random() * 100 + 1) },
+    //   ],
+    // },
+  ]
+
+  const webData = [
+    {
+      strength: 'strong',
+      name: 'Enforced',
+      categories: [
+        {
+          name: 'pass_conditon',
+          qty: Math.floor(Math.random() * 1000 + 1),
+        },
+      ],
+    },
+    {
+      strength: 'weak',
+      name: 'Not Enforced',
       categories: [
         {
           name: 'fail1',
@@ -49,14 +75,16 @@ export function SummaryCard({ ...props }) {
         },
       ],
     },
-    {
-      strength: 'unknown',
-      name: 'Unknown',
-      categories: [
-        { name: 'unknown', qty: Math.floor(Math.random() * 100 + 1) },
-      ],
-    },
   ]
+
+  const getData = () => {
+    if (name === 'web') {
+      return webData
+    }
+    return summaryData
+  }
+
+  const data = getData()
 
   const reducer = (accumulator, currentValue) => {
     return accumulator + currentValue
@@ -81,12 +109,14 @@ export function SummaryCard({ ...props }) {
   return (
     <Box>
       <Box
-        w="300px"
+        w="430px"
         rounded="lg"
         bg="#EDEDED"
         overflow="hidden"
-        borderColor="black"
-        borderWidth="1"
+        borderColor={name === 'dashboard' ? 'black' : ''}
+        borderWidth={name === 'dashboard' ? '1' : ''}
+        // borderColor="black"
+        // borderWidth="1"
       >
         <Box bg="#444444">
           <Text
@@ -97,12 +127,14 @@ export function SummaryCard({ ...props }) {
           >
             {title}
           </Text>
-          <Text fontSize="md" textAlign={['center']} color="#EDEDED">
-            {description}
-          </Text>
+          {name === 'dashboard' && (
+            <Text fontSize="md" textAlign={['center']} color="#EDEDED">
+              {description}
+            </Text>
+          )}
         </Box>
 
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
               data={data}
@@ -177,62 +209,65 @@ export function SummaryCard({ ...props }) {
         <br />
 
         {/* data box */}
-        <Box bg="#444444">
-          <Box h="1" />
-          <Stack
-            isInline
-            gridTemplateColumns="10"
-            gridTemplateRows="150"
-            overflowX="scroll"
-            gridAutoFlow="columns"
-            gridAutoColumns="40%"
-          >
-            <Box />
-            {data.map((entry) => {
-              let color
-              switch (entry.strength) {
-                case 'strong':
-                  color = '#2D8133'
-                  break
-                case 'moderate':
-                  color = '#ffbf47'
-                  break
-                case 'weak':
-                  color = '#e53e3e'
-                  break
-                case 'unknown':
-                  color = '#B0B0B0'
-                  break
-              }
-              return entry.categories.map((category) => {
-                return (
-                  <Stack align="center" isInline key={category.name}>
-                    <Text
-                      p="1"
-                      color="#EDEDED"
-                      backgroundColor={color}
-                      rounded="md"
-                      textAlign="center"
-                      as="b"
-                    >
-                      {category.qty}
-                      <br />
-                      {`${category.name}`}
-                    </Text>
-                    <Divider orientation="vertical" borderColor="red.500" />
-                  </Stack>
-                )
-              })
-            })}
-          </Stack>
-          <Box h="1" />
-        </Box>
+        {name === 'dashboard' && (
+          <Box bg="#444444">
+            <Box h="1" />
+            <Stack
+              isInline
+              gridTemplateColumns="10"
+              gridTemplateRows="150"
+              // overflowX="scroll"
+              gridAutoFlow="columns"
+              gridAutoColumns="40%"
+            >
+              <Box />
+              {data.map((entry) => {
+                let color
+                switch (entry.strength) {
+                  case 'strong':
+                    color = '#2D8133'
+                    break
+                  case 'moderate':
+                    color = '#ffbf47'
+                    break
+                  case 'weak':
+                    color = '#e53e3e'
+                    break
+                  case 'unknown':
+                    color = '#B0B0B0'
+                    break
+                }
+                return entry.categories.map((category) => {
+                  return (
+                    <Stack align="center" isInline key={category.name}>
+                      <Text
+                        p="1"
+                        color="#EDEDED"
+                        backgroundColor={color}
+                        rounded="md"
+                        textAlign="center"
+                        as="b"
+                      >
+                        {category.qty}
+                        <br />
+                        {`${category.name}`}
+                      </Text>
+                      <Divider orientation="vertical" borderColor="red.500" />
+                    </Stack>
+                  )
+                })
+              })}
+            </Stack>
+            <Box h="1" />
+          </Box>
+        )}
       </Box>
     </Box>
   )
 }
 
 SummaryCard.propTypes = {
+  name: string,
   title: string,
   description: string,
   data: array,

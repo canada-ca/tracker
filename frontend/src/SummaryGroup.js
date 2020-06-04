@@ -25,10 +25,6 @@ export function SummaryGroup({ ...props }) {
       description: 'Domains that pass the HTTPS requirements',
     },
     {
-      title: 'HTTPS Redirection',
-      description: 'Domains that pass the HTTPS Redirection requirements',
-    },
-    {
       title: 'HSTS',
       description: 'Domains that pass the HSTS requirements',
     },
@@ -38,6 +34,14 @@ export function SummaryGroup({ ...props }) {
     },
     {
       title: 'SSL',
+      description: 'Domains that pass the SSL requirements',
+    },
+    {
+      title: 'Protocols & Ciphers',
+      description: 'Domains that pass the SSL requirements',
+    },
+    {
+      title: 'Approved Certificate Use',
       description: 'Domains that pass the SSL requirements',
     },
   ]
@@ -60,11 +64,11 @@ export function SummaryGroup({ ...props }) {
   const getReportQty = () => {
     let reportQty
     if (name === 'dashboard') {
-      reportQty = 2
+      reportQty = dashOverview.length
     } else if (name === 'web') {
-      reportQty = 5
+      reportQty = webOverview.length
     } else {
-      reportQty = 3
+      reportQty = emailOverview.length
     }
     return reportQty
   }
@@ -84,6 +88,7 @@ export function SummaryGroup({ ...props }) {
       reports.push(
         <Stack align="center">
           <SummaryCard
+            name={name}
             title={reportData[i].title}
             description={reportData[i].description}
           />
@@ -100,9 +105,25 @@ export function SummaryGroup({ ...props }) {
       </Text>
       <Text fontSize="lg">{description}</Text>
       <br />
-      <SimpleGrid columns={{ lg: getReportQty() }} spacing="30px" width="100%">
-        {createReports()}
-      </SimpleGrid>
+      {name !== 'web' && (
+        <SimpleGrid
+          columns={{ lg: getReportQty() }}
+          spacing="30px"
+          width="110%"
+        >
+          {createReports()}
+        </SimpleGrid>
+      )}
+      {name === 'web' && (
+        <SimpleGrid
+          columns={{ lg: getReportQty() / 2 }}
+          spacing="30px"
+          width="110%"
+        >
+          {createReports()}
+        </SimpleGrid>
+      )}
+
       <br />
     </Stack>
   )
