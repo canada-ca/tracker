@@ -323,37 +323,34 @@ export function DmarcReportPage() {
     return { month: entry.month, year: entry.year, ...entry.categoryTotal }
   })
 
+  const cardWidth =
+    window.innerWidth < 500
+      ? '100%'
+      : window.innerWidth < 800
+      ? '50%'
+      : window.innerWidth < 1200
+      ? '35%'
+      : '20%'
+  const timeGraphWidth =
+    window.innerWidth < 500 ? '100%' : window.innerWidth < 1200 ? '75%' : '50%'
+
+  const cardAndGraphFitInline =
+    +cardWidth.slice(0, -1) + +timeGraphWidth.slice(0, -1) <= 100
+
   return (
     <Box width="100%">
       <Box>
-        <SummaryCard
-          title="DMARC Report"
-          description="Description of DMARC report"
-          data={cardData}
-          slider={false}
-          width={
-            window.innerWidth < 500
-              ? '100%'
-              : window.innerWidth < 800
-              ? '50%'
-              : window.innerWidth < 1200
-              ? '35%'
-              : '20%'
-          }
-          mx="auto"
-          pieDiameter={250}
-        />
-        <DmarcTimeGraph
-          data={barData}
-          width={
-            window.innerWidth < 500
-              ? '100%'
-              : window.innerWidth < 1200
-              ? '75%'
-              : '50%'
-          }
-          mx="auto"
-        />
+        <Stack isInline={cardAndGraphFitInline} align="center">
+          <SummaryCard
+            title="DMARC Report"
+            description="Description of DMARC report"
+            data={cardData}
+            slider={false}
+            width={cardWidth}
+            mx="auto"
+          />
+          <DmarcTimeGraph data={barData} width={timeGraphWidth} mx="auto" />
+        </Stack>
         <DmarcReportTable
           data={alignIpData.getAlignedByIp}
           columns={alignIpColumns}

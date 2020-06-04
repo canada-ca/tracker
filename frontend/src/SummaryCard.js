@@ -174,7 +174,6 @@ SummaryCard.propTypes = {
   description: string.isRequired,
   data: array.isRequired,
   slider: bool,
-  pieDiameter: number.isRequired,
 }
 
 export default WithPseudoBox(SummaryCard)
