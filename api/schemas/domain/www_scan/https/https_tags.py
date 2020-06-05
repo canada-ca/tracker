@@ -97,16 +97,3 @@ class HTTPSTags(SQLAlchemyObjectType):
             tags.append({"https14": "HTTPS-certificate-self-signed"})
 
         return tags
-
-
-# {
-#     "https": {
-#         "hsts": "No HSTS",
-#         "enforced": "Weak",
-#         "hsts_age": null,
-#         "expired_cert": false,
-#         "implementation": "Valid HTTPS",
-#         "preload_status": "HSTS Not Preloaded",
-#         "self_signed_cert": false
-#     }
-# }
