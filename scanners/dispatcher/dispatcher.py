@@ -15,16 +15,13 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-async def initiate_scan(payload, scanners, client):
+def initiate_scan(payload, scanners, client):
 
     try:
         dispatched = {}
 
         for scan_type, dispatch_function in scanners.items():
             dispatched[scan_type] = dispatch_function(payload, client)
-
-        for key in dispatched:
-            await dispatched[key]
 
         for key, val in dispatched.items():
             if val != f"Dispatched to {key} scanner":
@@ -38,7 +35,7 @@ async def initiate_scan(payload, scanners, client):
 
 
 def Server(scanners, default_client=requests):
-    def receive(request):
+    async def receive(request):
         logging.info("Request received")
         client = request.app.state.client
         inbound_payload = ast.literal_eval(request.headers.get("Data"))
