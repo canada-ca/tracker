@@ -7,67 +7,102 @@ from models import Dmarc_scans
 
 class DmarcTags(SQLAlchemyObjectType):
     """
+    Guidance tags for dmarc scan results
     """
-
     class Meta:
         model = Dmarc_scans
         exclude_fields = ("id", "dmarc_scan")
 
-    value = graphene.String(description="Important tags retrieved during scan")
+    value = graphene.List(
+        lambda: graphene.String,
+        description="Important tags retrieved during scan"
+    )
 
     def resolve_value(self: Dmarc_scans, info):
-        tags = {}
+        tags = []
 
-        if "missing" in self.dmarc_scan:
-            return tags.update({"dmarc2": "missing"})
+        if self.dmarc_scan.get("missing", None) is not None:
+            tags.append({"dmarc2": "missing"})
+            return tags
 
         # Check P Policy Tag
-        if self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "missing":
-            tags.update({"dmarc3": "P-missing"})
-        elif self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "none":
-            tags.update({"dmarc4": "P-none"})
-        elif self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "quarantine":
-            tags.update({"dmarc5": "P-quarantine"})
-        elif self.dmarc_scan["dmarc"]["tags"]["p"]["value"] == "reject":
-            tags.update({"dmarc6": "P-reject"})
+        p_policy_tag = self.dmarc_scan.get("dmarc", {}) \
+            .get("tags", {}) \
+            .get("p", {}) \
+            .get("value", None)
+
+        if p_policy_tag == "missing" or p_policy_tag == "Missing":
+            tags.append({"dmarc3": "P-missing"})
+        elif p_policy_tag == "none" or p_policy_tag == "None":
+            tags.append({"dmarc4": "P-none"})
+        elif p_policy_tag == "quarantine" or p_policy_tag == "Quarantine":
+            tags.append({"dmarc5": "P-quarantine"})
+        elif p_policy_tag == "reject" or p_policy_tag == "Reject":
+            tags.append({"dmarc6": "P-reject"})
 
         # Check PCT Tag
-        if self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] == 100:
-            tags.update({"dmarc7": "PCT-100"})
-        elif 100 > self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] > 0:
+        pct_tag = self.dmarc_scan.get("dmarc", {}) \
+            .get("tags", {}) \
+            .get("pct", {}) \
+            .get("value", None)
+
+        if pct_tag == 100:
+            tags.append({"dmarc7": "PCT-100"})
+        elif 100 > pct_tag > 0:
             pct_string = "PCT-" + str(
-                self.dmarc_scan["dmarc"]["tags"]["pct"]["value"]
+                pct_tag
             )
-            tags.update({"dmarc8": pct_string})
-        elif self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] == "invalid":
-            tags.update({"dmarc9": "PCT-invalid"})
-        elif self.dmarc_scan["dmarc"]["tags"]["pct"]["value"] == "none":
-            tags.update({"dmarc20": "PCT-none=exists"})
+            tags.append({"dmarc8": pct_string})
+        elif pct_tag == "invalid" or pct_tag == "Invalid":
+            tags.append({"dmarc9": "PCT-invalid"})
+        elif pct_tag == "none" or pct_tag == "None":
+            tags.append({"dmarc20": "PCT-none=exists"})
         else:
-            tags.update({"dmarc21": "PCT-0"})
+            tags.append({"dmarc21": "PCT-0"})
 
         # Check RUA Tag
-        for value in self.dmarc_scan["dmarc"]["tags"]["rua"]["value"]:
-            if value["address"] == "dmarc@cyber.gc.ca":
-                tags.update({"dmarc10": "RUA-CCCS"})
-            else:
-                tags.update({"dmarc12": "RUA-none"})
+        rua_tag = self.dmarc_scan.get("dmarc", {}) \
+            .get("tags", {}) \
+            .get("rua", {}) \
+            .get("value", None)
+
+        if rua_tag is None:
+            tags.append({"dmarc12": "RUA-none"})
+        else:
+            for value in rua_tag:
+                if value["address"] == "dmarc@cyber.gc.ca":
+                    tags.append({"dmarc10": "RUA-CCCS"})
+                else:
+                    tags.append({"dmarc12": "RUA-none"})
 
         # Check RUF Tag
-        for value in self.dmarc_scan["dmarc"]["tags"]["ruf"]["value"]:
-            if value["address"] == "dmarc@cyber.gc.ca":
-                tags.update({"dmarc11": "RUF-CCCS"})
-            else:
-                tags.update({"dmarc13": "RUF-none"})
+        ruf_tag = self.dmarc_scan.get("dmarc", {}) \
+            .get("tags", {}) \
+            .get("ruf", {}) \
+            .get("value", None)
+
+        if ruf_tag is None:
+            tags.append({"dmarc13": "RUF-none"})
+        else:
+            for value in ruf_tag:
+                if value["address"] == "dmarc@cyber.gc.ca":
+                    tags.append({"dmarc11": "RUF-CCCS"})
+                else:
+                    tags.append({"dmarc13": "RUF-none"})
 
         # Check SP tag
-        if self.dmarc_scan["dmarc"]["tags"]["sp"]["value"] == "missing":
-            tags.update({"dmarc16": "SP-missing"})
-        elif self.dmarc_scan["dmarc"]["tags"]["sp"]["value"] == "none":
-            tags.update({"dmarc17": "SP-none"})
-        elif self.dmarc_scan["dmarc"]["tags"]["sp"]["value"] == "quarantine":
-            tags.update({"dmarc18": "SP-quarantine"})
-        elif self.dmarc_scan["dmarc"]["tags"]["sp"]["value"] == "reject":
-            tags.update({"dmarc19": "SP-reject"})
+        sp_tag = self.dmarc_scan.get("dmarc", {}) \
+            .get("tags", {}) \
+            .get("sp", {}) \
+            .get("value", None)
+
+        if sp_tag == "missing" or sp_tag == "Missing":
+            tags.append({"dmarc16": "SP-missing"})
+        elif sp_tag == "none" or sp_tag == "None":
+            tags.append({"dmarc17": "SP-none"})
+        elif sp_tag == "quarantine" or sp_tag == "Quarantine":
+            tags.append({"dmarc18": "SP-quarantine"})
+        elif sp_tag == "reject" or sp_tag == "Reject":
+            tags.append({"dmarc19": "SP-reject"})
 
         return tags
