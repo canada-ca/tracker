@@ -50,10 +50,10 @@ def fire_scan(user_id: int, domain_id: int, url: str, dkim: bool):
 
     headers = {
         "Content-Type": "application/json",
-        "Data": payload,
+        "Data": str(payload),
         "Scan-Type": scan_type,
     }
 
-    status = requests.post(DISPATCHER_URL + "/receive", headers=headers, data=payload)
+    status = requests.post(DISPATCHER_URL + "/receive", headers=headers)
 
     return str(status.text)
