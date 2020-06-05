@@ -56,7 +56,7 @@ def resolve_get_dmarc_report_bar_graph(self, info, **kwargs):
                     $startDate:CustomDate!
                     $endDate:CustomDate!
                 ) {
-                    getTotalDmarcSummaries(
+                    getYearlyDmarcSummaries(
                         domain: $domain
                         startDate: $startDate
                         endDate: $endDate
@@ -90,7 +90,7 @@ def resolve_get_dmarc_report_bar_graph(self, info, **kwargs):
 
             # Skip first entry from return data because it is past 30 days which
             # for this query we do not want
-            iter_data = iter(data.get("getTotalDmarcSummaries").get("periods"))
+            iter_data = iter(data.get("getYearlyDmarcSummaries").get("periods"))
 
             # Loop through 13 months of data, and create return list
             for data in iter_data:

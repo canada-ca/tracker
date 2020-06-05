@@ -1,5 +1,5 @@
 dmarc_report_bar_graph_data = {
-    "getTotalDmarcSummaries": {
+    "getYearlyDmarcSummaries": {
         "periods": [
             {
                 "startDate": "2020-06-01",
