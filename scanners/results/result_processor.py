@@ -458,7 +458,7 @@ async def insert_dmarc(report, scan_id, db):
             mx_scan={"mx": report["mx"]}, id=scan.get("id")
         )
         spf_insert_query = Spf_scans.insert().values(
-            spf_scan={"spf": report["dmarc"]}, id=scan.get("id")
+            spf_scan={"spf": report["spf"]}, id=scan.get("id")
         )
 
         await db.execute(dmarc_insert_query)

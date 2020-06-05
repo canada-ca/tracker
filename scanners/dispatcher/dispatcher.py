@@ -15,13 +15,16 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate_scan(payload, scanners, client):
+async def initiate_scan(payload, scanners, client):
 
     try:
         dispatched = {}
 
         for scan_type, dispatch_function in scanners.items():
             dispatched[scan_type] = dispatch_function(payload, client)
+
+        for key in dispatched:
+            dispatched[key] = await dispatched[key]
 
         for key, val in dispatched.items():
             if val != f"Dispatched to {key} scanner":
@@ -58,11 +61,11 @@ def Server(scanners, default_client=requests):
 
         if scan_type == "web":
             return PlainTextResponse(
-                initiate_scan(outbound_payload, web_scanners, client)
+                await initiate_scan(outbound_payload, web_scanners, client)
             )
         elif scan_type == "mail":
             return PlainTextResponse(
-                initiate_scan(outbound_payload, mail_scanners, client)
+                await initiate_scan(outbound_payload, mail_scanners, client)
             )
         else:
             return PlainTextResponse("Invalid Scan-Type provided")
