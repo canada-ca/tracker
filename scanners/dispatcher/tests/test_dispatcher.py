@@ -18,9 +18,9 @@ def test_web_scan():
     test_app = Server(
         scanners={
             "dkim": {"auto": scan_dkim, "manual": manual_scan_dkim},
-            "dmarc": {"auto": test_dmarc.test, "manual": manual_scan_dmarc},
-            "https": {"auto": test_https.test, "manual": manual_scan_https},
-            "ssl": {"auto": test_ssl.test, "manual": manual_scan_ssl},
+            "dmarc": {"auto": test_dmarc, "manual": manual_scan_dmarc},
+            "https": {"auto": test_https, "manual": manual_scan_https},
+            "ssl": {"auto": test_ssl, "manual": manual_scan_ssl},
         },
     )
 
@@ -47,8 +47,8 @@ def test_mail_scan():
 
     test_app = Server(
         scanners={
-            "dkim": {"auto": test_dkim.test, "manual": manual_scan_dkim},
-            "dmarc": {"auto": test_dmarc.test, "manual": manual_scan_dmarc},
+            "dkim": {"auto": test_dkim, "manual": manual_scan_dkim},
+            "dmarc": {"auto": test_dmarc, "manual": manual_scan_dmarc},
             "https": {"auto": scan_https, "manual": manual_scan_https},
             "ssl": {"auto": scan_ssl, "manual": manual_scan_ssl},
         },
@@ -84,9 +84,9 @@ def test_manual_web_scan():
     test_app = Server(
         scanners={
             "dkim": {"auto": scan_dkim, "manual": manual_scan_dkim},
-            "dmarc": {"auto": scan_dmarc, "manual": test_dmarc.test},
-            "https": {"auto": scan_https, "manual": test_https.test},
-            "ssl": {"auto": scan_ssl, "manual": test_ssl.test},
+            "dmarc": {"auto": scan_dmarc, "manual": test_dmarc},
+            "https": {"auto": scan_https, "manual": test_https},
+            "ssl": {"auto": scan_ssl, "manual": test_ssl},
         },
     )
 
@@ -113,8 +113,8 @@ def test_manual_mail_scan():
 
     test_app=Server(
         scanners={
-            "dkim": {"auto": scan_dkim, "manual": test_dkim.test},
-            "dmarc": {"auto": scan_dmarc, "manual": test_dmarc.test},
+            "dkim": {"auto": scan_dkim, "manual": test_dkim},
+            "dmarc": {"auto": scan_dmarc, "manual": test_dmarc},
             "https": {"auto": scan_https, "manual": manual_scan_https},
             "ssl": {"auto": scan_ssl, "manual": manual_scan_ssl},
         },
