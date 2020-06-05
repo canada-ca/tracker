@@ -31,7 +31,7 @@ class DmarcTags(SQLAlchemyObjectType):
             .get("p", {}) \
             .get("value", None)
 
-        if isinstance(str, p_policy_tag):
+        if isinstance(p_policy_tag, str):
             p_policy_tag = p_policy_tag.lower()
 
         if p_policy_tag == "missing":
@@ -49,7 +49,7 @@ class DmarcTags(SQLAlchemyObjectType):
             .get("pct", {}) \
             .get("value", None)
 
-        if isinstance(str, pct_tag):
+        if isinstance(pct_tag, str):
             pct_tag = pct_tag.lower()
 
         if pct_tag == 100:
@@ -72,7 +72,7 @@ class DmarcTags(SQLAlchemyObjectType):
             .get("rua", {}) \
             .get("value", None)
 
-        if isinstance(str, rua_tag):
+        if isinstance(rua_tag, str):
             rua_tag = rua_tag.lower()
 
         if rua_tag is None:
@@ -105,7 +105,7 @@ class DmarcTags(SQLAlchemyObjectType):
             .get("sp", {}) \
             .get("value", None)
 
-        if isinstance(str, sp_tag):
+        if isinstance(sp_tag, str):
             sp_tag = sp_tag.lower()
 
         if sp_tag == "missing":
