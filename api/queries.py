@@ -14,6 +14,9 @@ from resolvers.domains import resolve_domain, resolve_domains
 # Get Dmarc Report Bar Graph Data
 from schemas.dmarc_report_bar_graph import get_dmarc_report_bar_graph
 
+# Get Dmarc Report Detail Tables
+from schemas.dmarc_report_detailed_tables import get_dmarc_report_detailed_tables
+
 # Get Dmarc Report Doughnut Data
 from schemas.dmarc_report_doughnut import get_dmarc_report_doughnut
 
@@ -173,6 +176,9 @@ class Query(graphene.ObjectType):
 
     # --- Start Get Dmarc Report Bar Graph ---
     get_dmarc_report_bar_graph = get_dmarc_report_bar_graph
+
+    # --- Start Get Dmarc Report Detailed Table
+    get_dmarc_report_detailed_tables = get_dmarc_report_detailed_tables
 
     # --- Start Get Dmarc Report Doughnut ---
     get_dmarc_report_doughnut = get_dmarc_report_doughnut

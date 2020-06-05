@@ -105,6 +105,27 @@ value as specified by
 """
 scalar DateTime
 
+"""Object that contains the details for each category"""
+type DetailTables {
+  """List of top senders that have full pass"""
+  fullPass: [TableStructure]
+
+  """List of top senders that have an spf failure"""
+  spfFailure: [TableStructure]
+
+  """List of top senders that have spf misaligned"""
+  spfMisaligned: [TableStructure]
+
+  """List of top senders that have an dkim failure"""
+  dkimFailure: [TableStructure]
+
+  """List of top senders that have dkim misaligned"""
+  dkimMisaligned: [TableStructure]
+
+  """List of top senders that have an dmarc failure"""
+  dmarcFailure: [TableStructure]
+}
+
 """
 DomainKeys Identified Mail (DKIM) permits a person, role, or
 organization that owns the signing domain to claim some
@@ -299,12 +320,36 @@ type DmarcReport implements Node {
   records: [Record]
 }
 
+"""A query object used to grab the data to create dmarc report bar graph"""
+type DmarcReportBarGraph {
+  """The month that the data is related to."""
+  month: String
+
+  """The year that the data is related to."""
+  year: Int
+
+  """Category totals for building dmarc report page bar graph."""
+  categoryTotals: CategoryTotals
+}
+
 type DmarcReportConnection {
   """Pagination data for this connection."""
   pageInfo: PageInfo!
 
   """Contains the nodes in this connection."""
   edges: [DmarcReportEdge]!
+}
+
+"""GraphQL object for returning data for dmarc report tables"""
+type DmarcReportDetailedTables {
+  """The month in which the data is relevant to."""
+  month: String
+
+  """The year in which the relevant to."""
+  year: Year
+
+  """The details used in creating tables for the dmarc report page"""
+  detailTables: DetailTables
 }
 
 """A query object used to grab the data to create dmarc report doughnuts"""
@@ -858,6 +903,24 @@ type PolicyPublished {
 
 """The central gathering point for all of the GraphQL queries."""
 type Query {
+  """A query object used to grab the data to create dmarc report bar graph."""
+  getDmarcReportBarGraph(
+    """The sluified version of the domain you wish to retrieve data for."""
+    domainSlug: Slug
+  ): [DmarcReportBarGraph]
+
+  """Query used for gathering data for dmarc report detail tables."""
+  getDmarcReportDetailedTables(
+    """The sluified version of the domain you wish to retrieve data for."""
+    domainSlug: Slug
+
+    """The period in which the returned data is relevant to."""
+    period: PeriodEnums
+
+    """The year in which the returned data is relevant to."""
+    year: Year
+  ): DmarcReportDetailedTables
+
   """A query object used to grab the data to create dmarc report doughnuts"""
   getDmarcReportDoughnut(domainSlug: Slug!, period: PeriodEnums!, year: Year!): DmarcReportDoughnut
 
