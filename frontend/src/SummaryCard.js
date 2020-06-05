@@ -114,7 +114,9 @@ export function SummaryCard({ ...props }) {
                     break
                   }
                 }
-                return <Cell dataKey={entry.name} fill={color} />
+                return (
+                  <Cell key={entry.name} dataKey={entry.name} fill={color} />
+                )
               })}
             </Pie>
             <Tooltip />
@@ -183,7 +185,7 @@ export function SummaryCard({ ...props }) {
                 }
                 return entry.categories.map((category) => {
                   return (
-                    <Stack align="center" isInline>
+                    <Stack key={category} align="center" isInline>
                       <Text
                         p="1"
                         color="#EDEDED"
