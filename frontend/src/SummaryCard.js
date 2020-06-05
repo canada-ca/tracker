@@ -1,15 +1,19 @@
 import React from 'react'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { Text, Stack, Box, Badge, Divider } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { string, array } from 'prop-types'
 
 export function SummaryCard({ ...props }) {
   const { name, title, description } = props
+  const { i18n } = useLingui()
 
-  const summaryData = [
+  // randomized data used to populate charts before API is connected
+  const data = [
     {
       strength: 'strong',
-      name: 'Fully Implemented',
+      name: name === 'web' ? i18n._(t`Enforced`) : i18n._(t`Fully Implemented`),
       categories: [
         {
           name: 'pass_conditon',
@@ -19,17 +23,18 @@ export function SummaryCard({ ...props }) {
     },
     {
       strength: 'moderate',
-      name: 'Partially Implemented',
+      name: i18n._(t`Partially Implemented`),
       categories: [
         {
           name: 'partial_pass',
-          qty: Math.floor(Math.random() * 300 + 1),
+          qty: name === 'web' ? null : Math.floor(Math.random() * 300 + 1),
         },
       ],
     },
     {
       strength: 'weak',
-      name: 'Not Implemented',
+      name:
+        name === 'web' ? i18n._(t`Not Enforced`) : i18n._(t`Not Implemented`),
       categories: [
         {
           name: 'fail_condition',
@@ -37,54 +42,7 @@ export function SummaryCard({ ...props }) {
         },
       ],
     },
-    // {
-    //   strength: 'unknown',
-    //   name: 'Unknown',
-    //   categories: [
-    //     { name: 'unknown', qty: Math.floor(Math.random() * 100 + 1) },
-    //   ],
-    // },
   ]
-
-  const webData = [
-    {
-      strength: 'strong',
-      name: 'Enforced',
-      categories: [
-        {
-          name: 'pass_conditon',
-          qty: Math.floor(Math.random() * 1000 + 1),
-        },
-      ],
-    },
-    {
-      strength: 'weak',
-      name: 'Not Enforced',
-      categories: [
-        {
-          name: 'fail1',
-          qty: Math.floor(Math.random() * 100 + 1),
-        },
-        {
-          name: 'fail2',
-          qty: Math.floor(Math.random() * 100 + 1),
-        },
-        {
-          name: 'fail3',
-          qty: Math.floor(Math.random() * 100 + 1),
-        },
-      ],
-    },
-  ]
-
-  const getData = () => {
-    if (name === 'web') {
-      return webData
-    }
-    return summaryData
-  }
-
-  const data = getData()
 
   const reducer = (accumulator, currentValue) => {
     return accumulator + currentValue
@@ -108,16 +66,7 @@ export function SummaryCard({ ...props }) {
 
   return (
     <Box>
-      <Box
-        w="430px"
-        rounded="lg"
-        bg="#EDEDED"
-        overflow="hidden"
-        borderColor={name === 'dashboard' ? 'black' : ''}
-        borderWidth={name === 'dashboard' ? '1' : ''}
-        // borderColor="black"
-        // borderWidth="1"
-      >
+      <Box w="430px" rounded="lg" bg="#EDEDED" overflow="hidden">
         <Box bg="#444444">
           <Text
             fontSize="xl"
@@ -165,9 +114,7 @@ export function SummaryCard({ ...props }) {
                     break
                   }
                 }
-                return (
-                  <Cell key={entry.name} dataKey={entry.name} fill={color} />
-                )
+                return <Cell dataKey={entry.name} fill={color} />
               })}
             </Pie>
             <Tooltip />
@@ -191,24 +138,21 @@ export function SummaryCard({ ...props }) {
                 color = 'gray'
                 break
             }
-            return (
-              <Badge
-                key={entry.name}
-                variantColor={color}
-                variant="solid"
-                alignItems="center"
-              >
-                <Text alignItems="center" mx="auto">
-                  {entry.name}: {entry.percent}%
-                </Text>
-              </Badge>
-            )
+            if (!(name === 'web' && entry.strength === 'moderate')) {
+              // stop moderate badge from appearing on web donuts
+              return (
+                <Badge variantColor={color} variant="solid" alignItems="center">
+                  <Text alignItems="center" mx="auto">
+                    {entry.name}: {entry.percent}%
+                  </Text>
+                </Badge>
+              )
+            }
           })}
         </Stack>
 
         <br />
 
-        {/* data box */}
         {name === 'dashboard' && (
           <Box bg="#444444">
             <Box h="1" />
@@ -239,7 +183,7 @@ export function SummaryCard({ ...props }) {
                 }
                 return entry.categories.map((category) => {
                   return (
-                    <Stack align="center" isInline key={category.name}>
+                    <Stack align="center" isInline>
                       <Text
                         p="1"
                         color="#EDEDED"

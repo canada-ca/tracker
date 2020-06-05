@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import React from 'react'
 import styled from '@emotion/styled'
 import { useTable, usePagination } from 'react-table'
@@ -8,23 +7,23 @@ import { Box, Text, Button, Stack, Select, Input } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 
 const Table = styled.table`
-width: 100%;
-border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 
-th {
-color: black;
-font-weight: bold;
-}
+  th {
+  color: black;
+  font-weight: bold;
+  }
 
-td, th {
-padding: 6px;
-border: 1px solid #ccc;
-text-align: left;
-}
-
-.title {
+  td, th {
+  padding: 6px;
+  border: 1px solid #ccc;
   text-align: center;
-}
+  }
+
+  .title {
+    text-align: center;
+  }
 
   @media only screen and (max-width: 760px) {
     table,

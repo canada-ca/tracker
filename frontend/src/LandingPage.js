@@ -4,23 +4,6 @@ import { useLingui } from '@lingui/react'
 import { Layout } from './Layout'
 import { Heading, Text, Stack } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
-import SummaryTable from './SummaryTable'
-import makeSummaryTableData from './makeSummaryTableData'
-
-const data = makeSummaryTableData(100)
-
-const columns = [
-  { Header: 'Domain', accessor: 'host_domain' },
-  { Header: 'HTTPS', accessor: 'https_result' },
-  { Header: 'HSTS', accessor: 'hsts_result' },
-  { Header: 'HSTS Preloaded', accessor: 'preloaded_result' },
-  { Header: 'SSL', accessor: 'ssl_result' },
-  { Header: 'Protocols & Ciphers', accessor: 'protocol_cipher_result' },
-  { Header: 'Approved Cert Use', accessor: 'cert_use_result' },
-  { Header: 'DMARC', accessor: 'dmarc_result' },
-  { Header: 'DKIM', accessor: 'dkim_result' },
-  { Header: 'SPF', accessor: 'spf_result' },
-]
 
 export function LandingPage() {
   const { i18n } = useLingui()
@@ -66,10 +49,11 @@ export function LandingPage() {
             )}
           />
         </Stack>
-        <SummaryTable data={data} columns={columns} mb="30px" />
       </Stack>
       <Text>
-        *All data represented in charts is mocked for demonstration purposes
+        <Trans>
+          *All data represented is mocked for demonstration purposes
+        </Trans>
       </Text>
     </Layout>
   )

@@ -7,57 +7,58 @@ import { string } from 'prop-types'
 
 export function SummaryGroup({ ...props }) {
   const { name, title, description } = props
+  const { i18n } = useLingui()
 
   const dashOverview = [
     {
-      title: 'Web Configuration',
-      description: 'Amalgomation of all web security factors',
+      title: i18n._(t`Web Configuration`),
+      description: i18n._(t`Amalgomation of all web security factors`),
     },
     {
-      title: 'Email Conifguration',
-      description: 'Amalgomation of all email security factors',
+      title: i18n._(t`Email Conifguration`),
+      description: i18n._(t`Amalgomation of all email security factors`),
     },
   ]
 
   const webOverview = [
     {
       title: 'HTTPS',
-      description: 'Domains that pass the HTTPS requirements',
+      description: 'description',
     },
     {
       title: 'HSTS',
-      description: 'Domains that pass the HSTS requirements',
+      description: 'description',
     },
     {
-      title: 'HSTS Preloaded',
-      description: 'Domains that pass the HSTS Preloaded requirements',
+      title: i18n._(t`HSTS Preloaded`),
+      description: 'description',
     },
     {
       title: 'SSL',
-      description: 'Domains that pass the SSL requirements',
+      description: 'description',
     },
     {
-      title: 'Protocols & Ciphers',
-      description: 'Domains that pass the SSL requirements',
+      title: i18n._(t`Protocols & Ciphers`),
+      description: 'description',
     },
     {
-      title: 'Approved Certificate Use',
-      description: 'Domains that pass the SSL requirements',
+      title: i18n._(t`Approved Certificate Use`),
+      description: 'description',
     },
   ]
 
   const emailOverview = [
     {
-      title: 'DMARC',
-      description: 'Domains that pass the DMARC requirements',
+      title: 'SPF',
+      description: 'description',
     },
     {
       title: 'DKIM',
-      description: 'Domains that pass the DKIM requirements',
+      description: 'description',
     },
     {
-      title: 'SPF',
-      description: 'Domains that pass the SPF requirements',
+      title: 'DMARC',
+      description: 'description',
     },
   ]
 
@@ -105,25 +106,14 @@ export function SummaryGroup({ ...props }) {
       </Text>
       <Text fontSize="lg">{description}</Text>
       <br />
-      {name !== 'web' && (
-        <SimpleGrid
-          columns={{ lg: getReportQty() }}
-          spacing="30px"
-          width="110%"
-        >
-          {createReports()}
-        </SimpleGrid>
-      )}
-      {name === 'web' && (
-        <SimpleGrid
-          columns={{ lg: getReportQty() / 2 }}
-          spacing="30px"
-          width="110%"
-        >
-          {createReports()}
-        </SimpleGrid>
-      )}
-
+      <SimpleGrid
+        columns={{ lg: name === 'web' ? getReportQty() / 2 : getReportQty() }}
+        spacing="30px"
+        width="110%"
+      >
+        {createReports()}
+      </SimpleGrid>
+      )
       <br />
     </Stack>
   )

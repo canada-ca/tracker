@@ -1,5 +1,7 @@
-// Temporary file to populate the summary table with data
-// delete file once table is connected to API
+/*
+  Temporary file to populate the summary table with data
+  delete file once table is connected to API
+*/
 
 import React from 'react'
 import { Icon } from '@chakra-ui/core'
@@ -74,6 +76,5 @@ export default function makeSummaryTableData(...lens) {
       }
     })
   }
-
   return makeDataLevel()
 }

@@ -426,26 +426,78 @@ msgstr "Create Account"
 msgid "Back"
 msgstr "Back"
 
-#: src/LandingPage.js:29
+#: src/LandingPage.js:32
 msgid "Dashboard Overview"
 msgstr "Dashboard Overview"
 
-#: src/LandingPage.js:30
+#: src/LandingPage.js:34
 msgid "Web and email security configuration of all domains"
 msgstr "Web and email security configuration of all domains"
 
-#: src/LandingPage.js:34
+#: src/LandingPage.js:39
 msgid "Web Security Overview"
 msgstr "Web Security Overview"
 
-#: src/LandingPage.js:35
+#: src/LandingPage.js:41
 msgid Key aspects of web application security of the hosts monitored by this dashboard.""
 msgstr "Key aspects of web application security of the hosts monitored by this dashboard."
 
-#: src/LandingPage.js:39
+#: src/LandingPage.js:46
 msgid "Email Security Overview"
 msgstr "Email Security Overview"
 
-#: src/LandingPage.js:40
+#: src/LandingPage.js:48
 msgid "Key aspects of email security of the hosts monitored by this dashboard."
 msgstr "Key aspects of email security of the hosts monitored by this dashboard."
+
+#: src/LandingPage.js:76
+msgid "*All data represented is mocked for demonstration purposes"
+msgstr "*All data represented is mocked for demonstration purposes"
+
+#: src/SummaryGroup.js:13
+msgid "Web Configuration"
+msgstr "Web Configuration"
+
+#: src/SummaryGroup.js:14
+msgid "Amalgomation of all web security factors"
+msgstr "Amalgomation of all web security factors"
+
+#: src/SummaryGroup.js:17
+msgid "Email Conifguration"
+msgstr "Email Conifguration"
+
+#: src/SummaryGroup.js:18
+msgid "Amalgomation of all email security factors"
+msgstr "Amalgomation of all email security factors"
+
+#: src/SummaryGroup.js:32
+msgid "HSTS Preloaded"
+msgstr "HSTS Preloaded"
+
+#: src/SummaryGroup.js:40
+msgid "Protocols & Ciphers"
+msgstr "Protocols & Ciphers"
+
+#: src/SummaryGroup.js:44
+msgid "Approved Certificate Use"
+msgstr "Approved Certificate Use"
+
+#: src/SummaryCard.js:16
+msgid "Enforced"
+msgstr "Enforced"
+
+#: src/SummaryCard.js:16
+msgid "Fully Implemented"
+msgstr "Fully Implemented"
+
+#: src/SummaryCard.js:16
+msgid "Partially Implemented"
+msgstr "Partially Implemented"
+
+#: src/SummaryCard.js:36
+msgid "Not Enforced"
+msgstr "Not Enforced"
+
+#: src/SummaryCard.js:36
+msgid "Not Implemented"
+msgstr "Not Implemented"
