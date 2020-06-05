@@ -15,101 +15,62 @@ def startup():
     logging.info(emoji.emojize("ASGI server started :rocket:"))
 
 
-def initiate(received_payload, scan_type, client):
+async def initiate_scan(payload, scanners, client):
 
     try:
-        received_dict = ast.literal_eval(received_payload)
-
-        payload = {
-            "scan_id": received_dict["scan_id"],
-            "domain": received_dict["domain"],
-        }
-
-        logging.info("Scan request parsed successfully")
-
         dispatched = {}
-        if scan_type == "web":
-            dispatched["https"] = client.post(
-                "http://127.0.0.1:8000/https", json=payload
-            )
-            dispatched["dmarc"] = client.post(
-                "http://127.0.0.1:8000/dmarc", json=payload
-            )
-            dispatched["ssl"] = client.post("http://127.0.0.1:8000/ssl", json=payload)
-        elif scan_type == "mail":
-            dispatched["dkim"] = client.post("http://127.0.0.1:8000/dkim", json=payload)
-            dispatched["dmarc"] = client.post(
-                "http://127.0.0.1:8000/dmarc", json=payload
-            )
-        else:
-            raise Exception("Invalid Scan-Type provided")
+
+        for scan_type, dispatch_function in scanners.items():
+            dispatched[scan_type] = dispatch_function(payload, client)
+
+        for key in dispatched:
+            await dispatched[key]
 
         for key, val in dispatched.items():
-            if val.text != f"Dispatched to {key} scanner":
+            if val != f"Dispatched to {key} scanner":
                 raise Exception(f"Failed to dispatch scan to {key} scanner")
 
-        return "All scans successfully dispatched to designated scanners"
+        return "Scan successfully dispatched to designated scanners"
 
     except Exception as e:
         logging.error("Failed: %s\n" % str(e))
         return f"Failed to dispatch scan to designated scanner(s): {str(e)}"
 
 
-def Server(scanners={}, default_client=requests):
+def Server(scanners, default_client=requests):
     def receive(request):
         logging.info("Request received")
         client = request.app.state.client
-        return PlainTextResponse(
-            initiate(
-                request.headers.get("Data"), request.headers.get("Scan-Type"), client
+        inbound_payload = ast.literal_eval(request.headers.get("Data"))
+        scan_type = request.headers.get("Scan-Type")
+        manual = inbound_payload["user_init"]
+
+        outbound_payload = {
+            "scan_id": inbound_payload["scan_id"],
+            "domain": inbound_payload["domain"],
+        }
+
+        logging.info("Scan request parsed successfully")
+
+        if manual is True:
+            web_scanners = {"https": scanners["https"]["manual"], "ssl": scanners["ssl"]["manual"], "dmarc": scanners["dmarc"]["manual"]}
+            mail_scanners = {"dkim": scanners["dkim"]["manual"], "dmarc": scanners["dmarc"]["manual"]}
+        else:
+            web_scanners = {"https": scanners["https"]["auto"], "ssl": scanners["ssl"]["auto"], "dmarc": scanners["dmarc"]["auto"]}
+            mail_scanners = {"dkim": scanners["dkim"]["auto"], "dmarc": scanners["dmarc"]["auto"]}
+
+        if scan_type == "web":
+            return PlainTextResponse(
+                initiate_scan(outbound_payload, web_scanners, client)
             )
-        )
-
-    async def dkim(request):
-        logging.info("DKIM scan requested")
-        try:
-            client = request.app.state.client
-            payload = await request.json()
-            scanners["dkim"](payload, client)
-        except Exception as e:
-            return PlainTextResponse(str(e))
-        return PlainTextResponse("Dispatched to dkim scanner")
-
-    async def dmarc(request):
-        logging.info("DMARC scan requested")
-        try:
-            client = request.app.state.client
-            payload = await request.json()
-            scanners["dmarc"](payload, client)
-        except Exception as e:
-            return PlainTextResponse(str(e))
-        return PlainTextResponse("Dispatched to dmarc scanner")
-
-    async def https(request):
-        logging.info("HTTPS scan requested")
-        try:
-            client = request.app.state.client
-            payload = await request.json()
-            scanners["https"](payload, client)
-        except Exception as e:
-            return PlainTextResponse(str(e))
-        return PlainTextResponse("Dispatched to https scanner")
-
-    async def ssl(request):
-        logging.info("SSL scan requested")
-        try:
-            client = request.app.state.client
-            payload = await request.json()
-            scanners["ssl"](payload, client)
-        except Exception as e:
-            return PlainTextResponse(str(e))
-        return PlainTextResponse("Dispatched to ssl scanner")
+        elif scan_type == "mail":
+            return PlainTextResponse(
+                initiate_scan(outbound_payload, mail_scanners, client)
+            )
+        else:
+            return PlainTextResponse("Invalid Scan-Type provided")
 
     routes = [
-        Route("/dkim", dkim, methods=["POST"]),
-        Route("/dmarc", dmarc, methods=["POST"]),
-        Route("/https", https, methods=["POST"]),
-        Route("/ssl", ssl, methods=["POST"]),
         Route("/receive", receive, methods=["POST"]),
     ]
 
@@ -122,9 +83,9 @@ def Server(scanners={}, default_client=requests):
 
 app = Server(
     scanners={
-        "dkim": Scanner(scan_type=scan_dkim),
-        "dmarc": Scanner(scan_type=scan_dmarc),
-        "https": Scanner(scan_type=scan_https),
-        "ssl": Scanner(scan_type=scan_ssl),
+        "dkim": {"auto": scan_dkim, "manual": manual_scan_dkim},
+        "dmarc": {"auto": scan_dmarc, "manual": manual_scan_dmarc},
+        "https": {"auto": scan_https, "manual": manual_scan_https},
+        "ssl": {"auto": scan_ssl, "manual": manual_scan_ssl},
     }
 )
