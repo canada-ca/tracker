@@ -8,19 +8,13 @@ from utils import *
 
 def test_web_scan():
     test_dmarc = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to dmarc scanner"
-        )
+        test=lambda payload, client: "Dispatched to dmarc scanner"
     )
     test_https = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to https scanner"
-        )
+        test=lambda payload, client: "Dispatched to https scanner"
     )
     test_ssl = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to ssl scanner"
-        )
+        test=lambda payload, client: "Dispatched to ssl scanner"
     )
 
     test_app = Server(
@@ -49,14 +43,10 @@ def test_web_scan():
 
 def test_mail_scan():
     test_dkim = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to dkim scanner"
-        )
+        test=lambda payload, client: "Dispatched to dkim scanner"
     )
     test_dmarc = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to dmarc scanner"
-        )
+        test=lambda payload, client: "Dispatched to dmarc scanner"
     )
 
     test_app = Server(
@@ -89,19 +79,13 @@ def test_mail_scan():
 
 def test_manual_web_scan():
     test_dmarc = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to dmarc scanner"
-        )
+        test=lambda payload, client: "Dispatched to dmarc scanner"
     )
     test_https = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to https scanner"
-        )
+        test=lambda payload, client: "Dispatched to https scanner"
     )
     test_ssl = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to ssl scanner"
-        )
+        test=lambda payload, client: "Dispatched to ssl scanner"
     )
 
     test_app = Server(
@@ -130,14 +114,10 @@ def test_manual_web_scan():
 
 def test_manual_mail_scan():
     test_dkim = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to dkim scanner"
-        )
+        test=lambda payload, client: "Dispatched to dkim scanner"
     )
     test_dmarc = stub(
-        test=lambda payload, client: PlainTextResponse(
-            "Dispatched to dmarc scanner"
-        )
+        test=lambda payload, client: "Dispatched to dmarc scanner"
     )
 
     test_app=Server(
