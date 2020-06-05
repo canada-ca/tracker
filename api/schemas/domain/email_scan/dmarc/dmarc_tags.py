@@ -31,13 +31,16 @@ class DmarcTags(SQLAlchemyObjectType):
             .get("p", {}) \
             .get("value", None)
 
-        if p_policy_tag == "missing" or p_policy_tag == "Missing":
+        if isinstance(str, p_policy_tag):
+            p_policy_tag = p_policy_tag.lower()
+
+        if p_policy_tag == "missing":
             tags.append({"dmarc3": "P-missing"})
-        elif p_policy_tag == "none" or p_policy_tag == "None":
+        elif p_policy_tag == "none":
             tags.append({"dmarc4": "P-none"})
-        elif p_policy_tag == "quarantine" or p_policy_tag == "Quarantine":
+        elif p_policy_tag == "quarantine":
             tags.append({"dmarc5": "P-quarantine"})
-        elif p_policy_tag == "reject" or p_policy_tag == "Reject":
+        elif p_policy_tag == "reject":
             tags.append({"dmarc6": "P-reject"})
 
         # Check PCT Tag
@@ -46,6 +49,9 @@ class DmarcTags(SQLAlchemyObjectType):
             .get("pct", {}) \
             .get("value", None)
 
+        if isinstance(str, pct_tag):
+            pct_tag = pct_tag.lower()
+
         if pct_tag == 100:
             tags.append({"dmarc7": "PCT-100"})
         elif 100 > pct_tag > 0:
@@ -53,9 +59,9 @@ class DmarcTags(SQLAlchemyObjectType):
                 pct_tag
             )
             tags.append({"dmarc8": pct_string})
-        elif pct_tag == "invalid" or pct_tag == "Invalid":
+        elif pct_tag == "invalid":
             tags.append({"dmarc9": "PCT-invalid"})
-        elif pct_tag == "none" or pct_tag == "None":
+        elif pct_tag == "none":
             tags.append({"dmarc20": "PCT-none=exists"})
         else:
             tags.append({"dmarc21": "PCT-0"})
@@ -65,6 +71,9 @@ class DmarcTags(SQLAlchemyObjectType):
             .get("tags", {}) \
             .get("rua", {}) \
             .get("value", None)
+
+        if isinstance(str, rua_tag):
+            rua_tag = rua_tag.lower()
 
         if rua_tag is None:
             tags.append({"dmarc12": "RUA-none"})
@@ -96,13 +105,16 @@ class DmarcTags(SQLAlchemyObjectType):
             .get("sp", {}) \
             .get("value", None)
 
-        if sp_tag == "missing" or sp_tag == "Missing":
+        if isinstance(str, sp_tag):
+            sp_tag = sp_tag.lower()
+
+        if sp_tag == "missing":
             tags.append({"dmarc16": "SP-missing"})
-        elif sp_tag == "none" or sp_tag == "None":
+        elif sp_tag == "none":
             tags.append({"dmarc17": "SP-none"})
-        elif sp_tag == "quarantine" or sp_tag == "Quarantine":
+        elif sp_tag == "quarantine":
             tags.append({"dmarc18": "SP-quarantine"})
-        elif sp_tag == "reject" or sp_tag == "Reject":
+        elif sp_tag == "reject":
             tags.append({"dmarc19": "SP-reject"})
 
         return tags
