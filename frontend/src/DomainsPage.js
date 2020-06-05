@@ -29,15 +29,9 @@ export default function DomainsPage() {
     },
   })
 
-  // XXX: 🤦
   let domains = []
   if (data && data.domains.edges) {
-    // This is all kinds of terrible
-    domains = data.domains.edges
-      .map((e) => e.node.organization)
-      .map((org) => org.domains)
-      .map((e) => e.edges)
-      .flat()
+    domains = data.domains.edges.map((e) => e.node)
   }
 
   if (loading)
@@ -58,7 +52,7 @@ export default function DomainsPage() {
             <Stack spacing={4} direction="row" flexWrap="wrap">
               <DomainList domains={domains}>
                 {(domain) => (
-                  <Domain key={domain.node.url} url={domain.node.url} />
+                  <Domain key={domain.url} url={domain.url} />
                 )}
               </DomainList>
             </Stack>

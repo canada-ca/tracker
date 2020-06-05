@@ -1,22 +1,13 @@
 import gql from 'graphql-tag'
 
 export const DOMAINS = gql`
-  query Domains($number: Int $cursor: String) {
-    domains(first: $number after: $cursor) {
+  query Domains($number: Int, $cursor: String) {
+    domains(first: $number, after: $cursor) {
       edges {
         node {
-          organization {
-            acronym
-            domains {
-              edges {
-                node {
-                  url
-                  slug
-                  lastRan
-                }
-              }
-            }
-          }
+          url
+          slug
+          lastRan
         }
       }
       pageInfo {
