@@ -47,7 +47,7 @@ def manual_scan_dmarc(payload, client):
         )
     except Exception as e:
         return str(e)
-    return "Dispatched to dkim scanner"
+    return "Dispatched to dmarc scanner"
 
 
 def manual_scan_https(payload, client):
@@ -57,7 +57,7 @@ def manual_scan_https(payload, client):
         )
     except Exception as e:
         return str(e)
-    return "Dispatched to dkim scanner"
+    return "Dispatched to https scanner"
 
 
 def manual_scan_ssl(payload, client):
@@ -67,4 +67,4 @@ def manual_scan_ssl(payload, client):
         )
     except Exception as e:
         return str(e)
-    return "Dispatched to dkim scanner"
+    return "Dispatched to ssl scanner"
