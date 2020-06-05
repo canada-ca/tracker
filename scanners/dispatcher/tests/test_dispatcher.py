@@ -1,4 +1,6 @@
 import pytest
+import asyncio
+from unittest.mock import MagicMock
 from pretend import stub
 from starlette.testclient import TestClient
 from dispatcher import Server
@@ -6,15 +8,12 @@ from utils import *
 
 
 def test_web_scan():
-    test_dmarc = stub(
-        test=lambda payload, client: "Dispatched to dmarc scanner"
-    )
-    test_https = stub(
-        test=lambda payload, client: "Dispatched to https scanner"
-    )
-    test_ssl = stub(
-        test=lambda payload, client: "Dispatched to ssl scanner"
-    )
+    test_dmarc = MagicMock(return_value=asyncio.Future())
+    test_dmarc.return_value.set_result("Dispatched to dmarc scanner")
+    test_https = MagicMock(return_value=asyncio.Future())
+    test_https.return_value.set_result("Dispatched to https scanner")
+    test_ssl = MagicMock(return_value=asyncio.Future())
+    test_ssl.return_value.set_result("Dispatched to ssl scanner")
 
     test_app = Server(
         scanners={
@@ -41,12 +40,10 @@ def test_web_scan():
 
 
 def test_mail_scan():
-    test_dkim = stub(
-        test=lambda payload, client: "Dispatched to dkim scanner"
-    )
-    test_dmarc = stub(
-        test=lambda payload, client: "Dispatched to dmarc scanner"
-    )
+    test_dmarc = MagicMock(return_value=asyncio.Future())
+    test_dmarc.return_value.set_result("Dispatched to dmarc scanner")
+    test_dkim = MagicMock(return_value=asyncio.Future())
+    test_dkim.return_value.set_result("Dispatched to dkim scanner")
 
     test_app = Server(
         scanners={
@@ -77,15 +74,12 @@ def test_mail_scan():
 
 
 def test_manual_web_scan():
-    test_dmarc = stub(
-        test=lambda payload, client: "Dispatched to dmarc scanner"
-    )
-    test_https = stub(
-        test=lambda payload, client: "Dispatched to https scanner"
-    )
-    test_ssl = stub(
-        test=lambda payload, client: "Dispatched to ssl scanner"
-    )
+    test_dmarc = MagicMock(return_value=asyncio.Future())
+    test_dmarc.return_value.set_result("Dispatched to dmarc scanner")
+    test_https = MagicMock(return_value=asyncio.Future())
+    test_https.return_value.set_result("Dispatched to https scanner")
+    test_ssl = MagicMock(return_value=asyncio.Future())
+    test_ssl.return_value.set_result("Dispatched to ssl scanner")
 
     test_app = Server(
         scanners={
@@ -112,12 +106,10 @@ def test_manual_web_scan():
 
 
 def test_manual_mail_scan():
-    test_dkim = stub(
-        test=lambda payload, client: "Dispatched to dkim scanner"
-    )
-    test_dmarc = stub(
-        test=lambda payload, client: "Dispatched to dmarc scanner"
-    )
+    test_dmarc = MagicMock(return_value=asyncio.Future())
+    test_dmarc.return_value.set_result("Dispatched to dmarc scanner")
+    test_dkim = MagicMock(return_value=asyncio.Future())
+    test_dkim.return_value.set_result("Dispatched to dkim scanner")
 
     test_app=Server(
         scanners={
