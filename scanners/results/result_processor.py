@@ -116,7 +116,7 @@ Scans = sqlalchemy.Table(
     sqlalchemy.Column("scan_date", sqlalchemy.DateTime),
     sqlalchemy.Column(
         "initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")
-    )
+    ),
 )
 
 Dmarc_scans = sqlalchemy.Table(

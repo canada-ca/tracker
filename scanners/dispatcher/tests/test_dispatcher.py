@@ -111,7 +111,7 @@ def test_manual_mail_scan():
     test_dkim = MagicMock(return_value=asyncio.Future())
     test_dkim.return_value.set_result("Dispatched to dkim scanner")
 
-    test_app=Server(
+    test_app = Server(
         scanners={
             "dkim": {"auto": scan_dkim, "manual": test_dkim},
             "dmarc": {"auto": scan_dmarc, "manual": test_dmarc},

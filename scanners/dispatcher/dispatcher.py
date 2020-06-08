@@ -53,11 +53,25 @@ def Server(scanners, default_client=requests):
         logging.info("Scan request parsed successfully")
 
         if manual is True:
-            web_scanners = {"https": scanners["https"]["manual"], "ssl": scanners["ssl"]["manual"], "dmarc": scanners["dmarc"]["manual"]}
-            mail_scanners = {"dkim": scanners["dkim"]["manual"], "dmarc": scanners["dmarc"]["manual"]}
+            web_scanners = {
+                "https": scanners["https"]["manual"],
+                "ssl": scanners["ssl"]["manual"],
+                "dmarc": scanners["dmarc"]["manual"],
+            }
+            mail_scanners = {
+                "dkim": scanners["dkim"]["manual"],
+                "dmarc": scanners["dmarc"]["manual"],
+            }
         else:
-            web_scanners = {"https": scanners["https"]["auto"], "ssl": scanners["ssl"]["auto"], "dmarc": scanners["dmarc"]["auto"]}
-            mail_scanners = {"dkim": scanners["dkim"]["auto"], "dmarc": scanners["dmarc"]["auto"]}
+            web_scanners = {
+                "https": scanners["https"]["auto"],
+                "ssl": scanners["ssl"]["auto"],
+                "dmarc": scanners["dmarc"]["auto"],
+            }
+            mail_scanners = {
+                "dkim": scanners["dkim"]["auto"],
+                "dmarc": scanners["dmarc"]["auto"],
+            }
 
         if scan_type == "web":
             return PlainTextResponse(
