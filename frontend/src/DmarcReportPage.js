@@ -151,6 +151,25 @@ export function DmarcReportPage() {
 
   const categoryTotals = doughnutData.getDmarcReportDoughnut.categoryTotals
 
+  const reportCardData = doughnutData.getDmarcReportDoughnut
+
+  const strengths = {
+    strong: {
+      types: ['dmarcFailReject', 'spfPassDkimPass'],
+      name: 'Pass',
+    },
+    moderate: {
+      types: ['dmarcFailQuarantine', 'spfFailDkimPass', 'spfPassDkimFail'],
+      name: 'Partial Pass',
+    },
+    weak: {
+      types: ['dmarcFailNone'],
+      name: 'Fail',
+    },
+  }
+
+  reportCardData.strengths = strengths
+
   const strong = (({ spfPassDkimPass }) => ({
     spfPassDkimPass,
   }))(categoryTotals)
@@ -344,7 +363,7 @@ export function DmarcReportPage() {
           <SummaryCard
             title="DMARC Report"
             description="Description of DMARC report"
-            data={cardData}
+            data={reportCardData}
             slider={false}
             width={cardWidth}
             mx="auto"

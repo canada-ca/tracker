@@ -432,12 +432,12 @@ type DmarcReportDoughnut {
   """
   Which month is the data based on.
   """
-  month: String
+  month: String @examples(values: ["LAST30DAYS"])
 
   """
   Which year the data is from.
   """
-  year: Int
+  year: Int @examples(values: [2019, 2020])
 
   """
   Category totals for building dmarc report page doughnuts.

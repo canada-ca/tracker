@@ -1,36 +1,26 @@
 import React, { useEffect, useRef } from 'react'
 import { Text, Stack, Box, Badge } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { string, array, bool, number } from 'prop-types'
+import { string, object, bool } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 
 function SummaryCard({ ...props }) {
   const { title, description, data, slider } = props
 
-  const reducer = (accumulator, currentValue) => {
-    return accumulator + currentValue
-  }
-
-  data.forEach((entry) => {
-    entry.value = entry.categories
-      .map((category) => category.qty)
-      .reduce(reducer)
-  })
-
-  const totalQty = data
-    .map((entry) => {
-      return entry.value
+  // Find total and percentage for each strength category
+  Object.values(data.strengths).forEach((strength) => {
+    strength.value = 0
+    strength.types.forEach((type) => {
+      if (Object.keys(data.categoryTotals).includes(type))
+        strength.value += data.categoryTotals[type]
     })
-    .reduce(reducer)
-
-  data.forEach((entry) => {
-    entry.percent = Math.round((entry.value / totalQty) * 100 * 10) / 10
+    strength.percent =
+      Math.round((strength.value / data.categoryTotals.total) * 100 * 10) / 10
   })
 
+  // This block will allow the donut to be as large as possible
   const ref = useRef(null)
-
   const [parentWidth, setParentWidth] = React.useState(0)
-
   useEffect(() => {
     if (ref.current) {
       setParentWidth(ref.current.offsetWidth)
@@ -57,7 +47,7 @@ function SummaryCard({ ...props }) {
         <ResponsiveContainer width="100%" height={parentWidth}>
           <PieChart>
             <Pie
-              data={data}
+              data={Object.values(data.strengths)}
               cx="50%"
               cy="50%"
               innerRadius="50%"
@@ -65,9 +55,9 @@ function SummaryCard({ ...props }) {
               paddingAngle={2}
               dataKey="value"
             >
-              {data.map((entry) => {
+              {Object.entries(data.strengths).map(([key, _value]) => {
                 let color
-                switch (entry.strength) {
+                switch (key) {
                   case 'strong': {
                     color = '#2D8133'
                     break
@@ -85,16 +75,16 @@ function SummaryCard({ ...props }) {
                     break
                   }
                 }
-                return <Cell dataKey={entry.name} fill={color} />
+                return <Cell dataKey={key} fill={color} />
               })}
             </Pie>
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>
 
-        {data.map((entry) => {
+        {Object.entries(data.strengths).map(([key, value]) => {
           let color
-          switch (entry.strength) {
+          switch (key) {
             case 'strong':
               color = 'green'
               break
@@ -117,7 +107,7 @@ function SummaryCard({ ...props }) {
               mx="auto"
             >
               <Text alignItems="center">
-                {entry.name}: {entry.percent}%
+                {value.name}: {value.percent}%
               </Text>
             </Badge>
           )
@@ -172,7 +162,7 @@ function SummaryCard({ ...props }) {
 SummaryCard.propTypes = {
   title: string.isRequired,
   description: string.isRequired,
-  data: array.isRequired,
+  data: object.isRequired,
   slider: bool,
 }
 
