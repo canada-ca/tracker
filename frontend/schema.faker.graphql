@@ -1807,7 +1807,7 @@ type UserPage implements Node {
   """
   Indicates the preferred language of this user
   """
-  lang: String @examples(values: ["ENGLSIH", "FRENCH"])
+  lang: String @examples(values: ["ENGLISH", "FRENCH"])
 
   """
   Indicates wether or not this user has enabled tfa
