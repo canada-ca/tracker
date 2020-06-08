@@ -17,7 +17,7 @@ class DkimTags(SQLAlchemyObjectType):
     def resolve_value(self: Dkim_scans, info):
         tags = []
 
-        if self.dkim_scan.get("missing", None) is not None:
+        if self.dkim_scan.get("dkim", {}).get("missing", None) is not None:
             return tags.append({"dkim2": "missing"})
 
         # Get Key Size, and Key Type

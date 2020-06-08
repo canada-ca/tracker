@@ -21,7 +21,7 @@ class DmarcTags(SQLAlchemyObjectType):
     def resolve_value(self: Dmarc_scans, info):
         tags = []
 
-        if self.dmarc_scan.get("missing", None) is not None:
+        if self.dmarc_scan.get("dmarc", {}).get("missing", None) is not None:
             tags.append({"dmarc2": "missing"})
             return tags
 

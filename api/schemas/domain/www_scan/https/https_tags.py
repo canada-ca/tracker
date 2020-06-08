@@ -20,7 +20,7 @@ class HTTPSTags(SQLAlchemyObjectType):
     def resolve_value(self: Https_scans, info):
         tags = []
 
-        if self.https_scan.get("missing", None) is not None:
+        if self.https_scan.get("https", {}).get("missing", None) is not None:
             return tags.append({"https2": "missing"})
 
         # Implementation

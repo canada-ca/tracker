@@ -21,7 +21,7 @@ class SPFTags(SQLAlchemyObjectType):
     def resolve_value(self: Spf_scans, info):
         tags = []
 
-        if self.spf_scan.get("missing", None) is not None:
+        if self.spf_scan.get("spf", {}).get("missing", None) is not None:
             return tags.append({"spf2": "missing"})
 
         # Check all tag
