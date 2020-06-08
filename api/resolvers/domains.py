@@ -118,8 +118,9 @@ def resolve_domains(self, info, **kwargs):
             query_rtr = []
             for org_id in org_ids:
                 if is_user_read(user_roles=user_roles, org_id=org_id):
-                    tmp_query = query.filter(Domains.organization_id == org_id).first()
-                    query_rtr.append(tmp_query)
+                    tmp_query = query.filter(Domains.organization_id == org_id).all()
+                    for item in tmp_query:
+                        query_rtr.append(item)
             if not query_rtr:
                 raise GraphQLError("Error, no domains to display")
             return query_rtr

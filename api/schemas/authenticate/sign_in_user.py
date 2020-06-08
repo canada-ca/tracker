@@ -42,8 +42,13 @@ def sign_in_user(user_name, password):
 
         user.failed_login_attempts = 0
         user.failed_login_attempt_time = 0
-        db_session.add(user)
-        db_session.commit()
+        try:
+            db_session.add(user)
+            db_session.commit()
+        except Exception as e:
+            db_session.rollback()
+            db_session.flush()
+            raise GraphQLError(str(e))
 
         return {
             "auth_token": tokenize(user_id=user.id),
@@ -57,7 +62,12 @@ def sign_in_user(user_name, password):
 
         user.failed_login_attempts = user.failed_login_attempts + 1
         user.failed_login_attempt_time = time_stamp
-        db_session.add(user)
-        db_session.commit()
+        try:
+            db_session.add(user)
+            db_session.commit()
+        except Exception as e:
+            db_session.rollback()
+            db_session.flush()
+            raise GraphQLError(str(e))
 
         raise GraphQLError(error_invalid_credentials())

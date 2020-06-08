@@ -66,10 +66,7 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
                 )
 
             # Get user id
-            user_id = (
-                db_session.query(User).filter(User.user_name == user_name).first().id
-            )
-            auth_token = tokenize(user_id=user_id)
+            auth_token = tokenize(user_id=user.id)
 
             return {"auth_token": auth_token, "user": user}
 
