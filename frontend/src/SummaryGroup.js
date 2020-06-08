@@ -9,6 +9,44 @@ export function SummaryGroup({ ...props }) {
   const { name, title, description } = props
   const { i18n } = useLingui()
 
+  // randomized data used to populate charts before API is connected
+  function makeData() {
+    return [
+      {
+        strength: 'strong',
+        name:
+          name === 'web' ? i18n._(t`Enforced`) : i18n._(t`Fully Implemented`),
+        categories: [
+          {
+            name: 'pass_conditon',
+            qty: Math.floor(Math.random() * 1000 + 1),
+          },
+        ],
+      },
+      {
+        strength: 'moderate',
+        name: i18n._(t`Partially Implemented`),
+        categories: [
+          {
+            name: 'partial_pass',
+            qty: name === 'web' ? null : Math.floor(Math.random() * 300 + 1),
+          },
+        ],
+      },
+      {
+        strength: 'weak',
+        name:
+          name === 'web' ? i18n._(t`Not Enforced`) : i18n._(t`Not Implemented`),
+        categories: [
+          {
+            name: 'fail_condition',
+            qty: Math.floor(Math.random() * 300 + 1),
+          },
+        ],
+      },
+    ]
+  }
+
   const dashOverview = [
     {
       title: i18n._(t`Web Configuration`),
@@ -92,6 +130,7 @@ export function SummaryGroup({ ...props }) {
             name={name}
             title={reportData[i].title}
             description={reportData[i].description}
+            data={makeData()}
           />
         </Stack>,
       )

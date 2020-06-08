@@ -482,22 +482,22 @@ msgstr "Protocols & Ciphers"
 msgid "Approved Certificate Use"
 msgstr "Approved Certificate Use"
 
-#: src/SummaryCard.js:16
+#: src/SummaryGroup.js:18
 msgid "Enforced"
 msgstr "Enforced"
 
-#: src/SummaryCard.js:16
+#: src/SummaryGroup.js:18
 msgid "Fully Implemented"
 msgstr "Fully Implemented"
 
-#: src/SummaryCard.js:16
+#: src/SummaryGroup.js:28
 msgid "Partially Implemented"
 msgstr "Partially Implemented"
 
-#: src/SummaryCard.js:36
+#: src/SummaryGroup.js:39
 msgid "Not Enforced"
 msgstr "Not Enforced"
 
-#: src/SummaryCard.js:36
+#: src/SummaryGroup.js:39
 msgid "Not Implemented"
 msgstr "Not Implemented"

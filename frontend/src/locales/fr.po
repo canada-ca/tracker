@@ -486,22 +486,22 @@ msgstr "Protocoles et codes"
 msgid "Approved Certificate Use"
 msgstr "Utilisation de certificats approuvés"
 
-#: src/SummaryCard.js:16
+#: src/SummaryGroup.js:18
 msgid "Enforced"
 msgstr "Mise en œuvre"
 
-#: src/SummaryCard.js:16
+#: src/SummaryGroup.js:18
 msgid "Fully Implemented"
 msgstr "Entièrement mis en œuvre"
 
-#: src/SummaryCard.js:26
+#: src/SummaryGroup.js:28
 msgid "Partially Implemented"
 msgstr "Partiellement mis en œuvre
 
-#: src/SummaryCard.js:37
+#: src/SummaryGroup.js:39
 msgid "Not Enforced"
 msgstr "Non appliqué"
 
-#: src/SummaryCard.js:37
+#: src/SummaryGroup.js:39
 msgid "Not Implemented"
 msgstr "Pas entièrement mis en œuvre"
