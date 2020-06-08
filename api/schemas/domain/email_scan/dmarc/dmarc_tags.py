@@ -22,7 +22,7 @@ class DmarcTags(SQLAlchemyObjectType):
         tags = []
 
         if self.dmarc_scan.get("dmarc", {}).get("missing", None) is not None:
-            tags.append({"dmarc2": "missing"})
+            tags.append({"dmarc2": "DMARC-missing"})
             return tags
 
         # Check P Policy Tag
@@ -51,20 +51,20 @@ class DmarcTags(SQLAlchemyObjectType):
 
         if isinstance(pct_tag, str):
             pct_tag = pct_tag.lower()
-
-        if pct_tag == 100:
-            tags.append({"dmarc7": "PCT-100"})
-        elif 100 > pct_tag > 0:
-            pct_string = "PCT-" + str(
-                pct_tag
-            )
-            tags.append({"dmarc8": pct_string})
-        elif pct_tag == "invalid":
-            tags.append({"dmarc9": "PCT-invalid"})
-        elif pct_tag == "none":
-            tags.append({"dmarc20": "PCT-none-exists"})
-        else:
-            tags.append({"dmarc21": "PCT-0"})
+            if pct_tag == "invalid":
+                tags.append({"dmarc9": "PCT-invalid"})
+            elif pct_tag == "none":
+                tags.append({"dmarc20": "PCT-none-exists"})
+        elif isinstance(pct_tag, int):
+            if pct_tag == 100:
+                tags.append({"dmarc7": "PCT-100"})
+            elif 100 > pct_tag > 0:
+                pct_string = "PCT-" + str(
+                    pct_tag
+                )
+                tags.append({"dmarc8": pct_string})
+            else:
+                tags.append({"dmarc21": "PCT-0"})
 
         # Check RUA Tag
         rua_tag = self.dmarc_scan.get("dmarc", {}) \
@@ -75,7 +75,7 @@ class DmarcTags(SQLAlchemyObjectType):
         if isinstance(rua_tag, str):
             rua_tag = rua_tag.lower()
 
-        if rua_tag is None:
+        if rua_tag is None or not rua_tag:
             tags.append({"dmarc12": "RUA-none"})
         else:
             for value in rua_tag:
@@ -90,7 +90,7 @@ class DmarcTags(SQLAlchemyObjectType):
             .get("ruf", {}) \
             .get("value", None)
 
-        if ruf_tag is None:
+        if ruf_tag is None or not ruf_tag:
             tags.append({"dmarc13": "RUF-none"})
         else:
             for value in ruf_tag:
