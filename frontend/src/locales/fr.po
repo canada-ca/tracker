@@ -429,3 +429,79 @@ msgstr "Créer un compte"
 #: src/CreateUserPage.js:89
 msgid "Back"
 msgstr "Retour"
+
+#: src/LandingPage.js:32
+msgid "Dashboard Overview"
+msgstr "Vue d'ensemble du tableau de bord"
+
+#: src/LandingPage.js:34
+msgid "Web and email security configuration of all domains"
+msgstr "Configuration de la sécurité du web et du courrier électronique de tous les domaines"
+
+#: src/LandingPage.js:39
+msgid "Web Security Overview"
+msgstr "Aperçu de la sécurité du Web"
+
+#: src/LandingPage.js:41
+msgid "Key aspects of web application security of the hosts monitored by this dashboard."
+msgstr "Les principaux aspects de la sécurité des applications web des hôtes surveillés par ce tableau de bord."
+
+#: src/LandingPage.js:46
+msgid "Email Security Overview"
+msgstr "Aperçu de la sécurité du courrier électronique"
+
+#: src/LandingPage.js:48
+msgid "Key aspects of email security of the hosts monitored by this dashboard."
+msgstr "Les principaux aspects de la sécurité du courrier électronique des hôtes surveillés par ce tableau de bord."
+
+#: src/LandingPage.js:76
+msgid "*All data represented is mocked for demonstration purposes"
+msgstr "*Toutes les données représentées sont simulées à des fins de démonstration"
+
+#: src/SummaryGroup.js:14
+msgid "Web Configuration"
+msgstr "Configuration Web"
+
+#: src/SummaryGroup.js:15
+msgid "Amalgomation of all web security factors"
+msgstr "Amalgame de tous les facteurs de sécurité du web"
+
+#: src/SummaryGroup.js:18
+msgid "Email Conifguration"
+msgstr "Conifguration du courrier électronique"
+
+#: src/SummaryGroup.js:19
+msgid "Amalgomation of all email security factors"
+msgstr "Amalgame de tous les facteurs de sécurité du courrier électronique"
+
+#: src/SummaryGroup.js:33
+msgid "HSTS Preloaded"
+msgstr "HSTS préchargé"
+
+#: src/SummaryGroup.js:41
+msgid "Protocols & Ciphers"
+msgstr "Protocoles et codes"
+
+#: src/SummaryGroup.js:45
+msgid "Approved Certificate Use"
+msgstr "Utilisation de certificats approuvés"
+
+#: src/SummaryCard.js:16
+msgid "Enforced"
+msgstr "Mise en œuvre"
+
+#: src/SummaryCard.js:16
+msgid "Fully Implemented"
+msgstr "Entièrement mis en œuvre"
+
+#: src/SummaryCard.js:26
+msgid "Partially Implemented"
+msgstr "Partiellement mis en œuvre
+
+#: src/SummaryCard.js:37
+msgid "Not Enforced"
+msgstr "Non appliqué"
+
+#: src/SummaryCard.js:37
+msgid "Not Implemented"
+msgstr "Pas entièrement mis en œuvre"
