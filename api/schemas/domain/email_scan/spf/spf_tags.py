@@ -33,23 +33,29 @@ class SPFTags(SQLAlchemyObjectType):
             all_tag = all_tag.lower()
 
         if all_tag == "missing":
-            tags.append({"spf3": "ALL-missing"})
+            tags.append({"spf4": "ALL-missing"})
         elif all_tag == "allow":
-            tags.append({"spf4": "ALL-allow"})
+            tags.append({"spf5": "ALL-allow"})
         elif all_tag == "neutral":
-            tags.append({"spf5": "ALL-neutral"})
+            tags.append({"spf6": "ALL-neutral"})
         elif all_tag == "redirect":
-            tags.append({"spf8": "ALL-redirect"})
+            tags.append({"spf9": "ALL-redirect"})
         elif all_tag == "fail":
             record_all_tag = self.spf_scan.get("spf", {}) \
                                  .get("record", "")[-4:].lower()
             if record_all_tag == "-all":
-                tags.append({"spf7": "ALL-hardfail"})
+                tags.append({"spf8": "ALL-hardfail"})
             elif record_all_tag == "~all":
-                tags.append({"spf6": "ALL-softfail"})
+                tags.append({"spf7": "ALL-softfail"})
+
+        # All tag check
+        record_all_tag = self.spf_scan.get("spf", {}) \
+            .get("record", "")[-4:].lower()
+        if record_all_tag == "-all":
+            tags.append({"spf10": "A-all"})
 
         dns_lookups = self.spf_scan.get("spf", {}).get("dns_lookups", 0)
         if dns_lookups > 10:
-            tags.append({"spf10": "INCLUDE-limit"})
+            tags.append({"spf11": "INCLUDE-limit"})
 
         return tags

@@ -62,7 +62,7 @@ class DmarcTags(SQLAlchemyObjectType):
         elif pct_tag == "invalid":
             tags.append({"dmarc9": "PCT-invalid"})
         elif pct_tag == "none":
-            tags.append({"dmarc20": "PCT-none=exists"})
+            tags.append({"dmarc20": "PCT-none-exists"})
         else:
             tags.append({"dmarc21": "PCT-0"})
 
