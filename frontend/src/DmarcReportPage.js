@@ -8,7 +8,7 @@ import {
   GET_DKIM_FAILURES,
   GET_DKIM_MISALIGN,
   GET_DMARC_FAILURES,
-  GET_YEARLY_REPORT,
+  GET_DMARC_REPORT_BAR_GRAPH,
   GET_DMARC_REPORT_DOUGHNUT,
   GET_YEARLY_DMARC_REPORT_SUMMARIES,
 } from './graphql/queries'
@@ -37,8 +37,8 @@ export function DmarcReportPage() {
   const {
     loading: yearlyLoading,
     error: yearlyError,
-    data: yearlyData,
-  } = useQuery(GET_YEARLY_DMARC_REPORT_SUMMARIES, {
+    data: barData,
+  } = useQuery(GET_DMARC_REPORT_BAR_GRAPH, {
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -149,10 +149,6 @@ export function DmarcReportPage() {
   )
     return <p>Error</p>
 
-  const categoryTotals = doughnutData.getDmarcReportDoughnut.categoryTotals
-
-  const reportCardData = doughnutData.getDmarcReportDoughnut
-
   const strengths = {
     strong: {
       types: ['dmarcFailReject', 'spfPassDkimPass'],
@@ -168,46 +164,15 @@ export function DmarcReportPage() {
     },
   }
 
+  const reportCardData = doughnutData.getDmarcReportDoughnut
   reportCardData.strengths = strengths
 
-  const strong = (({ spfPassDkimPass }) => ({
-    spfPassDkimPass,
-  }))(categoryTotals)
+  const formattedBarData = { periods: barData.getDmarcReportBarGraph.map((entry) => {
+    return { month: entry.month, year: entry.year, ...entry.categoryTotals }
+  }) }
+  formattedBarData.strengths = strengths
 
-  const moderate = (({ spfFailDkimPass, spfPassDkimFail }) => ({
-    spfFailDkimPass,
-    spfPassDkimFail,
-  }))(categoryTotals)
-
-  const weak = (({ dmarcFailNone, dmarcFailQuarantine, dmarcFailReject }) => ({
-    dmarcFailNone,
-    dmarcFailQuarantine,
-    dmarcFailReject,
-  }))(categoryTotals)
-
-  const getNameQtyPair = (categoryPair) => {
-    return Object.keys(categoryPair).map((key) => {
-      return { name: key, qty: categoryPair[key] }
-    })
-  }
-
-  const cardData = [
-    {
-      strength: 'strong',
-      name: 'Pass',
-      categories: getNameQtyPair(strong),
-    },
-    {
-      strength: 'moderate',
-      name: 'Partial pass',
-      categories: getNameQtyPair(moderate),
-    },
-    {
-      strength: 'weak',
-      name: 'All fail',
-      categories: getNameQtyPair(weak),
-    },
-  ]
+  console.log(formattedBarData)
 
   const [
     sourceIp,
@@ -338,10 +303,6 @@ export function DmarcReportPage() {
     },
   ]
 
-  const barData = yearlyData.getYearlyDmarcReportSummaries.map((entry) => {
-    return { month: entry.month, year: entry.year, ...entry.categoryTotal }
-  })
-
   const cardWidth =
     window.innerWidth < 500
       ? '100%'
@@ -368,7 +329,11 @@ export function DmarcReportPage() {
             width={cardWidth}
             mx="auto"
           />
-          <DmarcTimeGraph data={barData} width={timeGraphWidth} mx="auto" />
+          <DmarcTimeGraph
+            data={formattedBarData}
+            width={timeGraphWidth}
+            mx="auto"
+          />
         </Stack>
         <DmarcReportTable
           data={alignIpData.getAlignedByIp}

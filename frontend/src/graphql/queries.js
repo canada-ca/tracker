@@ -167,6 +167,24 @@ export const GET_YEARLY_DMARC_REPORT_SUMMARIES = gql`
   }
 `
 
+export const GET_DMARC_REPORT_BAR_GRAPH = gql`
+  query GetDmarcReportBarGraph($domainSlug: Slug!) {
+    getDmarcReportBarGraph(domainSlug: $domainSlug) {
+      month
+      year
+      categoryTotals {
+        dmarcFailNone
+        spfFailDkimPass
+        spfPassDkimPass
+        spfPassDkimFail
+        dmarcFailQuarantine
+        dmarcFailReject
+        total
+      }
+    }
+  }
+`
+
 export const GET_DMARC_REPORT_DOUGHNUT = gql`
   query GetDmarcReportDoughnut(
     $domainSlug: Slug!

@@ -380,12 +380,12 @@ type DmarcReportBarGraph {
   """
   The month that the data is related to.
   """
-  month: String
+  month: Month
 
   """
   The year that the data is related to.
   """
-  year: Int
+  year: Int @examples(values: [2019, 2020])
 
   """
   Category totals for building dmarc report page bar graph.
@@ -1330,7 +1330,7 @@ type Query {
     The sluified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug
-  ): [DmarcReportBarGraph]
+  ): [DmarcReportBarGraph]  @listLength(min: 12, max: 12)
 
   """
   Query used for gathering data for dmarc report detail tables.

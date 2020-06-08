@@ -10,15 +10,17 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
-import { array } from 'prop-types'
+import { object } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 
 function DmarcTimeGraph({ data }) {
+  const { periods, strengths } = data
+
   return (
     <ResponsiveContainer height={500}>
       <BarChart
         barSize="30px"
-        data={data}
+        data={periods}
         margin={{
           top: 25,
           bottom: 25,
@@ -31,19 +33,29 @@ function DmarcTimeGraph({ data }) {
           align="center"
           margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
         />
-        <Bar dataKey="spfPassDkimPass" stackId="a" fill="#2D8133" />
-        <Bar dataKey="spfFailDkimPass" stackId="a" fill="#ffbf47" />
-        <Bar dataKey="spfPassDkimFail" stackId="a" fill="#ffbf47" />
-        <Bar dataKey="dmarcFailNone" stackId="a" fill="#e53e3e" />
-        <Bar dataKey="dmarcFailQuarantine" stackId="a" fill="#e53e3e" />
-        <Bar dataKey="dmarcFailReject" stackId="a" fill="#e53e3e" />
+        {Object.entries(strengths).map(([strengthName, strengthDetails]) => {
+          let color
+          switch (strengthName) {
+            case 'strong':
+              color = '#2D8133'
+              break
+            case 'moderate':
+              color = '#ffbf47'
+              break
+            case 'weak':
+              color = '#e53e3e'
+          }
+          return strengthDetails.types.map((type) => {
+            return <Bar dataKey={type} stackId="a" fill={color} />
+          })
+        })}
       </BarChart>
     </ResponsiveContainer>
   )
 }
 
 DmarcTimeGraph.propTypes = {
-  data: array.isRequired,
+  data: object.isRequired,
 }
 
 export default WithPseudoBox(DmarcTimeGraph)
