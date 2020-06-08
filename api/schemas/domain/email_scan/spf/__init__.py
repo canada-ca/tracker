@@ -34,7 +34,7 @@ class SPF(SQLAlchemyObjectType):
         description="Instruction of what a recipient should do if there is "
         "not a match to your SPF record. "
     )
-    spf_guidance_tags = graphene.List(
+    spf_guidance_tags = graphene.Field(
         lambda: SPFTags, description="Key tags found during SPF scan"
     )
 
@@ -60,4 +60,4 @@ class SPF(SQLAlchemyObjectType):
             return self.spf_scan["spf"]["parsed"]["all"]
 
     def resolve_spf_guidance_tags(self: Spf_scans, info):
-        return SPFTags.get_query(info).all()
+        return SPFTags.get_query(info).first()

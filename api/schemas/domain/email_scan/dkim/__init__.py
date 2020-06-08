@@ -28,7 +28,7 @@ class DKIM(SQLAlchemyObjectType):
         description="DKIM record retrieved during the scan of the " "given domain "
     )
     key_length = graphene.String(description="Length of DKIM public key")
-    dkim_guidance_tags = graphene.List(
+    dkim_guidance_tags = graphene.Field(
         lambda: DkimTags, description="Key tags found during scan"
     )
 
@@ -45,4 +45,4 @@ class DKIM(SQLAlchemyObjectType):
         return self.dkim_scan["dkim"]["key_size"]
 
     def resolve_dkim_guidance_tags(self, info):
-        return DkimTags.get_query(info).all()
+        return DkimTags.get_query(info).first()
