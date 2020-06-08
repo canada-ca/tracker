@@ -23,6 +23,18 @@ class SSLTags(SQLAlchemyObjectType):
         if self.ssl_scan.get("missing", None) is not None:
             return tags.append({"ssl2": "missing"})
 
+        # SSL-rc4
+        ssl_rc4 = self.get('ssl', {}) \
+            .get("rc4", None)
+        if ssl_rc4:
+            tags.append({"ssl4": "SSL-rc4"})
+
+        # SSL-3des
+        ssl_3des = self.get('ssl', {}) \
+            .get("3des", None)
+        if ssl_3des:
+            tags.append({"ssl5": "SSL-3des"})
+
         # Signature Algorithm
         signature_algorithm = self.ssl_scan.get("ssl", {}) \
             .get("signature_algorithm", None)
@@ -52,37 +64,3 @@ class SSLTags(SQLAlchemyObjectType):
             tags.append({"ssl10": "Vulnerability-ccs-injection"})
 
         return tags
-
-# {
-#     "ssl": {
-#         "rc4": true,
-#         "3des": true,
-#         "SSL_2_0": false,
-#         "SSL_3_0": false,
-#         "TLS_1_0": false,
-#         "TLS_1_1": true,
-#         "TLS_1_2": true,
-#         "TLS_1_3": false,
-#         "heartbleed": false,
-#         "weak_ciphers": [
-#             "TLS_RSA_WITH_RC4_128_SHA",
-#             "TLS_RSA_WITH_RC4_128_MD5",
-#             "TLS_RSA_WITH_AES_256_CBC_SHA",
-#             "TLS_RSA_WITH_AES_128_CBC_SHA",
-#             "TLS_RSA_WITH_3DES_EDE_CBC_SHA"
-#         ],
-#         "strong_ciphers": [
-#
-#         ],
-#         "preferred_cipher": null,
-#         "acceptable_ciphers": [
-#             "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-#             "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
-#             "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
-#             "TLS_DHE_RSA_WITH_AES_128_CBC_SHA"
-#         ],
-#         "signature_algorithm": "SHA256",
-#         "openssl_ccs_injection": false,
-#         "acceptable_certificate": true
-#     }
-# }
