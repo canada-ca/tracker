@@ -18,7 +18,9 @@ class DkimTags(SQLAlchemyObjectType):
         tags = []
 
         if self.dkim_scan.get("dkim", {}).get("missing", None) is not None:
-            return tags.append({"dkim2": "missing"})
+            print("WHY WONT THIS WORK")
+            tags.append({"dkim2": "DKIM-missing"})
+            return tags
 
         # Get Key Size, and Key Type
         key_size = self.dkim_scan.get("dkim", {}) \
@@ -26,17 +28,24 @@ class DkimTags(SQLAlchemyObjectType):
         key_type = self.dkim_scan.get("dkim", {}) \
             .get("key_type", None)
 
-        if key_size >= 2048 and key_type == "rsa":
-            tags.append({"dkim5": "P-2048"})
-        elif key_size == 1024 and key_type == "rsa":
-            tags.append({"dkim4": "P-1024"})
-        elif key_size < 1024 and key_type == "rsa":
-            tags.append({"dkim3": "P-sub1024"})
+        if key_size is None:
+            tags.append({"dkim9": "P-invalid"})
+        elif key_type is None:
+            tags.append({"dkim9": "P-invalid"})
         else:
-            tags.append({"dkim6": "P-invalid"})
+            if key_size >= 4096 and key_type == "rsa":
+                tags.append({"dkim8": "P-4096"})
+            elif key_size >= 2048 and key_type == "rsa":
+                tags.append({"dkim7": "P-2048"})
+            elif key_size == 1024 and key_type == "rsa":
+                tags.append({"dkim6": "P-1024"})
+            elif key_size < 1024 and key_type == "rsa":
+                tags.append({"dkim5": "P-sub1024"})
+            else:
+                tags.append({"dkim9": "P-invalid"})
 
         # Update Recommended
-        key_invalid = self.get("dkim", {}) \
+        key_invalid = self.dkim_scan.get("dkim", {}) \
             .get("update-recommend", None)
 
         if key_invalid:
@@ -58,11 +67,11 @@ class DkimTags(SQLAlchemyObjectType):
         k_tag = self.dkim_scan.get("dkim", {}) \
             .get("txt_record", {}) \
             .get("k", None)
-        p_tag = self.get("dkim", {}) \
+        p_tag = self.dkim_scan.get("dkim", {}) \
             .get("txt_record", {}) \
             .get("p", None)
 
-        if v_tag and k_tag and p_tag:
+        if v_tag is None and k_tag is None and p_tag is None:
             tags.append({"dkim12": "DKIM-value-invalid"})
 
         # Testing Enabled
@@ -70,3 +79,5 @@ class DkimTags(SQLAlchemyObjectType):
             .get("t_value")
         if t_enabled is not None:
             tags.append({"dkim13": "T-enabled"})
+
+        return tags

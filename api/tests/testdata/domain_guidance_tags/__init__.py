@@ -1,0 +1,5 @@
+from tests.testdata.domain_guidance_tags.dkim_mock_data import dkim_mock_data
+from tests.testdata.domain_guidance_tags.dmarc_mock_data import dmarc_mock_data
+from tests.testdata.domain_guidance_tags.https_mock_data import https_mock_data
+from tests.testdata.domain_guidance_tags.spf_mock_data import spf_mock_data
+from tests.testdata.domain_guidance_tags.ssl_mock_data import ssl_mock_data
