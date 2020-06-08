@@ -18,7 +18,6 @@ class DkimTags(SQLAlchemyObjectType):
         tags = []
 
         if self.dkim_scan.get("dkim", {}).get("missing", None) is not None:
-            print("WHY WONT THIS WORK")
             tags.append({"dkim2": "DKIM-missing"})
             return tags
 
