@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/LandingPage.js:31
+msgid "*All data represented is mocked for demonstration purposes"
+msgstr "*Toutes les données représentées sont simulées à des fins de démonstration"
+
 #: src/DmarcReportGuidance.js:213
 msgid "A server configured to use the wrong \"envelope from\" address."
 msgstr "Un serveur configuré pour utiliser la mauvaise adresse \"envelope from\"."
@@ -50,11 +54,15 @@ msgstr "Admin"
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
+#: src/SummaryGroup.js:83
+msgid "Approved Certificate Use"
+msgstr "Utilisation de certificats approuvés"
+
 #: src/CreateUserPage.js:130
 msgid "Back"
 msgstr "Retour"
 
-#: src/LandingPage.js:16
+#: src/LandingPage.js:17
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre des services en ligne sécurisés. Un nouvel avis de politique vise à assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en matière de sécurité Web. Voyez comment les sites gouvernementaux deviennent plus sécuritaires."
 
@@ -74,7 +82,7 @@ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour les adres
 msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/PasswordConfirmation.js:140
+#: src/PasswordConfirmation.js:137
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
@@ -107,22 +115,30 @@ msgid "DMARC Policy Applied"
 msgstr "Politique de la DMARC appliquée"
 
 #: src/App.js:54
-#: src/DomainsPage.js:36
+#: src/DomainsPage.js:48
 msgid "Domains"
 msgstr "Domaines"
 
-#: src/EmailField.js:29
+#: src/EmailField.js:30
 msgid "Email"
 msgstr "Courriel"
+
+#: src/SummaryGroup.js:56
+msgid "Email Configuration"
+msgstr "Configuration du courriel"
 
 #: src/CreateUserPage.js:23
 #: src/SignInPage.js:23
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
-#: src/EmailField.js:31
-#~ msgid "Email {0}"
-#~ msgstr "Courriel {0}"
+#: src/SummaryGroup.js:57
+msgid "Email security settings summary"
+msgstr "Résumé des paramètres de sécurité du courriel"
+
+#: src/SummaryGroup.js:18
+msgid "Enforced"
+msgstr "Mise en œuvre"
 
 #: src/DmarcReportGuidance.js:317
 msgid "Ensure the DKIM record for thedomain and selector is present andvalid."
@@ -142,6 +158,10 @@ msgstr "Oublié votre mot de passe?"
 msgid "Forwarding by an intermediate server."
 msgstr "Redirection par un serveur intermédiaire."
 
+#: src/SummaryGroup.js:18
+msgid "Fully Implemented"
+msgstr "Entièrement mis en œuvre"
+
 #: src/DmarcReportGuidance.js:105
 #: src/DmarcReportGuidance.js:197
 #: src/DmarcReportGuidance.js:276
@@ -150,6 +170,10 @@ msgstr "Redirection par un serveur intermédiaire."
 #: src/DmarcReportGuidance.js:503
 msgid "Guidance"
 msgstr "Conseils"
+
+#: src/SummaryGroup.js:71
+msgid "HSTS Preloaded"
+msgstr "HSTS préchargé"
 
 #: src/DmarcReportGuidance.js:554
 msgid "Hide Guidance"
@@ -165,7 +189,12 @@ msgstr "Accueil"
 msgid "Invalid email"
 msgstr "Courriel non valide"
 
+#: src/Domain.js:21
+msgid "Last scanned:{lastRan}"
+msgstr "Dernier scan"
+
 #: src/CreateUserPage.js:73
+#: src/DomainsPage.js:40
 #: src/QRcodePage.js:21
 #: src/SignInPage.js:61
 msgid "Loading..."
@@ -180,17 +209,32 @@ msgstr "Messages soumis à la politique de la DMARC"
 msgid "Modify the SPF record to include the sending IP address."
 msgstr "Modifiez l'enregistrement SPF pour y inclure l'adresse IP d'envoi."
 
-#: src/DomainsPage.js:53
-#: src/DomainsPage.js:65
+#: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "Aucun domaine n'a encore été scanné."
+
+#: src/SummaryGroup.js:39
+msgid "Not Enforced"
+msgstr "Non appliqué"
+
+#: src/SummaryGroup.js:39
+msgid "Not Implemented"
+msgstr "Pas entièrement mis en œuvre"
+
+#: src/Domain.js:26
+msgid "Not scanned yet."
+msgstr ""
 
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: src/PasswordConfirmation.js:91
-#: src/PasswordField.js:35
+#: src/SummaryGroup.js:28
+msgid "Partially Implemented"
+msgstr "Partiellement mis en œuvre"
+
+#: src/PasswordConfirmation.js:88
+#: src/PasswordField.js:36
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -249,6 +293,10 @@ msgstr "préalpha"
 msgid "Privacy"
 msgstr "Confidentialité"
 
+#: src/SummaryGroup.js:79
+msgid "Protocols & Ciphers"
+msgstr "Protocoles et codes"
+
 #: src/DmarcReportGuidance.js:496
 msgid "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
 msgstr "Les messages reçus ont échoué à la fois au SPF et au DKIM, et donc à la DMARC. La politique du DMARC spécifiée pour le domaine a été appliquée à ces messages."
@@ -271,7 +319,7 @@ msgstr "Échec de l'alignement des domaines du SPF"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
-#: src/LanguageSelect.js:21
+#: src/LanguageSelect.js:18
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
@@ -374,9 +422,9 @@ msgstr "Ces notes d'orientation ont été conçues pour vous aider à résoudre 
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
-#: src/LandingPage.js:11
-msgid "Track web security compliance"
-msgstr "Suivre la conformité en matière de sécurité Web"
+#: src/LandingPage.js:12
+msgid "Track Web Security Compliance"
+msgstr "Suivre la conformité de la sécurité du Web"
 
 #: src/UserCard.js:38
 msgid "TwoFactor"
@@ -398,6 +446,14 @@ msgstr "Liste des utilisateurs"
 msgid "User Profile"
 msgstr "Profil de l'utilisateur"
 
+#: src/SummaryGroup.js:52
+msgid "Web Configuration"
+msgstr "Configuration Web"
+
+#: src/SummaryGroup.js:53
+msgid "Web encryption settings summary"
+msgstr "Résumé des paramètres de cryptage du Web"
+
 #: src/CreateUserPage.js:61
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Veuillez choisir votre langue préférée"
@@ -406,102 +462,30 @@ msgstr "Veuillez choisir votre langue préférée"
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
-#: src/CreateUserPage.js:61
-#~ msgid "Welcome, you have successfully signed in to your new account!"
-#~ msgstr "Bienvenue, vous avez réussi à vous connecter à votre nouveau compte"
-
 #: src/QRcodePage.js:45
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
 msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez."
 
-#: src/LanguageSelect.js:23
-msgid "Select Preferred Language"
-msgstr "Sélectionnez votre langue préférée"
+#: src/SummaryGroup.js:42
+msgid "fail"
+msgstr "échouer"
 
-#: src/CreateUserPage.js:46
-msgid "Create an account by entering an email and password."
-msgstr "Créez un compte en entrant un courriel et un mot de passe."
+#: src/SummaryGroup.js:27
+msgid "moderate"
+msgstr "modéré"
 
-#: src/CreateUserPage.js:80
-msgid "Create Account"
-msgstr "Créer un compte"
+#: src/SummaryGroup.js:31
+msgid "partial pass"
+msgstr "passe partielle"
 
-#: src/CreateUserPage.js:89
-msgid "Back"
-msgstr "Retour"
+#: src/SummaryGroup.js:21
+msgid "pass"
+msgstr "passe"
 
-#: src/LandingPage.js:32
-msgid "Dashboard Overview"
-msgstr "Vue d'ensemble du tableau de bord"
+#: src/SummaryGroup.js:16
+msgid "strong"
+msgstr "fort"
 
-#: src/LandingPage.js:34
-msgid "Web and email security configuration of all domains"
-msgstr "Configuration de la sécurité du web et du courrier électronique de tous les domaines"
-
-#: src/LandingPage.js:39
-msgid "Web Security Overview"
-msgstr "Aperçu de la sécurité du Web"
-
-#: src/LandingPage.js:41
-msgid "Key aspects of web application security of the hosts monitored by this dashboard."
-msgstr "Les principaux aspects de la sécurité des applications web des hôtes surveillés par ce tableau de bord."
-
-#: src/LandingPage.js:46
-msgid "Email Security Overview"
-msgstr "Aperçu de la sécurité du courrier électronique"
-
-#: src/LandingPage.js:48
-msgid "Key aspects of email security of the hosts monitored by this dashboard."
-msgstr "Les principaux aspects de la sécurité du courrier électronique des hôtes surveillés par ce tableau de bord."
-
-#: src/LandingPage.js:76
-msgid "*All data represented is mocked for demonstration purposes"
-msgstr "*Toutes les données représentées sont simulées à des fins de démonstration"
-
-#: src/SummaryGroup.js:14
-msgid "Web Configuration"
-msgstr "Configuration Web"
-
-#: src/SummaryGroup.js:15
-msgid "Amalgomation of all web security factors"
-msgstr "Amalgame de tous les facteurs de sécurité du web"
-
-#: src/SummaryGroup.js:18
-msgid "Email Conifguration"
-msgstr "Conifguration du courrier électronique"
-
-#: src/SummaryGroup.js:19
-msgid "Amalgomation of all email security factors"
-msgstr "Amalgame de tous les facteurs de sécurité du courrier électronique"
-
-#: src/SummaryGroup.js:33
-msgid "HSTS Preloaded"
-msgstr "HSTS préchargé"
-
-#: src/SummaryGroup.js:41
-msgid "Protocols & Ciphers"
-msgstr "Protocoles et codes"
-
-#: src/SummaryGroup.js:45
-msgid "Approved Certificate Use"
-msgstr "Utilisation de certificats approuvés"
-
-#: src/SummaryGroup.js:18
-msgid "Enforced"
-msgstr "Mise en œuvre"
-
-#: src/SummaryGroup.js:18
-msgid "Fully Implemented"
-msgstr "Entièrement mis en œuvre"
-
-#: src/SummaryGroup.js:28
-msgid "Partially Implemented"
-msgstr "Partiellement mis en œuvre
-
-#: src/SummaryGroup.js:39
-msgid "Not Enforced"
-msgstr "Non appliqué"
-
-#: src/SummaryGroup.js:39
-msgid "Not Implemented"
-msgstr "Pas entièrement mis en œuvre"
+#: src/SummaryGroup.js:37
+msgid "weak"
+msgstr "faible"
