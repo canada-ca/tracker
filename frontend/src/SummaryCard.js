@@ -4,6 +4,29 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { string, object, bool } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 
+/* scheme for const data:
+  strength options: 'strong', 'moderate', 'weak'. Omitted strengths are ignored
+  {
+    categoryTotals: {
+      property: value,
+      property: value,
+      ...,
+      total: value,
+    },
+    strengths: {
+      strong: {
+        name: Name to appear on badge
+        types: [
+          "property from category totals that are 'strong' ",
+          "property from category totals that are 'strong' ",
+        ]
+      },
+      moderate: {same as strong},
+      weak: {same as strong},
+    }
+  }
+ */
+
 function SummaryCard({ ...props }) {
   const { title, description, data, slider } = props
 
@@ -55,6 +78,7 @@ function SummaryCard({ ...props }) {
               paddingAngle={2}
               dataKey="value"
             >
+              {/* Generate cells for doughnut*/}
               {Object.entries(data.strengths).map(([key, _value]) => {
                 let color
                 switch (key) {
@@ -82,6 +106,7 @@ function SummaryCard({ ...props }) {
           </PieChart>
         </ResponsiveContainer>
 
+        {/* Generate badges */}
         {Object.entries(data.strengths).map(([key, value]) => {
           let color
           switch (key) {
@@ -113,6 +138,7 @@ function SummaryCard({ ...props }) {
           )
         })}
 
+        {/* Give empty room at bottom of card if no slider */}
         {!slider && <br />}
 
         {/* data box */}

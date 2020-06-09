@@ -172,8 +172,6 @@ export function DmarcReportPage() {
   }) }
   formattedBarData.strengths = strengths
 
-  console.log(formattedBarData)
-
   const [
     sourceIp,
     dnsDomain,
@@ -316,6 +314,8 @@ export function DmarcReportPage() {
 
   const cardAndGraphFitInline =
     +cardWidth.slice(0, -1) + +timeGraphWidth.slice(0, -1) <= 100
+
+  console.log(reportCardData)
 
   return (
     <Box width="100%">
