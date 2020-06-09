@@ -9,11 +9,34 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
-
 import { object } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 
-function DmarcTimeGraph({ data }) {
+/*
+scheme for const data:
+**strength options: 'strong', 'moderate', 'weak'. Omitted strengths are ignored
+{
+  periods: [
+    {month: STRING, year: INT, property: INT, property: INT, property: INT...},
+    {month: STRING, year: INT, property: INT, property: INT, property: INT...},
+    {...}
+  ],
+  strengths: {
+    strong: {
+      name: "Name to appear on badge"
+      types: [
+        "property from periods that are 'strong' ",
+        "property from periods that that are 'strong' ",
+      ]
+    },
+    moderate: {same as strong},
+    weak: {same as strong},
+  }
+}
+ */
+
+function DmarcTimeGraph({ ...props }) {
+  const { data } = props
   const { periods, strengths } = data
 
   return (

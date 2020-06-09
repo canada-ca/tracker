@@ -4,18 +4,19 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { string, object, bool } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 
-/* scheme for const data:
-  strength options: 'strong', 'moderate', 'weak'. Omitted strengths are ignored
+/*
+scheme for const data:
+**strength options: 'strong', 'moderate', 'weak'. Omitted strengths are ignored
   {
     categoryTotals: {
-      property: value,
-      property: value,
+      property: INT,
+      property: INT,
       ...,
       total: value,
     },
     strengths: {
       strong: {
-        name: Name to appear on badge
+        name: "Name to appear on badge"
         types: [
           "property from category totals that are 'strong' ",
           "property from category totals that are 'strong' ",

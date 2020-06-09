@@ -315,7 +315,7 @@ export function DmarcReportPage() {
   const cardAndGraphFitInline =
     +cardWidth.slice(0, -1) + +timeGraphWidth.slice(0, -1) <= 100
 
-  console.log(reportCardData)
+  console.log(formattedBarData)
 
   return (
     <Box width="100%">
