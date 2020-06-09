@@ -13,7 +13,7 @@ export function SummaryGroup({ ...props }) {
   function makeData() {
     return [
       {
-        strength: i18n._(t`strong`),
+        strength: 'strong',
         name:
           name === 'web' ? i18n._(t`Enforced`) : i18n._(t`Fully Implemented`),
         categories: [
@@ -24,7 +24,7 @@ export function SummaryGroup({ ...props }) {
         ],
       },
       {
-        strength: i18n._(t`moderate`),
+        strength: 'moderate',
         name: i18n._(t`Partially Implemented`),
         categories: [
           {
@@ -34,7 +34,7 @@ export function SummaryGroup({ ...props }) {
         ],
       },
       {
-        strength: i18n._(t`weak`),
+        strength: 'weak',
         name:
           name === 'web' ? i18n._(t`Not Enforced`) : i18n._(t`Not Implemented`),
         categories: [
