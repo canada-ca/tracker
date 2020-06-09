@@ -757,6 +757,154 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
     assert "{'dmarc13': 'RUF-none'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
 
 
+def test_dkim_guidance_tags_dmarc_14(save):
+    """
+    Test that dmarc guidance tag dmarc 14 shows up
+    """
+    org_one = Organizations(
+        acronym="ORG1",
+        name="Organization 1",
+        slug="organization-1",
+    )
+    save(org_one)
+
+    test_domain = Domains(
+        organization=org_one,
+        domain="test.domain.ca",
+        slug="test-domain-ca"
+    )
+    save(test_domain)
+
+    test_scan = Scans(
+        domain=test_domain
+    )
+    save(test_scan)
+
+    test_dkim_scan = Dmarc_scans(
+        id=test_scan.id,
+        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc14")
+    )
+    save(test_dkim_scan)
+
+    user = Users(
+        display_name="testuser",
+        user_name="testuser@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=org_one
+            ),
+        ],
+    )
+    save(user)
+
+    result = run(
+        mutation="""
+        {
+            domain(
+                urlSlug: "test-domain-ca"
+            ) {
+                email {
+                    edges {
+                        node {
+                            dmarc {
+                                dmarcGuidanceTags {
+                                    value
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        """,
+        as_user=user
+    )
+
+    if "errors" in result:
+        fail(
+            "expected signin for a normal user to succeed. Instead:"
+            "{}".format(json(result))
+        )
+
+    assert "{'dmarc14': 'TXT-DMARC-enabled'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+
+
+def test_dkim_guidance_tags_dmarc_15(save):
+    """
+    Test that dmarc guidance tag dmarc 15 shows up
+    """
+    org_one = Organizations(
+        acronym="ORG1",
+        name="Organization 1",
+        slug="organization-1",
+    )
+    save(org_one)
+
+    test_domain = Domains(
+        organization=org_one,
+        domain="test.domain.ca",
+        slug="test-domain-ca"
+    )
+    save(test_domain)
+
+    test_scan = Scans(
+        domain=test_domain
+    )
+    save(test_scan)
+
+    test_dkim_scan = Dmarc_scans(
+        id=test_scan.id,
+        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc15")
+    )
+    save(test_dkim_scan)
+
+    user = Users(
+        display_name="testuser",
+        user_name="testuser@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(
+                permission="user_read",
+                user_organization=org_one
+            ),
+        ],
+    )
+    save(user)
+
+    result = run(
+        mutation="""
+        {
+            domain(
+                urlSlug: "test-domain-ca"
+            ) {
+                email {
+                    edges {
+                        node {
+                            dmarc {
+                                dmarcGuidanceTags {
+                                    value
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        """,
+        as_user=user
+    )
+
+    if "errors" in result:
+        fail(
+            "expected signin for a normal user to succeed. Instead:"
+            "{}".format(json(result))
+        )
+
+    assert "{'dmarc15': 'TXT-DMARC-missing'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+
+
 def test_dkim_guidance_tags_dmarc_16(save):
     """
     Test that dmarc guidance tag dmarc 16 shows up

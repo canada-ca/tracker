@@ -115,6 +115,15 @@ dmarc_mock_data = {
             },
         }
     },
+    "dmarc_mock_data_dmarc14": {
+        "dmarc": {
+            "record": "v=DMARC1;p=None;sp=None;rua=mailto:dmarc@cyber.gc.ca",
+        }
+    },
+    "dmarc_mock_data_dmarc15": {
+        "dmarc": {
+        }
+    },
     "dmarc_mock_data_dmarc16": {
         "dmarc": {
             "tags": {
