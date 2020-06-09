@@ -7,6 +7,11 @@ const shadows = {
 }
 
 const colors = {
+  darkgray: '#444444',
+  strong: '#5CB95B',
+  moderate: '#ffbf47',
+  weak: '#e53e3e',
+  unknown: '#B0B0B0',
   green: {
     50: '#F2FFF0',
     100: '#C3EEBF',
@@ -26,6 +31,7 @@ const colors = {
     300: '#D5D5D5',
     400: '#AEAEAE',
     500: '#808080',
+    550: '#444444',
     600: '#555555',
     700: '#373737',
     800: '#202020',

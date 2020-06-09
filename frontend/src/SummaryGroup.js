@@ -13,33 +13,33 @@ export function SummaryGroup({ ...props }) {
   function makeData() {
     return [
       {
-        strength: 'strong',
+        strength: i18n._(t`strong`),
         name:
           name === 'web' ? i18n._(t`Enforced`) : i18n._(t`Fully Implemented`),
         categories: [
           {
-            name: 'pass_conditon',
+            name: i18n._(t`pass`),
             qty: Math.floor(Math.random() * 1000 + 1),
           },
         ],
       },
       {
-        strength: 'moderate',
+        strength: i18n._(t`moderate`),
         name: i18n._(t`Partially Implemented`),
         categories: [
           {
-            name: 'partial_pass',
+            name: i18n._(t`partial pass`),
             qty: name === 'web' ? null : Math.floor(Math.random() * 300 + 1),
           },
         ],
       },
       {
-        strength: 'weak',
+        strength: i18n._(t`weak`),
         name:
           name === 'web' ? i18n._(t`Not Enforced`) : i18n._(t`Not Implemented`),
         categories: [
           {
-            name: 'fail_condition',
+            name: i18n._(t`fail`),
             qty: Math.floor(Math.random() * 300 + 1),
           },
         ],
@@ -50,11 +50,11 @@ export function SummaryGroup({ ...props }) {
   const dashOverview = [
     {
       title: i18n._(t`Web Configuration`),
-      description: i18n._(t`Amalgomation of all web security factors`),
+      description: i18n._(t`Web encryption settings summary`),
     },
     {
-      title: i18n._(t`Email Conifguration`),
-      description: i18n._(t`Amalgomation of all email security factors`),
+      title: i18n._(t`Email Configuration`),
+      description: i18n._(t`Email security settings summary`),
     },
   ]
 
@@ -125,35 +125,24 @@ export function SummaryGroup({ ...props }) {
 
     for (let i = 0; i < getReportQty(); i++) {
       reports.push(
-        <Stack align="center">
-          <SummaryCard
-            name={name}
-            title={reportData[i].title}
-            description={reportData[i].description}
-            data={makeData()}
-          />
-        </Stack>,
+        <SummaryCard
+          name={name}
+          key={reportData[i].title}
+          title={reportData[i].title}
+          description={reportData[i].description}
+          data={makeData()}
+        />,
       )
     }
     return reports
   }
 
   return (
-    <Stack textAlign={'center'} align="center">
-      <Text fontSize="3xl" fontWeight="bold">
-        {title}
-      </Text>
-      <Text fontSize="lg">{description}</Text>
-      <br />
-      <SimpleGrid
-        columns={{ lg: name === 'web' ? getReportQty() / 2 : getReportQty() }}
-        spacing="30px"
-        width="110%"
-      >
+    <Stack textAlign="center" align="center">
+      <SimpleGrid columns={[1, 1, 1, 1, 2]} spacing="30px">
         {createReports()}
       </SimpleGrid>
       )
-      <br />
     </Stack>
   )
 }
