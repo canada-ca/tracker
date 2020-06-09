@@ -65,9 +65,7 @@ def test_spf_guidance_tags_spf_2(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -85,10 +83,8 @@ def test_spf_guidance_tags_spf_2(save):
         )
 
     assert (
-        "{'spf2': 'SPF-missing'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf2"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -143,9 +139,7 @@ def test_spf_guidance_tags_spf_3_dkim(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -163,10 +157,8 @@ def test_spf_guidance_tags_spf_3_dkim(save):
         )
 
     assert (
-        "{'spf3': 'SPF-bad-path'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf3"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -221,9 +213,7 @@ def test_spf_guidance_tags_spf_3_dmarc(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -241,10 +231,8 @@ def test_spf_guidance_tags_spf_3_dmarc(save):
         )
 
     assert (
-        "{'spf3': 'SPF-bad-path'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf3"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -290,9 +278,7 @@ def test_spf_guidance_tags_spf_4(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -310,10 +296,8 @@ def test_spf_guidance_tags_spf_4(save):
         )
 
     assert (
-        "{'spf4': 'ALL-missing'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf4"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -359,9 +343,7 @@ def test_spf_guidance_tags_spf_5(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -379,10 +361,8 @@ def test_spf_guidance_tags_spf_5(save):
         )
 
     assert (
-        "{'spf5': 'ALL-allow'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf5"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -428,9 +408,7 @@ def test_spf_guidance_tags_spf_6(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -448,10 +426,8 @@ def test_spf_guidance_tags_spf_6(save):
         )
 
     assert (
-        "{'spf6': 'ALL-neutral'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf6"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -497,9 +473,7 @@ def test_spf_guidance_tags_spf_7(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -517,10 +491,8 @@ def test_spf_guidance_tags_spf_7(save):
         )
 
     assert (
-        "{'spf7': 'ALL-softfail'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf7"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -566,9 +538,7 @@ def test_spf_guidance_tags_spf_8(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -586,10 +556,8 @@ def test_spf_guidance_tags_spf_8(save):
         )
 
     assert (
-        "{'spf8': 'ALL-hardfail'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf8"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -635,9 +603,7 @@ def test_spf_guidance_tags_spf_9(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -655,10 +621,8 @@ def test_spf_guidance_tags_spf_9(save):
         )
 
     assert (
-        "{'spf9': 'ALL-redirect'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf9"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -704,9 +668,7 @@ def test_spf_guidance_tags_spf_10(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -724,10 +686,8 @@ def test_spf_guidance_tags_spf_10(save):
         )
 
     assert (
-        "{'spf10': 'ALL-invalid'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf10"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -773,9 +733,7 @@ def test_spf_guidance_tags_spf_11(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -793,10 +751,8 @@ def test_spf_guidance_tags_spf_11(save):
         )
 
     assert (
-        "{'spf11': 'A-all'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf11"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -842,9 +798,7 @@ def test_spf_guidance_tags_spf_12(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -862,10 +816,8 @@ def test_spf_guidance_tags_spf_12(save):
         )
 
     assert (
-        "{'spf12': 'INCLUDE-limit'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf12"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
 
 
@@ -911,9 +863,7 @@ def test_spf_guidance_tags_spf_13(save):
                     edges {
                         node {
                             spf {
-                                spfGuidanceTags {
-                                    value
-                                }
+                                spfGuidanceTags
                             }
                         }
                     }
@@ -931,8 +881,6 @@ def test_spf_guidance_tags_spf_13(save):
         )
 
     assert (
-        "{'spf13': 'INCLUDE-missing'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
-            "spfGuidanceTags"
-        ]["value"]
+        "spf13"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
     )
