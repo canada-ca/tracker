@@ -59,44 +59,30 @@ describe('<DomainsPage>', () => {
               edges: [
                 {
                   node: {
-                    organization: {
-                      acronym: 'user-example-com',
-                      domains: {
-                        edges: [
-                          {
-                            node: {
-                              url: 'tbs-sct.gc.ca',
-                              slug: 'tbs-sct-gc-ca',
-                              lastRan: null,
-                              __typename: 'Domain',
-                            },
-                            __typename: 'DomainEdge',
-                          },
-                          {
-                            node: {
-                              url: 'rcmp-grc.gc.ca',
-                              slug: 'rcmp-grc-gc-ca',
-                              lastRan: null,
-                              __typename: 'Domain',
-                            },
-                            __typename: 'DomainEdge',
-                          },
-                        ],
-                        __typename: 'DomainConnection',
-                      },
-                      __typename: 'Organization',
-                    },
-                    __typename: 'Domain',
+                    url: 'tbs-sct.gc.ca',
+                    slug: 'tbs-sct-gc-ca',
+                    lastRan: null,
                   },
-                  __typename: 'DomainEdge',
+                },
+                {
+                  node: {
+                    url: 'canada.ca',
+                    slug: 'canada-ca',
+                    lastRan: null,
+                  },
+                },
+                {
+                  node: {
+                    url: 'rcmp-grc.gc.ca',
+                    slug: 'rcmp-grc-gc-ca',
+                    lastRan: null,
+                  },
                 },
               ],
               pageInfo: {
-                endCursor: 'string',
+                endCursor: 'YXJyYXljb25uZWN0aW9uOjI=',
                 hasNextPage: false,
-                __typename: 'PageInfo',
               },
-              __typename: 'DomainConnection',
             },
           },
         },
@@ -109,7 +95,7 @@ describe('<DomainsPage>', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider mocks={mocks}>
+              <MockedProvider mocks={mocks} addTypename={false}>
                 <DomainsPage />
               </MockedProvider>
             </MemoryRouter>

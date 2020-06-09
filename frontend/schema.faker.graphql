@@ -927,10 +927,6 @@ type Mutation {
     """
     userName: EmailAddress!
 
-    """
-    Preferred language of the user
-    """
-    preferredLang: LanguageEnums!
   ): SignUp
 
   """
@@ -1811,7 +1807,7 @@ type UserPage implements Node {
   """
   Indicates the preferred language of this user
   """
-  lang: String @examples(values: ["English", "French"])
+  lang: String @examples(values: ["ENGLISH", "FRENCH"])
 
   """
   Indicates wether or not this user has enabled tfa
