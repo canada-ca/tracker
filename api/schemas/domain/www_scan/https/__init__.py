@@ -24,7 +24,7 @@ class HTTPS(SQLAlchemyObjectType):
     hsts = graphene.String()
     hsts_age = graphene.String()
     preloaded = graphene.String()
-    https_guidance_tags = graphene.List(lambda: HTTPSTags)
+    https_guidance_tags = graphene.Field(lambda: HTTPSTags)
 
     def resole_domain(self: Https_scans, info):
         return get_domain(self, info)
@@ -48,4 +48,4 @@ class HTTPS(SQLAlchemyObjectType):
         return self.https_scan["https"]["preloaded"]
 
     def resolve_https_guidance_tags(self: Https_scans, info):
-        return HTTPS.get_query(info).all()
+        return HTTPS.get_query(info).first()

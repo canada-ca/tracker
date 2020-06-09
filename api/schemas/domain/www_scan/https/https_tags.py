@@ -21,7 +21,8 @@ class HTTPSTags(SQLAlchemyObjectType):
         tags = []
 
         if self.https_scan.get("https", {}).get("missing", None) is not None:
-            return tags.append({"https2": "missing"})
+            tags.append({"https2": "HTTPS-missing"})
+            return tags
 
         # Implementation
         implementation = self.https_scan.get("https", {}) \

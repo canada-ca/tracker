@@ -19,7 +19,7 @@ class SSL(SQLAlchemyObjectType):
     id = graphene.ID()
     domain = URL()
     timestamp = graphene.DateTime()
-    ssl_guidance_tags = graphene.List(lambda: SSLTags)
+    ssl_guidance_tags = graphene.Field(lambda: SSLTags)
 
     def resolve_domain(self, info):
         return get_domain(self, info)
@@ -28,4 +28,4 @@ class SSL(SQLAlchemyObjectType):
         return get_timestamp(self, info)
 
     def resolve_ssl_guidance_tags(self: Ssl_scans, info):
-        return SSLTags.get_query(info).all()
+        return SSLTags.get_query(info).first()
