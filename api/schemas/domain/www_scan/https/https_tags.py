@@ -60,22 +60,23 @@ class HTTPSTags(SQLAlchemyObjectType):
             hsts = hsts.lower()
 
         if hsts == "hsts max age too short":
-            tags.append()
+            tags.append({"https:10": "HSTS-short-age"})
         elif hsts == "no hsts":
             tags.append({"https9": "HSTS-missing"})
 
         # HSTS Age
         hsts_age = self.https_scan.get("https", {}) \
-            .get("hsts_age")
+            .get("hsts_age", None)
 
-        if hsts_age < 31536000:
-            tags.append({"https10": "HSTS-short-age"})
+        if hsts_age is not None:
+            if hsts_age < 31536000:
+                tags.append({"https10": "HSTS-short-age"})
 
         # Preload Status
         preload_status = self.https_scan.get("https", {}) \
             .get("preload_status", None)
 
-        if preload_status(preload_status, str):
+        if isinstance(preload_status, str):
             preload_status = preload_status.lower()
 
         if preload_status == "hsts preload ready":
