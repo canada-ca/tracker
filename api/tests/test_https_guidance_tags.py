@@ -56,9 +56,7 @@ def test_dkim_guidance_tags_https_2(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -76,10 +74,8 @@ def test_dkim_guidance_tags_https_2(save):
         )
 
     assert (
-        "{'https2': 'HTTPS-missing'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https2"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -125,9 +121,7 @@ def test_dkim_guidance_tags_https_3(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -145,10 +139,8 @@ def test_dkim_guidance_tags_https_3(save):
         )
 
     assert (
-        "{'https3': 'HTTPS-downgraded'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https3"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -194,9 +186,7 @@ def test_dkim_guidance_tags_https_4(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -214,10 +204,8 @@ def test_dkim_guidance_tags_https_4(save):
         )
 
     assert (
-        "{'https4': 'HTTPS-bad-chain'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https4"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -263,9 +251,7 @@ def test_dkim_guidance_tags_https_5(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -283,10 +269,8 @@ def test_dkim_guidance_tags_https_5(save):
         )
 
     assert (
-        "{'https5': 'HTTPS-bad-hostname'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https5"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -332,9 +316,7 @@ def test_dkim_guidance_tags_https_6(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -352,10 +334,8 @@ def test_dkim_guidance_tags_https_6(save):
         )
 
     assert (
-        "{'https6': 'HTTPS-not-enforced'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https6"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -401,9 +381,7 @@ def test_dkim_guidance_tags_https_7(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -421,10 +399,8 @@ def test_dkim_guidance_tags_https_7(save):
         )
 
     assert (
-        "{'https7': 'HTTPS-weakly-enforced'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https7"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -470,9 +446,7 @@ def test_dkim_guidance_tags_https_8(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -490,10 +464,8 @@ def test_dkim_guidance_tags_https_8(save):
         )
 
     assert (
-        "{'https8': 'HTTPS-moderately-enforced'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https8"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -539,9 +511,7 @@ def test_dkim_guidance_tags_https_9(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -559,10 +529,8 @@ def test_dkim_guidance_tags_https_9(save):
         )
 
     assert (
-        "{'https9': 'HSTS-missing'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https9"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -608,9 +576,7 @@ def test_dkim_guidance_tags_https_10(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -628,10 +594,8 @@ def test_dkim_guidance_tags_https_10(save):
         )
 
     assert (
-        "{'https:10': 'HSTS-short-age'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https10"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -677,9 +641,7 @@ def test_dkim_guidance_tags_https_11(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -697,10 +659,8 @@ def test_dkim_guidance_tags_https_11(save):
         )
 
     assert (
-        "{'https11': 'HSTS-preload-ready'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https11"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -746,9 +706,7 @@ def test_dkim_guidance_tags_https_12(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -766,10 +724,8 @@ def test_dkim_guidance_tags_https_12(save):
         )
 
     assert (
-        "{'https12': 'HSTS-not-preloaded'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https12"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -815,9 +771,7 @@ def test_dkim_guidance_tags_https_13(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -835,10 +789,8 @@ def test_dkim_guidance_tags_https_13(save):
         )
 
     assert (
-        "{'https13': 'HTTPS-certificate-expired'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https13"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
 
 
@@ -884,9 +836,7 @@ def test_dkim_guidance_tags_https_14(save):
                     edges {
                         node {
                             https {
-                                httpsGuidanceTags {
-                                    value
-                                }
+                                httpsGuidanceTags
                             }
                         }
                     }
@@ -904,8 +854,6 @@ def test_dkim_guidance_tags_https_14(save):
         )
 
     assert (
-        "{'https14': 'HTTPS-certificate-self-signed'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
-            "httpsGuidanceTags"
-        ]["value"]
+        "https14"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"]["httpsGuidanceTags"]
     )
