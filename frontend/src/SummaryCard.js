@@ -1,6 +1,6 @@
 import React from 'react'
 import theme from './theme/canada'
-import { Text, Stack, Box, Badge } from '@chakra-ui/core'
+import { Text, Stack, Box } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { string, array } from 'prop-types'
 

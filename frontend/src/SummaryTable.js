@@ -7,18 +7,20 @@ import { Box, Text, Button, Stack, Select, Input } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 
 const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
+  & {
+    width: 100%;
+    border-collapse: collapse;
+  }
 
   th {
-  color: black;
-  font-weight: bold;
+    color: black;
+    font-weight: bold;
   }
 
   td, th {
-  padding: 6px;
-  border: 1px solid #ccc;
-  text-align: center;
+    padding: 6px;
+    border: 1px solid #ccc;
+    text-align: center;
   }
 
   .title {
@@ -51,12 +53,12 @@ const Table = styled.table`
     }
 
     td: before {
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
     }
 
     ${(props) =>
@@ -107,10 +109,14 @@ function SummaryTable({ ...props }) {
         <br />
         <Table {...getTableProps()} flatHeaders={flatHeaders}>
           <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr className="category" {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>
+            {headerGroups.map((headerGroup, idx) => (
+              <tr
+                key={String(headerGroup) + idx}
+                className="category"
+                {...headerGroup.getHeaderGroupProps()}
+              >
+                {headerGroup.headers.map((column, i) => (
+                  <th key={String(column) + i} {...column.getHeaderProps()}>
                     {column.render('Header')}
                   </th>
                 ))}
@@ -118,13 +124,15 @@ function SummaryTable({ ...props }) {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {page.map((row, i) => {
+            {page.map((row, idx) => {
               prepareRow(row)
               return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
+                <tr key={String(row) + idx} {...row.getRowProps()}>
+                  {row.cells.map((cell, i) => {
                     return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      <td key={String(cell) + i} {...cell.getCellProps()}>
+                        {cell.render('Cell')}
+                      </td>
                     )
                   })}
                 </tr>
