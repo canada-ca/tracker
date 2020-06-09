@@ -9,6 +9,9 @@ from schemas.domain.www_scan.https.https_tags import HTTPSTags
 
 
 class HTTPS(SQLAlchemyObjectType):
+    """
+    Http Scan Object
+    """
     class Meta:
         model = Https_scans
         exclude_fields = ("id", "https_scan")
