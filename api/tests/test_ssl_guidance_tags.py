@@ -56,9 +56,7 @@ def test_spf_guidance_tags_spf_2(save):
                     edges {
                         node {
                             ssl {
-                                sslGuidanceTags {
-                                    value
-                                }
+                                sslGuidanceTags
                             }
                         }
                     }
@@ -76,10 +74,8 @@ def test_spf_guidance_tags_spf_2(save):
         )
 
     assert (
-        "{'ssl2': 'SSL-missing'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
-            "sslGuidanceTags"
-        ]["value"]
+        "ssl2"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
     )
 
 
@@ -125,9 +121,7 @@ def test_spf_guidance_tags_spf_3(save):
                     edges {
                         node {
                             ssl {
-                                sslGuidanceTags {
-                                    value
-                                }
+                                sslGuidanceTags
                             }
                         }
                     }
@@ -145,10 +139,8 @@ def test_spf_guidance_tags_spf_3(save):
         )
 
     assert (
-        "{'ssl3': 'SSL-rc4'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
-            "sslGuidanceTags"
-        ]["value"]
+        "ssl3"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
     )
 
 
@@ -194,9 +186,7 @@ def test_spf_guidance_tags_spf_4(save):
                     edges {
                         node {
                             ssl {
-                                sslGuidanceTags {
-                                    value
-                                }
+                                sslGuidanceTags
                             }
                         }
                     }
@@ -214,10 +204,8 @@ def test_spf_guidance_tags_spf_4(save):
         )
 
     assert (
-        "{'ssl4': 'SSL-3des'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
-            "sslGuidanceTags"
-        ]["value"]
+        "ssl4"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
     )
 
 
@@ -263,9 +251,7 @@ def test_spf_guidance_tags_spf_5(save):
                     edges {
                         node {
                             ssl {
-                                sslGuidanceTags {
-                                    value
-                                }
+                                sslGuidanceTags
                             }
                         }
                     }
@@ -283,10 +269,8 @@ def test_spf_guidance_tags_spf_5(save):
         )
 
     assert (
-        "{'ssl5': 'SSL-acceptable-certificate'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
-            "sslGuidanceTags"
-        ]["value"]
+        "ssl5"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
     )
 
 
@@ -332,9 +316,7 @@ def test_spf_guidance_tags_spf_6(save):
                     edges {
                         node {
                             ssl {
-                                sslGuidanceTags {
-                                    value
-                                }
+                                sslGuidanceTags
                             }
                         }
                     }
@@ -352,10 +334,8 @@ def test_spf_guidance_tags_spf_6(save):
         )
 
     assert (
-        "{'ssl6': 'SSL-invalid-cipher'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
-            "sslGuidanceTags"
-        ]["value"]
+        "ssl6"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
     )
 
 
@@ -401,9 +381,7 @@ def test_spf_guidance_tags_spf_7(save):
                     edges {
                         node {
                             ssl {
-                                sslGuidanceTags {
-                                    value
-                                }
+                                sslGuidanceTags
                             }
                         }
                     }
@@ -421,10 +399,8 @@ def test_spf_guidance_tags_spf_7(save):
         )
 
     assert (
-        "{'ssl7': 'Vulnerability-heartbleed'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
-            "sslGuidanceTags"
-        ]["value"]
+        "ssl7"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
     )
 
 
@@ -470,9 +446,7 @@ def test_spf_guidance_tags_spf_8(save):
                     edges {
                         node {
                             ssl {
-                                sslGuidanceTags {
-                                    value
-                                }
+                                sslGuidanceTags
                             }
                         }
                     }
@@ -490,8 +464,6 @@ def test_spf_guidance_tags_spf_8(save):
         )
 
     assert (
-        "{'ssl8': 'Vulnerability-ccs-injection'}"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
-            "sslGuidanceTags"
-        ]["value"]
+        "ssl8"
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
     )
