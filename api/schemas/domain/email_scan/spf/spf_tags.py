@@ -1,4 +1,6 @@
 import graphene
+import re
+
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from models import Spf_scans
@@ -22,17 +24,21 @@ class SPFTags(SQLAlchemyObjectType):
         tags = []
 
         if self.spf_scan.get("spf", {}).get("missing", None) is not None:
-            return tags.append({"spf2": "missing"})
+            return tags.append({"spf2": "SPF-missing"})
 
         # Check all tag
         all_tag = self.spf_scan.get("spf", {}) \
             .get("parsed", {}) \
             .get("all", None)
+        record_all_tag = self.spf_scan.get("spf", {}) \
+            .get("record", "")[-4:].lower()
 
         if isinstance(all_tag, str):
             all_tag = all_tag.lower()
 
-        if all_tag == "missing":
+        if record_all_tag == "":
+            tags.append({"spf10": "ALL-invalid"})
+        elif all_tag == "missing":
             tags.append({"spf4": "ALL-missing"})
         elif all_tag == "allow":
             tags.append({"spf5": "ALL-allow"})
@@ -41,12 +47,20 @@ class SPFTags(SQLAlchemyObjectType):
         elif all_tag == "redirect":
             tags.append({"spf9": "ALL-redirect"})
         elif all_tag == "fail":
-            record_all_tag = self.spf_scan.get("spf", {}) \
-                                 .get("record", "")[-4:].lower()
             if record_all_tag == "-all":
                 tags.append({"spf8": "ALL-hardfail"})
             elif record_all_tag == "~all":
                 tags.append({"spf7": "ALL-softfail"})
+        else:
+            record = self.spf_scan.get("spf", {}) \
+                .get("record", None)
+            if record is not None:
+                search_string = "a:"
+                matches = re.finditer(search_string, record)
+
+                for match in matches:
+                    if record[match:1] == "":
+                        tags.append({"spf11": "A-all"})
 
         # All tag check
         record_all_tag = self.spf_scan.get("spf", {}) \
@@ -56,6 +70,6 @@ class SPFTags(SQLAlchemyObjectType):
 
         dns_lookups = self.spf_scan.get("spf", {}).get("dns_lookups", 0)
         if dns_lookups > 10:
-            tags.append({"spf11": "INCLUDE-limit"})
+            tags.append({"spf12": "INCLUDE-limit"})
 
         return tags

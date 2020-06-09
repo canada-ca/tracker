@@ -99,6 +99,14 @@ class DmarcTags(SQLAlchemyObjectType):
                 else:
                     tags.append({"dmarc13": "RUF-none"})
 
+        # TXT DMARC
+        record_tag = self.dmarc_scan.get("dmarc", {}) \
+            .get("record", None)
+        if record_tag == "" or record_tag is None:
+            tags.append({"dmarc15": "TXT-DMARC-missing"})
+        else:
+            tags.append({"dmarc14": "TXT-DMARC-enabled"})
+
         # Check SP tag
         sp_tag = self.dmarc_scan.get("dmarc", {}) \
             .get("tags", {}) \
@@ -118,3 +126,64 @@ class DmarcTags(SQLAlchemyObjectType):
             tags.append({"dmarc19": "SP-reject"})
 
         return tags
+
+# {
+#     "dmarc": {
+#         "tags": {
+#             "p": {
+#                 "value": "None",
+#                 "explicit": true
+#             },
+#             "v": {
+#                 "value": "DMARC1",
+#                 "explicit": true
+#             },
+#             "fo": {
+#                 "value": [
+#                     "0"
+#                 ],
+#                 "explicit": false
+#             },
+#             "rf": {
+#                 "value": [
+#                     "afrf"
+#                 ],
+#                 "explicit": false
+#             },
+#             "ri": {
+#                 "value": 86400,
+#                 "explicit": false
+#             },
+#             "sp": {
+#                 "value": "None",
+#                 "explicit": true
+#             },
+#             "pct": {
+#                 "value": 100,
+#                 "explicit": false
+#             },
+#             "rua": {
+#                 "value": [
+#                     {
+#                         "scheme": "mailto",
+#                         "address": "dmarc@cyber.gc.ca",
+#                         "size_limit": null
+#                     }
+#                 ],
+#                 "explicit": true
+#             },
+#             "aspf": {
+#                 "value": "r",
+#                 "explicit": false
+#             },
+#             "adkim": {
+#                 "value": "r",
+#                 "explicit": false
+#             }
+#         },
+#         "valid": true,
+#         "record": "v=DMARC1;p=None;sp=None;rua=mailto:dmarc@cyber.gc.ca",
+#         "location": "forces.gc.ca",
+#         "warnings": []
+#     }
+# }
