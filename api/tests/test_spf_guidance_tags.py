@@ -37,11 +37,11 @@ def test_spf_guidance_tags_spf_2(save):
     )
     save(test_scan)
 
-    test_dkim_scan = Spf_scans(
+    test_spf_scan = Spf_scans(
         id=test_scan.id,
         spf_scan=spf_mock_data.get("spf_mock_data_spf2")
     )
-    save(test_dkim_scan)
+    save(test_spf_scan)
 
     user = Users(
         display_name="testuser",

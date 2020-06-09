@@ -37,11 +37,11 @@ def test_dkim_guidance_tags_dmarc_2(save):
     )
     save(test_scan)
 
-    test_dkim_scan = Dmarc_scans(
+    test_dmarc_scan = Dmarc_scans(
         id=test_scan.id,
         dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc2")
     )
-    save(test_dkim_scan)
+    save(test_dmarc_scan)
 
     user = Users(
         display_name="testuser",

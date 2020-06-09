@@ -37,11 +37,11 @@ def test_dkim_guidance_tags_https_2(save):
     )
     save(test_scan)
 
-    test_dkim_scan = Https_scans(
+    test_https_scan = Https_scans(
         id=test_scan.id,
         https_scan=https_mock_data.get("https_mock_data_https2")
     )
-    save(test_dkim_scan)
+    save(test_https_scan)
 
     user = Users(
         display_name="testuser",
