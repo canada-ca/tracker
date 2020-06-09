@@ -43,7 +43,7 @@ class DMARC(SQLAlchemyObjectType):
         "to be applied. "
     )
     dmarc_guidance_tags = graphene.List(
-        lambda: graphene.String, description="Key tags found during DMARC Scan"
+        lambda: graphene.String, description="Key tags found during scan"
     )
 
     def resolve_domain(self: Dmarc_scans, info):

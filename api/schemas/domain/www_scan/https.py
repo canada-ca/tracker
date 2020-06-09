@@ -19,12 +19,27 @@ class HTTPS(SQLAlchemyObjectType):
     id = graphene.ID(description="The ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
-    implementation = graphene.String(description="")
-    enforced = graphene.String(description="")
-    hsts = graphene.String(description="")
-    hsts_age = graphene.String(description="")
-    preloaded = graphene.String(description="")
-    https_guidance_tags = graphene.List(lambda: graphene.String, description="")
+    implementation = graphene.String(
+        description="State of the HTTPS implementation on the server and any "
+        "issues therein"
+    )
+    enforced = graphene.String(
+        description="Degree to which HTTPS is enforced on the server based "
+        "on behaviour"
+    )
+    hsts = graphene.String(
+        description="Presence and completeness of HSTS implementation"
+    )
+    hsts_age = graphene.String(
+        description="Denotes how long the domain should only be accessed using " "HTTPS"
+    )
+    preloaded = graphene.String(
+        description="Denotes whether the domain has been submitted and "
+        "included within HSTS preload list"
+    )
+    https_guidance_tags = graphene.List(
+        lambda: graphene.String, description="Key tags found during scan"
+    )
 
     def resole_domain(self: Https_scans, info):
         return get_domain(self, info)

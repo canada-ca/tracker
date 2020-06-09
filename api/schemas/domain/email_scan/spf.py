@@ -37,7 +37,7 @@ class SPF(SQLAlchemyObjectType):
         "not a match to your SPF record. "
     )
     spf_guidance_tags = graphene.List(
-        lambda: graphene.String, description="Key tags found during SPF scan"
+        lambda: graphene.String, description="Key tags found during scan"
     )
 
     def resolve_domain(self: Spf_scans, info):

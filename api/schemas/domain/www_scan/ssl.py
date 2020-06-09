@@ -16,10 +16,12 @@ class SSL(SQLAlchemyObjectType):
         model = Ssl_scans
         exclude_fields = ("id", "ssl_scan")
 
-    id = graphene.ID()
-    domain = URL()
-    timestamp = graphene.DateTime()
-    ssl_guidance_tags = graphene.List(lambda: graphene.String)
+    id = graphene.ID(description="The ID of the object")
+    domain = URL(description="The domain the scan was run on")
+    timestamp = graphene.DateTime(description="The time the scan was initiated")
+    ssl_guidance_tags = graphene.List(
+        lambda: graphene.String, descriptions="Key tags found during scan"
+    )
 
     def resolve_domain(self, info):
         return get_domain(self, info)
