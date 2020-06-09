@@ -8,14 +8,12 @@ class HTTPSTags(SQLAlchemyObjectType):
     """
     Guidance tags for HTTPS scan results
     """
+
     class Meta:
         model = Https_scans
         exclude_fields = ("id", "https_scan")
 
-    value = graphene.List(
-        lambda: graphene.String,
-        description=""
-    )
+    value = graphene.List(lambda: graphene.String, description="")
 
     def resolve_value(self: Https_scans, info):
         tags = []
@@ -25,8 +23,7 @@ class HTTPSTags(SQLAlchemyObjectType):
             return tags
 
         # Implementation
-        implementation = self.https_scan.get("https", {}) \
-            .get("implementation", None)
+        implementation = self.https_scan.get("https", {}).get("implementation", None)
 
         if isinstance(implementation, str):
             implementation = implementation.lower()
@@ -39,8 +36,7 @@ class HTTPSTags(SQLAlchemyObjectType):
             tags.append({"https5": "HTTPS-bad-hostname"})
 
         # Enforced
-        enforced = self.https_scan.get("https", {}) \
-            .get("enforced", None)
+        enforced = self.https_scan.get("https", {}).get("enforced", None)
 
         if isinstance(enforced, str):
             enforced = enforced.lower()
@@ -53,8 +49,7 @@ class HTTPSTags(SQLAlchemyObjectType):
             tags.append({"https6": "HTTPS-not-enforced"})
 
         # HSTS
-        hsts = self.https_scan.get("https", {}) \
-            .get("hsts", None)
+        hsts = self.https_scan.get("https", {}).get("hsts", None)
 
         if isinstance(hsts, str):
             hsts = hsts.lower()
@@ -65,16 +60,14 @@ class HTTPSTags(SQLAlchemyObjectType):
             tags.append({"https9": "HSTS-missing"})
 
         # HSTS Age
-        hsts_age = self.https_scan.get("https", {}) \
-            .get("hsts_age", None)
+        hsts_age = self.https_scan.get("https", {}).get("hsts_age", None)
 
         if hsts_age is not None:
             if hsts_age < 31536000:
                 tags.append({"https10": "HSTS-short-age"})
 
         # Preload Status
-        preload_status = self.https_scan.get("https", {}) \
-            .get("preload_status", None)
+        preload_status = self.https_scan.get("https", {}).get("preload_status", None)
 
         if isinstance(preload_status, str):
             preload_status = preload_status.lower()
@@ -85,15 +78,15 @@ class HTTPSTags(SQLAlchemyObjectType):
             tags.append({"https12": "HSTS-not-preloaded"})
 
         # Expired Cert
-        expired_cert = self.https_scan.get("https", {}) \
-            .get("expired_cert", None)
+        expired_cert = self.https_scan.get("https", {}).get("expired_cert", None)
 
         if expired_cert:
             tags.append({"https13": "HTTPS-certificate-expired"})
 
         # Self Signed Cert
-        self_signed_cert = self.https_scan.get("https", {}) \
-            .get("self_signed_cert", None)
+        self_signed_cert = self.https_scan.get("https", {}).get(
+            "self_signed_cert", None
+        )
 
         if self_signed_cert:
             tags.append({"https14": "HTTPS-certificate-self-signed"})

@@ -9,13 +9,13 @@ class DmarcTags(SQLAlchemyObjectType):
     """
     Guidance tags for dmarc scan results
     """
+
     class Meta:
         model = Dmarc_scans
         exclude_fields = ("id", "dmarc_scan")
 
     value = graphene.List(
-        lambda: graphene.String,
-        description="Important tags retrieved during scan"
+        lambda: graphene.String, description="Important tags retrieved during scan"
     )
 
     def resolve_value(self: Dmarc_scans, info):
@@ -26,10 +26,12 @@ class DmarcTags(SQLAlchemyObjectType):
             return tags
 
         # Check P Policy Tag
-        p_policy_tag = self.dmarc_scan.get("dmarc", {}) \
-            .get("tags", {}) \
-            .get("p", {}) \
+        p_policy_tag = (
+            self.dmarc_scan.get("dmarc", {})
+            .get("tags", {})
+            .get("p", {})
             .get("value", None)
+        )
 
         if isinstance(p_policy_tag, str):
             p_policy_tag = p_policy_tag.lower()
@@ -44,10 +46,12 @@ class DmarcTags(SQLAlchemyObjectType):
             tags.append({"dmarc6": "P-reject"})
 
         # Check PCT Tag
-        pct_tag = self.dmarc_scan.get("dmarc", {}) \
-            .get("tags", {}) \
-            .get("pct", {}) \
+        pct_tag = (
+            self.dmarc_scan.get("dmarc", {})
+            .get("tags", {})
+            .get("pct", {})
             .get("value", None)
+        )
 
         if isinstance(pct_tag, str):
             pct_tag = pct_tag.lower()
@@ -59,18 +63,18 @@ class DmarcTags(SQLAlchemyObjectType):
             if pct_tag == 100:
                 tags.append({"dmarc7": "PCT-100"})
             elif 100 > pct_tag > 0:
-                pct_string = "PCT-" + str(
-                    pct_tag
-                )
+                pct_string = "PCT-" + str(pct_tag)
                 tags.append({"dmarc8": pct_string})
             else:
                 tags.append({"dmarc21": "PCT-0"})
 
         # Check RUA Tag
-        rua_tag = self.dmarc_scan.get("dmarc", {}) \
-            .get("tags", {}) \
-            .get("rua", {}) \
+        rua_tag = (
+            self.dmarc_scan.get("dmarc", {})
+            .get("tags", {})
+            .get("rua", {})
             .get("value", None)
+        )
 
         if isinstance(rua_tag, str):
             rua_tag = rua_tag.lower()
@@ -85,10 +89,12 @@ class DmarcTags(SQLAlchemyObjectType):
                     tags.append({"dmarc12": "RUA-none"})
 
         # Check RUF Tag
-        ruf_tag = self.dmarc_scan.get("dmarc", {}) \
-            .get("tags", {}) \
-            .get("ruf", {}) \
+        ruf_tag = (
+            self.dmarc_scan.get("dmarc", {})
+            .get("tags", {})
+            .get("ruf", {})
             .get("value", None)
+        )
 
         if ruf_tag is None or not ruf_tag:
             tags.append({"dmarc13": "RUF-none"})
@@ -100,18 +106,19 @@ class DmarcTags(SQLAlchemyObjectType):
                     tags.append({"dmarc13": "RUF-none"})
 
         # TXT DMARC
-        record_tag = self.dmarc_scan.get("dmarc", {}) \
-            .get("record", None)
+        record_tag = self.dmarc_scan.get("dmarc", {}).get("record", None)
         if record_tag == "" or record_tag is None:
             tags.append({"dmarc15": "TXT-DMARC-missing"})
         else:
             tags.append({"dmarc14": "TXT-DMARC-enabled"})
 
         # Check SP tag
-        sp_tag = self.dmarc_scan.get("dmarc", {}) \
-            .get("tags", {}) \
-            .get("sp", {}) \
+        sp_tag = (
+            self.dmarc_scan.get("dmarc", {})
+            .get("tags", {})
+            .get("sp", {})
             .get("value", None)
+        )
 
         if isinstance(sp_tag, str):
             sp_tag = sp_tag.lower()

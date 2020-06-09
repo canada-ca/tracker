@@ -2,7 +2,16 @@ import pytest
 from pytest import fail
 
 from db import DB
-from models import Users, Organizations, Domains, Scans, Dkim_scans, Dmarc_scans, Spf_scans, User_affiliations
+from models import (
+    Users,
+    Organizations,
+    Domains,
+    Scans,
+    Dkim_scans,
+    Dmarc_scans,
+    Spf_scans,
+    User_affiliations,
+)
 from tests.testdata.domain_guidance_tags import spf_mock_data
 from tests.test_functions import json, run
 
@@ -19,27 +28,20 @@ def test_spf_guidance_tags_spf_2(save):
     Test that spf guidance tag spf 2 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf2")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf2")
     )
     save(test_spf_scan)
 
@@ -48,10 +50,7 @@ def test_spf_guidance_tags_spf_2(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -76,7 +75,7 @@ def test_spf_guidance_tags_spf_2(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -85,7 +84,12 @@ def test_spf_guidance_tags_spf_2(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf2': 'SPF-missing'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf2': 'SPF-missing'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_3_dkim(save):
@@ -93,33 +97,29 @@ def test_spf_guidance_tags_spf_3_dkim(save):
     Test that spf guidance tag spf 3 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
         id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf3").get("spf_mock_data_spf3_spf")
+        spf_scan=spf_mock_data.get("spf_mock_data_spf3").get("spf_mock_data_spf3_spf"),
     )
     save(test_spf_scan)
 
     test_dkim_scan = Dkim_scans(
         id=test_scan.id,
-        dkim_scan=spf_mock_data.get("spf_mock_data_spf3").get("spf_mock_data_spf3_dkim")
+        dkim_scan=spf_mock_data.get("spf_mock_data_spf3").get(
+            "spf_mock_data_spf3_dkim"
+        ),
     )
     save(test_dkim_scan)
 
@@ -128,10 +128,7 @@ def test_spf_guidance_tags_spf_3_dkim(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -156,7 +153,7 @@ def test_spf_guidance_tags_spf_3_dkim(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -165,7 +162,12 @@ def test_spf_guidance_tags_spf_3_dkim(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf3': 'SPF-bad-path'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf3': 'SPF-bad-path'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_3_dmarc(save):
@@ -173,33 +175,29 @@ def test_spf_guidance_tags_spf_3_dmarc(save):
     Test that spf guidance tag spf 3 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
         id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf3").get("spf_mock_data_spf3_spf")
+        spf_scan=spf_mock_data.get("spf_mock_data_spf3").get("spf_mock_data_spf3_spf"),
     )
     save(test_spf_scan)
 
     test_dmarc_scan = Dmarc_scans(
         id=test_scan.id,
-        dmarc_scan=spf_mock_data.get("spf_mock_data_spf3").get("spf_mock_data_spf3_dmarc")
+        dmarc_scan=spf_mock_data.get("spf_mock_data_spf3").get(
+            "spf_mock_data_spf3_dmarc"
+        ),
     )
     save(test_dmarc_scan)
 
@@ -208,10 +206,7 @@ def test_spf_guidance_tags_spf_3_dmarc(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -236,7 +231,7 @@ def test_spf_guidance_tags_spf_3_dmarc(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -245,7 +240,12 @@ def test_spf_guidance_tags_spf_3_dmarc(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf3': 'SPF-bad-path'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf3': 'SPF-bad-path'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_4(save):
@@ -253,27 +253,20 @@ def test_spf_guidance_tags_spf_4(save):
     Test that spf guidance tag spf 4 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf4")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf4")
     )
     save(test_spf_scan)
 
@@ -282,10 +275,7 @@ def test_spf_guidance_tags_spf_4(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -310,7 +300,7 @@ def test_spf_guidance_tags_spf_4(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -319,7 +309,12 @@ def test_spf_guidance_tags_spf_4(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf4': 'ALL-missing'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf4': 'ALL-missing'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_5(save):
@@ -327,27 +322,20 @@ def test_spf_guidance_tags_spf_5(save):
     Test that spf guidance tag spf 5 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf5")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf5")
     )
     save(test_spf_scan)
 
@@ -356,10 +344,7 @@ def test_spf_guidance_tags_spf_5(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -384,7 +369,7 @@ def test_spf_guidance_tags_spf_5(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -393,7 +378,12 @@ def test_spf_guidance_tags_spf_5(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf5': 'ALL-allow'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf5': 'ALL-allow'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_6(save):
@@ -401,27 +391,20 @@ def test_spf_guidance_tags_spf_6(save):
     Test that spf guidance tag spf 6 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf6")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf6")
     )
     save(test_spf_scan)
 
@@ -430,10 +413,7 @@ def test_spf_guidance_tags_spf_6(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -458,7 +438,7 @@ def test_spf_guidance_tags_spf_6(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -467,7 +447,12 @@ def test_spf_guidance_tags_spf_6(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf6': 'ALL-neutral'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf6': 'ALL-neutral'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_7(save):
@@ -475,27 +460,20 @@ def test_spf_guidance_tags_spf_7(save):
     Test that spf guidance tag spf 7 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf7")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf7")
     )
     save(test_spf_scan)
 
@@ -504,10 +482,7 @@ def test_spf_guidance_tags_spf_7(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -532,7 +507,7 @@ def test_spf_guidance_tags_spf_7(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -541,7 +516,12 @@ def test_spf_guidance_tags_spf_7(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf7': 'ALL-softfail'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf7': 'ALL-softfail'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_8(save):
@@ -549,27 +529,20 @@ def test_spf_guidance_tags_spf_8(save):
     Test that spf guidance tag spf 8 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf8")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf8")
     )
     save(test_spf_scan)
 
@@ -578,10 +551,7 @@ def test_spf_guidance_tags_spf_8(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -606,7 +576,7 @@ def test_spf_guidance_tags_spf_8(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -615,7 +585,12 @@ def test_spf_guidance_tags_spf_8(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf8': 'ALL-hardfail'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf8': 'ALL-hardfail'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_9(save):
@@ -623,27 +598,20 @@ def test_spf_guidance_tags_spf_9(save):
     Test that spf guidance tag spf 9 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf9")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf9")
     )
     save(test_spf_scan)
 
@@ -652,10 +620,7 @@ def test_spf_guidance_tags_spf_9(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -680,7 +645,7 @@ def test_spf_guidance_tags_spf_9(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -689,7 +654,12 @@ def test_spf_guidance_tags_spf_9(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf9': 'ALL-redirect'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf9': 'ALL-redirect'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_10(save):
@@ -697,27 +667,20 @@ def test_spf_guidance_tags_spf_10(save):
     Test that spf guidance tag spf 10 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf10")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf10")
     )
     save(test_spf_scan)
 
@@ -726,10 +689,7 @@ def test_spf_guidance_tags_spf_10(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -754,7 +714,7 @@ def test_spf_guidance_tags_spf_10(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -763,7 +723,12 @@ def test_spf_guidance_tags_spf_10(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf10': 'ALL-invalid'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf10': 'ALL-invalid'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_11(save):
@@ -771,27 +736,20 @@ def test_spf_guidance_tags_spf_11(save):
     Test that spf guidance tag spf 11 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf11")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf11")
     )
     save(test_spf_scan)
 
@@ -800,10 +758,7 @@ def test_spf_guidance_tags_spf_11(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -828,7 +783,7 @@ def test_spf_guidance_tags_spf_11(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -837,7 +792,12 @@ def test_spf_guidance_tags_spf_11(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf11': 'A-all'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf11': 'A-all'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_12(save):
@@ -845,27 +805,20 @@ def test_spf_guidance_tags_spf_12(save):
     Test that spf guidance tag spf 12 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf12")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf12")
     )
     save(test_spf_scan)
 
@@ -874,10 +827,7 @@ def test_spf_guidance_tags_spf_12(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -902,7 +852,7 @@ def test_spf_guidance_tags_spf_12(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -911,7 +861,12 @@ def test_spf_guidance_tags_spf_12(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf12': 'INCLUDE-limit'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf12': 'INCLUDE-limit'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_spf_guidance_tags_spf_13(save):
@@ -919,27 +874,20 @@ def test_spf_guidance_tags_spf_13(save):
     Test that spf guidance tag spf 13 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
-        id=test_scan.id,
-        spf_scan=spf_mock_data.get("spf_mock_data_spf13")
+        id=test_scan.id, spf_scan=spf_mock_data.get("spf_mock_data_spf13")
     )
     save(test_spf_scan)
 
@@ -948,10 +896,7 @@ def test_spf_guidance_tags_spf_13(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -976,7 +921,7 @@ def test_spf_guidance_tags_spf_13(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -985,4 +930,9 @@ def test_spf_guidance_tags_spf_13(save):
             "{}".format(json(result))
         )
 
-    assert "{'spf13': 'INCLUDE-missing'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]["value"]
+    assert (
+        "{'spf13': 'INCLUDE-missing'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]["value"]
+    )

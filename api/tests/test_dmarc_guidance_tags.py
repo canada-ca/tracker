@@ -19,27 +19,20 @@ def test_dkim_guidance_tags_dmarc_2(save):
     Test that dmarc guidance tag dmarc 2 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dmarc_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc2")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc2")
     )
     save(test_dmarc_scan)
 
@@ -48,10 +41,7 @@ def test_dkim_guidance_tags_dmarc_2(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -76,7 +66,7 @@ def test_dkim_guidance_tags_dmarc_2(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -85,7 +75,12 @@ def test_dkim_guidance_tags_dmarc_2(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc2': 'DMARC-missing'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc2': 'DMARC-missing'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_3(save):
@@ -93,27 +88,20 @@ def test_dkim_guidance_tags_dmarc_3(save):
     Test that dmarc guidance tag dmarc 3 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc3")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc3")
     )
     save(test_dkim_scan)
 
@@ -122,10 +110,7 @@ def test_dkim_guidance_tags_dmarc_3(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -150,7 +135,7 @@ def test_dkim_guidance_tags_dmarc_3(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -159,7 +144,12 @@ def test_dkim_guidance_tags_dmarc_3(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc3': 'P-missing'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc3': 'P-missing'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_4(save):
@@ -167,27 +157,20 @@ def test_dkim_guidance_tags_dmarc_4(save):
     Test that dmarc guidance tag dmarc 4 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc4")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc4")
     )
     save(test_dkim_scan)
 
@@ -196,10 +179,7 @@ def test_dkim_guidance_tags_dmarc_4(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -224,7 +204,7 @@ def test_dkim_guidance_tags_dmarc_4(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -233,7 +213,12 @@ def test_dkim_guidance_tags_dmarc_4(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc4': 'P-none'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc4': 'P-none'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_5(save):
@@ -241,27 +226,20 @@ def test_dkim_guidance_tags_dmarc_5(save):
     Test that dmarc guidance tag dmarc 5 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc5")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc5")
     )
     save(test_dkim_scan)
 
@@ -270,10 +248,7 @@ def test_dkim_guidance_tags_dmarc_5(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -298,7 +273,7 @@ def test_dkim_guidance_tags_dmarc_5(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -307,7 +282,12 @@ def test_dkim_guidance_tags_dmarc_5(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc5': 'P-quarantine'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc5': 'P-quarantine'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_6(save):
@@ -315,27 +295,20 @@ def test_dkim_guidance_tags_dmarc_6(save):
     Test that dmarc guidance tag dmarc 6 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc6")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc6")
     )
     save(test_dkim_scan)
 
@@ -344,10 +317,7 @@ def test_dkim_guidance_tags_dmarc_6(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -372,7 +342,7 @@ def test_dkim_guidance_tags_dmarc_6(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -381,7 +351,12 @@ def test_dkim_guidance_tags_dmarc_6(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc6': 'P-reject'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc6': 'P-reject'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_7(save):
@@ -389,27 +364,20 @@ def test_dkim_guidance_tags_dmarc_7(save):
     Test that dmarc guidance tag dmarc 7 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc7")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc7")
     )
     save(test_dkim_scan)
 
@@ -418,10 +386,7 @@ def test_dkim_guidance_tags_dmarc_7(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -446,7 +411,7 @@ def test_dkim_guidance_tags_dmarc_7(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -455,7 +420,12 @@ def test_dkim_guidance_tags_dmarc_7(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc7': 'PCT-100'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc7': 'PCT-100'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_8(save):
@@ -463,27 +433,20 @@ def test_dkim_guidance_tags_dmarc_8(save):
     Test that dmarc guidance tag dmarc 7 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc8")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc8")
     )
     save(test_dkim_scan)
 
@@ -492,10 +455,7 @@ def test_dkim_guidance_tags_dmarc_8(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -520,7 +480,7 @@ def test_dkim_guidance_tags_dmarc_8(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -529,7 +489,12 @@ def test_dkim_guidance_tags_dmarc_8(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc8': 'PCT-80'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc8': 'PCT-80'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_9(save):
@@ -537,27 +502,20 @@ def test_dkim_guidance_tags_dmarc_9(save):
     Test that dmarc guidance tag dmarc 9 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc9")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc9")
     )
     save(test_dkim_scan)
 
@@ -566,10 +524,7 @@ def test_dkim_guidance_tags_dmarc_9(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -594,7 +549,7 @@ def test_dkim_guidance_tags_dmarc_9(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -603,7 +558,12 @@ def test_dkim_guidance_tags_dmarc_9(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc9': 'PCT-invalid'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc9': 'PCT-invalid'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
@@ -611,27 +571,21 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
     Test that dmarc guidance tag dmarc 10, dmarc 11 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
         id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc10_dmarc_11")
+        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc10_dmarc_11"),
     )
     save(test_dkim_scan)
 
@@ -640,10 +594,7 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -668,7 +619,7 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -677,8 +628,18 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc10': 'RUA-CCCS'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
-    assert "{'dmarc11': 'RUF-CCCS'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc10': 'RUA-CCCS'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
+    assert (
+        "{'dmarc11': 'RUF-CCCS'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
@@ -686,27 +647,21 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
     Test that dmarc guidance tag dmarc 12, dmarc 13 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
         id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc12_dmarc_13")
+        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc12_dmarc_13"),
     )
     save(test_dkim_scan)
 
@@ -715,10 +670,7 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -743,7 +695,7 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -752,8 +704,18 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc12': 'RUA-none'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
-    assert "{'dmarc13': 'RUF-none'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc12': 'RUA-none'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
+    assert (
+        "{'dmarc13': 'RUF-none'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_14(save):
@@ -761,27 +723,20 @@ def test_dkim_guidance_tags_dmarc_14(save):
     Test that dmarc guidance tag dmarc 14 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc14")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc14")
     )
     save(test_dkim_scan)
 
@@ -790,10 +745,7 @@ def test_dkim_guidance_tags_dmarc_14(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -818,7 +770,7 @@ def test_dkim_guidance_tags_dmarc_14(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -827,7 +779,12 @@ def test_dkim_guidance_tags_dmarc_14(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc14': 'TXT-DMARC-enabled'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc14': 'TXT-DMARC-enabled'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_15(save):
@@ -835,27 +792,20 @@ def test_dkim_guidance_tags_dmarc_15(save):
     Test that dmarc guidance tag dmarc 15 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc15")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc15")
     )
     save(test_dkim_scan)
 
@@ -864,10 +814,7 @@ def test_dkim_guidance_tags_dmarc_15(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -892,7 +839,7 @@ def test_dkim_guidance_tags_dmarc_15(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -901,7 +848,12 @@ def test_dkim_guidance_tags_dmarc_15(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc15': 'TXT-DMARC-missing'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc15': 'TXT-DMARC-missing'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_16(save):
@@ -909,27 +861,20 @@ def test_dkim_guidance_tags_dmarc_16(save):
     Test that dmarc guidance tag dmarc 16 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc16")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc16")
     )
     save(test_dkim_scan)
 
@@ -938,10 +883,7 @@ def test_dkim_guidance_tags_dmarc_16(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -966,7 +908,7 @@ def test_dkim_guidance_tags_dmarc_16(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -975,7 +917,12 @@ def test_dkim_guidance_tags_dmarc_16(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc16': 'SP-missing'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc16': 'SP-missing'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_17(save):
@@ -983,27 +930,20 @@ def test_dkim_guidance_tags_dmarc_17(save):
     Test that dmarc guidance tag dmarc 17 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc17")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc17")
     )
     save(test_dkim_scan)
 
@@ -1012,10 +952,7 @@ def test_dkim_guidance_tags_dmarc_17(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -1040,7 +977,7 @@ def test_dkim_guidance_tags_dmarc_17(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -1049,7 +986,12 @@ def test_dkim_guidance_tags_dmarc_17(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc17': 'SP-none'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc17': 'SP-none'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_18(save):
@@ -1057,27 +999,20 @@ def test_dkim_guidance_tags_dmarc_18(save):
     Test that dmarc guidance tag dmarc 18 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc18")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc18")
     )
     save(test_dkim_scan)
 
@@ -1086,10 +1021,7 @@ def test_dkim_guidance_tags_dmarc_18(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -1114,7 +1046,7 @@ def test_dkim_guidance_tags_dmarc_18(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -1123,7 +1055,12 @@ def test_dkim_guidance_tags_dmarc_18(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc18': 'SP-quarantine'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc18': 'SP-quarantine'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_19(save):
@@ -1131,27 +1068,20 @@ def test_dkim_guidance_tags_dmarc_19(save):
     Test that dmarc guidance tag dmarc 19 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc19")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc19")
     )
     save(test_dkim_scan)
 
@@ -1160,10 +1090,7 @@ def test_dkim_guidance_tags_dmarc_19(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -1188,7 +1115,7 @@ def test_dkim_guidance_tags_dmarc_19(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -1197,7 +1124,12 @@ def test_dkim_guidance_tags_dmarc_19(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc19': 'SP-reject'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc19': 'SP-reject'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_20(save):
@@ -1205,27 +1137,20 @@ def test_dkim_guidance_tags_dmarc_20(save):
     Test that dmarc guidance tag dmarc 20 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc20")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc20")
     )
     save(test_dkim_scan)
 
@@ -1234,10 +1159,7 @@ def test_dkim_guidance_tags_dmarc_20(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -1262,7 +1184,7 @@ def test_dkim_guidance_tags_dmarc_20(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -1271,7 +1193,12 @@ def test_dkim_guidance_tags_dmarc_20(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc20': 'PCT-none-exists'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc20': 'PCT-none-exists'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )
 
 
 def test_dkim_guidance_tags_dmarc_21(save):
@@ -1279,27 +1206,20 @@ def test_dkim_guidance_tags_dmarc_21(save):
     Test that dmarc guidance tag dmarc 21 shows up
     """
     org_one = Organizations(
-        acronym="ORG1",
-        name="Organization 1",
-        slug="organization-1",
+        acronym="ORG1", name="Organization 1", slug="organization-1",
     )
     save(org_one)
 
     test_domain = Domains(
-        organization=org_one,
-        domain="test.domain.ca",
-        slug="test-domain-ca"
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
     )
     save(test_domain)
 
-    test_scan = Scans(
-        domain=test_domain
-    )
+    test_scan = Scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
-        id=test_scan.id,
-        dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc21")
+        id=test_scan.id, dmarc_scan=dmarc_mock_data.get("dmarc_mock_data_dmarc21")
     )
     save(test_dkim_scan)
 
@@ -1308,10 +1228,7 @@ def test_dkim_guidance_tags_dmarc_21(save):
         user_name="testuser@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(
-                permission="user_read",
-                user_organization=org_one
-            ),
+            User_affiliations(permission="user_read", user_organization=org_one),
         ],
     )
     save(user)
@@ -1336,7 +1253,7 @@ def test_dkim_guidance_tags_dmarc_21(save):
             }
         }
         """,
-        as_user=user
+        as_user=user,
     )
 
     if "errors" in result:
@@ -1345,4 +1262,9 @@ def test_dkim_guidance_tags_dmarc_21(save):
             "{}".format(json(result))
         )
 
-    assert "{'dmarc21': 'PCT-0'}" in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]["value"]
+    assert (
+        "{'dmarc21': 'PCT-0'}"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]["value"]
+    )

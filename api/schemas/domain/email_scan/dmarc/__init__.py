@@ -60,22 +60,28 @@ class DMARC(SQLAlchemyObjectType):
         return self.dmarc_scan.get("dmarc", {}).get("record", None)
 
     def resolve_p_policy(self: Dmarc_scans, info):
-        return self.dmarc_scan.get("dmarc", {}) \
-            .get("tags", {}) \
-            .get("p", {}) \
+        return (
+            self.dmarc_scan.get("dmarc", {})
+            .get("tags", {})
+            .get("p", {})
             .get("value", None)
+        )
 
     def resolve_sp_policy(self: Dmarc_scans, info):
-        return self.dmarc_scan.get("dmarc", {}) \
-            .get("tags", {}) \
-            .get("sp", {}) \
+        return (
+            self.dmarc_scan.get("dmarc", {})
+            .get("tags", {})
+            .get("sp", {})
             .get("value", None)
+        )
 
     def resolve_pct(self: Dmarc_scans, info):
-        return self.dmarc_scan.get("dmarc", {}) \
-            .get("tags", {}) \
-            .get("pct", {}) \
+        return (
+            self.dmarc_scan.get("dmarc", {})
+            .get("tags", {})
+            .get("pct", {})
             .get("value", None)
+        )
 
     def resolve_dmarc_guidance_tags(self: Dmarc_scans, info):
         return DmarcTags.get_query(info).first()

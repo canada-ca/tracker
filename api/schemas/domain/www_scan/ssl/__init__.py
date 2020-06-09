@@ -12,6 +12,7 @@ class SSL(SQLAlchemyObjectType):
     """
     SSL Scan Object
     """
+
     class Meta:
         model = Ssl_scans
         exclude_fields = ("id", "ssl_scan")
