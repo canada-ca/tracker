@@ -1,12 +1,12 @@
 import React from 'react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Text, Stack, SimpleGrid } from '@chakra-ui/core'
+import { Stack, SimpleGrid } from '@chakra-ui/core'
 import { SummaryCard } from './SummaryCard'
 import { string } from 'prop-types'
 
 export function SummaryGroup({ ...props }) {
-  const { name, title, description } = props
+  const { name } = props
   const { i18n } = useLingui()
 
   // randomized data used to populate charts before API is connected
