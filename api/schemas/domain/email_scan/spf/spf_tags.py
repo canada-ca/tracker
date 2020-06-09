@@ -3,7 +3,8 @@ import re
 
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from models import Spf_scans
+from db import db_session
+from models import Spf_scans, Dmarc_scans, Dkim_scans
 
 
 class SPFTags(SQLAlchemyObjectType):
@@ -26,6 +27,28 @@ class SPFTags(SQLAlchemyObjectType):
         if self.spf_scan.get("spf", {}).get("missing", None) is not None:
             tags.append({"spf2": "SPF-missing"})
             return tags
+
+        # Check for bad path
+        dkim_orm : Dkim_scans = db_session.query(Dkim_scans).filter(
+            Dkim_scans.id == self.id
+        ).first()
+        dmarc_orm : Dmarc_scans = db_session.query(Dmarc_scans).filter(
+            Dmarc_scans.id == self.id
+        ).first()
+
+        if dkim_orm is not None:
+            dkim_record = dkim_orm.dkim_scan.get("dkim", {}) \
+                .get("txt_record", None)
+            for key in dkim_record:
+                if key == "a" or key == "include":
+                    tags.append({"spf3": "SPF-bad-path"})
+
+        if dmarc_orm is not None:
+            dmarc_record = dmarc_orm.dmarc_scan.get("dmarc", {}) \
+                .get("record", None)
+            if ("include:" in dmarc_record) or ("a:" in dmarc_record) or ("all" in dmarc_record):
+                if not {"spf3": "SPF-bad-path"} in tags:
+                    tags.append({"spf3": "SPF-bad-path"})
 
         # Check all tag
         all_tag = self.spf_scan.get("spf", {}) \
