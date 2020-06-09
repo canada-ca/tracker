@@ -56,9 +56,7 @@ def test_dkim_guidance_tags_dkim_2(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -76,10 +74,8 @@ def test_dkim_guidance_tags_dkim_2(save):
         )
 
     assert (
-        "{'dkim2': 'DKIM-missing'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim2"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
 
 
@@ -125,9 +121,7 @@ def test_dkim_guidance_tags_dkim_5(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -145,10 +139,8 @@ def test_dkim_guidance_tags_dkim_5(save):
         )
 
     assert (
-        "{'dkim5': 'P-sub1024'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim5"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
 
 
@@ -194,9 +186,7 @@ def test_dkim_guidance_tags_dkim_6(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -214,10 +204,8 @@ def test_dkim_guidance_tags_dkim_6(save):
         )
 
     assert (
-        "{'dkim6': 'P-1024'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim6"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
 
 
@@ -263,9 +251,7 @@ def test_dkim_guidance_tags_dkim_7(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -283,10 +269,8 @@ def test_dkim_guidance_tags_dkim_7(save):
         )
 
     assert (
-        "{'dkim7': 'P-2048'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim7"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
 
 
@@ -332,9 +316,7 @@ def test_dkim_guidance_tags_dkim_8(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -352,10 +334,8 @@ def test_dkim_guidance_tags_dkim_8(save):
         )
 
     assert (
-        "{'dkim8': 'P-4096'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim8"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
 
 
@@ -401,9 +381,7 @@ def test_dkim_guidance_tags_dkim_9(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -421,10 +399,8 @@ def test_dkim_guidance_tags_dkim_9(save):
         )
 
     assert (
-        "{'dkim9': 'P-invalid'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim9"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
 
 
@@ -470,9 +446,7 @@ def test_dkim_guidance_tags_dkim_10(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -490,10 +464,8 @@ def test_dkim_guidance_tags_dkim_10(save):
         )
 
     assert (
-        "{'dkim10': 'P-update-recommended'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim10"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
 
 
@@ -539,9 +511,7 @@ def test_dkim_guidance_tags_dkim_11(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -559,10 +529,8 @@ def test_dkim_guidance_tags_dkim_11(save):
         )
 
     assert (
-        "{'dkim11': 'DKIM-invalid-crypto'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim11"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
 
 
@@ -608,9 +576,7 @@ def test_dkim_guidance_tags_dkim_12(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -628,10 +594,8 @@ def test_dkim_guidance_tags_dkim_12(save):
         )
 
     assert (
-        "{'dkim12': 'DKIM-value-invalid'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim12"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
 
 
@@ -677,9 +641,7 @@ def test_dkim_guidance_tags_dkim_13(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags {
-                                    value
-                                }
+                                dkimGuidanceTags
                             }
                         }
                     }
@@ -697,8 +659,6 @@ def test_dkim_guidance_tags_dkim_13(save):
         )
 
     assert (
-        "{'dkim13': 'T-enabled'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]["value"]
+        "dkim13"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"]["dkimGuidanceTags"]
     )
