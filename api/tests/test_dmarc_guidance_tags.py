@@ -1,5 +1,4 @@
 import pytest
-from datetime import datetime
 from pytest import fail
 
 from db import DB
