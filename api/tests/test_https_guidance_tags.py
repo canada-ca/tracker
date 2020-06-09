@@ -82,7 +82,7 @@ def test_dkim_guidance_tags_https_2(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -156,7 +156,7 @@ def test_dkim_guidance_tags_https_3(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -230,7 +230,7 @@ def test_dkim_guidance_tags_https_4(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -304,7 +304,7 @@ def test_dkim_guidance_tags_https_5(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -378,7 +378,7 @@ def test_dkim_guidance_tags_https_6(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -452,7 +452,7 @@ def test_dkim_guidance_tags_https_7(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -526,7 +526,7 @@ def test_dkim_guidance_tags_https_8(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -600,7 +600,7 @@ def test_dkim_guidance_tags_https_9(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -674,7 +674,7 @@ def test_dkim_guidance_tags_https_10(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -748,7 +748,7 @@ def test_dkim_guidance_tags_https_11(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -822,7 +822,7 @@ def test_dkim_guidance_tags_https_12(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -896,7 +896,7 @@ def test_dkim_guidance_tags_https_13(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -970,7 +970,7 @@ def test_dkim_guidance_tags_https_14(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected https guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 

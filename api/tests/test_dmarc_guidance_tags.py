@@ -82,7 +82,7 @@ def test_dkim_guidance_tags_dmarc_2(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -156,7 +156,7 @@ def test_dkim_guidance_tags_dmarc_3(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -230,7 +230,7 @@ def test_dkim_guidance_tags_dmarc_4(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -304,7 +304,7 @@ def test_dkim_guidance_tags_dmarc_5(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -378,7 +378,7 @@ def test_dkim_guidance_tags_dmarc_6(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -452,7 +452,7 @@ def test_dkim_guidance_tags_dmarc_7(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -526,7 +526,7 @@ def test_dkim_guidance_tags_dmarc_8(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -600,7 +600,7 @@ def test_dkim_guidance_tags_dmarc_9(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -674,7 +674,7 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -749,7 +749,7 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -824,7 +824,7 @@ def test_dkim_guidance_tags_dmarc_14(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -898,7 +898,7 @@ def test_dkim_guidance_tags_dmarc_15(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -972,7 +972,7 @@ def test_dkim_guidance_tags_dmarc_16(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -1046,7 +1046,7 @@ def test_dkim_guidance_tags_dmarc_17(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -1120,7 +1120,7 @@ def test_dkim_guidance_tags_dmarc_18(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -1194,7 +1194,7 @@ def test_dkim_guidance_tags_dmarc_19(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -1268,7 +1268,7 @@ def test_dkim_guidance_tags_dmarc_20(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
@@ -1342,7 +1342,7 @@ def test_dkim_guidance_tags_dmarc_21(save):
 
     if "errors" in result:
         fail(
-            "expected signin for a normal user to succeed. Instead:"
+            "expected dmarc guidance tags to be returned. Instead:"
             "{}".format(json(result))
         )
 
