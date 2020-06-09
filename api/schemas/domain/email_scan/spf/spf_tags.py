@@ -24,7 +24,8 @@ class SPFTags(SQLAlchemyObjectType):
         tags = []
 
         if self.spf_scan.get("spf", {}).get("missing", None) is not None:
-            return tags.append({"spf2": "SPF-missing"})
+            tags.append({"spf2": "SPF-missing"})
+            return tags
 
         # Check all tag
         all_tag = self.spf_scan.get("spf", {}) \
@@ -36,7 +37,7 @@ class SPFTags(SQLAlchemyObjectType):
         if isinstance(all_tag, str):
             all_tag = all_tag.lower()
 
-        if record_all_tag == "":
+        if record_all_tag != "-all" and record_all_tag != "~all":
             tags.append({"spf10": "ALL-invalid"})
         elif all_tag == "missing":
             tags.append({"spf4": "ALL-missing"})
@@ -51,25 +52,36 @@ class SPFTags(SQLAlchemyObjectType):
                 tags.append({"spf8": "ALL-hardfail"})
             elif record_all_tag == "~all":
                 tags.append({"spf7": "ALL-softfail"})
-        else:
-            record = self.spf_scan.get("spf", {}) \
-                .get("record", None)
-            if record is not None:
-                search_string = "a:"
-                matches = re.finditer(search_string, record)
 
-                for match in matches:
-                    if record[match:1] == "":
-                        tags.append({"spf11": "A-all"})
+        # Check for no host
+        record = self.spf_scan.get("spf", {}) \
+            .get("record", None)
+        if record is not None:
+            search_string = "a:"
+            matches = re.finditer(search_string, record)
+            match_pos = [match.start() for match in matches]
 
-        # All tag check
-        record_all_tag = self.spf_scan.get("spf", {}) \
-            .get("record", "")[-4:].lower()
-        if record_all_tag == "-all":
-            tags.append({"spf10": "A-all"})
+            for pos in match_pos:
+                if record[pos+1:1] == "" and not {"spf11": "A-all"} in tags:
+                    tags.append({"spf11": "A-all"})
 
+        # Look up limit check
         dns_lookups = self.spf_scan.get("spf", {}).get("dns_lookups", 0)
         if dns_lookups > 10:
             tags.append({"spf12": "INCLUDE-limit"})
+
+        # Check for missing include
+        include = self.spf_scan.get("spf", {}) \
+            .get("parsed", {}) \
+            .get("include", None)
+        record = self.spf_scan.get("spf", {}) \
+            .get("record", None)
+
+        if include is not None and record is not None:
+            for item in include:
+                check_item = item.get("domain", None)
+                if check_item is not None and f"include:{check_item}" not in record:
+                    if not {"spf13": "INCLUDE-missing"} in tags:
+                        tags.append({"spf13": "INCLUDE-missing"})
 
         return tags
