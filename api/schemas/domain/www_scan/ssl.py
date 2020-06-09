@@ -20,7 +20,7 @@ class SSL(SQLAlchemyObjectType):
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
     ssl_guidance_tags = graphene.List(
-        lambda: graphene.String, descriptions="Key tags found during scan"
+        lambda: graphene.String, description="Key tags found during scan"
     )
 
     def resolve_domain(self, info):
