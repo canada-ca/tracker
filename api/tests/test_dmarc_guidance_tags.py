@@ -56,9 +56,7 @@ def test_dkim_guidance_tags_dmarc_2(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -76,10 +74,8 @@ def test_dkim_guidance_tags_dmarc_2(save):
         )
 
     assert (
-        "{'dmarc2': 'DMARC-missing'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc2"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -125,9 +121,7 @@ def test_dkim_guidance_tags_dmarc_3(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -145,10 +139,8 @@ def test_dkim_guidance_tags_dmarc_3(save):
         )
 
     assert (
-        "{'dmarc3': 'P-missing'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc3"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -194,9 +186,7 @@ def test_dkim_guidance_tags_dmarc_4(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -214,10 +204,8 @@ def test_dkim_guidance_tags_dmarc_4(save):
         )
 
     assert (
-        "{'dmarc4': 'P-none'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc4"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -263,9 +251,7 @@ def test_dkim_guidance_tags_dmarc_5(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -283,10 +269,8 @@ def test_dkim_guidance_tags_dmarc_5(save):
         )
 
     assert (
-        "{'dmarc5': 'P-quarantine'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc5"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -332,9 +316,7 @@ def test_dkim_guidance_tags_dmarc_6(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -352,10 +334,8 @@ def test_dkim_guidance_tags_dmarc_6(save):
         )
 
     assert (
-        "{'dmarc6': 'P-reject'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc6"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -401,9 +381,7 @@ def test_dkim_guidance_tags_dmarc_7(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -421,10 +399,8 @@ def test_dkim_guidance_tags_dmarc_7(save):
         )
 
     assert (
-        "{'dmarc7': 'PCT-100'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc7"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -470,9 +446,7 @@ def test_dkim_guidance_tags_dmarc_8(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -490,10 +464,8 @@ def test_dkim_guidance_tags_dmarc_8(save):
         )
 
     assert (
-        "{'dmarc8': 'PCT-80'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc8"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -539,9 +511,7 @@ def test_dkim_guidance_tags_dmarc_9(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -559,10 +529,8 @@ def test_dkim_guidance_tags_dmarc_9(save):
         )
 
     assert (
-        "{'dmarc9': 'PCT-invalid'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc9"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -609,9 +577,7 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -629,16 +595,12 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
         )
 
     assert (
-        "{'dmarc10': 'RUA-CCCS'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc10"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
     assert (
-        "{'dmarc11': 'RUF-CCCS'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc11"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -685,9 +647,7 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -705,16 +665,12 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
         )
 
     assert (
-        "{'dmarc12': 'RUA-none'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc12"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
     assert (
-        "{'dmarc13': 'RUF-none'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc13"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -760,9 +716,7 @@ def test_dkim_guidance_tags_dmarc_14(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -780,10 +734,8 @@ def test_dkim_guidance_tags_dmarc_14(save):
         )
 
     assert (
-        "{'dmarc14': 'TXT-DMARC-enabled'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc14"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -829,9 +781,7 @@ def test_dkim_guidance_tags_dmarc_15(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -849,10 +799,8 @@ def test_dkim_guidance_tags_dmarc_15(save):
         )
 
     assert (
-        "{'dmarc15': 'TXT-DMARC-missing'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc15"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -898,9 +846,7 @@ def test_dkim_guidance_tags_dmarc_16(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -918,10 +864,8 @@ def test_dkim_guidance_tags_dmarc_16(save):
         )
 
     assert (
-        "{'dmarc16': 'SP-missing'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc16"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -967,9 +911,7 @@ def test_dkim_guidance_tags_dmarc_17(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -987,10 +929,8 @@ def test_dkim_guidance_tags_dmarc_17(save):
         )
 
     assert (
-        "{'dmarc17': 'SP-none'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc17"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -1036,9 +976,7 @@ def test_dkim_guidance_tags_dmarc_18(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -1056,10 +994,8 @@ def test_dkim_guidance_tags_dmarc_18(save):
         )
 
     assert (
-        "{'dmarc18': 'SP-quarantine'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc18"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -1105,9 +1041,7 @@ def test_dkim_guidance_tags_dmarc_19(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -1125,10 +1059,8 @@ def test_dkim_guidance_tags_dmarc_19(save):
         )
 
     assert (
-        "{'dmarc19': 'SP-reject'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc19"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -1174,9 +1106,7 @@ def test_dkim_guidance_tags_dmarc_20(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -1194,10 +1124,8 @@ def test_dkim_guidance_tags_dmarc_20(save):
         )
 
     assert (
-        "{'dmarc20': 'PCT-none-exists'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc20"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
 
 
@@ -1243,9 +1171,7 @@ def test_dkim_guidance_tags_dmarc_21(save):
                     edges {
                         node {
                             dmarc {
-                                dmarcGuidanceTags {
-                                    value
-                                }
+                                dmarcGuidanceTags
                             }
                         }
                     }
@@ -1263,8 +1189,6 @@ def test_dkim_guidance_tags_dmarc_21(save):
         )
 
     assert (
-        "{'dmarc21': 'PCT-0'}"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
-            "dmarcGuidanceTags"
-        ]["value"]
+        "dmarc21"
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
     )
