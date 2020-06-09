@@ -75,7 +75,9 @@ def test_dkim_guidance_tags_dmarc_2(save):
 
     assert (
         "dmarc2"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -140,7 +142,9 @@ def test_dkim_guidance_tags_dmarc_3(save):
 
     assert (
         "dmarc3"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -205,7 +209,9 @@ def test_dkim_guidance_tags_dmarc_4(save):
 
     assert (
         "dmarc4"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -270,7 +276,9 @@ def test_dkim_guidance_tags_dmarc_5(save):
 
     assert (
         "dmarc5"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -335,7 +343,9 @@ def test_dkim_guidance_tags_dmarc_6(save):
 
     assert (
         "dmarc6"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -400,7 +410,9 @@ def test_dkim_guidance_tags_dmarc_7(save):
 
     assert (
         "dmarc7"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -465,7 +477,9 @@ def test_dkim_guidance_tags_dmarc_8(save):
 
     assert (
         "dmarc8"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -530,7 +544,9 @@ def test_dkim_guidance_tags_dmarc_9(save):
 
     assert (
         "dmarc9"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -596,11 +612,15 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
 
     assert (
         "dmarc10"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
     assert (
         "dmarc11"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -666,11 +686,15 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
 
     assert (
         "dmarc12"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
     assert (
         "dmarc13"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -735,7 +759,9 @@ def test_dkim_guidance_tags_dmarc_14(save):
 
     assert (
         "dmarc14"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -800,7 +826,9 @@ def test_dkim_guidance_tags_dmarc_15(save):
 
     assert (
         "dmarc15"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -865,7 +893,9 @@ def test_dkim_guidance_tags_dmarc_16(save):
 
     assert (
         "dmarc16"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -930,7 +960,9 @@ def test_dkim_guidance_tags_dmarc_17(save):
 
     assert (
         "dmarc17"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -995,7 +1027,9 @@ def test_dkim_guidance_tags_dmarc_18(save):
 
     assert (
         "dmarc18"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -1060,7 +1094,9 @@ def test_dkim_guidance_tags_dmarc_19(save):
 
     assert (
         "dmarc19"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -1125,7 +1161,9 @@ def test_dkim_guidance_tags_dmarc_20(save):
 
     assert (
         "dmarc20"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )
 
 
@@ -1190,5 +1228,7 @@ def test_dkim_guidance_tags_dmarc_21(save):
 
     assert (
         "dmarc21"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"]["dmarcGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dmarc"][
+            "dmarcGuidanceTags"
+        ]
     )

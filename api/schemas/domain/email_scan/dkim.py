@@ -71,8 +71,7 @@ class DKIM(SQLAlchemyObjectType):
                 tags.append("dkim9")
 
         # Update Recommended
-        key_invalid = self.dkim_scan.get("dkim", {}).get("update-recommend",
-                                                         None)
+        key_invalid = self.dkim_scan.get("dkim", {}).get("update-recommend", None)
 
         if key_invalid:
             tags.append("dkim10")
@@ -87,12 +86,9 @@ class DKIM(SQLAlchemyObjectType):
 
         # Dkim value invalid
         # Check if v, k, and p exist in txt_record
-        v_tag = self.dkim_scan.get("dkim", {}).get("txt_record", {}).get("v",
-                                                                         None)
-        k_tag = self.dkim_scan.get("dkim", {}).get("txt_record", {}).get("k",
-                                                                         None)
-        p_tag = self.dkim_scan.get("dkim", {}).get("txt_record", {}).get("p",
-                                                                         None)
+        v_tag = self.dkim_scan.get("dkim", {}).get("txt_record", {}).get("v", None)
+        k_tag = self.dkim_scan.get("dkim", {}).get("txt_record", {}).get("k", None)
+        p_tag = self.dkim_scan.get("dkim", {}).get("txt_record", {}).get("p", None)
 
         if v_tag is None and k_tag is None and p_tag is None:
             if "dkim12" not in tags:

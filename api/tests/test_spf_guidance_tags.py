@@ -84,7 +84,9 @@ def test_spf_guidance_tags_spf_2(save):
 
     assert (
         "spf2"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -158,7 +160,9 @@ def test_spf_guidance_tags_spf_3_dkim(save):
 
     assert (
         "spf3"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -232,7 +236,9 @@ def test_spf_guidance_tags_spf_3_dmarc(save):
 
     assert (
         "spf3"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -297,7 +303,9 @@ def test_spf_guidance_tags_spf_4(save):
 
     assert (
         "spf4"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -362,7 +370,9 @@ def test_spf_guidance_tags_spf_5(save):
 
     assert (
         "spf5"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -427,7 +437,9 @@ def test_spf_guidance_tags_spf_6(save):
 
     assert (
         "spf6"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -492,7 +504,9 @@ def test_spf_guidance_tags_spf_7(save):
 
     assert (
         "spf7"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -557,7 +571,9 @@ def test_spf_guidance_tags_spf_8(save):
 
     assert (
         "spf8"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -622,7 +638,9 @@ def test_spf_guidance_tags_spf_9(save):
 
     assert (
         "spf9"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -687,7 +705,9 @@ def test_spf_guidance_tags_spf_10(save):
 
     assert (
         "spf10"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -752,7 +772,9 @@ def test_spf_guidance_tags_spf_11(save):
 
     assert (
         "spf11"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -817,7 +839,9 @@ def test_spf_guidance_tags_spf_12(save):
 
     assert (
         "spf12"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )
 
 
@@ -882,5 +906,7 @@ def test_spf_guidance_tags_spf_13(save):
 
     assert (
         "spf13"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"]["spfGuidanceTags"]
+        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["spf"][
+            "spfGuidanceTags"
+        ]
     )

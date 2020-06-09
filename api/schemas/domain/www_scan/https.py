@@ -11,6 +11,7 @@ class HTTPS(SQLAlchemyObjectType):
     """
     Http Scan Object
     """
+
     class Meta:
         model = Https_scans
         exclude_fields = ("id", "https_scan")
@@ -18,25 +19,12 @@ class HTTPS(SQLAlchemyObjectType):
     id = graphene.ID(description="The ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
-    implementation = graphene.String(
-        description=""
-    )
-    enforced = graphene.String(
-        description=""
-    )
-    hsts = graphene.String(
-        description=""
-    )
-    hsts_age = graphene.String(
-        description=""
-    )
-    preloaded = graphene.String(
-        description=""
-    )
-    https_guidance_tags = graphene.List(
-        lambda: graphene.String,
-        description=""
-    )
+    implementation = graphene.String(description="")
+    enforced = graphene.String(description="")
+    hsts = graphene.String(description="")
+    hsts_age = graphene.String(description="")
+    preloaded = graphene.String(description="")
+    https_guidance_tags = graphene.List(lambda: graphene.String, description="")
 
     def resole_domain(self: Https_scans, info):
         return get_domain(self, info)

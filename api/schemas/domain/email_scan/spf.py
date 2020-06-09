@@ -77,15 +77,13 @@ class SPF(SQLAlchemyObjectType):
         ).first()
 
         if dkim_orm is not None:
-            dkim_record = dkim_orm.dkim_scan.get("dkim", {}).get("txt_record",
-                                                                 None)
+            dkim_record = dkim_orm.dkim_scan.get("dkim", {}).get("txt_record", None)
             for key in dkim_record:
                 if key == "a" or key == "include":
                     tags.append("spf3")
 
         if dmarc_orm is not None:
-            dmarc_record = dmarc_orm.dmarc_scan.get("dmarc", {}).get("record",
-                                                                     None)
+            dmarc_record = dmarc_orm.dmarc_scan.get("dmarc", {}).get("record", None)
             if (
                 ("include:" in dmarc_record)
                 or ("a:" in dmarc_record)
@@ -95,10 +93,8 @@ class SPF(SQLAlchemyObjectType):
                     tags.append("spf3")
 
         # Check all tag
-        all_tag = self.spf_scan.get("spf", {}).get("parsed", {}).get("all",
-                                                                     None)
-        record_all_tag = self.spf_scan.get("spf", {}).get("record", "")[
-                         -4:].lower()
+        all_tag = self.spf_scan.get("spf", {}).get("parsed", {}).get("all", None)
+        record_all_tag = self.spf_scan.get("spf", {}).get("record", "")[-4:].lower()
 
         if isinstance(all_tag, str):
             all_tag = all_tag.lower()
@@ -127,7 +123,7 @@ class SPF(SQLAlchemyObjectType):
             match_pos = [match.start() for match in matches]
 
             for pos in match_pos:
-                if record[pos + 1: 1] == "" and not "spf11" in tags:
+                if record[pos + 1 : 1] == "" and not "spf11" in tags:
                     tags.append("spf11")
 
         # Look up limit check
@@ -136,8 +132,7 @@ class SPF(SQLAlchemyObjectType):
             tags.append("spf12")
 
         # Check for missing include
-        include = self.spf_scan.get("spf", {}).get("parsed", {}).get("include",
-                                                                     None)
+        include = self.spf_scan.get("spf", {}).get("parsed", {}).get("include", None)
         record = self.spf_scan.get("spf", {}).get("record", None)
 
         if include is not None and record is not None:

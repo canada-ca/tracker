@@ -75,7 +75,9 @@ def test_spf_guidance_tags_spf_2(save):
 
     assert (
         "ssl2"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+            "sslGuidanceTags"
+        ]
     )
 
 
@@ -140,7 +142,9 @@ def test_spf_guidance_tags_spf_3(save):
 
     assert (
         "ssl3"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+            "sslGuidanceTags"
+        ]
     )
 
 
@@ -205,7 +209,9 @@ def test_spf_guidance_tags_spf_4(save):
 
     assert (
         "ssl4"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+            "sslGuidanceTags"
+        ]
     )
 
 
@@ -270,7 +276,9 @@ def test_spf_guidance_tags_spf_5(save):
 
     assert (
         "ssl5"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+            "sslGuidanceTags"
+        ]
     )
 
 
@@ -335,7 +343,9 @@ def test_spf_guidance_tags_spf_6(save):
 
     assert (
         "ssl6"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+            "sslGuidanceTags"
+        ]
     )
 
 
@@ -400,7 +410,9 @@ def test_spf_guidance_tags_spf_7(save):
 
     assert (
         "ssl7"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+            "sslGuidanceTags"
+        ]
     )
 
 
@@ -465,5 +477,7 @@ def test_spf_guidance_tags_spf_8(save):
 
     assert (
         "ssl8"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"]["sslGuidanceTags"]
+        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+            "sslGuidanceTags"
+        ]
     )
