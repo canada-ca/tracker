@@ -48,6 +48,7 @@ def Server(scanners, default_client=requests):
         outbound_payload = {
             "scan_id": inbound_payload["scan_id"],
             "domain": inbound_payload["domain"],
+            "selectors": inbound_payload["selectors"]
         }
 
         logging.info("Scan request parsed successfully")
@@ -56,21 +57,17 @@ def Server(scanners, default_client=requests):
             web_scanners = {
                 "https": scanners["https"]["manual"],
                 "ssl": scanners["ssl"]["manual"],
-                "dmarc": scanners["dmarc"]["manual"],
             }
             mail_scanners = {
-                "dkim": scanners["dkim"]["manual"],
-                "dmarc": scanners["dmarc"]["manual"],
+                "dns": scanners["dns"]["manual"],
             }
         else:
             web_scanners = {
                 "https": scanners["https"]["auto"],
                 "ssl": scanners["ssl"]["auto"],
-                "dmarc": scanners["dmarc"]["auto"],
             }
             mail_scanners = {
-                "dkim": scanners["dkim"]["auto"],
-                "dmarc": scanners["dmarc"]["auto"],
+                "dns": scanners["dns"]["auto"],
             }
 
         if scan_type == "web":
@@ -97,8 +94,7 @@ def Server(scanners, default_client=requests):
 
 app = Server(
     scanners={
-        "dkim": {"auto": scan_dkim, "manual": manual_scan_dkim},
-        "dmarc": {"auto": scan_dmarc, "manual": manual_scan_dmarc},
+        "dns": {"auto": scan_dns, "manual": manual_scan_dns},
         "https": {"auto": scan_https, "manual": manual_scan_https},
         "ssl": {"auto": scan_ssl, "manual": manual_scan_ssl},
     }
