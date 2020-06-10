@@ -72,7 +72,7 @@ export default function UserPage() {
   if (updatePasswordError) {
     return <p>{String(updatePasswordError)}</p>
   }
-
+  console.log('User Data:', queryUserData)
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Formik
@@ -115,7 +115,11 @@ export default function UserPage() {
                 />
               </Stack>
 
-              <LanguageSelect name="lang" />
+              <Stack>
+                <Text fontSize="xl">Preferred Language:</Text>
+                <LanguageSelect name="lang" />
+              </Stack>
+
               <Button type="submit" variantColor="teal" w={'50%'} mt={5}>
                 Save Changes
               </Button>

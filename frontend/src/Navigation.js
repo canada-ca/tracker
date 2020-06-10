@@ -31,12 +31,14 @@ export const Navigation = ({ children, ...props }) => {
           flexGrow={1}
         >
           {React.Children.map(children, (child) => {
-            return React.cloneElement(child, {
-              as: ReactRouterLink,
-              mt: { base: 4, md: 0 },
-              mr: 6,
-              display: 'inline',
-            })
+            if (child !== null) {
+              return React.cloneElement(child, {
+                as: ReactRouterLink,
+                mt: { base: 4, md: 0 },
+                mr: 6,
+                display: 'inline',
+              })
+            }
           })}
         </Box>
       </Flex>

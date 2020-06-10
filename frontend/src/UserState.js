@@ -19,6 +19,8 @@ export function UserStateProvider({ initialState, children }) {
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  console.log('State: ', state)
+
   const userState = {
     currentUser: state,
     isLoggedIn: () => !equal(state, initialState),

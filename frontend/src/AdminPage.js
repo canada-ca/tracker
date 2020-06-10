@@ -1,16 +1,5 @@
 import React from 'react'
-import {
-  Stack,
-  SimpleGrid,
-  Divider,
-  Button,
-  Icon,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  Text,
-  Heading,
-} from '@chakra-ui/core'
+import { Stack, SimpleGrid, Text } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 import UserList from './UserList'
 import DomainsPage from './DomainsPage'
@@ -34,7 +23,6 @@ export default function AdminPage() {
               Organization Profile
             </Text>
             <Text>Name: $orgname</Text>
-            <Text>Location: $location</Text>
             <Text>Admins: $adminlist</Text>
             <Text>Member Count: $membercount</Text>
           </Stack>
