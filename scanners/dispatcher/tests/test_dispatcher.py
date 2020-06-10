@@ -1,15 +1,12 @@
 import pytest
 import asyncio
 from unittest.mock import MagicMock
-from pretend import stub
 from starlette.testclient import TestClient
 from dispatcher import Server
 from utils import *
 
 
 def test_web_scan():
-    test_dmarc = MagicMock(return_value=asyncio.Future())
-    test_dmarc.return_value.set_result("Dispatched to dmarc scanner")
     test_https = MagicMock(return_value=asyncio.Future())
     test_https.return_value.set_result("Dispatched to https scanner")
     test_ssl = MagicMock(return_value=asyncio.Future())
@@ -17,8 +14,7 @@ def test_web_scan():
 
     test_app = Server(
         scanners={
-            "dkim": {"auto": scan_dkim, "manual": manual_scan_dkim},
-            "dmarc": {"auto": test_dmarc, "manual": manual_scan_dmarc},
+            "dns": {"auto": scan_dns, "manual": manual_scan_dns},
             "https": {"auto": test_https, "manual": manual_scan_https},
             "ssl": {"auto": test_ssl, "manual": manual_scan_ssl},
         },
@@ -27,7 +23,7 @@ def test_web_scan():
     test_client = TestClient(test_app)
     test_app.state.client = test_client
 
-    test_payload = {"scan_id": 1, "domain": "cyber.gc.ca", "user_init": False}
+    test_payload = {"scan_id": 1, "domain": "cyber.gc.ca", "user_init": False, "selectors": []}
     headers = {
         "Content-Type": "application/json",
         "Data": str(test_payload),
@@ -40,15 +36,12 @@ def test_web_scan():
 
 
 def test_mail_scan():
-    test_dmarc = MagicMock(return_value=asyncio.Future())
-    test_dmarc.return_value.set_result("Dispatched to dmarc scanner")
-    test_dkim = MagicMock(return_value=asyncio.Future())
-    test_dkim.return_value.set_result("Dispatched to dkim scanner")
+    test_dns = MagicMock(return_value=asyncio.Future())
+    test_dns.return_value.set_result("Dispatched to dns scanner")
 
     test_app = Server(
         scanners={
-            "dkim": {"auto": test_dkim, "manual": manual_scan_dkim},
-            "dmarc": {"auto": test_dmarc, "manual": manual_scan_dmarc},
+            "dns": {"auto": test_dns, "manual": manual_scan_dns},
             "https": {"auto": scan_https, "manual": manual_scan_https},
             "ssl": {"auto": scan_ssl, "manual": manual_scan_ssl},
         },
@@ -59,8 +52,9 @@ def test_mail_scan():
 
     test_payload = {
         "scan_id": 1,
-        "domain": "selector1._domainkey.cyber.gc.ca",
+        "domain": "cyber.gc.ca",
         "user_init": False,
+        "selectors": ["selector1._domainkey", "selector2._domainkey"]
     }
     headers = {
         "Content-Type": "application/json",
@@ -74,8 +68,6 @@ def test_mail_scan():
 
 
 def test_manual_web_scan():
-    test_dmarc = MagicMock(return_value=asyncio.Future())
-    test_dmarc.return_value.set_result("Dispatched to dmarc scanner")
     test_https = MagicMock(return_value=asyncio.Future())
     test_https.return_value.set_result("Dispatched to https scanner")
     test_ssl = MagicMock(return_value=asyncio.Future())
@@ -83,8 +75,7 @@ def test_manual_web_scan():
 
     test_app = Server(
         scanners={
-            "dkim": {"auto": scan_dkim, "manual": manual_scan_dkim},
-            "dmarc": {"auto": scan_dmarc, "manual": test_dmarc},
+            "dns": {"auto": scan_dns, "manual": manual_scan_dns},
             "https": {"auto": scan_https, "manual": test_https},
             "ssl": {"auto": scan_ssl, "manual": test_ssl},
         },
@@ -93,7 +84,7 @@ def test_manual_web_scan():
     test_client = TestClient(test_app)
     test_app.state.client = test_client
 
-    test_payload = {"scan_id": 1, "domain": "cyber.gc.ca", "user_init": True}
+    test_payload = {"scan_id": 1, "domain": "cyber.gc.ca", "user_init": True, "selectors": []}
     headers = {
         "Content-Type": "application/json",
         "Data": str(test_payload),
@@ -106,15 +97,12 @@ def test_manual_web_scan():
 
 
 def test_manual_mail_scan():
-    test_dmarc = MagicMock(return_value=asyncio.Future())
-    test_dmarc.return_value.set_result("Dispatched to dmarc scanner")
-    test_dkim = MagicMock(return_value=asyncio.Future())
-    test_dkim.return_value.set_result("Dispatched to dkim scanner")
+    test_dns = MagicMock(return_value=asyncio.Future())
+    test_dns.return_value.set_result("Dispatched to dns scanner")
 
     test_app = Server(
         scanners={
-            "dkim": {"auto": scan_dkim, "manual": test_dkim},
-            "dmarc": {"auto": scan_dmarc, "manual": test_dmarc},
+            "dns": {"auto": scan_dns, "manual": test_dns},
             "https": {"auto": scan_https, "manual": manual_scan_https},
             "ssl": {"auto": scan_ssl, "manual": manual_scan_ssl},
         },
@@ -125,8 +113,9 @@ def test_manual_mail_scan():
 
     test_payload = {
         "scan_id": 1,
-        "domain": "selector1._domainkey.cyber.gc.ca",
+        "domain": "cyber.gc.ca",
         "user_init": True,
+        "selectors": ["selector1._domainkey", "selector2._domainkey"]
     }
     headers = {
         "Content-Type": "application/json",
