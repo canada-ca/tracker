@@ -72,7 +72,7 @@ def test_process_ssl():
 
 def test_process_dns():
     test_dns_insert = MagicMock(return_value=asyncio.Future())
-    test_dns_insert.return_value.set_result("DMARC Scan inserted into database")
+    test_dns_insert.return_value.set_result("DNS Scans inserted into database")
     test_app = Server(
         functions={
             "insert": {
