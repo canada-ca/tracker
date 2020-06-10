@@ -6,7 +6,6 @@ from graphene_sqlalchemy.types import ORMField
 from models import Domains, Scans
 from scalars.slug import Slug
 from scalars.url import URL
-from resolvers.dmarc_report import resolve_dmarc_reports
 from schemas.domain.email_scan import EmailScan
 from schemas.domain.www_scan import WWWScan
 
