@@ -6,6 +6,7 @@ import requests
 import emoji
 import sqlalchemy
 from sqlalchemy.sql import select
+from sqlalchemy.dialects.postgresql import ARRAY
 import databases
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
@@ -33,6 +34,7 @@ Domains = sqlalchemy.Table(
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("domain", sqlalchemy.String),
     sqlalchemy.Column("last_run", sqlalchemy.DateTime),
+    sqlalchemy.Column("selectors", ARRAY(sqlalchemy.String)),
     sqlalchemy.Column(
         "organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")
     ),
@@ -127,7 +129,7 @@ Mail_scans = sqlalchemy.Table(
         "domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")
     ),
     sqlalchemy.Column("scan_date", sqlalchemy.DateTime),
-    sqlalchemy.Column("selectors", sqlalchemy.Array(sqlalchemy.String)),
+    sqlalchemy.Column("selectors", ARRAY(sqlalchemy.String)),
     sqlalchemy.Column(
         "initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")
     ),
