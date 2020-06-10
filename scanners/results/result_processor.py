@@ -106,7 +106,7 @@ User_affiliations = sqlalchemy.Table(
     sqlalchemy.Column("permission", sqlalchemy.String),
 )
 
-Scans = sqlalchemy.Table(
+Web_scans = sqlalchemy.Table(
     "scans",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
@@ -114,6 +114,20 @@ Scans = sqlalchemy.Table(
         "domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")
     ),
     sqlalchemy.Column("scan_date", sqlalchemy.DateTime),
+    sqlalchemy.Column(
+        "initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")
+    ),
+)
+
+Mail_scans = sqlalchemy.Table(
+    "scans",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column(
+        "domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")
+    ),
+    sqlalchemy.Column("scan_date", sqlalchemy.DateTime),
+    sqlalchemy.Column("selectors", sqlalchemy.Array(sqlalchemy.String)),
     sqlalchemy.Column(
         "initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")
     ),
@@ -376,30 +390,22 @@ def process_ssl(results):
     return report
 
 
-def process_dmarc(results):
+def process_dns(results):
 
     if results is not None and results is not {}:
         report = {
             "dmarc": results["dmarc"],
             "spf": results["spf"],
             "mx": results["mx"],
+            "dkim": results["dkim"],
         }
     else:
         report = {
             "dmarc": {"missing": True},
             "spf": {"missing": True},
             "mx": {"missing": True},
+            "dkim": {"missing": True},
         }
-
-    return report
-
-
-def process_dkim(results):
-
-    if results is not None and results is not {}:
-        report = results
-    else:
-        report = {"missing": True}
 
     return report
 
@@ -407,7 +413,7 @@ def process_dkim(results):
 async def insert_https(report, scan_id, db):
     try:
         await db.connect()
-        scan_query = select([Scans]).where(Scans.c.id == scan_id)
+        scan_query = select([Web_scans]).where(Web_scans.c.id == scan_id)
         scan = await db.fetch_one(scan_query)
         logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
 
@@ -427,7 +433,7 @@ async def insert_https(report, scan_id, db):
 async def insert_ssl(report, scan_id, db):
     try:
         await db.connect()
-        scan_query = select([Scans]).where(Scans.c.id == scan_id)
+        scan_query = select([Web_scans]).where(Web_scans.c.id == scan_id)
         scan = await db.fetch_one(scan_query)
         logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
 
@@ -444,12 +450,36 @@ async def insert_ssl(report, scan_id, db):
     return "SSL Scan inserted into database"
 
 
-async def insert_dmarc(report, scan_id, db):
+async def insert_dns(report, scan_id, db):
     try:
         await db.connect()
-        scan_query = select([Scans]).where(Scans.c.id == scan_id)
+        scan_query = select([Mail_scans]).where(Mail_scans.c.id == scan_id)
         scan = await db.fetch_one(scan_query)
         logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
+
+        if report["dkim"]["missing"] is not True:
+            # Check for previous dkim scans on this domain
+            previous_scan_query = select([Mail_scans]).where(
+                Mail_scans.c.domain_id == scan.get("domain_id")
+            )
+
+            previous_scans = await db.fetch_all(previous_scan_query)
+
+            historical_dkim = None
+            # If public key has been in use for a year or more, recommend update
+            for previous_scan in previous_scans:
+                if (scan.get("scan_date") - previous_scan.get("scan_date")).days >= 365:
+                    historical_dkim_query = select([Dkim_scans]).where(
+                        Dkim_scans.c.id == previous_scan.get("id")
+                    )
+                    historical_dkim = await db.fetch_one(historical_dkim_query)
+
+            if historical_dkim is not None:
+                for selector in report["dkim"]:
+                    for historical_selector in historical_dkim.get("dkim_scan")["dkim"]:
+                        if selector == historical_selector:
+                            if report["dkim"]["selector"]["public_key_modulus"] == historical_selector["public_key_modulus"]:
+                                report["dkim"]["selector"]["update-recommended"] = True
 
         dmarc_insert_query = Dmarc_scans.insert().values(
             dmarc_scan={"dmarc": report["dmarc"]}, id=scan.get("id")
@@ -460,60 +490,21 @@ async def insert_dmarc(report, scan_id, db):
         spf_insert_query = Spf_scans.insert().values(
             spf_scan={"spf": report["spf"]}, id=scan.get("id")
         )
+        dkim_insert_query = Dkim_scans.insert().values(
+            dkim_scan={"dkim": report["dkim"]}, id=scan.get("id")
+        )
 
         await db.execute(dmarc_insert_query)
         await db.execute(mx_insert_query)
         await db.execute(spf_insert_query)
+        await db.execute(dkim_insert_query)
         await db.disconnect()
     except Exception as e:
         logging.info(str(e))
         await db.disconnect()
         return f"Failed database insertion(s): {str(e)}"
 
-    return "DMARC/MX/SPF Scans inserted into database"
-
-
-async def insert_dkim(report, scan_id, db):
-    try:
-        await db.connect()
-        scan_query = select([Scans]).where(Scans.c.id == scan_id)
-        scan = await db.fetch_one(scan_query)
-        logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
-
-        # Check for previous dkim scans on this domain
-        previous_scan_query = select([Scans]).where(
-            Scans.c.domain_id == scan.get("domain_id")
-        )
-
-        previous_scans = await db.fetch_all(previous_scan_query)
-
-        update_recommended = False
-
-        # If public key has been in use for a year or more, recommend update
-        for previous_scan in previous_scans:
-            if (scan.get("scan_date") - previous_scan.get("scan_date")).days >= 365:
-                historical_dkim_query = select([Dkim_scans]).where(
-                    Dkim_scans.c.id == previous_scan.get("id")
-                )
-                historical_dkim = await db.fetch_one(historical_dkim_query)
-                if (
-                    report["public_key_modulus"]
-                    == historical_dkim.get("dkim_scan")["dkim"]["public_key_modulus"]
-                ):
-                    update_recommended = True
-
-        report["update-recommended"] = update_recommended
-        insert_query = Dkim_scans.insert().values(
-            dkim_scan=json.dumps({"dkim": report}), id=scan.get("id")
-        )
-        await db.execute(insert_query)
-        await db.disconnect()
-    except Exception as e:
-        logging.info(str(e))
-        await db.disconnect()
-        return f"Failed database insertion(s): {str(e)}"
-
-    return "DKIM Scan inserted into database"
+    return "DMARC/MX/SPF/DKIM Scans inserted into database"
 
 
 def Server(functions={}, database_uri=DATABASE_URI):
@@ -560,14 +551,12 @@ app = Server(
         "insert": {
             "https": insert_https,
             "ssl": insert_ssl,
-            "dmarc": insert_dmarc,
-            "dkim": insert_dkim,
+            "dns": insert_dns,
         },
         "process": {
             "https": process_https,
             "ssl": process_ssl,
-            "dmarc": process_dmarc,
-            "dkim": process_dkim,
+            "dns": process_dns,
         },
     }
 )
