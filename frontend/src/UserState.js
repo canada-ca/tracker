@@ -22,6 +22,9 @@ export function UserStateProvider({ initialState, children }) {
   const userState = {
     currentUser: state,
     isLoggedIn: () => !equal(state, initialState),
+    isAdmin: () => {
+      return true
+    },
     login: (user) => dispatch({ type: 'LOGIN', user }),
     logout: () => dispatch({ type: 'LOGOUT', user: initialState }),
   }

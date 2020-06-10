@@ -8,6 +8,7 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
+  Text,
 } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 import { QUERY_USERLIST } from './graphql/queries'
@@ -40,6 +41,9 @@ export default function UserList() {
 
   return (
     <Stack mb={6} w="100%">
+      <Text fontSize="2xl" fontWeight="bold">
+        User List
+      </Text>
       <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
         <InputGroup>
           <InputLeftElement>
@@ -48,14 +52,14 @@ export default function UserList() {
           <Input type="text" placeholder="Search for user" />
         </InputGroup>
         <Button
-          width={['100%', '40%']}
+          width={'70%'}
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
             window.alert('create user')
           }}
         >
-          <Trans>Create User</Trans>
+          <Trans>Add User</Trans>
         </Button>
       </SimpleGrid>
       <Divider />

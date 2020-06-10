@@ -22,11 +22,12 @@ const QRcodePage = lazy(() => import('./QRcodePage'))
 const UserPage = lazy(() => import('./UserPage'))
 const UserList = lazy(() => import('./UserList'))
 const SignInPage = lazy(() => import('./SignInPage'))
+const AdminPage = lazy(() => import('./AdminPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
-  const { currentUser, isLoggedIn } = useUserState()
+  const { currentUser, isLoggedIn, isAdmin } = useUserState()
 
   return (
     <>
@@ -53,7 +54,6 @@ export default function App() {
           <Link to="/domains">
             <Trans>Domains</Trans>
           </Link>
-
           {isLoggedIn() ? (
             <Link to="/user">
               <Trans>User Profile</Trans>
@@ -66,6 +66,12 @@ export default function App() {
           <Link to="/user-list">
             <Trans>User List</Trans>
           </Link>
+
+          {isAdmin() && (
+            <Link to="/admin">
+              <Trans>Admin Portal</Trans>
+            </Link>
+          )}
         </Navigation>
         {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
         <Main>
@@ -110,6 +116,14 @@ export default function App() {
                 path="/two-factor-code"
               >
                 <QRcodePage userName={currentUser.userName} />
+              </RouteIf>
+
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
+                path="/admin"
+              >
+                <AdminPage />
               </RouteIf>
 
               <Route component={PageNotFound} />

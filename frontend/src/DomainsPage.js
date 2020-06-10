@@ -2,14 +2,25 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Heading, Stack, useToast } from '@chakra-ui/core'
+import {
+  Stack,
+  useToast,
+  Text,
+  Button,
+  InputGroup,
+  InputLeftElement,
+  Icon,
+  Input,
+  SimpleGrid,
+} from '@chakra-ui/core'
 import { DOMAINS } from './graphql/queries'
 import { useUserState } from './UserState'
 import { Domain } from './Domain'
 import { DomainList } from './DomainList'
+import { PaginationButtons } from './PaginationButtons'
 
 export default function DomainsPage() {
-  const { currentUser } = useUserState()
+  const { currentUser, isAdmin } = useUserState()
   const toast = useToast()
   const { loading, _error, data } = useQuery(DOMAINS, {
     context: {
@@ -43,19 +54,38 @@ export default function DomainsPage() {
 
   return (
     <Layout>
-      <Stack spacing={10} shouldWrapChildren>
-        <Heading as="h1">
+      <Stack shouldWrapChildren>
+        <Text fontWeight="bold" fontSize="2xl">
           <Trans>Domains</Trans>
-        </Heading>
+        </Text>
+        <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
+          <InputGroup>
+            <InputLeftElement>
+              <Icon name="search" color="gray.300" />
+            </InputLeftElement>
+            <Input type="text" placeholder="Search for domain" />
+          </InputGroup>
+          {isAdmin() && (
+            <Button
+              width={'70%'}
+              leftIcon="add"
+              variantColor="blue"
+              onClick={() => {
+                window.alert('add domain')
+              }}
+            >
+              Add Domain
+            </Button>
+          )}
+        </SimpleGrid>
         {data && data.domains && (
           <Stack spacing={4}>
             <Stack spacing={4} direction="row" flexWrap="wrap">
               <DomainList domains={domains}>
-                {(domain) => (
-                  <Domain key={domain.url} url={domain.url} />
-                )}
+                {(domain) => <Domain key={domain.url} url={domain.url} />}
               </DomainList>
             </Stack>
+            <PaginationButtons next={false} previous={false} />
           </Stack>
         )}
       </Stack>
