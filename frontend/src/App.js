@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
-import { Global, css } from '@emotion/core'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
