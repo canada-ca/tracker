@@ -109,7 +109,7 @@ User_affiliations = sqlalchemy.Table(
 )
 
 Web_scans = sqlalchemy.Table(
-    "scans",
+    "web_scans",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column(
@@ -122,7 +122,7 @@ Web_scans = sqlalchemy.Table(
 )
 
 Mail_scans = sqlalchemy.Table(
-    "scans",
+    "mail_scans",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column(
@@ -130,6 +130,7 @@ Mail_scans = sqlalchemy.Table(
     ),
     sqlalchemy.Column("scan_date", sqlalchemy.DateTime),
     sqlalchemy.Column("selectors", ARRAY(sqlalchemy.String)),
+    sqlalchemy.Column("dmarc_phase", sqlalchemy.Integer),
     sqlalchemy.Column(
         "initiated_by", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")
     ),
@@ -139,9 +140,8 @@ Dmarc_scans = sqlalchemy.Table(
     "dmarc_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("mail_scans.id"), primary_key=True
     ),
-    sqlalchemy.Column("dmarc_phase", sqlalchemy.Integer),
     sqlalchemy.Column("dmarc_scan", sqlalchemy.JSON),
 )
 
@@ -149,7 +149,7 @@ Dkim_scans = sqlalchemy.Table(
     "dkim_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("mail_scans.id"), primary_key=True
     ),
     sqlalchemy.Column("dkim_scan", sqlalchemy.JSON),
 )
@@ -158,7 +158,7 @@ Mx_scans = sqlalchemy.Table(
     "mx_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("mail_scans.id"), primary_key=True
     ),
     sqlalchemy.Column("mx_scan", sqlalchemy.JSON),
 )
@@ -167,7 +167,7 @@ Spf_scans = sqlalchemy.Table(
     "spf_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("mail_scans.id"), primary_key=True
     ),
     sqlalchemy.Column("spf_scan", sqlalchemy.JSON),
 )
@@ -176,7 +176,7 @@ Https_scans = sqlalchemy.Table(
     "https_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("web_scans.id"), primary_key=True
     ),
     sqlalchemy.Column("https_scan", sqlalchemy.JSON),
 )
@@ -185,7 +185,7 @@ Ssl_scans = sqlalchemy.Table(
     "ssl_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("scans.id"), primary_key=True
+        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("web_scans.id"), primary_key=True
     ),
     sqlalchemy.Column("ssl_scan", sqlalchemy.JSON),
 )
