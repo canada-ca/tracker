@@ -385,7 +385,7 @@ type DmarcReportBarGraph {
   """
   The year that the data is related to.
   """
-  year: Int @examples(values: [2019, 2020])
+  year: Year @examples(values: [2019, 2020])
 
   """
   Category totals for building dmarc report page bar graph.
@@ -412,12 +412,12 @@ type DmarcReportDetailedTables {
   """
   The month in which the data is relevant to.
   """
-  month: String
+  month: Month
 
   """
   The year in which the relevant to.
   """
-  year: Year
+  year: Year @examples(values: [2019, 2020])
 
   """
   The details used in creating tables for the dmarc report page
@@ -1330,7 +1330,7 @@ type Query {
     The sluified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug
-  ): [DmarcReportBarGraph]  @listLength(min: 12, max: 12)
+  ): [DmarcReportBarGraph] @listLength(min: 12, max: 12)
 
   """
   Query used for gathering data for dmarc report detail tables.
@@ -1420,7 +1420,7 @@ type Query {
     Slug of domain you want to retrieve data on
     """
     domainSlug: Slug
-  ): [YearlyDmarcReportSummary] @listLength(min:13, max:13)
+  ): [YearlyDmarcReportSummary] @listLength(min: 13, max: 13)
 
   """
   The ID of the object
@@ -2082,42 +2082,68 @@ A field that conforms to a 4 digit integer
 """
 scalar Year
 
-"""Used to fake months"""
+"""
+Used to fake months
+"""
 enum Month {
-  """The month of January"""
+  """
+  The month of January
+  """
   JANUARY
 
-  """The month of February"""
+  """
+  The month of February
+  """
   FEBRUARY
 
-  """The month of March"""
+  """
+  The month of March
+  """
   MARCH
 
-  """The month of April"""
+  """
+  The month of April
+  """
   APRIL
 
-  """The month of May"""
+  """
+  The month of May
+  """
   MAY
 
-  """The month of June"""
+  """
+  The month of June
+  """
   JUNE
 
-  """The month of July"""
+  """
+  The month of July
+  """
   JULY
 
-  """The month of August"""
+  """
+  The month of August
+  """
   AUGUST
 
-  """The month of September"""
+  """
+  The month of September
+  """
   SEPTEMBER
 
-  """The month of October"""
+  """
+  The month of October
+  """
   OCTOBER
 
-  """The month of November"""
+  """
+  The month of November
+  """
   NOVEMBER
 
-  """The month of December"""
+  """
+  The month of December
+  """
   DECEMBER
 }
 
@@ -2128,12 +2154,12 @@ type YearlyDmarcReportSummary {
   """
   Which month is the data based on
   """
-  month: String
+  month: Month
 
   """
   Which year the data is from
   """
-  year: String
+  year: Year
 
   """
   Category totals for quick viewing
@@ -2148,31 +2174,35 @@ type TableStructure {
   """
   IP address of sending server
   """
-  sourceIpAddress: String
+  sourceIpAddress: String @fake(type: ipv4Address)
   """
   Domain from SMTP banner message
   """
-  envelopeFrom: String
+  envelopeFrom: String @fake(type: domainName)
   """
   Domains used for SPF validation
   """
-  spfDomains: String
+  spfDomains: String @fake(type: domainName)
   """
   Domains used for DKIM validation
   """
-  dkimDomains: String
+  dkimDomains: String @fake(type: domainName)
   """
   Pointer to a DKIM public key record in DNS
   """
-  dkimSelectors: String
+  dkimSelectors: String @examples(values: ["selector4", "selector1", "none"])
   """
   Total messages related to this record
   """
   totalMessages: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 5000, precisionNumber: 1 }
+    )
   """
   Geographic location of source IP address
   """
-  countryCode: String
+  countryCode: String @fake(type: countryCode)
   """
   Owner of ISP for source IP address
   """
@@ -2200,5 +2230,5 @@ type TableStructure {
   """
   Domain from reverse DNS of source IP address
   """
-  dnsDomain: String
+  dnsDomain: String @fake(type: domainName)
 }

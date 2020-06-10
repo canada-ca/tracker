@@ -211,6 +211,69 @@ export const GET_DMARC_REPORT_DOUGHNUT = gql`
   }
 `
 
+export const GET_DMARC_REPORT_DETAILED_TABLES = gql`
+  query GetDmarcReportDetailedTables(
+    $domainSlug: Slug
+    $period: PeriodEnums
+    $year: Year
+  ) {
+    getDmarcReportDetailedTables(
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
+    ) {
+      month
+      year
+      detailTables {
+        fullPass {
+          sourceIpAddress
+          dnsDomain
+          envelopeFrom
+          dkimDomains
+          dkimSelectors
+          totalMessages
+        }
+        spfFailure {
+          sourceIpAddress
+          dnsDomain
+          envelopeFrom
+          totalMessages
+        }
+        spfMisaligned {
+          sourceIpAddress
+          dnsDomain
+          envelopeFrom
+          totalMessages
+        }
+        dkimFailure {
+          sourceIpAddress
+          dnsDomain
+          envelopeFrom
+          dkimDomains
+          dkimSelectors
+          totalMessages
+        }
+        dkimMisaligned {
+          sourceIpAddress
+          dnsDomain
+          envelopeFrom
+          dkimDomains
+          dkimSelectors
+          totalMessages
+        }
+        dmarcFailure {
+          sourceIpAddress
+          dnsDomain
+          envelopeFrom
+          dkimDomains
+          dkimSelectors
+          totalMessages
+        }
+      }
+    }
+  }
+`
+
 export const QUERY_DMARC_REPORT = gql`
   query QueryDmarcReport($reportId: String!) {
     queryDmarcReport(reportId: $reportId) {
@@ -218,7 +281,7 @@ export const QUERY_DMARC_REPORT = gql`
       orgName
       endDate
       dmarcResult
-      dkimResult
+
       spfResult
       passDmarcPercentage
       passArcPercentage

@@ -164,12 +164,16 @@ export function DmarcReportPage() {
     },
   }
 
+  // TODO: reportCardData.strengths and formattedBarData.strengths reference
+  //  the same object, is this okay?
   const reportCardData = doughnutData.getDmarcReportDoughnut
   reportCardData.strengths = strengths
 
-  const formattedBarData = { periods: barData.getDmarcReportBarGraph.map((entry) => {
-    return { month: entry.month, year: entry.year, ...entry.categoryTotals }
-  }) }
+  const formattedBarData = {
+    periods: barData.getDmarcReportBarGraph.map((entry) => {
+      return { month: entry.month, year: entry.year, ...entry.categoryTotals }
+    }),
+  }
   formattedBarData.strengths = strengths
 
   const [
@@ -301,6 +305,8 @@ export function DmarcReportPage() {
     },
   ]
 
+  // TODO: This should check full screen size, not window.innerWidth
+  //  similar to:   @media screen and (max-width: 760px)
   const cardWidth =
     window.innerWidth < 500
       ? '100%'
@@ -314,8 +320,6 @@ export function DmarcReportPage() {
 
   const cardAndGraphFitInline =
     +cardWidth.slice(0, -1) + +timeGraphWidth.slice(0, -1) <= 100
-
-  console.log(formattedBarData)
 
   return (
     <Box width="100%">
