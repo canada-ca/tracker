@@ -38,7 +38,7 @@
     "react-dom": "^16.13.1",
     "react-minimal-pie-chart": "^8.0.1",
     "react-router-dom": "^5.2.0",
-    "react-table": "^7.1.0",
+    "react-table": "^7.2.0",
     "react-test-renderer": "^16.13.1",
     "recharts": "^1.8.5",
     "yup": "^0.29.1"
