@@ -2,19 +2,13 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
 import {
-  GET_ALIGNED_BY_IP,
-  GET_SPF_FAILURES,
-  GET_SPF_MISALIGN,
-  GET_DKIM_FAILURES,
-  GET_DKIM_MISALIGN,
-  GET_DMARC_FAILURES,
   GET_DMARC_REPORT_BAR_GRAPH,
   GET_DMARC_REPORT_DOUGHNUT,
   GET_DMARC_REPORT_DETAILED_TABLES,
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcTimeGraph'
-import { Box, Stack } from '@chakra-ui/core'
+import { Box } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 
 export function DmarcReportPage() {
@@ -61,8 +55,6 @@ export function DmarcReportPage() {
   if (tableLoading || doughnutLoading || barLoading) return <p>Loading...</p>
   // TODO: Properly handle these errors
   if (tableError || doughnutError || barError) return <p>Error</p>
-
-  console.log(tableData)
 
   const strengths = {
     strong: {
@@ -188,23 +180,17 @@ export function DmarcReportPage() {
   // TODO: This should check full screen size, not window.innerWidth
   //  similar to:   @media screen and (max-width: 760px)
   const cardWidth =
-    window.innerWidth < 500
+    window.matchMedia("(max-width: 500px)").matches
       ? '100%'
-      : window.innerWidth < 800
+      : window.matchMedia("(max-width: 800px)").matches
       ? '50%'
-      : window.innerWidth < 1200
+      : window.matchMedia("(max-width: 1200px)").matches
       ? '35%'
       : '20%'
-  const timeGraphWidth =
-    window.innerWidth < 500 ? '100%' : window.innerWidth < 1200 ? '75%' : '50%'
-
-  const cardAndGraphFitInline =
-    +cardWidth.slice(0, -1) + +timeGraphWidth.slice(0, -1) <= 100
 
   return (
     <Box width="100%">
       <Box>
-        <Stack isInline={cardAndGraphFitInline} align="center">
           <SummaryCard
             title="DMARC Report"
             description="Description of DMARC report"
@@ -215,10 +201,9 @@ export function DmarcReportPage() {
           />
           <DmarcTimeGraph
             data={formattedBarData}
-            width={timeGraphWidth}
+            width="100%"
             mx="auto"
           />
-        </Stack>
         <DmarcReportTable data={fullPassData} columns={fullPassColumns} mb="30px" />
         <DmarcReportTable
           data={spfFailureData}
