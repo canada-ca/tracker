@@ -152,32 +152,32 @@ type DetailTables {
   """
   List of top senders that have full pass
   """
-  fullPass: [TableStructure]
+  fullPass: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have an spf failure
   """
-  spfFailure: [TableStructure]
+  spfFailure: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have spf misaligned
   """
-  spfMisaligned: [TableStructure]
+  spfMisaligned: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have an dkim failure
   """
-  dkimFailure: [TableStructure]
+  dkimFailure: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have dkim misaligned
   """
-  dkimMisaligned: [TableStructure]
+  dkimMisaligned: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have an dmarc failure
   """
-  dmarcFailure: [TableStructure]
+  dmarcFailure: [TableStructure] @listLength(min: 20, max: 30)
 }
 
 """

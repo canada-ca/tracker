@@ -80,7 +80,6 @@ text-align: left;
 
 function DmarcReportTable({ ...props }) {
   const { data, columns } = props
-  const { currentUser } = useUserState()
   const [show, setShow] = React.useState(true)
 
   const handleShow = () => setShow(!show)

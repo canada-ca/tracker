@@ -10,7 +10,7 @@ import {
   GET_DMARC_FAILURES,
   GET_DMARC_REPORT_BAR_GRAPH,
   GET_DMARC_REPORT_DOUGHNUT,
-  GET_YEARLY_DMARC_REPORT_SUMMARIES,
+  GET_DMARC_REPORT_DETAILED_TABLES,
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcTimeGraph'
@@ -19,7 +19,6 @@ import DmarcReportTable from './DmarcReportTable'
 
 export function DmarcReportPage() {
   const { currentUser } = useUserState()
-  const [show, setShow] = React.useState(true)
 
   const {
     loading: doughnutLoading,
@@ -34,120 +33,36 @@ export function DmarcReportPage() {
     variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020 },
   })
 
-  const {
-    loading: yearlyLoading,
-    error: yearlyError,
-    data: barData,
-  } = useQuery(GET_DMARC_REPORT_BAR_GRAPH, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
+  const { loading: barLoading, error: barError, data: barData } = useQuery(
+    GET_DMARC_REPORT_BAR_GRAPH,
+    {
+      context: {
+        headers: {
+          authorization: currentUser.jwt,
+        },
       },
+      variables: { domainSlug: 'cyber.gc.ca' },
     },
-    variables: { domainSlug: 'cyber.gc.ca' },
-  })
-
-  const {
-    loading: alignIpLoading,
-    error: alignIpError,
-    data: alignIpData,
-  } = useQuery(GET_ALIGNED_BY_IP, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: { domain: 'cyber.gc.ca' },
-  })
-
-  const {
-    loading: spfFailLoading,
-    error: spfFailError,
-    data: spfFailData,
-  } = useQuery(GET_SPF_FAILURES, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: { domain: 'cyber.gc.ca' },
-  })
-
-  const {
-    loading: spfMisalignLoading,
-    error: spfMisalignError,
-    data: spfMisalignData,
-  } = useQuery(GET_SPF_MISALIGN, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: { domain: 'cyber.gc.ca' },
-  })
-
-  const {
-    loading: dkimFailLoading,
-    error: dkimFailError,
-    data: dkimFailData,
-  } = useQuery(GET_DKIM_FAILURES, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: { domain: 'cyber.gc.ca' },
-  })
-
-  const {
-    loading: dkimMisalignLoading,
-    error: dkimMisalignError,
-    data: dkimMisalignData,
-  } = useQuery(GET_DKIM_MISALIGN, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: { domain: 'cyber.gc.ca' },
-  })
-
-  const {
-    loading: dmarcFailLoading,
-    error: dmarcFailError,
-    data: dmarcFailData,
-  } = useQuery(GET_DMARC_FAILURES, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: { domain: 'cyber.gc.ca' },
-  })
-
-  if (
-    alignIpLoading ||
-    spfFailLoading ||
-    spfMisalignLoading ||
-    dkimFailLoading ||
-    dkimMisalignLoading ||
-    dmarcFailLoading ||
-    doughnutLoading ||
-    yearlyLoading
   )
-    return <p>Loading...</p>
-  if (
-    alignIpError ||
-    spfFailError ||
-    spfFailError ||
-    spfMisalignError ||
-    dkimFailError ||
-    dkimMisalignError ||
-    dmarcFailError ||
-    doughnutError ||
-    yearlyError
-  )
-    return <p>Error</p>
+
+  const {
+    loading: tableLoading,
+    error: tableError,
+    data: tableData,
+  } = useQuery(GET_DMARC_REPORT_DETAILED_TABLES, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+    variables: { domain: 'cyber.gc.ca' },
+  })
+
+  if (tableLoading || doughnutLoading || barLoading) return <p>Loading...</p>
+  // TODO: Properly handle these errors
+  if (tableError || doughnutError || barError) return <p>Error</p>
+
+  console.log(tableData)
 
   const strengths = {
     strong: {
@@ -176,131 +91,96 @@ export function DmarcReportPage() {
   }
   formattedBarData.strengths = strengths
 
+  const detailTablesData = tableData.getDmarcReportDetailedTables.detailTables
+  const fullPassData = detailTablesData.fullPass
+  const spfFailureData = detailTablesData.spfFailure
+  const spfMisalignedData = detailTablesData.spfMisaligned
+  const dkimFailureData = detailTablesData.dkimFailure
+  const dkimMisalignedData = detailTablesData.dkimMisaligned
+  const dmarcFailureData = detailTablesData.dmarcFailure
+
   const [
     sourceIp,
     dnsDomain,
-    headerFrom,
     envelopeFrom,
-    spfResults,
-    spfAligned,
     dkimDomains,
     dkimSelectors,
-    dkimResults,
-    dkimAligned,
-    messageCount,
-    disposition,
+    totalMessages,
   ] = [
-    { Header: 'source_ip_address', accessor: 'source_ip_address' },
-    { Header: 'dns_domain', accessor: 'dns_domain' },
-    { Header: 'header_from', accessor: 'header_from' },
-    { Header: 'envelope_from', accessor: 'envelope_from' },
-    { Header: 'spf_results', accessor: 'spf_results' },
-    { Header: 'spf_aligned', accessor: 'spf_aligned' },
-    { Header: 'dkim_domains', accessor: 'dkim_domains' },
-    { Header: 'dkim_selectors', accessor: 'dkim_selectors' },
-    { Header: 'dkim_results', accessor: 'dkim_results' },
-    { Header: 'dkim_aligned', accessor: 'dkim_aligned' },
-    { Header: 'message_count', accessor: 'message_count' },
-    { Header: 'disposition', accessor: 'disposition' },
+    { Header: 'sourceIpAddress', accessor: 'sourceIpAddress' },
+    { Header: 'dnsDomain', accessor: 'dnsDomain' },
+    { Header: 'envelopeFrom', accessor: 'envelopeFrom' },
+    { Header: 'dkimDomains', accessor: 'dkimDomains' },
+    { Header: 'dkimSelectors', accessor: 'dkimSelectors' },
+    { Header: 'totalMessages', accessor: 'totalMessages' },
   ]
 
-  const alignIpColumns = [
+  const fullPassColumns = [
     {
       Header: 'Fully Aligned by IP Address',
       columns: [
         sourceIp,
         dnsDomain,
-        headerFrom,
         envelopeFrom,
-        spfResults,
-        spfAligned,
         dkimDomains,
         dkimSelectors,
-        dkimResults,
-        dkimAligned,
-        messageCount,
+        totalMessages,
       ],
     },
   ]
 
-  const spfFailColumns = [
+  const spfFailureColumns = [
     {
       Header: 'SPF Failures by IP Address',
-      columns: [
-        sourceIp,
-        dnsDomain,
-        envelopeFrom,
-        headerFrom,
-        spfResults,
-        messageCount,
-      ],
+      columns: [sourceIp, dnsDomain, envelopeFrom, totalMessages],
     },
   ]
 
-  const spfMisalignColumns = [
+  const spfMisalignedColumns = [
     {
       Header: 'SPF Misalignment by IP Address',
-      columns: [
-        sourceIp,
-        dnsDomain,
-        envelopeFrom,
-        headerFrom,
-        spfResults,
-        spfAligned,
-        messageCount,
-      ],
+      columns: [sourceIp, dnsDomain, envelopeFrom, totalMessages],
     },
   ]
 
-  const dkimFailColumns = [
+  const dkimFailureColumns = [
     {
       Header: 'DKIM Failures by IP Address',
       columns: [
         sourceIp,
         dnsDomain,
         envelopeFrom,
-        headerFrom,
         dkimDomains,
         dkimSelectors,
-        dkimResults,
-        messageCount,
+        totalMessages,
       ],
     },
   ]
 
-  const dkimMisalignColumns = [
+  const dkimMisalignedColumns = [
     {
       Header: 'DKIM Misalignment by IP Address',
       columns: [
         sourceIp,
         dnsDomain,
         envelopeFrom,
-        headerFrom,
         dkimDomains,
         dkimSelectors,
-        dkimResults,
-        dkimAligned,
-        messageCount,
+        totalMessages,
       ],
     },
   ]
 
-  const dmarcFailColumns = [
+  const dmarcFailureColumns = [
     {
       Header: 'DMARC Failures by IP Address',
       columns: [
         sourceIp,
         dnsDomain,
         envelopeFrom,
-        headerFrom,
-        spfResults,
-        spfAligned,
         dkimDomains,
         dkimSelectors,
-        dkimResults,
-        dkimAligned,
-        disposition,
-        messageCount,
+        totalMessages,
       ],
     },
   ]
@@ -339,34 +219,30 @@ export function DmarcReportPage() {
             mx="auto"
           />
         </Stack>
+        <DmarcReportTable data={fullPassData} columns={fullPassColumns} mb="30px" />
         <DmarcReportTable
-          data={alignIpData.getAlignedByIp}
-          columns={alignIpColumns}
+          data={spfFailureData}
+          columns={spfFailureColumns}
           mb="30px"
         />
         <DmarcReportTable
-          data={spfFailData.getSpfFailures}
-          columns={spfFailColumns}
+          data={spfMisalignedData}
+          columns={spfMisalignedColumns}
           mb="30px"
         />
         <DmarcReportTable
-          data={spfMisalignData.getSpfMisalign}
-          columns={spfMisalignColumns}
+          data={dkimFailureData}
+          columns={dkimFailureColumns}
           mb="30px"
         />
         <DmarcReportTable
-          data={dkimFailData.getDkimFailures}
-          columns={dkimFailColumns}
+          data={dkimMisalignedData}
+          columns={dkimMisalignedColumns}
           mb="30px"
         />
         <DmarcReportTable
-          data={dkimMisalignData.getDkimMisalign}
-          columns={dkimMisalignColumns}
-          mb="30px"
-        />
-        <DmarcReportTable
-          data={dmarcFailData.getDmarcFailures}
-          columns={dmarcFailColumns}
+          data={dmarcFailureData}
+          columns={dmarcFailureColumns}
           mb="30px"
         />
       </Box>
