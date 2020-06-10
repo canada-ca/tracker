@@ -110,6 +110,7 @@ export function DmarcReportPage() {
   const fullPassColumns = [
     {
       Header: 'Fully Aligned by IP Address',
+      hidden: true,
       columns: [
         sourceIp,
         dnsDomain,
@@ -124,6 +125,7 @@ export function DmarcReportPage() {
   const spfFailureColumns = [
     {
       Header: 'SPF Failures by IP Address',
+      hidden: true,
       columns: [sourceIp, dnsDomain, envelopeFrom, totalMessages],
     },
   ]
@@ -131,6 +133,7 @@ export function DmarcReportPage() {
   const spfMisalignedColumns = [
     {
       Header: 'SPF Misalignment by IP Address',
+      hidden: true,
       columns: [sourceIp, dnsDomain, envelopeFrom, totalMessages],
     },
   ]
@@ -138,6 +141,7 @@ export function DmarcReportPage() {
   const dkimFailureColumns = [
     {
       Header: 'DKIM Failures by IP Address',
+      hidden: true,
       columns: [
         sourceIp,
         dnsDomain,
@@ -152,6 +156,7 @@ export function DmarcReportPage() {
   const dkimMisalignedColumns = [
     {
       Header: 'DKIM Misalignment by IP Address',
+      hidden: true,
       columns: [
         sourceIp,
         dnsDomain,
@@ -166,6 +171,7 @@ export function DmarcReportPage() {
   const dmarcFailureColumns = [
     {
       Header: 'DMARC Failures by IP Address',
+      hidden: true,
       columns: [
         sourceIp,
         dnsDomain,
@@ -179,55 +185,60 @@ export function DmarcReportPage() {
 
   // TODO: This should check full screen size, not window.innerWidth
   //  similar to:   @media screen and (max-width: 760px)
-  const cardWidth =
-    window.matchMedia("(max-width: 500px)").matches
-      ? '100%'
-      : window.matchMedia("(max-width: 800px)").matches
-      ? '50%'
-      : window.matchMedia("(max-width: 1200px)").matches
-      ? '35%'
-      : '20%'
+  const cardWidth = window.matchMedia('(max-width: 500px)').matches
+    ? '100%'
+    : window.matchMedia('(max-width: 800px)').matches
+    ? '50%'
+    : window.matchMedia('(max-width: 1200px)').matches
+    ? '35%'
+    : '20%'
 
   return (
     <Box width="100%">
       <Box>
-          <SummaryCard
-            title="DMARC Report"
-            description="Description of DMARC report"
-            data={reportCardData}
-            slider={false}
-            width={cardWidth}
-            mx="auto"
-          />
-          <DmarcTimeGraph
-            data={formattedBarData}
-            width="100%"
-            mx="auto"
-          />
-        <DmarcReportTable data={fullPassData} columns={fullPassColumns} mb="30px" />
+        <SummaryCard
+          title="DMARC Report"
+          description="Description of DMARC report"
+          data={reportCardData}
+          slider={false}
+          width={cardWidth}
+          mx="auto"
+        />
+        <DmarcTimeGraph data={formattedBarData} width="100%" mx="auto" />
+        <DmarcReportTable
+          data={fullPassData}
+          columns={fullPassColumns}
+          title="Fully Aligned by IP Address"
+          mb="30px"
+        />
         <DmarcReportTable
           data={spfFailureData}
           columns={spfFailureColumns}
+          title="SPF Failures by IP Address"
           mb="30px"
         />
         <DmarcReportTable
           data={spfMisalignedData}
           columns={spfMisalignedColumns}
+          title="SPF Misalignment by IP Address"
           mb="30px"
         />
         <DmarcReportTable
           data={dkimFailureData}
           columns={dkimFailureColumns}
+          title="DKIM Failures by IP Address"
           mb="30px"
         />
         <DmarcReportTable
           data={dkimMisalignedData}
           columns={dkimMisalignedColumns}
+          title="DKIM Misalignment by IP Address"
           mb="30px"
         />
         <DmarcReportTable
           data={dmarcFailureData}
           columns={dmarcFailureColumns}
+          title="DMARC Failures by IP Address"
           mb="30px"
         />
       </Box>

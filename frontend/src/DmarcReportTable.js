@@ -1,12 +1,8 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { GET_ALIGNED_BY_IP, GET_YEARLY_REPORT } from './graphql/queries'
-import { useQuery } from '@apollo/react-hooks'
-import { slugify } from './slugify'
-import { useUserState } from './UserState'
 import { useTable, usePagination } from 'react-table'
-import { array } from 'prop-types'
-import { Box, Button, Collapse, PseudoBox } from '@chakra-ui/core'
+import { array, string } from 'prop-types'
+import { Box, Button, Collapse } from '@chakra-ui/core'
 
 import WithPseudoBox from './withPseudoBox'
 
@@ -14,6 +10,10 @@ const Table = styled.table`
 width: 100%;
 border-collapse: collapse;
 
+caption {
+width: 100%;
+
+}
 th {
 color: black;
 font-weight: bold;
@@ -29,9 +29,19 @@ text-align: left;
   text-align: center;
 }
 
-  .pagination {
-    padding: 0.5rem;
-  }
+.pagination {
+  padding: 0.5rem;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap; /* added line */
+}
 
   @media screen and (max-width: 760px) {
     table,
@@ -41,12 +51,6 @@ text-align: left;
     td,
     tr {
       display: block;
-    }
-
-    thead .category {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
     }
 
     tr { border: 1px solid #ccc; }
@@ -79,7 +83,7 @@ text-align: left;
 `
 
 function DmarcReportTable({ ...props }) {
-  const { data, columns } = props
+  const { data, columns, title } = props
   const [show, setShow] = React.useState(true)
 
   const handleShow = () => setShow(!show)
@@ -116,87 +120,113 @@ function DmarcReportTable({ ...props }) {
 
   return (
     <>
-      <Button bg="gray.700" color="white" onClick={handleShow} w="100%">
-        {flatHeaders[0].Header}
-      </Button>
-      <Collapse isOpen={show}>
-        <Box overflowX="auto">
-          <Table {...getTableProps()} flatHeaders={flatHeaders}>
-            <thead>
-              {headerGroups.slice(1).map((headerGroup) => (
-                <tr className="category" {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
-                    <th {...column.getHeaderProps()}>
-                      {column.render('Header')}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {page.map((row, i) => {
-                prepareRow(row)
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map((cell) => {
-                      return (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      )
-                    })}
-                  </tr>
-                )
-              })}
-            </tbody>
-          </Table>
-        </Box>
-        <div className="pagination">
-          <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-            {'<<'}
-          </button>{' '}
-          <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </button>{' '}
-          <button onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </button>{' '}
-          <button
-            onClick={() => gotoPage(pageCount - 1)}
-            disabled={!canNextPage}
-          >
-            {'>>'}
-          </button>{' '}
-          <span>
-            Page{' '}
-            <strong>
-              {pageIndex + 1} of {pageOptions.length}
-            </strong>{' '}
-          </span>
-          <span>
-            | Go to page:{' '}
-            <input
-              type="number"
-              defaultValue={pageIndex + 1}
+      <Box>
+        <Button bg="gray.700" color="white" onClick={handleShow} w="100%">
+          {title}
+        </Button>
+        <Collapse isOpen={show}>
+          <Box overflowX="auto">
+            <Table {...getTableProps()} flatHeaders={flatHeaders}>
+              {/*<caption>*/}
+              {/*  <Button bg="gray.700" color="white" width="100%" onClick={handleShow}>*/}
+              {/*    {title}*/}
+              {/*  </Button>*/}
+              {/*</caption>*/}
+              <thead>
+                {headerGroups.map((headerGroup, index) => {
+                  console.log('group', headerGroup)
+                  return (
+                    <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                      {headerGroup.headers.map((column) => {
+                        // Using column.Header since column.id _sometimes_ has appended numbers
+                        const key =
+                          column.depth === 0
+                            ? `${title}:${column.Header}`
+                            : `${column.parent.Header}:${column.Header}`
+                        return (
+                          <th
+                            key={key}
+                            className={column.hidden ? 'visually-hidden' : ''}
+                            {...column.getHeaderProps()}
+                          >
+                            {column.render('Header')}
+                          </th>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {page.map((row, rowIndex) => {
+                  prepareRow(row)
+                  return (
+                    <tr key={`${title}:${rowIndex}`} {...row.getRowProps()}>
+                      {row.cells.map((cell, cellIndex) => {
+                        return (
+                          <td
+                            key={`${title}:${rowIndex}:${cellIndex}`}
+                            {...cell.getCellProps()}
+                          >
+                            {cell.render('Cell')}
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </Box>
+          <div className="pagination">
+            <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+              {'<<'}
+            </button>{' '}
+            <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+              {'<'}
+            </button>{' '}
+            <button onClick={() => nextPage()} disabled={!canNextPage}>
+              {'>'}
+            </button>{' '}
+            <button
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+            >
+              {'>>'}
+            </button>{' '}
+            <span>
+              Page{' '}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{' '}
+            </span>
+            <span>
+              | Go to page:{' '}
+              <input
+                type="number"
+                defaultValue={pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0
+                  gotoPage(page)
+                }}
+                style={{ width: '100px' }}
+              />
+            </span>{' '}
+            <select
+              value={pageSize}
               onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0
-                gotoPage(page)
+                setPageSize(Number(e.target.value))
               }}
-              style={{ width: '100px' }}
-            />
-          </span>{' '}
-          <select
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value))
-            }}
-          >
-            {[5, 10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </select>
-        </div>
-      </Collapse>
+            >
+              {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+        </Collapse>
+      </Box>
     </>
   )
 }
@@ -204,6 +234,7 @@ function DmarcReportTable({ ...props }) {
 DmarcReportTable.propTypes = {
   data: array.isRequired,
   columns: array.isRequired,
+  title: string.isRequired,
 }
 
 export default WithPseudoBox(DmarcReportTable)
