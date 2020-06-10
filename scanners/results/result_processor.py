@@ -504,7 +504,7 @@ async def insert_dns(report, scan_id, db):
         await db.disconnect()
         return f"Failed database insertion(s): {str(e)}"
 
-    return "DMARC/MX/SPF/DKIM Scans inserted into database"
+    return "DNS Scans inserted into database"
 
 
 def Server(functions={}, database_uri=DATABASE_URI):
