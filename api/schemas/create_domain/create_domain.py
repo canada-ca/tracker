@@ -11,6 +11,7 @@ from models import (
 )
 from scalars.url import URL
 from scalars.slug import Slug
+from scalars.selectors import Selectors
 
 
 class CreateDomain(graphene.Mutation):
@@ -28,6 +29,10 @@ class CreateDomain(graphene.Mutation):
             description="URL that you would like to be added to database.",
             required=True,
         )
+        selectors = Selectors(
+            description="DKIM selector strings corresponding to this domain",
+            required=False,
+        )
 
     status = graphene.Boolean()
 
@@ -36,6 +41,7 @@ class CreateDomain(graphene.Mutation):
         user_roles = kwargs.get("user_roles")
         org_slug = cleanse_input(kwargs.get("org_slug"))
         domain = cleanse_input(kwargs.get("url"))
+        selectors = cleanse_input(kwargs.get("selectors", []))
 
         # Check to see if org acronym is SA Org
         if org_slug == "super-admin":
@@ -63,7 +69,7 @@ class CreateDomain(graphene.Mutation):
             raise GraphQLError("Error, Domain already exists.")
 
         if is_user_write(user_roles=user_roles, org_id=org_id):
-            new_domain = Domains(domain=domain, organization_id=org_id)
+            new_domain = Domains(domain=domain, selectors=selectors, organization_id=org_id)
             try:
                 db_session.add(new_domain)
                 db_session.commit()

@@ -8,6 +8,7 @@ from functions.input_validators import cleanse_input
 from functions.slugify import slugify_value
 from models import Domains
 from scalars.url import URL
+from scalars.selectors import Selectors
 
 
 class UpdateDomain(graphene.Mutation):
@@ -26,6 +27,10 @@ class UpdateDomain(graphene.Mutation):
             "to be.",
             required=True,
         )
+        updated_selectors = Selectors(
+            description="The new DKIM selector strings corresponding to this domain",
+            required=False,
+        )
 
     status = graphene.Boolean()
 
@@ -34,6 +39,7 @@ class UpdateDomain(graphene.Mutation):
         user_roles = kwargs.get("user_roles")
         current_domain = cleanse_input(kwargs.get("current_url"))
         updated_domain = cleanse_input(kwargs.get("updated_url"))
+        updated_selectors = cleanse_input(kwargs.get("updated_selectors", []))
 
         # Check to see if current domain exists
         domain_orm = Domains.query.filter(Domains.domain == current_domain).first()
@@ -43,7 +49,7 @@ class UpdateDomain(graphene.Mutation):
 
         if is_user_write(user_roles=user_roles, org_id=domain_orm.organization_id):
             Domains.query.filter(Domains.domain == current_domain).update(
-                {"domain": updated_domain, "slug": slugify_value(updated_domain)}
+                {"domain": updated_domain, "selectors": updated_selectors, "slug": slugify_value(updated_domain)}
             )
 
             try:

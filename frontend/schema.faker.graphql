@@ -494,17 +494,17 @@ type Domain implements Node {
   """
   DKIM, DMARC, and SPF scan results
   """
-  email(
+  mail(
     before: String
     after: String
     first: Int
     last: Int
-  ): EmailScanConnection
+  ): MailScanConnection
 
   """
   HTTPS, and SSL scan results
   """
-  www(before: String, after: String, first: Int, last: Int): WWWScanConnection
+  web(before: String, after: String, first: Int, last: Int): WebScanConnection
 
   """
   DMARC aggregate report
@@ -555,7 +555,7 @@ scalar EmailAddress
 """
 Results of DKIM, DMARC, and SPF scans, on domains
 """
-type EmailScan implements Node {
+type MailScan implements Node {
   """
   The domain the scan was run on
   """
@@ -587,7 +587,7 @@ type EmailScan implements Node {
   dkim: [DKIM]
 }
 
-type EmailScanConnection {
+type MailScanConnection {
   """
   Pagination data for this connection.
   """
@@ -596,17 +596,17 @@ type EmailScanConnection {
   """
   Contains the nodes in this connection.
   """
-  edges: [EmailScanEdge]!
+  edges: [MailScanEdge]!
 }
 
 """
-A Relay edge containing a `EmailScan` and its cursor.
+A Relay edge containing a `MailScan` and its cursor.
 """
-type EmailScanEdge {
+type MailScanEdge {
   """
   The item at the end of the edge
   """
-  node: EmailScan
+  node: MailScan
 
   """
   A cursor for use in pagination
@@ -1930,7 +1930,7 @@ type ValidateTwoFactor {
 """
 Results of HTTPS and SSL scans on domain
 """
-type WWWScan implements Node {
+type WebScan implements Node {
   """
   The domain the scan was run on
   """
@@ -1949,7 +1949,7 @@ type WWWScan implements Node {
   ssl: [SSL]
 }
 
-type WWWScanConnection {
+type WebScanConnection {
   """
   Pagination data for this connection.
   """
@@ -1958,17 +1958,17 @@ type WWWScanConnection {
   """
   Contains the nodes in this connection.
   """
-  edges: [WWWScanEdge]!
+  edges: [WebScanEdge]!
 }
 
 """
-A Relay edge containing a `WWWScan` and its cursor.
+A Relay edge containing a `WebScan` and its cursor.
 """
-type WWWScanEdge {
+type WebScanEdge {
   """
   The item at the end of the edge
   """
-  node: WWWScan
+  node: WebScan
 
   """
   A cursor for use in pagination
