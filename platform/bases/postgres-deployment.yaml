@@ -1,38 +1,58 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
 metadata:
-  creationTimestamp: null
-  labels:
-    app: postgres
-  name: postgres
+  creationTimestamp: null  
+  labels:                  
+    app: postgres           
+  name: tracker-postgres-cluster
   namespace: api
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres
-  strategy: {}
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        app: postgres
-    spec:
-      containers:
-      - image: postgres:alpine
-        name: postgres
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: postgres
-              key: POSTGRES_USER
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres
-              key: POSTGRES_PASSWORD
-        resources: {}
-status: {}
+  dockerImage: registry.opensource.zalan.do/acid/spilo-cdp-12:1.6-p115
+  teamId: "tracker"
+  numberOfInstances: 2
+  users:
+    trackdmarc:  # database owner
+    - superuser
+    - createdb
+  databases:
+    track_dmarc: trackdmarc
+  enableMasterLoadBalancer: false
+  enableReplicaLoadBalancer: false
+  allowedSourceRanges:  #load balancer's source ranges for both master and replica
+  - 127.0.0.1/32
+  postgresql:
+    version: "12"
+    parameters:
+      shared_buffers: "32MB"
+      max_connections: "10"
+      log_statement: "all"
+  volume:
+    size: 1Gi
+  enableShmVolume: true
+  # Resources go here
+  patroni:
+    initdb:
+      encoding: "UTF8"
+      locale: "en_US.UTF-8"
+      data-checksums: "true"
+  pg_hba:
+  - hostssl all all 0.0.0.0/0 md5
+  - host    all all 0.0.0.0/0 md5
+  ttl: 30
+  loop_wait: &loop_wait 10
+  retry_timeout: 10
+  synchronous_mode: false
+  synchronous_mode_strict: false
+  maximum_lag_on_failover: 33554432
+  connectionPooler:
+    numberOfInstances: 2
+    mode: "transaction"
+    schema: "pooler"
+    user: "pooler"
+    resources:
+      requests:
+        cpu: 300m
+        memory: 100Mi
+      limits:
+        cpu: "1"
+        memory: 100Mi
