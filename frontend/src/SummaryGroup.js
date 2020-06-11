@@ -2,7 +2,7 @@ import React from 'react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Stack, SimpleGrid } from '@chakra-ui/core'
-import { SummaryCard } from './SummaryCard'
+import SummaryCard from './SummaryCard'
 import { string } from 'prop-types'
 
 export function SummaryGroup({ ...props }) {
