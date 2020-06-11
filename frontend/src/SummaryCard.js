@@ -63,7 +63,7 @@ function SummaryCard({ ...props }) {
     }
   }, [ref, setParentWidth])
 
-  // Generate cells for the doughtnut to be added to the JSX
+  // Generate cells for the doughnut to be added to the JSX
   const doughnutCells = Object.entries(data.strengths).map(
     ([strengthKey, _value]) => {
       return (
@@ -92,44 +92,25 @@ function SummaryCard({ ...props }) {
   })
 
   const sliderRow = slider && (
-    <Box bg="#444444">
-      <Stack isInline overflowX="auto">
-        {Object.entries(data.strengths).map(([key, value]) => {
-          let color
-          switch (key) {
-            case 'strong':
-              color = '#2D8133'
-              break
-            case 'moderate':
-              color = '#ffbf47'
-              break
-            case 'weak':
-              color = '#e53e3e'
-              break
-            case 'unknown':
-              color = 'gray'
-              break
-          }
-          return value.types.map((type) => {
-            return (
-              <Text
-                key={`${title}:Slider:${type}`}
-                color="#EDEDED"
-                rounded="md"
-                textAlign="center"
-                as="b"
-                fontSize="xs"
-                bg={color}
-              >
-                {type}
-                <br />
-                {data.categoryTotals[type]}
-              </Text>
-            )
-          })
-        })}
-      </Stack>
-    </Box>
+    <Stack isInline display="flex">
+      {Object.entries(data.strengths).map(([strengthKey, strengthValues]) => {
+        return (
+          <Text
+            flex="1"
+            key={`${title}:Slider:${strengthValues.name}`}
+            color="black"
+            bg={strengthKey}
+            rounded="md"
+            textAlign="center"
+            fontWeight="bold"
+          >
+            {strengthValues.name}
+            <br />
+            {strengthValues.value}
+          </Text>
+        )
+      })}
+    </Stack>
   )
 
   return (

@@ -108,6 +108,7 @@ export function SummaryGroup({ ...props }) {
         : name === 'web'
         ? webOverview
         : emailOverview
+    const slider = name === 'dashboard' && true
 
     reportData.forEach((dataEntry) => {
       reports.push(
@@ -117,7 +118,7 @@ export function SummaryGroup({ ...props }) {
           title={dataEntry.title}
           description={dataEntry.description}
           data={makeData()}
-          slider={false}
+          slider={slider}
         />,
       )
     })

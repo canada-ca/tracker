@@ -234,9 +234,9 @@ export function DmarcReportPage() {
           title="DMARC Report"
           description="Description of DMARC report"
           data={reportCardData}
-          slider={false}
           width={cardWidth}
           mx="auto"
+          slider={true}
         />
         <DmarcTimeGraph data={formattedBarData} width="100%" mx="auto" />
         <DmarcReportTable
