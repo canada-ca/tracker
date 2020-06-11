@@ -4,7 +4,7 @@ import { string } from 'prop-types'
 import { Stack, Select, FormControl, FormErrorMessage } from '@chakra-ui/core'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
-import WithPseudoBox, { withPseudoBoxPropTypes } from './withPseudoBox'
+import WithPseudoBox from './withPseudoBox'
 
 function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)
@@ -28,7 +28,6 @@ function LanguageSelect({ name, ...props }) {
 }
 
 LanguageSelect.propTypes = {
-  ...withPseudoBoxPropTypes,
   name: string.isRequired,
 }
 export default WithPseudoBox(LanguageSelect)

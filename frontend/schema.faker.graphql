@@ -380,7 +380,7 @@ type DmarcReportBarGraph {
   """
   The month that the data is related to.
   """
-  month: Month
+  month: PeriodEnums
 
   """
   The year that the data is related to.
@@ -412,7 +412,7 @@ type DmarcReportDetailedTables {
   """
   The month in which the data is relevant to.
   """
-  month: Month
+  month: PeriodEnums
 
   """
   The year in which the relevant to.
@@ -432,7 +432,7 @@ type DmarcReportDoughnut {
   """
   Which month is the data based on.
   """
-  month: String @examples(values: ["LAST30DAYS"])
+  month: PeriodEnums
 
   """
   Which year the data is from.
@@ -1235,7 +1235,7 @@ type Query {
     The sluified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug
-  ): [DmarcReportBarGraph] @listLength(min: 12, max: 12)
+  ): [DmarcReportBarGraph] @listLength(min: 13, max: 13)
 
   """
   Query used for gathering data for dmarc report detail tables.
@@ -1286,16 +1286,6 @@ type Query {
     """
     userName: EmailAddress
   ): UserPage
-
-  """
-  Gather category totals from the dmarc-report-api
-  """
-  getYearlyDmarcReportSummaries(
-    """
-    Slug of domain you want to retrieve data on
-    """
-    domainSlug: Slug
-  ): [YearlyDmarcReportSummary] @listLength(min: 13, max: 13)
 
   """
   The ID of the object
@@ -1956,91 +1946,6 @@ type WWWScanEdge {
 A field that conforms to a 4 digit integer
 """
 scalar Year
-
-"""
-Used to fake months
-"""
-enum Month {
-  """
-  The month of January
-  """
-  JANUARY
-
-  """
-  The month of February
-  """
-  FEBRUARY
-
-  """
-  The month of March
-  """
-  MARCH
-
-  """
-  The month of April
-  """
-  APRIL
-
-  """
-  The month of May
-  """
-  MAY
-
-  """
-  The month of June
-  """
-  JUNE
-
-  """
-  The month of July
-  """
-  JULY
-
-  """
-  The month of August
-  """
-  AUGUST
-
-  """
-  The month of September
-  """
-  SEPTEMBER
-
-  """
-  The month of October
-  """
-  OCTOBER
-
-  """
-  The month of November
-  """
-  NOVEMBER
-
-  """
-  The month of December
-  """
-  DECEMBER
-}
-
-"""
-Yearly overview of various category totals from the external dmarc report api
-"""
-type YearlyDmarcReportSummary {
-  """
-  Which month is the data based on
-  """
-  month: Month
-
-  """
-  Which year the data is from
-  """
-  year: Year
-
-  """
-  Category totals for quick viewing
-  """
-  categoryTotal: CategoryTotals
-}
 
 """
 Object that contains the fields of each detail table
