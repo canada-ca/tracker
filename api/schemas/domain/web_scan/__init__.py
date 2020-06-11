@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from models import Scans, Ssl_scans, Https_scans
+from models import Web_scans, Ssl_scans, Https_scans
 from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
@@ -16,7 +16,7 @@ class WebScan(SQLAlchemyObjectType):
     """
 
     class Meta:
-        model = Scans
+        model = Web_scans
         interfaces = (relay.Node,)
         exclude_fields = ("id", "domain_id", "scan_date", "initiated_by")
 
@@ -25,17 +25,17 @@ class WebScan(SQLAlchemyObjectType):
     https = graphene.List(lambda: HTTPS)
     ssl = graphene.List(lambda: SSL)
 
-    def resolve_domain(self: Scans, info):
+    def resolve_domain(self: Web_scans, info):
         return get_domain(self, info)
 
-    def resolve_timestamp(self: Scans, info):
+    def resolve_timestamp(self: Web_scans, info):
         return get_timestamp(self, info)
 
-    def resolve_https(self: Scans, info):
+    def resolve_https(self: Web_scans, info):
         query = HTTPS.get_query(info)
         return query.filter(self.id == Https_scans.id).all()
 
-    def resolve_ssl(self: Scans, info):
+    def resolve_ssl(self: Web_scans, info):
         query = SSL.get_query(info)
         return query.filter(self.id == Ssl_scans.id).all()
 

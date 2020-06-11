@@ -3,7 +3,7 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
 
-from models import Domains, Scans
+from models import Domains, Web_scans, Mail_scans
 from scalars.slug import Slug
 from scalars.url import URL
 from resolvers.dmarc_report import resolve_dmarc_reports
@@ -23,7 +23,8 @@ class Domain(SQLAlchemyObjectType):
             "selectors",
             "organization_id",
             "organization",
-            "scans",
+            "web_scans",
+            "mail_scans",
             "slug",
         )
 
@@ -57,12 +58,12 @@ class Domain(SQLAlchemyObjectType):
 
     def resolve_mail(self: Domains, info):
         query = MailScan.get_query(info)
-        query = query.filter(Scans.domain_id == self.id)
+        query = query.filter(Mail_scans.domain_id == self.id)
         return query.all()
 
     def resolve_web(self: Domains, info):
         query = WebScan.get_query(info)
-        query = query.filter(Scans.domain_id == self.id)
+        query = query.filter(Web_scans.domain_id == self.id)
         return query.all()
 
     def resolve_dmarc_report(self: Domains, info, **kwargs):

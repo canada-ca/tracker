@@ -2,7 +2,7 @@ import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from db import db_session
-from models import Dmarc_scans, Scans, Domains
+from models import Dmarc_scans, Domains
 from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp

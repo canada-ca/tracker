@@ -7,7 +7,8 @@ from models import (
     Domains,
     Users,
     User_affiliations,
-    Scans,
+    Web_scans,
+    Mail_scans,
     Dkim_scans,
     Dmarc_scans,
     Https_scans,
@@ -55,20 +56,23 @@ def test_remove_domain_super_admin(db):
 
     test_domain = Domains(domain="sa.remove.domain.ca", organization_id=org_one.id,)
     save(test_domain)
-    test_scan = Scans(domain_id=test_domain.id)
-    scan_id = test_scan.id
-    save(test_scan)
-    test_dkim = Dkim_scans(id=test_scan.id)
+    test_web_scan = Web_scans(domain_id=test_domain.id)
+    test_mail_scan = Mail_scans(domain_id=test_domain.id)
+    web_scan_id = test_web_scan.id
+    mail_scan_id = test_mail_scan.id
+    save(test_web_scan)
+    save(test_mail_scan)
+    test_dkim = Dkim_scans(id=test_mail_scan.id)
     save(test_dkim)
-    test_dmarc = Dmarc_scans(id=test_scan.id)
+    test_dmarc = Dmarc_scans(id=test_mail_scan.id)
     save(test_dmarc)
-    test_https = Https_scans(id=test_scan.id)
+    test_https = Https_scans(id=test_web_scan.id)
     save(test_https)
-    test_mx = Mx_scans(id=test_scan.id)
+    test_mx = Mx_scans(id=test_mail_scan.id)
     save(test_mx)
-    test_ssl = Ssl_scans(id=test_scan.id)
+    test_ssl = Ssl_scans(id=test_web_scan.id)
     save(test_ssl)
-    test_spf = Spf_scans(id=test_scan.id)
+    test_spf = Spf_scans(id=test_mail_scan.id)
     save(test_spf)
 
     remove_result = run(
@@ -90,13 +94,14 @@ def test_remove_domain_super_admin(db):
     assert (
         not session.query(Domains).filter(Domains.domain == "sa.remove.domain.ca").all()
     )
-    assert not session.query(Scans).filter(Scans.id == scan_id).all()
-    assert not session.query(Dkim_scans).filter(Dkim_scans.id == scan_id).all()
-    assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == scan_id).all()
-    assert not session.query(Https_scans).filter(Https_scans.id == scan_id).all()
-    assert not session.query(Mx_scans).filter(Mx_scans.id == scan_id).all()
-    assert not session.query(Ssl_scans).filter(Ssl_scans.id == scan_id).all()
-    assert not session.query(Spf_scans).filter(Spf_scans.id == scan_id).all()
+    assert not session.query(Web_scans).filter(Web_scans.id == web_scan_id).all()
+    assert not session.query(Mail_scans).filter(Mail_scans.id == mail_scan_id).all()
+    assert not session.query(Dkim_scans).filter(Dkim_scans.id == mail_scan_id).all()
+    assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == mail_scan_id).all()
+    assert not session.query(Https_scans).filter(Https_scans.id == web_scan_id).all()
+    assert not session.query(Mx_scans).filter(Mx_scans.id == mail_scan_id).all()
+    assert not session.query(Ssl_scans).filter(Ssl_scans.id == web_scan_id).all()
+    assert not session.query(Spf_scans).filter(Spf_scans.id == mail_scan_id).all()
 
 
 def test_remove_domain_org_admin(db):
@@ -123,20 +128,23 @@ def test_remove_domain_org_admin(db):
 
     test_domain = Domains(domain="admin.remove.domain.ca", organization_id=org_one.id,)
     save(test_domain)
-    test_scan = Scans(domain_id=test_domain.id)
-    scan_id = test_scan.id
-    save(test_scan)
-    test_dkim = Dkim_scans(id=test_scan.id)
+    test_web_scan = Web_scans(domain_id=test_domain.id)
+    test_mail_scan = Mail_scans(domain_id=test_domain.id)
+    web_scan_id = test_web_scan.id
+    mail_scan_id = test_mail_scan.id
+    save(test_web_scan)
+    save(test_mail_scan)
+    test_dkim = Dkim_scans(id=test_mail_scan.id)
     save(test_dkim)
-    test_dmarc = Dmarc_scans(id=test_scan.id)
+    test_dmarc = Dmarc_scans(id=test_mail_scan.id)
     save(test_dmarc)
-    test_https = Https_scans(id=test_scan.id)
+    test_https = Https_scans(id=test_web_scan.id)
     save(test_https)
-    test_mx = Mx_scans(id=test_scan.id)
+    test_mx = Mx_scans(id=test_mail_scan.id)
     save(test_mx)
-    test_ssl = Ssl_scans(id=test_scan.id)
+    test_ssl = Ssl_scans(id=test_web_scan.id)
     save(test_ssl)
-    test_spf = Spf_scans(id=test_scan.id)
+    test_spf = Spf_scans(id=test_mail_scan.id)
     save(test_spf)
 
     remove_result = run(
@@ -158,13 +166,14 @@ def test_remove_domain_org_admin(db):
     assert (
         not session.query(Domains).filter(Domains.domain == "sa.remove.domain.ca").all()
     )
-    assert not session.query(Scans).filter(Scans.id == scan_id).all()
-    assert not session.query(Dkim_scans).filter(Dkim_scans.id == scan_id).all()
-    assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == scan_id).all()
-    assert not session.query(Https_scans).filter(Https_scans.id == scan_id).all()
-    assert not session.query(Mx_scans).filter(Mx_scans.id == scan_id).all()
-    assert not session.query(Ssl_scans).filter(Ssl_scans.id == scan_id).all()
-    assert not session.query(Spf_scans).filter(Spf_scans.id == scan_id).all()
+    assert not session.query(Web_scans).filter(Web_scans.id == web_scan_id).all()
+    assert not session.query(Mail_scans).filter(Mail_scans.id == mail_scan_id).all()
+    assert not session.query(Dkim_scans).filter(Dkim_scans.id == mail_scan_id).all()
+    assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == mail_scan_id).all()
+    assert not session.query(Https_scans).filter(Https_scans.id == web_scan_id).all()
+    assert not session.query(Mx_scans).filter(Mx_scans.id == mail_scan_id).all()
+    assert not session.query(Ssl_scans).filter(Ssl_scans.id == web_scan_id).all()
+    assert not session.query(Spf_scans).filter(Spf_scans.id == mail_scan_id).all()
 
 
 def test_remove_domain_org_admin_cant_remove_diff_org(db):
@@ -242,20 +251,23 @@ def test_remove_domain_user_write(db):
         domain="user.write.remove.domain.ca", organization_id=org_one.id,
     )
     save(test_domain)
-    test_scan = Scans(domain_id=test_domain.id)
-    scan_id = test_scan.id
-    save(test_scan)
-    test_dkim = Dkim_scans(id=test_scan.id)
+    test_web_scan = Web_scans(domain_id=test_domain.id)
+    test_mail_scan = Mail_scans(domain_id=test_domain.id)
+    web_scan_id = test_web_scan.id
+    mail_scan_id = test_mail_scan.id
+    save(test_web_scan)
+    save(test_mail_scan)
+    test_dkim = Dkim_scans(id=test_mail_scan.id)
     save(test_dkim)
-    test_dmarc = Dmarc_scans(id=test_scan.id)
+    test_dmarc = Dmarc_scans(id=test_mail_scan.id)
     save(test_dmarc)
-    test_https = Https_scans(id=test_scan.id)
+    test_https = Https_scans(id=test_web_scan.id)
     save(test_https)
-    test_mx = Mx_scans(id=test_scan.id)
+    test_mx = Mx_scans(id=test_mail_scan.id)
     save(test_mx)
-    test_ssl = Ssl_scans(id=test_scan.id)
+    test_ssl = Ssl_scans(id=test_web_scan.id)
     save(test_ssl)
-    test_spf = Spf_scans(id=test_scan.id)
+    test_spf = Spf_scans(id=test_mail_scan.id)
     save(test_spf)
 
     remove_result = run(
@@ -277,13 +289,14 @@ def test_remove_domain_user_write(db):
     assert (
         not session.query(Domains).filter(Domains.domain == "sa.remove.domain.ca").all()
     )
-    assert not session.query(Scans).filter(Scans.id == scan_id).all()
-    assert not session.query(Dkim_scans).filter(Dkim_scans.id == scan_id).all()
-    assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == scan_id).all()
-    assert not session.query(Https_scans).filter(Https_scans.id == scan_id).all()
-    assert not session.query(Mx_scans).filter(Mx_scans.id == scan_id).all()
-    assert not session.query(Ssl_scans).filter(Ssl_scans.id == scan_id).all()
-    assert not session.query(Spf_scans).filter(Spf_scans.id == scan_id).all()
+    assert not session.query(Web_scans).filter(Web_scans.id == web_scan_id).all()
+    assert not session.query(Mail_scans).filter(Mail_scans.id == mail_scan_id).all()
+    assert not session.query(Dkim_scans).filter(Dkim_scans.id == mail_scan_id).all()
+    assert not session.query(Dmarc_scans).filter(Dmarc_scans.id == mail_scan_id).all()
+    assert not session.query(Https_scans).filter(Https_scans.id == web_scan_id).all()
+    assert not session.query(Mx_scans).filter(Mx_scans.id == mail_scan_id).all()
+    assert not session.query(Ssl_scans).filter(Ssl_scans.id == web_scan_id).all()
+    assert not session.query(Spf_scans).filter(Spf_scans.id == mail_scan_id).all()
 
 
 def test_remove_domain_user_write_cant_remove_diff_org(db):
