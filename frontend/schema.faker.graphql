@@ -1039,101 +1039,6 @@ type Organization implements Node {
   ): UserAffClassConnection
 }
 
-type AlignedByIp {
-  source_ip_address: String @fake(type: ipv4Address)
-  dns_domain: URL @fake(type: domainName)
-  header_from: URL @fake(type: domainName)
-  envelope_from: URL @fake(type: domainName)
-  spf_results: String @examples(values: ["pass", "fail"])
-  spf_aligned: String @examples(values: ["true", "false"])
-  dkim_domains: URL @fake(type: domainName)
-  dkim_selectors: String @examples(values: ["selector4", "none", "selector1"])
-  dkim_results: String @examples(values: ["pass", "fail"])
-  dkim_aligned: String @examples(values: ["true", "false"])
-  message_count: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 1000, precisionNumber: 1 }
-    )
-}
-
-type SpfFailures {
-  source_ip_address: String @fake(type: ipv4Address)
-  dns_domain: URL @fake(type: domainName)
-  envelope_from: URL @fake(type: domainName)
-  header_from: URL @fake(type: domainName)
-  spf_results: String @examples(values: ["pass", "fail"])
-  message_count: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 1000, precisionNumber: 1 }
-    )
-}
-
-type SpfMisalign {
-  source_ip_address: String @fake(type: ipv4Address)
-  dns_domain: URL @fake(type: domainName)
-  envelope_from: URL @fake(type: domainName)
-  header_from: URL @fake(type: domainName)
-  spf_results: String @examples(values: ["pass", "fail"])
-  spf_aligned: String @examples(values: ["true", "false"])
-  message_count: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 1000, precisionNumber: 1 }
-    )
-}
-
-type DkimFailures {
-  source_ip_address: String @fake(type: ipv4Address)
-  dns_domain: URL @fake(type: domainName)
-  envelope_from: URL @fake(type: domainName)
-  header_from: URL @fake(type: domainName)
-  dkim_domains: URL @fake(type: domainName)
-  dkim_selectors: String @examples(values: ["selector4", "none", "selector1"])
-  dkim_results: String @examples(values: ["pass", "fail"])
-  message_count: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 1000, precisionNumber: 1 }
-    )
-}
-
-type DkimMisalign {
-  source_ip_address: String @fake(type: ipv4Address)
-  dns_domain: URL @fake(type: domainName)
-  envelope_from: URL @fake(type: domainName)
-  header_from: URL @fake(type: domainName)
-  dkim_domains: URL @fake(type: domainName)
-  dkim_selectors: String @examples(values: ["selector4", "none", "selector1"])
-  dkim_results: String @examples(values: ["pass", "fail"])
-  dkim_aligned: String @examples(values: ["true", "false"])
-  message_count: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 1000, precisionNumber: 1 }
-    )
-}
-
-type DmarcFailures {
-  source_ip_address: String @fake(type: ipv4Address)
-  dns_domain: URL @fake(type: domainName)
-  envelope_from: URL @fake(type: domainName)
-  header_from: URL @fake(type: domainName)
-  spf_results: String @examples(values: ["pass", "fail"])
-  spf_aligned: String @examples(values: ["true", "false"])
-  dkim_domains: URL @fake(type: domainName)
-  dkim_selectors: String @examples(values: ["selector4", "none", "selector1"])
-  dkim_results: String @examples(values: ["pass", "fail"])
-  dkim_aligned: String @examples(values: ["true", "false"])
-  disposition: String @examples(values: ["none"])
-  message_count: Int
-    @fake(
-      type: number
-      options: { minNumber: 0, maxNumber: 1000, precisionNumber: 1 }
-    )
-}
-
 type OrganizationConnection {
   """
   Pagination data for this connection.
@@ -1360,36 +1265,6 @@ type Query {
     period: PeriodEnums!
     year: Year!
   ): DmarcReportDoughnut
-
-  """
-  Select information to create Fully Alligned by IP Address table
-  """
-  getAlignedByIp(domain: Slug!): [AlignedByIp] @listLength(min: 10, max: 15)
-
-  """
-  Select information to create SPF Failures by IP Address table
-  """
-  getSpfFailures(domain: Slug!): [SpfFailures] @listLength(min: 10, max: 15)
-
-  """
-  Select information to create SPF Misalignment by IP Address table
-  """
-  getSpfMisalign(domain: Slug!): [SpfMisalign] @listLength(min: 10, max: 15)
-
-  """
-  Select information to create DKIM Failures by IP Address table
-  """
-  getDkimFailures(domain: Slug!): [DkimFailures] @listLength(min: 10, max: 15)
-
-  """
-  Select information to create DKIM Misalignment by IP Address table
-  """
-  getDkimMisalign(domain: Slug!): [DkimMisalign] @listLength(min: 10, max: 15)
-
-  """
-  Select information to create DMARC Failures by IP Address table
-  """
-  getDmarcFailures(domain: Slug!): [DmarcFailures] @listLength(min: 10, max: 15)
 
   """
   An graphql object that will be used to populate a userList component in the front end

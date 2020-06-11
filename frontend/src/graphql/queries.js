@@ -149,24 +149,6 @@ export const GET_DMARC_FAILURES = gql`
   }
 `
 
-export const GET_YEARLY_DMARC_REPORT_SUMMARIES = gql`
-  query GetYearlyDmarcReportSummaries($domainSlug: Slug!) {
-    getYearlyDmarcReportSummaries(domainSlug: $domainSlug) {
-      month
-      year
-      categoryTotal {
-        dmarcFailNone
-        spfFailDkimPass
-        spfPassDkimPass
-        spfPassDkimFail
-        dmarcFailQuarantine
-        dmarcFailReject
-        total
-      }
-    }
-  }
-`
-
 export const GET_DMARC_REPORT_BAR_GRAPH = gql`
   query GetDmarcReportBarGraph($domainSlug: Slug!) {
     getDmarcReportBarGraph(domainSlug: $domainSlug) {
@@ -227,47 +209,63 @@ export const GET_DMARC_REPORT_DETAILED_TABLES = gql`
       detailTables {
         fullPass {
           sourceIpAddress
-          dnsDomain
           envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
           dkimDomains
           dkimSelectors
-          totalMessages
         }
         spfFailure {
           sourceIpAddress
-          dnsDomain
           envelopeFrom
           totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
         }
         spfMisaligned {
           sourceIpAddress
-          dnsDomain
           envelopeFrom
           totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
         }
         dkimFailure {
           sourceIpAddress
-          dnsDomain
           envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
           dkimDomains
           dkimSelectors
-          totalMessages
         }
         dkimMisaligned {
           sourceIpAddress
-          dnsDomain
           envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
           dkimDomains
           dkimSelectors
-          totalMessages
         }
         dmarcFailure {
           sourceIpAddress
-          dnsDomain
           envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
           dkimDomains
           dkimSelectors
-          totalMessages
         }
       }
     }
