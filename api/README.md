@@ -73,6 +73,14 @@ cloud-build-local --config=api/cloudbuild.yaml --substitutions=BRANCH_NAME=<bran
 ```
 from the root directory of the repository.
 
+#### Installing Black
+Keeping with code formatting standards this project uses the [black](https://github.com/psf/black). To install black
+follow the below instructions. Due to black not having a stable release it is impossible to add to our dev dependencies
+as we would have to use the `--pre` tag which causes issues with our base dependencies.
+```shell script
+pip install black
+```
+
 #### Setting up pre-commit
 `pre-commit` is apart of the dev dependencies, so it will already be installed in your
 virtual environment. How ever since this is a monorepo setup you will have to navigate
