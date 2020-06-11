@@ -6,7 +6,6 @@ const staticPath = join(resolve(process.cwd()), 'public')
 
 function Server() {
   const server = express()
-  server.use('/', express.static(staticPath, { maxage: '365d' }))
   server.use(bodyParser.json())
   server.disable('x-powered-by')
 
@@ -18,7 +17,9 @@ function Server() {
     res.json({ status: 'ready' })
   })
 
-  server.get('/*', (_req, res) => {
+  server.use('/', express.static(staticPath, { maxage: '365d' }))
+
+  server.get('*', (_req, res) => {
     res.sendFile(resolve(join('public', 'index.html')))
   })
   return server

@@ -1,5 +1,38 @@
 import gql from 'graphql-tag'
 
+export const ORGANIZATION_BY_SLUG = gql`
+  query FindOrganizationDetailBySlug($slug: Slug!) {
+    organization:findOrganizationDetailBySlug(slug: $slug) {
+      id
+      name
+      acronym
+      province
+      domains {
+        edges {
+          node {
+            id
+            url
+            lastRan
+          }
+        }
+      }
+    }
+  }
+`
+
+export const ORGANIZATIONS = gql`
+  query Organisations {
+    organizations(first: 10) {
+      edges {
+        node {
+          name
+          slug
+        }
+      }
+    }
+  }
+`
+
 export const DOMAINS = gql`
   query Domains($number: Int, $cursor: String) {
     domains(first: $number, after: $cursor) {

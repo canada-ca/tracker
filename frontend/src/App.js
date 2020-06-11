@@ -22,6 +22,8 @@ const UserPage = lazy(() => import('./UserPage'))
 const UserList = lazy(() => import('./UserList'))
 const SignInPage = lazy(() => import('./SignInPage'))
 const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
+const Organizations = lazy(() => import('./Organizations'))
+const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -49,6 +51,9 @@ export default function App() {
             <Trans>Domains</Trans>
           </Link>
 
+          <Link to="/organizations">
+            <Trans>Organizations</Trans>
+          </Link>
           {isLoggedIn() ? (
             <Link to="/user">
               <Trans>User Profile</Trans>
@@ -79,6 +84,21 @@ export default function App() {
               </Route>
 
               <Route path="/sign-in" component={SignInPage} />
+
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
+                path="/organizations"
+                render={({ match: { url } }) => (
+                  <>
+                    <Route path={`${url}`} component={Organizations} exact />
+                    <Route
+                      path={`${url}/:orgSlug`}
+                      component={OrganizationDetails}
+                    />
+                  </>
+                )}
+              />
 
               <RouteIf
                 condition={isLoggedIn()}

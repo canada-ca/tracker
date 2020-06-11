@@ -431,6 +431,18 @@ type Domain implements Node {
         "cse-cst.gc.ca"
         "forces.gc.ca"
         "jAva&Tab;script:alert('XSS')"
+        "cra.arc.gc.ca"
+        "cra-arc.gc.ca"
+        "cse-cst.gc.ca"
+        "cyber.gc.ca"
+        "dfait-maeci.gc.ca"
+        "dfo-mpo.gc.ca"
+        "ec.gc.ca"
+        "forces.gc.ca"
+        "gccollab.ca"
+        "gccollaboration.ca"
+        "goc-gdc.ca"
+        "hc-sc.gc.ca"
       ]
     )
 
@@ -442,7 +454,7 @@ type Domain implements Node {
   """
   The last time that a scan was ran on this domain
   """
-  lastRan: DateTime
+  lastRan: DateTime @fake(type: recentDate)
 
   """
   DKIM, DMARC, and SPF scan results
@@ -613,6 +625,11 @@ type HTTPS {
   """
   preloaded: String
 
+  httpsGuidanceTags: [HTTPSTags]
+}
+
+type HTTPSTags {
+  value: String
   """
   Key tags found during scan
   """
@@ -914,6 +931,67 @@ type NotificationEmail {
   uri: String
 }
 
+type OrganizationDetail {
+  """
+  The ID of the object.
+  """
+  id: ID!
+
+  """
+  The acronym of the organization.
+  """
+  acronym: Acronym
+
+  """
+  The full name of the organization.
+  """
+  name: String @fake(type: companyName)
+
+  """
+  Slug of the organizations name
+  """
+  slug: Slug
+    @examples(
+      values: [
+        "treasury-board-secretariat"
+        "environment-canada"
+        "health-canada"
+        "canada-revenue-agency"
+        "fisheries-and-oceans-canada"
+      ]
+    )
+
+  """
+  The zone which the organization belongs to.
+  """
+  zone: String
+
+  """
+  The sector which the organizaion belongs to.
+  """
+  sector: String @examples(values: ["government", "energy", "research"])
+
+  """
+  The province in which the organization resides.
+  """
+  province: String @examples(values: ["Ontario", "Nova Scotia", "Quebec"])
+
+  """
+  The city in which the organization resides.
+  """
+  city: String @examples(values: ["Ottawa", "Halifax", "Montreal"])
+
+  """
+  The domains which belong to this organization.
+  """
+  domains(
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): DomainConnection
+}
+
 type Organization implements Node {
   """
   The ID of the object.
@@ -928,12 +1006,22 @@ type Organization implements Node {
   """
   The full name of the organization.
   """
-  name: String
+  name: String @fake(type: companyName)
 
   """
   Slug of the organizations name
   """
   slug: Slug
+    @examples(
+      values: [
+        "treasury-board-secretariat"
+        "environment-canada"
+        "health-canada"
+        "canada-revenue-agency"
+        "fisheries-and-oceans-canada"
+      ]
+    )
+
 
   """
   The zone which the organization belongs to.
@@ -948,12 +1036,12 @@ type Organization implements Node {
   """
   The province in which the organization resides.
   """
-  province: String
+  province: String @examples(values: ["Ontario", "Nova Scotia", "Quebec"])
 
   """
   The city in which the organization resides.
   """
-  city: String
+  city: String @examples(values: ["Ottawa", "Halifax", "Montreal"])
 
   """
   The domains which belong to this organization.
@@ -1308,13 +1396,7 @@ type Query {
   """
   Select all information on a selected organization that a user has access to.
   """
-  organization(
-    slug: Slug!
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): OrganizationConnection
+  findOrganizationDetailBySlug(slug: Slug!): OrganizationDetail
 
   """
   Select all information on all organizations that a user has access to.
@@ -1602,12 +1684,12 @@ type SSL {
   """
   The domain the scan was run on
   """
-  domain: URL
+  domain: URL @fake(type: domainName)
 
   """
   The time the scan was initiated
   """
-  timestamp: DateTime
+  timestamp: DateTime @fake(type: pastDate)
 
   """
   Key tags found during scan
