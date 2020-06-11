@@ -11,7 +11,8 @@ export const Navigation = ({ children, ...props }) => {
       justify="space-between"
       wrap="wrap"
       padding={{ sm: '0.6rem', md: '0.80rem', lg: '1rem', xl: '1rem' }}
-      bg="teal.500"
+      bg="gray.550"
+      py={15.5}
       color="white"
       {...props}
     >

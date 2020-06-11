@@ -30,9 +30,6 @@ from schemas.user_list import user_list, resolve_user_list
 # User Page Imports
 from schemas.user_page import user_page, resolve_user_page
 
-# Yearly Dmarc Report Category Totals
-from schemas.yearly_dmarc_report_summary import get_yearly_dmarc_report_summaries
-
 # Need to be updated
 from schemas.users import Users
 from resolvers.users import resolve_users
@@ -182,9 +179,6 @@ class Query(graphene.ObjectType):
 
     # --- Start Get Dmarc Report Doughnut ---
     get_dmarc_report_doughnut = get_dmarc_report_doughnut
-
-    # -- Start Dmarc Report Queries --
-    get_yearly_dmarc_report_summaries = get_yearly_dmarc_report_summaries
 
     # -- End Dmarc Report Queries
 

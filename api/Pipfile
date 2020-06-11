@@ -11,6 +11,8 @@ mypy = "*"
 pylint = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-mock = "*"
+pre-commit = "*"
 
 [packages]
 flask = "*"
@@ -25,13 +27,11 @@ graphene = "*"
 graphql-core = "*"
 flask-script = "*"
 flask-migrate = "*"
-pytest = "*"
 pyotp = "*"
 pyjwt = "*"
 python-slugify = "*"
 bcrypt = "*"
 gql = "*"
-pytest-mock = "*"
 
 [scripts]
 test = "python -m pytest"

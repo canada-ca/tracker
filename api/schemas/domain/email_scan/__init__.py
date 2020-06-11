@@ -23,17 +23,17 @@ class EmailScan(SQLAlchemyObjectType):
 
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
-    dmarc = graphene.List(
+    dmarc = graphene.Field(
         lambda: DMARC,
         description="Domain-based Message Authentication, Reporting, "
         "and Conformance (DMARC) ",
     )
-    spf = graphene.List(
+    spf = graphene.Field(
         lambda: SPF,
         description="Sender Policy Framework (SPF) for Authorizing Use of "
         "Domains in Email ",
     )
-    dkim = graphene.List(
+    dkim = graphene.Field(
         lambda: DKIM, description="DomainKeys Identified Mail (DKIM) Signatures"
     )
 
@@ -45,15 +45,15 @@ class EmailScan(SQLAlchemyObjectType):
 
     def resolve_dmarc(self: Scans, info):
         query = DMARC.get_query(info)
-        return query.filter(self.id == Dmarc_scans.id).all()
+        return query.filter(self.id == Dmarc_scans.id).first()
 
     def resolve_spf(self: Scans, info):
         query = SPF.get_query(info)
-        return query.filter(self.id == Spf_scans.id).all()
+        return query.filter(self.id == Spf_scans.id).first()
 
     def resolve_dkim(self: Scans, info):
         query = DKIM.get_query(info)
-        return query.filter(self.id == Dkim_scans.id).all()
+        return query.filter(self.id == Dkim_scans.id).first()
 
 
 class EmailScanConnection(relay.Connection):

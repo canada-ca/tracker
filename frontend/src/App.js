@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
-import { Global, css } from '@emotion/core'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
 import { Trans } from '@lingui/macro'
@@ -34,11 +33,6 @@ export default function App() {
       <Flex direction="column" minHeight="100vh" bg="gray.50">
         <header>
           <CSSReset />
-          <Global
-            styles={css`
-              @import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i&display=swap');
-            `}
-          />
           <SkipLink invisible href="#main">
             <Trans>Skip to main content</Trans>
           </SkipLink>
