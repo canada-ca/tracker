@@ -31,6 +31,10 @@ scheme for const data:
 function SummaryCard({ ...props }) {
   const { title, description, data, slider } = props
 
+  const totalForCategories = Object.values(data.categoryTotals).reduce(
+    (a, b) => a + b,
+  )
+
   // Find total and percentage for each strength category
   Object.values(data.strengths).forEach((strength) => {
     strength.value = 0
@@ -39,7 +43,7 @@ function SummaryCard({ ...props }) {
         strength.value += data.categoryTotals[type]
     })
     strength.percent =
-      Math.round((strength.value / data.categoryTotals.total) * 100 * 10) / 10
+      Math.round((strength.value / totalForCategories) * 100 * 10) / 10
   })
 
   // This block will allow the donut to be as large as possible
