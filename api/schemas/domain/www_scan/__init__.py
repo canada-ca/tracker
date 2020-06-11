@@ -22,8 +22,8 @@ class WWWScan(SQLAlchemyObjectType):
 
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
-    https = graphene.List(lambda: HTTPS)
-    ssl = graphene.List(lambda: SSL)
+    https = graphene.Field(lambda: HTTPS)
+    ssl = graphene.Field(lambda: SSL)
 
     def resolve_domain(self: Scans, info):
         return get_domain(self, info)
@@ -33,11 +33,11 @@ class WWWScan(SQLAlchemyObjectType):
 
     def resolve_https(self: Scans, info):
         query = HTTPS.get_query(info)
-        return query.filter(self.id == Https_scans.id).all()
+        return query.filter(self.id == Https_scans.id).first()
 
     def resolve_ssl(self: Scans, info):
         query = SSL.get_query(info)
-        return query.filter(self.id == Ssl_scans.id).all()
+        return query.filter(self.id == Ssl_scans.id).first()
 
 
 class WWWScanConnection(relay.Connection):

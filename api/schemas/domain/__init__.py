@@ -25,6 +25,7 @@ class Domain(SQLAlchemyObjectType):
             "organization",
             "scans",
             "slug",
+            "dmarc_reports"
         )
 
     url = URL(description="The domain the scan was run on")

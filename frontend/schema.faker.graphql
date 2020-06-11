@@ -221,17 +221,7 @@ type DKIM {
   """
   Key tags found during scan
   """
-  dkimGuidanceTags: [DkimTags]
-    @examples(
-      values: [
-        "DKIM-GC"
-        "DKIM-missing"
-        "P-1024"
-        "P-2048"
-        "P-invalid"
-        "T-enabled"
-      ]
-    )
+  dkimGuidanceTags: [String]
 }
 
 """
@@ -252,13 +242,6 @@ type DkimReport {
   DKIM raw result
   """
   result: String
-}
-
-type DkimTags {
-  """
-  Key tags found during scan
-  """
-  value: String
 }
 
 """
@@ -288,6 +271,11 @@ type DMARC {
   Time when scan was initiated
   """
   timestamp: DateTime @fake(type: pastDate)
+
+  """
+  DMARC Phase found when running scan
+  """
+  dmarcPhase: Int
 
   """
   DMARC record retrieved during the scan of the given domain
@@ -320,7 +308,7 @@ type DMARC {
   """
   Key tags found during DMARC Scan
   """
-  dmarcGuidanceTags: [DmarcTags]
+  dmarcGuidanceTags: [String]
 }
 
 """
@@ -458,29 +446,6 @@ type DmarcReportEdge {
   A cursor for use in pagination
   """
   cursor: String!
-}
-
-"""
-
-"""
-type DmarcTags {
-  dmarcPhase: Int
-
-  """
-  Important tags retrieved during scan
-  """
-  value: String
-    @examples(
-      values: [
-        "DMARC-GC"
-        "DMARC-missing"
-        "P-missing"
-        "P-None"
-        "P-quarantine"
-        "CNAME-DMARC"
-        "RUA-none"
-      ]
-    )
 }
 
 type Domain implements Node {
@@ -660,6 +625,7 @@ type EmailVerifyAccount {
   status: Boolean
 }
 
+"""Http Scan Object"""
 type HTTPS {
   """
   The ID of the object
@@ -675,16 +641,26 @@ type HTTPS {
   The time the scan was initiated
   """
   timestamp: DateTime
-  implementation: String
-  enforced: String
-  hsts: String
-  hstsAge: String
-  preloaded: String
-  httpsGuidanceTags: [HTTPSTags]
-}
 
-type HTTPSTags {
-  value: String
+  """State of the HTTPS implementation on the server and any issues therein"""
+  implementation: String
+
+  """Degree to which HTTPS is enforced on the server based on behaviour"""
+  enforced: String
+
+  """Presence and completeness of HSTS implementation"""
+  hsts: String
+
+  """Denotes how long the domain should only be accessed using HTTPS"""
+  hstsAge: String
+
+  """
+  Denotes whether the domain has been submitted and included within HSTS preload list
+  """
+  preloaded: String
+
+  """Key tags found during scan"""
+  httpsGuidanceTags: [String]
 }
 
 """
@@ -1595,15 +1571,67 @@ type SPFTags {
     )
 }
 
+"""SSL Scan Object"""
 type SSL {
+  """The ID of the object"""
   id: ID
-  domain: URL @fake(type: domainName)
-  timestamp: DateTime @fake(type: pastDate)
+
+  """The domain the scan was run on"""
+  domain: URL
+
+  """The time the scan was initiated"""
+  timestamp: DateTime
+
+  """Key tags found during scan"""
+  sslGuidanceTags: [String]
 }
 
-"""
-This class handles the inner nested dict given by key: 'template'.
-"""
+"""Object that contains the fields of each detail table"""
+type TableStructure {
+  """IP address of sending server"""
+  sourceIpAddress: String
+
+  """Domain from SMTP banner message"""
+  envelopeFrom: String
+
+  """Domains used for SPF validation"""
+  spfDomains: String
+
+  """Domains used for DKIM validation"""
+  dkimDomains: String
+
+  """Pointer to a DKIM public key record in DNS"""
+  dkimSelectors: String
+
+  """Total messages related to this record"""
+  totalMessages: Int
+
+  """Geographic location of source IP address"""
+  countryCode: String
+
+  """Owner of ISP for source IP address"""
+  ispOrg: String
+
+  """Owner of prefix for source IP address"""
+  prefixOrg: String
+
+  """Name of AS for source IP address"""
+  asName: String
+
+  """Number of AS for source IP address"""
+  asNum: Int
+
+  """Owner of AS for source IP address"""
+  asOrg: String
+
+  """Host from reverse DNS of source IP address"""
+  dnsHost: String
+
+  """Domain from reverse DNS of source IP address"""
+  dnsDomain: String
+}
+
+"""This class handles the inner nested dict given by key: 'template'. """
 type Template {
   id: String
   uri: String
@@ -1973,64 +2001,3 @@ type YearlyDmarcReportSummary {
   categoryTotal: CategoryTotals
 }
 
-"""
-Object that contains the fields of each detail table
-"""
-type TableStructure {
-  """
-  IP address of sending server
-  """
-  sourceIpAddress: String
-  """
-  Domain from SMTP banner message
-  """
-  envelopeFrom: String
-  """
-  Domains used for SPF validation
-  """
-  spfDomains: String
-  """
-  Domains used for DKIM validation
-  """
-  dkimDomains: String
-  """
-  Pointer to a DKIM public key record in DNS
-  """
-  dkimSelectors: String
-  """
-  Total messages related to this record
-  """
-  totalMessages: Int
-  """
-  Geographic location of source IP address
-  """
-  countryCode: String
-  """
-  Owner of ISP for source IP address
-  """
-  ispOrg: String
-  """
-  Owner of prefix for source IP address
-  """
-  prefixOrg: String
-  """
-  Name of AS for source IP address
-  """
-  asName: String
-  """
-  Number of AS for source IP address
-  """
-  asNum: Int
-  """
-  Owner of AS for source IP address
-  """
-  asOrg: String
-  """
-  Host from reverse DNS of source IP address
-  """
-  dnsHost: String
-  """
-  Domain from reverse DNS of source IP address
-  """
-  dnsDomain: String
-}
