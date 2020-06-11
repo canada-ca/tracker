@@ -1980,24 +1980,3 @@ type WWWScanEdge {
 A field that conforms to a 4 digit integer
 """
 scalar Year
-
-"""
-Yearly overview of various category totals from the external dmarc report api
-"""
-type YearlyDmarcReportSummary {
-  """
-  Which month is the data based on
-  """
-  month: String
-
-  """
-  Which year the data is from
-  """
-  year: String
-
-  """
-  Category totals for quick viewing
-  """
-  categoryTotal: CategoryTotals
-}
-
