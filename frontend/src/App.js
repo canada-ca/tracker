@@ -28,7 +28,7 @@ export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
   const { currentUser, isLoggedIn, isAdmin } = useUserState()
-  // console.log(currentUser)
+  console.log('currentuser:', currentUser)
 
   return (
     <>
@@ -52,9 +52,9 @@ export default function App() {
           <Link to="/">
             <Trans>Home</Trans>
           </Link>
-          <Link to="/domains">
+          {/* <Link to="/domains">
             <Trans>Domains</Trans>
-          </Link>
+          </Link> */}
           {isLoggedIn() ? (
             <Link to="/user">
               <Trans>User Profile</Trans>
@@ -64,9 +64,9 @@ export default function App() {
               <Trans>Sign In</Trans>
             </Link>
           )}
-          <Link to="/user-list">
+          {/* <Link to="/user-list">
             <Trans>User List</Trans>
-          </Link>
+          </Link> */}
           {isLoggedIn() && isAdmin() && (
             <Link to="/admin">
               <Trans>Admin Portal</Trans>

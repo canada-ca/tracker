@@ -72,7 +72,7 @@ export default function UserPage() {
   if (updatePasswordError) {
     return <p>{String(updatePasswordError)}</p>
   }
-  console.log('User Data:', queryUserData)
+  // console.log('User Data:', queryUserData)
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Formik
@@ -170,7 +170,6 @@ export default function UserPage() {
           variantColor="teal"
           w={'50%'}
           onClick={() => {
-            // This clears the JWT, essentially logging the user out in one go
             logout()
             history.push('/')
             toast({
