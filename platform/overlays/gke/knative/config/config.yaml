@@ -129,7 +129,7 @@ spec:
         autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
-        - name: dmarc-scanner
+        - name: dns-scanner
           image: gcr.io/track-compliance/scanners/dns:master # The URL to the image of the app
 
 ---
@@ -183,7 +183,7 @@ spec:
         autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
-        - name: dmarc-scanner
+        - name: dns-scanner
           image: gcr.io/track-compliance/scanners/dns:master # The URL to the image of the app
 
 ---
