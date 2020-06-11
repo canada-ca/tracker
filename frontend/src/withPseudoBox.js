@@ -2,21 +2,19 @@ import React from 'react'
 import { PseudoBox } from '@chakra-ui/core'
 import { string } from 'prop-types'
 
-export const withPseudoBoxPropTypes = {
-  mb: string,
-  ml: string,
-  mt: string,
-  mr: string,
-  w: string,
-  width: string,
-  h: string,
-  height: string,
-  mx: string,
-}
-
 const WithPseudoBox = (WrappedComponent) => {
   return function WrappedWithPseudoBox(props) {
-    // eslint-disable-next-line react/prop-types
+    WrappedWithPseudoBox.propTypes = {
+      mb: string,
+      ml: string,
+      mt: string,
+      mr: string,
+      w: string,
+      width: string,
+      h: string,
+      height: string,
+      mx: string,
+    }
     const {
       mb,
       ml,
