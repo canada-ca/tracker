@@ -23,7 +23,12 @@ def test_web_scan():
     test_client = TestClient(test_app)
     test_app.state.client = test_client
 
-    test_payload = {"scan_id": 1, "domain": "cyber.gc.ca", "user_init": False, "selectors": []}
+    test_payload = {
+        "scan_id": 1,
+        "domain": "cyber.gc.ca",
+        "user_init": False,
+        "selectors": [],
+    }
     headers = {
         "Content-Type": "application/json",
         "Data": str(test_payload),
@@ -54,7 +59,7 @@ def test_mail_scan():
         "scan_id": 1,
         "domain": "cyber.gc.ca",
         "user_init": False,
-        "selectors": ["selector1._domainkey", "selector2._domainkey"]
+        "selectors": ["selector1._domainkey", "selector2._domainkey"],
     }
     headers = {
         "Content-Type": "application/json",
@@ -84,7 +89,12 @@ def test_manual_web_scan():
     test_client = TestClient(test_app)
     test_app.state.client = test_client
 
-    test_payload = {"scan_id": 1, "domain": "cyber.gc.ca", "user_init": True, "selectors": []}
+    test_payload = {
+        "scan_id": 1,
+        "domain": "cyber.gc.ca",
+        "user_init": True,
+        "selectors": [],
+    }
     headers = {
         "Content-Type": "application/json",
         "Data": str(test_payload),
@@ -115,7 +125,7 @@ def test_manual_mail_scan():
         "scan_id": 1,
         "domain": "cyber.gc.ca",
         "user_init": True,
-        "selectors": ["selector1._domainkey", "selector2._domainkey"]
+        "selectors": ["selector1._domainkey", "selector2._domainkey"],
     }
     headers = {
         "Content-Type": "application/json",

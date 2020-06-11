@@ -48,7 +48,7 @@ def Server(scanners, default_client=requests):
         outbound_payload = {
             "scan_id": inbound_payload["scan_id"],
             "domain": inbound_payload["domain"],
-            "selectors": inbound_payload["selectors"]
+            "selectors": inbound_payload["selectors"],
         }
 
         logging.info("Scan request parsed successfully")
