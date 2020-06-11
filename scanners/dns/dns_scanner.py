@@ -97,7 +97,7 @@ async def scan_dkim(domain, selectors):
     record = {}
 
     for selector in selectors:
-
+        record[selector] = {}
         try:
             # Retrieve public key from DNS
             pk_txt = dnsplug.get_txt_dnspython(f"{selector}.{domain}")
