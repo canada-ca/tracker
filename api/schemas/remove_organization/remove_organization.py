@@ -9,7 +9,8 @@ from models import (
     Organizations,
     User_affiliations,
     Domains,
-    Scans,
+    Web_scans,
+    Mail_scans,
     Ssl_scans,
     Spf_scans,
     Https_scans,
@@ -62,12 +63,30 @@ class RemoveOrganization(graphene.Mutation):
                 if len(domain_orm) > 0:
                     # Loop Through All Domains
                     for domain in domain_orm:
-                        # Get All Scans
-                        scan_orm = Scans.query.filter(
-                            Scans.domain_id == domain.id
+                        # Get All Web Scans
+                        web_scan_orm = Web_scans.query.filter(
+                            Web_scans.domain_id == domain.id
                         ).all()
                         # Delete All Related Scans
-                        for scan in scan_orm:
+                        for scan in web_scan_orm:
+                            try:
+                                Https_scans.query.filter(
+                                    Https_scans.id == scan.id
+                                ).delete()
+                                Ssl_scans.query.filter(
+                                    Ssl_scans.id == scan.id
+                                ).delete()
+                                Web_scans.query.filter(Web_scans.id == scan.id).delete()
+                            except Exception as e:
+                                print("Scans: " + e)
+                                return RemoveOrganization(status=False)
+
+                        # Get All Web Scans
+                        mail_scan_orm = Mail_scans.query.filter(
+                            Mail_scans.domain_id == domain.id
+                        ).all()
+                        # Delete All Related Scans
+                        for scan in mail_scan_orm:
                             try:
                                 Dkim_scans.query.filter(
                                     Dkim_scans.id == scan.id
@@ -75,19 +94,13 @@ class RemoveOrganization(graphene.Mutation):
                                 Dmarc_scans.query.filter(
                                     Dmarc_scans.id == scan.id
                                 ).delete()
-                                Https_scans.query.filter(
-                                    Https_scans.id == scan.id
-                                ).delete()
                                 Mx_scans.query.filter(
                                     Mx_scans.id == scan.id
                                 ).delete()
                                 Spf_scans.query.filter(
                                     Spf_scans.id == scan.id
                                 ).delete()
-                                Ssl_scans.query.filter(
-                                    Ssl_scans.id == scan.id
-                                ).delete()
-                                Scans.query.filter(Scans.id == scan.id).delete()
+                                Mail_scans.query.filter(Mail_scans.id == scan.id).delete()
                             except Exception as e:
                                 print("Scans: " + e)
                                 return RemoveOrganization(status=False)
