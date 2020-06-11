@@ -4,10 +4,12 @@ import logging
 import json
 import emoji
 import dkim
+import nacl
 import base64
 from checkdmarc import *
-from dkim import dnsplug, crypto
+from dkim import dnsplug, crypto, KeyFormatError
 from dkim.crypto import *
+from dkim.util import InvalidTagValueList
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse, JSONResponse
