@@ -6,10 +6,8 @@ from graphene_sqlalchemy.types import ORMField
 from models import Domains, Scans
 from scalars.slug import Slug
 from scalars.url import URL
-from resolvers.dmarc_report import resolve_dmarc_reports
 from schemas.domain.email_scan import EmailScan
 from schemas.domain.www_scan import WWWScan
-from schemas.domain.dmarc_report import DmarcReport
 
 
 class Domain(SQLAlchemyObjectType):
@@ -40,12 +38,6 @@ class Domain(SQLAlchemyObjectType):
     www = graphene.ConnectionField(
         WWWScan._meta.connection, description="HTTPS, and SSL scan results"
     )
-    dmarc_report = graphene.ConnectionField(
-        DmarcReport._meta.connection,
-        start_date=graphene.Argument(graphene.Date, required=False),
-        end_date=graphene.Argument(graphene.Date, required=False),
-        description="DMARC aggregate report",
-    )
 
     def resolve_url(self: Domains, info):
         return self.domain
@@ -65,10 +57,6 @@ class Domain(SQLAlchemyObjectType):
         query = WWWScan.get_query(info)
         query = query.filter(Scans.domain_id == self.id)
         return query.all()
-
-    def resolve_dmarc_report(self: Domains, info, **kwargs):
-        kwargs["domain"] = self.domain
-        return resolve_dmarc_reports(self, info, **kwargs)
 
 
 class DomainConnection(relay.Connection):
