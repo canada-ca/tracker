@@ -140,7 +140,10 @@ Dmarc_scans = sqlalchemy.Table(
     "dmarc_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("mail_scans.id"), primary_key=True
+        "id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("mail_scans.id"),
+        primary_key=True,
     ),
     sqlalchemy.Column("dmarc_scan", sqlalchemy.JSON),
 )
@@ -149,7 +152,10 @@ Dkim_scans = sqlalchemy.Table(
     "dkim_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("mail_scans.id"), primary_key=True
+        "id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("mail_scans.id"),
+        primary_key=True,
     ),
     sqlalchemy.Column("dkim_scan", sqlalchemy.JSON),
 )
@@ -158,7 +164,10 @@ Mx_scans = sqlalchemy.Table(
     "mx_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("mail_scans.id"), primary_key=True
+        "id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("mail_scans.id"),
+        primary_key=True,
     ),
     sqlalchemy.Column("mx_scan", sqlalchemy.JSON),
 )
@@ -167,7 +176,10 @@ Spf_scans = sqlalchemy.Table(
     "spf_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("mail_scans.id"), primary_key=True
+        "id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("mail_scans.id"),
+        primary_key=True,
     ),
     sqlalchemy.Column("spf_scan", sqlalchemy.JSON),
 )
@@ -176,7 +188,10 @@ Https_scans = sqlalchemy.Table(
     "https_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("web_scans.id"), primary_key=True
+        "id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("web_scans.id"),
+        primary_key=True,
     ),
     sqlalchemy.Column("https_scan", sqlalchemy.JSON),
 )
@@ -185,7 +200,10 @@ Ssl_scans = sqlalchemy.Table(
     "ssl_scans",
     metadata,
     sqlalchemy.Column(
-        "id", sqlalchemy.Integer, sqlalchemy.ForeignKey("web_scans.id"), primary_key=True
+        "id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("web_scans.id"),
+        primary_key=True,
     ),
     sqlalchemy.Column("ssl_scan", sqlalchemy.JSON),
 )
@@ -480,7 +498,10 @@ async def insert_dns(report, scan_id, db):
                 for selector in report["dkim"]:
                     for historical_selector in historical_dkim.get("dkim_scan")["dkim"]:
                         if selector == historical_selector:
-                            if report["dkim"]["selector"]["public_key_modulus"] == historical_selector["public_key_modulus"]:
+                            if (
+                                report["dkim"]["selector"]["public_key_modulus"]
+                                == historical_selector["public_key_modulus"]
+                            ):
                                 report["dkim"]["selector"]["update-recommended"] = True
 
         dmarc_insert_query = Dmarc_scans.insert().values(
@@ -550,15 +571,7 @@ def Server(functions={}, database_uri=DATABASE_URI):
 
 app = Server(
     functions={
-        "insert": {
-            "https": insert_https,
-            "ssl": insert_ssl,
-            "dns": insert_dns,
-        },
-        "process": {
-            "https": process_https,
-            "ssl": process_ssl,
-            "dns": process_dns,
-        },
+        "insert": {"https": insert_https, "ssl": insert_ssl, "dns": insert_dns,},
+        "process": {"https": process_https, "ssl": process_ssl, "dns": process_dns,},
     }
 )

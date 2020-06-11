@@ -25,10 +25,17 @@ def fire_scan(user_id: int, domain_id: int, url: str, scan_type: str, selectors=
 
     # Create Scan Object
     if scan_type == "mail":
-        new_scan = Mail_scans(domain_id=domain_id, scan_date=scan_datetime, selectors=selectors, initiated_by=user_id)
+        new_scan = Mail_scans(
+            domain_id=domain_id,
+            scan_date=scan_datetime,
+            selectors=selectors,
+            initiated_by=user_id,
+        )
         db_session.add(new_scan)
     else:
-        new_scan = Web_scans(domain_id=domain_id, scan_date=scan_datetime, initiated_by=user_id)
+        new_scan = Web_scans(
+            domain_id=domain_id, scan_date=scan_datetime, initiated_by=user_id
+        )
         db_session.add(new_scan)
 
     # Update Domain Tables Last Run
