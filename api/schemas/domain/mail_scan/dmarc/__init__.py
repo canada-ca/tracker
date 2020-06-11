@@ -6,7 +6,7 @@ from models import Dmarc_scans, Scans, Domains
 from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
-from schemas.domain.email_scan.dmarc.dmarc_tags import DmarcTags
+from schemas.domain.mail_scan.dmarc.dmarc_tags import DmarcTags
 
 
 class DMARC(SQLAlchemyObjectType):
@@ -25,7 +25,6 @@ class DMARC(SQLAlchemyObjectType):
     id = graphene.ID(description="ID of the object")
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="Time when scan was initiated")
-    dmarc_phase = graphene.Int(description="DMARC Phase found when running scan")
     record = graphene.String(
         description="DMARC record retrieved during the scan of the " "given domain "
     )

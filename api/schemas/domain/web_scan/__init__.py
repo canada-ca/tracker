@@ -6,11 +6,11 @@ from models import Scans, Ssl_scans, Https_scans
 from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
-from schemas.domain.www_scan.https import HTTPS
-from schemas.domain.www_scan.ssl import SSL
+from schemas.domain.web_scan.https import HTTPS
+from schemas.domain.web_scan.ssl import SSL
 
 
-class WWWScan(SQLAlchemyObjectType):
+class WebScan(SQLAlchemyObjectType):
     """
     Results of HTTPS and SSL scans on domain
     """
@@ -40,6 +40,6 @@ class WWWScan(SQLAlchemyObjectType):
         return query.filter(self.id == Ssl_scans.id).all()
 
 
-class WWWScanConnection(relay.Connection):
+class WebScanConnection(relay.Connection):
     class Meta:
-        node = WWWScan
+        node = WebScan

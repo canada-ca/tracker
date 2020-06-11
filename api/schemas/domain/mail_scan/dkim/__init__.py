@@ -5,7 +5,7 @@ from models import Dkim_scans
 from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
-from schemas.domain.email_scan.dkim.dkim_tags import DkimTags
+from schemas.domain.mail_scan.dkim.dkim_tags import DkimTags
 
 
 class DKIM(SQLAlchemyObjectType):

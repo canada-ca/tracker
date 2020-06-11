@@ -7,8 +7,8 @@ from models import Domains, Scans
 from scalars.slug import Slug
 from scalars.url import URL
 from resolvers.dmarc_report import resolve_dmarc_reports
-from schemas.domain.email_scan import EmailScan
-from schemas.domain.www_scan import WWWScan
+from schemas.domain.mail_scan import MailScan
+from schemas.domain.web_scan import WebScan
 from schemas.domain.dmarc_report import DmarcReport
 
 
@@ -20,7 +20,7 @@ class Domain(SQLAlchemyObjectType):
             "id",
             "domain",
             "last_run",
-            "dmarc_phase",
+            "selectors",
             "organization_id",
             "organization",
             "scans",
@@ -34,10 +34,10 @@ class Domain(SQLAlchemyObjectType):
     )
     organization = ORMField(model_attr="organization")
     email = graphene.ConnectionField(
-        EmailScan._meta.connection, description="DKIM, DMARC, and SPF scan results"
+        MailScan._meta.connection, description="DKIM, DMARC, and SPF scan results"
     )
-    www = graphene.ConnectionField(
-        WWWScan._meta.connection, description="HTTPS, and SSL scan results"
+    web = graphene.ConnectionField(
+        WebScan._meta.connection, description="HTTPS, and SSL scan results"
     )
     dmarc_report = graphene.ConnectionField(
         DmarcReport._meta.connection,
@@ -55,13 +55,13 @@ class Domain(SQLAlchemyObjectType):
     def resolve_last_ran(self: Domains, info):
         return self.last_run
 
-    def resolve_email(self: Domains, info):
-        query = EmailScan.get_query(info)
+    def resolve_mail(self: Domains, info):
+        query = MailScan.get_query(info)
         query = query.filter(Scans.domain_id == self.id)
         return query.all()
 
-    def resolve_www(self: Domains, info):
-        query = WWWScan.get_query(info)
+    def resolve_web(self: Domains, info):
+        query = WebScan.get_query(info)
         query = query.filter(Scans.domain_id == self.id)
         return query.all()
 

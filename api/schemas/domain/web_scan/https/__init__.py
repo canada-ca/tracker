@@ -5,7 +5,7 @@ from models import Https_scans
 from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
-from schemas.domain.www_scan.https.https_tags import HTTPSTags
+from schemas.domain.web_scan.https.https_tags import HTTPSTags
 
 
 class HTTPS(SQLAlchemyObjectType):

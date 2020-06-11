@@ -2,7 +2,7 @@ from graphene import Time
 from sqlalchemy.types import Integer, Boolean, DateTime, Float
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 
 from db import Base
 from functions.slugify import slugify_value
@@ -17,12 +17,14 @@ class Domains(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     domain = Column(String)
     last_run = Column(DateTime)
+    selectors = Column(ARRAY(String))
     organization_id = Column(Integer, ForeignKey("organizations.id"))
     slug = Column(String, index=True)
     organization = relationship(
         "Organizations", back_populates="domains", cascade="all, delete"
     )
-    scans = relationship("Scans", back_populates="domain", cascade="all, delete")
+    web_scans = relationship("web_scans", back_populates="domain", cascade="all, delete")
+    mail_scans = relationship("mail_scans", back_populates="domain", cascade="all, delete")
     dmarc_reports = relationship(
         "Dmarc_Reports", back_populates="domain", cascade="all, delete"
     )
@@ -45,56 +47,67 @@ class Dmarc_Reports(Base):
     )
 
 
-class Scans(Base):
-    __tablename__ = "scans"
+class Web_scans(Base):
+    __tablename__ = "web_scans"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     domain_id = Column(Integer, ForeignKey("domains.id"))
     scan_date = Column(DateTime)
     initiated_by = Column(Integer, ForeignKey("users.id"))
-    domain = relationship("Domains", back_populates="scans", cascade="all, delete")
+    domain = relationship("Domains", back_populates="web_scans", cascade="all, delete")
+
+
+class Mail_scans(Base):
+    __tablename__ = "mail_scans"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    domain_id = Column(Integer, ForeignKey("domains.id"))
+    scan_date = Column(DateTime)
+    dmarc_phase = Column(Integer)
+    selectors = Column(ARRAY(String))
+    initiated_by = Column(Integer, ForeignKey("users.id"))
+    domain = relationship("Domains", back_populates="mail_scans", cascade="all, delete")
 
 
 class Dmarc_scans(Base):
     __tablename__ = "dmarc_scans"
 
-    id = Column(Integer, ForeignKey("scans.id"), primary_key=True)
-    dmarc_phase = Column(Integer)
+    id = Column(Integer, ForeignKey("mail_scans.id"), primary_key=True)
     dmarc_scan = Column(JSONB)
 
 
 class Dkim_scans(Base):
     __tablename__ = "dkim_scans"
 
-    id = Column(Integer, ForeignKey("scans.id"), primary_key=True)
+    id = Column(Integer, ForeignKey("mail_scans.id"), primary_key=True)
     dkim_scan = Column(JSONB)
 
 
 class Mx_scans(Base):
     __tablename__ = "mx_scans"
 
-    id = Column(Integer, ForeignKey("scans.id"), primary_key=True)
+    id = Column(Integer, ForeignKey("mail_scans.id"), primary_key=True)
     mx_scan = Column(JSONB)
 
 
 class Spf_scans(Base):
     __tablename__ = "spf_scans"
 
-    id = Column(Integer, ForeignKey("scans.id"), primary_key=True)
+    id = Column(Integer, ForeignKey("mail_scans.id"), primary_key=True)
     spf_scan = Column(JSONB)
 
 
 class Https_scans(Base):
     __tablename__ = "https_scans"
 
-    id = Column(Integer, ForeignKey("scans.id"), primary_key=True)
+    id = Column(Integer, ForeignKey("web_scans.id"), primary_key=True)
     https_scan = Column(JSONB)
 
 
 class Ssl_scans(Base):
     __tablename__ = "ssl_scans"
 
-    id = Column(Integer, ForeignKey("scans.id"), primary_key=True)
+    id = Column(Integer, ForeignKey("web_scans.id"), primary_key=True)
     ssl_scan = Column(JSONB)
 
 
