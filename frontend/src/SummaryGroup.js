@@ -100,40 +100,27 @@ export function SummaryGroup({ ...props }) {
     },
   ]
 
-  const getReportQty = () => {
-    let reportQty
-    if (name === 'dashboard') {
-      reportQty = dashOverview.length
-    } else if (name === 'web') {
-      reportQty = webOverview.length
-    } else {
-      reportQty = emailOverview.length
-    }
-    return reportQty
-  }
-
   const createReports = () => {
     const reports = []
-    let reportData
-    if (name === 'dashboard') {
-      reportData = dashOverview
-    } else if (name === 'web') {
-      reportData = webOverview
-    } else {
-      reportData = emailOverview
-    }
+    const reportData =
+      name === 'dashboard'
+        ? dashOverview
+        : name === 'web'
+        ? webOverview
+        : emailOverview
 
-    for (let i = 0; i < getReportQty(); i++) {
+    reportData.forEach((dataEntry) => {
       reports.push(
         <SummaryCard
           name={name}
-          key={reportData[i].title}
-          title={reportData[i].title}
-          description={reportData[i].description}
+          key={dataEntry.title}
+          title={dataEntry.title}
+          description={dataEntry.description}
           data={makeData()}
+          slider={false}
         />,
       )
-    }
+    })
     return reports
   }
 

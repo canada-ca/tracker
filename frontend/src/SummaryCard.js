@@ -3,6 +3,9 @@ import { Text, Stack, Box, Badge } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { string, object, bool } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
+import theme from './theme/canada'
+
+const { colors } = theme
 
 /*
 scheme for const data:
@@ -31,9 +34,14 @@ scheme for const data:
 function SummaryCard({ ...props }) {
   const { title, description, data, slider } = props
 
-  const totalForCategories = Object.values(data.categoryTotals).reduce(
-    (a, b) => a + b,
-  )
+  const excludeFromTotal = ['total', '__typename']
+  // Calculate total of all properties in categoryTotals
+  const totalForCategories = Object.entries(data.categoryTotals)
+    .filter((category) => !excludeFromTotal.includes(category[0]))
+    .map((category) => category[1])
+    .reduce((categoryValue, currentTotal) => {
+      return categoryValue + currentTotal
+    })
 
   // Find total and percentage for each strength category
   Object.values(data.strengths).forEach((strength) => {
@@ -55,19 +63,88 @@ function SummaryCard({ ...props }) {
     }
   }, [ref, setParentWidth])
 
+  // Generate cells for the doughtnut to be added to the JSX
+  const doughnutCells = Object.entries(data.strengths).map(
+    ([strengthKey, _value]) => {
+      return (
+        <Cell
+          key={`${title}:DoughnutCell:${strengthKey}`}
+          fill={colors[strengthKey]}
+        />
+      )
+    },
+  )
+
+  // Generate badges for the card to be used in the JSX
+  const badges = Object.entries(data.strengths).map(([strengthKey, value]) => {
+    return (
+      <Text
+        key={`${title}:Badge:${strengthKey}`}
+        color="white"
+        alignItems="center"
+        px="1em"
+        bg={strengthKey}
+        rounded="md"
+      >
+        {value.name}: {value.percent}%
+      </Text>
+    )
+  })
+
+  const sliderRow = slider && (
+    <Box bg="#444444">
+      <Stack isInline overflowX="auto">
+        {Object.entries(data.strengths).map(([key, value]) => {
+          let color
+          switch (key) {
+            case 'strong':
+              color = '#2D8133'
+              break
+            case 'moderate':
+              color = '#ffbf47'
+              break
+            case 'weak':
+              color = '#e53e3e'
+              break
+            case 'unknown':
+              color = 'gray'
+              break
+          }
+          return value.types.map((type) => {
+            return (
+              <Text
+                key={`${title}:Slider:${type}`}
+                color="#EDEDED"
+                rounded="md"
+                textAlign="center"
+                as="b"
+                fontSize="xs"
+                bg={color}
+              >
+                {type}
+                <br />
+                {data.categoryTotals[type]}
+              </Text>
+            )
+          })
+        })}
+      </Stack>
+    </Box>
+  )
+
   return (
-    <Box bg="#EDEDED" rounded="lg" overflow="hidden" ref={ref}>
+    <Box bg="white" rounded="lg" overflow="hidden" ref={ref}>
       <Stack>
-        <Box bg="#444444">
+        <Box bg="gray.550" px="2em">
           <Text
             fontSize="xl"
             fontWeight="semibold"
-            textAlign={['center']}
-            color="#EDEDED"
+            textAlign="center"
+            color="white"
           >
             {title}
           </Text>
-          <Text fontSize="md" textAlign={['center']} color="#EDEDED">
+          <Text fontSize="md" textAlign="center" color="white">
             {description}
           </Text>
         </Box>
@@ -83,117 +160,19 @@ function SummaryCard({ ...props }) {
               paddingAngle={2}
               dataKey="value"
             >
-              {/* Generate cells for doughnut */}
-              {Object.entries(data.strengths).map(([key, _value]) => {
-                let color
-                switch (key) {
-                  case 'strong': {
-                    color = '#2D8133'
-                    break
-                  }
-                  case 'moderate': {
-                    color = '#ffbf47'
-                    break
-                  }
-                  case 'weak': {
-                    color = '#e53e3e'
-                    break
-                  }
-                  case 'unknown': {
-                    color = 'grey'
-                    break
-                  }
-                }
-                return (
-                  <Cell
-                    key={`${title}:DoughnutCell:${key}`}
-                    dataKey={key}
-                    fill={color}
-                  />
-                )
-              })}
+              {doughnutCells}
             </Pie>
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>
 
-        {/* Generate badges */}
-        {Object.entries(data.strengths).map(([key, value]) => {
-          let color
-          switch (key) {
-            case 'strong':
-              color = 'green'
-              break
-            case 'moderate':
-              color = 'yellow'
-              break
-            case 'weak':
-              color = 'red'
-              break
-            case 'unknown':
-              color = 'gray'
-              break
-          }
-          return (
-            <Badge
-              key={`${title}:Badge:${key}`}
-              variantColor={color}
-              variant="solid"
-              alignItems="center"
-              width="min-content"
-              mx="auto"
-            >
-              <Text alignItems="center">
-                {value.name}: {value.percent}%
-              </Text>
-            </Badge>
-          )
-        })}
+        <Stack align="center">{badges}</Stack>
 
         {/* Give empty room at bottom of card if no slider */}
         {!slider && <br />}
 
         {/* data box */}
-        {slider && (
-          <Box bg="#444444">
-            <Stack isInline overflowX="auto">
-              {Object.entries(data.strengths).map(([key, value]) => {
-                let color
-                switch (key) {
-                  case 'strong':
-                    color = '#2D8133'
-                    break
-                  case 'moderate':
-                    color = '#ffbf47'
-                    break
-                  case 'weak':
-                    color = '#e53e3e'
-                    break
-                  case 'unknown':
-                    color = 'gray'
-                    break
-                }
-                return value.types.map((type) => {
-                  return (
-                    <Text
-                      key={`${title}:Slider:${type}`}
-                      color="#EDEDED"
-                      rounded="md"
-                      textAlign="center"
-                      as="b"
-                      fontSize="xs"
-                      bg={color}
-                    >
-                      {type}
-                      <br />
-                      {data.categoryTotals[type]}
-                    </Text>
-                  )
-                })
-              })}
-            </Stack>
-          </Box>
-        )}
+        {slider && sliderRow}
       </Stack>
     </Box>
   )
