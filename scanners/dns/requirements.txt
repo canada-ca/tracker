@@ -7,4 +7,5 @@ requests>=2.18.4
 checkdmarc
 dkimpy
 dnspython
+PyNaCl
 pretend
