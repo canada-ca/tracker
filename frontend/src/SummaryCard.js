@@ -79,7 +79,7 @@ function SummaryCard({ ...props }) {
               paddingAngle={2}
               dataKey="value"
             >
-              {/* Generate cells for doughnut*/}
+              {/* Generate cells for doughnut */}
               {Object.entries(data.strengths).map(([key, _value]) => {
                 let color
                 switch (key) {
@@ -100,7 +100,13 @@ function SummaryCard({ ...props }) {
                     break
                   }
                 }
-                return <Cell dataKey={key} fill={color} />
+                return (
+                  <Cell
+                    key={`${title}:DoughnutCell:${key}`}
+                    dataKey={key}
+                    fill={color}
+                  />
+                )
               })}
             </Pie>
             <Tooltip />
@@ -126,6 +132,7 @@ function SummaryCard({ ...props }) {
           }
           return (
             <Badge
+              key={`${title}:Badge:${key}`}
               variantColor={color}
               variant="solid"
               alignItems="center"
@@ -146,9 +153,9 @@ function SummaryCard({ ...props }) {
         {slider && (
           <Box bg="#444444">
             <Stack isInline overflowX="auto">
-              {data.map((entry) => {
+              {Object.entries(data.strengths).map(([key, value]) => {
                 let color
-                switch (entry.strength) {
+                switch (key) {
                   case 'strong':
                     color = '#2D8133'
                     break
@@ -159,21 +166,23 @@ function SummaryCard({ ...props }) {
                     color = '#e53e3e'
                     break
                   case 'unknown':
-                    color = '#B0B0B0'
+                    color = 'gray'
                     break
                 }
-                return entry.categories.map((category) => {
+                return value.types.map((type) => {
                   return (
                     <Text
+                      key={`${title}:Slider:${type}`}
                       color="#EDEDED"
                       rounded="md"
                       textAlign="center"
                       as="b"
                       fontSize="xs"
+                      bg={color}
                     >
-                      {`${category.name}`}
+                      {type}
                       <br />
-                      {category.qty}
+                      {data.categoryTotals[type]}
                     </Text>
                   )
                 })

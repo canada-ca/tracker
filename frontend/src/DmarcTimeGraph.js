@@ -69,7 +69,7 @@ function DmarcTimeGraph({ ...props }) {
               color = '#e53e3e'
           }
           return strengthDetails.types.map((type) => {
-            return <Bar dataKey={type} stackId="a" fill={color} />
+            return <Bar key={`Bar:${type}`} dataKey={type} stackId="a" fill={color} />
           })
         })}
       </BarChart>

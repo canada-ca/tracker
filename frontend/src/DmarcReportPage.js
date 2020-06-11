@@ -91,6 +91,8 @@ export function DmarcReportPage() {
   const dkimMisalignedData = detailTablesData.dkimMisaligned
   const dmarcFailureData = detailTablesData.dmarcFailure
 
+  const initialSort = [{ id: 'totalMessages', desc: true }]
+
   const [
     sourceIp,
     dnsDomain,
@@ -209,36 +211,42 @@ export function DmarcReportPage() {
           data={fullPassData}
           columns={fullPassColumns}
           title="Fully Aligned by IP Address"
+          initialSort={initialSort}
           mb="30px"
         />
         <DmarcReportTable
           data={spfFailureData}
           columns={spfFailureColumns}
           title="SPF Failures by IP Address"
+          initialSort={initialSort}
           mb="30px"
         />
         <DmarcReportTable
           data={spfMisalignedData}
           columns={spfMisalignedColumns}
           title="SPF Misalignment by IP Address"
+          initialSort={initialSort}
           mb="30px"
         />
         <DmarcReportTable
           data={dkimFailureData}
           columns={dkimFailureColumns}
           title="DKIM Failures by IP Address"
+          initialSort={initialSort}
           mb="30px"
         />
         <DmarcReportTable
           data={dkimMisalignedData}
           columns={dkimMisalignedColumns}
           title="DKIM Misalignment by IP Address"
+          initialSort={initialSort}
           mb="30px"
         />
         <DmarcReportTable
           data={dmarcFailureData}
           columns={dmarcFailureColumns}
           title="DMARC Failures by IP Address"
+          initialSort={initialSort}
           mb="30px"
         />
       </Box>
