@@ -52,7 +52,7 @@ class Selectors(Scalar):
                 raise GraphQLError(
                     scalar_error_only_types("strings", "selectors", str(type(selector)))
                 )
-            if not SELECTOR_REGEX_CHECK.search(selector):
+            if not SELECTOR_REGEX_CHECK.search(str(selector)):
                 raise GraphQLError(scalar_error_type("Selector", selector))
 
         return node.values
