@@ -71,13 +71,9 @@ def test_valid_get_dmarc_report_bar_graph_query_as_super_admin(save, mocker):
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -131,13 +127,9 @@ def test_valid_get_dmarc_report_bar_graph_query_as_org_admin(save, mocker):
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -191,13 +183,9 @@ def test_valid_get_dmarc_report_bar_graph_query_as_user_write(save, mocker):
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -251,13 +239,9 @@ def test_valid_get_dmarc_report_bar_graph_query_as_user_read(save, mocker):
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -316,13 +300,9 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -382,13 +362,9 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -448,13 +424,9 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -506,13 +478,9 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
