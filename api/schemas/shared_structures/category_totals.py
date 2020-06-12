@@ -6,53 +6,24 @@ class CategoryTotals(graphene.ObjectType):
     This object displays the total amount of messages that fit into each category
     """
 
-    dmarc_fail_none = graphene.Int(
-        description="Amount of messages that failed dmarc and nothing was done."
+    full_pass = graphene.Int(
+        description="Amount of messages that have are passing SPF and DKIM."
     )
-    spf_fail_dkim_pass = graphene.Int(
-        description="Amount of messages that failed SPF, but passed DKIM."
+    partial_pass = graphene.Int(
+        description="Amount of messages that are passing either SPF or DKIM, but failing one."
     )
-    spf_pass_dkim_pass = graphene.Int(
-        description="Amount of messages that passed SPF and DKIM."
-    )
-    spf_pass_dkim_fail = graphene.Int(
-        description="Amount of messages that passed SPF, but failed DKIM."
-    )
-    dmarc_fail_quarantine = graphene.Int(
-        description="Amount of messages that failed DMARC and were quarantined."
-    )
-    dmarc_fail_reject = graphene.Int(
-        description="Amount of messages that failed DMARC and were rejected."
-    )
-    total = graphene.Int(description="The sum of all different categories.")
+    fail = graphene.Int(description="Amount of messages that fail both SPF and DKIM.")
+    total = graphene.Int(description="Sum of all categories.")
 
-    def resolve_dmarc_fail_none(self: dict, info):
-        return self.get("dmarcFailNone")
+    def resolve_full_pass(self: dict, info):
+        return self.get("fullPass")
 
-    def resolve_spf_fail_dkim_pass(self: dict, info):
-        return self.get("spfFailDkimPass")
+    def resolve_partial_pass(self: dict, info):
+        return self.get("partialPass")
 
-    def resolve_spf_pass_dkim_pass(self: dict, info):
-        return self.get("spfPassDkimPass")
-
-    def resolve_spf_pass_dkim_fail(self: dict, info):
-        return self.get("spfPassDkimFail")
-
-    def resolve_dmarc_fail_quarantine(self: dict, info):
-        return self.get("dmarcFailQuarantine")
-
-    def resolve_dmarc_fail_reject(self: dict, info):
-        return self.get("dmarcFailReject")
+    def resolve_fail(self: dict, info):
+        return self.get("fail")
 
     def resolve_total(self: dict, info):
-        total = sum(
-            (
-                self.get("dmarcFailNone"),
-                self.get("spfFailDkimPass"),
-                self.get("spfPassDkimPass"),
-                self.get("spfPassDkimFail"),
-                self.get("dmarcFailQuarantine"),
-                self.get("dmarcFailReject"),
-            )
-        )
+        total = sum((self.get("fullPass"), self.get("partialPass"), self.get("fail"),))
         return total
