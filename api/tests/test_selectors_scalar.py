@@ -68,7 +68,7 @@ def test_invalid_selectors_parse_literal_not_selector():
 
 
 def test_invalid_selectors_parse_literal_wrong_ast_type():
-    test_list = ast.ListValue(value=[ast.IntValue(value="1234")])
+    test_list = ast.ListValue(value=[ast.IntValue(value=1234)])
     with pytest.raises(
         GraphQLError,
         match=scalar_error_only_types("strings", "selectors", str(ast.Type)),
