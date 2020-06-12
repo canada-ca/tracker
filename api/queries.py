@@ -20,6 +20,9 @@ from schemas.dmarc_report_detailed_tables import get_dmarc_report_detailed_table
 # Get Dmarc Report Doughnut Data
 from schemas.dmarc_report_doughnut import get_dmarc_report_doughnut
 
+# Is User an Admin Query
+from schemas.is_user_admin import is_user_admin
+
 # Organization Imports
 from schemas.organizations import Organization
 from resolvers.organizations import resolve_organization, resolve_organizations
@@ -121,6 +124,9 @@ class Query(graphene.ObjectType):
 
     def resolve_user_list(self, info, **kwargs):
         return resolve_user_list(self, info, **kwargs)
+
+    # Is user an admin or super admin
+    is_user_admin = is_user_admin
 
     # --- End User Queries
 
