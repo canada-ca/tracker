@@ -14,7 +14,7 @@ istioctl manifest generate --set values.kiali.enabled=true \
   --set values.gateways.istio-ingressgateway.loadBalancerIP=34.95.5.243 > istio.yaml
 ```
 
-Inside the config that is generated is a service definition that currently needs to be modified to ensure that unneeded ports are not opened. This means editing the istio.yaml file and making the following modification.
+Inside the config that is generated is a service definition that currently needs to be modified to ensure that unneeded ports are not opened. This means editing the istio.yaml file and appending the following at the end.
 
 ```bash
  apiVersion: v1
@@ -45,6 +45,7 @@ Inside the config that is generated is a service definition that currently needs
      app: istio-ingressgateway
      istio: ingressgateway
    type: LoadBalancer
+---
 ```
 
 That patches the `istio.yaml` in the bases folder with the loadbalancer config
