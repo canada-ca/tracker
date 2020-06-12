@@ -26,15 +26,15 @@ DB_NAME=
 TOKEN_KEY=
 ```
 
-## postgres.env
+## pgo-cluster.env
 
-To keep things simple in the early part of the development process, we've been running the [official Postgres Docker image](https://hub.docker.com/_/postgres) without bothering to persist the data. 
+In order to ensure data redundancy and other highly-available concepts, we are employing a [Postgres Operator](https://github.com/zalando/postgres-operator) to mange our PostgreSQL cluster.
 
-One of the interesting features of this image is that if you define both the `POSTGRES_USER` and `POSTGRES_PASSWORD` environment variables, it will create a user and a database with the same name. The values we set in `postgres.env` should be done keeping this feature in mind, since this has implications for the `DB_USER` and `DB_NAME` values in `api.env` and `scanners.env`.
+By default, the PostgreSQL user for this deployment is `trackdmarc`, which is set in the `postgresql-deployment.yaml` config in the platform bases folder.  The values we set in `pgo-cluster.env` should be done keeping this in mind, and these values also have implications for the `DB_USER` and `DB_NAME` values in `api.env` and `scanners.env`.
 
 ```sh
-POSTGRES_USER=
-POSTGRES_PASSWORD=
+username=trackdmarc
+password=
 ```
 
 ## kiali.env
