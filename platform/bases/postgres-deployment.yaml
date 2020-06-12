@@ -1,9 +1,9 @@
 apiVersion: "acid.zalan.do/v1"
 kind: postgresql
 metadata:
-  creationTimestamp: null  
-  labels:                  
-    app: postgres           
+  creationTimestamp: null
+  labels:
+    app: postgres
   name: tracker-postgres-cluster
   namespace: api
 spec:
