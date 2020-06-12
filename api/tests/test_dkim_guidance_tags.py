@@ -2,7 +2,7 @@ import pytest
 from pytest import fail
 
 from db import DB
-from models import Users, Organizations, Domains, Scans, Dkim_scans, User_affiliations
+from models import Users, Organizations, Domains, Mail_scans, Dkim_scans, User_affiliations
 from tests.testdata.domain_guidance_tags import dkim_mock_data
 from tests.test_functions import json, run
 
@@ -28,7 +28,7 @@ def test_dkim_guidance_tags_dkim_2(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
@@ -95,7 +95,7 @@ def test_dkim_guidance_tags_dkim_5(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
@@ -162,7 +162,7 @@ def test_dkim_guidance_tags_dkim_6(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
@@ -229,7 +229,7 @@ def test_dkim_guidance_tags_dkim_7(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
@@ -296,7 +296,7 @@ def test_dkim_guidance_tags_dkim_8(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
@@ -363,7 +363,7 @@ def test_dkim_guidance_tags_dkim_9(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
@@ -430,7 +430,7 @@ def test_dkim_guidance_tags_dkim_10(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
@@ -497,7 +497,7 @@ def test_dkim_guidance_tags_dkim_11(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
@@ -564,7 +564,7 @@ def test_dkim_guidance_tags_dkim_12(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
@@ -631,7 +631,7 @@ def test_dkim_guidance_tags_dkim_13(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(

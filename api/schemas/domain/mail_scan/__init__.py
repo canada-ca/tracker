@@ -23,6 +23,7 @@ class MailScan(SQLAlchemyObjectType):
 
     domain = URL(description="The domain the scan was run on")
     timestamp = graphene.DateTime(description="The time the scan was initiated")
+    dmarc_phase = graphene.Int(description="DMARC implementation phase detected when running scan")
     selectors = graphene.List(description="List of DKIM selector strings to scan", of_type=graphene.String)
     dmarc = graphene.Field(
         lambda: DMARC,

@@ -2,7 +2,7 @@ import pytest
 from pytest import fail
 
 from db import DB
-from models import Users, Organizations, Domains, Scans, Https_scans, User_affiliations
+from models import Users, Organizations, Domains, Web_scans, Https_scans, User_affiliations
 from tests.testdata.domain_guidance_tags import https_mock_data
 from tests.test_functions import json, run
 
@@ -28,7 +28,7 @@ def test_dkim_guidance_tags_https_2(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_https_scan = Https_scans(
@@ -52,7 +52,7 @@ def test_dkim_guidance_tags_https_2(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -75,7 +75,7 @@ def test_dkim_guidance_tags_https_2(save):
 
     assert (
         "https2"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -95,7 +95,7 @@ def test_dkim_guidance_tags_https_3(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -119,7 +119,7 @@ def test_dkim_guidance_tags_https_3(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -142,7 +142,7 @@ def test_dkim_guidance_tags_https_3(save):
 
     assert (
         "https3"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -162,7 +162,7 @@ def test_dkim_guidance_tags_https_4(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -186,7 +186,7 @@ def test_dkim_guidance_tags_https_4(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -209,7 +209,7 @@ def test_dkim_guidance_tags_https_4(save):
 
     assert (
         "https4"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -229,7 +229,7 @@ def test_dkim_guidance_tags_https_5(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -253,7 +253,7 @@ def test_dkim_guidance_tags_https_5(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -276,7 +276,7 @@ def test_dkim_guidance_tags_https_5(save):
 
     assert (
         "https5"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -296,7 +296,7 @@ def test_dkim_guidance_tags_https_6(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -320,7 +320,7 @@ def test_dkim_guidance_tags_https_6(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -343,7 +343,7 @@ def test_dkim_guidance_tags_https_6(save):
 
     assert (
         "https6"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -363,7 +363,7 @@ def test_dkim_guidance_tags_https_7(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -387,7 +387,7 @@ def test_dkim_guidance_tags_https_7(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -410,7 +410,7 @@ def test_dkim_guidance_tags_https_7(save):
 
     assert (
         "https7"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -430,7 +430,7 @@ def test_dkim_guidance_tags_https_8(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -454,7 +454,7 @@ def test_dkim_guidance_tags_https_8(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -477,7 +477,7 @@ def test_dkim_guidance_tags_https_8(save):
 
     assert (
         "https8"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -497,7 +497,7 @@ def test_dkim_guidance_tags_https_9(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -521,7 +521,7 @@ def test_dkim_guidance_tags_https_9(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -544,7 +544,7 @@ def test_dkim_guidance_tags_https_9(save):
 
     assert (
         "https9"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -564,7 +564,7 @@ def test_dkim_guidance_tags_https_10(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -588,7 +588,7 @@ def test_dkim_guidance_tags_https_10(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -611,7 +611,7 @@ def test_dkim_guidance_tags_https_10(save):
 
     assert (
         "https10"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -631,7 +631,7 @@ def test_dkim_guidance_tags_https_11(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -655,7 +655,7 @@ def test_dkim_guidance_tags_https_11(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -678,7 +678,7 @@ def test_dkim_guidance_tags_https_11(save):
 
     assert (
         "https11"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -698,7 +698,7 @@ def test_dkim_guidance_tags_https_12(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -722,7 +722,7 @@ def test_dkim_guidance_tags_https_12(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -745,7 +745,7 @@ def test_dkim_guidance_tags_https_12(save):
 
     assert (
         "https12"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -765,7 +765,7 @@ def test_dkim_guidance_tags_https_13(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -789,7 +789,7 @@ def test_dkim_guidance_tags_https_13(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -812,7 +812,7 @@ def test_dkim_guidance_tags_https_13(save):
 
     assert (
         "https13"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -832,7 +832,7 @@ def test_dkim_guidance_tags_https_14(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Https_scans(
@@ -856,7 +856,7 @@ def test_dkim_guidance_tags_https_14(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             https {
@@ -879,7 +879,7 @@ def test_dkim_guidance_tags_https_14(save):
 
     assert (
         "https14"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["https"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
