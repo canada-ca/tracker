@@ -15,6 +15,9 @@ from schemas.dmarc_report_churro_chart.dmarc_report_churro_chart import (
     DmarcReportChurroChart,
 )
 
+# Only For Demo Purposes
+from tests.testdata.get_dmarc_report_churro_chart import dmarc_report_churro_chart_data
+
 
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
 DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
@@ -112,3 +115,34 @@ def resolve_get_dmarc_report_churro_chart(self, info, **kwargs):
             raise GraphQLError("Error, you do not have access to this domain.")
     else:
         raise GraphQLError("Error, domain cannot be found.")
+
+
+def resolve_demo_get_dmarc_report_churro_chart(self, info, **kwargs):
+    """
+    This function is used to resolve the getDmarcReportBarGraph query
+    :param self: A graphql field object
+    :param info: Request information
+    :param kwargs: Various Arguments passed in
+    :return: Returns a list of DmarcReportBarGraph's
+    """
+    rtr_list = []
+
+    # Skip first entry from return data because it is past 30 days which
+    # for this query we do not want
+    iter_data = iter(
+        dmarc_report_churro_chart_data.get("getYearlyDmarcSummaries").get("periods")
+    )
+
+    # Loop through 13 months of data, and create return list
+    for data in iter_data:
+        rtr_list.append(
+            DmarcReportChurroChart(
+                # Get Month Name
+                calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
+                # Get Year
+                data.get("endDate")[0:4].lstrip("0"),
+                # Get Category Data
+                data.get("categoryTotals"),
+            )
+        )
+    return rtr_list
