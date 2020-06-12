@@ -75,21 +75,35 @@ function SummaryCard({ ...props }) {
     },
   )
 
+  const compareStrengths = (a, b) =>
+    a[1].value < b[1].value ? 1 : b[1].value < a[1].value ? -1 : 0
+
   // Generate badges for the card to be used in the JSX
-  const badges = Object.entries(data.strengths).map(([strengthKey, value]) => {
-    return (
-      <Text
-        key={`${title}:Badge:${strengthKey}`}
-        color="white"
-        alignItems="center"
-        px="1em"
-        bg={strengthKey}
-        rounded="md"
-      >
-        {value.name}: {value.percent}%
-      </Text>
-    )
-  })
+  const badges = (
+    <Stack align="center">
+      {Object.entries(data.strengths)
+        .sort(compareStrengths)
+        .map(([strengthKey, strengthValues]) => {
+          return (
+            <Text
+              key={`${title}:Badge:${strengthKey}`}
+              color="white"
+              alignItems="center"
+              px="0.5em"
+              bg={strengthKey}
+              rounded="md"
+              fontWeight="bold"
+              fontSize="sm"
+            >
+              {`${
+                strengthValues.name
+              }: ${strengthValues.value.toLocaleString()} -
+              ${strengthValues.percent}%`}
+            </Text>
+          )
+        })}
+    </Stack>
+  )
 
   const sliderRow = slider && (
     <Stack isInline display="flex">
@@ -107,6 +121,8 @@ function SummaryCard({ ...props }) {
             {strengthValues.name}
             <br />
             {strengthValues.value}
+            <br />
+            {`${strengthValues.percent}%`}
           </Text>
         )
       })}
@@ -152,13 +168,13 @@ function SummaryCard({ ...props }) {
           </PieChart>
         </ResponsiveContainer>
 
-        <Stack align="center">{badges}</Stack>
+        {badges}
 
         {/* Give empty room at bottom of card if no slider */}
         {!slider && <br />}
 
         {/* data box */}
-        {slider && sliderRow}
+        {/*{slider && sliderRow}*/}
       </Stack>
     </Box>
   )
