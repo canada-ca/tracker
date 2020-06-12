@@ -16,30 +16,30 @@ class Selectors(Scalar):
     """
 
     @staticmethod
-    def serialize(value):
-        if not isinstance(value, list):
-            raise GraphQLError(scalar_error_type("List", value))
+    def serialize(values):
+        if not isinstance(values, list):
+            raise GraphQLError(scalar_error_type("List", values))
 
-        for selector in value:
+        for selector in values:
             if not isinstance(selector, str):
                 raise GraphQLError(scalar_error_type("String", selector))
             if not SELECTOR_REGEX_CHECK.search(selector):
                 raise GraphQLError(scalar_error_type("Selector", selector))
 
-        return value
+        return values
 
     @staticmethod
-    def parse_value(value):
-        if not isinstance(value, list):
-            raise GraphQLError(scalar_error_type("List", value))
+    def parse_value(values):
+        if not isinstance(values, list):
+            raise GraphQLError(scalar_error_type("List", valuse))
 
-        for selector in value:
+        for selector in values:
             if not isinstance(selector, str):
                 raise GraphQLError(scalar_error_type("String", selector))
             if not SELECTOR_REGEX_CHECK.search(selector):
                 raise GraphQLError(scalar_error_type("Selector", selector))
 
-        return value
+        return values
 
     @staticmethod
     def parse_literal(node):
@@ -47,7 +47,7 @@ class Selectors(Scalar):
             raise GraphQLError(
                 scalar_error_only_types("lists", "selectors", str(type(node)))
             )
-        for selector in node.value:
+        for selector in node.values:
             if not isinstance(selector, ast.StringValue):
                 raise GraphQLError(
                     scalar_error_only_types("strings", "selectors", str(type(selector)))
