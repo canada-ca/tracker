@@ -21,7 +21,10 @@ from schemas.dmarc_report_churro_chart import (
 from schemas.dmarc_report_detailed_tables import get_dmarc_report_detailed_tables
 
 # Get Dmarc Report Doughnut Data
-from schemas.dmarc_report_doughnut import get_dmarc_report_doughnut
+from schemas.dmarc_report_doughnut import (
+    get_dmarc_report_doughnut,
+    demo_get_dmarc_report_doughnut,
+)
 
 # Is User an Admin Query
 from schemas.is_user_admin import is_user_admin
@@ -189,6 +192,7 @@ class Query(graphene.ObjectType):
 
     # --- Start Get Dmarc Report Doughnut ---
     get_dmarc_report_doughnut = get_dmarc_report_doughnut
+    demo_get_dmarc_report_doughnut = demo_get_dmarc_report_doughnut
 
     # -- End Dmarc Report Queries
 
