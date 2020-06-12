@@ -4,7 +4,7 @@ from graphql import GraphQLError
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_write
-from functions.input_validators import cleanse_input
+from functions.input_validators import cleanse_input, cleanse_input_list
 from models import (
     Organizations,
     Domains,
@@ -41,7 +41,7 @@ class CreateDomain(graphene.Mutation):
         user_roles = kwargs.get("user_roles")
         org_slug = cleanse_input(kwargs.get("org_slug"))
         domain = cleanse_input(kwargs.get("url"))
-        selectors = cleanse_input(kwargs.get("selectors", []))
+        selectors = cleanse_input_list(kwargs.get("selectors", []))
 
         # Check to see if org acronym is SA Org
         if org_slug == "super-admin":
