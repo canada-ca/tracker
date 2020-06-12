@@ -8,8 +8,10 @@ import {
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcTimeGraph'
-import { Box } from '@chakra-ui/core'
+import { Box, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
+import { Trans } from '@lingui/macro'
+import { Layout } from './Layout'
 
 export function DmarcReportPage() {
   const { currentUser } = useUserState()
@@ -228,60 +230,63 @@ export function DmarcReportPage() {
     : '20%'
 
   return (
-    <Box width="100%">
-      <Box>
-        <SummaryCard
-          title="DMARC Report"
-          description="Description of DMARC report"
-          data={reportCardData}
-          width={cardWidth}
-          mx="auto"
-          slider={true}
-        />
-        <DmarcTimeGraph data={formattedBarData} width="100%" mx="auto" />
-        <DmarcReportTable
-          data={fullPassData}
-          columns={fullPassColumns}
-          title="Fully Aligned by IP Address"
-          initialSort={initialSort}
-          mb="30px"
-        />
-        <DmarcReportTable
-          data={spfFailureData}
-          columns={spfFailureColumns}
-          title="SPF Failures by IP Address"
-          initialSort={initialSort}
-          mb="30px"
-        />
-        <DmarcReportTable
-          data={spfMisalignedData}
-          columns={spfMisalignedColumns}
-          title="SPF Misalignment by IP Address"
-          initialSort={initialSort}
-          mb="30px"
-        />
-        <DmarcReportTable
-          data={dkimFailureData}
-          columns={dkimFailureColumns}
-          title="DKIM Failures by IP Address"
-          initialSort={initialSort}
-          mb="30px"
-        />
-        <DmarcReportTable
-          data={dkimMisalignedData}
-          columns={dkimMisalignedColumns}
-          title="DKIM Misalignment by IP Address"
-          initialSort={initialSort}
-          mb="30px"
-        />
-        <DmarcReportTable
-          data={dmarcFailureData}
-          columns={dmarcFailureColumns}
-          title="DMARC Failures by IP Address"
-          initialSort={initialSort}
-          mb="30px"
-        />
-      </Box>
+    <Box>
+      <Text>
+        <Trans>
+          *All data represented is mocked for demonstration purposes
+        </Trans>
+      </Text>
+      <SummaryCard
+        title="DMARC Report"
+        description="Description of DMARC report"
+        data={reportCardData}
+        width={cardWidth}
+        mx="auto"
+        slider={true}
+      />
+      <DmarcTimeGraph data={formattedBarData} width="100%" mx="auto" />
+      <DmarcReportTable
+        data={fullPassData}
+        columns={fullPassColumns}
+        title="Fully Aligned by IP Address"
+        initialSort={initialSort}
+        mb="30px"
+      />
+      <DmarcReportTable
+        data={spfFailureData}
+        columns={spfFailureColumns}
+        title="SPF Failures by IP Address"
+        initialSort={initialSort}
+        mb="30px"
+      />
+      <DmarcReportTable
+        data={spfMisalignedData}
+        columns={spfMisalignedColumns}
+        title="SPF Misalignment by IP Address"
+        initialSort={initialSort}
+        mb="30px"
+      />
+      <DmarcReportTable
+        data={dkimFailureData}
+        columns={dkimFailureColumns}
+        title="DKIM Failures by IP Address"
+        initialSort={initialSort}
+        mb="30px"
+      />
+      <DmarcReportTable
+        data={dkimMisalignedData}
+        columns={dkimMisalignedColumns}
+        title="DKIM Misalignment by IP Address"
+        initialSort={initialSort}
+        mb="30px"
+      />
+      <DmarcReportTable
+        data={dmarcFailureData}
+        columns={dmarcFailureColumns}
+        title="DMARC Failures by IP Address"
+        initialSort={initialSort}
+        mb="30px"
+      />
     </Box>
   )
 }

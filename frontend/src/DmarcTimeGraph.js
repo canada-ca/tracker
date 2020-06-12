@@ -38,6 +38,11 @@ scheme for const data:
 function DmarcTimeGraph({ ...props }) {
   const { data } = props
   const { periods, strengths } = data
+  const ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+
+  const formatTicks = (tick) => {
+    return `${tick * 100}%`
+  }
 
   return (
     <ResponsiveContainer height={500}>
@@ -48,10 +53,17 @@ function DmarcTimeGraph({ ...props }) {
           top: 25,
           bottom: 25,
         }}
+        stackOffset="expand"
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" padding={{ left: 5, right: 5 }} />
-        <YAxis padding={{ top: 25, bottom: 10 }} /> <Tooltip />
+        <YAxis
+          padding={{ top: 25, bottom: 10 }}
+          ticks={ticks}
+          tickFormatter={formatTicks}
+          domain={[0, 1]}
+        />{' '}
+        <Tooltip />
         <Legend
           align="center"
           margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
@@ -69,7 +81,14 @@ function DmarcTimeGraph({ ...props }) {
               color = '#e53e3e'
           }
           return strengthDetails.types.map((type) => {
-            return <Bar key={`Bar:${type}`} dataKey={type} stackId="a" fill={color} />
+            return (
+              <Bar
+                key={`Bar:${type}`}
+                dataKey={type}
+                stackId="a"
+                fill={color}
+              />
+            )
           })
         })}
       </BarChart>

@@ -125,7 +125,12 @@ function SummaryCard({ ...props }) {
           >
             {title}
           </Text>
-          <Text fontSize="md" textAlign="center" color="white">
+          <Text
+            fontSize="md"
+            textAlign="center"
+            color="white"
+            wordBreak="break-word"
+          >
             {description}
           </Text>
         </Box>
