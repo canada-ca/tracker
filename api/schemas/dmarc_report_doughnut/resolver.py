@@ -89,12 +89,9 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
                             startDate
                             endDate
                             categoryTotals {
-                                dmarcFailNone
-                                dmarcFailQuarantine
-                                dmarcFailReject
-                                spfFailDkimPass
-                                spfPassDkimFail
-                                spfPassDkimPass
+                                fullPass
+                                partialPass
+                                fail
                             }
                         }
                     }
