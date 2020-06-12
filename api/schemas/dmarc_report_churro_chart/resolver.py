@@ -11,7 +11,9 @@ from functions.auth_functions import is_user_read
 from functions.external_graphql_api_request import send_request
 from functions.input_validators import cleanse_input
 from models import Domains
-from schemas.dmarc_report_bar_graph.dmarc_report_bar_graph import DmarcReportBarGraph
+from schemas.dmarc_report_churro_chart.dmarc_report_churro_chart import (
+    DmarcReportChurroChart,
+)
 
 
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
@@ -19,7 +21,7 @@ DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
 
 
 @require_token
-def resolve_get_dmarc_report_bar_graph(self, info, **kwargs):
+def resolve_get_dmarc_report_churro_chart(self, info, **kwargs):
     """
     This function is used to resolve the getDmarcReportBarGraph query
     :param self: A graphql field object
@@ -95,11 +97,9 @@ def resolve_get_dmarc_report_bar_graph(self, info, **kwargs):
             # Loop through 13 months of data, and create return list
             for data in iter_data:
                 rtr_list.append(
-                    DmarcReportBarGraph(
+                    DmarcReportChurroChart(
                         # Get Month Name
-                        calendar.month_name[
-                            int(data.get("endDate")[5:7].lstrip("0"))
-                        ],
+                        calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
                         # Get Year
                         data.get("endDate")[0:4].lstrip("0"),
                         # Get Category Data
