@@ -64,7 +64,7 @@ def test_invalid_selectors_parse_value_wrong_type():
 def test_invalid_selectors_parse_literal_not_selector():
     test_list = ast.ListValue(values=[ast.StringValue(value="This Will Fail")])
     with pytest.raises(
-        GraphQLError, match=scalar_error_type("Selector", test_list.value)
+        GraphQLError, match=scalar_error_type("Selector", test_list.values)
     ):
         Selectors.parse_literal(test_list)
 
