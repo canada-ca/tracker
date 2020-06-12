@@ -3,7 +3,7 @@ import graphene
 from schemas.shared_structures.category_totals import CategoryTotals
 
 
-class DmarcReportBarGraph(graphene.ObjectType):
+class DmarcReportChurroChart(graphene.ObjectType):
     """
     A query object used to grab the data to create dmarc report bar graph
     """

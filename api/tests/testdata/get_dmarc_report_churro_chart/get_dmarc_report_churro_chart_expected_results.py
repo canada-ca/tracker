@@ -1,6 +1,6 @@
-dmarc_report_bar_graph_expected_data = {
+dmarc_report_churro_chart_expected_data = {
     "data": {
-        "getDmarcReportBarGraph": [
+        "getDmarcReportChurroChart": [
             {
                 "month": "June",
                 "year": 2020,
