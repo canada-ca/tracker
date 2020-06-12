@@ -31,7 +31,7 @@ class Selectors(Scalar):
     @staticmethod
     def parse_value(values):
         if not isinstance(values, list):
-            raise GraphQLError(scalar_error_type("List", valuse))
+            raise GraphQLError(scalar_error_type("List", values))
 
         for selector in values:
             if not isinstance(selector, str):
@@ -55,4 +55,4 @@ class Selectors(Scalar):
             if not SELECTOR_REGEX_CHECK.search(selector):
                 raise GraphQLError(scalar_error_type("Selector", selector))
 
-        return node.value
+        return node.values
