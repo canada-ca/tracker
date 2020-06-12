@@ -29,10 +29,7 @@ Inside the config that is generated is a service definition that currently needs
    namespace: istio-system
  spec:
    ports:
--  - name: status-port
--    port: 15021
--    targetPort: 15021
-   - name: http2
+-  - name: http2
      port: 80
      targetPort: 8080
    - name: https
