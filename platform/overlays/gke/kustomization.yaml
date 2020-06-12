@@ -9,6 +9,12 @@ resources:
 - knative/config/config.yaml
 - knative/monitoring/prometheus.yaml
 - knative/monitoring/grafana/grafana.yaml
+- pgo/operatorconfiguration.crd.yaml
+- pgo/postgresql.crd.yaml
+- pgo/api-service.yaml
+- pgo/operator-service-account-rbac.yaml
+- pgo/postgres-operator.yaml
+- pgo/postgresql-operator-default-configuration.yaml
 - http-01-challenge-destination-rule.yaml
 images:
 - name: gcr.io/track-compliance/api
