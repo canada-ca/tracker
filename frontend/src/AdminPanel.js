@@ -6,17 +6,14 @@ import DomainsPage from './DomainsPage'
 import { string } from 'prop-types'
 
 export default function AdminPanel({ ...props }) {
-  const { org } = props
-  // console.log('affiliaions', org)
-  const members = Math.floor(Math.random() * 80 + 20)
+  const { name } = props
 
   return (
     <Stack spacing={10}>
       <Stack spacing={4}>
-        <Text fontSize="2xl" fontWeight="bold">
-          {org} Organization Panel
+        <Text fontSize="3xl" fontWeight="bold">
+          {name}
         </Text>
-        <Text>Member Count: {members} </Text>
       </Stack>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
         <DomainsPage />
@@ -27,5 +24,5 @@ export default function AdminPanel({ ...props }) {
 }
 
 AdminPanel.propTypes = {
-  org: string,
+  name: string,
 }
