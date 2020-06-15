@@ -15,7 +15,7 @@ get_dmarc_report_detailed_tables = graphene.Field(
     lambda: DmarcReportDetailedTables,
     domain_slug=graphene.Argument(
         Slug,
-        description="The sluified version of the domain you wish to retrieve data for.",
+        description="The slugified version of the domain you wish to retrieve data for.",
         required=True,
     ),
     period=graphene.Argument(
@@ -37,7 +37,7 @@ get_demo_dmarc_report_detailed_tables = graphene.Field(
     lambda: DmarcReportDetailedTables,
     domain_slug=graphene.Argument(
         Slug,
-        description="The sluified version of the domain you wish to retrieve data for.",
+        description="The slugified version of the domain you wish to retrieve data for.",
         required=True,
     ),
     period=graphene.Argument(
