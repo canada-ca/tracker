@@ -1,6 +1,6 @@
 import pytest
 
-from enums.scan_type import ScanTypeEnums
+from enums.scan_types import ScanTypeEnums
 
 
 def test_mail_scan_enum():
