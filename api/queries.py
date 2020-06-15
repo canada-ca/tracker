@@ -18,7 +18,10 @@ from schemas.dmarc_report_churro_chart import (
 )
 
 # Get Dmarc Report Detail Tables
-from schemas.dmarc_report_detailed_tables import get_dmarc_report_detailed_tables
+from schemas.dmarc_report_detailed_tables import (
+    get_dmarc_report_detailed_tables,
+    get_demo_dmarc_report_detailed_tables,
+)
 
 # Get Dmarc Report Doughnut Data
 from schemas.dmarc_report_doughnut import (
@@ -189,6 +192,7 @@ class Query(graphene.ObjectType):
 
     # --- Start Get Dmarc Report Detailed Table
     get_dmarc_report_detailed_tables = get_dmarc_report_detailed_tables
+    demo_get_dmarc_report_detailed_tables = get_demo_dmarc_report_detailed_tables
 
     # --- Start Get Dmarc Report Doughnut ---
     get_dmarc_report_doughnut = get_dmarc_report_doughnut

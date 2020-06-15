@@ -18,6 +18,11 @@ from schemas.dmarc_report_detailed_tables.dmarc_report_detailed_tables import (
 )
 from schemas.dmarc_report_detailed_tables.gql_query import query_string
 
+# For demo purposes only
+from tests.testdata.get_dmarc_report_detail_table import (
+    dmarc_report_detail_table_return_data,
+)
+
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
 DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
 
@@ -94,3 +99,25 @@ def resolve_dmarc_report_detailed_tables(self, info, **kwargs):
             raise GraphQLError("Error, you do not have access to this domain.")
     else:
         raise GraphQLError("Error, domain cannot be found.")
+
+
+def resolve_demo_dmarc_report_detailed_tables(self, info, **kwargs):
+    """
+
+    :param self:
+    :param info:
+    :param kwargs:
+    :return:
+    """
+    data = dmarc_report_detail_table_return_data.get("getDmarcSummaryByPeriod").get(
+        "period"
+    )
+
+    return DmarcReportDetailedTables(
+        # Get Month Name
+        calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
+        # Get Year
+        data.get("endDate")[0:4].lstrip("0"),
+        # Get Category Data
+        data.get("detailTables"),
+    )
