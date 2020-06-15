@@ -1,16 +1,16 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from '@emotion/styled'
 import { useTable, usePagination, useSortBy } from 'react-table'
 import { array, string } from 'prop-types'
 import {
   Box,
   Button,
-  ButtonGroup,
   Collapse,
   Divider,
   Icon,
   IconButton,
-  Input, Select,
+  Input,
+  Select,
   Stack,
   Text,
 } from '@chakra-ui/core'
@@ -41,12 +41,22 @@ td, th {
   padding: 0.5rem;
 }
 
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; /* added line */
+}
+
 // Remove outside borders from cells, let table handle border
 @media screen and (min-width: 761px) {
-  tr:first-child td {
+  tr:first-type-of td {
     border-top: 0;
   }
-  tr td:first-child, th:first-child {
+  tr td:first-type-of, th:first-type-of {
     border-left: 0;
   }
   tr:last-child td {
@@ -132,8 +142,10 @@ function DmarcReportTable({ ...props }) {
     usePagination,
   )
 
+  const wrapperRef = useRef(null)
+
   return (
-    <Box>
+    <Box ref={wrapperRef}>
       <Button bg="gray.700" color="white" onClick={handleShow} width="100%">
         {title}
       </Button>
@@ -198,61 +210,75 @@ function DmarcReportTable({ ...props }) {
             </tbody>
           </Table>
         </Box>
-        <Box className="pagination" hidden={!show}>
-          <Stack spacing="1em" isInline align="center">
-            <ButtonGroup spacing="1em">
+        <Box className="pagination" hidden={!show} mt="0.25em">
+          <Stack
+            isInline
+            align="center"
+            flexWrap="wrap"
+            justify="space-between"
+          >
+            <Stack spacing="1em" isInline align="center" flexWrap="wrap">
               <IconButton
-                onClick={() => gotoPage(0)}
+                onClick={() => {
+                  wrapperRef.current.scrollIntoView()
+                  gotoPage(0)
+                }}
                 disabled={!canPreviousPage}
                 icon="arrow-left"
               />
               <IconButton
-                onClick={() => previousPage()}
+                onClick={() => {
+                  wrapperRef.current.scrollIntoView(true)
+                  previousPage()
+                }}
                 disabled={!canPreviousPage}
                 icon="chevron-left"
               />
               <IconButton
-                onClick={() => nextPage()}
+                onClick={() => {
+                  wrapperRef.current.scrollIntoView(true)
+                  nextPage()
+                }}
                 disabled={!canNextPage}
                 icon="chevron-right"
               />
               <IconButton
-                onClick={() => gotoPage(pageCount - 1)}
+                onClick={() => {
+                  wrapperRef.current.scrollIntoView(true)
+                  gotoPage(pageCount - 1)
+                }}
                 disabled={!canNextPage}
                 icon="arrow-right"
               />
-            </ButtonGroup>
-            <Text>
-              Page {pageIndex + 1} of {pageOptions.length}
-            </Text>
-            <Divider
-              orientation="vertical"
-              borderColor="black"
-              bg="black"
-              height="1rem"
-            />
-            <Text>Go to page:</Text>
-            <Input
-              defaultValue={pageIndex + 1}
-              width="6rem"
-              onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0
-                gotoPage(page)
-              }}
-            />
-            <Select
-              value={pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value))
-              }}
-              width="fit-content"
-            >
-              {[5, 10, 20, 30, 40, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </Select>
+              <Text>
+                Page {pageIndex + 1} of {pageOptions.length}
+              </Text>
+            </Stack>
+            <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+              <Text>Go to page:</Text>
+              <Input
+                defaultValue={pageIndex + 1}
+                width="6rem"
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0
+                  gotoPage(page)
+                }}
+              />
+              <Select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value))
+                  wrapperRef.current.scrollIntoView(true)
+                }}
+                width="fit-content"
+              >
+                {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                  <option key={pageSize} value={pageSize}>
+                    Show {pageSize}
+                  </option>
+                ))}
+              </Select>
+            </Stack>
           </Stack>
         </Box>
       </Collapse>
