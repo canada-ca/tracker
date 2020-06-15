@@ -3,14 +3,16 @@ import datetime
 
 import requests
 import jwt
+from typing import List
 
+from enums.scan_types import ScanTypeEnums
 from db import db_session
 from models import Web_scans, Mail_scans, Domains
 
 DISPATCHER_URL = "http://dispatcher.tracker.svc.cluster.local"
 
 
-def fire_scan(user_id: int, domain_id: int, url: str, scan_type: str, selectors=[]):
+def fire_scan(user_id: int, domain_id: int, url: str, scan_type: str, selectors: List[str]):
     """
     Functionality to send request to scanners and request a domain to get scanned
     :param user_id: The id of the requesting user
@@ -22,6 +24,11 @@ def fire_scan(user_id: int, domain_id: int, url: str, scan_type: str, selectors=
     """
     # Get Time
     scan_datetime = datetime.datetime.utcnow()
+
+    try:
+        scan_type = ScanTypeEnums.get(scan_type)
+    except ValueError:
+        return "Error: Invalid scan type provided"
 
     # Create Scan Object
     if scan_type == "mail":
