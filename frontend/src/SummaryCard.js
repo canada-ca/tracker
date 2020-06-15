@@ -32,7 +32,7 @@ scheme for const data:
  */
 
 function SummaryCard({ ...props }) {
-  const { title, description, data, slider } = props
+  const { title, description, data } = props
 
   const excludeFromTotal = ['total', '__typename']
   // Calculate total of all properties in categoryTotals
@@ -159,7 +159,6 @@ SummaryCard.propTypes = {
   title: string.isRequired,
   description: string.isRequired,
   data: object.isRequired,
-  slider: bool,
 }
 
 export default WithPseudoBox(SummaryCard)

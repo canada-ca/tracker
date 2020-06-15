@@ -7,8 +7,10 @@ import { Box, Button, Collapse, Icon } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 
 const Table = styled.table`
-width: 100%;
+
+width: calc(100% - 2px);
 border-collapse: collapse;
+border: 1px solid #ccc;
 
 caption {
 width: 100%;
@@ -23,6 +25,19 @@ td, th {
 padding: 6px;
 border: 1px solid #ccc;
 text-align: left;
+}
+
+tr:first-child td {
+  border-top: 0;
+}
+tr td:first-child, th:first-child {
+  border-left: 0;
+}
+tr:last-child td {
+  border-bottom: 0;
+}
+tr td:last-child, th:last-child {
+  border-right: 0;
 }
 
 .pagination {
@@ -124,64 +139,66 @@ function DmarcReportTable({ ...props }) {
         {title}
       </Button>
       <Collapse isOpen={show}>
-        <Table {...getTableProps()} flatHeaders={flatHeaders}>
-          <thead>
-            {headerGroups.map((headerGroup, index) => {
-              return (
-                <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => {
-                    // Using column.Header since column.id _sometimes_ has appended numbers
-                    const key =
-                      column.depth === 0
-                        ? `${title}:${column.Header}`
-                        : `${column.parent.Header}:${column.Header}`
-                    return (
-                      <th
-                        key={key}
-                        className={column.hidden ? 'visually-hidden' : ''}
-                        {...column.getHeaderProps(
-                          column.getSortByToggleProps(),
-                        )}
-                      >
-                        {column.render('Header')}
-                        <span>
-                          {column.isSorted ? (
-                            column.isSortedDesc ? (
-                              <Icon name="chevron-down" />
-                            ) : (
-                              <Icon name="chevron-up" />
-                            )
-                          ) : (
-                            ''
+        <Box width="100%" overflowX="auto">
+          <Table {...getTableProps()} flatHeaders={flatHeaders}>
+            <thead>
+              {headerGroups.map((headerGroup, index) => {
+                return (
+                  <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => {
+                      // Using column.Header since column.id _sometimes_ has appended numbers
+                      const key =
+                        column.depth === 0
+                          ? `${title}:${column.Header}`
+                          : `${column.parent.Header}:${column.Header}`
+                      return (
+                        <th
+                          key={key}
+                          className={column.hidden ? 'visually-hidden' : ''}
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps(),
                           )}
-                        </span>
-                      </th>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row, rowIndex) => {
-              prepareRow(row)
-              return (
-                <tr key={`${title}:${rowIndex}`} {...row.getRowProps()}>
-                  {row.cells.map((cell, cellIndex) => {
-                    return (
-                      <td
-                        key={`${title}:${rowIndex}:${cellIndex}`}
-                        {...cell.getCellProps()}
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
+                        >
+                          {column.render('Header')}
+                          <span>
+                            {column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <Icon name="chevron-down" />
+                              ) : (
+                                <Icon name="chevron-up" />
+                              )
+                            ) : (
+                              ''
+                            )}
+                          </span>
+                        </th>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {page.map((row, rowIndex) => {
+                prepareRow(row)
+                return (
+                  <tr key={`${title}:${rowIndex}`} {...row.getRowProps()}>
+                    {row.cells.map((cell, cellIndex) => {
+                      return (
+                        <td
+                          key={`${title}:${rowIndex}:${cellIndex}`}
+                          {...cell.getCellProps()}
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </Table>
+        </Box>
         <Box className="pagination" hidden={!show}>
           <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
             {'<<'}

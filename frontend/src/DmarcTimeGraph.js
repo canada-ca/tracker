@@ -12,6 +12,7 @@ import {
 import { object } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 import theme from './theme/canada'
+import { Box } from '@chakra-ui/core'
 
 const { colors } = theme
 
@@ -48,43 +49,45 @@ function DmarcTimeGraph({ ...props }) {
   }
 
   return (
-    <ResponsiveContainer height={500}>
-      <BarChart
-        barSize="30px"
-        data={periods}
-        margin={{
-          top: 25,
-          bottom: 25,
-        }}
-        stackOffset="expand"
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="month" padding={{ left: 5, right: 5 }} />
-        <YAxis
-          padding={{ top: 25, bottom: 10 }}
-          ticks={ticks}
-          tickFormatter={formatTicks}
-          domain={[0, 1]}
-        />
-        <Tooltip />
-        <Legend
-          align="center"
-          margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
-        />
-        {Object.entries(strengths).map(([strengthName, strengthDetails]) => {
-          return strengthDetails.types.map((type) => {
-            return (
-              <Bar
-                key={`Bar:${type}`}
-                dataKey={type}
-                stackId="a"
-                fill={colors[strengthName]}
-              />
-            )
-          })
-        })}
-      </BarChart>
-    </ResponsiveContainer>
+    <Box overflow="hidden">
+      <ResponsiveContainer height={500}>
+        <BarChart
+          barSize="30px"
+          data={periods}
+          margin={{
+            top: 25,
+            bottom: 25,
+          }}
+          stackOffset="expand"
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" padding={{ left: 5, right: 5 }} />
+          <YAxis
+            padding={{ top: 25, bottom: 10 }}
+            ticks={ticks}
+            tickFormatter={formatTicks}
+            domain={[0, 1]}
+          />
+          <Tooltip />
+          <Legend
+            align="center"
+            margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
+          />
+          {Object.entries(strengths).map(([strengthName, strengthDetails]) => {
+            return strengthDetails.types.map((type) => {
+              return (
+                <Bar
+                  key={`Bar:${type}`}
+                  dataKey={type}
+                  stackId="a"
+                  fill={colors[strengthName]}
+                />
+              )
+            })
+          })}
+        </BarChart>
+      </ResponsiveContainer>
+    </Box>
   )
 }
 

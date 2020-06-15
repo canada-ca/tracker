@@ -230,7 +230,7 @@ export function DmarcReportPage() {
     : '20%'
 
   return (
-    <Box>
+    <Box width="100%">
       <Text>
         <Trans>
           *All data represented is mocked for demonstration purposes
@@ -242,7 +242,6 @@ export function DmarcReportPage() {
         data={reportCardData}
         width={cardWidth}
         mx="auto"
-        slider={true}
       />
       <DmarcTimeGraph data={formattedBarData} width="100%" mx="auto" />
       <DmarcReportTable
