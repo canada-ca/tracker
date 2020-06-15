@@ -49,7 +49,7 @@ class Domain(SQLAlchemyObjectType):
     def resolve_last_ran(self: Domains, info):
         return self.last_run
 
-    def resolve_mail(self: Domains, info):
+    def resolve_email(self: Domains, info):
         query = MailScan.get_query(info)
         query = query.filter(Mail_scans.domain_id == self.id)
         return query.all()
