@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { Text, Stack, Box, Badge } from '@chakra-ui/core'
+import { Text, Stack, Box } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { string, object, bool } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
@@ -80,7 +80,7 @@ function SummaryCard({ ...props }) {
 
   // Generate badges for the card to be used in the JSX
   const badges = (
-    <Stack align="center">
+    <Stack align="center" spacing={0}>
       {Object.entries(data.strengths)
         .sort(compareStrengths)
         .map(([strengthKey, strengthValues]) => {
@@ -88,50 +88,33 @@ function SummaryCard({ ...props }) {
             <Text
               key={`${title}:Badge:${strengthKey}`}
               color="white"
-              alignItems="center"
               px="0.5em"
               bg={strengthKey}
-              rounded="md"
               fontWeight="bold"
               fontSize="sm"
+              width="100%"
+              textAlign="center"
             >
               {`${
                 strengthValues.name
-              }: ${strengthValues.value.toLocaleString()} -
-              ${strengthValues.percent}%`}
+              }: ${strengthValues.value.toLocaleString()} - ${strengthValues.percent}% `}
             </Text>
           )
         })}
     </Stack>
   )
 
-  const sliderRow = slider && (
-    <Stack isInline display="flex">
-      {Object.entries(data.strengths).map(([strengthKey, strengthValues]) => {
-        return (
-          <Text
-            flex="1"
-            key={`${title}:Slider:${strengthValues.name}`}
-            color="black"
-            bg={strengthKey}
-            rounded="md"
-            textAlign="center"
-            fontWeight="bold"
-          >
-            {strengthValues.name}
-            <br />
-            {strengthValues.value}
-            <br />
-            {`${strengthValues.percent}%`}
-          </Text>
-        )
-      })}
-    </Stack>
-  )
+  const boxShadow = `0.4em 0.4em 0.3em ${colors.gray[300]}`
 
   return (
-    <Box bg="white" rounded="lg" overflow="hidden" ref={ref}>
-      <Stack>
+    <Box
+      bg="white"
+      rounded="lg"
+      overflow="hidden"
+      ref={ref}
+      boxShadow={boxShadow}
+    >
+      <Stack spacing={0}>
         <Box bg="gray.550" px="2em">
           <Text
             fontSize="xl"
@@ -159,7 +142,6 @@ function SummaryCard({ ...props }) {
               cy="50%"
               innerRadius="50%"
               outerRadius="90%"
-              paddingAngle={2}
               dataKey="value"
             >
               {doughnutCells}
@@ -167,14 +149,7 @@ function SummaryCard({ ...props }) {
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>
-
         {badges}
-
-        {/* Give empty room at bottom of card if no slider */}
-        {!slider && <br />}
-
-        {/* data box */}
-        {/*{slider && sliderRow}*/}
       </Stack>
     </Box>
   )

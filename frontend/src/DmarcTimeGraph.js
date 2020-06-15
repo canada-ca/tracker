@@ -11,6 +11,9 @@ import {
 } from 'recharts'
 import { object } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
+import theme from './theme/canada'
+
+const { colors } = theme
 
 /*
 scheme for const data:
@@ -62,31 +65,20 @@ function DmarcTimeGraph({ ...props }) {
           ticks={ticks}
           tickFormatter={formatTicks}
           domain={[0, 1]}
-        />{' '}
+        />
         <Tooltip />
         <Legend
           align="center"
           margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
         />
         {Object.entries(strengths).map(([strengthName, strengthDetails]) => {
-          let color
-          switch (strengthName) {
-            case 'strong':
-              color = '#2D8133'
-              break
-            case 'moderate':
-              color = '#ffbf47'
-              break
-            case 'weak':
-              color = '#e53e3e'
-          }
           return strengthDetails.types.map((type) => {
             return (
               <Bar
                 key={`Bar:${type}`}
                 dataKey={type}
                 stackId="a"
-                fill={color}
+                fill={colors[strengthName]}
               />
             )
           })
