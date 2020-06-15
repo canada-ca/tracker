@@ -55,7 +55,7 @@
     "@lingui/cli": "^3.0.0-13",
     "@lingui/loader": "^3.0.0-13",
     "@lingui/macro": "^3.0.0-13",
-    "@testing-library/jest-dom": "^5.9.0",
+    "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^10.2.1",
     "acorn": "^7.2.0",
     "babel-core": "^7.0.0-bridge.0",
