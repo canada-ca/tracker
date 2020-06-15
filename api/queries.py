@@ -12,13 +12,22 @@ from schemas.domain import Domain
 from resolvers.domains import resolve_domain, resolve_domains
 
 # Get Dmarc Report Bar Graph Data
-from schemas.dmarc_report_bar_graph import get_dmarc_report_bar_graph
+from schemas.dmarc_report_churro_chart import (
+    get_dmarc_report_churro_chart,
+    demo_get_dmarc_report_churro_chart,
+)
 
 # Get Dmarc Report Detail Tables
-from schemas.dmarc_report_detailed_tables import get_dmarc_report_detailed_tables
+from schemas.dmarc_report_detailed_tables import (
+    get_dmarc_report_detailed_tables,
+    get_demo_dmarc_report_detailed_tables,
+)
 
 # Get Dmarc Report Doughnut Data
-from schemas.dmarc_report_doughnut import get_dmarc_report_doughnut
+from schemas.dmarc_report_doughnut import (
+    get_dmarc_report_doughnut,
+    demo_get_dmarc_report_doughnut,
+)
 
 # Is User an Admin Query
 from schemas.is_user_admin import is_user_admin
@@ -178,13 +187,16 @@ class Query(graphene.ObjectType):
     # --- End Domain Queries ---
 
     # --- Start Get Dmarc Report Bar Graph ---
-    get_dmarc_report_bar_graph = get_dmarc_report_bar_graph
+    get_dmarc_report_churro_chart = get_dmarc_report_churro_chart
+    demo_get_dmarc_report_churro_chart = demo_get_dmarc_report_churro_chart
 
     # --- Start Get Dmarc Report Detailed Table
     get_dmarc_report_detailed_tables = get_dmarc_report_detailed_tables
+    demo_get_dmarc_report_detailed_tables = get_demo_dmarc_report_detailed_tables
 
     # --- Start Get Dmarc Report Doughnut ---
     get_dmarc_report_doughnut = get_dmarc_report_doughnut
+    demo_get_dmarc_report_doughnut = demo_get_dmarc_report_doughnut
 
     # -- End Dmarc Report Queries
 

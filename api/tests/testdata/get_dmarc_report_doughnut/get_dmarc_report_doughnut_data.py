@@ -4,12 +4,10 @@ api_return_data = {
             "startDate": "2020-05-01",
             "endDate": "2020-05-31",
             "categoryTotals": {
-                "dmarcFailNone": 543,
-                "dmarcFailQuarantine": 56,
-                "dmarcFailReject": 74,
-                "spfFailDkimPass": 432,
-                "spfPassDkimFail": 532,
-                "spfPassDkimPass": 75,
+                "partialPass": 336,
+                "fullPass": 8331,
+                "fail": 570,
+                "total": 9237,
             },
         }
     }

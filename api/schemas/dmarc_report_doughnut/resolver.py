@@ -15,6 +15,8 @@ from functions.start_end_date_generation import generate_start_end_date
 from models import Domains
 from schemas.dmarc_report_doughnut.dmarc_report_doughnut import DmarcReportDoughnut
 
+# Only for demo purposes
+from tests.testdata.get_dmarc_report_doughnut import api_return_data
 
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
 DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
@@ -89,12 +91,9 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
                             startDate
                             endDate
                             categoryTotals {
-                                dmarcFailNone
-                                dmarcFailQuarantine
-                                dmarcFailReject
-                                spfFailDkimPass
-                                spfPassDkimFail
-                                spfPassDkimPass
+                                fullPass
+                                partialPass
+                                fail
                             }
                         }
                     }
@@ -123,3 +122,22 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
             raise GraphQLError("Error, you do not have access to this domain.")
     else:
         raise GraphQLError("Error, you do not have access to this domain.")
+
+
+def resolve_demo_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughnut:
+    """
+    This function is used to resolve the get_yearly_dmarc_report_summary query
+    :param self: A graphql field object
+    :param info: Request information
+    :param kwargs: Various Arguments passed in
+    :return: Returns a DmarcReportDoughnut
+    """
+    data = api_return_data.get("getDmarcSummaryByPeriod").get("period")
+    return DmarcReportDoughnut(
+        # Get Month Name
+        calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
+        # Get Year
+        data.get("endDate")[0:4].lstrip("0"),
+        # Get Category Data
+        data.get("categoryTotals"),
+    )
