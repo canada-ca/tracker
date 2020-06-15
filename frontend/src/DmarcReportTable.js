@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Collapse,
-  Divider,
   Icon,
   IconButton,
   Input,

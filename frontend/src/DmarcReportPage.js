@@ -2,7 +2,7 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
 import {
-  GET_DMARC_REPORT_BAR_GRAPH,
+  GET_DMARC_REPORT_CHURRO_CHART,
   GET_DMARC_REPORT_DOUGHNUT,
   GET_DMARC_REPORT_DETAILED_TABLES,
 } from './graphql/queries'
@@ -30,7 +30,7 @@ export function DmarcReportPage() {
   })
 
   const { loading: barLoading, error: barError, data: barData } = useQuery(
-    GET_DMARC_REPORT_BAR_GRAPH,
+    GET_DMARC_REPORT_CHURRO_CHART,
     {
       context: {
         headers: {
@@ -60,15 +60,15 @@ export function DmarcReportPage() {
 
   const strengths = {
     strong: {
-      types: ['dmarcFailReject', 'spfPassDkimPass'],
+      types: ['fullPass'],
       name: 'Pass',
     },
     moderate: {
-      types: ['dmarcFailQuarantine', 'spfFailDkimPass', 'spfPassDkimFail'],
+      types: ['partialPass'],
       name: 'Partial Pass',
     },
     weak: {
-      types: ['dmarcFailNone'],
+      types: ['fail'],
       name: 'Fail',
     },
   }
@@ -79,7 +79,7 @@ export function DmarcReportPage() {
   reportCardData.strengths = strengths
 
   const formattedBarData = {
-    periods: barData.getDmarcReportBarGraph.map((entry) => {
+    periods: barData.getDmarcReportChurroChart.map((entry) => {
       return { month: entry.month, year: entry.year, ...entry.categoryTotals }
     }),
   }

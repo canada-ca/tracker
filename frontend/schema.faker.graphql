@@ -73,34 +73,19 @@ This object displays the total amount of messages that fit into each category
 """
 type CategoryTotals {
   """
-  Amount of messages that failed dmarc and nothing was done.
+  Amount of messages that passed all checks
   """
-  dmarcFailNone: Int
+  fullPass: Int
 
   """
-  Amount of messages that failed SPF, but passed DKIM.
+  Amount of messages that passed some checks
   """
-  spfFailDkimPass: Int
+  partialPass: Int
 
   """
-  Amount of messages that passed SPF and DKIM.
+  Amount of messages that failed all checks
   """
-  spfPassDkimPass: Int
-
-  """
-  Amount of messages that passed SPF, but failed DKIM.
-  """
-  spfPassDkimFail: Int
-
-  """
-  Amount of messages that failed DMARC and were quarantined.
-  """
-  dmarcFailQuarantine: Int
-
-  """
-  Amount of messages that failed DMARC and were rejected.
-  """
-  dmarcFailReject: Int
+  fail: Int
 
   """
   The sum of all different categories.
@@ -357,9 +342,9 @@ type DmarcReport implements Node {
 }
 
 """
-A query object used to grab the data to create dmarc report bar graph
+A query object used to grab the data to create dmarc report churro chart
 """
-type DmarcReportBarGraph {
+type DmarcReportChurroChart {
   """
   The month that the data is related to.
   """
@@ -371,7 +356,7 @@ type DmarcReportBarGraph {
   year: Year @examples(values: [2019, 2020])
 
   """
-  Category totals for building dmarc report page bar graph.
+  Category totals for building dmarc report page churro chart.
   """
   categoryTotals: CategoryTotals
 }
@@ -1195,14 +1180,14 @@ The central gathering point for all of the GraphQL queries.
 """
 type Query {
   """
-  A query object used to grab the data to create dmarc report bar graph.
+  A query object used to grab the data to create dmarc report churro chart.
   """
-  getDmarcReportBarGraph(
+  getDmarcReportChurroChart(
     """
     The sluified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug
-  ): [DmarcReportBarGraph] @listLength(min: 13, max: 13)
+  ): [DmarcReportChurroChart] @listLength(min: 13, max: 13)
 
   """
   Query used for gathering data for dmarc report detail tables.

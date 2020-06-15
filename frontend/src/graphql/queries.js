@@ -59,18 +59,15 @@ export const QUERY_USER = gql`
   }
 `
 
-export const GET_DMARC_REPORT_BAR_GRAPH = gql`
-  query GetDmarcReportBarGraph($domainSlug: Slug!) {
-    getDmarcReportBarGraph(domainSlug: $domainSlug) {
+export const GET_DMARC_REPORT_CHURRO_CHART = gql`
+  query GetDmarcReportChurroChart($domainSlug: Slug!) {
+    getDmarcReportChurroChart(domainSlug: $domainSlug) {
       month
       year
       categoryTotals {
-        dmarcFailNone
-        spfFailDkimPass
-        spfPassDkimPass
-        spfPassDkimFail
-        dmarcFailQuarantine
-        dmarcFailReject
+        fullPass
+        partialPass
+        fail
         total
       }
     }
@@ -91,12 +88,9 @@ export const GET_DMARC_REPORT_DOUGHNUT = gql`
       month
       year
       categoryTotals {
-        dmarcFailNone
-        spfFailDkimPass
-        spfPassDkimPass
-        spfPassDkimFail
-        dmarcFailQuarantine
-        dmarcFailReject
+        fullPass
+        partialPass
+        fail
         total
       }
     }
