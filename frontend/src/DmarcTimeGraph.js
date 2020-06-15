@@ -48,6 +48,11 @@ function DmarcTimeGraph({ ...props }) {
     return `${tick * 100}%`
   }
 
+  // Create date entry for x-axis data keys (e.g.: 'JAN-19')
+  periods.forEach((period) => {
+    period.date = `${period.month.slice(0, 3)}-${period.year.toString().slice(-2)}`
+  })
+
   return (
     <Box overflow="hidden">
       <ResponsiveContainer height={500}>
@@ -61,7 +66,7 @@ function DmarcTimeGraph({ ...props }) {
           stackOffset="expand"
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" padding={{ left: 5, right: 5 }} />
+          <XAxis dataKey="date" padding={{ left: 5, right: 5 }} />
           <YAxis
             padding={{ top: 25, bottom: 10 }}
             ticks={ticks}
