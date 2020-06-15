@@ -2,8 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 secretGenerator:
 - envs:
-  - postgres.env
-  name: postgres
+  - pgo-cluster.env
+  name: trackdmarc.tracker-postgres-cluster.credentials
   namespace: api
 - envs:
   - api.env
@@ -24,4 +24,3 @@ resources:
 - frontend-namespace.yaml
 - istio-system-namespace.yaml
 - tracker-namespace.yaml
-- knative-serving-namespace.yaml

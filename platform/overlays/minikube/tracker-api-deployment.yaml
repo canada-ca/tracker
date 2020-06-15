@@ -32,8 +32,8 @@ spec:
         - name: DB_PASS
           valueFrom:
             secretKeyRef:
-              name: trackdmarc.tracker-postgres-cluster.credentials
-              key: password
+              name: api
+              key: DB_PASS
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
@@ -80,10 +80,7 @@ spec:
               name: api
               key: TOKEN_KEY
         - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: api
-              key: DB_HOST
+          value: postgres
         - name: DB_PORT
           value: "5432"
         resources:
@@ -107,8 +104,8 @@ spec:
         - name: DB_PASS
           valueFrom:
             secretKeyRef:
-              name: trackdmarc.tracker-postgres-cluster.credentials
-              key: password
+              name: api
+              key: DB_PASS
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
@@ -160,10 +157,7 @@ spec:
               name: api
               key: TOKEN_KEY
         - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: api
-              key: DB_HOST
+          value: postgres
         - name: DB_PORT
           value: "5432"
         resources:
