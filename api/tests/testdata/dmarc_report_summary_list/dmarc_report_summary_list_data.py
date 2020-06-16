@@ -1,4 +1,4 @@
-dmarc_report_churro_chart_data = {
+dmarc_report_summary_list_data = {
     "getYearlyDmarcSummaries": {
         "periods": [
             {

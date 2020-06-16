@@ -13,8 +13,8 @@ from resolvers.domains import resolve_domain, resolve_domains
 
 # Get Dmarc Report Bar Graph Data
 from schemas.dmarc_report_summary_list import (
-    get_dmarc_report_churro_chart,
-    demo_get_dmarc_report_churro_chart,
+    dmarc_report_summary_list,
+    demo_dmarc_report_summary_list,
 )
 
 # Get Dmarc Report Detail Tables
@@ -187,8 +187,8 @@ class Query(graphene.ObjectType):
     # --- End Domain Queries ---
 
     # --- Start Get Dmarc Report Bar Graph ---
-    get_dmarc_report_churro_chart = get_dmarc_report_churro_chart
-    demo_get_dmarc_report_churro_chart = demo_get_dmarc_report_churro_chart
+    dmarc_report_summary_list = dmarc_report_summary_list
+    demo_dmarc_report_summary_list = demo_dmarc_report_summary_list
 
     # --- Start Get Dmarc Report Detailed Table
     dmarc_report_detail_tables = dmarc_report_detail_tables

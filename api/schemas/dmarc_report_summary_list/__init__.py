@@ -1,16 +1,16 @@
 import graphene
 
 from scalars.slug import Slug
-from schemas.dmarc_report_churro_chart.dmarc_report_churro_chart import (
-    DmarcReportChurroChart,
+from schemas.dmarc_report_summary_list.dmarc_report_summary_list import (
+    DmarcReportSummaryList,
 )
-from schemas.dmarc_report_churro_chart.resolver import (
-    resolve_get_dmarc_report_churro_chart,
-    resolve_demo_get_dmarc_report_churro_chart,
+from schemas.dmarc_report_summary_list.resolver import (
+    resolve_dmarc_report_summary_list,
+    resolve_demo_dmarc_report_summary_list,
 )
 
-get_dmarc_report_churro_chart = graphene.List(
-    lambda: DmarcReportChurroChart,
+dmarc_report_summary_list = graphene.List(
+    lambda: DmarcReportSummaryList,
     domain_slug=graphene.Argument(
         Slug,
         description="The slugified version of the domain you wish to retrieve "
@@ -19,11 +19,11 @@ get_dmarc_report_churro_chart = graphene.List(
     ),
     description="A query object used to grab the data to create dmarc report "
     "bar graph.",
-    resolver=resolve_get_dmarc_report_churro_chart,
+    resolver=resolve_dmarc_report_summary_list,
 )
 
-demo_get_dmarc_report_churro_chart = graphene.List(
-    lambda: DmarcReportChurroChart,
+demo_dmarc_report_summary_list = graphene.List(
+    lambda: DmarcReportSummaryList,
     domain_slug=graphene.Argument(
         Slug,
         description="The slugified version of the domain you wish to retrieve "
@@ -32,5 +32,5 @@ demo_get_dmarc_report_churro_chart = graphene.List(
     ),
     description="A query object used to grab the data to create dmarc report "
     "bar graph.",
-    resolver=resolve_demo_get_dmarc_report_churro_chart,
+    resolver=resolve_demo_dmarc_report_summary_list,
 )
