@@ -10,7 +10,7 @@ from models import (
     Users,
     User_affiliations,
 )
-from tests.testdata.get_dmarc_report_doughnut import api_return_data
+from tests.testdata.dmarc_report_summary import api_return_data
 from tests.test_functions import run, json
 
 
@@ -28,7 +28,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_super_admin(save, mocker):
     Test to see if super admins can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary.resolver.send_request",
         autospec=True,
         return_value=api_return_data,
     )
@@ -61,7 +61,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_super_admin(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummary (
                 domainSlug: "test-domain-gc-ca"
                 period: MAY
                 year: "2020"
@@ -85,7 +85,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_super_admin(save, mocker):
 
     expected_result = {
         "data": {
-            "getDmarcReportDoughnut": {
+            "dmarcReportSummary": {
                 "year": 2020,
                 "month": "May",
                 "categoryTotals": {
@@ -106,7 +106,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_org_admin(save, mocker):
     Test to see if org admins can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary.resolver.send_request",
         autospec=True,
         return_value=api_return_data,
     )
@@ -134,7 +134,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_org_admin(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummary (
                 domainSlug: "test-domain-gc-ca"
                 period: MAY
                 year: "2020"
@@ -158,7 +158,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_org_admin(save, mocker):
 
     expected_result = {
         "data": {
-            "getDmarcReportDoughnut": {
+            "dmarcReportSummary": {
                 "year": 2020,
                 "month": "May",
                 "categoryTotals": {
@@ -179,7 +179,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_write(save, mocker):
     Test to see if user write can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary.resolver.send_request",
         autospec=True,
         return_value=api_return_data,
     )
@@ -207,7 +207,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_write(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummary (
                 domainSlug: "test-domain-gc-ca"
                 period: MAY
                 year: "2020"
@@ -231,7 +231,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_write(save, mocker):
 
     expected_result = {
         "data": {
-            "getDmarcReportDoughnut": {
+            "dmarcReportSummary": {
                 "year": 2020,
                 "month": "May",
                 "categoryTotals": {
@@ -252,7 +252,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_read(save, mocker):
     Test to see if user read can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary.resolver.send_request",
         autospec=True,
         return_value=api_return_data,
     )
@@ -280,7 +280,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_read(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummary (
                 domainSlug: "test-domain-gc-ca"
                 period: MAY
                 year: "2020"
@@ -304,7 +304,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_read(save, mocker):
 
     expected_result = {
         "data": {
-            "getDmarcReportDoughnut": {
+            "dmarcReportSummary": {
                 "year": 2020,
                 "month": "May",
                 "categoryTotals": {
@@ -325,7 +325,7 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     Test to ensure admins from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary.resolver.send_request",
         autospec=True,
         return_value=api_return_data,
     )
@@ -358,7 +358,7 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummary (
                 domainSlug: "test-domain-gc-ca"
                 period: MAY
                 year: "2020"
@@ -389,7 +389,7 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     Test to ensure user write from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary.resolver.send_request",
         autospec=True,
         return_value=api_return_data,
     )
@@ -422,7 +422,7 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummary (
                 domainSlug: "test-domain-gc-ca"
                 period: MAY
                 year: "2020"
@@ -453,7 +453,7 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     Test to ensure user read from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary.resolver.send_request",
         autospec=True,
         return_value=api_return_data,
     )
@@ -486,7 +486,7 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummary (
                 domainSlug: "test-domain-gc-ca"
                 period: MAY
                 year: "2020"
@@ -517,7 +517,7 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     Test to ensure that if domain does not exist it errors out
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary.resolver.send_request",
         autospec=True,
         return_value=api_return_data,
     )
@@ -542,7 +542,7 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummary (
                 domainSlug: "test-domain-gc-ca"
                 period: MAY
                 year: "2020"

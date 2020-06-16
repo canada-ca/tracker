@@ -25,8 +25,8 @@ from schemas.dmarc_report_detail_tables import (
 
 # Get Dmarc Report Doughnut Data
 from schemas.dmarc_report_summary import (
-    get_dmarc_report_doughnut,
-    demo_get_dmarc_report_doughnut,
+    dmarc_report_summary,
+    demo_dmarc_report_summary,
 )
 
 # Is User an Admin Query
@@ -195,8 +195,8 @@ class Query(graphene.ObjectType):
     demo_dmarc_report_detail_tables = demo_dmarc_report_detail_tables
 
     # --- Start Get Dmarc Report Doughnut ---
-    get_dmarc_report_doughnut = get_dmarc_report_doughnut
-    demo_get_dmarc_report_doughnut = demo_get_dmarc_report_doughnut
+    dmarc_report_summary = dmarc_report_summary
+    demo_dmarc_report_summary = demo_dmarc_report_summary
 
     # -- End Dmarc Report Queries
 

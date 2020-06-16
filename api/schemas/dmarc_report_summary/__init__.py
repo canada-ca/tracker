@@ -3,15 +3,15 @@ import graphene
 from enums.period import PeriodEnums
 from scalars.year import Year
 from scalars.slug import Slug
-from schemas.dmarc_report_doughnut.dmarc_report_doughnut import DmarcReportDoughnut
-from schemas.dmarc_report_doughnut.resolver import (
-    resolve_get_dmarc_report_doughnut,
-    resolve_demo_get_dmarc_report_doughnut,
+from schemas.dmarc_report_summary.dmarc_report_summary import DmarcReportSummary
+from schemas.dmarc_report_summary.resolver import (
+    resolve_dmarc_report_summary,
+    resolve_demo_dmarc_report_summary,
 )
 
 
-get_dmarc_report_doughnut = graphene.Field(
-    lambda: DmarcReportDoughnut,
+dmarc_report_summary = graphene.Field(
+    lambda: DmarcReportSummary,
     domain_slug=graphene.Argument(
         Slug,
         description="The slugified version of the domain you wish to retrieve data for.",
@@ -29,11 +29,11 @@ get_dmarc_report_doughnut = graphene.Field(
     ),
     description="A query object used to grab the data to create dmarc report "
     "doughnuts",
-    resolver=resolve_get_dmarc_report_doughnut,
+    resolver=resolve_dmarc_report_summary,
 )
 
-demo_get_dmarc_report_doughnut = graphene.Field(
-    lambda: DmarcReportDoughnut,
+demo_dmarc_report_summary = graphene.Field(
+    lambda: DmarcReportSummary,
     domain_slug=graphene.Argument(
         Slug,
         description="The slugified version of the domain you wish to retrieve data for.",
@@ -51,5 +51,5 @@ demo_get_dmarc_report_doughnut = graphene.Field(
     ),
     description="A query object used to grab the data to create dmarc report "
     "doughnuts",
-    resolver=resolve_demo_get_dmarc_report_doughnut,
+    resolver=resolve_demo_dmarc_report_summary,
 )

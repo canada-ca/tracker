@@ -13,17 +13,17 @@ from functions.external_graphql_api_request import send_request
 from functions.input_validators import cleanse_input
 from functions.start_end_date_generation import generate_start_end_date
 from models import Domains
-from schemas.dmarc_report_doughnut.dmarc_report_doughnut import DmarcReportDoughnut
+from schemas.dmarc_report_summary.dmarc_report_summary import DmarcReportSummary
 
 # Only for demo purposes
-from tests.testdata.get_dmarc_report_doughnut import api_return_data
+from tests.testdata.dmarc_report_summary import api_return_data
 
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
 DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
 
 
 @require_token
-def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughnut:
+def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
     """
     This function is used to resolve the get_yearly_dmarc_report_summary query
     :param self: A graphql field object
@@ -110,7 +110,7 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
             )
 
             data = data.get("getDmarcSummaryByPeriod").get("period")
-            return DmarcReportDoughnut(
+            return DmarcReportSummary(
                 # Get Month Name
                 calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
                 # Get Year
@@ -124,7 +124,7 @@ def resolve_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughn
         raise GraphQLError("Error, you do not have access to this domain.")
 
 
-def resolve_demo_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportDoughnut:
+def resolve_demo_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
     """
     This function is used to resolve the get_yearly_dmarc_report_summary query
     :param self: A graphql field object
@@ -133,7 +133,7 @@ def resolve_demo_get_dmarc_report_doughnut(self, info, **kwargs) -> DmarcReportD
     :return: Returns a DmarcReportDoughnut
     """
     data = api_return_data.get("getDmarcSummaryByPeriod").get("period")
-    return DmarcReportDoughnut(
+    return DmarcReportSummary(
         # Get Month Name
         calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
         # Get Year
