@@ -45,9 +45,7 @@ class RemoveDomain(graphene.Mutation):
         if is_user_write(user_roles=user_roles, org_id=domain_orm.organization_id):
             try:
                 # Get Domain Id
-                domain_id = (
-                    Domains.query.filter(Domains.domain == domain).first().id
-                )
+                domain_id = Domains.query.filter(Domains.domain == domain).first().id
 
                 # Get All Web Scans
                 webscans = (
@@ -92,6 +90,4 @@ class RemoveDomain(graphene.Mutation):
                 db_session.flush()
                 return RemoveDomain(status=False)
         else:
-            raise GraphQLError(
-                "Error, you do not have permission to remove domains."
-            )
+            raise GraphQLError("Error, you do not have permission to remove domains.")

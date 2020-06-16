@@ -8,9 +8,7 @@ from models import Dmarc_Reports
 def test_should_save_without_raising_an_error():
     try:
         report = Dmarc_Reports(
-            start_date="2018-10-01 13:07:12",
-            end_date="2018-10-01 13:07:12",
-            report={},
+            start_date="2018-10-01 13:07:12", end_date="2018-10-01 13:07:12", report={},
         )
         db_session.add(report)
         db_session.commit()

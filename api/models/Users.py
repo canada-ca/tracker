@@ -28,7 +28,6 @@ class Users(Base):
     )
     email_validated = Column(Boolean, default=False)
 
-
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
         acronym = slugify_value(self.user_name).upper()[:50]
@@ -38,7 +37,6 @@ class Users(Base):
                 user_organization=Organizations(name=self.user_name, acronym=acronym,),
             )
         )
-
 
     @hybrid_method
     def find_by_user_name(self, user_name):

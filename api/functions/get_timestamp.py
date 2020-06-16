@@ -15,9 +15,9 @@ def get_timestamp(self, info):
     if timestamp is None:
         timestamp = (
             db_session.query(Mail_scans)
-                .filter(Mail_scans.id == self.id)
-                .options(load_only("scan_date"))
-                .first()
+            .filter(Mail_scans.id == self.id)
+            .options(load_only("scan_date"))
+            .first()
         )
 
     return timestamp.scan_date

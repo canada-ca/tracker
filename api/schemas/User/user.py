@@ -32,7 +32,7 @@ class User(SQLAlchemyObjectType):
             "user_password",
             "password",
             "roles",
-            "email_validated"
+            "email_validated",
         )
 
     user_name = EmailAddress(description="Email that the user signed up with")

@@ -14,6 +14,7 @@ class EmailVerifyAccount(graphene.Mutation):
     Mutation that allows the user to verify their account through a token
     sent in an email
     """
+
     class Arguments:
         token_string = graphene.String(
             description="Token in sent via email, and located in url", required=True

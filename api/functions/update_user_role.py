@@ -36,9 +36,9 @@ def update_user_role(**kwargs):
         raise GraphQLError(error_user_does_not_exist())
 
     def update_user_role_db():
-        db_session.query(User_aff).filter(
-            User_aff.organization_id == org_id
-        ).filter(User_aff.user_id == user[0]["id"]).update({"permission": new_role})
+        db_session.query(User_aff).filter(User_aff.organization_id == org_id).filter(
+            User_aff.user_id == user[0]["id"]
+        ).update({"permission": new_role})
         try:
             db_session.commit()
         except Exception as e:
