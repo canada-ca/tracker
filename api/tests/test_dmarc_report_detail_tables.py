@@ -10,7 +10,7 @@ from models import (
     Users,
     User_affiliations,
 )
-from tests.testdata.get_dmarc_report_detail_table import (
+from tests.testdata.dmarc_report_detail_table import (
     test_query,
     dmarc_report_detail_table_return_data,
     dmarc_report_detail_table_expected_result,

@@ -19,7 +19,7 @@ from schemas.dmarc_report_detail_tables.dmarc_report_detail_tables import (
 from schemas.dmarc_report_detail_tables.gql_query import query_string
 
 # For demo purposes only
-from tests.testdata.get_dmarc_report_detail_table import (
+from tests.testdata.dmarc_report_detail_table import (
     dmarc_report_detail_table_return_data,
 )
 
