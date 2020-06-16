@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { useTable, usePagination, useSortBy } from 'react-table'
 import { array, string } from 'prop-types'
@@ -141,6 +141,16 @@ function DmarcReportTable({ ...props }) {
     usePagination,
   )
 
+  const [goToPageValue, setGoToPageNumber] = useState(pageIndex + 1)
+
+  const handleGoToPageChange = (event) => {
+    if (isNaN(event.target.value)) return 0 // TODO: Error handling here?
+    setGoToPageNumber(event.target.value)
+
+    const page = event.target.value ? Number(event.target.value) - 1 : 0
+    gotoPage(page)
+  }
+
   const wrapperRef = useRef(null)
 
   return (
@@ -256,11 +266,10 @@ function DmarcReportTable({ ...props }) {
             <Stack spacing="1em" isInline align="center" flexWrap="wrap">
               <Text>Go to page:</Text>
               <Input
-                defaultValue={pageIndex + 1}
                 width="6rem"
-                onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0
-                  gotoPage(page)
+                value={goToPageValue}
+                onChange={(event) => {
+                  handleGoToPageChange(event)
                 }}
               />
               <Select

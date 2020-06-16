@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   BarChart,
   Bar,
@@ -13,8 +13,6 @@ import { object } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 import theme from './theme/canada'
 import { Box } from '@chakra-ui/core'
-
-const { colors } = theme
 
 /*
 scheme for const data:
@@ -43,14 +41,18 @@ function DmarcTimeGraph({ ...props }) {
   const { data } = props
   const { periods, strengths } = data
   const ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+  const { colors } = theme
 
   const formatTicks = (tick) => {
     return `${tick * 100}%`
   }
 
   // Create date entry for x-axis data keys (e.g.: 'JAN-19')
+  // TODO: Should we just be receiving the data in this format?
   periods.forEach((period) => {
-    period.date = `${period.month.slice(0, 3)}-${period.year.toString().slice(-2)}`
+    period.date = `${period.month.slice(0, 3)}-${period.year
+      .toString()
+      .slice(-2)}`
   })
 
   return (
@@ -64,6 +66,7 @@ function DmarcTimeGraph({ ...props }) {
             bottom: 25,
           }}
           stackOffset="expand"
+        >
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" padding={{ left: 5, right: 5 }} />
