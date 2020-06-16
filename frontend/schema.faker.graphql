@@ -291,73 +291,15 @@ type DMARC {
   dmarcGuidanceTags: [String]
 }
 
-"""
-Generated DMARC Aggregated Report's
-"""
-type DmarcReport implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
+"""A query object used to grab the data to create dmarc report bar graph"""
+type DmarcReportSummaryList {
+  """The month that the data is related to."""
+  month: String
 
-  """
-  ID of the report.
-  """
-  reportId: String @examples(values: ["example.com:1538463741"])
+  """The year that the data is related to."""
+  year: Int
 
-  """
-  The organization name the report was generated from.
-  """
-  orgName: String @examples(values: ["accurateplastics.com"])
-
-  """
-  The organization email name the report was generated from.
-  """
-  orgEmail: String @examples(values: ["administrator@accurateplastics.com"])
-
-  """
-  Start date & time of aggregate report
-  """
-  startDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
-
-  """
-  End date & time of aggregate report
-  """
-  endDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
-
-  """
-  Errors that occurred during the report generation
-  """
-  errors: [String]
-
-  """
-  DMARC published policies
-  """
-  policyPublished: PolicyPublished
-
-  """
-  Aggregate report records
-  """
-  records: [Record]
-}
-
-"""
-A query object used to grab the data to create dmarc report churro chart
-"""
-type DmarcReportChurroChart {
-  """
-  The month that the data is related to.
-  """
-  month: PeriodEnums
-
-  """
-  The year that the data is related to.
-  """
-  year: Year @examples(values: [2019, 2020])
-
-  """
-  Category totals for building dmarc report page churro chart.
-  """
+  """Category totals for building dmarc report page bar graph."""
   categoryTotals: CategoryTotals
 }
 
@@ -373,43 +315,27 @@ type DmarcReportConnection {
   edges: [DmarcReportEdge]!
 }
 
-"""
-GraphQL object for returning data for dmarc report tables
-"""
-type DmarcReportDetailedTables {
-  """
-  The month in which the data is relevant to.
-  """
-  month: PeriodEnums
+"""GraphQL object for returning data for dmarc report tables"""
+type DmarcReportDetailTables {
+  """The month in which the data is relevant to."""
+  month: String
 
-  """
-  The year in which the relevant to.
-  """
-  year: Year @examples(values: [2019, 2020])
+  """The year in which the relevant to."""
+  year: Year
 
-  """
-  The details used in creating tables for the dmarc report page
-  """
+  """The details used in creating tables for the dmarc report page"""
   detailTables: DetailTables
 }
 
-"""
-A query object used to grab the data to create dmarc report doughnuts
-"""
-type DmarcReportDoughnut {
-  """
-  Which month is the data based on.
-  """
-  month: PeriodEnums
+"""A query object used to grab the data to create dmarc report doughnuts"""
+type DmarcReportSummary {
+  """Which month is the data based on."""
+  month: String
 
-  """
-  Which year the data is from.
-  """
-  year: Int @examples(values: [2019, 2020])
+  """Which year the data is from."""
+  year: Int
 
-  """
-  Category totals for building dmarc report page doughnuts.
-  """
+  """Category totals for building dmarc report page doughnuts."""
   categoryTotals: CategoryTotals
 }
 
@@ -474,17 +400,17 @@ type Domain implements Node {
   """
   DKIM, DMARC, and SPF scan results
   """
-  email(
+  mail(
     before: String
     after: String
     first: Int
     last: Int
-  ): EmailScanConnection
+  ): MailScanConnection
 
   """
   HTTPS, and SSL scan results
   """
-  www(before: String, after: String, first: Int, last: Int): WWWScanConnection
+  web(before: String, after: String, first: Int, last: Int): WebScanConnection
 
   """
   DMARC aggregate report
@@ -535,7 +461,7 @@ scalar EmailAddress
 """
 Results of DKIM, DMARC, and SPF scans, on domains
 """
-type EmailScan implements Node {
+type MailScan implements Node {
   """
   The domain the scan was run on
   """
@@ -567,7 +493,7 @@ type EmailScan implements Node {
   dkim: [DKIM]
 }
 
-type EmailScanConnection {
+type MailScanConnection {
   """
   Pagination data for this connection.
   """
@@ -576,17 +502,17 @@ type EmailScanConnection {
   """
   Contains the nodes in this connection.
   """
-  edges: [EmailScanEdge]!
+  edges: [MailScanEdge]!
 }
 
 """
-A Relay edge containing a `EmailScan` and its cursor.
+A Relay edge containing a `MailScan` and its cursor.
 """
-type EmailScanEdge {
+type MailScanEdge {
   """
   The item at the end of the edge
   """
-  node: EmailScan
+  node: MailScan
 
   """
   A cursor for use in pagination
@@ -675,9 +601,53 @@ enum LanguageEnums {
   FRENCH
 }
 
-"""
-The central gathering point for all of the GraphQL mutations.
-"""
+"""Results of DKIM, DMARC, and SPF scans, on domains"""
+type MailScan implements Node {
+  """DMARC implementation phase detected when running scan"""
+  dmarcPhase: Int
+
+  """List of DKIM selector strings to scan"""
+  selectors: [String]
+
+  """The domain the scan was run on"""
+  domain: URL
+
+  """The ID of the object."""
+  id: ID!
+
+  """The time the scan was initiated"""
+  timestamp: DateTime
+
+  """
+  Domain-based Message Authentication, Reporting, and Conformance (DMARC)
+  """
+  dmarc: DMARC
+
+  """Sender Policy Framework (SPF) for Authorizing Use of Domains in Email """
+  spf: SPF
+
+  """DomainKeys Identified Mail (DKIM) Signatures"""
+  dkim: DKIM
+}
+
+type MailScanConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [MailScanEdge]!
+}
+
+"""A Relay edge containing a `MailScan` and its cursor."""
+type MailScanEdge {
+  """The item at the end of the edge"""
+  node: MailScan
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""The central gathering point for all of the GraphQL mutations."""
 type Mutation {
   updatePassword(
     confirmPassword: String!
@@ -788,9 +758,10 @@ type Mutation {
     """
     orgSlug: Slug!
 
-    """
-    URL that you would like to be added to database.
-    """
+    """DKIM selector strings corresponding to this domain"""
+    selectors: Selectors
+
+    """URL that you would like to be added to database."""
     url: URL!
   ): CreateDomain
 
@@ -803,9 +774,10 @@ type Mutation {
     """
     currentUrl: URL!
 
-    """
-    The new domain you wish to update the current domain to be.
-    """
+    """The new DKIM selector strings corresponding to this domain"""
+    updatedSelectors: Selectors
+
+    """The new domain you wish to update the current domain to be."""
     updatedUrl: URL!
   ): UpdateDomain
 
@@ -1179,55 +1151,66 @@ type PolicyPublished {
 The central gathering point for all of the GraphQL queries.
 """
 type Query {
-  """
-  A query object used to grab the data to create dmarc report churro chart.
-  """
-  getDmarcReportChurroChart(
-    """
-    The sluified version of the domain you wish to retrieve data for.
-    """
-    domainSlug: Slug
-  ): [DmarcReportChurroChart] @listLength(min: 13, max: 13)
-
-  """
-  Query used for gathering data for dmarc report detail tables.
-  """
-  getDmarcReportDetailedTables(
-    """
-    The sluified version of the domain you wish to retrieve data for.
-    """
-    domainSlug: Slug
-
-    """
-    The period in which the returned data is relevant to.
-    """
-    period: PeriodEnums
-
-    """
-    The year in which the returned data is relevant to.
-    """
-    year: Year
-  ): DmarcReportDetailedTables
-
-  """
-  A query object used to grab the data to create dmarc report doughnuts
-  """
-  getDmarcReportDoughnut(
+  """A query object used to grab the data to create dmarc report bar graph."""
+  dmarcReportSummaryList(
+    """The slugified version of the domain you wish to retrieve data for."""
     domainSlug: Slug!
-    period: PeriodEnums!
-    year: Year!
-  ): DmarcReportDoughnut
+  ): [DmarcReportSummaryList]
 
-  """
-  An graphql object that will be used to populate a userList component in the front end
-  """
-  userList(
-    orgSlug: Slug!
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): UserListItemConnection
+  """A query object used to grab the data to create dmarc report bar graph."""
+  demoDmarcReportSummaryList(
+    """The slugified version of the domain you wish to retrieve data for."""
+    domainSlug: Slug!
+  ): [DmarcReportSummaryList]
+
+  """Query used for gathering data for dmarc report detail tables."""
+  dmarcReportDetailTables(
+    """The slugified version of the domain you wish to retrieve data for."""
+    domainSlug: Slug!
+
+    """The period in which the returned data is relevant to."""
+    period: PeriodEnums!
+
+    """The year in which the returned data is relevant to."""
+    year: Year!
+  ): DmarcReportDetailTables
+
+  """Query used for gathering data for dmarc report detail tables."""
+  demoDmarcReportDetailTables(
+    """The slugified version of the domain you wish to retrieve data for."""
+    domainSlug: Slug!
+
+    """The period in which the returned data is relevant to."""
+    period: PeriodEnums!
+
+    """The year in which the returned data is relevant to."""
+    year: Year!
+  ): DmarcReportDetailTables
+
+  """A query object used to grab the data to create dmarc report doughnuts"""
+  dmarcReportSummary(
+    """The slugified version of the domain you wish to retrieve data for."""
+    domainSlug: Slug!
+
+    """The period in which the returned data is relevant to."""
+    period: PeriodEnums!
+
+    """The year in which the returned data is relevant to."""
+    year: Year!
+  ): DmarcReportSummary
+
+  """A query object used to grab the data to create dmarc report doughnuts"""
+  demoDmarcReportSummary(
+    """The slugified version of the domain you wish to retrieve data for."""
+    domainSlug: Slug!
+
+    """The period in which the returned data is relevant to."""
+    period: PeriodEnums!
+
+    """The year in which the returned data is relevant to."""
+    year: Year!
+  ): DmarcReportSummary
+  isUserAdmin: IsUserAdmin
 
   """
   An graphql object that will be used to populate a userPage component in the front end
@@ -1397,6 +1380,9 @@ enum RoleEnums {
   """
   SUPER_ADMIN
 }
+
+"""A field that conforms to a list of strings"""
+scalar Selectors
 
 """
 This mutation is used for re-sending a verification email if it failed
@@ -1855,7 +1841,7 @@ type ValidateTwoFactor {
 """
 Results of HTTPS and SSL scans on domain
 """
-type WWWScan implements Node {
+type WebScan implements Node {
   """
   The domain the scan was run on
   """
@@ -1874,7 +1860,7 @@ type WWWScan implements Node {
   ssl: [SSL]
 }
 
-type WWWScanConnection {
+type WebScanConnection {
   """
   Pagination data for this connection.
   """
@@ -1883,17 +1869,17 @@ type WWWScanConnection {
   """
   Contains the nodes in this connection.
   """
-  edges: [WWWScanEdge]!
+  edges: [WebScanEdge]!
 }
 
 """
-A Relay edge containing a `WWWScan` and its cursor.
+A Relay edge containing a `WebScan` and its cursor.
 """
-type WWWScanEdge {
+type WebScanEdge {
   """
   The item at the end of the edge
   """
-  node: WWWScan
+  node: WebScan
 
   """
   A cursor for use in pagination

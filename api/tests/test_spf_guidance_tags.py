@@ -6,7 +6,7 @@ from models import (
     Users,
     Organizations,
     Domains,
-    Scans,
+    Mail_scans,
     Dkim_scans,
     Dmarc_scans,
     Spf_scans,
@@ -37,7 +37,7 @@ def test_spf_guidance_tags_spf_2(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -104,7 +104,7 @@ def test_spf_guidance_tags_spf_3_dkim(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -180,7 +180,7 @@ def test_spf_guidance_tags_spf_3_dmarc(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -256,7 +256,7 @@ def test_spf_guidance_tags_spf_4(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -323,7 +323,7 @@ def test_spf_guidance_tags_spf_5(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -390,7 +390,7 @@ def test_spf_guidance_tags_spf_6(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -457,7 +457,7 @@ def test_spf_guidance_tags_spf_7(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -524,7 +524,7 @@ def test_spf_guidance_tags_spf_8(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -591,7 +591,7 @@ def test_spf_guidance_tags_spf_9(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -658,7 +658,7 @@ def test_spf_guidance_tags_spf_10(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -725,7 +725,7 @@ def test_spf_guidance_tags_spf_11(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -792,7 +792,7 @@ def test_spf_guidance_tags_spf_12(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(
@@ -859,7 +859,7 @@ def test_spf_guidance_tags_spf_13(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_spf_scan = Spf_scans(

@@ -110,7 +110,7 @@ spec:
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
-  name: dmarc-scanner
+  name: dns-scanner
   namespace: tracker
   labels:
     app: scanners
@@ -129,35 +129,8 @@ spec:
         autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
-        - name: dmarc-scanner
-          image: gcr.io/track-compliance/scanners/dmarc:master # The URL to the image of the app
-
----
-
-apiVersion: serving.knative.dev/v1 # Current version of Knative
-kind: Service
-metadata:
-  name: dkim-scanner
-  namespace: tracker
-  labels:
-    app: scanners
-spec:
-  template:
-    metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
-        # Knative concurrency-based autoscaling (default).
-        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
-        autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
-    spec:
-      containers:
-        - name: dkim-scanner
-          image: gcr.io/track-compliance/scanners/dkim:master # The URL to the image of the app
+        - name: dns-scanner
+          image: gcr.io/track-compliance/scanners/dns:master # The URL to the image of the app
 
 ---
 
@@ -191,7 +164,7 @@ spec:
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
-  name: dmarc-scanner-manual
+  name: dns-scanner-manual
   namespace: tracker
   labels:
     app: scanners
@@ -210,35 +183,8 @@ spec:
         autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
-        - name: dmarc-scanner
-          image: gcr.io/track-compliance/scanners/dmarc:master # The URL to the image of the app
-
----
-
-apiVersion: serving.knative.dev/v1 # Current version of Knative
-kind: Service
-metadata:
-  name: dkim-scanner-manual
-  namespace: tracker
-  labels:
-    app: scanners
-spec:
-  template:
-    metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
-        # Knative concurrency-based autoscaling (default).
-        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
-        autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
-    spec:
-      containers:
-        - name: dkim-scanner
-          image: gcr.io/track-compliance/scanners/dkim:master # The URL to the image of the app
+        - name: dns-scanner
+          image: gcr.io/track-compliance/scanners/dns:master # The URL to the image of the app
 
 ---
 

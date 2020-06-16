@@ -26,3 +26,17 @@ def cleanse_input(input_string):
     input_string = input_string.strip()
     input_string = html.escape(input_string)
     return input_string
+
+
+def cleanse_input_list(input_list):
+    """
+    This function will take a list of input strings and perform cleansing functions on it.  This will help ensure that injection
+    attacks are prevented
+    :param input_list: The list of strings as given by the http request
+    :return output_list:  Ths list of strings after all cleansing functions are done on it.
+    """
+    output_list = []
+    for input_string in input_list:
+        output_list.append(cleanse_input(input_string))
+
+    return output_list

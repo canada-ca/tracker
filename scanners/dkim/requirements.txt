@@ -1,9 +1,0 @@
-starlette
-gunicorn
-uvicorn
-emoji
-requests>=2.18.4
-dkimpy
-pytest
-dnspython
-pretend
