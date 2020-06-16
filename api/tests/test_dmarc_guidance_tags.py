@@ -2,7 +2,7 @@ import pytest
 from pytest import fail
 
 from db import DB
-from models import Users, Organizations, Domains, Scans, Dmarc_scans, User_affiliations
+from models import Users, Organizations, Domains, Mail_scans, Dmarc_scans, User_affiliations
 from tests.testdata.domain_guidance_tags import dmarc_mock_data
 from tests.test_functions import json, run
 
@@ -28,7 +28,7 @@ def test_dkim_guidance_tags_dmarc_2(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dmarc_scan = Dmarc_scans(
@@ -95,7 +95,7 @@ def test_dkim_guidance_tags_dmarc_3(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -162,7 +162,7 @@ def test_dkim_guidance_tags_dmarc_4(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -229,7 +229,7 @@ def test_dkim_guidance_tags_dmarc_5(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -296,7 +296,7 @@ def test_dkim_guidance_tags_dmarc_6(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -363,7 +363,7 @@ def test_dkim_guidance_tags_dmarc_7(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -430,7 +430,7 @@ def test_dkim_guidance_tags_dmarc_8(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -497,7 +497,7 @@ def test_dkim_guidance_tags_dmarc_9(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -564,7 +564,7 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -638,7 +638,7 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -712,7 +712,7 @@ def test_dkim_guidance_tags_dmarc_14(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -779,7 +779,7 @@ def test_dkim_guidance_tags_dmarc_15(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -846,7 +846,7 @@ def test_dkim_guidance_tags_dmarc_16(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -913,7 +913,7 @@ def test_dkim_guidance_tags_dmarc_17(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -980,7 +980,7 @@ def test_dkim_guidance_tags_dmarc_18(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -1047,7 +1047,7 @@ def test_dkim_guidance_tags_dmarc_19(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -1114,7 +1114,7 @@ def test_dkim_guidance_tags_dmarc_20(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(
@@ -1181,7 +1181,7 @@ def test_dkim_guidance_tags_dmarc_21(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Mail_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Dmarc_scans(

@@ -2,7 +2,7 @@ import pytest
 from pytest import fail
 
 from db import DB
-from models import Users, Organizations, Domains, Scans, Ssl_scans, User_affiliations
+from models import Users, Organizations, Domains, Web_scans, Ssl_scans, User_affiliations
 from tests.testdata.domain_guidance_tags import ssl_mock_data
 from tests.test_functions import json, run
 
@@ -28,7 +28,7 @@ def test_spf_guidance_tags_spf_2(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Ssl_scans(
@@ -52,7 +52,7 @@ def test_spf_guidance_tags_spf_2(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             ssl {
@@ -75,7 +75,7 @@ def test_spf_guidance_tags_spf_2(save):
 
     assert (
         "ssl2"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["ssl"][
             "sslGuidanceTags"
         ]
     )
@@ -95,7 +95,7 @@ def test_spf_guidance_tags_spf_3(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Ssl_scans(
@@ -119,7 +119,7 @@ def test_spf_guidance_tags_spf_3(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             ssl {
@@ -142,7 +142,7 @@ def test_spf_guidance_tags_spf_3(save):
 
     assert (
         "ssl3"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["ssl"][
             "sslGuidanceTags"
         ]
     )
@@ -162,7 +162,7 @@ def test_spf_guidance_tags_spf_4(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Ssl_scans(
@@ -186,7 +186,7 @@ def test_spf_guidance_tags_spf_4(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             ssl {
@@ -209,7 +209,7 @@ def test_spf_guidance_tags_spf_4(save):
 
     assert (
         "ssl4"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["ssl"][
             "sslGuidanceTags"
         ]
     )
@@ -229,7 +229,7 @@ def test_spf_guidance_tags_spf_5(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Ssl_scans(
@@ -253,7 +253,7 @@ def test_spf_guidance_tags_spf_5(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             ssl {
@@ -276,7 +276,7 @@ def test_spf_guidance_tags_spf_5(save):
 
     assert (
         "ssl5"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["ssl"][
             "sslGuidanceTags"
         ]
     )
@@ -296,7 +296,7 @@ def test_spf_guidance_tags_spf_6(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Ssl_scans(
@@ -320,7 +320,7 @@ def test_spf_guidance_tags_spf_6(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             ssl {
@@ -343,7 +343,7 @@ def test_spf_guidance_tags_spf_6(save):
 
     assert (
         "ssl6"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["ssl"][
             "sslGuidanceTags"
         ]
     )
@@ -363,7 +363,7 @@ def test_spf_guidance_tags_spf_7(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Ssl_scans(
@@ -387,7 +387,7 @@ def test_spf_guidance_tags_spf_7(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             ssl {
@@ -410,7 +410,7 @@ def test_spf_guidance_tags_spf_7(save):
 
     assert (
         "ssl7"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["ssl"][
             "sslGuidanceTags"
         ]
     )
@@ -430,7 +430,7 @@ def test_spf_guidance_tags_spf_8(save):
     )
     save(test_domain)
 
-    test_scan = Scans(domain=test_domain)
+    test_scan = Web_scans(domain=test_domain)
     save(test_scan)
 
     test_dkim_scan = Ssl_scans(
@@ -454,7 +454,7 @@ def test_spf_guidance_tags_spf_8(save):
             domain(
                 urlSlug: "test-domain-ca"
             ) {
-                www {
+                web {
                     edges {
                         node {
                             ssl {
@@ -477,7 +477,7 @@ def test_spf_guidance_tags_spf_8(save):
 
     assert (
         "ssl8"
-        in result["data"]["domain"][0]["www"]["edges"][0]["node"]["ssl"][
+        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["ssl"][
             "sslGuidanceTags"
         ]
     )

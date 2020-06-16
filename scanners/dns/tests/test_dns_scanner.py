@@ -1,7 +1,7 @@
 import pytest
 from pretend import stub
 from starlette.testclient import TestClient
-from dkim_scanner import Server
+from dns_scanner import Server
 
 
 def test_scan():
@@ -11,10 +11,12 @@ def test_scan():
 
     test_client = TestClient(test_app)
 
-    test_payload = {"scan_id": 1, "domain": "selector1._domainkey.cyber.gc.ca"}
+    test_payload = {
+        "scan_id": 1,
+        "domain": "cyber.gc.ca",
+        "selectors": ["selector1._domainkey", "selector2._domainkey"],
+    }
 
     res = test_client.post("/scan", json=test_payload)
 
-    assert (
-        res.text == "DKIM scan completed. Scan results dispatched to result-processor"
-    )
+    assert res.text == "DNS scan completed. Scan results dispatched to result-processor"

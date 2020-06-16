@@ -7,7 +7,8 @@ from functions.auth_functions import is_user_write
 from functions.input_validators import cleanse_input
 from models import (
     Domains,
-    Scans,
+    Web_scans,
+    Mail_scans,
     Dkim_scans,
     Dmarc_scans,
     Https_scans,
@@ -48,23 +49,37 @@ class RemoveDomain(graphene.Mutation):
                     Domains.query.filter(Domains.domain == domain).first().id
                 )
 
-                # Get All Scans
-                scans = (
-                    db_session.query(Scans)
-                    .filter(Scans.domain_id == domain_id)
+                # Get All Web Scans
+                webscans = (
+                    db_session.query(Web_scans)
+                    .filter(Web_scans.domain_id == domain_id)
                     .all()
                 )
 
-                # Remove all related scans
-                for scan in scans:
+                # Remove all related web scans
+                for scan in webscans:
+                    try:
+                        Https_scans.query.filter(Https_scans.id == scan.id).delete()
+                        Ssl_scans.query.filter(Ssl_scans.id == scan.id).delete()
+                        Web_scans.query.filter(Web_scans.id == scan.id).delete()
+                    except Exception as e:
+                        return RemoveDomain(status=False)
+
+                # Get all Mail Scans
+                mailscans = (
+                    db_session.query(Mail_scans)
+                    .filter(Mail_scans.domain_id == domain_id)
+                    .all()
+                )
+
+                # Remove all related mail scans
+                for scan in mailscans:
                     try:
                         Dkim_scans.query.filter(Dkim_scans.id == scan.id).delete()
                         Dmarc_scans.query.filter(Dmarc_scans.id == scan.id).delete()
-                        Https_scans.query.filter(Https_scans.id == scan.id).delete()
                         Mx_scans.query.filter(Mx_scans.id == scan.id).delete()
                         Spf_scans.query.filter(Spf_scans.id == scan.id).delete()
-                        Ssl_scans.query.filter(Ssl_scans.id == scan.id).delete()
-                        Scans.query.filter(Scans.id == scan.id).delete()
+                        Mail_scans.query.filter(Mail_scans.id == scan.id).delete()
                     except Exception as e:
                         return RemoveDomain(status=False)
 
