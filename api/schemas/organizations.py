@@ -47,7 +47,6 @@ class Organization(SQLAlchemyObjectType):
         description="The users that have an affiliation with the organization.",
     )
 
-
     def resolve_acronym(self: OrgModel, info):
         return self.acronym
 

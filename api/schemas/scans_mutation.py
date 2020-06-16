@@ -54,7 +54,11 @@ class RequestScan(graphene.Mutation):
         if is_user_write(user_roles=user_roles, org_id=org_id):
             # Fire scan and get status from request
             status = fire_scan(
-                user_id=user_id, domain_id=domain_id, url=url, scan_type=scan_type, selectors=selectors
+                user_id=user_id,
+                domain_id=domain_id,
+                url=url,
+                scan_type=scan_type,
+                selectors=selectors,
             )
 
             # Return status information to user
@@ -63,6 +67,5 @@ class RequestScan(graphene.Mutation):
         # If user doesn't have rights error out
         else:
             raise GraphQLError(
-                "Error, you do not have permission to request a scan on "
-                "that domain"
+                "Error, you do not have permission to request a scan on " "that domain"
             )

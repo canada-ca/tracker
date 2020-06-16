@@ -43,9 +43,7 @@ class RemoveOrganization(graphene.Mutation):
 
         # Check to see if org exists
         org_orm = (
-            db_session.query(Organizations)
-            .filter(Organizations.slug == slug)
-            .first()
+            db_session.query(Organizations).filter(Organizations.slug == slug).first()
         )
 
         if org_orm is None:
@@ -73,9 +71,7 @@ class RemoveOrganization(graphene.Mutation):
                                 Https_scans.query.filter(
                                     Https_scans.id == scan.id
                                 ).delete()
-                                Ssl_scans.query.filter(
-                                    Ssl_scans.id == scan.id
-                                ).delete()
+                                Ssl_scans.query.filter(Ssl_scans.id == scan.id).delete()
                                 Web_scans.query.filter(Web_scans.id == scan.id).delete()
                             except Exception as e:
                                 print("Scans: " + e)
@@ -94,13 +90,11 @@ class RemoveOrganization(graphene.Mutation):
                                 Dmarc_scans.query.filter(
                                     Dmarc_scans.id == scan.id
                                 ).delete()
-                                Mx_scans.query.filter(
-                                    Mx_scans.id == scan.id
+                                Mx_scans.query.filter(Mx_scans.id == scan.id).delete()
+                                Spf_scans.query.filter(Spf_scans.id == scan.id).delete()
+                                Mail_scans.query.filter(
+                                    Mail_scans.id == scan.id
                                 ).delete()
-                                Spf_scans.query.filter(
-                                    Spf_scans.id == scan.id
-                                ).delete()
-                                Mail_scans.query.filter(Mail_scans.id == scan.id).delete()
                             except Exception as e:
                                 print("Scans: " + e)
                                 return RemoveOrganization(status=False)

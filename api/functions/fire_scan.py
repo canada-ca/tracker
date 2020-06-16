@@ -12,7 +12,9 @@ from models import Web_scans, Mail_scans, Domains
 DISPATCHER_URL = "http://dispatcher.tracker.svc.cluster.local"
 
 
-def fire_scan(user_id: int, domain_id: int, url: str, scan_type: str, selectors: List[str]):
+def fire_scan(
+    user_id: int, domain_id: int, url: str, scan_type: str, selectors: List[str]
+):
     """
     Functionality to send request to scanners and request a domain to get scanned
     :param user_id: The id of the requesting user

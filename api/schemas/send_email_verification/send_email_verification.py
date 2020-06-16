@@ -46,7 +46,7 @@ class SendEmailVerification(graphene.Mutation):
             client=NotificationsAPIClient(
                 api_key=os.getenv("NOTIFICATION_API_KEY"),
                 base_url=os.getenv("NOTIFICATION_API_URL"),
-            )
+            ),
         )
 
         if email_status.__contains__("Email Send Error"):

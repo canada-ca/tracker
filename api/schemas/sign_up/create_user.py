@@ -56,7 +56,7 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
                 client=NotificationsAPIClient(
                     api_key=os.getenv("NOTIFICATION_API_KEY"),
                     base_url=os.getenv("NOTIFICATION_API_URL"),
-                )
+                ),
             )
 
             if email_response.__contains__("Email Send Error"):
