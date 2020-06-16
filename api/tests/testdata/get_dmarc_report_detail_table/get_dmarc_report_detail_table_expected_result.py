@@ -1,6 +1,6 @@
 dmarc_report_detail_table_expected_result = {
     "data": {
-        "getDmarcReportDetailedTables": {
+        "dmarcReportDetailTables": {
             "month": "April",
             "year": "2020",
             "detailTables": {

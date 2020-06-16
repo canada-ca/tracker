@@ -1,6 +1,6 @@
 test_query = """
 {
-    getDmarcReportDetailedTables(
+    dmarcReportDetailTables(
         domainSlug: "test-domain-gc-ca"
         year: "2020"
         period: MAY

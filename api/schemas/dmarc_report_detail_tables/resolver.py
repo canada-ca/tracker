@@ -13,10 +13,10 @@ from functions.external_graphql_api_request import send_request
 from functions.input_validators import cleanse_input
 from functions.start_end_date_generation import generate_start_end_date
 from models import Domains
-from schemas.dmarc_report_detailed_tables.dmarc_report_detailed_tables import (
-    DmarcReportDetailedTables,
+from schemas.dmarc_report_detail_tables.dmarc_report_detail_tables import (
+    DmarcReportDetailTables,
 )
-from schemas.dmarc_report_detailed_tables.gql_query import query_string
+from schemas.dmarc_report_detail_tables.gql_query import query_string
 
 # For demo purposes only
 from tests.testdata.get_dmarc_report_detail_table import (
@@ -28,7 +28,7 @@ DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
 
 
 @require_token
-def resolve_dmarc_report_detailed_tables(self, info, **kwargs):
+def resolve_dmarc_report_detail_tables(self, info, **kwargs):
     """
 
     :param self:
@@ -86,7 +86,7 @@ def resolve_dmarc_report_detailed_tables(self, info, **kwargs):
 
             data = data.get("getDmarcSummaryByPeriod").get("period")
 
-            return DmarcReportDetailedTables(
+            return DmarcReportDetailTables(
                 # Get Month Name
                 calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
                 # Get Year
@@ -101,7 +101,7 @@ def resolve_dmarc_report_detailed_tables(self, info, **kwargs):
         raise GraphQLError("Error, domain cannot be found.")
 
 
-def resolve_demo_dmarc_report_detailed_tables(self, info, **kwargs):
+def resolve_demo_dmarc_report_detail_tables(self, info, **kwargs):
     """
 
     :param self:
@@ -113,7 +113,7 @@ def resolve_demo_dmarc_report_detailed_tables(self, info, **kwargs):
         "period"
     )
 
-    return DmarcReportDetailedTables(
+    return DmarcReportDetailTables(
         # Get Month Name
         calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
         # Get Year

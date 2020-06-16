@@ -32,7 +32,7 @@ def test_valid_get_dmarc_report_detail_tables_query_as_super_admin(save, mocker)
     Test to see if super admins can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_detailed_tables.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
         return_value=dmarc_report_detail_table_return_data,
     )
@@ -75,7 +75,7 @@ def test_valid_get_dmarc_report_detail_tables_query_as_org_admin(save, mocker):
     Test to see if org admins can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_detailed_tables.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
         return_value=dmarc_report_detail_table_return_data,
     )
@@ -113,7 +113,7 @@ def test_valid_get_dmarc_report_detail_tables_query_as_user_write(save, mocker):
     Test to see if user write can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_detailed_tables.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
         return_value=dmarc_report_detail_table_return_data,
     )
@@ -151,7 +151,7 @@ def test_valid_get_dmarc_report_detail_tables_query_as_user_read(save, mocker):
     Test to see if user read can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_detailed_tables.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
         return_value=dmarc_report_detail_table_return_data,
     )
@@ -189,7 +189,7 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     Test to ensure admins from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_detailed_tables.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
         return_value=dmarc_report_detail_table_return_data,
     )
@@ -233,7 +233,7 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     Test to ensure user write from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_detailed_tables.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
         return_value=dmarc_report_detail_table_return_data,
     )
@@ -277,7 +277,7 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     Test to ensure user read from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_detailed_tables.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
         return_value=dmarc_report_detail_table_return_data,
     )
@@ -321,7 +321,7 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     Test to ensure that if domain does not exist it errors out
     """
     mocker.patch(
-        "schemas.dmarc_report_detailed_tables.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
         return_value=dmarc_report_detail_table_return_data,
     )
