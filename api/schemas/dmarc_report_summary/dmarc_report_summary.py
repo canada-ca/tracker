@@ -3,7 +3,7 @@ import graphene
 from schemas.shared_structures import CategoryTotals
 
 
-class DmarcReportDoughnut(graphene.ObjectType):
+class DmarcReportSummary(graphene.ObjectType):
     """
     A query object used to grab the data to create dmarc report doughnuts
     """

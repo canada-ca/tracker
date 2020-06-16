@@ -10,11 +10,11 @@ from models import (
     Users,
     User_affiliations,
 )
-from tests.testdata.get_dmarc_report_bar_graph import (
-    dmarc_report_bar_graph_data,
-    dmarc_report_bar_graph_expected_data,
+from tests.testdata.dmarc_report_detail_table import (
+    test_query,
+    dmarc_report_detail_table_return_data,
+    dmarc_report_detail_table_expected_result,
 )
-
 from tests.test_functions import run, json
 
 
@@ -27,14 +27,14 @@ def save():
         cleanup()
 
 
-def test_valid_get_dmarc_report_bar_graph_query_as_super_admin(save, mocker):
+def test_valid_get_dmarc_report_detail_tables_query_as_super_admin(save, mocker):
     """
     Test to see if super admins can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_bar_graph.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
-        return_value=dmarc_report_bar_graph_data,
+        return_value=dmarc_report_detail_table_return_data,
     )
 
     org_one = Organizations(
@@ -62,44 +62,22 @@ def test_valid_get_dmarc_report_bar_graph_query_as_super_admin(save, mocker):
     )
     save(super_admin)
 
-    result = run(
-        query="""
-        {
-            getDmarcReportBarGraph (
-                domainSlug: "test-domain-gc-ca"
-            ) {
-                year
-                month
-                categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
-                    total
-                }
-            }
-        }
-        """,
-        as_user=super_admin,
-    )
+    result = run(query=test_query, as_user=super_admin,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
-    assert result == dmarc_report_bar_graph_expected_data
+    assert result == dmarc_report_detail_table_expected_result
 
 
-def test_valid_get_dmarc_report_bar_graph_query_as_org_admin(save, mocker):
+def test_valid_get_dmarc_report_detail_tables_query_as_org_admin(save, mocker):
     """
     Test to see if org admins can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_bar_graph.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
-        return_value=dmarc_report_bar_graph_data,
+        return_value=dmarc_report_detail_table_return_data,
     )
 
     org_admin = Users(
@@ -122,44 +100,22 @@ def test_valid_get_dmarc_report_bar_graph_query_as_org_admin(save, mocker):
     )
     save(org_admin)
 
-    result = run(
-        query="""
-        {
-            getDmarcReportBarGraph (
-                domainSlug: "test-domain-gc-ca"
-            ) {
-                year
-                month
-                categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
-                    total
-                }
-            }
-        }
-        """,
-        as_user=org_admin,
-    )
+    result = run(query=test_query, as_user=org_admin,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
-    assert result == dmarc_report_bar_graph_expected_data
+    assert result == dmarc_report_detail_table_expected_result
 
 
-def test_valid_get_dmarc_report_bar_graph_query_as_user_write(save, mocker):
+def test_valid_get_dmarc_report_detail_tables_query_as_user_write(save, mocker):
     """
     Test to see if user write can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_bar_graph.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
-        return_value=dmarc_report_bar_graph_data,
+        return_value=dmarc_report_detail_table_return_data,
     )
 
     user_write = Users(
@@ -182,44 +138,22 @@ def test_valid_get_dmarc_report_bar_graph_query_as_user_write(save, mocker):
     )
     save(user_write)
 
-    result = run(
-        query="""
-        {
-            getDmarcReportBarGraph (
-                domainSlug: "test-domain-gc-ca"
-            ) {
-                year
-                month
-                categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
-                    total
-                }
-            }
-        }
-        """,
-        as_user=user_write,
-    )
+    result = run(query=test_query, as_user=user_write,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
-    assert result == dmarc_report_bar_graph_expected_data
+    assert result == dmarc_report_detail_table_expected_result
 
 
-def test_valid_get_dmarc_report_bar_graph_query_as_user_read(save, mocker):
+def test_valid_get_dmarc_report_detail_tables_query_as_user_read(save, mocker):
     """
     Test to see if user read can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_bar_graph.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
-        return_value=dmarc_report_bar_graph_data,
+        return_value=dmarc_report_detail_table_return_data,
     )
 
     user_read = Users(
@@ -242,34 +176,12 @@ def test_valid_get_dmarc_report_bar_graph_query_as_user_read(save, mocker):
     )
     save(user_read)
 
-    result = run(
-        query="""
-        {
-            getDmarcReportBarGraph (
-                domainSlug: "test-domain-gc-ca"
-            ) {
-                year
-                month
-                categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
-                    total
-                }
-            }
-        }
-        """,
-        as_user=user_read,
-    )
+    result = run(query=test_query, as_user=user_read,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
-    assert result == dmarc_report_bar_graph_expected_data
+    assert result == dmarc_report_detail_table_expected_result
 
 
 def test_admin_from_different_org_cant_access_data(save, mocker):
@@ -277,9 +189,9 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     Test to ensure admins from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_bar_graph.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
-        return_value=dmarc_report_bar_graph_data,
+        return_value=dmarc_report_detail_table_return_data,
     )
 
     org_one = Organizations(
@@ -307,29 +219,7 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     )
     save(org_admin)
 
-    result = run(
-        query="""
-        {
-            getDmarcReportBarGraph (
-                domainSlug: "test-domain-gc-ca"
-            ) {
-                year
-                month
-                categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
-                    total
-                }
-            }
-        }
-        """,
-        as_user=org_admin,
-    )
+    result = run(query=test_query, as_user=org_admin,)
 
     if "errors" not in result:
         fail("Expected to error out, instead: {}".format(json(result)))
@@ -343,9 +233,9 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     Test to ensure user write from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_bar_graph.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
-        return_value=dmarc_report_bar_graph_data,
+        return_value=dmarc_report_detail_table_return_data,
     )
 
     org_one = Organizations(
@@ -373,29 +263,7 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     )
     save(user_write)
 
-    result = run(
-        query="""
-        {
-            getDmarcReportBarGraph (
-                domainSlug: "test-domain-gc-ca"
-            ) {
-                year
-                month
-                categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
-                    total
-                }
-            }
-        }
-        """,
-        as_user=user_write,
-    )
+    result = run(query=test_query, as_user=user_write,)
 
     if "errors" not in result:
         fail("Expected to error out, instead: {}".format(json(result)))
@@ -409,9 +277,9 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     Test to ensure user read from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_bar_graph.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
-        return_value=dmarc_report_bar_graph_data,
+        return_value=dmarc_report_detail_table_return_data,
     )
 
     org_one = Organizations(
@@ -439,29 +307,7 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     )
     save(user_read)
 
-    result = run(
-        query="""
-        {
-            getDmarcReportBarGraph (
-                domainSlug: "test-domain-gc-ca"
-            ) {
-                year
-                month
-                categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
-                    total
-                }
-            }
-        }
-        """,
-        as_user=user_read,
-    )
+    result = run(query=test_query, as_user=user_read,)
 
     if "errors" not in result:
         fail("Expected to error out, instead: {}".format(json(result)))
@@ -475,9 +321,9 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     Test to ensure that if domain does not exist it errors out
     """
     mocker.patch(
-        "schemas.dmarc_report_bar_graph.resolver.send_request",
+        "schemas.dmarc_report_detail_tables.resolver.send_request",
         autospec=True,
-        return_value=dmarc_report_bar_graph_data,
+        return_value=dmarc_report_detail_table_return_data,
     )
 
     super_admin = Users(
@@ -497,29 +343,7 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     )
     save(super_admin)
 
-    result = run(
-        query="""
-        {
-            getDmarcReportBarGraph (
-                domainSlug: "test-domain-gc-ca"
-            ) {
-                year
-                month
-                categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
-                    total
-                }
-            }
-        }
-        """,
-        as_user=super_admin,
-    )
+    result = run(query=test_query, as_user=super_admin,)
 
     if "errors" not in result:
         fail("Expected to error out, instead: {}".format(json(result)))

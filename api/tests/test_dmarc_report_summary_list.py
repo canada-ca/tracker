@@ -10,7 +10,11 @@ from models import (
     Users,
     User_affiliations,
 )
-from tests.testdata.get_dmarc_report_doughnut import api_return_data
+from tests.testdata.dmarc_report_summary_list import (
+    dmarc_report_summary_list_data,
+    dmarc_report_summary_list_expected_data,
+)
+
 from tests.test_functions import run, json
 
 
@@ -23,14 +27,14 @@ def save():
         cleanup()
 
 
-def test_valid_get_dmarc_report_doughnut_query_as_super_admin(save, mocker):
+def test_valid_get_dmarc_report_churro_chart_query_as_super_admin(save, mocker):
     """
     Test to see if super admins can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary_list.resolver.send_request",
         autospec=True,
-        return_value=api_return_data,
+        return_value=dmarc_report_summary_list_data,
     )
 
     org_one = Organizations(
@@ -61,21 +65,15 @@ def test_valid_get_dmarc_report_doughnut_query_as_super_admin(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummaryList (
                 domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
             ) {
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -87,35 +85,17 @@ def test_valid_get_dmarc_report_doughnut_query_as_super_admin(save, mocker):
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
-    expected_result = {
-        "data": {
-            "getDmarcReportDoughnut": {
-                "year": 2020,
-                "month": "May",
-                "categoryTotals": {
-                    "dmarcFailNone": 543,
-                    "spfFailDkimPass": 432,
-                    "spfPassDkimPass": 75,
-                    "spfPassDkimFail": 532,
-                    "dmarcFailQuarantine": 56,
-                    "dmarcFailReject": 74,
-                    "total": 1712,
-                },
-            }
-        }
-    }
-
-    assert result == expected_result
+    assert result == dmarc_report_summary_list_expected_data
 
 
-def test_valid_get_dmarc_report_doughnut_query_as_org_admin(save, mocker):
+def test_valid_get_dmarc_report_churro_chart_query_as_org_admin(save, mocker):
     """
     Test to see if org admins can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary_list.resolver.send_request",
         autospec=True,
-        return_value=api_return_data,
+        return_value=dmarc_report_summary_list_data,
     )
 
     org_admin = Users(
@@ -141,21 +121,15 @@ def test_valid_get_dmarc_report_doughnut_query_as_org_admin(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummaryList (
                 domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
             ) {
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -167,35 +141,17 @@ def test_valid_get_dmarc_report_doughnut_query_as_org_admin(save, mocker):
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
-    expected_result = {
-        "data": {
-            "getDmarcReportDoughnut": {
-                "year": 2020,
-                "month": "May",
-                "categoryTotals": {
-                    "dmarcFailNone": 543,
-                    "spfFailDkimPass": 432,
-                    "spfPassDkimPass": 75,
-                    "spfPassDkimFail": 532,
-                    "dmarcFailQuarantine": 56,
-                    "dmarcFailReject": 74,
-                    "total": 1712,
-                },
-            }
-        }
-    }
-
-    assert result == expected_result
+    assert result == dmarc_report_summary_list_expected_data
 
 
-def test_valid_get_dmarc_report_doughnut_query_as_user_write(save, mocker):
+def test_valid_get_dmarc_report_churro_chart_query_as_user_write(save, mocker):
     """
     Test to see if user write can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary_list.resolver.send_request",
         autospec=True,
-        return_value=api_return_data,
+        return_value=dmarc_report_summary_list_data,
     )
 
     user_write = Users(
@@ -221,21 +177,15 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_write(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummaryList (
                 domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
             ) {
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -247,35 +197,17 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_write(save, mocker):
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
-    expected_result = {
-        "data": {
-            "getDmarcReportDoughnut": {
-                "year": 2020,
-                "month": "May",
-                "categoryTotals": {
-                    "dmarcFailNone": 543,
-                    "spfFailDkimPass": 432,
-                    "spfPassDkimPass": 75,
-                    "spfPassDkimFail": 532,
-                    "dmarcFailQuarantine": 56,
-                    "dmarcFailReject": 74,
-                    "total": 1712,
-                },
-            }
-        }
-    }
-
-    assert result == expected_result
+    assert result == dmarc_report_summary_list_expected_data
 
 
-def test_valid_get_dmarc_report_doughnut_query_as_user_read(save, mocker):
+def test_valid_get_dmarc_report_churro_chart_query_as_user_read(save, mocker):
     """
     Test to see if user read can query any data
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary_list.resolver.send_request",
         autospec=True,
-        return_value=api_return_data,
+        return_value=dmarc_report_summary_list_data,
     )
 
     user_read = Users(
@@ -301,21 +233,15 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_read(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummaryList (
                 domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
             ) {
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -327,25 +253,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_read(save, mocker):
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
-    expected_result = {
-        "data": {
-            "getDmarcReportDoughnut": {
-                "year": 2020,
-                "month": "May",
-                "categoryTotals": {
-                    "dmarcFailNone": 543,
-                    "spfFailDkimPass": 432,
-                    "spfPassDkimPass": 75,
-                    "spfPassDkimFail": 532,
-                    "dmarcFailQuarantine": 56,
-                    "dmarcFailReject": 74,
-                    "total": 1712,
-                },
-            }
-        }
-    }
-
-    assert result == expected_result
+    assert result == dmarc_report_summary_list_expected_data
 
 
 def test_admin_from_different_org_cant_access_data(save, mocker):
@@ -353,9 +261,9 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     Test to ensure admins from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary_list.resolver.send_request",
         autospec=True,
-        return_value=api_return_data,
+        return_value=dmarc_report_summary_list_data,
     )
 
     org_one = Organizations(
@@ -386,21 +294,15 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummaryList (
                 domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
             ) {
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -421,9 +323,9 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     Test to ensure user write from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary_list.resolver.send_request",
         autospec=True,
-        return_value=api_return_data,
+        return_value=dmarc_report_summary_list_data,
     )
 
     org_one = Organizations(
@@ -454,21 +356,15 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummaryList (
                 domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
             ) {
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -489,9 +385,9 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     Test to ensure user read from different orgs cant access this information
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary_list.resolver.send_request",
         autospec=True,
-        return_value=api_return_data,
+        return_value=dmarc_report_summary_list_data,
     )
 
     org_one = Organizations(
@@ -522,21 +418,15 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummaryList (
                 domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
             ) {
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -557,9 +447,9 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     Test to ensure that if domain does not exist it errors out
     """
     mocker.patch(
-        "schemas.dmarc_report_doughnut.resolver.send_request",
+        "schemas.dmarc_report_summary_list.resolver.send_request",
         autospec=True,
-        return_value=api_return_data,
+        return_value=dmarc_report_summary_list_data,
     )
 
     super_admin = Users(
@@ -582,21 +472,15 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     result = run(
         query="""
         {
-            getDmarcReportDoughnut (
+            dmarcReportSummaryList (
                 domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
             ) {
                 year
                 month
                 categoryTotals {
-                    dmarcFailNone
-                    spfFailDkimPass
-                    spfPassDkimPass
-                    spfPassDkimFail
-                    dmarcFailQuarantine
-                    dmarcFailQuarantine
-                    dmarcFailReject
+                    fullPass
+                    partialPass
+                    fail
                     total
                 }
             }
@@ -609,4 +493,4 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
         fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, you do not have access to this domain."
+    assert error["message"] == "Error, domain cannot be found."

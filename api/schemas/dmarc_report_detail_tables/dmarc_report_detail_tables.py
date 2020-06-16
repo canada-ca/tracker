@@ -4,7 +4,7 @@ from scalars.year import Year
 from schemas.shared_structures.detail_tables import DetailTables
 
 
-class DmarcReportDetailedTables(graphene.ObjectType):
+class DmarcReportDetailTables(graphene.ObjectType):
     """
     GraphQL object for returning data for dmarc report tables
     """
