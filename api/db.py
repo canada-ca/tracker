@@ -11,7 +11,11 @@ DB_NAME = os.getenv("DB_NAME")
 
 engine = create_engine(
     f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
+    pool_size=10,
+    max_overflow=2,
+    pool_recycle=300,
     pool_pre_ping=True,
+    pool_use_lifo=True,
 )
 
 db_session = scoped_session(
