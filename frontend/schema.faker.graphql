@@ -281,7 +281,7 @@ type DmarcReportDetailTables {
   """
   The month in which the data is relevant to.
   """
-  month: String
+  month: PeriodEnums
 
   """
   The year in which the relevant to.
@@ -301,12 +301,12 @@ type DmarcReportSummary {
   """
   Which month is the data based on.
   """
-  month: String
+  month: PeriodEnums
 
   """
   Which year the data is from.
   """
-  year: Int
+  year: Year
 
   """
   Category totals for building dmarc report page doughnuts.
@@ -321,12 +321,12 @@ type DmarcReportSummaryList {
   """
   The month that the data is related to.
   """
-  month: String
+  month: PeriodEnums
 
   """
   The year that the data is related to.
   """
-  year: Int
+  year: Year @examples(values: [2019, 2020])
 
   """
   Category totals for building dmarc report page bar graph.
@@ -1172,7 +1172,7 @@ type Query {
     The slugified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug!
-  ): [DmarcReportSummaryList]
+  ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
   """
   A query object used to grab the data to create dmarc report bar graph.
   """
@@ -1181,7 +1181,7 @@ type Query {
     The slugified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug!
-  ): [DmarcReportSummaryList]
+  ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
   Query used for gathering data for dmarc report detail tables.
