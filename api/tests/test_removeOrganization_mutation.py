@@ -98,7 +98,7 @@ def test_mutation_removeOrganization_does_not_remove_super_admin_org(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, you cannot remove this organization"
+    assert message == "Error, unable to remove organization."
 
 
 def test_mutation_removeOrganization_fails_if_org_does_not_exist(save):
@@ -139,7 +139,7 @@ def test_mutation_removeOrganization_fails_if_org_does_not_exist(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, organization does not exist"
+    assert message == "Error, unable to remove organization."
 
 
 def test_mutation_removeOrganization_fails_for_admin_users(save):
@@ -178,7 +178,7 @@ def test_mutation_removeOrganization_fails_for_admin_users(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, you do not have permission to remove organizations."
+    assert message == "Error, unable to remove organization."
 
 
 def test_mutation_removeOrganization_fails_for_write_users(save):
@@ -220,7 +220,7 @@ def test_mutation_removeOrganization_fails_for_write_users(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, you do not have permission to remove organizations."
+    assert message == "Error, unable to remove organization."
 
 
 def test_mutation_removeOrganization_fails_for_read_users(save):
@@ -262,4 +262,4 @@ def test_mutation_removeOrganization_fails_for_read_users(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, you do not have permission to remove organizations."
+    assert message == "Error, unable to remove organization."

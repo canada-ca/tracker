@@ -164,7 +164,7 @@ def test_mutation_createOrganization_fails_for_write_users(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, you do not have permission to create organizations"
+    assert message == "Error, unable to create organization."
 
 
 def test_mutation_createOrganization_fails_for_admin_users(save):
@@ -202,7 +202,7 @@ def test_mutation_createOrganization_fails_for_admin_users(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, you do not have permission to create organizations"
+    assert message == "Error, unable to create organization."
 
 
 def test_mutation_createOrganization_fails_for_read_users(save):
@@ -249,7 +249,7 @@ def test_mutation_createOrganization_fails_for_read_users(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, you do not have permission to create organizations"
+    assert message == "Error, unable to create organization."
 
 
 def test_mutation_createOrganization_fails_for_admin_users(save):
@@ -287,4 +287,4 @@ def test_mutation_createOrganization_fails_for_admin_users(save):
     errors, data = result.values()
     [first] = errors
     message, _, _ = first.values()
-    assert message == "Error, you do not have permission to create organizations"
+    assert message == "Error, unable to create organization."

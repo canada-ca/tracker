@@ -114,4 +114,4 @@ def test_send_verification_email_mutation_user_cant_be_found(save):
         )
 
     [error] = result["errors"]
-    assert error["message"] == "Error, cannot find user."
+    assert error["message"] == "Error, unable to send verification email."

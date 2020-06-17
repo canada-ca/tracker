@@ -225,7 +225,7 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
         fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, you do not have access to this domain."
+    assert error["message"] == "Error, dmarc detail tables cannot be found."
 
 
 def test_user_write_from_different_org_cant_access_data(save, mocker):
@@ -269,7 +269,7 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
         fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, you do not have access to this domain."
+    assert error["message"] == "Error, dmarc detail tables cannot be found."
 
 
 def test_user_read_from_different_org_cant_access_data(save, mocker):
@@ -313,7 +313,7 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
         fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, you do not have access to this domain."
+    assert error["message"] == "Error, dmarc detail tables cannot be found."
 
 
 def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
@@ -349,4 +349,4 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
         fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, domain cannot be found."
+    assert error["message"] == "Error, dmarc detail tables cannot be found."

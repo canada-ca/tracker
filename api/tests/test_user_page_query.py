@@ -221,9 +221,7 @@ def test_admin_cant_see_user_in_different_org(save):
         fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, user does not belong to any of your organizations"
-    )
+    assert error["message"] == "Error, user cannot be found."
 
 
 # User Write Tests
@@ -283,10 +281,7 @@ def test_user_write_cant_see_user_in_same_org(save):
         fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"]
-        == "Error, you do not have permission to view this users information"
-    )
+    assert error["message"] == "Error, user cannot be found."
 
 
 def test_user_write_cant_see_user_in_different_org(save):
@@ -341,9 +336,7 @@ def test_user_write_cant_see_user_in_different_org(save):
         fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, user does not belong to any of your organizations"
-    )
+    assert error["message"] == "Error, user cannot be found."
 
 
 # User Read Tests
@@ -403,10 +396,7 @@ def test_user_read_cant_see_user_in_same_org(save):
         fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"]
-        == "Error, you do not have permission to view this users information"
-    )
+    assert error["message"] == "Error, user cannot be found."
 
 
 def test_user_read_cant_see_user_in_different_org(save):
@@ -461,9 +451,7 @@ def test_user_read_cant_see_user_in_different_org(save):
         fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, user does not belong to any of your organizations"
-    )
+    assert error["message"] == "Error, user cannot be found."
 
 
 def test_user_read_can_see_own_information(save):

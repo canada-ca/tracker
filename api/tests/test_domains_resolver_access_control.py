@@ -225,7 +225,7 @@ def test_get_domain_resolvers_by_url_super_admin_invalid_domain(save):
         fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, domain does not exist"
+    assert error["message"] == "Error, unable to find domain."
 
 
 def test_get_domain_resolvers_by_org_super_admin_org_no_domains(save):
@@ -273,7 +273,7 @@ def test_get_domain_resolvers_by_org_super_admin_org_no_domains(save):
         fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, no domains associated with that organization"
+    assert error["message"] == "Error, unable to find domains."
 
 
 def test_get_domain_resolvers_by_url_user_read_single_node(save):
@@ -426,7 +426,7 @@ def test_get_domain_resolvers_by_url_user_read_no_access(save):
         fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, you do not have permission to view that domain"
+    assert error["message"] == "Error, unable to find domain."
 
 
 def test_get_domain_resolvers_by_org_user_read_no_access(save):
@@ -477,10 +477,7 @@ def test_get_domain_resolvers_by_org_user_read_no_access(save):
         fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"]
-        == "Error, you do not have permission to view that organization"
-    )
+    assert error["message"] == "Error, unable to find domains."
 
 
 def test_get_domain_resolvers_by_url_user_read_invalid_domain(save):
@@ -520,7 +517,7 @@ def test_get_domain_resolvers_by_url_user_read_invalid_domain(save):
         fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, domain does not exist"
+    assert error["message"] == "Error, unable to find domain."
 
 
 def test_get_domain_resolvers_by_org_user_read_org_no_domains(save):
@@ -564,4 +561,4 @@ def test_get_domain_resolvers_by_org_user_read_org_no_domains(save):
         fail("Expected error, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, no domains associated with that organization"
+    assert error["message"] == "Error, unable to find domains."
