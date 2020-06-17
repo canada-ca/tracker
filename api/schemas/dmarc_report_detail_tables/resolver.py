@@ -96,7 +96,7 @@ def resolve_dmarc_report_detail_tables(self, info, **kwargs):
             )
 
         else:
-            raise GraphQLError("Error, domain cannot be found.")
+            raise GraphQLError("Error, dmarc detail tables cannot be found.")
     else:
         raise GraphQLError("Error, dmarc detail tables cannot be found.")
 
