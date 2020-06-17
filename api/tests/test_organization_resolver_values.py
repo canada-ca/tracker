@@ -52,38 +52,20 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
 
     result = run(
         """
-        {
-            organization(slug: "organization-1") {
-                edges {
-                    node {
-                        acronym
-                        name
-                        slug
-                        zone
-                        sector
-                        province
-                        city
-                        domains {
-                            edges {
-                                node {
-                                    url
-                                }
-                            }
-                        }
-                        affiliatedUsers {
-                            edges {
-                                node {
-                                    user {
-                                        displayName
-                                    }
-                                    permission
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+		{
+		  organization:findOrganizationDetailBySlug(slug: "organization-1") {
+			name
+			acronym
+			province
+			domains {
+			  edges {
+				node {
+				  url
+				}
+			  }
+			}
+		  }
+		}
         """,
         as_user=super_admin,
     )
@@ -91,38 +73,18 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
     expected_result = {
         "data": {
             "organization": {
-                "edges": [
-                    {
-                        "node": {
-                            "acronym": "ORG1",
-                            "name": "Organization 1",
-                            "slug": "organization-1",
-                            "zone": "Prov",
-                            "sector": "Banking",
-                            "province": "Alberta",
-                            "city": "Calgary",
-                            "domains": {
-                                "edges": [{"node": {"url": "somecooldomain.ca"}}]
-                            },
-                            "affiliatedUsers": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testsuperadmin"},
-                                            "permission": "SUPER_ADMIN",
-                                        }
-                                    },
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testuserread"},
-                                            "permission": "USER_READ",
-                                        }
-                                    },
-                                ]
-                            },
+                "name": "Organization 1",
+                "acronym": "ORG1",
+                "province": "Alberta",
+                "domains": {
+                    "edges": [
+                        {
+                            "node": {
+                                "url": "somecooldomain.ca"
+                            }
                         }
-                    }
-                ]
+                    ]
+                },
             }
         }
     }
@@ -403,38 +365,20 @@ def test_get_org_resolvers_by_org_user_read_single_node(save):
 
     result = run(
         """
-        {
-            organization(slug: "organization-1") {
-                edges {
-                    node {
-                        acronym
-                        name
-                        slug
-                        zone
-                        sector
-                        province
-                        city
-                        domains {
-                            edges {
-                                node {
-                                    url
-                                }
-                            }
-                        }
-                        affiliatedUsers {
-                            edges {
-                                node {
-                                    user {
-                                        displayName
-                                    }
-                                    permission
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+		{
+		  organization:findOrganizationDetailBySlug(slug: "organization-1") {
+			name
+			acronym
+			province
+			domains {
+			  edges {
+				node {
+				  url
+				}
+			  }
+			}
+		  }
+		}
         """,
         as_user=user,
     )
@@ -442,23 +386,18 @@ def test_get_org_resolvers_by_org_user_read_single_node(save):
     expected_result = {
         "data": {
             "organization": {
-                "edges": [
-                    {
-                        "node": {
-                            "acronym": "ORG1",
-                            "name": "Organization 1",
-                            "slug": "organization-1",
-                            "zone": "Prov",
-                            "sector": "Banking",
-                            "province": "Alberta",
-                            "city": "Calgary",
-                            "domains": {
-                                "edges": [{"node": {"url": "somecooldomain.ca"}}]
-                            },
-                            "affiliatedUsers": {"edges": []},
+                "name": "Organization 1",
+                "acronym": "ORG1",
+                "province": "Alberta",
+                "domains": {
+                    "edges": [
+                        {
+                            "node": {
+                                "url": "somecooldomain.ca",
+                            }
                         }
-                    }
-                ]
+                    ]
+                },
             }
         }
     }
