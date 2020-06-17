@@ -52,7 +52,7 @@ rules:
       - get
       - list
       - watch
-  - apiGroups: 
+  - apiGroups:
     - config.istio.io
     - networking.istio.io
     - authentication.istio.io
@@ -121,7 +121,7 @@ rules:
       - get
       - list
       - watch
-  - apiGroups: 
+  - apiGroups:
     - config.istio.io
     - networking.istio.io
     - authentication.istio.io
@@ -180,7 +180,7 @@ data:
     deployment:
       accessible_namespaces: ['**']
     login_token:
-      signing_key: "ussA6cftOq"
+      signing_key: "KbXC4fGXXh"
     server:
       port: 20001
       web_root: /kiali
@@ -188,10 +188,10 @@ data:
       istio:
         url_service_version: http://istiod.istio-system:15014/version
       tracing:
-        url: 
+        url:
         in_cluster_url: http://tracing/jaeger
       grafana:
-        url: 
+        url:
         in_cluster_url: http://grafana:3000
       prometheus:
         url: http://prometheus.istio-system:9090
@@ -950,7 +950,7 @@ spec:
           - name: MEMORY_MAX_TRACES
             value: "50000"
           - name: QUERY_BASE_PATH
-            value:  /jaeger 
+            value:  /jaeger
           livenessProbe:
             httpGet:
               path: /
@@ -965,7 +965,7 @@ spec:
           resources:
             requests:
               cpu: 10m
-      affinity:      
+      affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
@@ -997,7 +997,7 @@ spec:
               - key: beta.kubernetes.io/arch
                 operator: In
                 values:
-                - "s390x"      
+                - "s390x"
       volumes:
       - name: data
         emptyDir: {}
@@ -1357,6 +1357,68 @@ webhooks:
     # endpoint is ready.
     failurePolicy: Ignore
     sideEffects: None
+---
+
+
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: istiooperators.install.istio.io
+  labels:
+    release: istio
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.revision
+    description: Istio control plane revision
+    name: Revision
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    description: 'CreationTimestamp is a timestamp representing the server time when
+      this object was created. It is not guaranteed to be set in happens-before order
+      across separate operations. Clients may not set this value. It is represented
+      in RFC3339 form and is in UTC. Populated by the system. Read-only. Null for
+      lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata'
+    name: Age
+    type: date
+  group: install.istio.io
+  names:
+    kind: IstioOperator
+    plural: istiooperators
+    singular: istiooperator
+    shortNames:
+    - iop
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values.
+            More info: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase.
+            More info: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        spec:
+          description: 'Specification of the desired state of the istio control plane resource.
+            More info: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
+          type: object
+        status:
+          description: 'Status describes each of istio control plane component status at the current time.
+            0 means NONE, 1 means UPDATING, 2 means HEALTHY, 3 means ERROR, 4 means RECONCILING.
+            More info: https://github.com/istio/api/blob/master/operator/v1alpha1/istio.operator.v1alpha1.pb.html &
+            https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
+          type: object
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
 ---
 
 
@@ -6353,68 +6415,6 @@ spec:
       storage: true
 ---
 
-
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
-  name: istiooperators.install.istio.io
-  labels:
-    release: istio
-spec:
-  additionalPrinterColumns:
-  - JSONPath: .spec.revision
-    description: Istio control plane revision
-    name: Revision
-    type: string
-  - JSONPath: .metadata.creationTimestamp
-    description: 'CreationTimestamp is a timestamp representing the server time when
-      this object was created. It is not guaranteed to be set in happens-before order
-      across separate operations. Clients may not set this value. It is represented
-      in RFC3339 form and is in UTC. Populated by the system. Read-only. Null for
-      lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata'
-    name: Age
-    type: date
-  group: install.istio.io
-  names:
-    kind: IstioOperator
-    plural: istiooperators
-    singular: istiooperator
-    shortNames:
-    - iop
-  scope: Namespaced
-  subresources:
-    status: {}
-  validation:
-    openAPIV3Schema:
-      properties:
-        apiVersion:
-          description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values.
-            More info: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#resources'
-          type: string
-        kind:
-          description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase.
-            More info: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-          type: string
-        spec:
-          description: 'Specification of the desired state of the istio control plane resource.
-            More info: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
-          type: object
-        status:
-          description: 'Status describes each of istio control plane component status at the current time.
-            0 means NONE, 1 means UPDATING, 2 means HEALTHY, 3 means ERROR, 4 means RECONCILING.
-            More info: https://github.com/istio/api/blob/master/operator/v1alpha1/istio.operator.v1alpha1.pb.html &
-            https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
-          type: object
-  versions:
-  - name: v1alpha1
-    served: true
-    storage: true
----
-
 # Cni component is disabled.
 
 # EgressGateways istio-egressgateway component is disabled.
@@ -6737,9 +6737,6 @@ spec:
   - name: https
     port: 443
     targetPort: 8443
-  - name: tls
-    port: 15443
-    targetPort: 15443
   selector:
     app: istio-ingressgateway
     istio: ingressgateway
@@ -8403,36 +8400,6 @@ spec:
                       inline_string: "envoy.wasm.stats"
 ---
 
-
- apiVersion: v1
- kind: Service
- metadata:
-   annotations: null
-   labels:
-     app: istio-ingressgateway
-     istio: ingressgateway
-     release: istio
-   name: istio-ingressgateway
-   namespace: istio-system
- spec:
-   ports:
--  - name: status-port
--    port: 15021
--    targetPort: 15021
-   - name: http2
-     port: 80
-     targetPort: 8080
-   - name: https
-     port: 443
-     targetPort: 8443
--  - name: tls
--    port: 15443
--    targetPort: 15443
-   selector:
-     app: istio-ingressgateway
-     istio: ingressgateway
-   type: LoadBalancer
----
 # Policy component is disabled.
 
 # Telemetry component is disabled.
