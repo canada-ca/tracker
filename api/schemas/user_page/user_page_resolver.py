@@ -47,7 +47,7 @@ def resolve_user_page(self, info, **kwargs):
 
     # Check to see if user actually exists
     if req_user_orm is None:
-        raise GraphQLError("Error, user cannot be found")
+        raise GraphQLError("Error, user cannot be found.")
     else:
         req_user_id = req_user_orm.id
 
@@ -64,7 +64,7 @@ def resolve_user_page(self, info, **kwargs):
 
     # Check to ensure the user belongs to at least one organization
     if req_org_orms is None:
-        raise GraphQLError("Error, user does not belong to any organization")
+        raise GraphQLError("Error, user cannot be found.")
     else:
         # Compile list of org id's the user belongs to
         req_user_org_ids = []
@@ -90,11 +90,8 @@ def resolve_user_page(self, info, **kwargs):
                 # return
                 return query.filter(Users.id == req_user_id).first()
             else:
-                raise GraphQLError(
-                    "Error, you do not have permission to view this users"
-                    " information"
-                )
+                raise GraphQLError("Error, user cannot be found.")
 
     # Give error if requesting user and requested user do not share an org
     if user_check:
-        raise GraphQLError("Error, user does not belong to any of your organizations")
+        raise GraphQLError("Error, user cannot be found.")

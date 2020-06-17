@@ -45,7 +45,7 @@ class CreateDomain(graphene.Mutation):
 
         # Check to see if org acronym is SA Org
         if org_slug == "super-admin":
-            raise GraphQLError("Error, you cannot add a domain to this organization.")
+            raise GraphQLError("Error, unable to create domain.")
 
         # Check to see if org exists
         org_orm = (
@@ -55,14 +55,14 @@ class CreateDomain(graphene.Mutation):
         )
 
         if org_orm is None:
-            raise GraphQLError("Error, Organization does not exist.")
+            raise GraphQLError("Error, unable to create domain.")
         org_id = org_orm.id
 
         # Check to see if domain exists
         domain_orm = db_session.query(Domains).filter(Domains.domain == domain).first()
 
         if domain_orm is not None:
-            raise GraphQLError("Error, Domain already exists.")
+            raise GraphQLError("Error, unable to create domain.")
 
         if is_user_write(user_roles=user_roles, org_id=org_id):
             new_domain = Domains(
@@ -77,7 +77,4 @@ class CreateDomain(graphene.Mutation):
                 db_session.flush()
                 return CreateDomain(status=False)
         else:
-            raise GraphQLError(
-                "Error, you do not have permission to create a domain for "
-                "that organization"
-            )
+            raise GraphQLError("Error, unable to create domain.")

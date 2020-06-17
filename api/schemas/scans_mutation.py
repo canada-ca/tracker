@@ -42,7 +42,7 @@ class RequestScan(graphene.Mutation):
 
         # Check to make sure domain exists
         if domain_orm is None:
-            raise GraphQLError("Error, domain does not exist")
+            raise GraphQLError("Error, unable to request scan.")
 
         # Check to ensure user has admin rights
         org_id = domain_orm.organization_id
@@ -66,6 +66,4 @@ class RequestScan(graphene.Mutation):
 
         # If user doesn't have rights error out
         else:
-            raise GraphQLError(
-                "Error, you do not have permission to request a scan on " "that domain"
-            )
+            raise GraphQLError("Error, unable to request scan.")

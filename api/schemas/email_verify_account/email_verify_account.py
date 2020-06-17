@@ -42,7 +42,7 @@ class EmailVerifyAccount(graphene.Mutation):
         user = db_session.query(Users).filter(Users.user_name == user_name).first()
 
         if not user:
-            raise GraphQLError("Error, User does not exist")
+            raise GraphQLError("Error, unable to verify account.")
 
         user.verify_account()
 

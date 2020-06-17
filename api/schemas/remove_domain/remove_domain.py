@@ -39,7 +39,7 @@ class RemoveDomain(graphene.Mutation):
 
         # Check to see if domain exists
         if domain_orm is None:
-            raise GraphQLError("Error, domain does not exist.")
+            raise GraphQLError("Error, unable to remove domain.")
 
         # Check permissions
         if is_user_write(user_roles=user_roles, org_id=domain_orm.organization_id):
@@ -90,4 +90,4 @@ class RemoveDomain(graphene.Mutation):
                 db_session.flush()
                 return RemoveDomain(status=False)
         else:
-            raise GraphQLError("Error, you do not have permission to remove domains.")
+            raise GraphQLError("Error, unable to remove domain.")

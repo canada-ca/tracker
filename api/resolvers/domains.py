@@ -36,7 +36,7 @@ def resolve_domain(self: Domain, info, **kwargs):
 
     # If org cannot be found
     if not org_orm:
-        raise GraphQLError("Error, domain does not exist")
+        raise GraphQLError("Error, unable to find domain.")
     org_id = org_orm.id
 
     # Check if user has read access or higher to the requested organization
@@ -47,7 +47,7 @@ def resolve_domain(self: Domain, info, **kwargs):
             .all()
         )
     else:
-        raise GraphQLError("Error, you do not have permission to view that domain")
+        raise GraphQLError("Error, unable to find domain.")
 
     return query_rtn
 
@@ -73,7 +73,7 @@ def resolve_domains(self, info, **kwargs):
         org_ids.append(role["org_id"])
 
     if not org_ids:
-        raise GraphQLError("Error, you have not been assigned to any organization")
+        raise GraphQLError("Error, unable to find domains.")
 
     # Retrieve information based on query
     query = Domain.get_query(info)
@@ -88,7 +88,7 @@ def resolve_domains(self, info, **kwargs):
 
         # Check if org exists
         if not len(org_orms.all()):
-            raise GraphQLError("Error, no organization associated with that enum")
+            raise GraphQLError("Error, unable to find organization.")
 
         # Convert to int id
         org_id = org_orms.first().id
@@ -99,20 +99,16 @@ def resolve_domains(self, info, **kwargs):
 
             # If org has no domains related to it
             if not len(query_rtn):
-                raise GraphQLError(
-                    "Error, no domains associated with that organization"
-                )
+                raise GraphQLError("Error, unable to find domains.")
         else:
-            raise GraphQLError(
-                "Error, you do not have permission to view that organization"
-            )
+            raise GraphQLError("Error, unable to find domains.")
 
         return query_rtn
     else:
         if is_super_admin(user_roles=user_roles):
             query_rtn = query.all()
             if not query_rtn:
-                raise GraphQLError("Error, no domains to view")
+                raise GraphQLError("Error, unable to find domains.")
             return query_rtn
         else:
             query_rtr = []
@@ -122,5 +118,5 @@ def resolve_domains(self, info, **kwargs):
                     for item in tmp_query:
                         query_rtr.append(item)
             if not query_rtr:
-                raise GraphQLError("Error, no domains to display")
+                raise GraphQLError("Error, unable to find domains.")
             return query_rtr

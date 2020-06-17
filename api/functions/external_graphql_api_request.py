@@ -67,4 +67,4 @@ def send_request(api_domain, auth_token, variables: dict, query) -> dict:
                     "Error from dmarc-report-api: " + str(error_dict.get("message"))
                 )
         except ValueError as ve:
-            raise GraphQLError("Error, when querying dmarc-report-api: " + str(e))
+            raise GraphQLError("Error, when querying dmarc-report-api.")

@@ -34,16 +34,14 @@ def resolve_organization(self: Organization, info, **kwargs):
 
     # if org cannot be found
     if not org_orm:
-        raise GraphQLError("Error, organization does not exist")
+        raise GraphQLError("Error, unable to find organization.")
     org_id = org_orm.id
 
     # Check to ensure user has access to given org
     if is_user_read(user_roles=user_roles, org_id=org_id):
         query_rtn = query.filter(Organizations.slug == slug).first()
     else:
-        raise GraphQLError(
-            "Error, you do not have permission to view that organization"
-        )
+        raise GraphQLError("Error, unable to find organization.")
 
     return query_rtn
 
@@ -75,7 +73,7 @@ def resolve_organizations(self, info, **kwargs):
         query_rtn = query.all()
         # If no org can be matched
         if not len(query_rtn):
-            raise GraphQLError("Error, no organizations to view")
+            raise GraphQLError("Error, unable to find organizations.")
         return query_rtn
     # If user fails super admin check
     else:
@@ -86,5 +84,5 @@ def resolve_organizations(self, info, **kwargs):
                 tmp_query = query.filter(Organizations.id == org_id).first()
                 query_rtr.append(tmp_query)
         if not query_rtr:
-            raise GraphQLError("Error, no organizations to display")
+            raise GraphQLError("Error, unable to find organizations.")
         return query_rtr

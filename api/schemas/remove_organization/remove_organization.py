@@ -39,7 +39,7 @@ class RemoveOrganization(graphene.Mutation):
 
         # Restrict the deletion of SA Org
         if slug == "super-admin":
-            raise GraphQLError("Error, you cannot remove this organization")
+            raise GraphQLError("Error, unable to remove organization.")
 
         # Check to see if org exists
         org_orm = (
@@ -47,7 +47,7 @@ class RemoveOrganization(graphene.Mutation):
         )
 
         if org_orm is None:
-            raise GraphQLError("Error, organization does not exist")
+            raise GraphQLError("Error, unable to remove organization.")
 
         # Check Permissions
         if is_super_admin(user_roles=user_roles):
@@ -124,6 +124,4 @@ class RemoveOrganization(graphene.Mutation):
                 db_session.flush()
                 return RemoveOrganization(status=False)
         else:
-            raise GraphQLError(
-                "Error, you do not have permission to remove organizations."
-            )
+            raise GraphQLError("Error, unable to remove organization.")

@@ -56,7 +56,7 @@ class CreateOrganization(graphene.Mutation):
             )
 
             if org_orm is not None:
-                raise GraphQLError("Error, Organization already exists")
+                raise GraphQLError("Error, unable to create organization.")
 
             # Generate org tags
             org_tags = {
@@ -81,6 +81,4 @@ class CreateOrganization(graphene.Mutation):
                 db_session.flush()
                 return CreateOrganization(status=False)
         else:
-            raise GraphQLError(
-                "Error, you do not have permission to create organizations"
-            )
+            raise GraphQLError("Error, unable to create organization.")

@@ -53,7 +53,7 @@ class UpdateOrganization(graphene.Mutation):
 
             # Restrict the deletion of SA Org
             if slug == "super-admin":
-                raise GraphQLError("Error, you cannot modify this organization")
+                raise GraphQLError("Error, unable to update organization.")
 
             # Get requested org orm
             org_orm = (
@@ -64,7 +64,7 @@ class UpdateOrganization(graphene.Mutation):
 
             # Check to see if org exists
             if org_orm is None:
-                raise GraphQLError("Error, organization does not exist.")
+                raise GraphQLError("Error, unable to update organization.")
 
             # Check to see if organization slug already in use
             update_org_orm = (
@@ -75,7 +75,7 @@ class UpdateOrganization(graphene.Mutation):
             )
 
             if update_org_orm is not None:
-                raise GraphQLError("Error, organization info already in use.")
+                raise GraphQLError("Error, unable to update organization.")
 
             # Update orm
             org_orm.slug = (
@@ -102,6 +102,4 @@ class UpdateOrganization(graphene.Mutation):
                 db_session.flush()
                 return UpdateOrganization(status=False)
         else:
-            raise GraphQLError(
-                "Error, you do not have permission to update organizations"
-            )
+            raise GraphQLError("Error, unable to update organization.")

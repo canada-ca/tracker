@@ -45,7 +45,7 @@ class UpdateDomain(graphene.Mutation):
         domain_orm = Domains.query.filter(Domains.domain == current_domain).first()
 
         if domain_orm is None:
-            raise GraphQLError("Error, domain does not exist.")
+            raise GraphQLError("Error, unable to update domain.")
 
         if is_user_write(user_roles=user_roles, org_id=domain_orm.organization_id):
             Domains.query.filter(Domains.domain == current_domain).update(
@@ -64,6 +64,4 @@ class UpdateDomain(graphene.Mutation):
                 db_session.flush()
                 return UpdateDomain(status=False)
         else:
-            raise GraphQLError(
-                "Error, you do not have permission to edit domains belonging to another organization"
-            )
+            raise GraphQLError("Error, unable to update domain.")
