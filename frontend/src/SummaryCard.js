@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Text, Stack, Box } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { string, object, bool } from 'prop-types'
+import { string, object } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 import theme from './theme/canada'
 
@@ -97,7 +97,9 @@ function SummaryCard({ ...props }) {
             >
               {`${
                 strengthValues.name
-              }: ${strengthValues.value.toLocaleString()} - ${strengthValues.percent}% `}
+              }: ${strengthValues.value.toLocaleString()} - ${
+                strengthValues.percent
+              }% `}
             </Text>
           )
         })}

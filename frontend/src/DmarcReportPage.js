@@ -11,7 +11,6 @@ import DmarcTimeGraph from './DmarcTimeGraph'
 import { Box, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { Trans } from '@lingui/macro'
-import { Layout } from './Layout'
 
 export function DmarcReportPage() {
   const { currentUser } = useUserState()
@@ -51,7 +50,7 @@ export function DmarcReportPage() {
         authorization: currentUser.jwt,
       },
     },
-    variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020  },
+    variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020 },
   })
 
   if (tableLoading || summaryLoading || barLoading) return <p>Loading...</p>
