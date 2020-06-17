@@ -59,9 +59,9 @@ export const QUERY_USER = gql`
   }
 `
 
-export const GET_DMARC_REPORT_CHURRO_CHART = gql`
-  query GetDmarcReportChurroChart($domainSlug: Slug!) {
-    getDmarcReportChurroChart(domainSlug: $domainSlug) {
+export const DMARC_REPORT_SUMMARY_LIST = gql`
+  query DmarcReportSummaryList($domainSlug: Slug!) {
+    dmarcReportSummaryList(domainSlug: $domainSlug) {
       month
       year
       categoryTotals {
@@ -74,13 +74,28 @@ export const GET_DMARC_REPORT_CHURRO_CHART = gql`
   }
 `
 
-export const GET_DMARC_REPORT_DOUGHNUT = gql`
-  query GetDmarcReportDoughnut(
+export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
+  query DemoDmarcReportSummaryList($domainSlug: Slug!) {
+    demoDmarcReportSummaryList(domainSlug: $domainSlug) {
+      month
+      year
+      categoryTotals {
+        fullPass
+        partialPass
+        fail
+        total
+      }
+    }
+  }
+`
+
+export const DMARC_REPORT_SUMMARY = gql`
+  query DmarcReportSummary(
     $domainSlug: Slug!
     $period: PeriodEnums!
     $year: Year!
   ) {
-    getDmarcReportDoughnut(
+    dmarcReportSummary(
       domainSlug: $domainSlug
       period: $period
       year: $year
@@ -97,13 +112,115 @@ export const GET_DMARC_REPORT_DOUGHNUT = gql`
   }
 `
 
-export const GET_DMARC_REPORT_DETAILED_TABLES = gql`
-  query GetDmarcReportDetailedTables(
-    $domainSlug: Slug
-    $period: PeriodEnums
-    $year: Year
+export const DEMO_DMARC_REPORT_SUMMARY = gql`
+  query DemoDmarcReportSummary(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
   ) {
-    getDmarcReportDetailedTables(
+    demoDmarcReportSummary(
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
+    ) {
+      month
+      year
+      categoryTotals {
+        fullPass
+        partialPass
+        fail
+        total
+      }
+    }
+  }
+`
+
+export const DMARC_REPORT_DETAIL_TABLES = gql`
+  query DmarcReportDetailTables(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
+  ) {
+    dmarcReportDetailTables(
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
+    ) {
+      month
+      year
+      detailTables {
+        fullPass {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+          dkimDomains
+          dkimSelectors
+        }
+        spfFailure {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+        }
+        spfMisaligned {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+        }
+        dkimFailure {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          dkimDomains
+          dkimSelectors
+        }
+        dkimMisaligned {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          dkimDomains
+          dkimSelectors
+        }
+        dmarcFailure {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+          dkimDomains
+          dkimSelectors
+        }
+      }
+    }
+  }
+`
+
+export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
+  query DemoDmarcReportDetailTables(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
+  ) {
+    demoDmarcReportDetailTables(
       domainSlug: $domainSlug
       period: $period
       year: $year

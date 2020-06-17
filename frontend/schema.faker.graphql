@@ -274,39 +274,63 @@ type DMARC {
   dmarcGuidanceTags: [String]
 }
 
-"""GraphQL object for returning data for dmarc report tables"""
+"""
+GraphQL object for returning data for dmarc report tables
+"""
 type DmarcReportDetailTables {
-  """The month in which the data is relevant to."""
+  """
+  The month in which the data is relevant to.
+  """
   month: String
 
-  """The year in which the relevant to."""
+  """
+  The year in which the relevant to.
+  """
   year: Year
 
-  """The details used in creating tables for the dmarc report page"""
+  """
+  The details used in creating tables for the dmarc report page
+  """
   detailTables: DetailTables
 }
 
-"""A query object used to grab the data to create dmarc report doughnuts"""
+"""
+A query object used to grab the data to create dmarc report doughnuts
+"""
 type DmarcReportSummary {
-  """Which month is the data based on."""
+  """
+  Which month is the data based on.
+  """
   month: String
 
-  """Which year the data is from."""
+  """
+  Which year the data is from.
+  """
   year: Int
 
-  """Category totals for building dmarc report page doughnuts."""
+  """
+  Category totals for building dmarc report page doughnuts.
+  """
   categoryTotals: CategoryTotals
 }
 
-"""A query object used to grab the data to create dmarc report bar graph"""
+"""
+A query object used to grab the data to create dmarc report bar graph
+"""
 type DmarcReportSummaryList {
-  """The month that the data is related to."""
+  """
+  The month that the data is related to.
+  """
   month: String
 
-  """The year that the data is related to."""
+  """
+  The year that the data is related to.
+  """
   year: Int
 
-  """Category totals for building dmarc report page bar graph."""
+  """
+  Category totals for building dmarc report page bar graph.
+  """
   categoryTotals: CategoryTotals
 }
 
@@ -740,10 +764,14 @@ type Mutation {
     """
     orgSlug: Slug!
 
-    """DKIM selector strings corresponding to this domain"""
+    """
+    DKIM selector strings corresponding to this domain
+    """
     selectors: Selectors
 
-    """URL that you would like to be added to database."""
+    """
+    URL that you would like to be added to database.
+    """
     url: URL!
   ): CreateDomain
 
@@ -761,7 +789,9 @@ type Mutation {
     """
     updatedSelectors: Selectors
 
-    """The new domain you wish to update the current domain to be."""
+    """
+    The new domain you wish to update the current domain to be.
+    """
     updatedUrl: URL!
   ): UpdateDomain
 
@@ -838,7 +868,6 @@ type Mutation {
     Email address that the user will use to authenticate with
     """
     userName: EmailAddress!
-
   ): SignUp
 
   """
@@ -1154,51 +1183,83 @@ type Query {
     domainSlug: Slug!
   ): [DmarcReportSummaryList]
 
-  """Query used for gathering data for dmarc report detail tables."""
+  """
+  Query used for gathering data for dmarc report detail tables.
+  """
   dmarcReportDetailTables(
-    """The slugified version of the domain you wish to retrieve data for."""
+    """
+    The slugified version of the domain you wish to retrieve data for.
+    """
     domainSlug: Slug!
 
-    """The period in which the returned data is relevant to."""
+    """
+    The period in which the returned data is relevant to.
+    """
     period: PeriodEnums!
 
-    """The year in which the returned data is relevant to."""
+    """
+    The year in which the returned data is relevant to.
+    """
     year: Year!
   ): DmarcReportDetailTables
 
-  """Query used for gathering data for dmarc report detail tables."""
+  """
+  Query used for gathering data for dmarc report detail tables.
+  """
   demoDmarcReportDetailTables(
-    """The slugified version of the domain you wish to retrieve data for."""
+    """
+    The slugified version of the domain you wish to retrieve data for.
+    """
     domainSlug: Slug!
 
-    """The period in which the returned data is relevant to."""
+    """
+    The period in which the returned data is relevant to.
+    """
     period: PeriodEnums!
 
-    """The year in which the returned data is relevant to."""
+    """
+    The year in which the returned data is relevant to.
+    """
     year: Year!
   ): DmarcReportDetailTables
 
-  """A query object used to grab the data to create dmarc report doughnuts"""
+  """
+  A query object used to grab the data to create dmarc report doughnuts
+  """
   dmarcReportSummary(
-    """The slugified version of the domain you wish to retrieve data for."""
+    """
+    The slugified version of the domain you wish to retrieve data for.
+    """
     domainSlug: Slug!
 
-    """The period in which the returned data is relevant to."""
+    """
+    The period in which the returned data is relevant to.
+    """
     period: PeriodEnums!
 
-    """The year in which the returned data is relevant to."""
+    """
+    The year in which the returned data is relevant to.
+    """
     year: Year!
   ): DmarcReportSummary
 
-  """A query object used to grab the data to create dmarc report doughnuts"""
+  """
+  A query object used to grab the data to create dmarc report doughnuts
+  """
   demoDmarcReportSummary(
-    """The slugified version of the domain you wish to retrieve data for."""
+    """
+    The slugified version of the domain you wish to retrieve data for.
+    """
     domainSlug: Slug!
 
-    """The period in which the returned data is relevant to."""
+    """
+    The period in which the returned data is relevant to.
+    """
     period: PeriodEnums!
 
-    """The year in which the returned data is relevant to."""
+    """
+    The year in which the returned data is relevant to.
+    """
     year: Year!
   ): DmarcReportSummary
 
@@ -1359,10 +1420,6 @@ This mutation is used to send a domain to the scanners to be scanned
 type RequestScan {
   status: String
 }
-"""
-A field that conforms to a list of strings
-"""
-scalar Selectors
 
 enum RoleEnums {
   """
@@ -1386,7 +1443,9 @@ enum RoleEnums {
   SUPER_ADMIN
 }
 
-"""A field that conforms to a list of strings"""
+"""
+A field that conforms to a list of strings
+"""
 scalar Selectors
 
 """
@@ -1531,22 +1590,34 @@ type SPFTags {
     )
 }
 
-"""SSL Scan Object"""
+"""
+SSL Scan Object
+"""
 type SSL {
-  """The ID of the object"""
+  """
+  The ID of the object
+  """
   id: ID
 
-  """The domain the scan was run on"""
+  """
+  The domain the scan was run on
+  """
   domain: URL
 
-  """The time the scan was initiated"""
+  """
+  The time the scan was initiated
+  """
   timestamp: DateTime
 
-  """Key tags found during scan"""
+  """
+  Key tags found during scan
+  """
   sslGuidanceTags: [String]
 }
 
-"""This class handles the inner nested dict given by key: 'template'. """
+"""
+This class handles the inner nested dict given by key: 'template'.
+"""
 type Template {
   id: String
   uri: String

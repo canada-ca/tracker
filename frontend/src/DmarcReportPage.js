@@ -2,9 +2,9 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
 import {
-  GET_DMARC_REPORT_CHURRO_CHART,
-  GET_DMARC_REPORT_DOUGHNUT,
-  GET_DMARC_REPORT_DETAILED_TABLES,
+  DEMO_DMARC_REPORT_DETAIL_TABLES,
+  DEMO_DMARC_REPORT_SUMMARY,
+  DEMO_DMARC_REPORT_SUMMARY_LIST,
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcTimeGraph'
@@ -17,10 +17,10 @@ export function DmarcReportPage() {
   const { currentUser } = useUserState()
 
   const {
-    loading: doughnutLoading,
-    error: doughnutError,
-    data: doughnutData,
-  } = useQuery(GET_DMARC_REPORT_DOUGHNUT, {
+    loading: summaryLoading,
+    error: summaryError,
+    data: summaryData,
+  } = useQuery(DEMO_DMARC_REPORT_SUMMARY, {
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -30,7 +30,7 @@ export function DmarcReportPage() {
   })
 
   const { loading: barLoading, error: barError, data: barData } = useQuery(
-    GET_DMARC_REPORT_CHURRO_CHART,
+    DEMO_DMARC_REPORT_SUMMARY_LIST,
     {
       context: {
         headers: {
@@ -45,18 +45,18 @@ export function DmarcReportPage() {
     loading: tableLoading,
     error: tableError,
     data: tableData,
-  } = useQuery(GET_DMARC_REPORT_DETAILED_TABLES, {
+  } = useQuery(DEMO_DMARC_REPORT_DETAIL_TABLES, {
     context: {
       headers: {
         authorization: currentUser.jwt,
       },
     },
-    variables: { domain: 'cyber.gc.ca' },
+    variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020  },
   })
 
-  if (tableLoading || doughnutLoading || barLoading) return <p>Loading...</p>
+  if (tableLoading || summaryLoading || barLoading) return <p>Loading...</p>
   // TODO: Properly handle these errors
-  if (tableError || doughnutError || barError) return <p>Error</p>
+  if (tableError || summaryError || barError) return <p>Error</p>
 
   const strengths = {
     strong: {
@@ -75,17 +75,18 @@ export function DmarcReportPage() {
 
   // TODO: reportCardData.strengths and formattedBarData.strengths reference
   //  the same object, is this okay?
-  const reportCardData = doughnutData.getDmarcReportDoughnut
+  const reportCardData = summaryData.demoDmarcReportSummary
   reportCardData.strengths = strengths
 
   const formattedBarData = {
-    periods: barData.getDmarcReportChurroChart.map((entry) => {
+    periods: barData.demoDmarcReportSummaryList.map((entry) => {
       return { month: entry.month, year: entry.year, ...entry.categoryTotals }
     }),
   }
   formattedBarData.strengths = strengths
 
-  const detailTablesData = tableData.getDmarcReportDetailedTables.detailTables
+  const detailTablesData = tableData.demoDmarcReportDetailTables.detailTables
+
   const fullPassData = detailTablesData.fullPass
   const spfFailureData = detailTablesData.spfFailure
   const spfMisalignedData = detailTablesData.spfMisaligned

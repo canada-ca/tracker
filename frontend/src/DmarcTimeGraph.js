@@ -67,7 +67,6 @@ function DmarcTimeGraph({ ...props }) {
           }}
           stackOffset="expand"
         >
-        >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" padding={{ left: 5, right: 5 }} />
           <YAxis
