@@ -114,7 +114,7 @@ def test_domain_creation_super_admin_cant_create_in_sa_org(save):
         fail("Expected to generate error, instead: {}".format(json(create_result)))
 
     [error] = create_result["errors"]
-    assert error["message"] == "Error, you cannot add a domain to this organization."
+    assert error["message"] == "Error, unable to create domain."
 
 
 def test_domain_creation_org_admin(save):
@@ -213,10 +213,7 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save):
         fail("Expected to generate error, instead: {}".format(json(create_result)))
 
     [error] = create_result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to create a "
-        "domain for that organization"
-    )
+    assert error["message"] == "Error, unable to create domain."
 
 
 def test_domain_creation_user_write(save):
@@ -315,10 +312,7 @@ def test_domain_creation_user_write_cant_create_in_different_org(save):
         fail("Expected to generate error, instead: {}".format(json(create_result)))
 
     [error] = create_result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to create a "
-        "domain for that organization"
-    )
+    assert error["message"] == "Error, unable to create domain."
 
 
 def test_domain_creation_user_read_cant_create_domain(save):
@@ -358,7 +352,4 @@ def test_domain_creation_user_read_cant_create_domain(save):
         fail("Expected to generate error, instead: {}".format(json(create_result)))
 
     [error] = create_result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to create a "
-        "domain for that organization"
-    )
+    assert error["message"] == "Error, unable to create domain."
