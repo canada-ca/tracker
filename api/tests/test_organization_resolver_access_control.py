@@ -40,15 +40,11 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
     save(super_admin)
     result = run(
         query="""
-        {
-            organization(slug: "org1") {
-                edges {
-                    node {
-                        acronym
-                    }
-                }
-            }
-        }
+		{
+		  organization:findOrganizationDetailBySlug(slug: "org1") {
+			acronym
+		  }
+		}
         """,
         as_user=super_admin,
     )
@@ -57,7 +53,7 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
         fail("Tried to select org, instead: {}".format(json(result)))
 
     expected_result = {
-        "data": {"organization": {"edges": [{"node": {"acronym": "ORG1"}}]}}
+        "data": {"organization": {"acronym": "ORG1"}}
     }
 
     assert result == expected_result
@@ -202,15 +198,11 @@ def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
 
     result = run(
         query="""
-        {
-            organization(slug: "org2") {
-                edges {
-                    node {
-                        name
-                    }
-                }
-            }
-        }
+		{
+		  organization:findOrganizationDetailBySlug(slug: "org2") {
+			name
+		  }
+		}
         """,
         as_user=reader,
     )
