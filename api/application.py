@@ -10,7 +10,6 @@ add_graphql_endpoint(app)
 
 @app.before_first_request
 def setup_super_admin():
-    print("Creating Super Admin User")
     create_sa()
 
 
