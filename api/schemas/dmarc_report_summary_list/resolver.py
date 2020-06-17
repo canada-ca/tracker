@@ -112,7 +112,7 @@ def resolve_dmarc_report_summary_list(self, info, **kwargs):
             return rtr_list
 
         else:
-            raise GraphQLError("Error, dmarc report summary list cannot be found.")
+            raise GraphQLError("Error, domain cannot be found.")
     else:
         raise GraphQLError("Error, dmarc report summary list cannot be found.")
 
