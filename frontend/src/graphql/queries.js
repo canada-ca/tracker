@@ -76,7 +76,7 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
 
 export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
   query DemoDmarcReportSummaryList($domainSlug: Slug!) {
-    demoDmarcReportSummaryList(domainSlug: $domainSlug) {
+    dmarcReportSummaryList(domainSlug: $domainSlug) {
       month
       year
       categoryTotals {
@@ -118,7 +118,7 @@ export const DEMO_DMARC_REPORT_SUMMARY = gql`
     $period: PeriodEnums!
     $year: Year!
   ) {
-    demoDmarcReportSummary(
+    dmarcReportSummary(
       domainSlug: $domainSlug
       period: $period
       year: $year
@@ -220,7 +220,7 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
     $period: PeriodEnums!
     $year: Year!
   ) {
-    demoDmarcReportDetailTables(
+    dmarcReportDetailTables(
       domainSlug: $domainSlug
       period: $period
       year: $year
