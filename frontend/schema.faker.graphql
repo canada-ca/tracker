@@ -92,7 +92,6 @@ type CategoryTotals {
   """
   total: Int
 }
-
 """
 This class handles the inner nested dict given by key: 'content'.
 """
@@ -177,17 +176,14 @@ type DKIM {
   ID of the object
   """
   id: ID
-
   """
   The domain the scan was run on
   """
   domain: URL @fake(type: domainName)
-
   """
   Time when scan was initiated
   """
   timestamp: DateTime @fake(type: pastDate)
-
   """
   DKIM record retrieved during the scan of the given domain
   """
@@ -197,18 +193,15 @@ type DKIM {
         "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3rvAQg9bl72tae1RFu4zdx1ZE4E8VUbQfxDcm;"
       ]
     )
-
   """
   Length of DKIM public key
   """
   keyLength: String @examples(values: ["sub1024", "1024", "2048", "2048plus"])
-
   """
   Key tags found during scan
   """
   dkimGuidanceTags: [String]
 }
-
 """
 DKIM report results
 """
@@ -217,18 +210,15 @@ type DkimReport {
   DKIM domain
   """
   domain: String
-
   """
   Selector used for DKIM authentication
   """
   selector: String
-
   """
   DKIM raw result
   """
   result: String
 }
-
 """
 Domain-based Message Authentication, Reporting, and Conformance
 (DMARC) is a scalable mechanism by which a mail-originating
@@ -241,22 +231,18 @@ type DMARC {
   ID of the object
   """
   id: ID
-
   """
   The domain the scan was run on
   """
   domain: URL @fake(type: domainName)
-
   """
   Time when scan was initiated
   """
   timestamp: DateTime @fake(type: pastDate)
-
   """
   DMARC Phase found when running scan
   """
   dmarcPhase: Int
-
   """
   DMARC record retrieved during the scan of the given domain
   """
@@ -267,19 +253,16 @@ type DMARC {
         "v=DMARC1; p=none; sp=none; rua=mailto:dmarc@cyber.gc.ca"
       ]
     )
-
   """
   The requested policy you wish mailbox providers to apply when your email fails DMARC authentication and alignment checks.
   """
   pPolicy: String @examples(values: ["none", "missing", "quarantine", "reject"])
-
   """
   This tag is used to indicate a requested policy for all subdomains where mail
   is failing the DMARC authentication and alignment checks.
   """
   spPolicy: String
     @examples(values: ["none", "missing", "quarantine", "reject"])
-
   """
   The percentage of messages to which the DMARC policy is to be applied.
   """
@@ -289,30 +272,6 @@ type DMARC {
   Key tags found during DMARC Scan
   """
   dmarcGuidanceTags: [String]
-}
-
-"""A query object used to grab the data to create dmarc report bar graph"""
-type DmarcReportSummaryList {
-  """The month that the data is related to."""
-  month: String
-
-  """The year that the data is related to."""
-  year: Int
-
-  """Category totals for building dmarc report page bar graph."""
-  categoryTotals: CategoryTotals
-}
-
-type DmarcReportConnection {
-  """
-  Pagination data for this connection.
-  """
-  pageInfo: PageInfo!
-
-  """
-  Contains the nodes in this connection.
-  """
-  edges: [DmarcReportEdge]!
 }
 
 """GraphQL object for returning data for dmarc report tables"""
@@ -339,6 +298,70 @@ type DmarcReportSummary {
   categoryTotals: CategoryTotals
 }
 
+"""A query object used to grab the data to create dmarc report bar graph"""
+type DmarcReportSummaryList {
+  """The month that the data is related to."""
+  month: String
+
+  """The year that the data is related to."""
+  year: Int
+
+  """Category totals for building dmarc report page bar graph."""
+  categoryTotals: CategoryTotals
+}
+
+"""
+Generated DMARC Aggregated Report's
+"""
+type DmarcReport implements Node {
+  """
+  The ID of the object.
+  """
+  id: ID!
+  """
+  ID of the report.
+  """
+  reportId: String @examples(values: ["example.com:1538463741"])
+  """
+  The organization name the report was generated from.
+  """
+  orgName: String @examples(values: ["accurateplastics.com"])
+  """
+  The organization email name the report was generated from.
+  """
+  orgEmail: String @examples(values: ["administrator@accurateplastics.com"])
+  """
+  Start date & time of aggregate report
+  """
+  startDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
+  """
+  End date & time of aggregate report
+  """
+  endDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
+  """
+  Errors that occurred during the report generation
+  """
+  errors: [String]
+  """
+  DMARC published policies
+  """
+  policyPublished: PolicyPublished
+  """
+  Aggregate report records
+  """
+  records: [Record]
+}
+
+type DmarcReportConnection {
+  """
+  Pagination data for this connection.
+  """
+  pageInfo: PageInfo!
+  """
+  Contains the nodes in this connection.
+  """
+  edges: [DmarcReportEdge]!
+}
 """
 A Relay edge containing a `DmarcReport` and its cursor.
 """
@@ -400,13 +423,7 @@ type Domain implements Node {
   """
   DKIM, DMARC, and SPF scan results
   """
-  mail(
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): MailScanConnection
-
+  mail(before: String, after: String, first: Int, last: Int): MailScanConnection
   """
   HTTPS, and SSL scan results
   """
@@ -424,7 +441,6 @@ type Domain implements Node {
     last: Int
   ): DmarcReportConnection
 }
-
 type DomainConnection {
   """
   Pagination data for this connection.
@@ -436,7 +452,6 @@ type DomainConnection {
   """
   edges: [DomainEdge]!
 }
-
 """
 A Relay edge containing a `Domain` and its cursor.
 """
@@ -445,7 +460,6 @@ type DomainEdge {
   The item at the end of the edge
   """
   node: Domain
-
   """
   A cursor for use in pagination
   """
@@ -531,7 +545,9 @@ type EmailVerifyAccount {
   status: Boolean
 }
 
-"""Http Scan Object"""
+"""
+Http Scan Object
+"""
 type HTTPS {
   """
   The ID of the object
@@ -548,16 +564,24 @@ type HTTPS {
   """
   timestamp: DateTime
 
-  """State of the HTTPS implementation on the server and any issues therein"""
+  """
+  State of the HTTPS implementation on the server and any issues therein
+  """
   implementation: String
 
-  """Degree to which HTTPS is enforced on the server based on behaviour"""
+  """
+  Degree to which HTTPS is enforced on the server based on behaviour
+  """
   enforced: String
 
-  """Presence and completeness of HSTS implementation"""
+  """
+  Presence and completeness of HSTS implementation
+  """
   hsts: String
 
-  """Denotes how long the domain should only be accessed using HTTPS"""
+  """
+  Denotes how long the domain should only be accessed using HTTPS
+  """
   hstsAge: String
 
   """
@@ -565,7 +589,9 @@ type HTTPS {
   """
   preloaded: String
 
-  """Key tags found during scan"""
+  """
+  Key tags found during scan
+  """
   httpsGuidanceTags: [String]
 }
 
@@ -601,53 +627,9 @@ enum LanguageEnums {
   FRENCH
 }
 
-"""Results of DKIM, DMARC, and SPF scans, on domains"""
-type MailScan implements Node {
-  """DMARC implementation phase detected when running scan"""
-  dmarcPhase: Int
-
-  """List of DKIM selector strings to scan"""
-  selectors: [String]
-
-  """The domain the scan was run on"""
-  domain: URL
-
-  """The ID of the object."""
-  id: ID!
-
-  """The time the scan was initiated"""
-  timestamp: DateTime
-
-  """
-  Domain-based Message Authentication, Reporting, and Conformance (DMARC)
-  """
-  dmarc: DMARC
-
-  """Sender Policy Framework (SPF) for Authorizing Use of Domains in Email """
-  spf: SPF
-
-  """DomainKeys Identified Mail (DKIM) Signatures"""
-  dkim: DKIM
-}
-
-type MailScanConnection {
-  """Pagination data for this connection."""
-  pageInfo: PageInfo!
-
-  """Contains the nodes in this connection."""
-  edges: [MailScanEdge]!
-}
-
-"""A Relay edge containing a `MailScan` and its cursor."""
-type MailScanEdge {
-  """The item at the end of the edge"""
-  node: MailScan
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
-"""The central gathering point for all of the GraphQL mutations."""
+"""
+The central gathering point for all of the GraphQL mutations.
+"""
 type Mutation {
   updatePassword(
     confirmPassword: String!
@@ -774,7 +756,9 @@ type Mutation {
     """
     currentUrl: URL!
 
-    """The new DKIM selector strings corresponding to this domain"""
+    """
+    The new DKIM selector strings corresponding to this domain
+    """
     updatedSelectors: Selectors
 
     """The new domain you wish to update the current domain to be."""
@@ -1151,15 +1135,22 @@ type PolicyPublished {
 The central gathering point for all of the GraphQL queries.
 """
 type Query {
-  """A query object used to grab the data to create dmarc report bar graph."""
+  """
+  A query object used to grab the data to create dmarc report bar graph.
+  """
   dmarcReportSummaryList(
-    """The slugified version of the domain you wish to retrieve data for."""
+    """
+    The slugified version of the domain you wish to retrieve data for.
+    """
     domainSlug: Slug!
   ): [DmarcReportSummaryList]
-
-  """A query object used to grab the data to create dmarc report bar graph."""
+  """
+  A query object used to grab the data to create dmarc report bar graph.
+  """
   demoDmarcReportSummaryList(
-    """The slugified version of the domain you wish to retrieve data for."""
+    """
+    The slugified version of the domain you wish to retrieve data for.
+    """
     domainSlug: Slug!
   ): [DmarcReportSummaryList]
 
@@ -1210,7 +1201,17 @@ type Query {
     """The year in which the returned data is relevant to."""
     year: Year!
   ): DmarcReportSummary
-  isUserAdmin: IsUserAdmin
+
+  """
+  An graphql object that will be used to populate a userList component in the front end
+  """
+  userList(
+    orgSlug: Slug!
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): UserListItemConnection
 
   """
   An graphql object that will be used to populate a userPage component in the front end
@@ -1358,6 +1359,10 @@ This mutation is used to send a domain to the scanners to be scanned
 type RequestScan {
   status: String
 }
+"""
+A field that conforms to a list of strings
+"""
+scalar Selectors
 
 enum RoleEnums {
   """
@@ -1404,7 +1409,6 @@ type SignUp {
   """
   authResult: AuthResult
 }
-
 """
 A field whos values contain numbers, letters, dashes, and underscores
 """

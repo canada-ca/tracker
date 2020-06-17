@@ -2,7 +2,14 @@ import pytest
 from pytest import fail
 
 from db import DB
-from models import Users, Organizations, Domains, Web_scans, Ssl_scans, User_affiliations
+from models import (
+    Users,
+    Organizations,
+    Domains,
+    Web_scans,
+    Ssl_scans,
+    User_affiliations,
+)
 from tests.testdata.domain_guidance_tags import ssl_mock_data
 from tests.test_functions import json, run
 

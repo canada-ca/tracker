@@ -85,9 +85,7 @@ class UpdateOrganization(graphene.Mutation):
             org_orm.acronym = acronym if acronym != "" else org_orm.acronym
             org_orm.org_tags = {
                 "zone": zone if zone != "" else org_orm.org_tags.get("zone"),
-                "sector": sector
-                if sector != ""
-                else org_orm.org_tags.get("sector"),
+                "sector": sector if sector != "" else org_orm.org_tags.get("sector"),
                 "province": province
                 if province != ""
                 else org_orm.org_tags.get("province"),

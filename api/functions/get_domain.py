@@ -15,9 +15,9 @@ def get_domain(self, info):
     if domain_id is None:
         domain_id = (
             db_session.query(Mail_scans)
-                .filter(Mail_scans.id == self.id)
-                .options(load_only("domain_id"))
-                .first()
+            .filter(Mail_scans.id == self.id)
+            .options(load_only("domain_id"))
+            .first()
         )
 
     domain = (

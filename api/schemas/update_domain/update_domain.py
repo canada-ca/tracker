@@ -49,7 +49,11 @@ class UpdateDomain(graphene.Mutation):
 
         if is_user_write(user_roles=user_roles, org_id=domain_orm.organization_id):
             Domains.query.filter(Domains.domain == current_domain).update(
-                {"domain": updated_domain, "selectors": updated_selectors, "slug": slugify_value(updated_domain)}
+                {
+                    "domain": updated_domain,
+                    "selectors": updated_selectors,
+                    "slug": slugify_value(updated_domain),
+                }
             )
 
             try:

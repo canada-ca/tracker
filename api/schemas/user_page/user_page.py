@@ -26,7 +26,7 @@ class UserPage(SQLAlchemyObjectType):
             "user_affiliation",
             "password",
             "roles",
-            "email_validated"
+            "email_validated",
         )
 
     user_name = EmailAddress(description="The users email address or userName")

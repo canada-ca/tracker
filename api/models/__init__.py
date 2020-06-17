@@ -23,8 +23,12 @@ class Domains(Base):
     organization = relationship(
         "Organizations", back_populates="domains", cascade="all, delete"
     )
-    web_scans = relationship("Web_scans", back_populates="domain", cascade="all, delete")
-    mail_scans = relationship("Mail_scans", back_populates="domain", cascade="all, delete")
+    web_scans = relationship(
+        "Web_scans", back_populates="domain", cascade="all, delete"
+    )
+    mail_scans = relationship(
+        "Mail_scans", back_populates="domain", cascade="all, delete"
+    )
     dmarc_reports = relationship(
         "Dmarc_Reports", back_populates="domain", cascade="all, delete"
     )
