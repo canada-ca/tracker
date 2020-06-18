@@ -25,7 +25,7 @@ scheme for const data:
   ],
   strengths: {
     strong: {
-      name: "Name to appear on badge"
+      name: "Name to appear to user"
       types: [
         "property from periods that are 'strong' ",
         "property from periods that that are 'strong' ",

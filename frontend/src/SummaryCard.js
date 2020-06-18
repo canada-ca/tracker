@@ -19,7 +19,7 @@ scheme for const data:
     },
     strengths: {
       strong: {
-        name: "Name to appear on badge"
+        name: "Name to appear to user"
         types: [
           "property from category totals that are 'strong' ",
           "property from category totals that are 'strong' ",
