@@ -12,10 +12,13 @@ import { Box, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { Trans } from '@lingui/macro'
 import { number } from 'prop-types'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export function DmarcReportPage({ ...props }) {
   const { summaryListResponsiveWidth } = props
   const { currentUser } = useUserState()
+  const { i18n } = useLingui()
 
   const {
     loading: summaryLoading,
@@ -62,15 +65,15 @@ export function DmarcReportPage({ ...props }) {
   const strengths = {
     strong: {
       types: ['fullPass'],
-      name: 'Pass',
+      name: i18n._(t`Pass`),
     },
     moderate: {
       types: ['partialPass'],
-      name: 'Partial Pass',
+      name: i18n._(t`Partial Pass`),
     },
     weak: {
       types: ['fail'],
-      name: 'Fail',
+      name: i18n._(t`Fail`),
     },
   }
 
@@ -95,6 +98,7 @@ export function DmarcReportPage({ ...props }) {
   const dkimMisalignedData = detailTablesData.dkimMisaligned
   const dmarcFailureData = detailTablesData.dmarcFailure
 
+  // Initial sorting category for detail tables
   const initialSort = [{ id: 'totalMessages', desc: true }]
 
   const [
@@ -121,7 +125,7 @@ export function DmarcReportPage({ ...props }) {
 
   const fullPassColumns = [
     {
-      Header: 'Fully Aligned by IP Address',
+      Header: i18n._(t`Fully Aligned by IP Address`),
       hidden: true,
       columns: [
         sourceIpAddress,
@@ -139,7 +143,7 @@ export function DmarcReportPage({ ...props }) {
 
   const spfFailureColumns = [
     {
-      Header: 'SPF Failures by IP Address',
+      Header: i18n._(t`SPF Failures by IP Address`),
       hidden: true,
       columns: [
         sourceIpAddress,
@@ -155,7 +159,7 @@ export function DmarcReportPage({ ...props }) {
 
   const spfMisalignedColumns = [
     {
-      Header: 'SPF Misalignment by IP Address',
+      Header: i18n._(t`SPF Misalignment by IP Address`),
       hidden: true,
       columns: [
         sourceIpAddress,
@@ -171,7 +175,7 @@ export function DmarcReportPage({ ...props }) {
 
   const dkimFailureColumns = [
     {
-      Header: 'DKIM Failures by IP Address',
+      Header: i18n._(t`DKIM Failures by IP Address`),
       hidden: true,
       columns: [
         sourceIpAddress,
@@ -188,7 +192,7 @@ export function DmarcReportPage({ ...props }) {
 
   const dkimMisalignedColumns = [
     {
-      Header: 'DKIM Misalignment by IP Address',
+      Header: i18n._(t`DKIM Misalignment by IP Address`),
       hidden: true,
       columns: [
         sourceIpAddress,
@@ -205,7 +209,7 @@ export function DmarcReportPage({ ...props }) {
 
   const dmarcFailureColumns = [
     {
-      Header: 'DMARC Failures by IP Address',
+      Header: i18n._(t`DMARC Failures by IP Address`),
       hidden: true,
       columns: [
         sourceIpAddress,
@@ -237,8 +241,8 @@ export function DmarcReportPage({ ...props }) {
         </Trans>
       </Text>
       <SummaryCard
-        title="DMARC Report"
-        description="Description of DMARC report"
+        title={i18n._(t`DMARC Report`)}
+        description={i18n._(t`Description of DMARC report`)}
         data={reportCardData}
         width={cardWidth}
         mx="auto"
@@ -252,42 +256,42 @@ export function DmarcReportPage({ ...props }) {
       <DmarcReportTable
         data={fullPassData}
         columns={fullPassColumns}
-        title="Fully Aligned by IP Address"
+        title={i18n._(t`Fully Aligned by IP Address`)}
         initialSort={initialSort}
         mb="30px"
       />
       <DmarcReportTable
         data={spfFailureData}
         columns={spfFailureColumns}
-        title="SPF Failures by IP Address"
+        title={i18n._(t`SPF Failures by IP Address`)}
         initialSort={initialSort}
         mb="30px"
       />
       <DmarcReportTable
         data={spfMisalignedData}
         columns={spfMisalignedColumns}
-        title="SPF Misalignment by IP Address"
+        title={i18n._(t`SPF Misalignment by IP Address`)}
         initialSort={initialSort}
         mb="30px"
       />
       <DmarcReportTable
         data={dkimFailureData}
         columns={dkimFailureColumns}
-        title="DKIM Failures by IP Address"
+        title={i18n._(t`DKIM Failures by IP Address`)}
         initialSort={initialSort}
         mb="30px"
       />
       <DmarcReportTable
         data={dkimMisalignedData}
         columns={dkimMisalignedColumns}
-        title="DKIM Misalignment by IP Address"
+        title={i18n._(t`DKIM Misalignment by IP Address`)}
         initialSort={initialSort}
         mb="30px"
       />
       <DmarcReportTable
         data={dmarcFailureData}
         columns={dmarcFailureColumns}
-        title="DMARC Failures by IP Address"
+        title={i18n._(t`DMARC Failures by IP Address`)}
         initialSort={initialSort}
         mb="30px"
       />
