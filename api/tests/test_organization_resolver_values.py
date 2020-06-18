@@ -76,15 +76,7 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
                 "name": "Organization 1",
                 "acronym": "ORG1",
                 "province": "Alberta",
-                "domains": {
-                    "edges": [
-                        {
-                            "node": {
-                                "url": "somecooldomain.ca"
-                            }
-                        }
-                    ]
-                },
+                "domains": {"edges": [{"node": {"url": "somecooldomain.ca"}}]},
             }
         }
     }
@@ -389,15 +381,7 @@ def test_get_org_resolvers_by_org_user_read_single_node(save):
                 "name": "Organization 1",
                 "acronym": "ORG1",
                 "province": "Alberta",
-                "domains": {
-                    "edges": [
-                        {
-                            "node": {
-                                "url": "somecooldomain.ca",
-                            }
-                        }
-                    ]
-                },
+                "domains": {"edges": [{"node": {"url": "somecooldomain.ca",}}]},
             }
         }
     }

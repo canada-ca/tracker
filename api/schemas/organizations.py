@@ -16,6 +16,7 @@ from models import User_affiliations as UserAffModel
 from functions.auth_functions import is_admin
 from functions.auth_wrappers import require_token
 
+
 class OrganizationDetail(SQLAlchemyObjectType):
     class Meta:
         model = OrgModel
@@ -43,8 +44,11 @@ class OrganizationDetail(SQLAlchemyObjectType):
         DomainsSchema._meta.connection,
         description="The domains which belong to this organization.",
     )
+
     def resolve_id(self: OrgModel, info):
-        return b64encode("Organization:{}".format(self.id).encode('ascii')).decode("utf-8")
+        return b64encode("Organization:{}".format(self.id).encode("ascii")).decode(
+            "utf-8"
+        )
 
     def resolve_acronym(self: OrgModel, info):
         return self.acronym
