@@ -38,7 +38,7 @@ def resolve_domain(self: Domain, info, **kwargs):
 
     # If org cannot be found
     if not org_orm:
-        logger.notice(
+        logger.warning(
             f"User: {user_id} attempted to access a domain using {url_slug}, but no organization was found."
         )
         raise GraphQLError("Error, unable to find domain.")
@@ -60,7 +60,7 @@ def resolve_domain(self: Domain, info, **kwargs):
             )
             raise GraphQLError("Error, unable to find domain.")
     else:
-        logger.notice(
+        logger.warning(
             f"User: {user_id} attempted to access a domain using {url_slug}, but does not have access to {org_orm.slug}."
         )
         raise GraphQLError("Error, unable to find domain.")
@@ -90,7 +90,7 @@ def resolve_domains(self, info, **kwargs):
         org_ids.append(role["org_id"])
 
     if not org_ids:
-        logger.notice(
+        logger.warning(
             f"User: {user_id} attempted to access domains for this org {org_slug}, but has no roles assigned."
         )
         raise GraphQLError("Error, unable to find domains.")
@@ -108,7 +108,7 @@ def resolve_domains(self, info, **kwargs):
 
         # Check if org exists
         if not len(org_orms.all()):
-            logger.notice(
+            logger.warning(
                 f"User: {user_id} attempted to access an orgnaizations domains using {org_slug}, but no organization was found."
             )
             raise GraphQLError("Error, unable to find organization.")
@@ -127,7 +127,7 @@ def resolve_domains(self, info, **kwargs):
                 )
                 raise GraphQLError("Error, unable to find domains.")
         else:
-            logger.notice(
+            logger.warning(
                 f"User: {user_id} attempted to access an organizations domains using {org_slug}, but does not have access to this organization."
             )
             raise GraphQLError("Error, unable to find domains.")
