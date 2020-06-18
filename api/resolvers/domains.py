@@ -51,8 +51,11 @@ def resolve_domain(self: Domain, info, **kwargs):
             .filter(Domains.organization_id == org_id)
             .all()
         )
+        logger.info(
+            f"User: {user_id} successfully retrieved the domain information for {url_slug}"
+        )
         if not query_rtn:
-            logger.notice(
+            logger.info(
                 f"User: {user_id} attempted to access a domain using {url_slug}, but no domain was found."
             )
             raise GraphQLError("Error, unable to find domain.")
@@ -119,7 +122,7 @@ def resolve_domains(self, info, **kwargs):
 
             # If org has no domains related to it
             if not len(query_rtn):
-                logger.notice(
+                logger.info(
                     f"User: {user_id} attempted to access an organizations domains using {org_slug}, but no domains were found."
                 )
                 raise GraphQLError("Error, unable to find domains.")
@@ -129,15 +132,22 @@ def resolve_domains(self, info, **kwargs):
             )
             raise GraphQLError("Error, unable to find domains.")
 
+        logger.info(
+            f"User: {user_id}, successfully retrieved all domains for this org {org_slug}."
+        )
         return query_rtn
     else:
         if is_super_admin(user_roles=user_roles):
             query_rtn = query.all()
             if not query_rtn:
-                logger.notice(
+                logger.info(
                     f"Super Admin: {user_id} tried to gather all domains, but none were found."
                 )
                 raise GraphQLError("Error, unable to find domains.")
+
+            logger.info(
+                f"Super Admin: {user_id}, successfully retrieved all domains for all orgs that they have access to."
+            )
             return query_rtn
         else:
             query_rtr = []
@@ -146,9 +156,14 @@ def resolve_domains(self, info, **kwargs):
                     tmp_query = query.filter(Domains.organization_id == org_id).all()
                     for item in tmp_query:
                         query_rtr.append(item)
+
             if not query_rtr:
-                logger.notice(
+                logger.info(
                     f"User: {user_id}, tried to access all the domains for all the orgs that they belong to but none were found."
                 )
                 raise GraphQLError("Error, unable to find domains.")
+
+            logger.info(
+                f"User: {user_id}, successfully retrieved all domains for all orgs that they have access to."
+            )
             return query_rtr
