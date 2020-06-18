@@ -5,6 +5,7 @@ from app import logger
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read
+from functions.input_validators import cleanse_input
 from models import Domains, Organizations
 from schemas.domain import Domain
 
@@ -21,7 +22,7 @@ def resolve_domain(self: Domain, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in via kwargs
-    url_slug = kwargs.get("url_slug")
+    url_slug = cleanse_input(kwargs.get("url_slug"))
     user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
 
@@ -87,7 +88,7 @@ def resolve_domains(self, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in from kwargs
-    org_slug = kwargs.get("org_slug")
+    org_slug = cleanse_input(kwargs.get("org_slug"))
     user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
 
