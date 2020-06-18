@@ -39,7 +39,7 @@ def resolve_organization(self: Organization, info, **kwargs):
 
     # Check to ensure user has access to given org
     if is_user_read(user_roles=user_roles, org_id=org_id):
-        query_rtn = query.filter(Organizations.slug == slug).all()
+        query_rtn = query.filter(Organizations.slug == slug).first()
     else:
         raise GraphQLError(
             "Error, you do not have permission to view that organization"

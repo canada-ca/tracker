@@ -52,7 +52,7 @@ rules:
       - get
       - list
       - watch
-  - apiGroups: 
+  - apiGroups:
     - config.istio.io
     - networking.istio.io
     - authentication.istio.io
@@ -121,7 +121,7 @@ rules:
       - get
       - list
       - watch
-  - apiGroups: 
+  - apiGroups:
     - config.istio.io
     - networking.istio.io
     - authentication.istio.io
@@ -180,7 +180,7 @@ data:
     deployment:
       accessible_namespaces: ['**']
     login_token:
-      signing_key: "ussA6cftOq"
+      signing_key: "v1tmtYENTR"
     server:
       port: 20001
       web_root: /kiali
@@ -188,10 +188,10 @@ data:
       istio:
         url_service_version: http://istiod.istio-system:15014/version
       tracing:
-        url: 
+        url:
         in_cluster_url: http://tracing/jaeger
       grafana:
-        url: 
+        url:
         in_cluster_url: http://grafana:3000
       prometheus:
         url: http://prometheus.istio-system:9090
@@ -801,7 +801,7 @@ spec:
           value: cluster.local
         - name: ISTIO_META_CLUSTER_ID
           value: Kubernetes
-        image: docker.io/istio/proxyv2:1.6.0
+        image: docker.io/istio/proxyv2:1.6.2
         imagePullPolicy: Always
         name: istio-proxy
         ports:
@@ -950,7 +950,7 @@ spec:
           - name: MEMORY_MAX_TRACES
             value: "50000"
           - name: QUERY_BASE_PATH
-            value:  /jaeger 
+            value:  /jaeger
           livenessProbe:
             httpGet:
               path: /
@@ -965,7 +965,7 @@ spec:
           resources:
             requests:
               cpu: 10m
-      affinity:      
+      affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
@@ -997,7 +997,7 @@ spec:
               - key: beta.kubernetes.io/arch
                 operator: In
                 values:
-                - "s390x"      
+                - "s390x"
       volumes:
       - name: data
         emptyDir: {}
@@ -6576,7 +6576,7 @@ spec:
           value: sni-dnat
         - name: ISTIO_META_CLUSTER_ID
           value: Kubernetes
-        image: docker.io/istio/proxyv2:1.6.0
+        image: docker.io/istio/proxyv2:1.6.2
         name: istio-proxy
         ports:
         - containerPort: 15021
@@ -6737,9 +6737,6 @@ spec:
   - name: https
     port: 443
     targetPort: 8443
-  - name: tls
-    port: 15443
-    targetPort: 15443
   selector:
     app: istio-ingressgateway
     istio: ingressgateway
@@ -6910,7 +6907,7 @@ spec:
           value: Kubernetes
         - name: CENTRAL_ISTIOD
           value: "false"
-        image: docker.io/istio/pilot:1.6.0
+        image: docker.io/istio/pilot:1.6.2
         name: discovery
         ports:
         - containerPort: 8080
@@ -7095,7 +7092,7 @@ data:
         "sts": {
           "servicePort": 0
         },
-        "tag": "1.6.0",
+        "tag": "1.6.2",
         "telemetryNamespace": "istio-system",
         "tracer": {
           "datadog": {
@@ -7597,6 +7594,7 @@ webhooks:
         namespace: istio-system
         path: "/inject"
       caBundle: ""
+    sideEffects: None
     rules:
       - operations: [ "CREATE" ]
         apiGroups: [""]
@@ -8403,36 +8401,6 @@ spec:
                       inline_string: "envoy.wasm.stats"
 ---
 
-
- apiVersion: v1
- kind: Service
- metadata:
-   annotations: null
-   labels:
-     app: istio-ingressgateway
-     istio: ingressgateway
-     release: istio
-   name: istio-ingressgateway
-   namespace: istio-system
- spec:
-   ports:
--  - name: status-port
--    port: 15021
--    targetPort: 15021
-   - name: http2
-     port: 80
-     targetPort: 8080
-   - name: https
-     port: 443
-     targetPort: 8443
--  - name: tls
--    port: 15443
--    targetPort: 15443
-   selector:
-     app: istio-ingressgateway
-     istio: ingressgateway
-   type: LoadBalancer
----
 # Policy component is disabled.
 
 # Telemetry component is disabled.
