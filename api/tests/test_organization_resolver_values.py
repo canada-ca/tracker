@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -13,7 +15,7 @@ def save():
     cleanup()
 
 
-def test_get_org_resolvers_by_org_super_admin_single_node(save):
+def test_get_org_resolvers_by_org_super_admin_single_node(save, caplog):
     """
     Test org resolver by organization as a super admin, single node return
     with all values
@@ -50,22 +52,23 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     result = run(
         """
-		{
-		  organization:findOrganizationDetailBySlug(slug: "organization-1") {
-			name
-			acronym
-			province
-			domains {
-			  edges {
-				node {
-				  url
-				}
-			  }
-			}
-		  }
-		}
+        {
+            organization:findOrganizationDetailBySlug(slug: "organization-1") {
+                name
+                acronym
+                province
+                domains {
+                    edges {
+                        node {
+                            url
+                        }
+                    }
+                }
+            }
+        }
         """,
         as_user=super_admin,
     )
@@ -89,9 +92,13 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
         )
 
     assert result == expected_result
+    assert (
+        f"User: {super_admin.id} successfully retrieved organization info for organization-1"
+        in caplog.text
+    )
 
 
-def test_get_org_resolvers_super_admin_multi_node(save):
+def test_get_org_resolvers_super_admin_multi_node(save, caplog):
     """
     Test organization resolver as a super admin, multi node return with
     all values
@@ -154,6 +161,7 @@ def test_get_org_resolvers_super_admin_multi_node(save):
     super_admin.verify_account()
     save(super_admin)
 
+    caplog.set_level(logging.INFO)
     result = run(
         """
         {
@@ -313,10 +321,14 @@ def test_get_org_resolvers_super_admin_multi_node(save):
         )
 
     assert result == expected_result
+    assert (
+        f"Super admin: {super_admin.id} successfully retrieved all organizations."
+        in caplog.text
+    )
 
 
 # User read tests
-def test_get_org_resolvers_by_org_user_read_single_node(save):
+def test_get_org_resolvers_by_org_user_read_single_node(save, caplog):
     """
     Test org resolver with an org as a user read, multi node return with
     all values
@@ -355,22 +367,23 @@ def test_get_org_resolvers_by_org_user_read_single_node(save):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     result = run(
         """
-		{
-		  organization:findOrganizationDetailBySlug(slug: "organization-1") {
-			name
-			acronym
-			province
-			domains {
-			  edges {
-				node {
-				  url
-				}
-			  }
-			}
-		  }
-		}
+        {
+            organization:findOrganizationDetailBySlug(slug: "organization-1") {
+                name
+                acronym
+                province
+                domains {
+                    edges {
+                        node {
+                            url
+                        }
+                    }
+                }
+            }
+        }
         """,
         as_user=user,
     )
@@ -387,9 +400,13 @@ def test_get_org_resolvers_by_org_user_read_single_node(save):
     }
 
     assert result == expected_result
+    assert (
+        f"User: {user.id} successfully retrieved organization info for organization-1"
+        in caplog.text
+    )
 
 
-def test_get_org_resolvers_by_org_user_read_multi_node(save):
+def test_get_org_resolvers_by_org_user_read_multi_node(save, caplog):
     """
     Test organizations resolver as a user read, multi node return with
     all values
@@ -417,6 +434,7 @@ def test_get_org_resolvers_by_org_user_read_multi_node(save):
     user.verify_account()
     save(user)
 
+    caplog.set_level(logging.INFO)
     result = run(
         """
         {
@@ -503,3 +521,7 @@ def test_get_org_resolvers_by_org_user_read_multi_node(save):
     if "errors" in result:
         fail("Expect success but errors were returned: {}".format(result["errors"]))
     assert result == expected_result
+    assert (
+        f"User: {user.id} successfully retrieved all organizations that they belong to."
+        in caplog.text
+    )
