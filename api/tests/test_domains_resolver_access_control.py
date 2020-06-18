@@ -1,9 +1,7 @@
+import logging
 import pytest
+
 from pytest import fail
-from flask import Request
-from graphene.test import Client
-from unittest import TestCase
-from werkzeug.test import create_environ
 
 from db import DB
 from models import Organizations, Domains, Users, User_affiliations
@@ -17,7 +15,7 @@ def save():
     cleanup()
 
 
-def test_get_domain_resolvers_by_url_super_admin_single_node(save):
+def test_get_domain_resolvers_by_url_super_admin_single_node(save, caplog):
     """
     Test domain resolver by url as a super admin, single node return
     """
@@ -46,6 +44,7 @@ def test_get_domain_resolvers_by_url_super_admin_single_node(save):
     test_domain = Domains(domain="sa.test.domain.ca", organization=org_one,)
     save(test_domain)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -64,6 +63,10 @@ def test_get_domain_resolvers_by_url_super_admin_single_node(save):
 
     expected_result = {"data": {"domain": [{"url": "sa.test.domain.ca"}]}}
     assert result == expected_result
+    assert (
+        f"User: {super_admin.id} successfully retrieved the domain information for sa-test-domain-ca"
+        in caplog.text
+    )
 
 
 def test_get_domain_resolvers_by_org_super_admin_single_node(save):
