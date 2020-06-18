@@ -43,6 +43,10 @@ def resolve_organization(self: Organization, info, **kwargs):
     # Check to ensure user has access to given org
     if is_user_read(user_roles=user_roles, org_id=org_id):
         query_rtn = query.filter(Organizations.slug == slug).first()
+        logger.info(
+            f"User: {user_id} successfully retrieved organization info for {slug}"
+        )
+
     else:
         logger.warning(
             f"User: {user_id} attempted to access an organization using {slug}, but does not have access to this organization"
