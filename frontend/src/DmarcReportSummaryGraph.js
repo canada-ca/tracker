@@ -42,6 +42,7 @@ function DmarcReportSummaryGraph({ ...props }) {
   const { periods, strengths } = data
   const ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
   const { colors } = theme
+  console.log(data)
 
   const formatTicks = (tick) => {
     return `${tick * 100}%`
@@ -55,6 +56,13 @@ function DmarcReportSummaryGraph({ ...props }) {
         ? period.month
         : `${period.month.slice(0, 3)}-${period.year.toString().slice(-2)}`
   })
+
+  const formatStrengthName = (name) => {
+    const spacesInserted = name.replace(/([A-Z])/g, ' $1')
+    const formattedName =
+      spacesInserted.charAt(0).toUpperCase() + spacesInserted.slice(1)
+    return formattedName
+  }
 
   return (
     <Box overflow="hidden">
@@ -90,6 +98,7 @@ function DmarcReportSummaryGraph({ ...props }) {
                   dataKey={type}
                   stackId="a"
                   fill={colors[strengthName]}
+                  name={strengthDetails.name}
                 />
               )
             })

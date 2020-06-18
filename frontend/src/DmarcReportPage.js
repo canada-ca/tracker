@@ -112,15 +112,15 @@ export function DmarcReportPage({ ...props }) {
     dnsHost,
     spfDomains,
   ] = [
-    { Header: 'sourceIpAddress', accessor: 'sourceIpAddress' },
-    { Header: 'envelopeFrom', accessor: 'envelopeFrom' },
-    { Header: 'dkimDomains', accessor: 'dkimDomains' },
-    { Header: 'dkimSelectors', accessor: 'dkimSelectors' },
-    { Header: 'totalMessages', accessor: 'totalMessages' },
-    { Header: 'countryCode', accessor: 'countryCode' },
-    { Header: 'prefixOrg', accessor: 'prefixOrg' },
-    { Header: 'dnsHost', accessor: 'dnsHost' },
-    { Header: 'spfDomains', accessor: 'spfDomains' },
+    { Header: i18n._(t`Source IP Address`), accessor: 'sourceIpAddress' },
+    { Header: i18n._(t`Envelope From`), accessor: 'envelopeFrom' },
+    { Header: i18n._(t`DKIM Domains`), accessor: 'dkimDomains' },
+    { Header: i18n._(t`DKIM Selectors`), accessor: 'dkimSelectors' },
+    { Header: i18n._(t`Total Messages`), accessor: 'totalMessages' },
+    { Header: i18n._(t`Country Code`), accessor: 'countryCode' },
+    { Header: i18n._(t`Prefix Org`), accessor: 'prefixOrg' },
+    { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' },
+    { Header: i18n._(t`SPF Domains`), accessor: 'spfDomains' },
   ]
 
   const fullPassColumns = [

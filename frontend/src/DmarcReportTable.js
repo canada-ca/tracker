@@ -13,6 +13,9 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core'
+import { Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 import WithPseudoBox from './withPseudoBox'
 
@@ -104,6 +107,7 @@ td, th {
 function DmarcReportTable({ ...props }) {
   const { data, columns, title, initialSort } = props
   const [show, setShow] = React.useState(true)
+  const { i18n } = useLingui()
 
   const handleShow = () => setShow(!show)
 
@@ -264,11 +268,15 @@ function DmarcReportTable({ ...props }) {
                 aria-label="Go to last page"
               />
               <Text>
-                Page {pageIndex + 1} of {pageOptions.length}
+                <Trans>
+                  Page {pageIndex + 1} of {pageOptions.length}
+                </Trans>
               </Text>
             </Stack>
             <Stack spacing="1em" isInline align="center" flexWrap="wrap">
-              <Text>Go to page:</Text>
+              <Text>
+                <Trans>Go to page:</Trans>
+              </Text>
               <Input
                 width="6rem"
                 value={goToPageValue}
@@ -286,7 +294,7 @@ function DmarcReportTable({ ...props }) {
               >
                 {[5, 10, 20, 30, 40, 50].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
-                    Show {pageSize}
+                    {i18n._(t`Show ${pageSize}`)}
                   </option>
                 ))}
               </Select>

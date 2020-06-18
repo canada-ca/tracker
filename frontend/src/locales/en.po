@@ -87,6 +87,10 @@ msgstr "Configure the server to use the same domain for the DKIM header as for t
 msgid "Confirm password"
 msgstr "Confirm password"
 
+#: src/DmarcReportPage.js:120
+msgid "Country Code"
+msgstr "Country Code"
+
 #: src/CreateUserPage.js:121
 #: src/SignInPage.js:113
 msgid "Create Account"
@@ -110,6 +114,10 @@ msgstr "DKIM Check Failed"
 msgid "DKIM Domain Alignment Failed"
 msgstr "DKIM Domain Alignment Failed"
 
+#: src/DmarcReportPage.js:117
+msgid "DKIM Domains"
+msgstr "DKIM Domains"
+
 #: src/DmarcReportPage.js:178
 #: src/DmarcReportPage.js:280
 msgid "DKIM Failures by IP Address"
@@ -119,6 +127,10 @@ msgstr "DKIM Failures by IP Address"
 #: src/DmarcReportPage.js:287
 msgid "DKIM Misalignment by IP Address"
 msgstr "DKIM Misalignment by IP Address"
+
+#: src/DmarcReportPage.js:118
+msgid "DKIM Selectors"
+msgstr "DKIM Selectors"
 
 #: src/DmarcReportPage.js:212
 #: src/DmarcReportPage.js:294
@@ -133,6 +145,10 @@ msgstr "DMARC Policy Applied"
 #: src/DmarcReportPage.js:244
 msgid "DMARC Report"
 msgstr "DMARC Report"
+
+#: src/DmarcReportPage.js:122
+msgid "DNS Host"
+msgstr "DNS Host"
 
 #: src/DmarcReportPage.js:245
 msgid "Description of DMARC report"
@@ -172,6 +188,10 @@ msgstr "Ensure the DKIM record for thedomain and selector is present andvalid."
 msgid "Ensure the SPF record is present and valid."
 msgstr "Ensure the SPF record is present and valid."
 
+#: src/DmarcReportPage.js:116
+msgid "Envelope From"
+msgstr "Envelope From"
+
 #: src/DmarcReportPage.js:76
 msgid "Fail"
 msgstr "Fail"
@@ -194,6 +214,10 @@ msgstr "Fully Aligned by IP Address"
 #: src/SummaryGroup.js:30
 msgid "Fully Implemented"
 msgstr "Fully Implemented"
+
+#: src/DmarcReportTable.js:278
+msgid "Go to page:"
+msgstr "Go to page:"
 
 #: src/DmarcReportGuidance.js:105
 #: src/DmarcReportGuidance.js:197
@@ -261,6 +285,10 @@ msgstr "Not scanned yet."
 #: src/PageNotFound.js:9
 msgid "Page not found"
 msgstr "Page not found"
+
+#: src/DmarcReportTable.js:271
+msgid "Page {0} of {1}"
+msgstr "Page {0} of {1}"
 
 #: src/DmarcReportPage.js:72
 msgid "Partial Pass"
@@ -330,6 +358,10 @@ msgstr "Possible Resolutions"
 msgid "Pre-Alpha"
 msgstr "Pre-Alpha"
 
+#: src/DmarcReportPage.js:121
+msgid "Prefix Org"
+msgstr "Prefix Org"
+
 #: src/App.js:130
 msgid "Privacy"
 msgstr "Privacy"
@@ -359,6 +391,10 @@ msgstr "SPF Check Failed"
 #: src/DmarcReportGuidance.js:204
 msgid "SPF Domain Alignment Failed"
 msgstr "SPF Domain Alignment Failed"
+
+#: src/DmarcReportPage.js:123
+msgid "SPF Domains"
+msgstr "SPF Domains"
 
 #: src/DmarcReportPage.js:146
 #: src/DmarcReportPage.js:266
@@ -390,6 +426,10 @@ msgstr "Show Guidance"
 #~ msgid "Show More"
 #~ msgstr "Show More"
 
+#: src/DmarcReportTable.js:297
+msgid "Show {pageSize}"
+msgstr "Show {pageSize}"
+
 #: src/App.js:58
 #: src/QRcodePage.js:58
 #: src/SignInPage.js:104
@@ -411,6 +451,10 @@ msgstr "Skip to main content"
 #: src/PageNotFound.js:12
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Sorry, the page you were trying to view does not exist."
+
+#: src/DmarcReportPage.js:115
+msgid "Source IP Address"
+msgstr "Source IP Address"
 
 #: src/App.js:140
 msgid "Terms & conditions"
@@ -476,6 +520,10 @@ msgstr "These guidance notes were designed to help you trouble shoot your failed
 #: src/App.js:40
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
+
+#: src/DmarcReportPage.js:119
+msgid "Total Messages"
+msgstr "Total Messages"
 
 #: src/LandingPage.js:12
 msgid "Track Web Security Compliance"
