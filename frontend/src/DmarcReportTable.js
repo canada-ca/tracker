@@ -152,7 +152,7 @@ function DmarcReportTable({ ...props }) {
   }
 
   const wrapperRef = useRef(null)
-  
+
   return (
     <Box ref={wrapperRef}>
       <Button bg="gray.700" color="white" onClick={handleShow} width="100%">

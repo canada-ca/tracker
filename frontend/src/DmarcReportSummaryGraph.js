@@ -50,9 +50,10 @@ function DmarcReportSummaryGraph({ ...props }) {
   // Create date entry for x-axis data keys (e.g.: 'JAN-19')
   // TODO: Should we just be receiving the data in this format?
   periods.forEach((period) => {
-    period.date = period.month === 'LAST30DAYS' ? period.month : `${period.month.slice(0, 3)}-${period.year
-      .toString()
-      .slice(-2)}`
+    period.date =
+      period.month === 'LAST30DAYS'
+        ? period.month
+        : `${period.month.slice(0, 3)}-${period.year.toString().slice(-2)}`
   })
 
   return (
