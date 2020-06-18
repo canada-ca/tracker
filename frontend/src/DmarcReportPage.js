@@ -7,7 +7,7 @@ import {
   DEMO_DMARC_REPORT_SUMMARY_LIST,
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
-import DmarcTimeGraph from './DmarcTimeGraph'
+import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import { Box, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { Trans } from '@lingui/macro'

@@ -3,7 +3,7 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { render, waitFor } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import DmarcTimeGraph from '../DmarcTimeGraph'
+import DmarcTimeGraph from '../DmarcReportSummaryGraph'
 import { formattedSummaryListData } from '../fixtures/summaryListData'
 
 describe('<DmarcReportTimeGraph />', () => {
