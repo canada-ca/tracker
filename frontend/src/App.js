@@ -71,7 +71,6 @@ export default function App() {
           <Suspense fallback={<div>Loading...</div>}>
             <Switch>
               <Route exact path="/">
-                {/*<DmarcReportPage />*/}
                 <LandingPage />
               </Route>
 

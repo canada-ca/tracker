@@ -152,7 +152,7 @@ function DmarcReportTable({ ...props }) {
   }
 
   const wrapperRef = useRef(null)
-
+  
   return (
     <Box ref={wrapperRef}>
       <Button bg="gray.700" color="white" onClick={handleShow} width="100%">
@@ -234,6 +234,7 @@ function DmarcReportTable({ ...props }) {
                 }}
                 disabled={!canPreviousPage}
                 icon="arrow-left"
+                aria-label="Go to first page"
               />
               <IconButton
                 onClick={() => {
@@ -242,6 +243,7 @@ function DmarcReportTable({ ...props }) {
                 }}
                 disabled={!canPreviousPage}
                 icon="chevron-left"
+                aria-label="Go to previous page"
               />
               <IconButton
                 onClick={() => {
@@ -250,6 +252,7 @@ function DmarcReportTable({ ...props }) {
                 }}
                 disabled={!canNextPage}
                 icon="chevron-right"
+                aria-label="Go to next page"
               />
               <IconButton
                 onClick={() => {
@@ -258,6 +261,7 @@ function DmarcReportTable({ ...props }) {
                 }}
                 disabled={!canNextPage}
                 icon="arrow-right"
+                aria-label="Go to last page"
               />
               <Text>
                 Page {pageIndex + 1} of {pageOptions.length}
