@@ -298,7 +298,7 @@ DmarcReportTable.propTypes = {
   data: array.isRequired,
   columns: array.isRequired,
   title: string.isRequired,
-  initialSort: array,
+  initialSort: array.isRequired,
 }
 
 export default WithPseudoBox(DmarcReportTable)
