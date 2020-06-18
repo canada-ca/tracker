@@ -11,8 +11,10 @@ import DmarcTimeGraph from './DmarcTimeGraph'
 import { Box, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { Trans } from '@lingui/macro'
+import { number } from 'prop-types'
 
-export function DmarcReportPage() {
+export function DmarcReportPage({ ...props }) {
+  const { summaryListResponsiveWidth } = props
   const { currentUser } = useUserState()
 
   const {
@@ -219,8 +221,6 @@ export function DmarcReportPage() {
     },
   ]
 
-  // TODO: This should check full screen size, not window.innerWidth
-  //  similar to:   @media screen and (max-width: 760px)
   const cardWidth = window.matchMedia('(max-width: 500px)').matches
     ? '100%'
     : window.matchMedia('(max-width: 800px)').matches
@@ -243,7 +243,12 @@ export function DmarcReportPage() {
         width={cardWidth}
         mx="auto"
       />
-      <DmarcTimeGraph data={formattedBarData} width="100%" mx="auto" />
+      <DmarcTimeGraph
+        data={formattedBarData}
+        width="100%"
+        mx="auto"
+        responsiveWidth={summaryListResponsiveWidth}
+      />
       <DmarcReportTable
         data={fullPassData}
         columns={fullPassColumns}
@@ -288,4 +293,9 @@ export function DmarcReportPage() {
       />
     </Box>
   )
+}
+
+DmarcReportPage.propTypes = {
+  // Need to allow summaryList ResponsiveContainer width as a set number for tests to work
+  summaryListResponsiveWidth: number,
 }

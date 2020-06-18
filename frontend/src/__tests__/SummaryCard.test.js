@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { SummaryCard } from '../SummaryCard'
+import SummaryCard from '../SummaryCard'
 
 const data = [
   {

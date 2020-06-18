@@ -9,7 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
-import { object } from 'prop-types'
+import { object, number } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 import theme from './theme/canada'
 import { Box } from '@chakra-ui/core'
@@ -35,10 +35,10 @@ scheme for const data:
     weak: {same as strong},
   }
 }
- */
+*/
 
 function DmarcTimeGraph({ ...props }) {
-  const { data } = props
+  const { data, responsiveWidth } = props
   const { periods, strengths } = data
   const ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
   const { colors } = theme
@@ -49,6 +49,7 @@ function DmarcTimeGraph({ ...props }) {
 
   // Create date entry for x-axis data keys (e.g.: 'JAN-19')
   // TODO: Should we just be receiving the data in this format?
+  // TODO: Account for LAST30DAYS (currently forming LAS-##)
   periods.forEach((period) => {
     period.date = `${period.month.slice(0, 3)}-${period.year
       .toString()
@@ -57,7 +58,8 @@ function DmarcTimeGraph({ ...props }) {
 
   return (
     <Box overflow="hidden">
-      <ResponsiveContainer height={500}>
+      {/* Need to allow ResponsiveContainer width as a set number for tests to work */}
+      <ResponsiveContainer height={500} width={responsiveWidth || '100%'}>
         <BarChart
           barSize="30px"
           data={periods}
@@ -100,6 +102,7 @@ function DmarcTimeGraph({ ...props }) {
 
 DmarcTimeGraph.propTypes = {
   data: object.isRequired,
+  responsiveWidth: number,
 }
 
 export default WithPseudoBox(DmarcTimeGraph)
