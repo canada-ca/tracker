@@ -46,4 +46,4 @@ logger_dict = {
 }
 
 logging.config.dictConfig(logger_dict)
-logger = logging.getLogger("custom")
+logger = logging.getLogger("TrackerAPI")
