@@ -68,7 +68,7 @@ Object.defineProperty(window, 'matchMedia', {
 
 describe('<DmarcReportPage />', () => {
   it('renders', async () => {
-    const { getByText } = render(
+    const { getAllByText } = render(
       <UserStateProvider
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
@@ -83,6 +83,6 @@ describe('<DmarcReportPage />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getByText(/Partial Pass/i))
+    await waitFor(() => getAllByText(/Partial Pass/i))
   })
 })

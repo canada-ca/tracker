@@ -15,6 +15,6 @@ describe('<DmarcReportTimeGraph />', () => {
         </I18nProvider>
       </ThemeProvider>,
     )
-    await waitFor(() => getByText(/partialPass/i))
+    await waitFor(() => getByText(/Partial Pass/i))
   })
 })
