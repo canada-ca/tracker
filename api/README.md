@@ -76,7 +76,7 @@ from the root directory of the repository.
 #### Installing Black
 Keeping with code formatting standards this project uses the [black](https://github.com/psf/black). To install black
 follow the below instructions. Due to black not having a stable release it is impossible to add to our dev dependencies
-as we would have to use the `--pre` tag which causes issues with our base dependencies.
+as we would have to use the `--pre` tag which causes issues with our base dependencies, so we have to install it globally.
 ```shell script
 pip install black
 ```
