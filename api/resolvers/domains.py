@@ -28,6 +28,13 @@ def resolve_domain(self: Domain, info, **kwargs):
     # Get initial Domain Query Object
     query = Domain.get_query(info)
 
+    domain_orm = db_session.query(Domains).filter(Domains.slug == url_slug).first()
+    if not domain_orm:
+        logger.warning(
+            f"User: {user_id} attempted to access a domain using {url_slug}, but domain was not found."
+        )
+        raise GraphQLError("Error, unable to find domain.")
+
     # Get org id that is related to the domain
     org_orm = (
         db_session.query(Organizations)
@@ -39,7 +46,7 @@ def resolve_domain(self: Domain, info, **kwargs):
     # If org cannot be found
     if not org_orm:
         logger.warning(
-            f"User: {user_id} attempted to access a domain using {url_slug}, but no organization was found."
+            f"User: {user_id} attempted to access a domain using {url_slug}, but no organization was not found."
         )
         raise GraphQLError("Error, unable to find domain.")
     org_id = org_orm.id
