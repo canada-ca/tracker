@@ -12,7 +12,7 @@ import {
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { rawSummaryData } from '../fixtures/summaryListData'
+import { rawSummaryListData } from '../fixtures/summaryListData'
 import { rawDmarcReportDetailTablesData } from '../fixtures/dmarcReportDetailTablesData'
 import { rawSummaryCardData } from '../fixtures/summaryCardData'
 
@@ -27,7 +27,9 @@ const mocks = [
       },
     },
     result: {
-      data: rawSummaryCardData,
+      data: {
+        demoDmarcReportSummary: rawSummaryCardData,
+      },
     },
   },
   {
@@ -37,7 +39,7 @@ const mocks = [
     },
     result: {
       data: {
-        dmarcReportSummaryList: rawSummaryData,
+        demoDmarcReportSummaryList: rawSummaryListData,
       },
     },
   },
@@ -52,7 +54,7 @@ const mocks = [
     },
     result: {
       data: {
-        dmarcReportDetailTables: rawDmarcReportDetailTablesData,
+        demoDmarcReportDetailTables: rawDmarcReportDetailTablesData,
       },
     },
   },

@@ -79,17 +79,17 @@ export function DmarcReportPage({ ...props }) {
 
   // TODO: reportCardData.strengths and formattedBarData.strengths reference
   //  the same object, is this okay?
-  const reportCardData = summaryData.dmarcReportSummary
+  const reportCardData = summaryData.demoDmarcReportSummary
   reportCardData.strengths = strengths
 
   const formattedBarData = {
-    periods: barData.dmarcReportSummaryList.map((entry) => {
+    periods: barData.demoDmarcReportSummaryList.map((entry) => {
       return { month: entry.month, year: entry.year, ...entry.categoryTotals }
     }),
   }
   formattedBarData.strengths = strengths
 
-  const detailTablesData = tableData.dmarcReportDetailTables.detailTables
+  const detailTablesData = tableData.demoDmarcReportDetailTables.detailTables
 
   const fullPassData = detailTablesData.fullPass
   const spfFailureData = detailTablesData.spfFailure

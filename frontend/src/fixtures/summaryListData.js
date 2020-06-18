@@ -1,4 +1,4 @@
-export const rawSummaryData = [
+export const rawSummaryListData = [
   {
     month: 'APRIL',
     year: 2020,
