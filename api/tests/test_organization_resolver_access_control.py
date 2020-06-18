@@ -52,9 +52,7 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
     if "errors" in result:
         fail("Tried to select org, instead: {}".format(json(result)))
 
-    expected_result = {
-        "data": {"organization": {"acronym": "ORG1"}}
-    }
+    expected_result = {"data": {"organization": {"acronym": "ORG1"}}}
 
     assert result == expected_result
 
