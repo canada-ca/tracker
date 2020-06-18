@@ -1,6 +1,7 @@
 from graphql import GraphQLError
 from sqlalchemy.orm import load_only
 
+from app import logger
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read
@@ -21,6 +22,7 @@ def resolve_domain(self: Domain, info, **kwargs):
     """
     # Get Information passed in via kwargs
     url_slug = kwargs.get("url_slug")
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
 
     # Get initial Domain Query Object
@@ -36,6 +38,9 @@ def resolve_domain(self: Domain, info, **kwargs):
 
     # If org cannot be found
     if not org_orm:
+        logger.notice(
+            f"User: {user_id} attempted to access a domain using {url_slug}, but no organization was found."
+        )
         raise GraphQLError("Error, unable to find domain.")
     org_id = org_orm.id
 
@@ -46,7 +51,15 @@ def resolve_domain(self: Domain, info, **kwargs):
             .filter(Domains.organization_id == org_id)
             .all()
         )
+        if not query_rtn:
+            logger.notice(
+                f"User: {user_id} attempted to access a domain using {url_slug}, but no domain was found."
+            )
+            raise GraphQLError("Error, unable to find domain.")
     else:
+        logger.notice(
+            f"User: {user_id} attempted to access a domain using {url_slug}, but does not have access to {org_orm.slug}."
+        )
         raise GraphQLError("Error, unable to find domain.")
 
     return query_rtn
@@ -65,6 +78,7 @@ def resolve_domains(self, info, **kwargs):
     """
     # Get Information passed in from kwargs
     org_slug = kwargs.get("org_slug")
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
 
     # Generate list of org's the user has access to
@@ -73,6 +87,9 @@ def resolve_domains(self, info, **kwargs):
         org_ids.append(role["org_id"])
 
     if not org_ids:
+        logger.notice(
+            f"User: {user_id} attempted to access domains for this org {org_slug}, but has no roles assigned."
+        )
         raise GraphQLError("Error, unable to find domains.")
 
     # Retrieve information based on query
@@ -88,19 +105,28 @@ def resolve_domains(self, info, **kwargs):
 
         # Check if org exists
         if not len(org_orms.all()):
+            logger.notice(
+                f"User: {user_id} attempted to access an orgnaizations domains using {org_slug}, but no organization was found."
+            )
             raise GraphQLError("Error, unable to find organization.")
 
         # Convert to int id
         org_id = org_orms.first().id
 
         # Check if user has permission to view org
-        if is_user_read(user_roles, org_id):
+        if is_user_read(user_roles=user_roles, org_id=org_id):
             query_rtn = query.filter(Domains.organization_id == org_id).all()
 
             # If org has no domains related to it
             if not len(query_rtn):
+                logger.notice(
+                    f"User: {user_id} attempted to access an organizations domains using {org_slug}, but no domains were found."
+                )
                 raise GraphQLError("Error, unable to find domains.")
         else:
+            logger.notice(
+                f"User: {user_id} attempted to access an organizations domains using {org_slug}, but does not have access to this organization."
+            )
             raise GraphQLError("Error, unable to find domains.")
 
         return query_rtn
@@ -108,6 +134,9 @@ def resolve_domains(self, info, **kwargs):
         if is_super_admin(user_roles=user_roles):
             query_rtn = query.all()
             if not query_rtn:
+                logger.notice(
+                    f"Super Admin: {user_id} tried to gather all domains, but none were found."
+                )
                 raise GraphQLError("Error, unable to find domains.")
             return query_rtn
         else:
@@ -118,5 +147,8 @@ def resolve_domains(self, info, **kwargs):
                     for item in tmp_query:
                         query_rtr.append(item)
             if not query_rtr:
+                logger.notice(
+                    f"User: {user_id}, tried to access all the domains for all the orgs that they belong to but none were found."
+                )
                 raise GraphQLError("Error, unable to find domains.")
             return query_rtr
