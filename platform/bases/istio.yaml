@@ -180,7 +180,7 @@ data:
     deployment:
       accessible_namespaces: ['**']
     login_token:
-      signing_key: "jwo67mBivR"
+      signing_key: "V2xSG4IqrE"
     server:
       port: 20001
       web_root: /kiali
@@ -801,7 +801,7 @@ spec:
           value: cluster.local
         - name: ISTIO_META_CLUSTER_ID
           value: Kubernetes
-        image: docker.io/istio/proxyv2:1.6.0
+        image: docker.io/istio/proxyv2:1.6.2
         imagePullPolicy: Always
         name: istio-proxy
         ports:
@@ -6566,7 +6566,7 @@ spec:
           value: sni-dnat
         - name: ISTIO_META_CLUSTER_ID
           value: Kubernetes
-        image: docker.io/istio/proxyv2:1.6.0
+        image: docker.io/istio/proxyv2:1.6.2
         name: istio-proxy
         ports:
         - containerPort: 15021
@@ -6886,7 +6886,7 @@ spec:
           value: Kubernetes
         - name: CENTRAL_ISTIOD
           value: "false"
-        image: docker.io/istio/pilot:1.6.0
+        image: docker.io/istio/pilot:1.6.2
         name: discovery
         ports:
         - containerPort: 8080
@@ -7061,7 +7061,7 @@ data:
         "sts": {
           "servicePort": 0
         },
-        "tag": "1.6.0",
+        "tag": "1.6.2",
         "telemetryNamespace": "istio-system",
         "tracer": {
           "datadog": {
@@ -7563,6 +7563,7 @@ webhooks:
         namespace: istio-system
         path: "/inject"
       caBundle: ""
+    sideEffects: None
     rules:
       - operations: [ "CREATE" ]
         apiGroups: [""]
