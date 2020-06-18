@@ -7,7 +7,7 @@ import DmarcReportTable from '../DmarcReportTable'
 import {
   singleDmarcReportDetailTableData,
   singleDmarcReportDetailTableColumns,
-} from './fixtures/dmarcReportDetailTablesData'
+} from '../fixtures/dmarcReportDetailTablesData'
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

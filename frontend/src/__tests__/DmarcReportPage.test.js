@@ -12,8 +12,9 @@ import {
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { rawSummaryData } from './fixtures/summaryListData'
-import { rawDmarcReportDetailTablesData } from './fixtures/dmarcReportDetailTablesData'
+import { rawSummaryData } from '../fixtures/summaryListData'
+import { rawDmarcReportDetailTablesData } from '../fixtures/dmarcReportDetailTablesData'
+import { rawSummaryCardData } from '../fixtures/summaryCardData'
 
 const mocks = [
   {
@@ -26,20 +27,7 @@ const mocks = [
       },
     },
     result: {
-      data: {
-        dmarcReportSummary: {
-          month: 'MAY',
-          year: 2020,
-          categoryTotals: {
-            fullPass: 81205,
-            partialPass: 62023,
-            fail: 60283,
-            total: 4774,
-            __typename: 'CategoryTotals',
-          },
-          __typename: 'DmarcReportSummary',
-        },
-      },
+      data: rawSummaryCardData,
     },
   },
   {
@@ -80,7 +68,7 @@ Object.defineProperty(window, 'matchMedia', {
 
 describe('<DmarcReportPage />', () => {
   it('renders', async () => {
-    const { getByText, getAllByText } = render(
+    const { getByText } = render(
       <UserStateProvider
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
@@ -96,12 +84,5 @@ describe('<DmarcReportPage />', () => {
       </UserStateProvider>,
     )
     await waitFor(() => getByText(/Partial Pass/i))
-    await waitFor(() => getByText(/partialPass/i))
-    await waitFor(() => getAllByText(/Fully Aligned by IP Address/i))
-    await waitFor(() => getAllByText(/SPF Failures by IP Address/i))
-    await waitFor(() => getAllByText(/SPF Misalignment by IP Address/i))
-    await waitFor(() => getAllByText(/DKIM Failures by IP Address/i))
-    await waitFor(() => getAllByText(/DKIM Misalignment by IP Address/i))
-    await waitFor(() => getAllByText(/DKIM Failures by IP Address/i))
   })
 })
