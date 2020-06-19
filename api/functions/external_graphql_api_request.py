@@ -4,6 +4,8 @@ from gql import Client
 from gql.transport.requests import RequestsHTTPTransport
 from graphql import GraphQLError
 
+from app import logger
+
 
 def create_transport(api_domain, auth_token) -> RequestsHTTPTransport:
     """
@@ -63,8 +65,13 @@ def send_request(api_domain, auth_token, variables: dict, query) -> dict:
         try:
             error_dict = json.loads(error_str)
             if error_dict.get("message", None):
-                raise GraphQLError(
-                    "Error from dmarc-report-api: " + str(error_dict.get("message"))
+                logger.error(
+                    f"Error occurred on the dmarc-report-api side: {str(error_dict.get('message'))}"
                 )
+                raise GraphQLError("Error when querying dmarc-report-api.")
+
         except ValueError as ve:
+            logger.error(
+                f"Value Error occurred when receiving data from dmarc-report-api: {str(ve)}"
+            )
             raise GraphQLError("Error, when querying dmarc-report-api.")

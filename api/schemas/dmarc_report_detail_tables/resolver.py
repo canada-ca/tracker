@@ -5,6 +5,7 @@ import gql
 from datetime import datetime, timedelta
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 from enums.period import PeriodEnums
 from functions.auth_functions import is_user_read
@@ -30,12 +31,14 @@ DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
 @require_token
 def resolve_dmarc_report_detail_tables(self, info, **kwargs):
     """
-
-    :param self:
-    :param info:
-    :param kwargs:
-    :return:
+    This function is used to resolve the DmarcReportDetailTables graphql object
+    which contains a list of details for creating the detail table table.
+    :param self: None
+    :param info: Request information sent to the sever from a client
+    :param kwargs: Field arguments (i.e. organization), and user_roles
+    :return: DmarcReportDetailTables Object
     """
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
     domain_slug = cleanse_input(kwargs.get("domain_slug"))
     period = cleanse_input(kwargs.get("period"))
@@ -86,6 +89,9 @@ def resolve_dmarc_report_detail_tables(self, info, **kwargs):
 
             data = data.get("getDmarcSummaryByPeriod").get("period")
 
+            logger.info(
+                f"User: {user_id} successfully retrieved the DmarcDetailTables for: {domain_slug}."
+            )
             return DmarcReportDetailTables(
                 # Get Month Name
                 calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
@@ -96,18 +102,25 @@ def resolve_dmarc_report_detail_tables(self, info, **kwargs):
             )
 
         else:
+            logger.warning(
+                f"User: {user_id} tried to retrieved the DmarcDetailTables for: {domain_slug} but does not have access to {domain_orm.organization.slug}."
+            )
             raise GraphQLError("Error, dmarc detail tables cannot be found.")
     else:
+        logger.warning(
+            f"User: {user_id} tried to retrieved the DmarcDetailTables for: {domain_slug} but domain does not exist."
+        )
         raise GraphQLError("Error, dmarc detail tables cannot be found.")
 
 
 def resolve_demo_dmarc_report_detail_tables(self, info, **kwargs):
     """
-
-    :param self:
-    :param info:
-    :param kwargs:
-    :return:
+    This function is used to demo resolve the DmarcReportDetailTables graphql
+    query which contains a predetermined data set to be returned to the user
+    :param self: None
+    :param info: Request information sent to the sever from a client
+    :param kwargs: Field arguments (i.e. organization), and user_roles
+    :return: DmarcReportDetailTables Object
     """
     data = dmarc_report_detail_table_return_data.get("getDmarcSummaryByPeriod").get(
         "period"

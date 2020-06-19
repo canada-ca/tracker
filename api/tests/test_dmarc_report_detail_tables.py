@@ -1,3 +1,4 @@
+import logging
 import pytest
 
 from pytest import fail
@@ -27,7 +28,9 @@ def save():
         cleanup()
 
 
-def test_valid_get_dmarc_report_detail_tables_query_as_super_admin(save, mocker):
+def test_valid_get_dmarc_report_detail_tables_query_as_super_admin(
+    save, mocker, caplog
+):
     """
     Test to see if super admins can query any data
     """
@@ -62,15 +65,20 @@ def test_valid_get_dmarc_report_detail_tables_query_as_super_admin(save, mocker)
     )
     save(super_admin)
 
+    caplog.set_level(logging.INFO)
     result = run(query=test_query, as_user=super_admin,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
     assert result == dmarc_report_detail_table_expected_result
+    assert (
+        f"User: {super_admin.id} successfully retrieved the DmarcDetailTables for: test-domain-gc-ca."
+        in caplog.text
+    )
 
 
-def test_valid_get_dmarc_report_detail_tables_query_as_org_admin(save, mocker):
+def test_valid_get_dmarc_report_detail_tables_query_as_org_admin(save, mocker, caplog):
     """
     Test to see if org admins can query any data
     """
@@ -100,15 +108,20 @@ def test_valid_get_dmarc_report_detail_tables_query_as_org_admin(save, mocker):
     )
     save(org_admin)
 
+    caplog.set_level(logging.INFO)
     result = run(query=test_query, as_user=org_admin,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
     assert result == dmarc_report_detail_table_expected_result
+    assert (
+        f"User: {org_admin.id} successfully retrieved the DmarcDetailTables for: test-domain-gc-ca."
+        in caplog.text
+    )
 
 
-def test_valid_get_dmarc_report_detail_tables_query_as_user_write(save, mocker):
+def test_valid_get_dmarc_report_detail_tables_query_as_user_write(save, mocker, caplog):
     """
     Test to see if user write can query any data
     """
@@ -138,15 +151,20 @@ def test_valid_get_dmarc_report_detail_tables_query_as_user_write(save, mocker):
     )
     save(user_write)
 
+    caplog.set_level(logging.INFO)
     result = run(query=test_query, as_user=user_write,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
     assert result == dmarc_report_detail_table_expected_result
+    assert (
+        f"User: {user_write.id} successfully retrieved the DmarcDetailTables for: test-domain-gc-ca."
+        in caplog.text
+    )
 
 
-def test_valid_get_dmarc_report_detail_tables_query_as_user_read(save, mocker):
+def test_valid_get_dmarc_report_detail_tables_query_as_user_read(save, mocker, caplog):
     """
     Test to see if user read can query any data
     """
@@ -176,15 +194,20 @@ def test_valid_get_dmarc_report_detail_tables_query_as_user_read(save, mocker):
     )
     save(user_read)
 
+    caplog.set_level(logging.INFO)
     result = run(query=test_query, as_user=user_read,)
 
     if "errors" in result:
         fail("Expected to get return data, instead: {}".format(json(result)))
 
     assert result == dmarc_report_detail_table_expected_result
+    assert (
+        f"User: {user_read.id} successfully retrieved the DmarcDetailTables for: test-domain-gc-ca."
+        in caplog.text
+    )
 
 
-def test_admin_from_different_org_cant_access_data(save, mocker):
+def test_admin_from_different_org_cant_access_data(save, mocker, caplog):
     """
     Test to ensure admins from different orgs cant access this information
     """
@@ -219,6 +242,7 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
     )
     save(org_admin)
 
+    caplog.set_level(logging.WARNING)
     result = run(query=test_query, as_user=org_admin,)
 
     if "errors" not in result:
@@ -226,9 +250,13 @@ def test_admin_from_different_org_cant_access_data(save, mocker):
 
     [error] = result["errors"]
     assert error["message"] == "Error, dmarc detail tables cannot be found."
+    assert (
+        f"User: {org_admin.id} tried to retrieved the DmarcDetailTables for: test-domain-gc-ca but does not have access to organization-1."
+        in caplog.text
+    )
 
 
-def test_user_write_from_different_org_cant_access_data(save, mocker):
+def test_user_write_from_different_org_cant_access_data(save, mocker, caplog):
     """
     Test to ensure user write from different orgs cant access this information
     """
@@ -263,6 +291,7 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
     )
     save(user_write)
 
+    caplog.set_level(logging.WARNING)
     result = run(query=test_query, as_user=user_write,)
 
     if "errors" not in result:
@@ -270,9 +299,13 @@ def test_user_write_from_different_org_cant_access_data(save, mocker):
 
     [error] = result["errors"]
     assert error["message"] == "Error, dmarc detail tables cannot be found."
+    assert (
+        f"User: {user_write.id} tried to retrieved the DmarcDetailTables for: test-domain-gc-ca but does not have access to organization-1."
+        in caplog.text
+    )
 
 
-def test_user_read_from_different_org_cant_access_data(save, mocker):
+def test_user_read_from_different_org_cant_access_data(save, mocker, caplog):
     """
     Test to ensure user read from different orgs cant access this information
     """
@@ -307,6 +340,7 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
     )
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(query=test_query, as_user=user_read,)
 
     if "errors" not in result:
@@ -314,9 +348,13 @@ def test_user_read_from_different_org_cant_access_data(save, mocker):
 
     [error] = result["errors"]
     assert error["message"] == "Error, dmarc detail tables cannot be found."
+    assert (
+        f"User: {user_read.id} tried to retrieved the DmarcDetailTables for: test-domain-gc-ca but does not have access to organization-1."
+        in caplog.text
+    )
 
 
-def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
+def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker, caplog):
     """
     Test to ensure that if domain does not exist it errors out
     """
@@ -343,6 +381,7 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
     )
     save(super_admin)
 
+    caplog.set_level(logging.WARNING)
     result = run(query=test_query, as_user=super_admin,)
 
     if "errors" not in result:
@@ -350,3 +389,4 @@ def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker):
 
     [error] = result["errors"]
     assert error["message"] == "Error, dmarc detail tables cannot be found."
+    assert f"User: {super_admin.id} tried to retrieved the DmarcDetailTables for: test-domain-gc-ca but domain does not exist."
