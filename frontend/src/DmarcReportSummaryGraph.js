@@ -49,6 +49,15 @@ function DmarcReportSummaryGraph({ ...props }) {
     return `${tick * 100}%`
   }
 
+  // Sort dates
+  periods.sort((a, b) => {
+    if (a.month === 'LAST30DAYS') return 1
+    if (b.month === 'LAST30DAYS') return -1
+    const aDate = new Date(`${a.month}, ${a.year}`)
+    const bDate = new Date(`${b.month}, ${b.year}`)
+    return aDate - bDate
+  })
+
   // Format dates
   periods.forEach((period) => {
     let date
@@ -59,6 +68,8 @@ function DmarcReportSummaryGraph({ ...props }) {
           .replace(/ /, '-'))
     period.date = date
   })
+
+  console.log(periods)
 
   return (
     <Box overflow="hidden">
