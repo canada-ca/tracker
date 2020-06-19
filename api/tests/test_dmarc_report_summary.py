@@ -24,7 +24,7 @@ def save():
         cleanup()
 
 
-def test_valid_get_dmarc_report_doughnut_query_as_super_admin(save, mocker, caplog):
+def test_valid_get_dmarc_report_summary_query_as_super_admin(save, mocker, caplog):
     """
     Test to see if super admins can query any data
     """
@@ -107,7 +107,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_super_admin(save, mocker, capl
     )
 
 
-def test_valid_get_dmarc_report_doughnut_query_as_org_admin(save, mocker, caplog):
+def test_valid_get_dmarc_report_summary_query_as_org_admin(save, mocker, caplog):
     """
     Test to see if org admins can query any data
     """
@@ -185,7 +185,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_org_admin(save, mocker, caplog
     )
 
 
-def test_valid_get_dmarc_report_doughnut_query_as_user_write(save, mocker, caplog):
+def test_valid_get_dmarc_report_summary_query_as_user_write(save, mocker, caplog):
     """
     Test to see if user write can query any data
     """
@@ -263,7 +263,7 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_write(save, mocker, caplo
     )
 
 
-def test_valid_get_dmarc_report_doughnut_query_as_user_read(save, mocker, caplog):
+def test_valid_get_dmarc_report_summary_query_as_user_read(save, mocker, caplog):
     """
     Test to see if user read can query any data
     """
@@ -341,7 +341,9 @@ def test_valid_get_dmarc_report_doughnut_query_as_user_read(save, mocker, caplog
     )
 
 
-def test_admin_from_different_org_cant_access_data(save, mocker, caplog):
+def test_dmarc_report_summary_admin_from_different_org_cant_access_data(
+    save, mocker, caplog
+):
     """
     Test to ensure admins from different orgs cant access this information
     """
@@ -410,7 +412,9 @@ def test_admin_from_different_org_cant_access_data(save, mocker, caplog):
     )
 
 
-def test_user_write_from_different_org_cant_access_data(save, mocker, caplog):
+def test_dmarc_report_summary_user_write_from_different_org_cant_access_data(
+    save, mocker, caplog
+):
     """
     Test to ensure user write from different orgs cant access this information
     """
@@ -479,7 +483,9 @@ def test_user_write_from_different_org_cant_access_data(save, mocker, caplog):
     )
 
 
-def test_user_read_from_different_org_cant_access_data(save, mocker, caplog):
+def test_dmarc_report_summary_user_read_from_different_org_cant_access_data(
+    save, mocker, caplog
+):
     """
     Test to ensure user read from different orgs cant access this information
     """
@@ -548,7 +554,9 @@ def test_user_read_from_different_org_cant_access_data(save, mocker, caplog):
     )
 
 
-def test_to_ensure_error_occurs_when_domain_does_not_exist(save, mocker, caplog):
+def test_dmarc_report_summary_to_ensure_error_occurs_when_domain_does_not_exist(
+    save, mocker, caplog
+):
     """
     Test to ensure that if domain does not exist it errors out
     """
