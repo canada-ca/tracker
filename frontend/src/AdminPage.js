@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, Text, Select } from '@chakra-ui/core'
+import { Stack, Text, Select, Divider } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { QUERY_USER } from './graphql/queries'
@@ -36,14 +36,12 @@ export default function AdminPage() {
 
   const affiliations = queryUserData.userPage.userAffiliations
 
-  const createOrgOptions = () => {
-    const options = []
-
-    options.push(
-      <option hidden value="default">
+  const getOrgOptions = () => {
+    const options = [
+      <option hidden key="default">
         Select an organization
       </option>,
-    )
+    ]
 
     for (let i = 0; i < affiliations.length; i++) {
       if (affiliations[i].admin) {
@@ -55,6 +53,12 @@ export default function AdminPage() {
       }
     }
     return options
+
+    // affiliations.map((org) => {
+    //   return (
+    //     org.admin && <option key={org.organization}>{org.organization}</option>
+    //   )
+    // })
   }
 
   return (
@@ -63,26 +67,34 @@ export default function AdminPage() {
         <Text fontSize="3xl" fontWeight="bold">
           Welcome, Admin
         </Text>
-        {/* {createOrgOptions().length > 2 && ( */}
-        <Stack isInline>
+        <Stack isInline align="center">
+          <Text fontWeight="bold" fontSize="xl">
+            Organization:{' '}
+          </Text>
           <Select
-            w="20%"
+            w="25%"
+            size="lg"
+            variant="filled"
             onChange={(e) => {
               setOrgName(e.target.value)
             }}
           >
-            {createOrgOptions()}
+            {getOrgOptions()}
           </Select>
         </Stack>
-        {/* )} */}
-        {createOrgOptions().length > 1 && orgName !== '' ? (
-          <AdminPanel name={orgName} />
-        ) : (
-          <Stack align="center">
-            <Text fontSize="2xl" fontWeight="bold">
-              Empty...
+        {getOrgOptions().length > 1 && orgName !== '' ? (
+          <Stack>
+            <AdminPanel orgName={orgName} />
+            <Divider />
+            <Text>
+              *search bars do not actively search databases currently. They are
+              used to demonstrate the 'add' button feature
             </Text>
           </Stack>
+        ) : (
+          <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
+            Select an organization to view admin options
+          </Text>
         )}
       </Stack>
     </Layout>

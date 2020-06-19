@@ -9,34 +9,60 @@ import {
   InputLeftElement,
   Input,
   Text,
+  IconButton,
+  useToast,
 } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
-import { QUERY_USERLIST } from './graphql/queries'
-import { useQuery } from '@apollo/react-hooks'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
-import { useUserState } from './UserState'
-import { slugify } from './slugify'
+import { object, string } from 'prop-types'
 
-export default function UserList() {
-  const { currentUser } = useUserState()
-  // This function generates the URL when the page loads
-  const { loading, error, data } = useQuery(QUERY_USERLIST, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
+export default function UserList({ ...props }) {
+  const { data, orgName } = props
+  const [userList, setUserList] = React.useState(data.userList.edges)
+  const [userSearch, setUserSearch] = React.useState('')
+  const toast = useToast()
+
+  const newUser = (displayName, id) => {
+    return {
+      node: {
+        id: id,
+        userName: String(id),
+        admin: false,
+        tfa: false,
+        displayName: displayName,
       },
-    },
-    variables: {
-      slug: slugify(currentUser.userName),
-    },
-  })
-  if (loading) {
-    return <p>Loading...</p>
+    }
   }
-  if (error) {
-    console.log(error)
-    return <p>Error :(</p>
+
+  const removeUser = (user) => {
+    const temp = userList
+    let index = -1
+    for (var i = 0; i < temp.length; i++) {
+      if (temp[i].node.id === user.id) {
+        index = i
+      }
+    }
+
+    if (index > -1) {
+      temp.splice(index, 1)
+      setUserList(temp)
+      toast({
+        title: 'User removed',
+        description: `${user.displayName} was successfully removed from ${orgName}`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'User removal failed',
+        description: `${user.displayName} could not be removed from ${orgName}`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
   }
 
   return (
@@ -49,31 +75,71 @@ export default function UserList() {
           <InputLeftElement>
             <Icon name="search" color="gray.300" />
           </InputLeftElement>
-          <Input type="text" placeholder="Search for user" />
+          <Input
+            type="text"
+            placeholder="Search for user"
+            value={userSearch}
+            onChange={(e) => {
+              setUserSearch(e.target.value)
+            }}
+          />
         </InputGroup>
         <Button
           width={'70%'}
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
-            window.alert('create user')
+            userSearch !== ''
+              ? setUserList([...userList, newUser(userSearch, Math.random())])
+              : toast({
+                  title: 'An error occurred.',
+                  description: 'Search for a user to add them',
+                  status: 'error',
+                  duration: 9000,
+                  isClosable: true,
+                })
+            setUserSearch('')
           }}
         >
-          <Trans>Add User</Trans>
+          <Trans>Invite User</Trans>
         </Button>
       </SimpleGrid>
       <Divider />
-      {data.userList.edges.map(({ node }) => {
-        return (
-          <UserCard
-            key={node.id}
-            userName={node.userName}
-            tfa={node.tfa}
-            admin={node.admin}
-            displayName={node.displayName}
-          />
-        )
-      })}
+
+      {userList.length === 0 ? (
+        <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
+          No users in this organization
+        </Text>
+      ) : (
+        userList.map(({ node }) => {
+          return (
+            <Stack isInline key={node.id} align="center">
+              <IconButton
+                icon="minus"
+                size="sm"
+                variantColor="red"
+                isDisabled={node.admin}
+                onClick={() => removeUser(node)}
+              />
+              <IconButton
+                icon="edit"
+                size="sm"
+                variantColor="blue"
+                onClick={() => window.alert('edit user')}
+                isDisabled={node.admin}
+              />
+
+              <UserCard
+                userName={node.userName}
+                tfa={node.tfa}
+                admin={node.admin}
+                displayName={node.displayName}
+              />
+            </Stack>
+          )
+        })
+      )}
+      <Divider />
       <PaginationButtons
         next={data.userList.pageInfo.hasNextPage}
         previous={data.userList.pageInfo.hasPreviousPage}
@@ -104,3 +170,8 @@ export default function UserList() {
     })}
   </Box>
 </Box> */
+
+UserList.propTypes = {
+  data: object,
+  orgName: string,
+}
