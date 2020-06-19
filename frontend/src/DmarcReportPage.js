@@ -15,7 +15,7 @@ import { number } from 'prop-types'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
-export function DmarcReportPage({ ...props }) {
+export default function DmarcReportPage({ ...props }) {
   const { summaryListResponsiveWidth } = props
   const { currentUser } = useUserState()
   const { i18n } = useLingui()
