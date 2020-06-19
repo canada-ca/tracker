@@ -1,14 +1,16 @@
+import logging
 import pytest
+
 from datetime import datetime
 from pytest import fail
 
 from db import DB
-from models import Users
 from functions.error_messages import (
     error_invalid_credentials,
     error_too_many_failed_login_attempts,
     error_user_does_not_exist,
 )
+from models import Users
 from tests.test_functions import json, run
 
 
@@ -19,7 +21,7 @@ def db():
     cleanup()
 
 
-def test_authenticate_with_valid_credentials(db):
+def test_authenticate_with_valid_credentials(db, caplog):
     """
     Test that ensures a user can be signed in successfully
     """
@@ -35,6 +37,7 @@ def test_authenticate_with_valid_credentials(db):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     actual = run(
         mutation="""
         mutation{
@@ -60,9 +63,11 @@ def test_authenticate_with_valid_credentials(db):
 
     [username] = actual["data"]["authenticate"]["authResult"]["user"].values()
     assert username == "testuser@testemail.ca"
+    assert f"Successfully reset user: {user.id} login attempts counter." in caplog.text
+    assert f"User: {user.id} successfully authenticated their account." in caplog.text
 
 
-def test_authenticate_with_invalid_credentials_fails(db):
+def test_authenticate_with_invalid_credentials_fails(db, caplog):
     """
     Test that ensures a user can be signed in successfully
     """
@@ -78,6 +83,7 @@ def test_authenticate_with_invalid_credentials_fails(db):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     actual = run(
         mutation="""
         mutation {
@@ -104,9 +110,17 @@ def test_authenticate_with_invalid_credentials_fails(db):
     [err] = actual["errors"]
     [message, _line, _field] = err.values()
     assert message == "Incorrect email or password"
+    assert (
+        f"Successfully increased login failed attempts counter for user: {user.id}"
+        in caplog.text
+    )
+    assert (
+        f"User attempted to authenticate an account {user.id} with invalid credentials."
+        in caplog.text
+    )
 
 
-def test_authenticate_failed_login_attempts_are_recorded(db):
+def test_authenticate_failed_login_attempts_are_recorded(db, caplog):
     save, session = db
 
     user = Users(
@@ -116,6 +130,7 @@ def test_authenticate_failed_login_attempts_are_recorded(db):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     actual = run(
         mutation="""
         mutation {
@@ -142,9 +157,17 @@ def test_authenticate_failed_login_attempts_are_recorded(db):
     session.refresh(user)
     assert user.failed_login_attempts == 1
     assert user.failed_login_attempt_time is not 0
+    assert (
+        f"Successfully increased login failed attempts counter for user: {user.id}"
+        in caplog.text
+    )
+    assert (
+        f"User attempted to authenticate an account {user.id} with invalid credentials."
+        in caplog.text
+    )
 
 
-def test_authenticate_successful_login_sets_failed_attempts_to_zero(db):
+def test_authenticate_successful_login_sets_failed_attempts_to_zero(db, caplog):
     """
     Test that ensures a user can be signed in, and that when they do, their
     user count is updated to be 0.
@@ -160,6 +183,7 @@ def test_authenticate_successful_login_sets_failed_attempts_to_zero(db):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     actual = run(
         mutation="""
         mutation {
@@ -180,9 +204,11 @@ def test_authenticate_successful_login_sets_failed_attempts_to_zero(db):
     session.refresh(user)
     assert user.failed_login_attempts == 0
     assert user.failed_login_attempt_time == 0
+    assert f"Successfully reset user: {user.id} login attempts counter." in caplog.text
+    assert f"User: {user.id} successfully authenticated their account." in caplog.text
 
 
-def test_authenticate_too_many_failed_attempts(db):
+def test_authenticate_too_many_failed_attempts(db, caplog):
     save, _ = db
 
     user = Users(
@@ -193,6 +219,8 @@ def test_authenticate_too_many_failed_attempts(db):
         failed_login_attempt_time=0,
     )
     save(user)
+
+    caplog.set_level(logging.WARNING)
     actual = run(
         """
         mutation{
@@ -219,9 +247,14 @@ def test_authenticate_too_many_failed_attempts(db):
     [err] = actual["errors"]
     [message, _line, _field] = err.values()
     assert message == error_too_many_failed_login_attempts()
+    assert (
+        f"User: {user.id} tried to authenticate but has too many login attempts."
+        in caplog.text
+    )
 
 
-def test_authenticating_in_with_unknown_users_returns_error():
+def test_authenticating_in_with_unknown_users_returns_error(caplog):
+    caplog.set_level(logging.WARNING)
     actual = run(
         """
         mutation{
@@ -248,3 +281,7 @@ def test_authenticating_in_with_unknown_users_returns_error():
     [err] = actual["errors"]
     [message, _line, _field] = err.values()
     assert message == error_user_does_not_exist()
+    assert (
+        f"User attempted to authenticate an account that does not exist using this username: null@example.com."
+        in caplog.text
+    )

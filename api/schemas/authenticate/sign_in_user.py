@@ -1,12 +1,13 @@
 import datetime
 import bcrypt
 
-from json_web_token import tokenize
-from graphql import GraphQLError
+from app import logger
+from db import db_session
 from functions.input_validators import *
 from functions.error_messages import *
+from graphql import GraphQLError
+from json_web_token import tokenize
 from models import Users
-from db import db_session
 
 
 def sign_in_user(user_name, password):
@@ -21,6 +22,9 @@ def sign_in_user(user_name, password):
     user = Users.find_by_user_name(user_name)
 
     if user is None:
+        logger.warning(
+            f"User attempted to authenticate an account that does not exist using this username: {user_name}."
+        )
         raise GraphQLError(error_user_does_not_exist())
 
     # Checks the amount of failed login attempts and if the time since the last
@@ -30,6 +34,9 @@ def sign_in_user(user_name, password):
         and (user.failed_login_attempt_time + 1800)
         < datetime.datetime.now().timestamp()
     ):
+        logger.warning(
+            f"User: {user.id} tried to authenticate but has too many login attempts."
+        )
         raise GraphQLError(error_too_many_failed_login_attempts())
 
     email_match = user_name == user.user_name
@@ -45,11 +52,16 @@ def sign_in_user(user_name, password):
         try:
             db_session.add(user)
             db_session.commit()
+            logger.info(f"Successfully reset user: {user.id} login attempts counter.")
         except Exception as e:
             db_session.rollback()
             db_session.flush()
-            raise GraphQLError(str(e))
+            logger.error(
+                f"A database exception occurred when a user: {user.id} tried to authenticate their account: {str(e)}"
+            )
+            raise GraphQLError("Error authenticating account, please try again.")
 
+        logger.info(f"User: {user.id} successfully authenticated their account.")
         return {
             "auth_token": tokenize(user_id=user.id),
             "user": user,
@@ -65,9 +77,19 @@ def sign_in_user(user_name, password):
         try:
             db_session.add(user)
             db_session.commit()
+            logger.info(
+                f"Successfully increased login failed attempts counter for user: {user.id}"
+            )
         except Exception as e:
             db_session.rollback()
             db_session.flush()
+
+            logger.error(
+                f"A database exception occurred when a trying to increment a user: {user.id} failed login attempts: {str(e)}"
+            )
             raise GraphQLError(str(e))
 
+        logger.warning(
+            f"User attempted to authenticate an account {user.id} with invalid credentials."
+        )
         raise GraphQLError(error_invalid_credentials())
