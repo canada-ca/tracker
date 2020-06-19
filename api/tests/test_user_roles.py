@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -14,7 +16,7 @@ def db():
     cleanup()
 
 
-def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_write(db):
+def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_write(db, caplog):
     [save, _] = db
     org1 = Organizations(acronym="ORG1", name="Organization 1")
     super_admin = Users(
@@ -38,6 +40,7 @@ def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_write(db):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     update_result = run(
         mutation="""
         mutation {
@@ -69,9 +72,13 @@ def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_write(db):
 
     [response] = actual["data"].values()
     assert response == "User Passed User Write Claim"
+    assert (
+        f"User: {user.id} passed the user write claims test for this organization: {org1.slug}."
+        in caplog.text
+    )
 
 
-def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_admin(db):
+def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_admin(db, caplog):
     [save, _] = db
     org1 = Organizations(acronym="ORG1", name="Organization 1")
     super_admin = Users(
@@ -95,6 +102,7 @@ def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_admin(db):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     update_result = run(
         mutation="""
         mutation {
@@ -126,9 +134,13 @@ def test_sa_user_can_use_updateUserRole_to_switch_user_from_read_to_admin(db):
 
     [response] = actual["data"].values()
     assert response == "User Passed Admin Claim"
+    assert (
+        f"User: {user.id} passed the admin claims test for this organization: {org1.slug}."
+        in caplog.text
+    )
 
 
-def test_sa_user_can_use_updateUserRole_annoint_another_user_a_sa(db):
+def test_sa_user_can_use_updateUserRole_annoint_another_user_a_sa(db, caplog):
     [save, _] = db
     org1 = Organizations(acronym="ORG1", name="Organization 1")
     super_admin = Users(
@@ -152,6 +164,7 @@ def test_sa_user_can_use_updateUserRole_annoint_another_user_a_sa(db):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     update_result = run(
         mutation="""
         mutation {
@@ -183,6 +196,7 @@ def test_sa_user_can_use_updateUserRole_annoint_another_user_a_sa(db):
 
     [response] = actual["data"].values()
     assert response == "User Passed Super Admin Claim"
+    assert f"User: {user.id} passed the super admin claims test." in caplog.text
 
 
 def test_read_user_cannot_update_their_own_permissions(db):
