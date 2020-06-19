@@ -33,7 +33,7 @@ export default function App() {
   const { loading, error, data } = useQuery(IS_USER_ADMIN, {
     onError: (error) => {
       const [_, message] = error.message.split(': ')
-      // console.log(message)
+      console.log(message)
     },
   })
 

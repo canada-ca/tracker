@@ -96,3 +96,17 @@ export const QUERY_DMARC_REPORT = gql`
     }
   }
 `
+
+export const IS_USER_ADMIN = gql`
+  query IsUserAdmin {
+    user {
+      affiliations {
+        edges {
+          node {
+            permission
+          }
+        }
+      }
+    }
+  }
+`
