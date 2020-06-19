@@ -2,20 +2,17 @@ import pyotp
 import os
 
 from sqlalchemy.orm import load_only
-
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
-
+from functions.auth_wrappers import require_token
+from functions.auth_functions import is_super_admin, is_admin
 from models import (
     Users,
     User_affiliations,
 )
-
 from schemas.user import User as UserSchema
-
-from functions.auth_wrappers import require_token
-from functions.auth_functions import is_super_admin, is_user_read, is_admin
 
 
 @require_token
@@ -54,6 +51,9 @@ def resolve_user(self, info, **kwargs):
 
         # Check to see if user actually exists
         if req_user_orm is None:
+            logger.warning(
+                f"User: {user_id}, tried to find this user {user_name} but the account does not exist."
+            )
             raise GraphQLError("Error, user cannot be found.")
         else:
             req_user_id = req_user_orm.id
@@ -68,7 +68,10 @@ def resolve_user(self, info, **kwargs):
 
         # Check to ensure the user belongs to at least one organization
         if req_org_orms is None:
-            raise GraphQLError("Error, user does not belong to any organization")
+            logger.warning(
+                f"User: {user_id}, tried to find this user {user_name} but the account does not belong to any organization."
+            )
+            raise GraphQLError("Error, user cannot be found.")
         else:
             # Compile list of org id's the user belongs to
             req_user_org_ids = []
@@ -77,36 +80,44 @@ def resolve_user(self, info, **kwargs):
 
         # Check to see if the requested user is a super admin and if true return
         if is_super_admin(user_roles=user_roles):
+            logger.info(
+                f"Super admin {user_id} successfully retrieved the user information for this user {user_name}."
+            )
             return query.filter(Users.id == req_user_id)
+
         elif user_id == req_user_id:
+            logger.info(
+                f"User {user_id} successfully retrieved their own user information using this username {user_name}."
+            )
             return query.filter(Users.id == req_user_id)
 
         # Declare return list, and check
         rtn_query = []
-        user_check = True
 
         # Go through each org id that the user belongs to
         for req_org_id in req_user_org_ids:
             # Check to see if the requesting user and requested user belong to
             # the same org
             if req_org_id in org_ids:
-                # Set check flag
-                user_check = False
 
                 # Check to see if the requesting user has admin rights to org
                 if is_admin(user_roles=user_roles, org_id=req_org_id):
                     # If admin and user share multiple orgs compile list and
                     # return
                     rtn_query.append(query.filter(Users.id == req_user_id).first())
-                else:
-                    raise GraphQLError("Error, user cannot be found.")
-                return rtn_query
+                    logger.info(
+                        f"User {user_id} successfully retrieved the user information for this user {user_name}."
+                    )
+                    return rtn_query
 
         # Give error if requesting user and requested user do not share an org
-        if user_check:
-            raise GraphQLError("Error, user cannot be found.")
+        logger.warning(
+            f"User: {user_id}, tried to find this user {user_name} but does not have admin access to any similar organizations."
+        )
+        raise GraphQLError("Error, user cannot be found.")
     # Return user profile of requesting user
     else:
+        logger.info(f"User {user_id} successfully retrieved their own information.")
         return query.filter(Users.id == user_id)
 
 
