@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from gql import gql
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_read
@@ -32,6 +33,7 @@ def resolve_dmarc_report_summary_list(self, info, **kwargs):
     :param kwargs: Various Arguments passed in
     :return: Returns a list of DmarcReportBarGraph's
     """
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
     domain_slug = cleanse_input(kwargs.get("domain_slug"))
 
@@ -109,11 +111,21 @@ def resolve_dmarc_report_summary_list(self, info, **kwargs):
                         data.get("categoryTotals"),
                     )
                 )
+
+            logger.info(
+                f"User: {user_id} successfully retrieved the DmarcReportSummaryList for: {domain_slug}."
+            )
             return rtr_list
 
         else:
+            logger.warning(
+                f"User: {user_id} tried to retrieved the DmarcReportSummaryList for: {domain_slug} but does not have access to {domain_orm.organization.slug}."
+            )
             raise GraphQLError("Error, dmarc report summary list cannot be found.")
     else:
+        logger.warning(
+            f"User: {user_id} tried to retrieved the DmarcReportSummaryList for: {domain_slug} but domain does not exist."
+        )
         raise GraphQLError("Error, dmarc report summary list cannot be found.")
 
 
