@@ -1,19 +1,19 @@
 import React from 'react'
 import { PseudoBox } from '@chakra-ui/core'
-import { string } from 'prop-types'
+import { string, number, oneOfType } from 'prop-types'
 
 const WithPseudoBox = (WrappedComponent) => {
   return function WrappedWithPseudoBox(props) {
     WrappedWithPseudoBox.propTypes = {
-      mb: string,
-      ml: string,
-      mt: string,
-      mr: string,
-      w: string,
-      width: string,
-      h: string,
-      height: string,
-      mx: string,
+      mb: oneOfType([string, number]),
+      ml: oneOfType([string, number]),
+      mt: oneOfType([string, number]),
+      mr: oneOfType([string, number]),
+      w: oneOfType([string, number]),
+      width: oneOfType([string, number]),
+      h: oneOfType([string, number]),
+      height: oneOfType([string, number]),
+      mx: oneOfType([string, number]),
     }
     const {
       mb,

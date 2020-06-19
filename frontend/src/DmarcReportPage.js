@@ -8,7 +8,7 @@ import {
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
-import { Box, Text } from '@chakra-ui/core'
+import { Box, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { Trans } from '@lingui/macro'
 import { number } from 'prop-types'
@@ -231,6 +231,13 @@ export function DmarcReportPage({ ...props }) {
     ? '35%'
     : '20%'
 
+  const graphWidth =
+    cardWidth.slice(0, -1) <= 20
+      ? `${100 - Number(cardWidth.slice(0, -1))}%`
+      : '100%'
+
+  const cardAndGraphInline = graphWidth !== '100%'
+
   return (
     <Box width="100%">
       <Text>
@@ -238,19 +245,21 @@ export function DmarcReportPage({ ...props }) {
           *All data represented is mocked for demonstration purposes
         </Trans>
       </Text>
-      <SummaryCard
-        title={i18n._(t`DMARC Report`)}
-        description={i18n._(t`Description of DMARC report`)}
-        data={reportCardData}
-        width={cardWidth}
-        mx="auto"
-      />
-      <DmarcTimeGraph
-        data={formattedBarData}
-        width="100%"
-        mx="auto"
-        responsiveWidth={summaryListResponsiveWidth}
-      />
+      <Stack align="center" isInline={cardAndGraphInline}>
+        <SummaryCard
+          title={i18n._(t`DMARC Report`)}
+          description={i18n._(t`Description of DMARC report`)}
+          data={reportCardData}
+          width={cardWidth}
+          mx="auto"
+        />
+        <DmarcTimeGraph
+          data={formattedBarData}
+          width={graphWidth}
+          mx="auto"
+          responsiveWidth={summaryListResponsiveWidth}
+        />
+      </Stack>
       <DmarcReportTable
         data={fullPassData}
         columns={fullPassColumns}
