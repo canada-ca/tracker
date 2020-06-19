@@ -30,7 +30,7 @@ export default function DmarcReportPage({ ...props }) {
         authorization: currentUser.jwt,
       },
     },
-    variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020 },
+    variables: { domainSlug: 'testDomainSlug', period: 'LAST30DAYS', year: 2020 },
   })
 
   const { loading: barLoading, error: barError, data: barData } = useQuery(
@@ -41,7 +41,7 @@ export default function DmarcReportPage({ ...props }) {
           authorization: currentUser.jwt,
         },
       },
-      variables: { domainSlug: 'cyber.gc.ca' },
+      variables: { domainSlug: 'testDomainSlug' },
     },
   )
 
@@ -55,7 +55,7 @@ export default function DmarcReportPage({ ...props }) {
         authorization: currentUser.jwt,
       },
     },
-    variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020 },
+    variables: { domainSlug: 'testDomainSlug', period: 'LAST30DAYS', year: 2020 },
   })
 
   if (tableLoading || summaryLoading || barLoading) return <p>Loading...</p>

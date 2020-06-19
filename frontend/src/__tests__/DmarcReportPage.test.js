@@ -21,7 +21,7 @@ const mocks = [
     request: {
       query: DEMO_DMARC_REPORT_SUMMARY,
       variables: {
-        domainSlug: 'cyber.gc.ca',
+        domainSlug: 'testDomainSlug',
         period: 'LAST30DAYS',
         year: 2020,
       },
@@ -35,7 +35,7 @@ const mocks = [
   {
     request: {
       query: DEMO_DMARC_REPORT_SUMMARY_LIST,
-      variables: { domainSlug: 'cyber.gc.ca' },
+      variables: { domainSlug: 'testDomainSlug' },
     },
     result: {
       data: {
@@ -47,7 +47,7 @@ const mocks = [
     request: {
       query: DEMO_DMARC_REPORT_DETAIL_TABLES,
       variables: {
-        domainSlug: 'cyber.gc.ca',
+        domainSlug: 'testDomainSlug',
         period: 'LAST30DAYS',
         year: 2020,
       },
