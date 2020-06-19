@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -13,7 +15,7 @@ def save():
     cleanup()
 
 
-def test_get_users_as_super_admin(save):
+def test_get_users_as_super_admin(save, caplog):
     """
     Test to see if users resolver access control allows super admin to
     request users outside of organization
@@ -68,6 +70,7 @@ def test_get_users_as_super_admin(save):
     save(org2_admin)
     save(writer)
 
+    caplog.set_level(logging.INFO)
     actual = run(
         query="""
         {
@@ -102,10 +105,14 @@ def test_get_users_as_super_admin(save):
         }
     }
     assert expected == actual
+    assert (
+        f"Super admin: {super_admin.id}, successfully retrieved all users."
+        in caplog.text
+    )
 
 
 # Admin Same Org
-def test_get_users_from_same_org(save):
+def test_get_users_from_same_org(save, caplog):
     """
     Test users query to see if an admin from the corresponding org can
     retrieve the information
@@ -160,6 +167,7 @@ def test_get_users_from_same_org(save):
     save(org2_admin)
     save(writer)
 
+    caplog.set_level(logging.INFO)
     actual = run(
         query="""
         {
@@ -193,10 +201,14 @@ def test_get_users_from_same_org(save):
     }
 
     assert actual == expected
+    assert (
+        f"User: {org1_admin.id}, successfully retrieved all users for the {org1.slug} organization."
+        in caplog.text
+    )
 
 
 # Admin different org
-def test_get_users_admin_from_different_org(save):
+def test_get_users_admin_from_different_org(save, caplog):
     """
     Test users query to see if an admin from anther org cannot
     retrieve the information
@@ -251,6 +263,7 @@ def test_get_users_admin_from_different_org(save):
     save(org2_admin)
     save(writer)
 
+    caplog.set_level(logging.WARNING)
     actual = run(
         query="""
         {
@@ -275,16 +288,19 @@ def test_get_users_admin_from_different_org(save):
     [err] = actual["errors"]
     [message, _, _] = err.values()
     assert message == "Error, unable to find organization."
+    assert (
+        f"User: {org2_admin.id} tried to access all users from {org1.slug} organization, but is not an admin for that organization."
+        in caplog.text
+    )
 
 
 # User write tests
-def test_get_users_user_write(save):
+def test_get_users_user_write(save, caplog):
     """
     Ensure user write cannot access this query
     """
     org1 = Organizations(acronym="ORG1", name="Organization 1")
     org2 = Organizations(acronym="ORG2", name="Organization 2")
-    org3 = Organizations(acronym="ORG3", name="Organization 3")
 
     reader = Users(
         display_name="testuserread",
@@ -332,6 +348,7 @@ def test_get_users_user_write(save):
     save(org2_admin)
     save(writer)
 
+    caplog.set_level(logging.WARNING)
     actual = run(
         query="""
         {
@@ -356,9 +373,13 @@ def test_get_users_user_write(save):
     [err] = actual["errors"]
     [message, _, _] = err.values()
     assert message == "Error, unable to find organization."
+    assert (
+        f"User: {writer.id} tried to access all users from {org1.slug} organization, but is not an admin for that organization."
+        in caplog.text
+    )
 
 
-def test_get_users_user_read(save):
+def test_get_users_user_read(save, caplog):
     """
     Ensure user write cannot access this query
     """
@@ -412,6 +433,7 @@ def test_get_users_user_read(save):
     save(org2_admin)
     save(writer)
 
+    caplog.set_level(logging.WARNING)
     actual = run(
         query="""
         {
@@ -436,3 +458,7 @@ def test_get_users_user_read(save):
     [err] = actual["errors"]
     [message, _, _] = err.values()
     assert message == "Error, unable to find organization."
+    assert (
+        f"User: {reader.id} tried to access all users from {org1.slug} organization, but is not an admin for that organization."
+        in caplog.text
+    )
