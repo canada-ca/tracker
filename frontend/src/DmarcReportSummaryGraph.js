@@ -13,6 +13,7 @@ import { object, number } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 import theme from './theme/canada'
 import { Box } from '@chakra-ui/core'
+import { useLingui } from '@lingui/react'
 
 /*
 scheme for const data:
@@ -42,18 +43,21 @@ function DmarcReportSummaryGraph({ ...props }) {
   const { periods, strengths } = data
   const ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
   const { colors } = theme
+  const { i18n } = useLingui()
 
-  const formatTicks = (tick) => {
+  const formatYAxisTicks = (tick) => {
     return `${tick * 100}%`
   }
 
-  // Create date entry for x-axis data keys (e.g.: 'JAN-19')
-  // TODO: Should we just be receiving the data in this format?
+  // Format dates
   periods.forEach((period) => {
-    period.date =
-      period.month === 'LAST30DAYS'
-        ? period.month
-        : `${period.month.slice(0, 3)}-${period.year.toString().slice(-2)}`
+    let date
+    period.month === 'LAST30DAYS'
+      ? (date = period.month)
+      : (date = new Date(`${period.month}, ${period.year}`)
+          .toLocaleDateString(i18n.locale, { month: 'short', year: '2-digit' })
+          .replace(/ /, '-'))
+    period.date = date
   })
 
   return (
@@ -74,7 +78,7 @@ function DmarcReportSummaryGraph({ ...props }) {
           <YAxis
             padding={{ top: 25, bottom: 10 }}
             ticks={ticks}
-            tickFormatter={formatTicks}
+            tickFormatter={formatYAxisTicks}
             domain={[0, 1]}
           />
           <Tooltip />
