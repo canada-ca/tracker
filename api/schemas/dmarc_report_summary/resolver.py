@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from gql import gql
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 from enums.period import PeriodEnums
 from functions.auth_wrappers import require_token
@@ -31,6 +32,7 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
     :param kwargs: Various Arguments passed in
     :return: Returns a DmarcReportDoughnut
     """
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
     domain_slug = cleanse_input(kwargs.get("domain_slug"))
     period = cleanse_input(kwargs.get("period"))
@@ -110,6 +112,10 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
             )
 
             data = data.get("getDmarcSummaryByPeriod").get("period")
+
+            logger.info(
+                f"User: {user_id} successfully retrieved the DmarcReportSummary for: {domain_slug}."
+            )
             return DmarcReportSummary(
                 # Get Month Name
                 calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
@@ -119,8 +125,14 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
                 data.get("categoryTotals"),
             )
         else:
+            logger.warning(
+                f"User: {user_id} tried to retrieved the DmarcReportSummary for: {domain_slug} but does not have access to {domain_orm.organization.slug}."
+            )
             raise GraphQLError("Error, dmarc summary cannot be found.")
     else:
+        logger.warning(
+            f"User: {user_id} tried to retrieved the DmarcReportSummary for: {domain_slug} but domain does not exist."
+        )
         raise GraphQLError("Error, dmarc summary cannot be found.")
 
 
