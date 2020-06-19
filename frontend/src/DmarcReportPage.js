@@ -1,240 +1,312 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
-import {
-  Text,
-  Stack,
-  SimpleGrid,
-  Box,
-  Button,
-  Heading,
-  Icon,
-  Flex,
-  Divider,
-} from '@chakra-ui/core'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
-import { QUERY_DMARC_REPORT } from './graphql/queries'
-import { DmarcReportGraph } from './DmarcReportGraph'
-import { DmarcReportTimeGraph } from './DmarcReportTimeGraph'
-import { DmarcReportGuidance } from './DmarcReportGuidance'
+import {
+  DEMO_DMARC_REPORT_DETAIL_TABLES,
+  DEMO_DMARC_REPORT_SUMMARY,
+  DEMO_DMARC_REPORT_SUMMARY_LIST,
+} from './graphql/queries'
+import SummaryCard from './SummaryCard'
+import DmarcTimeGraph from './DmarcReportSummaryGraph'
+import { Box, Stack, Text } from '@chakra-ui/core'
+import DmarcReportTable from './DmarcReportTable'
+import { Trans } from '@lingui/macro'
+import { number } from 'prop-types'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-export function DmarcReportPage() {
+export default function DmarcReportPage({ ...props }) {
+  const { summaryListResponsiveWidth } = props
   const { currentUser } = useUserState()
-  const { loading, error, data } = useQuery(QUERY_DMARC_REPORT, {
-    variables: { reportId: 'test-report-id' },
+  const { i18n } = useLingui()
+
+  const {
+    loading: summaryLoading,
+    error: summaryError,
+    data: summaryData,
+  } = useQuery(DEMO_DMARC_REPORT_SUMMARY, {
     context: {
       headers: {
         authorization: currentUser.jwt,
       },
     },
+    variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020 },
   })
 
-  const [show, setShow] = React.useState(true)
-  const handleClick = () => {
-    setShow(!show)
-    console.log('Show: ' + show)
+  const { loading: barLoading, error: barError, data: barData } = useQuery(
+    DEMO_DMARC_REPORT_SUMMARY_LIST,
+    {
+      context: {
+        headers: {
+          authorization: currentUser.jwt,
+        },
+      },
+      variables: { domainSlug: 'cyber.gc.ca' },
+    },
+  )
+
+  const {
+    loading: tableLoading,
+    error: tableError,
+    data: tableData,
+  } = useQuery(DEMO_DMARC_REPORT_DETAIL_TABLES, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+    variables: { domainSlug: 'cyber.gc.ca', period: 'LAST30DAYS', year: 2020 },
+  })
+
+  if (tableLoading || summaryLoading || barLoading) return <p>Loading...</p>
+  // TODO: Properly handle these errors
+  if (tableError || summaryError || barError) return <p>Error</p>
+
+  const strengths = {
+    strong: {
+      types: ['fullPass'],
+      name: i18n._(t`Pass`),
+    },
+    moderate: {
+      types: ['partialPass'],
+      name: i18n._(t`Partial Pass`),
+    },
+    weak: {
+      types: ['fail'],
+      name: i18n._(t`Fail`),
+    },
   }
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>{String(error)}</p>
-  return (
-    <Box p={{ sm: '15px', md: '10px', lg: '0px', xl: '0px' }} mb="100px">
-      <Heading mb={4} textAlign={['center', 'left']}>
-        DMARC Report
-      </Heading>
-      <Text w="100%" p={['30px', '0px']}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
-      </Text>
-      <Stack>
-        <Flex
-          align="center"
-          role="dmarcHeader"
-          justifyContent={['center', 'left']}
-          maxW="100%"
-          mt={['0px', '50px']}
-        >
-          <Text fontSize="2xl" fontWeight="bold">
-            DMARC
-          </Text>
-          {data.queryDmarcReport.dmarcResult ? (
-            <Icon
-              ml={2}
-              name="check-circle"
-              size="26px"
-              color="green.500"
-              role="passIcon"
-            />
-          ) : (
-            <Icon
-              ml={2}
-              name="warning"
-              size="26px"
-              color="red.500"
-              role="failIcon"
-            />
-          )}
-        </Flex>
+  const reportCardData = summaryData.demoDmarcReportSummary
+  reportCardData.strengths = { ...strengths }
 
-        <DmarcReportGraph
-          passDmarcPercentage={data.queryDmarcReport.passDmarcPercentage}
-          passArcPercentage={data.queryDmarcReport.passArcPercentage}
-          failDmarcPercentage={data.queryDmarcReport.failDmarcPercentage}
-          failDkimPercentage={data.queryDmarcReport.failDkimPercentage}
-          failSpfPercentage={data.queryDmarcReport.failSpfPercentage}
-          count={data.queryDmarcReport.count}
+  const formattedBarData = {
+    periods: barData.demoDmarcReportSummaryList.map((entry) => {
+      return { month: entry.month, year: entry.year, ...entry.categoryTotals }
+    }),
+  }
+  formattedBarData.strengths = { ...strengths }
+
+  const detailTablesData = tableData.demoDmarcReportDetailTables.detailTables
+
+  const fullPassData = detailTablesData.fullPass
+  const spfFailureData = detailTablesData.spfFailure
+  const spfMisalignedData = detailTablesData.spfMisaligned
+  const dkimFailureData = detailTablesData.dkimFailure
+  const dkimMisalignedData = detailTablesData.dkimMisaligned
+  const dmarcFailureData = detailTablesData.dmarcFailure
+
+  // Initial sorting category for detail tables
+  const initialSort = [{ id: 'totalMessages', desc: true }]
+
+  const [
+    sourceIpAddress,
+    envelopeFrom,
+    dkimDomains,
+    dkimSelectors,
+    totalMessages,
+    countryCode,
+    prefixOrg,
+    dnsHost,
+    spfDomains,
+  ] = [
+    { Header: i18n._(t`Source IP Address`), accessor: 'sourceIpAddress' },
+    { Header: i18n._(t`Envelope From`), accessor: 'envelopeFrom' },
+    { Header: i18n._(t`DKIM Domains`), accessor: 'dkimDomains' },
+    { Header: i18n._(t`DKIM Selectors`), accessor: 'dkimSelectors' },
+    { Header: i18n._(t`Total Messages`), accessor: 'totalMessages' },
+    { Header: i18n._(t`Country Code`), accessor: 'countryCode' },
+    { Header: i18n._(t`Prefix Org`), accessor: 'prefixOrg' },
+    { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' },
+    { Header: i18n._(t`SPF Domains`), accessor: 'spfDomains' },
+  ]
+
+  const fullPassColumns = [
+    {
+      Header: i18n._(t`Fully Aligned by IP Address`),
+      hidden: true,
+      columns: [
+        sourceIpAddress,
+        envelopeFrom,
+        countryCode,
+        prefixOrg,
+        dnsHost,
+        spfDomains,
+        dkimDomains,
+        dkimSelectors,
+        totalMessages,
+      ],
+    },
+  ]
+
+  const spfFailureColumns = [
+    {
+      Header: i18n._(t`SPF Failures by IP Address`),
+      hidden: true,
+      columns: [
+        sourceIpAddress,
+        envelopeFrom,
+        countryCode,
+        prefixOrg,
+        dnsHost,
+        spfDomains,
+        totalMessages,
+      ],
+    },
+  ]
+
+  const spfMisalignedColumns = [
+    {
+      Header: i18n._(t`SPF Misalignment by IP Address`),
+      hidden: true,
+      columns: [
+        sourceIpAddress,
+        envelopeFrom,
+        countryCode,
+        prefixOrg,
+        dnsHost,
+        spfDomains,
+        totalMessages,
+      ],
+    },
+  ]
+
+  const dkimFailureColumns = [
+    {
+      Header: i18n._(t`DKIM Failures by IP Address`),
+      hidden: true,
+      columns: [
+        sourceIpAddress,
+        envelopeFrom,
+        countryCode,
+        prefixOrg,
+        dnsHost,
+        dkimDomains,
+        dkimSelectors,
+        totalMessages,
+      ],
+    },
+  ]
+
+  const dkimMisalignedColumns = [
+    {
+      Header: i18n._(t`DKIM Misalignment by IP Address`),
+      hidden: true,
+      columns: [
+        sourceIpAddress,
+        envelopeFrom,
+        countryCode,
+        prefixOrg,
+        dnsHost,
+        dkimDomains,
+        dkimSelectors,
+        totalMessages,
+      ],
+    },
+  ]
+
+  const dmarcFailureColumns = [
+    {
+      Header: i18n._(t`DMARC Failures by IP Address`),
+      hidden: true,
+      columns: [
+        sourceIpAddress,
+        envelopeFrom,
+        countryCode,
+        prefixOrg,
+        dnsHost,
+        spfDomains,
+        dkimDomains,
+        dkimSelectors,
+        totalMessages,
+      ],
+    },
+  ]
+
+  const cardWidth = window.matchMedia('(max-width: 500px)').matches
+    ? '100%'
+    : window.matchMedia('(max-width: 800px)').matches
+    ? '50%'
+    : window.matchMedia('(max-width: 1200px)').matches
+    ? '35%'
+    : '20%'
+
+  const graphWidth =
+    cardWidth.slice(0, -1) <= 20
+      ? `${100 - Number(cardWidth.slice(0, -1))}%`
+      : '100%'
+
+  const cardAndGraphInline = graphWidth !== '100%'
+
+  return (
+    <Box width="100%">
+      <Text>
+        <Trans>
+          *All data represented is mocked for demonstration purposes
+        </Trans>
+      </Text>
+      <Stack align="center" isInline={cardAndGraphInline}>
+        <SummaryCard
+          title={i18n._(t`DMARC Report`)}
+          description={i18n._(t`Description of DMARC report`)}
+          data={reportCardData}
+          width={cardWidth}
+          mx="auto"
+        />
+        <DmarcTimeGraph
+          data={formattedBarData}
+          width={graphWidth}
+          mx="auto"
+          responsiveWidth={summaryListResponsiveWidth}
         />
       </Stack>
-
-      <Box mt={['20px', '125px']} p={['30px', '0px']}>
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-          Report Breakdown
-        </Text>
-        <SimpleGrid
-          mt="40px"
-          columns={{ sm: 1, md: 1, lg: 4, xl: 4 }}
-          spacing="20px"
-        >
-          <Stack isInline>
-            <Text fontSize="md" fontWeight="semibold">
-              Message Count:
-            </Text>
-            <Text fontSize="md">12345</Text>
-          </Stack>
-
-          <Stack isInline>
-            <Text fontSize="md" fontWeight="semibold">
-              Passed Dmarc:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.passDmarcPercentage}%
-            </Text>
-          </Stack>
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              Fail Dmarc:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.failDmarcPercentage}%
-            </Text>
-          </Stack>
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              Fail Dkim:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.failDkimPercentage}%
-            </Text>
-          </Stack>
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              Fail Dkim:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.failSpfPercentage}%
-            </Text>
-          </Stack>
-
-          <Stack isInline>
-            <Text fontSize="md" fontWeight="semibold">
-              Orginization name:
-            </Text>
-            <Text fontSize="md">{data.queryDmarcReport.orgName || 'null'}</Text>
-          </Stack>
-
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              IP address:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.source.ipAddress || 'null'}
-            </Text>
-          </Stack>
-
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              Date:
-            </Text>
-            <Text fontSize="md">{data.queryDmarcReport.endDate || 'null'}</Text>
-          </Stack>
-
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              Report ID:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.reportId || 'null'}
-            </Text>
-          </Stack>
-
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              Country:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.source.country || 'null'}
-            </Text>
-          </Stack>
-
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              Reverse DNS:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.source.reverseDns || 'null'}
-            </Text>
-          </Stack>
-
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              Base domain:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.source.baseDomain || 'null'}
-            </Text>
-          </Stack>
-          <Stack isInline display={[show ? 'none' : 'flex', 'flex']}>
-            <Text fontSize="md" fontWeight="semibold">
-              Header from:
-            </Text>
-            <Text fontSize="md">
-              {data.queryDmarcReport.identifiers.headerFrom || 'null'}
-            </Text>
-          </Stack>
-        </SimpleGrid>
-        <Button
-          variant="link"
-          textAlign="center"
-          w="100%"
-          variantColor="teal"
-          mt="10"
-          mb="10px"
-          onClick={handleClick}
-          display={['inline', 'none']}
-        >
-          {show ? <Trans>Show More</Trans> : <Trans>Show Less</Trans>}
-        </Button>
-      </Box>
-
-      <Divider
-        m={['10px auto', '10px']}
-        mt={['10px', '50px']}
-        w={['70%', '100%']}
+      <DmarcReportTable
+        data={fullPassData}
+        columns={fullPassColumns}
+        title={i18n._(t`Fully Aligned by IP Address`)}
+        initialSort={initialSort}
+        mb="30px"
       />
-      <DmarcReportTimeGraph />
-      <Divider
-        m={['10px auto', '10px']}
-        mt={['10px', '50px']}
-        w={['70%', '100%']}
+      <DmarcReportTable
+        data={spfFailureData}
+        columns={spfFailureColumns}
+        title={i18n._(t`SPF Failures by IP Address`)}
+        initialSort={initialSort}
+        mb="30px"
       />
-      <DmarcReportGuidance />
-      <Divider
-        m={['10px auto', '10px']}
-        mt={['10px', '50px']}
-        w={['70%', '100%']}
+      <DmarcReportTable
+        data={spfMisalignedData}
+        columns={spfMisalignedColumns}
+        title={i18n._(t`SPF Misalignment by IP Address`)}
+        initialSort={initialSort}
+        mb="30px"
+      />
+      <DmarcReportTable
+        data={dkimFailureData}
+        columns={dkimFailureColumns}
+        title={i18n._(t`DKIM Failures by IP Address`)}
+        initialSort={initialSort}
+        mb="30px"
+      />
+      <DmarcReportTable
+        data={dkimMisalignedData}
+        columns={dkimMisalignedColumns}
+        title={i18n._(t`DKIM Misalignment by IP Address`)}
+        initialSort={initialSort}
+        mb="30px"
+      />
+      <DmarcReportTable
+        data={dmarcFailureData}
+        columns={dmarcFailureColumns}
+        title={i18n._(t`DMARC Failures by IP Address`)}
+        initialSort={initialSort}
+        mb="30px"
       />
     </Box>
   )
+}
+
+DmarcReportPage.propTypes = {
+  // Need to allow summaryList ResponsiveContainer width as a set number for tests to work
+  summaryListResponsiveWidth: number,
 }

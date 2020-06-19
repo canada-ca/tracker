@@ -13,7 +13,7 @@ import {
   Button,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
-import WithPseudoBox, { withPseudoBoxPropTypes } from './withPseudoBox.js'
+import WithPseudoBox from './withPseudoBox.js'
 
 function PasswordField({ name, ...props }) {
   const [field, meta] = useField(name)
@@ -48,7 +48,6 @@ function PasswordField({ name, ...props }) {
 }
 
 PasswordField.propTypes = {
-  ...withPseudoBoxPropTypes,
   name: string.isRequired,
 }
 

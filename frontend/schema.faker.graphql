@@ -73,30 +73,20 @@ This object displays the total amount of messages that fit into each category
 """
 type CategoryTotals {
   """
-  Amount of messages that failed dmarc and nothing was done.
+  Amount of messages that passed all checks
   """
-  dmarcFailNone: Int
+  fullPass: Int
 
   """
-  Amount of messages that failed SPF, but passed DKIM.
+  Amount of messages that passed some checks
   """
-  spfFailDkimPass: Int
+  partialPass: Int
+
   """
-  Amount of messages that passed SPF and DKIM.
+  Amount of messages that failed all checks
   """
-  spfPassDkimPass: Int
-  """
-  Amount of messages that passed SPF, but failed DKIM.
-  """
-  spfPassDkimFail: Int
-  """
-  Amount of messages that failed DMARC and were quarantined.
-  """
-  dmarcFailQuarantine: Int
-  """
-  Amount of messages that failed DMARC and were rejected.
-  """
-  dmarcFailReject: Int
+  fail: Int
+
   """
   The sum of all different categories.
   """
@@ -146,32 +136,32 @@ type DetailTables {
   """
   List of top senders that have full pass
   """
-  fullPass: [TableStructure]
+  fullPass: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have an spf failure
   """
-  spfFailure: [TableStructure]
+  spfFailure: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have spf misaligned
   """
-  spfMisaligned: [TableStructure]
+  spfMisaligned: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have an dkim failure
   """
-  dkimFailure: [TableStructure]
+  dkimFailure: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have dkim misaligned
   """
-  dkimMisaligned: [TableStructure]
+  dkimMisaligned: [TableStructure] @listLength(min: 20, max: 30)
 
   """
   List of top senders that have an dmarc failure
   """
-  dmarcFailure: [TableStructure]
+  dmarcFailure: [TableStructure] @listLength(min: 20, max: 30)
 }
 
 """
@@ -277,11 +267,73 @@ type DMARC {
   The percentage of messages to which the DMARC policy is to be applied.
   """
   pct: Int @examples(values: [0, 20, 60, 70, 90, 100])
+
   """
   Key tags found during DMARC Scan
   """
   dmarcGuidanceTags: [String]
 }
+
+"""
+GraphQL object for returning data for dmarc report tables
+"""
+type DmarcReportDetailTables {
+  """
+  The month in which the data is relevant to.
+  """
+  month: PeriodEnums
+
+  """
+  The year in which the relevant to.
+  """
+  year: Year
+
+  """
+  The details used in creating tables for the dmarc report page
+  """
+  detailTables: DetailTables
+}
+
+"""
+A query object used to grab the data to create dmarc report doughnuts
+"""
+type DmarcReportSummary {
+  """
+  Which month is the data based on.
+  """
+  month: PeriodEnums
+
+  """
+  Which year the data is from.
+  """
+  year: Year
+
+  """
+  Category totals for building dmarc report page doughnuts.
+  """
+  categoryTotals: CategoryTotals
+}
+
+"""
+A query object used to grab the data to create dmarc report bar graph
+"""
+type DmarcReportSummaryList {
+  """
+  The month that the data is related to.
+  """
+  month: PeriodEnums
+
+  """
+  The year that the data is related to.
+  """
+  year: Year @examples(values: [2019, 2020])
+
+  """
+  Category totals for building dmarc report page bar graph.
+  """
+  categoryTotals: CategoryTotals
+}
+
 """
 Generated DMARC Aggregated Report's
 """
@@ -323,23 +375,7 @@ type DmarcReport implements Node {
   """
   records: [Record]
 }
-"""
-A query object used to grab the data to create dmarc report bar graph
-"""
-type DmarcReportSummaryList {
-  """
-  The month that the data is related to.
-  """
-  month: String
-  """
-  The year that the data is related to.
-  """
-  year: Int
-  """
-  Category totals for building dmarc report page bar graph.
-  """
-  categoryTotals: CategoryTotals
-}
+
 type DmarcReportConnection {
   """
   Pagination data for this connection.
@@ -351,40 +387,6 @@ type DmarcReportConnection {
   edges: [DmarcReportEdge]!
 }
 """
-GraphQL object for returning data for dmarc report tables
-"""
-type DmarcReportDetailTables {
-  """
-  The month in which the data is relevant to.
-  """
-  month: String
-  """
-  The year in which the relevant to.
-  """
-  year: Year
-  """
-  The details used in creating tables for the dmarc report page
-  """
-  detailTables: DetailTables
-}
-"""
-A query object used to grab the data to create dmarc report doughnuts
-"""
-type DmarcReportSummary {
-  """
-  Which month is the data based on.
-  """
-  month: String
-  """
-  Which year the data is from.
-  """
-  year: Int
-  """
-  Category totals for building dmarc report page doughnuts.
-  """
-  categoryTotals: CategoryTotals
-}
-"""
 A Relay edge containing a `DmarcReport` and its cursor.
 """
 type DmarcReportEdge {
@@ -392,11 +394,13 @@ type DmarcReportEdge {
   The item at the end of the edge
   """
   node: DmarcReport
+
   """
   A cursor for use in pagination
   """
   cursor: String!
 }
+
 type Domain implements Node {
   organization: Organization
   dmarcReports(
@@ -405,10 +409,12 @@ type Domain implements Node {
     first: Int
     last: Int
   ): DmarcReportConnection
+
   """
   The ID of the object.
   """
   id: ID!
+
   """
   The domain the scan was run on
   """
@@ -427,14 +433,17 @@ type Domain implements Node {
         "jAva&Tab;script:alert('XSS')"
       ]
     )
+
   """
   Slug of the url
   """
   slug: Slug
+
   """
   The last time that a scan was ran on this domain
   """
   lastRan: DateTime
+
   """
   DKIM, DMARC, and SPF scan results
   """
@@ -443,6 +452,7 @@ type Domain implements Node {
   HTTPS, and SSL scan results
   """
   web(before: String, after: String, first: Int, last: Int): WebScanConnection
+
   """
   DMARC aggregate report
   """
@@ -460,6 +470,7 @@ type DomainConnection {
   Pagination data for this connection.
   """
   pageInfo: PageInfo!
+
   """
   Contains the nodes in this connection.
   """
@@ -478,6 +489,7 @@ type DomainEdge {
   """
   cursor: String!
 }
+
 """
 A field whose value conforms to the standard internet email address format as specified in RFC822:
 https://www.w3.org/Protocols/rfc822/.
@@ -492,14 +504,17 @@ type MailScan implements Node {
   The domain the scan was run on
   """
   domain: URL @fake(type: domainName)
+
   """
   The ID of the object.
   """
   id: ID!
+
   """
   The time the scan was initiated
   """
   timestamp: DateTime @fake(type: pastDate)
+
   """
   Domain-based Message Authentication, Reporting, and Conformance (DMARC)
   """
@@ -1001,69 +1016,85 @@ type PageInfo {
   When paginating backwards, are there more items?
   """
   hasPreviousPage: Boolean! @examples(values: [true, false])
+
   """
   When paginating backwards, the cursor to continue.
   """
   startCursor: String
+
   """
   When paginating forwards, the cursor to continue.
   """
   endCursor: String
 }
+
 enum PeriodEnums {
   """
   The month of January
   """
   JANUARY
+
   """
   The month of February
   """
   FEBRUARY
+
   """
   The month of March
   """
   MARCH
+
   """
   The month of April
   """
   APRIL
+
   """
   The month of May
   """
   MAY
+
   """
   The month of June
   """
   JUNE
+
   """
   The month of July
   """
   JULY
+
   """
   The month of August
   """
   AUGUST
+
   """
   The month of September
   """
   SEPTEMBER
+
   """
   The month of October
   """
   OCTOBER
+
   """
   The month of November
   """
   NOVEMBER
+
   """
   The month of December
   """
   DECEMBER
+
   """
   The last 30 days
   """
   LAST30DAYS
 }
+
 """
 Policies evaluated
 """
@@ -1072,19 +1103,23 @@ type PolicyEvaluated {
   Tells mail receivers what do do with messages that do not pass your rules
   """
   disposition: String @examples(values: ["none"])
+
   """
   DKIM pass/fail
   """
   dkim: String @examples(values: ["fail"])
+
   """
   SPF pass/fail
   """
   spf: String @examples(values: ["fail"])
+
   """
   List of policy override reasons
   """
   policyOverrideReasons: [String]
 }
+
 """
 Domains published policy
 """
@@ -1093,31 +1128,38 @@ type PolicyPublished {
   Domain report was generated from
   """
   domain: URL @examples(values: ["example.com"])
+
   """
   DKIM alignment mode
   """
   adkim: String @examples(values: ["r"])
+
   """
   SPF alignment mode
   """
   aspf: String @examples(values: ["r"])
+
   """
   P Policy
   """
   p: String @examples(values: ["none"])
+
   """
   SP Policy
   """
   sp: String @examples(values: ["none"])
+
   """
   DMARC Percentage
   """
   pct: Int @examples(values: [0, 10, 20, 50, 100])
+
   """
   Lets mailbox providers knows if you want sample messages that failed either SPF or DKIM
   """
   fo: Int @examples(values: [0])
 }
+
 """
 The central gathering point for all of the GraphQL queries.
 """
@@ -1130,7 +1172,7 @@ type Query {
     The slugified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug!
-  ): [DmarcReportSummaryList]
+  ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
   """
   A query object used to grab the data to create dmarc report bar graph.
   """
@@ -1139,24 +1181,28 @@ type Query {
     The slugified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug!
-  ): [DmarcReportSummaryList]
+  ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
+
   """
   Query used for gathering data for dmarc report detail tables.
   """
   dmarcReportDetailTables(
     """
-    The sluified version of the domain you wish to retrieve data for.
+    The slugified version of the domain you wish to retrieve data for.
     """
-    domainSlug: Slug
+    domainSlug: Slug!
+
     """
     The period in which the returned data is relevant to.
     """
-    period: PeriodEnums
+    period: PeriodEnums!
+
     """
     The year in which the returned data is relevant to.
     """
-    year: Year
+    year: Year!
   ): DmarcReportDetailTables
+
   """
   Query used for gathering data for dmarc report detail tables.
   """
@@ -1165,23 +1211,38 @@ type Query {
     The slugified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug!
+
     """
     The period in which the returned data is relevant to.
     """
     period: PeriodEnums!
+
     """
     The year in which the returned data is relevant to.
     """
     year: Year!
   ): DmarcReportDetailTables
+
   """
   A query object used to grab the data to create dmarc report doughnuts
   """
   dmarcReportSummary(
+    """
+    The slugified version of the domain you wish to retrieve data for.
+    """
     domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
     period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
     year: Year!
   ): DmarcReportSummary
+
   """
   A query object used to grab the data to create dmarc report doughnuts
   """
@@ -1190,15 +1251,18 @@ type Query {
     The slugified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug!
+
     """
     The period in which the returned data is relevant to.
     """
     period: PeriodEnums!
+
     """
     The year in which the returned data is relevant to.
     """
     year: Year!
   ): DmarcReportSummary
+
   """
   An graphql object that will be used to populate a userList component in the front end
   """
@@ -1209,6 +1273,7 @@ type Query {
     first: Int
     last: Int
   ): UserListItemConnection
+
   """
   An graphql object that will be used to populate a userPage component in the front end
   """
@@ -1218,10 +1283,12 @@ type Query {
     """
     userName: EmailAddress
   ): UserPage
+
   """
   The ID of the object
   """
   node(id: ID!): Node
+
   """
   Select list of users belonging to an organization.
   """
@@ -1232,10 +1299,12 @@ type Query {
     first: Int
     last: Int
   ): UsersConnection
+
   """
   Query the currently logged in user if no user name isgiven, or query a specific user by user name.
   """
   user(userName: EmailAddress): [User]
+
   """
   Select all information on a selected organization that a user has access to.
   """
@@ -1246,6 +1315,7 @@ type Query {
     first: Int
     last: Int
   ): OrganizationConnection
+
   """
   Select all information on all organizations that a user has access to.
   """
@@ -1255,10 +1325,12 @@ type Query {
     first: Int
     last: Int
   ): OrganizationConnection
+
   """
   Select information on a specific domain.
   """
   domain(urlSlug: Slug!): [Domain]
+
   """
   Select information on an organizations domains, or all domains a user has access to.
   """
@@ -1269,6 +1341,7 @@ type Query {
     first: Int
     last: Int
   ): DomainConnection
+
   """
   An api endpoint used to generate a OTP url used for two factor authentication.
   """
@@ -1278,86 +1351,103 @@ type Query {
         "otpauth://totp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App"
       ]
     )
+
   """
   An api endpoint to view a current user's claims -- Requires an active JWT.
   """
   testUserClaims(orgSlug: Slug!, role: RoleEnums!): String
+
   """
   An api endpoint that will send an email to a given email address so a user can reset their password for the web app.
   """
   sendPasswordReset(email: EmailAddress!): NotificationEmail
+
   """
   An api endpoint that will send a verification email to a given email address.
   """
   sendValidationEmail(email: EmailAddress!): NotificationEmail
 }
+
 """
 DMARC aggregate report record
 """
 type Record {
   count: Int @examples(values: [1])
+
   """
   DMARC source information
   """
   source: Source
+
   """
   DMARC alignment object
   """
   alignment: Alignment
+
   """
   DMARC policy evaluation object
   """
   policyEvaluated: PolicyEvaluated
+
   """
   Identifiers Object
   """
   identifiers: Identifiers
+
   """
   Raw DKIM, and SPF results
   """
   authResults: AuthResults
 }
+
 """
 This mutation allows the removal of unused domains
 """
 type RemoveDomain {
   status: Boolean
 }
+
 """
 Mutation allows the removal of an organization inside the database.
 """
 type RemoveOrganization {
   status: Boolean
 }
+
 """
 This mutation is used to send a domain to the scanners to be scanned
 """
 type RequestScan {
   status: String
 }
-"""
-A field that conforms to a list of strings
-"""
-scalar Selectors
 
 enum RoleEnums {
   """
   A user who has been given access to view results
   """
   USER_READ
+
   """
   A user who has been given access to run scans, and manage domains
   """
   USER_WRITE
+
   """
   A user who has the same access as a user write account, but can define new user write accounts
   """
   ADMIN
+
   """
   A user who has the same access as an admin, but can define new admins
   """
   SUPER_ADMIN
 }
+
+"""
+A field that conforms to a list of strings
+"""
+scalar Selectors
+
 """
 This mutation is used for re-sending a verification email if it failed
 during user creation
@@ -1368,6 +1458,7 @@ type SendEmailVerification {
   """
   status: Boolean
 }
+
 """
 This method allows for new users to sign up for our sites services.
 """
@@ -1381,6 +1472,7 @@ type SignUp {
 A field whos values contain numbers, letters, dashes, and underscores
 """
 scalar Slug
+
 """
 Domain information
 """
@@ -1389,10 +1481,12 @@ type Source {
   Source IP Address
   """
   ipAddress: String @examples(values: ["104.195.80.20"])
+
   """
   Source Country
   """
   country: String @examples(values: ["US"])
+
   """
   Reverse DNS (also known as rDNS) uses PTR records to associate IP addresses with domain names
   """
@@ -1519,81 +1613,6 @@ type SSL {
   Key tags found during scan
   """
   sslGuidanceTags: [String]
-}
-
-"""
-Object that contains the fields of each detail table
-"""
-type TableStructure {
-  """
-  IP address of sending server
-  """
-  sourceIpAddress: String
-
-  """
-  Domain from SMTP banner message
-  """
-  envelopeFrom: String
-
-  """
-  Domains used for SPF validation
-  """
-  spfDomains: String
-
-  """
-  Domains used for DKIM validation
-  """
-  dkimDomains: String
-
-  """
-  Pointer to a DKIM public key record in DNS
-  """
-  dkimSelectors: String
-
-  """
-  Total messages related to this record
-  """
-  totalMessages: Int
-
-  """
-  Geographic location of source IP address
-  """
-  countryCode: String
-
-  """
-  Owner of ISP for source IP address
-  """
-  ispOrg: String
-
-  """
-  Owner of prefix for source IP address
-  """
-  prefixOrg: String
-
-  """
-  Name of AS for source IP address
-  """
-  asName: String
-
-  """
-  Number of AS for source IP address
-  """
-  asNum: Int
-
-  """
-  Owner of AS for source IP address
-  """
-  asOrg: String
-
-  """
-  Host from reverse DNS of source IP address
-  """
-  dnsHost: String
-
-  """
-  Domain from reverse DNS of source IP address
-  """
-  dnsDomain: String
 }
 
 """
@@ -1947,3 +1966,69 @@ type WebScanEdge {
 A field that conforms to a 4 digit integer
 """
 scalar Year
+
+"""
+Object that contains the fields of each detail table
+"""
+type TableStructure {
+  """
+  IP address of sending server
+  """
+  sourceIpAddress: String @fake(type: ipv4Address)
+  """
+  Domain from SMTP banner message
+  """
+  envelopeFrom: String @fake(type: domainName)
+  """
+  Domains used for SPF validation
+  """
+  spfDomains: String @fake(type: domainName)
+  """
+  Domains used for DKIM validation
+  """
+  dkimDomains: String @fake(type: domainName)
+  """
+  Pointer to a DKIM public key record in DNS
+  """
+  dkimSelectors: String @examples(values: ["selector4", "selector1", "none"])
+  """
+  Total messages related to this record
+  """
+  totalMessages: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 5000, precisionNumber: 1 }
+    )
+  """
+  Geographic location of source IP address
+  """
+  countryCode: String @fake(type: countryCode)
+  """
+  Owner of ISP for source IP address
+  """
+  ispOrg: String
+  """
+  Owner of prefix for source IP address
+  """
+  prefixOrg: String
+  """
+  Name of AS for source IP address
+  """
+  asName: String
+  """
+  Number of AS for source IP address
+  """
+  asNum: Int
+  """
+  Owner of AS for source IP address
+  """
+  asOrg: String
+  """
+  Host from reverse DNS of source IP address
+  """
+  dnsHost: String
+  """
+  Domain from reverse DNS of source IP address
+  """
+  dnsDomain: String @fake(type: domainName)
+}

@@ -1,20 +1,44 @@
 import React from 'react'
 import { PseudoBox } from '@chakra-ui/core'
-import { string } from 'prop-types'
-
-export const withPseudoBoxPropTypes = {
-  mb: string,
-  ml: string,
-  mt: string,
-  mr: string,
-}
+import { string, number, oneOfType } from 'prop-types'
 
 const WithPseudoBox = (WrappedComponent) => {
   return function WrappedWithPseudoBox(props) {
-    // eslint-disable-next-line react/prop-types
-    const { mb, ml, mt, mr, ...passThroughProps } = props
+    WrappedWithPseudoBox.propTypes = {
+      mb: oneOfType([string, number]),
+      ml: oneOfType([string, number]),
+      mt: oneOfType([string, number]),
+      mr: oneOfType([string, number]),
+      w: oneOfType([string, number]),
+      width: oneOfType([string, number]),
+      h: oneOfType([string, number]),
+      height: oneOfType([string, number]),
+      mx: oneOfType([string, number]),
+    }
+    const {
+      mb,
+      ml,
+      mt,
+      mr,
+      w,
+      width,
+      h,
+      height,
+      mx,
+      ...passThroughProps
+    } = props
     return (
-      <PseudoBox mb={mb} ml={ml} mt={mt} mr={mr}>
+      <PseudoBox
+        mb={mb}
+        ml={ml}
+        mt={mt}
+        mr={mr}
+        w={w}
+        width={width}
+        h={h}
+        height={height}
+        mx={mx}
+      >
         <WrappedComponent {...passThroughProps} />
       </PseudoBox>
     )

@@ -24,6 +24,8 @@ export function DomainList({ domains = [], ...props }) {
 DomainList.propTypes = {
   children: func,
   domains: arrayOf(
-    shape({ node: shape({ organization: object, url: string, lastRan: string }) }),
+    shape({
+      node: shape({ organization: object, url: string, lastRan: string }),
+    }),
   ),
 }

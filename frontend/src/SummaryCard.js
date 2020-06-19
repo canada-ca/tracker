@@ -1,121 +1,166 @@
-import React from 'react'
-import theme from './theme/canada'
+import React, { useEffect, useRef } from 'react'
 import { Text, Stack, Box } from '@chakra-ui/core'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { string, array } from 'prop-types'
+import { string, object } from 'prop-types'
+import WithPseudoBox from './withPseudoBox'
+import theme from './theme/canada'
 
 const { colors } = theme
 
-export function SummaryCard({ ...props }) {
-  const { name, title, description, data } = props
-
-  const reducer = (accumulator, currentValue) => {
-    return accumulator + currentValue
+/*
+scheme for const data:
+**strength options: 'strong', 'moderate', 'weak'. Omitted strengths are ignored
+  {
+    categoryTotals: {
+      property: INT,
+      property: INT,
+      ...,
+      total: value,
+    },
+    strengths: {
+      strong: {
+        name: "Name to appear to user"
+        types: [
+          "property from category totals that are 'strong' ",
+          "property from category totals that are 'strong' ",
+        ]
+      },
+      moderate: {same as strong},
+      weak: {same as strong},
+    }
   }
+ */
 
-  data.forEach((entry) => {
-    entry.value = entry.categories
-      .map((category) => category.qty)
-      .reduce(reducer)
-  })
+function SummaryCard({ ...props }) {
+  const { title, description, data } = props
 
-  const totalQty = data
-    .map((entry) => {
-      return entry.value
+  const excludeFromTotal = ['total', '__typename']
+  // Calculate total of all properties in categoryTotals
+  const totalForCategories = Object.entries(data.categoryTotals)
+    .filter((category) => !excludeFromTotal.includes(category[0]))
+    .map((category) => category[1])
+    .reduce((categoryValue, currentTotal) => {
+      return categoryValue + currentTotal
     })
-    .reduce(reducer)
 
-  data.forEach((entry) => {
-    entry.percent = Math.round((entry.value / totalQty) * 100 * 10) / 10
+  // Find total and percentage for each strength category
+  Object.values(data.strengths).forEach((strength) => {
+    strength.value = 0
+    strength.types.forEach((type) => {
+      if (Object.keys(data.categoryTotals).includes(type))
+        strength.value += data.categoryTotals[type]
+    })
+    strength.percent =
+      Math.round((strength.value / totalForCategories) * 100 * 10) / 10
   })
+
+  // This block will allow the donut to be as large as possible
+  const ref = useRef(null)
+  const [parentWidth, setParentWidth] = React.useState(0)
+  useEffect(() => {
+    if (ref.current) {
+      setParentWidth(ref.current.offsetWidth)
+    }
+  }, [ref, setParentWidth])
+
+  // Generate cells for the doughnut to be added to the JSX
+  const doughnutCells = Object.entries(data.strengths).map(
+    ([strengthKey, _value]) => {
+      return (
+        <Cell
+          key={`${title}:DoughnutCell:${strengthKey}`}
+          fill={colors[strengthKey]}
+        />
+      )
+    },
+  )
+
+  const compareStrengths = (a, b) =>
+    a[1].value < b[1].value ? 1 : b[1].value < a[1].value ? -1 : 0
+
+  // Generate badges for the card to be used in the JSX
+  const badges = (
+    <Stack align="center" spacing={0}>
+      {Object.entries(data.strengths)
+        .sort(compareStrengths)
+        .map(([strengthKey, strengthValues]) => {
+          return (
+            <Text
+              key={`${title}:Badge:${strengthKey}`}
+              color="white"
+              px="0.5em"
+              bg={strengthKey}
+              fontWeight="bold"
+              fontSize="sm"
+              width="100%"
+              textAlign="center"
+            >
+              {`${
+                strengthValues.name
+              }: ${strengthValues.value.toLocaleString()} - ${
+                strengthValues.percent
+              }% `}
+            </Text>
+          )
+        })}
+    </Stack>
+  )
+
+  const boxShadow = `0.4em 0.4em 0.3em ${colors.gray[300]}`
 
   return (
-    <Box w="100%" rounded="lg" bg="white" overflow="hidden">
-      <Box bg="gray.550" px="2em">
-        <Text
-          fontSize="xl"
-          fontWeight="semibold"
-          textAlign="center"
-          color="white"
-        >
-          {title}
-        </Text>
-        {name === 'dashboard' && (
-          <Text fontSize="md" textAlign="center" color="white">
+    <Box
+      bg="white"
+      rounded="lg"
+      overflow="hidden"
+      ref={ref}
+      boxShadow={boxShadow}
+    >
+      <Stack spacing={0}>
+        <Box bg="gray.550" px="2em">
+          <Text
+            fontSize="xl"
+            fontWeight="semibold"
+            textAlign="center"
+            color="white"
+          >
+            {title}
+          </Text>
+          <Text
+            fontSize="md"
+            textAlign="center"
+            color="white"
+            wordBreak="break-word"
+          >
             {description}
           </Text>
-        )}
-      </Box>
+        </Box>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius="50%"
-            outerRadius="90%"
-            paddingAngle={2}
-            dataKey="value"
-          >
-            {data.map(({ name, strength }) => {
-              return <Cell key={name} dataKey={name} fill={colors[strength]} />
-            })}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-      </ResponsiveContainer>
-
-      <Stack align="center">
-        {data.map(({ strength, percent, name }) => {
-          if (!(name === 'web' && strength === 'moderate')) {
-            // stop moderate badge from appearing on web donuts
-            return (
-              <Text
-                color="white"
-                key={`${name}:${strength}:${percent}`}
-                px="1em"
-                bg={strength}
-                alignItems="center"
-              >
-                {name}: {percent}%
-              </Text>
-            )
-          }
-        })}
+        <ResponsiveContainer width="100%" height={parentWidth}>
+          <PieChart>
+            <Pie
+              data={Object.values(data.strengths)}
+              cx="50%"
+              cy="50%"
+              innerRadius="50%"
+              outerRadius="90%"
+              dataKey="value"
+            >
+              {doughnutCells}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+        {badges}
       </Stack>
-
-      <br />
-
-      {name === 'dashboard' && (
-        <Stack isInline display="flex">
-          {data.map(({ strength, categories }) => {
-            return categories.map((category) => {
-              return (
-                <Text
-                  flex="1"
-                  key={`${name}:${strength}:${category}`}
-                  color="black"
-                  backgroundColor={strength}
-                  rounded="md"
-                  fontWeight="bold"
-                >
-                  {category.qty}
-                  <br />
-                  {category.name}
-                </Text>
-              )
-            })
-          })}
-        </Stack>
-      )}
     </Box>
   )
 }
 
 SummaryCard.propTypes = {
-  name: string,
-  title: string,
-  description: string,
-  data: array,
+  title: string.isRequired,
+  description: string.isRequired,
+  data: object.isRequired,
 }
+
+export default WithPseudoBox(SummaryCard)

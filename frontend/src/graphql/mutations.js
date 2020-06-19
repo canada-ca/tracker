@@ -13,13 +13,13 @@ export const SIGN_UP = gql`
       userName: $userName
       password: $password
       confirmPassword: $confirmPassword
-      preferredLang:  $preferredLang
+      preferredLang: $preferredLang
     ) {
       authResult {
-          authToken
-          user {
-              userName
-         }
+        authToken
+        user {
+          userName
+        }
       }
     }
   }
@@ -29,11 +29,11 @@ export const AUTHENTICATE = gql`
   mutation authenticate($userName: EmailAddress!, $password: String!) {
     authenticate(userName: $userName, password: $password) {
       authResult {
-          authToken
-          user {
-              userName
-              tfa
-          }
+        authToken
+        user {
+          userName
+          tfa
+        }
       }
     }
   }

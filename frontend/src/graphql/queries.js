@@ -59,39 +59,235 @@ export const QUERY_USER = gql`
   }
 `
 
-export const QUERY_DMARC_REPORT = gql`
-  query QueryDmarcReport($reportId: String!) {
-    queryDmarcReport(reportId: $reportId) {
-      reportId
-      orgName
-      endDate
-      dmarcResult
-      dkimResult
-      spfResult
-      passDmarcPercentage
-      passArcPercentage
-      failDmarcPercentage
-      failDkimPercentage
-      failSpfPercentage
-      count
-      dkim {
-        domain
-        selector
-        result
+export const DMARC_REPORT_SUMMARY_LIST = gql`
+  query DmarcReportSummaryList($domainSlug: Slug!) {
+    dmarcReportSummaryList(domainSlug: $domainSlug) {
+      month
+      year
+      categoryTotals {
+        fullPass
+        partialPass
+        fail
+        total
       }
-      spf {
-        domain
-        scope
-        result
+    }
+  }
+`
+
+export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
+  query DemoDmarcReportSummaryList($domainSlug: Slug!) {
+    demoDmarcReportSummaryList(domainSlug: $domainSlug) {
+      month
+      year
+      categoryTotals {
+        fullPass
+        partialPass
+        fail
+        total
       }
-      source {
-        ipAddress
-        country
-        reverseDns
-        baseDomain
+    }
+  }
+`
+
+export const DMARC_REPORT_SUMMARY = gql`
+  query DmarcReportSummary(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
+  ) {
+    dmarcReportSummary(
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
+    ) {
+      month
+      year
+      categoryTotals {
+        fullPass
+        partialPass
+        fail
+        total
       }
-      identifiers {
-        headerFrom
+    }
+  }
+`
+
+export const DEMO_DMARC_REPORT_SUMMARY = gql`
+  query DemoDmarcReportSummary(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
+  ) {
+    demoDmarcReportSummary(
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
+    ) {
+      month
+      year
+      categoryTotals {
+        fullPass
+        partialPass
+        fail
+        total
+      }
+    }
+  }
+`
+
+export const DMARC_REPORT_DETAIL_TABLES = gql`
+  query DmarcReportDetailTables(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
+  ) {
+    dmarcReportDetailTables(
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
+    ) {
+      month
+      year
+      detailTables {
+        fullPass {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+          dkimDomains
+          dkimSelectors
+        }
+        spfFailure {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+        }
+        spfMisaligned {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+        }
+        dkimFailure {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          dkimDomains
+          dkimSelectors
+        }
+        dkimMisaligned {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          dkimDomains
+          dkimSelectors
+        }
+        dmarcFailure {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+          dkimDomains
+          dkimSelectors
+        }
+      }
+    }
+  }
+`
+
+export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
+  query DemoDmarcReportDetailTables(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
+  ) {
+    demoDmarcReportDetailTables(
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
+    ) {
+      month
+      year
+      detailTables {
+        fullPass {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+          dkimDomains
+          dkimSelectors
+        }
+        spfFailure {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+        }
+        spfMisaligned {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+        }
+        dkimFailure {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          dkimDomains
+          dkimSelectors
+        }
+        dkimMisaligned {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          dkimDomains
+          dkimSelectors
+        }
+        dmarcFailure {
+          sourceIpAddress
+          envelopeFrom
+          totalMessages
+          countryCode
+          prefixOrg
+          dnsHost
+          spfDomains
+          dkimDomains
+          dkimSelectors
+        }
       }
     }
   }

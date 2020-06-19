@@ -1,50 +1,50 @@
 import React from 'react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Stack, SimpleGrid } from '@chakra-ui/core'
-import { SummaryCard } from './SummaryCard'
+import { Stack, SimpleGrid, Box } from '@chakra-ui/core'
+import SummaryCard from './SummaryCard'
 import { string } from 'prop-types'
 
 export function SummaryGroup({ ...props }) {
   const { name } = props
   const { i18n } = useLingui()
 
-  // randomized data used to populate charts before API is connected
-  function makeData() {
-    return [
-      {
-        strength: 'strong',
-        name:
-          name === 'web' ? i18n._(t`Enforced`) : i18n._(t`Fully Implemented`),
-        categories: [
-          {
-            name: i18n._(t`pass`),
-            qty: Math.floor(Math.random() * 1000 + 1),
-          },
-        ],
+  const makeData = () => {
+    return {
+      categoryTotals: {
+        strongExample1: Math.floor(Math.random() * 1000 + 1),
+        strongExample2: Math.floor(Math.random() * 1000 + 1),
+        // conditionally add moderate categories
+        ...(name !== 'web' && {
+          moderateExample1:
+            name === 'web' ? null : Math.floor(Math.random() * 300 + 1),
+          moderateExample2:
+            name === 'web' ? null : Math.floor(Math.random() * 300 + 1),
+        }),
+        weakExample: Math.floor(Math.random() * 500 + 1),
       },
-      {
-        strength: 'moderate',
-        name: i18n._(t`Partially Implemented`),
-        categories: [
-          {
-            name: i18n._(t`partial pass`),
-            qty: name === 'web' ? null : Math.floor(Math.random() * 300 + 1),
+      strengths: {
+        strong: {
+          types: ['strongExample1', 'strongExample2'],
+          name:
+            name === 'web' ? i18n._(t`Enforced`) : i18n._(t`Fully Implemented`),
+        },
+        // conditionally add moderate strength
+        ...(name !== 'web' && {
+          moderate: {
+            types: ['moderateExample1', 'moderateExample2'],
+            name: 'Partially Implemented',
           },
-        ],
+        }),
+        weak: {
+          types: ['weakExample'],
+          name:
+            name === 'web'
+              ? i18n._(t`Not Enforced`)
+              : i18n._(t`Not Implemented`),
+        },
       },
-      {
-        strength: 'weak',
-        name:
-          name === 'web' ? i18n._(t`Not Enforced`) : i18n._(t`Not Implemented`),
-        categories: [
-          {
-            name: i18n._(t`fail`),
-            qty: Math.floor(Math.random() * 300 + 1),
-          },
-        ],
-      },
-    ]
+    }
   }
 
   const dashOverview = [
@@ -100,50 +100,38 @@ export function SummaryGroup({ ...props }) {
     },
   ]
 
-  const getReportQty = () => {
-    let reportQty
-    if (name === 'dashboard') {
-      reportQty = dashOverview.length
-    } else if (name === 'web') {
-      reportQty = webOverview.length
-    } else {
-      reportQty = emailOverview.length
-    }
-    return reportQty
-  }
-
   const createReports = () => {
     const reports = []
-    let reportData
-    if (name === 'dashboard') {
-      reportData = dashOverview
-    } else if (name === 'web') {
-      reportData = webOverview
-    } else {
-      reportData = emailOverview
-    }
+    const reportData =
+      name === 'dashboard'
+        ? dashOverview
+        : name === 'web'
+        ? webOverview
+        : emailOverview
 
-    for (let i = 0; i < getReportQty(); i++) {
+    reportData.forEach((dataEntry) => {
       reports.push(
         <SummaryCard
           name={name}
-          key={reportData[i].title}
-          title={reportData[i].title}
-          description={reportData[i].description}
+          key={dataEntry.title}
+          title={dataEntry.title}
+          description={dataEntry.description}
           data={makeData()}
         />,
       )
-    }
+    })
     return reports
   }
 
   return (
-    <Stack textAlign="center" align="center">
-      <SimpleGrid columns={[1, 1, 1, 1, 2]} spacing="30px">
-        {createReports()}
-      </SimpleGrid>
-      )
-    </Stack>
+    <Box>
+      <Stack textAlign="center" align="center">
+        <SimpleGrid columns={[1, 1, 1, 1, 2]} spacing="30px">
+          {createReports()}
+        </SimpleGrid>
+        )
+      </Stack>
+    </Box>
   )
 }
 

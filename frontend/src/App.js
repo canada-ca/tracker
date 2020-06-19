@@ -21,6 +21,7 @@ const QRcodePage = lazy(() => import('./QRcodePage'))
 const UserPage = lazy(() => import('./UserPage'))
 const UserList = lazy(() => import('./UserList'))
 const SignInPage = lazy(() => import('./SignInPage'))
+const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -59,6 +60,10 @@ export default function App() {
           )}
           <Link to="/user-list">
             <Trans>User List</Trans>
+          </Link>
+
+          <Link to="/dmarc-report">
+            <Trans>Report</Trans>
           </Link>
         </Navigation>
         {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
@@ -105,6 +110,10 @@ export default function App() {
               >
                 <QRcodePage userName={currentUser.userName} />
               </RouteIf>
+
+              <Route path="/dmarc-report">
+                <DmarcReportPage />
+              </Route>
 
               <Route component={PageNotFound} />
             </Switch>
