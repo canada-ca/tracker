@@ -69,8 +69,6 @@ function DmarcReportSummaryGraph({ ...props }) {
     period.date = date
   })
 
-  console.log(periods)
-
   return (
     <Box overflow="hidden">
       {/* Need to allow ResponsiveContainer width as a set number for tests to work */}
