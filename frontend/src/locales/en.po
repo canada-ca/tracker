@@ -246,6 +246,10 @@ msgstr "Home"
 msgid "Invalid email"
 msgstr "Invalid email"
 
+#: src/DmarcReportSummaryGraph.js:66
+msgid "LAST30DAYS"
+msgstr "LAST30DAYS"
+
 #: src/Domain.js:21
 msgid "Last scanned:{lastRan}"
 msgstr "Last scanned:{lastRan}"

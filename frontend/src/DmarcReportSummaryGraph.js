@@ -13,6 +13,7 @@ import { object, number } from 'prop-types'
 import WithPseudoBox from './withPseudoBox'
 import theme from './theme/canada'
 import { Box } from '@chakra-ui/core'
+import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 /*
@@ -62,7 +63,7 @@ function DmarcReportSummaryGraph({ ...props }) {
   periods.forEach((period) => {
     let date
     period.month === 'LAST30DAYS'
-      ? (date = period.month)
+      ? (date = i18n._(t`LAST30DAYS`))
       : (date = new Date(`${period.month}, ${period.year}`)
           .toLocaleDateString(i18n.locale, { month: 'short', year: '2-digit' })
           .replace(/ /, '-'))

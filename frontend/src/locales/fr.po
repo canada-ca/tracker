@@ -246,6 +246,10 @@ msgstr "Accueil"
 msgid "Invalid email"
 msgstr "Courriel non valide"
 
+#: src/DmarcReportSummaryGraph.js:66
+msgid "LAST30DAYS"
+msgstr "30DERNIERSJOURS"
+
 #: src/Domain.js:21
 msgid "Last scanned:{lastRan}"
 msgstr "Dernier scan"
