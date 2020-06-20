@@ -21,9 +21,9 @@ const mocks = [
     request: {
       query: DEMO_DMARC_REPORT_SUMMARY,
       variables: {
-        domainSlug: 'testDomainSlug',
+        domainSlug: 'test-domain-slug',
         period: 'LAST30DAYS',
-        year: 2020,
+        year: '2020',
       },
     },
     result: {
@@ -35,7 +35,7 @@ const mocks = [
   {
     request: {
       query: DEMO_DMARC_REPORT_SUMMARY_LIST,
-      variables: { domainSlug: 'testDomainSlug' },
+      variables: { domainSlug: 'test-domain-slug' },
     },
     result: {
       data: {
@@ -47,9 +47,9 @@ const mocks = [
     request: {
       query: DEMO_DMARC_REPORT_DETAIL_TABLES,
       variables: {
-        domainSlug: 'testDomainSlug',
+        domainSlug: 'test-domain-slug',
         period: 'LAST30DAYS',
-        year: 2020,
+        year: '2020',
       },
     },
     result: {
