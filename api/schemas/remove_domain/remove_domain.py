@@ -1,6 +1,8 @@
 import graphene
+
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_write
@@ -31,6 +33,7 @@ class RemoveDomain(graphene.Mutation):
 
     @require_token
     def mutate(self, info, **kwargs):
+        user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
         domain = cleanse_input(kwargs.get("url"))
 
@@ -39,6 +42,9 @@ class RemoveDomain(graphene.Mutation):
 
         # Check to see if domain exists
         if domain_orm is None:
+            logger.warning(
+                f"User: {user_id} tried to remove domain: {domain}, but it does not exist."
+            )
             raise GraphQLError("Error, unable to remove domain.")
 
         # Check permissions
@@ -61,6 +67,9 @@ class RemoveDomain(graphene.Mutation):
                         Ssl_scans.query.filter(Ssl_scans.id == scan.id).delete()
                         Web_scans.query.filter(Web_scans.id == scan.id).delete()
                     except Exception as e:
+                        logger.error(
+                            f"User: {user_id} tried to remove {domain} web scans but a database error occurred: {str(e)}"
+                        )
                         return RemoveDomain(status=False)
 
                 # Get all Mail Scans
@@ -79,15 +88,27 @@ class RemoveDomain(graphene.Mutation):
                         Spf_scans.query.filter(Spf_scans.id == scan.id).delete()
                         Mail_scans.query.filter(Mail_scans.id == scan.id).delete()
                     except Exception as e:
+                        logger.error(
+                            f"User: {user_id} tried to remove {domain} mail scans but a database error occurred: {str(e)}"
+                        )
                         return RemoveDomain(status=False)
 
                 Domains.query.filter(Domains.domain == domain).delete()
                 db_session.commit()
+                logger.info(
+                    f"User: {user_id} successfully removed {domain} and all related scans."
+                )
                 return RemoveDomain(status=True)
 
             except Exception as e:
                 db_session.rollback()
                 db_session.flush()
+                logger.error(
+                    f"User: {user_id} tried to remove {domain} but a database error occurred: {str(e)}"
+                )
                 return RemoveDomain(status=False)
         else:
+            logger.warning(
+                f"User: {user_id} tried to remove {domain} but does not have proper access to remove this domain."
+            )
             raise GraphQLError("Error, unable to remove domain.")
