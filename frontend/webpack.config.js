@@ -12,6 +12,7 @@ module.exports = ({ mode }) => {
       main: './src/index.js',
     },
     output: {
+      publicPath: '/',
       path: path.resolve(__dirname, 'public'),
       filename: '[name].[hash].js',
     },
@@ -30,11 +31,17 @@ module.exports = ({ mode }) => {
     }),
     plugins: [
       new CleanWebpackPlugin(),
-      new HtmlWebpackPlugin({ template: './src/html.js' }),
+      new HtmlWebpackPlugin({
+        publicPath: 'public',
+        template: './src/html.js',
+      }),
     ],
     devServer: {
       port: 3000,
       host: '0.0.0.0',
+      publicPath: '/',
+      hot: true,
+      historyApiFallback: true,
     },
     module: {
       rules: [

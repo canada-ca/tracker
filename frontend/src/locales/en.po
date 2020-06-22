@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/DmarcReportPage.js:239
+#: src/DmarcReportPage.js:244
 #: src/LandingPage.js:31
 msgid "*All data represented is mocked for demonstration purposes"
 msgstr "*All data represented is mocked for demonstration purposes"
@@ -87,7 +87,7 @@ msgstr "Configure the server to use the same domain for the DKIM header as for t
 msgid "Confirm password"
 msgstr "Confirm password"
 
-#: src/DmarcReportPage.js:120
+#: src/DmarcReportPage.js:118
 msgid "Country Code"
 msgstr "Country Code"
 
@@ -114,26 +114,26 @@ msgstr "DKIM Check Failed"
 msgid "DKIM Domain Alignment Failed"
 msgstr "DKIM Domain Alignment Failed"
 
-#: src/DmarcReportPage.js:117
+#: src/DmarcReportPage.js:115
 msgid "DKIM Domains"
 msgstr "DKIM Domains"
 
-#: src/DmarcReportPage.js:178
-#: src/DmarcReportPage.js:280
+#: src/DmarcReportPage.js:176
+#: src/DmarcReportPage.js:287
 msgid "DKIM Failures by IP Address"
 msgstr "DKIM Failures by IP Address"
 
-#: src/DmarcReportPage.js:195
-#: src/DmarcReportPage.js:287
+#: src/DmarcReportPage.js:193
+#: src/DmarcReportPage.js:294
 msgid "DKIM Misalignment by IP Address"
 msgstr "DKIM Misalignment by IP Address"
 
-#: src/DmarcReportPage.js:118
+#: src/DmarcReportPage.js:116
 msgid "DKIM Selectors"
 msgstr "DKIM Selectors"
 
-#: src/DmarcReportPage.js:212
-#: src/DmarcReportPage.js:294
+#: src/DmarcReportPage.js:210
+#: src/DmarcReportPage.js:301
 msgid "DMARC Failures by IP Address"
 msgstr "DMARC Failures by IP Address"
 
@@ -142,19 +142,23 @@ msgstr "DMARC Failures by IP Address"
 msgid "DMARC Policy Applied"
 msgstr "DMARC Policy Applied"
 
-#: src/DmarcReportPage.js:244
+#: src/DmarcReportPage.js:250
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
-#: src/DmarcReportPage.js:122
+#: src/DmarcReportPage.js:120
 msgid "DNS Host"
 msgstr "DNS Host"
 
-#: src/DmarcReportPage.js:245
+#: src/DmarcReportPage.js:251
 msgid "Description of DMARC report"
 msgstr "Description of DMARC report"
 
-#: src/App.js:49
+#: src/Domain.js:20
+msgid "Domain:"
+msgstr "Domain:"
+
+#: src/App.js:51
 #: src/DomainsPage.js:48
 msgid "Domains"
 msgstr "Domains"
@@ -188,7 +192,7 @@ msgstr "Ensure the DKIM record for thedomain and selector is present andvalid."
 msgid "Ensure the SPF record is present and valid."
 msgstr "Ensure the SPF record is present and valid."
 
-#: src/DmarcReportPage.js:116
+#: src/DmarcReportPage.js:114
 msgid "Envelope From"
 msgstr "Envelope From"
 
@@ -206,8 +210,8 @@ msgstr "Forgot your password?"
 msgid "Forwarding by an intermediate server."
 msgstr "Forwarding by an intermediate server."
 
-#: src/DmarcReportPage.js:128
-#: src/DmarcReportPage.js:259
+#: src/DmarcReportPage.js:126
+#: src/DmarcReportPage.js:266
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
@@ -236,7 +240,7 @@ msgstr "HSTS Preloaded"
 msgid "Hide Guidance"
 msgstr "Hide Guidance"
 
-#: src/App.js:46
+#: src/App.js:48
 #: src/QRcodePage.js:67
 msgid "Home"
 msgstr "Home"
@@ -250,12 +254,14 @@ msgstr "Invalid email"
 msgid "LAST30DAYS"
 msgstr "LAST30DAYS"
 
-#: src/Domain.js:21
-msgid "Last scanned:{lastRan}"
-msgstr "Last scanned:{lastRan}"
+#: src/Domain.js:35
+msgid "Last scanned:"
+msgstr "Last scanned:"
 
 #: src/CreateUserPage.js:73
 #: src/DomainsPage.js:40
+#: src/OrganizationDetails.js:45
+#: src/Organizations.js:44
 #: src/QRcodePage.js:21
 #: src/SignInPage.js:61
 msgid "Loading..."
@@ -270,9 +276,17 @@ msgstr "Messages Subject to DMARC Policy"
 msgid "Modify the SPF record to include the sending IP address."
 msgstr "Modify the SPF record to include the sending IP address."
 
+#: src/Organizations.js:58
+msgid "No Organizations"
+msgstr "No Organizations"
+
 #: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "No domains scanned yet."
+
+#: src/OrganizationDetails.js:69
+msgid "No domains yet."
+msgstr "No domains yet."
 
 #: src/SummaryGroup.js:43
 msgid "Not Enforced"
@@ -282,9 +296,14 @@ msgstr "Not Enforced"
 msgid "Not Implemented"
 msgstr "Not Implemented"
 
-#: src/Domain.js:26
+#: src/Domain.js:43
 msgid "Not scanned yet."
 msgstr "Not scanned yet."
+
+#: src/App.js:55
+#: src/Organizations.js:52
+msgid "Organizations"
+msgstr "Organizations"
 
 #: src/PageNotFound.js:9
 msgid "Page not found"
@@ -297,10 +316,6 @@ msgstr "Page {0} of {1}"
 #: src/DmarcReportPage.js:72
 msgid "Partial Pass"
 msgstr "Partial Pass"
-
-#: src/SummaryGroup.js:28
-#~ msgid "Partially Implemented"
-#~ msgstr "Partially Implemented"
 
 #: src/DmarcReportPage.js:68
 msgid "Pass"
@@ -358,15 +373,15 @@ msgstr "Possible Causes"
 msgid "Possible Resolutions"
 msgstr "Possible Resolutions"
 
-#: src/App.js:39
+#: src/App.js:41
 msgid "Pre-Alpha"
 msgstr "Pre-Alpha"
 
-#: src/DmarcReportPage.js:121
+#: src/DmarcReportPage.js:119
 msgid "Prefix Org"
 msgstr "Prefix Org"
 
-#: src/App.js:130
+#: src/App.js:150
 msgid "Privacy"
 msgstr "Privacy"
 
@@ -382,7 +397,7 @@ msgstr "Received messages failed both SPF and DKIM, and therefore failed DMARC. 
 msgid "Remove redundant SPF records."
 msgstr "Remove redundant SPF records."
 
-#: src/App.js:66
+#: src/App.js:71
 msgid "Report"
 msgstr "Report"
 
@@ -396,17 +411,17 @@ msgstr "SPF Check Failed"
 msgid "SPF Domain Alignment Failed"
 msgstr "SPF Domain Alignment Failed"
 
-#: src/DmarcReportPage.js:123
+#: src/DmarcReportPage.js:121
 msgid "SPF Domains"
 msgstr "SPF Domains"
 
-#: src/DmarcReportPage.js:146
-#: src/DmarcReportPage.js:266
+#: src/DmarcReportPage.js:144
+#: src/DmarcReportPage.js:273
 msgid "SPF Failures by IP Address"
 msgstr "SPF Failures by IP Address"
 
-#: src/DmarcReportPage.js:162
-#: src/DmarcReportPage.js:273
+#: src/DmarcReportPage.js:160
+#: src/DmarcReportPage.js:280
 msgid "SPF Misalignment by IP Address"
 msgstr "SPF Misalignment by IP Address"
 
@@ -422,19 +437,11 @@ msgstr "Select Preferred Language"
 msgid "Show Guidance"
 msgstr "Show Guidance"
 
-#: src/DmarcReportPage.js:217
-#~ msgid "Show Less"
-#~ msgstr "Show Less"
-
-#: src/DmarcReportPage.js:217
-#~ msgid "Show More"
-#~ msgstr "Show More"
-
 #: src/DmarcReportTable.js:297
 msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
-#: src/App.js:58
+#: src/App.js:63
 #: src/QRcodePage.js:58
 #: src/SignInPage.js:104
 msgid "Sign In"
@@ -448,7 +455,7 @@ msgstr "Sign In."
 msgid "Sign in with your username and password."
 msgstr "Sign in with your username and password."
 
-#: src/App.js:37
+#: src/App.js:39
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -456,11 +463,11 @@ msgstr "Skip to main content"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Sorry, the page you were trying to view does not exist."
 
-#: src/DmarcReportPage.js:115
+#: src/DmarcReportPage.js:113
 msgid "Source IP Address"
 msgstr "Source IP Address"
 
-#: src/App.js:140
+#: src/App.js:160
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -521,11 +528,11 @@ msgstr "There is no DKIM record for the domain and/or selector used or the recor
 msgid "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
 msgstr "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
 
-#: src/App.js:40
+#: src/App.js:42
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
-#: src/DmarcReportPage.js:119
+#: src/DmarcReportPage.js:117
 msgid "Total Messages"
 msgstr "Total Messages"
 
@@ -545,11 +552,11 @@ msgstr "Unable to create your account, please try again."
 msgid "Unable to sign in to your account, please try again."
 msgstr "Unable to sign in to your account, please try again."
 
-#: src/App.js:62
+#: src/App.js:67
 msgid "User List"
 msgstr "User List"
 
-#: src/App.js:54
+#: src/App.js:59
 msgid "User Profile"
 msgstr "User Profile"
 
@@ -573,26 +580,10 @@ msgstr "Welcome, you are successfully signed in!"
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
 msgstr "Your 2FA app will then have a valid code that you can use when you sign in."
 
-#: src/SummaryGroup.js:42
-#~ msgid "fail"
-#~ msgstr "fail"
+#: src/OrganizationDetails.js:55
+msgid "back to organizations"
+msgstr "back to organizations"
 
-#: src/SummaryGroup.js:27
-#~ msgid "moderate"
-#~ msgstr "moderate"
-
-#: src/SummaryGroup.js:31
-#~ msgid "partial pass"
-#~ msgstr "partial pass"
-
-#: src/SummaryGroup.js:21
-#~ msgid "pass"
-#~ msgstr "pass"
-
-#: src/SummaryGroup.js:16
-#~ msgid "strong"
-#~ msgstr "strong"
-
-#: src/SummaryGroup.js:37
-#~ msgid "weak"
-#~ msgstr "weak"
+#: src/OrganizationDetails.js:62
+msgid "{0}"
+msgstr "{0}"

@@ -1,32 +1,51 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { string } from 'prop-types'
-import { Stack, Link, Icon, Text, ListItem } from '@chakra-ui/core'
+import {
+  Divider,
+  Stack,
+  Box,
+  Link,
+  Icon,
+  Text,
+  ListItem,
+} from '@chakra-ui/core'
 
 export function Domain({ url, lastRan, ...rest }) {
   return (
     <ListItem {...rest}>
-      <Stack spacing={4} padding={[1, 2, 3]} direction="row" flexWrap="wrap">
-        <Link
-          href={`http://${encodeURIComponent(url)}`}
-          isExternal
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {url}
-          <Icon name="external-link" mx="2px" />
-        </Link>
-        {lastRan && (
-          <Text>
-            <Trans>Last scanned:{lastRan}</Trans>
+      <Stack spacing={4} padding={[1, 2, 3]}>
+        <Box>
+          <Text py={2} fontWeight="bold">
+            <Trans>Domain:</Trans>
           </Text>
+          <Link
+            href={`http://${encodeURIComponent(url)}`}
+            isExternal
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {url}
+            <Icon name="external-link" mx="2px" />
+          </Link>
+        </Box>
+        {lastRan && (
+          <Box>
+            <Text py={2} fontWeight="bold">
+              <Trans>Last scanned:</Trans>
+            </Text>
+            <Text>{lastRan}</Text>
+          </Box>
         )}
         {!lastRan && (
-          <Text>
-            <Trans>Not scanned yet.</Trans>
-          </Text>
+          <Box>
+            <Text py={2} fontWeight="bold">
+              <Trans>Not scanned yet.</Trans>
+            </Text>
+          </Box>
         )}
       </Stack>
+      <Divider borderColor="gray.900" />
     </ListItem>
   )
 }

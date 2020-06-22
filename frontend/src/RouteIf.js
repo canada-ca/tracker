@@ -8,7 +8,7 @@ export function RouteIf({ children, alternate, condition, ...rest }) {
       {...rest}
       render={({ location }) =>
         condition ? (
-          children
+          <Route {...rest} {...{ children }} />
         ) : (
           <Redirect
             to={{
@@ -23,7 +23,7 @@ export function RouteIf({ children, alternate, condition, ...rest }) {
 }
 
 RouteIf.propTypes = {
-  children: node.isRequired,
+  children: node,
   condition: bool.isRequired,
   alternate: string.isRequired,
 }
