@@ -23,15 +23,34 @@ export default function UserList({ ...props }) {
   const [userSearch, setUserSearch] = React.useState('')
   const toast = useToast()
 
-  const newUser = (displayName, id) => {
-    return {
-      node: {
-        id: id,
-        userName: String(id),
-        admin: false,
-        tfa: false,
-        displayName: displayName,
-      },
+  const addUser = (name, id) => {
+    if (name !== '') {
+      const newUser = {
+        node: {
+          id: id,
+          userName: String(id),
+          admin: false,
+          tfa: false,
+          displayName: name,
+        },
+      }
+      setUserList([...userList, newUser])
+      setUserSearch('')
+      toast({
+        title: 'User added',
+        description: `${newUser.node.displayName} was successfully invited to ${orgName}`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'An error occurred.',
+        description: 'Search for a user to add them',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
     }
   }
 
@@ -82,16 +101,7 @@ export default function UserList({ ...props }) {
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
-            userSearch !== ''
-              ? setUserList([...userList, newUser(userSearch, Math.random())])
-              : toast({
-                  title: 'An error occurred.',
-                  description: 'Search for a user to add them',
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                })
-            setUserSearch('')
+            addUser(userSearch, Math.random())
           }}
         >
           <Trans>Invite User</Trans>

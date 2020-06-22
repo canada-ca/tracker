@@ -23,13 +23,32 @@ export function DomainList({ ...props }) {
   const [domainSearch, setDomainSearch] = React.useState('')
   const toast = useToast()
 
-  const newDomain = (url) => {
-    return {
-      node: {
-        slug: 'org-slug-bois',
-        url: url,
-        lastRan: null,
-      },
+  const addDomain = (url) => {
+    if (url !== '') {
+      const newDomain = {
+        node: {
+          slug: 'new-org-slug',
+          url: url,
+          lastRan: null,
+        },
+      }
+      setDomainList([...domainList, newDomain])
+      setDomainSearch('')
+      toast({
+        title: 'User added',
+        description: `${newDomain.node.url} was successfully invited to ${orgName}`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'An error occurred.',
+        description: 'Search for a domain to add it',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
     }
   }
 
@@ -80,16 +99,7 @@ export function DomainList({ ...props }) {
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
-            domainSearch !== ''
-              ? setDomainList([...domainList, newDomain(domainSearch)])
-              : toast({
-                  title: 'An error occurred.',
-                  description: 'Search for a domain to add it',
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                })
-            setDomainSearch('')
+            addDomain(domainSearch)
           }}
         >
           <Trans>Add Domain</Trans>

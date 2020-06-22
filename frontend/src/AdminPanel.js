@@ -67,11 +67,6 @@ export default function AdminPanel({ ...props }) {
 
   return (
     <Stack spacing={10}>
-      {/* <Stack spacing={4}>
-        <Text fontSize="3xl" fontWeight="bold">
-          {orgName}
-        </Text>
-      </Stack> */}
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
         <DomainList data={domainsData} orgName={orgName} />
         <UserList data={userListData} orgName={orgName} />
