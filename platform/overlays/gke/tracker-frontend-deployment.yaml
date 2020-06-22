@@ -9,3 +9,14 @@ metadata:
   annotations:
     fluxcd.io/automated: "true"
     fluxcd.io/tag.frontend: regexp:^(master-*)$
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tracker-frontend
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+
