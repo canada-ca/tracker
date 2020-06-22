@@ -84,14 +84,14 @@ from schemas.send_email_verification.send_email_verification import (
     SendEmailVerification,
 )
 
+# Update Users Password
+from schemas.update_user_password.update_user_password import UpdateUserPassword
+
 # Update User Role Mutation
 from schemas.user_affiliations import UpdateUserRole
 
-# Need to be updated
-from schemas.user import (
-    UpdateUserPassword,
-    ValidateTwoFactor,
-)
+# Validate Two Factor
+from schemas.validate_two_factor.validate_two_factor import ValidateTwoFactor
 
 # --- End Mutation Imports ---
 
