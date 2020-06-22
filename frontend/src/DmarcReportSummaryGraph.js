@@ -54,8 +54,8 @@ function DmarcReportSummaryGraph({ ...props }) {
   periods.sort((a, b) => {
     if (a.month === 'LAST30DAYS') return 1
     if (b.month === 'LAST30DAYS') return -1
-    const aDate = new Date(`${a.month}, ${a.year}`)
-    const bDate = new Date(`${b.month}, ${b.year}`)
+    const aDate = new Date(`${a.month} 1, ${a.year}`)
+    const bDate = new Date(`${b.month} 1, ${b.year}`)
     return aDate - bDate
   })
 
