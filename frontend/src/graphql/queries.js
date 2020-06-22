@@ -103,6 +103,10 @@ export const IS_USER_ADMIN = gql`
       affiliations {
         edges {
           node {
+            organization {
+              id
+              acronym
+            }
             permission
           }
         }

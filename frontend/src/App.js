@@ -146,7 +146,7 @@ export default function App() {
                 alternate="/sign-in"
                 path="/admin"
               >
-                <AdminPage />
+                <AdminPage orgs={data.user[0].affiliations.edges} />
               </RouteIf>
 
               <Route component={PageNotFound} />

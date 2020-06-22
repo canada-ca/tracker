@@ -2,39 +2,12 @@ import React from 'react'
 import { Stack, Text, Select, Divider } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { QUERY_USER } from './graphql/queries'
-import { useUserState } from './UserState'
-import { useQuery } from '@apollo/react-hooks'
 import AdminPanel from './AdminPanel'
+import { array } from 'prop-types'
 
-export default function AdminPage() {
-  const { currentUser } = useUserState()
+export default function AdminPage({ ...props }) {
+  const { orgs } = props
   const [orgName, setOrgName] = React.useState('')
-
-  const {
-    loading: queryUserLoading,
-    error: queryUserError,
-    data: queryUserData,
-  } = useQuery(QUERY_USER, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: {
-      userName: currentUser.userName,
-    },
-  })
-
-  if (queryUserLoading) {
-    return <p>Loading user...</p>
-  }
-
-  if (queryUserError) {
-    return <p>{String(queryUserError)}</p>
-  }
-
-  const affiliations = queryUserData.userPage.userAffiliations
 
   const getOrgOptions = () => {
     const options = [
@@ -43,22 +16,19 @@ export default function AdminPage() {
       </option>,
     ]
 
-    for (let i = 0; i < affiliations.length; i++) {
-      if (affiliations[i].admin) {
+    for (let i = 0; i < orgs.length; i++) {
+      if (
+        orgs[i].node.permission === 'ADMIN' ||
+        orgs[i].node.permission === 'SUPER_ADMIN'
+      ) {
         options.push(
-          <option value={affiliations[i].organization}>
-            {affiliations[i].organization}
+          <option value={orgs[i].node.organization.id}>
+            {orgs[i].node.organization.acronym}
           </option>,
         )
       }
     }
     return options
-
-    // affiliations.map((org) => {
-    //   return (
-    //     org.admin && <option key={org.organization}>{org.organization}</option>
-    //   )
-    // })
   }
 
   return (
@@ -99,4 +69,8 @@ export default function AdminPage() {
       </Stack>
     </Layout>
   )
+}
+
+AdminPage.propTypes = {
+  orgs: array,
 }
