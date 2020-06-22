@@ -1,6 +1,7 @@
 from sqlalchemy.orm import load_only
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 
 from models import (
@@ -47,8 +48,12 @@ def resolve_user_page(self, info, **kwargs):
 
     # Check to see if user actually exists
     if req_user_orm is None:
+        logger.warning(
+            f"User: {user_id} tried to access {user_name} but account does not exist."
+        )
         raise GraphQLError("Error, user cannot be found.")
     else:
+        logger.info(f"User: {user_id} successfully retrieved their own information.")
         req_user_id = req_user_orm.id
 
     if user_id == req_user_id:
@@ -62,21 +67,18 @@ def resolve_user_page(self, info, **kwargs):
         .all()
     )
 
-    # Check to ensure the user belongs to at least one organization
-    if req_org_orms is None:
-        raise GraphQLError("Error, user cannot be found.")
-    else:
-        # Compile list of org id's the user belongs to
-        req_user_org_ids = []
-        for org_id in req_org_orms:
-            req_user_org_ids.append(org_id.organization_id)
-
     # Check to see if the requested user is a super admin and if true return
     if is_super_admin(user_roles=user_roles):
+        logger.info(
+            f"Super Admin: {user_id} successfully retrieved {req_user_id} information."
+        )
         return query.filter(Users.id == req_user_id).first()
 
-    # Declare return list, and check
-    user_check = True
+    # Compile list of org id's the user belongs to
+    req_user_org_ids = []
+    if req_org_orms is not None:
+        for org_id in req_org_orms:
+            req_user_org_ids.append(org_id.organization_id)
 
     # Go through each org id that the user belongs to
     for req_org_id in req_user_org_ids:
@@ -88,10 +90,13 @@ def resolve_user_page(self, info, **kwargs):
             if is_admin(user_roles=user_roles, org_id=req_org_id):
                 # If admin and user share multiple orgs compile list and
                 # return
+                logger.info(
+                    f"User: {user_id} successfully retrieved {req_user_id} information."
+                )
                 return query.filter(Users.id == req_user_id).first()
-            else:
-                raise GraphQLError("Error, user cannot be found.")
 
-    # Give error if requesting user and requested user do not share an org
-    if user_check:
-        raise GraphQLError("Error, user cannot be found.")
+    # If requesting user is not admin, or they do not share orgs return error
+    logger.warning(
+        f"User: {user_id} tried to access user page for {req_user_id} but does not have proper permissions."
+    )
+    raise GraphQLError("Error, user cannot be found.")
