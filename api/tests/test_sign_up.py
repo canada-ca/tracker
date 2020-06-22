@@ -1,5 +1,7 @@
+import logging
 import pytest
 import pytest_mock
+
 from pytest import fail
 
 from app import app
@@ -10,22 +12,25 @@ from tests.test_functions import json, run
 
 
 @pytest.fixture()
-def save():
+def db():
     s, cleanup, db_session = DB()
-    yield s
+    yield s, db_session
     cleanup()
 
 
-def test_successful_creation_english(save, mocker):
+def test_successful_creation_english(db, mocker, caplog):
     """
     Test that ensures a user can be created successfully using the api endpoint
     """
+    _, session = db
+
     mocker.patch(
         "schemas.sign_up.create_user.send_verification_email",
         autospec=True,
         return_value="delivered",
     )
 
+    caplog.set_level(logging.INFO)
     request_headers = {"Origin": "https://testserver.com"}
     with app.test_request_context(headers=request_headers):
         result = run(
@@ -67,19 +72,29 @@ def test_successful_creation_english(save, mocker):
             }
         }
 
+        user = (
+            session.query(Users)
+            .filter(Users.user_name == "different-email@testemail.ca")
+            .first()
+        )
+
         assert result == expected_result
+        assert f"Successfully created new user: {user.id}" in caplog.text
 
 
-def test_successful_creation_french(save, mocker):
+def test_successful_creation_french(db, mocker, caplog):
     """
     Test that ensures a user can be created successfully using the api endpoint
     """
+    _, session = db
+
     mocker.patch(
         "schemas.sign_up.create_user.send_verification_email",
         autospec=True,
         return_value="delivered",
     )
 
+    caplog.set_level(logging.INFO)
     request_headers = {"Origin": "https://testserver.com"}
     with app.test_request_context(headers=request_headers):
         result = run(
@@ -121,11 +136,20 @@ def test_successful_creation_french(save, mocker):
             }
         }
 
+        user = (
+            session.query(Users)
+            .filter(Users.user_name == "different-email@testemail.ca")
+            .first()
+        )
+
         assert result == expected_result
+        assert f"Successfully created new user: {user.id}" in caplog.text
 
 
-def test_email_address_in_use(save):
+def test_email_address_in_use(db, caplog):
     """Test that ensures each user has a unique email address"""
+    save, session = db
+
     test_user = Users(
         display_name="testuser",
         user_name="testuser@testemail.ca",
@@ -133,6 +157,7 @@ def test_email_address_in_use(save):
     )
     save(test_user)
 
+    caplog.set_level(logging.WARNING)
     error_result = run(
         mutation="""
         mutation {
@@ -161,14 +186,25 @@ def test_email_address_in_use(save):
             )
         )
 
+    user = (
+        session.query(Users).filter(Users.user_name == "testuser@testemail.ca").first()
+    )
+
     [error] = error_result["errors"]
     assert error["message"] == error_email_in_use()
+    assert (
+        f"User tried to sign up using: testuser@testemail.ca but account already exists {user.id}"
+        in caplog.text
+    )
 
 
-def test_password_too_short(save):
+def test_password_too_short(db, caplog):
     """
     Test that ensure that a user's password meets the valid length requirements
     """
+    save, _ = db
+
+    caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
         mutation {
@@ -199,10 +235,17 @@ def test_password_too_short(save):
 
     [error] = result["errors"]
     assert error["message"] == error_password_does_not_meet_requirements()
+    assert (
+        f"User: testuser@testemail.ca tried to sign up but password did not meet requirements."
+        in caplog.text
+    )
 
 
-def test_passwords_do_not_match():
-    """Test to ensure that user password matches their password confirmation"""
+def test_passwords_do_not_match(caplog):
+    """
+    Test to ensure that user password matches their password confirmation
+    """
+    caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
         mutation {
@@ -233,3 +276,7 @@ def test_passwords_do_not_match():
 
     [error] = result["errors"]
     assert error["message"] == error_passwords_do_not_match()
+    assert (
+        f"User: testuser@testemail.ca tried to sign up but passwords were not matching."
+        in caplog.text
+    )
