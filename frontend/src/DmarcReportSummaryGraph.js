@@ -64,7 +64,7 @@ function DmarcReportSummaryGraph({ ...props }) {
     let date
     period.month === 'LAST30DAYS'
       ? (date = i18n._(t`LAST30DAYS`))
-      : (date = new Date(`${period.month}, ${period.year}`)
+      : (date = new Date(`${period.month} 1, ${period.year}`)
           .toLocaleDateString(i18n.locale, { month: 'short', year: '2-digit' })
           .replace(/ /, '-'))
     period.date = date
