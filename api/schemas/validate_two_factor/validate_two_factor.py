@@ -1,6 +1,6 @@
 import graphene
 
-from schemas.User.user import User
+from schemas.user.user import User
 from schemas.validate_two_factor.validate import validate_two_factor
 from scalars.email_address import EmailAddress
 

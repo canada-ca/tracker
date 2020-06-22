@@ -30,7 +30,7 @@ def update_password(user_name, password, confirm_password):
     if user is None:
         raise GraphQLError(error_user_does_not_exist())
 
-    # TODO: move this into the User model
+    # TODO: move this into the user model
     user = User.query.filter(User.user_name == user_name).update(
         {
             "user_password": bcrypt.hashpw(
