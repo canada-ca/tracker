@@ -1,6 +1,8 @@
 import graphene
+
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin
@@ -39,6 +41,7 @@ class UpdateOrganization(graphene.Mutation):
     @require_token
     def mutate(self, info, **kwargs):
         # Get arguments from mutation
+        user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
         slug = cleanse_input(kwargs.get("slug"))
         name = cleanse_input(kwargs.get("name"))
@@ -53,6 +56,7 @@ class UpdateOrganization(graphene.Mutation):
 
             # Restrict the deletion of SA Org
             if slug == "super-admin":
+                logger.warning(f"User: {user_id} tried to update super-admin org.")
                 raise GraphQLError("Error, unable to update organization.")
 
             # Get requested org orm
@@ -64,6 +68,9 @@ class UpdateOrganization(graphene.Mutation):
 
             # Check to see if org exists
             if org_orm is None:
+                logger.warning(
+                    f"User: {user_id} tried to update {slug} but org does not exist."
+                )
                 raise GraphQLError("Error, unable to update organization.")
 
             # Check to see if organization slug already in use
@@ -75,6 +82,9 @@ class UpdateOrganization(graphene.Mutation):
             )
 
             if update_org_orm is not None:
+                logger.warning(
+                    f"User: {user_id} tried to update {slug} but org settings already in use."
+                )
                 raise GraphQLError("Error, unable to update organization.")
 
             # Update orm
@@ -96,10 +106,19 @@ class UpdateOrganization(graphene.Mutation):
 
             try:
                 db_session.commit()
+                logger.info(
+                    f"User: {user_id} successfully updated {slug} organization."
+                )
                 return UpdateOrganization(status=True)
             except Exception as e:
                 db_session.rollback()
                 db_session.flush()
+                logger.error(
+                    f"User: {user_id} tried updating {slug}, but error occured when updating the organization {str(e)}"
+                )
                 return UpdateOrganization(status=False)
         else:
+            logger.warning(
+                f"User: {user_id} tried to update {slug} organization but does not have access to update organizations."
+            )
             raise GraphQLError("Error, unable to update organization.")
