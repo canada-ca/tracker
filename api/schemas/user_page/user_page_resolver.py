@@ -67,15 +67,6 @@ def resolve_user_page(self, info, **kwargs):
         .all()
     )
 
-    # Check to ensure the user belongs to at least one organization
-    if req_org_orms is None:
-        raise GraphQLError("Error, user cannot be found.")
-    else:
-        # Compile list of org id's the user belongs to
-        req_user_org_ids = []
-        for org_id in req_org_orms:
-            req_user_org_ids.append(org_id.organization_id)
-
     # Check to see if the requested user is a super admin and if true return
     if is_super_admin(user_roles=user_roles):
         logger.info(
