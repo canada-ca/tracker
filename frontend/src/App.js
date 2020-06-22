@@ -47,7 +47,6 @@ export default function App() {
 
   const isAdmin = (userData) => {
     for (let i = 0; i < userData.length; i++) {
-      console.log(userData[i])
       if (
         userData[i].node.permission === 'ADMIN' ||
         userData[i].node.permission === 'SUPER_ADMIN'

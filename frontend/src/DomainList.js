@@ -22,7 +22,6 @@ export function DomainList({ ...props }) {
   const [domainList, setDomainList] = React.useState(data.domains.edges)
   const [domainSearch, setDomainSearch] = React.useState('')
   const toast = useToast()
-  // console.log(domainList)
 
   const newDomain = (url) => {
     return {
@@ -35,19 +34,12 @@ export function DomainList({ ...props }) {
   }
 
   const removeDomain = (domain) => {
-    const temp = domainList
-    let index = -1
-    for (var i = 0; i < temp.length; i++) {
-      if (temp[i].node.url === domain.url) {
-        index = i
-      }
-    }
+    const temp = domainList.filter((d) => d.node.url !== domain.url)
 
-    if (index > -1) {
-      temp.splice(index, 1)
+    if (temp) {
       setDomainList(temp)
       toast({
-        title: 'Domain removed',
+        title: 'User removed',
         description: `${domain.url} was successfully removed from ${orgName}`,
         status: 'success',
         duration: 9000,
@@ -55,7 +47,7 @@ export function DomainList({ ...props }) {
       })
     } else {
       toast({
-        title: 'Domain removal failed',
+        title: 'User removal failed',
         description: `${domain.url} could not be removed from ${orgName}`,
         status: 'error',
         duration: 9000,
@@ -105,7 +97,7 @@ export function DomainList({ ...props }) {
       </SimpleGrid>
       <Divider />
 
-      {domainList.length === 0 ? (
+      {!domainList || domainList.length === 0 ? (
         <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
           No domains scanned yet
         </Text>

@@ -22,7 +22,7 @@ export default function AdminPage({ ...props }) {
         orgs[i].node.permission === 'SUPER_ADMIN'
       ) {
         options.push(
-          <option value={orgs[i].node.organization.id}>
+          <option value={orgs[i].node.organization.acronym}>
             {orgs[i].node.organization.acronym}
           </option>,
         )

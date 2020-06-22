@@ -36,16 +36,9 @@ export default function UserList({ ...props }) {
   }
 
   const removeUser = (user) => {
-    const temp = userList
-    let index = -1
-    for (var i = 0; i < temp.length; i++) {
-      if (temp[i].node.id === user.id) {
-        index = i
-      }
-    }
+    const temp = userList.filter((c) => c.node.id !== user.id)
 
-    if (index > -1) {
-      temp.splice(index, 1)
+    if (temp) {
       setUserList(temp)
       toast({
         title: 'User removed',
