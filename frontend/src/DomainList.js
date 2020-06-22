@@ -1,5 +1,6 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import {
   Text,
   Stack,
@@ -22,6 +23,7 @@ export function DomainList({ ...props }) {
   const [domainList, setDomainList] = React.useState(data.domains.edges)
   const [domainSearch, setDomainSearch] = React.useState('')
   const toast = useToast()
+  const { i18n } = useLingui()
 
   const addDomain = (url) => {
     if (url !== '') {
@@ -36,8 +38,8 @@ export function DomainList({ ...props }) {
       setDomainSearch('')
       toast({
         title: 'User added',
-        description: `${newDomain.node.url} was successfully invited to ${orgName}`,
-        status: 'success',
+        description: `${newDomain.node.url} was added to ${orgName}`,
+        status: 'info',
         duration: 9000,
         isClosable: true,
       })
@@ -59,8 +61,8 @@ export function DomainList({ ...props }) {
       setDomainList(temp)
       toast({
         title: 'User removed',
-        description: `${domain.url} was successfully removed from ${orgName}`,
-        status: 'success',
+        description: `${domain.url} was removed from ${orgName}`,
+        status: 'info',
         duration: 9000,
         isClosable: true,
       })
@@ -78,7 +80,7 @@ export function DomainList({ ...props }) {
   return (
     <Stack mb={6} w="100%">
       <Text fontSize="2xl" fontWeight="bold">
-        Domain List
+        <Trans>Domain List</Trans>
       </Text>
       <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
         <InputGroup>
@@ -87,7 +89,7 @@ export function DomainList({ ...props }) {
           </InputLeftElement>
           <Input
             type="text"
-            placeholder="Search for domain"
+            placeholder={i18n._(t`Search for a domain`)}
             value={domainSearch}
             onChange={(e) => {
               setDomainSearch(e.target.value)
@@ -95,7 +97,7 @@ export function DomainList({ ...props }) {
           />
         </InputGroup>
         <Button
-          width={'70%'}
+          width={'100%'}
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
@@ -109,7 +111,7 @@ export function DomainList({ ...props }) {
 
       {!domainList || domainList.length === 0 ? (
         <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
-          No domains scanned yet
+          <Trans>No domains scanned yet</Trans>
         </Text>
       ) : (
         domainList.map(({ node }) => {

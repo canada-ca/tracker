@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLingui } from '@lingui/react'
 import {
   Stack,
   SimpleGrid,
@@ -12,7 +13,7 @@ import {
   IconButton,
   useToast,
 } from '@chakra-ui/core'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
 import { object, string } from 'prop-types'
@@ -22,6 +23,7 @@ export default function UserList({ ...props }) {
   const [userList, setUserList] = React.useState(data.userList.edges)
   const [userSearch, setUserSearch] = React.useState('')
   const toast = useToast()
+  const { i18n } = useLingui()
 
   const addUser = (name, id) => {
     if (name !== '') {
@@ -38,8 +40,8 @@ export default function UserList({ ...props }) {
       setUserSearch('')
       toast({
         title: 'User added',
-        description: `${newUser.node.displayName} was successfully invited to ${orgName}`,
-        status: 'success',
+        description: `${newUser.node.displayName} was invited to ${orgName}`,
+        status: 'info',
         duration: 9000,
         isClosable: true,
       })
@@ -61,8 +63,8 @@ export default function UserList({ ...props }) {
       setUserList(temp)
       toast({
         title: 'User removed',
-        description: `${user.displayName} was successfully removed from ${orgName}`,
-        status: 'success',
+        description: `${user.displayName} was removed from ${orgName}`,
+        status: 'info',
         duration: 9000,
         isClosable: true,
       })
@@ -80,7 +82,7 @@ export default function UserList({ ...props }) {
   return (
     <Stack mb={6} w="100%">
       <Text fontSize="2xl" fontWeight="bold">
-        User List
+        <Trans>User List</Trans>
       </Text>
       <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
         <InputGroup>
@@ -89,7 +91,7 @@ export default function UserList({ ...props }) {
           </InputLeftElement>
           <Input
             type="text"
-            placeholder="Search for user"
+            placeholder={i18n._(t`Search for a user`)}
             value={userSearch}
             onChange={(e) => {
               setUserSearch(e.target.value)
@@ -111,7 +113,7 @@ export default function UserList({ ...props }) {
 
       {userList.length === 0 ? (
         <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
-          No users in this organization
+          <Trans>No users in this organization</Trans>
         </Text>
       ) : (
         userList.map(({ node }) => {

@@ -341,6 +341,10 @@ msgstr "En savoir plus"
 msgid "Sign In"
 msgstr "Se connecter"
 
+#: src/App.js:94
+msgid "Admin Portal"
+msgstr "Portail Admin"
+
 #: src/SignInPage.js:49
 msgid "Sign In."
 msgstr "Se connecter."
@@ -489,3 +493,60 @@ msgstr "fort"
 #: src/SummaryGroup.js:37
 msgid "weak"
 msgstr "faible"
+
+#: src/AdminPage.js:17
+msgid "Select an organization"
+msgstr "Sélectionnez une organisation"
+
+#: src/AdminPage.js:40
+msgid "Welcome, Admin"
+msgstr "Bienvenue à l'administration"
+
+#: src/AdminPage.js:44
+msgid "Organization: "
+msgstr "Organisation: "
+
+#: src/AdminPage.js:62
+msgid "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
+msgstr "*Les barres de recherche ne recherchent pas activement les bases de données actuellement. Elles sont utilisées pour démontrer la fonction du bouton 'Ajouter'"
+
+#: src/AdminPage.js:68
+msgid "Select an organization to view admin options"
+msgstr "Sélectionnez une organisation pour voir les options d'administration"
+
+#: src/DomainList.js:81
+msgid "Domain List"
+msgstr "Liste des domaines"
+
+#: src/DomainList.js:105
+msgid "Add Domain"
+msgstr "Ajouter un domaine"
+
+#: src/DomainList.js:112
+msgid "No domains scanned yet"
+msgstr "Aucun domaine n'a encore été scanné"
+
+#: src.DomainList.js:92
+msgid "Search for a domain"
+msgstr "Rechercher un domaine"
+
+#: src.DomainList.js:41
+msgid "was added to"
+msgstr "a été ajouté à"
+
+#: src/UserList.js:83
+msgid "User List"
+msgstr "Liste des utilisateurs"
+
+#: src/UserList.js:107
+msgid "Invite User"
+msgstr "Inviter l'utilisateur"
+
+#: src/UserList.js:114
+msgid "No users in this organization"
+msgstr "Aucun utilisateur dans cette organisation"
+
+#: src.UserList.js:94
+msgid "Search for a user"
+msgstr "Rechercher un utilisateur"
+
