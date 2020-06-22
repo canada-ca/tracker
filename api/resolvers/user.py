@@ -12,7 +12,7 @@ from models import (
     Users,
     User_affiliations,
 )
-from schemas.user import User as UserSchema
+from schemas.User.user import User
 
 
 @require_token
@@ -37,7 +37,7 @@ def resolve_user(self, info, **kwargs):
         org_ids.append(role["org_id"])
 
     # Get initial query
-    query = UserSchema.get_query(info)
+    query = User.get_query(info)
 
     # Check to see if user is requesting a specific user
     if user_name is not None:
