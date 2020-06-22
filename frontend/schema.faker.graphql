@@ -33,7 +33,7 @@ that gives them access to restricted content.
 """
 type Authenticate {
   """
-  User info who just signed in, and their JWT
+  user info who just signed in, and their JWT
   """
   authResult: AuthResult
 }
@@ -48,7 +48,7 @@ type AuthResult {
   authToken: String
 
   """
-  User that has just been created or signed in
+  user that has just been created or signed in
   """
   user: User
 }
@@ -852,7 +852,7 @@ type Mutation {
     password: String!
 
     """
-    User email that they signed up with.
+    user email that they signed up with.
     """
     userName: EmailAddress!
   ): Authenticate
@@ -1793,12 +1793,12 @@ type UserAffClass implements Node {
   id: ID!
 
   """
-  User's ID
+  user's ID
   """
   userId: Int
 
   """
-  User's level of access to a given organization
+  user's level of access to a given organization
   """
   permission: RoleEnums
 }

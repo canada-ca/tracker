@@ -12,7 +12,7 @@ from models import (
     Users,
     User_affiliations,
 )
-from schemas.User.user import User
+from schemas.user.user import User
 
 
 @require_token

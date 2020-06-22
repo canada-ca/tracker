@@ -1,7 +1,7 @@
 import graphene
 
 from schemas.update_user_password.update_password import update_password
-from schemas.User.user import User
+from schemas.user.user import User
 from scalars.email_address import EmailAddress
 
 
