@@ -1,3 +1,4 @@
+import logging
 import pytest
 
 from pytest import fail
@@ -14,7 +15,7 @@ def save():
     cleanup()
 
 
-def test_is_admin_query(save):
+def test_is_admin_query(save, caplog):
     """
     Test to see if query works
     """
@@ -25,6 +26,7 @@ def test_is_admin_query(save):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -42,3 +44,7 @@ def test_is_admin_query(save):
     expected_result = {"data": {"isUserAdmin": {"isAdmin": True}}}
 
     assert result == expected_result
+    assert (
+        f"User: {user.id} checked for any admin roles, and found at least one."
+        in caplog.text
+    )
