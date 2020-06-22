@@ -67,7 +67,7 @@ def send_verification_email(user: Users, client: NotificationsAPIClient):
         logger.warning(
             f"{email_status} occurred when attempting to send {user.id}'s verification email."
         )
-        raise GraphQLError("Error, when sending verification email, please try again.")
+        return f"Email Send Error: {email_status}"
     else:
         logger.info(f"User: {user.id} successfully sent verification email.")
         return email_status
