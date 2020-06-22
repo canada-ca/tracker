@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -17,7 +19,7 @@ def save():
     cleanup()
 
 
-def test_mutation_removeOrganization_succeeds_for_super_admin(save):
+def test_mutation_removeOrganization_succeeds_for_super_admin(save, caplog):
     sa_user = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
@@ -35,9 +37,9 @@ def test_mutation_removeOrganization_succeeds_for_super_admin(save):
             user_organization=Organizations(acronym="ORG1", name="Org One"),
         )
     )
-
     save(sa_user)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
          mutation {
@@ -60,9 +62,12 @@ def test_mutation_removeOrganization_succeeds_for_super_admin(save):
     [status] = created_org
 
     assert status == {"status": True}
+    assert (
+        f"User: {sa_user.id} successfully removed org-one organization." in caplog.text
+    )
 
 
-def test_mutation_removeOrganization_does_not_remove_super_admin_org(save):
+def test_mutation_removeOrganization_does_not_remove_super_admin_org(save, caplog):
     sa_user = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
@@ -77,6 +82,7 @@ def test_mutation_removeOrganization_does_not_remove_super_admin_org(save):
 
     save(sa_user)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
          mutation {
@@ -99,9 +105,10 @@ def test_mutation_removeOrganization_does_not_remove_super_admin_org(save):
     [first] = errors
     message, _, _ = first.values()
     assert message == "Error, unable to remove organization."
+    assert f"User: {sa_user.id} tried to remove super-admin org." in caplog.text
 
 
-def test_mutation_removeOrganization_fails_if_org_does_not_exist(save):
+def test_mutation_removeOrganization_fails_if_org_does_not_exist(save, caplog):
     sa_user = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
@@ -116,6 +123,7 @@ def test_mutation_removeOrganization_fails_if_org_does_not_exist(save):
 
     save(sa_user)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         """
          mutation {
@@ -140,9 +148,13 @@ def test_mutation_removeOrganization_fails_if_org_does_not_exist(save):
     [first] = errors
     message, _, _ = first.values()
     assert message == "Error, unable to remove organization."
+    assert (
+        f"User: {sa_user.id} tried to remove random but org does not exist."
+        in caplog.text
+    )
 
 
-def test_mutation_removeOrganization_fails_for_admin_users(save):
+def test_mutation_removeOrganization_fails_for_admin_users(save, caplog):
     admin = Users(
         display_name="admin", user_name="admin@example.com", password="testpassword123",
     )
@@ -155,6 +167,7 @@ def test_mutation_removeOrganization_fails_for_admin_users(save):
 
     save(admin)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         """
          mutation {
@@ -179,9 +192,13 @@ def test_mutation_removeOrganization_fails_for_admin_users(save):
     [first] = errors
     message, _, _ = first.values()
     assert message == "Error, unable to remove organization."
+    assert (
+        f"User: {admin.id} tried to remove org-one organization but does not have access to remove organizations."
+        in caplog.text
+    )
 
 
-def test_mutation_removeOrganization_fails_for_write_users(save):
+def test_mutation_removeOrganization_fails_for_write_users(save, caplog):
     write_user = Users(
         display_name="writer",
         user_name="write_user@example.com",
@@ -197,6 +214,7 @@ def test_mutation_removeOrganization_fails_for_write_users(save):
 
     save(write_user)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         """
          mutation {
@@ -221,9 +239,13 @@ def test_mutation_removeOrganization_fails_for_write_users(save):
     [first] = errors
     message, _, _ = first.values()
     assert message == "Error, unable to remove organization."
+    assert (
+        f"User: {write_user.id} tried to remove org-one organization but does not have access to remove organizations."
+        in caplog.text
+    )
 
 
-def test_mutation_removeOrganization_fails_for_read_users(save):
+def test_mutation_removeOrganization_fails_for_read_users(save, caplog):
     reader = Users(
         display_name="reader",
         user_name="reader@example.com",
@@ -239,6 +261,7 @@ def test_mutation_removeOrganization_fails_for_read_users(save):
 
     save(reader)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         """
          mutation {
@@ -263,3 +286,7 @@ def test_mutation_removeOrganization_fails_for_read_users(save):
     [first] = errors
     message, _, _ = first.values()
     assert message == "Error, unable to remove organization."
+    assert (
+        f"User: {reader.id} tried to remove org-one organization but does not have access to remove organizations."
+        in caplog.text
+    )
