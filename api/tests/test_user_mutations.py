@@ -37,6 +37,129 @@ def user_schema_test_db_init():
     cleanup()
 
 
+def test_update_password_success(save):
+    """
+    Test to ensure that a user is returned when their password is updated
+    successfully
+    """
+    test_user = Users(
+        display_name="testuser",
+        user_name="testuser@testemail.ca",
+        password="testpassword123",
+    )
+    save(test_user)
+
+    result = run(
+        mutation="""
+        mutation {
+            updatePassword(userName: "testuser@testemail.ca", password: "another-super-long-password",
+                confirmPassword: "another-super-long-password") {
+                user {
+                    userName
+                    displayName
+                }
+            }
+        }
+        """,
+        as_user=test_user,
+    )
+
+    if "errors" in result:
+        fail("Tried to update password, instead: {}".format(json(result)))
+
+    expected_result = {
+        "data": {
+            "updatePassword": {
+                "user": {
+                    "userName": "testuser@testemail.ca",
+                    "displayName": "testuser",
+                }
+            }
+        }
+    }
+    assert result == expected_result
+
+
+def test_updated_passwords_do_not_match():
+    """
+    Test to ensure that user's new password matches their password confirmation
+    """
+    result = run(
+        mutation="""
+        mutation {
+            updatePassword(userName: "test@test-email.ca", password: "a-super-long-password",
+                confirmPassword: "another-super-long-password") {
+                user {
+                    userName
+                }
+            }
+        }
+        """,
+    )
+
+    if "errors" not in result:
+        fail(
+            "Tried to update passwords with mis-matching passwords, instead: {}".format(
+                json(result)
+            )
+        )
+
+    [error] = result["errors"]
+    assert error["message"] == error_passwords_do_not_match()
+
+
+def test_updated_password_too_short():
+    """Test that ensure that a user's password meets the valid length requirements"""
+    result = run(
+        mutation="""
+        mutation {
+            updatePassword(userName: "test@test-email.ca", password: "password", confirmPassword: "password") {
+                user {
+                    userName
+                }
+            }
+        }
+        """,
+    )
+
+    if "errors" not in result:
+        fail(
+            "Tried to update password with too short password, instead: {}".format(
+                json(result)
+            )
+        )
+
+    [error] = result["errors"]
+    assert error["message"] == error_password_does_not_meet_requirements()
+
+
+def test_updated_password_no_user_email():
+    """
+    Test that ensures an empty string submitted as email will not be accepted
+    """
+    result = run(
+        mutation="""
+        mutation {
+            updatePassword(userName: "", password: "valid-password", confirmPassword: "valid-password") {
+                user {
+                    userName
+                }
+            }
+        }
+        """,
+    )
+
+    if "errors" not in result:
+        fail(
+            "Tried to update password with no username, instead: {}".format(
+                json(result)
+            )
+        )
+
+    [error] = result["errors"]
+    assert error["message"] == scalar_error_type("email address", "")
+
+
 def test_successful_validation(save):
     """
     Test that ensures a validation is successful when all params are proper
