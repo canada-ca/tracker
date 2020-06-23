@@ -19,8 +19,19 @@ import { Domain } from './Domain'
 import { string, arrayOf, shape, object } from 'prop-types'
 
 export function DomainList({ ...props }) {
-  const { data, orgName } = props
-  const [domainList, setDomainList] = React.useState(data.domains.edges)
+  let { domainsData, orgName } = props
+  if (domainsData === null) {
+    domainsData = {
+      domains: {
+        edges: [],
+        pageInfo: {
+          hasNextPage: false,
+        },
+      },
+    }
+  }
+
+  const [domainList, setDomainList] = React.useState(domainsData.domains.edges)
   const [domainSearch, setDomainSearch] = React.useState('')
   const toast = useToast()
   const { i18n } = useLingui()
@@ -139,7 +150,7 @@ export function DomainList({ ...props }) {
       )}
       <Divider />
       <PaginationButtons
-        next={data.domains.pageInfo.hasNextPage}
+        next={domainsData.domains.pageInfo.hasNextPage}
         previous={false}
       />
     </Stack>
@@ -147,7 +158,7 @@ export function DomainList({ ...props }) {
 }
 
 DomainList.propTypes = {
-  data: shape({
+  domainsData: shape({
     domains: shape({
       edges: arrayOf(
         shape({

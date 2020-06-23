@@ -1,6 +1,5 @@
 import React from 'react'
-import { Stack, SimpleGrid, Text, useToast } from '@chakra-ui/core'
-import { Trans } from '@lingui/macro'
+import { Stack, SimpleGrid, useToast } from '@chakra-ui/core'
 import UserList from './UserList'
 import { DomainList } from './DomainList'
 import { string } from 'prop-types'
@@ -65,11 +64,14 @@ export default function AdminPanel({ ...props }) {
     return <p>{String(domainsError)}</p>
   }
 
+  // console.log(domainsData)
+  // console.log(userListData)
+
   return (
     <Stack spacing={10}>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
-        <DomainList data={domainsData} orgName={orgName} />
-        <UserList data={userListData} orgName={orgName} />
+        <DomainList name="admin" domainsData={domainsData} orgName={orgName} />
+        <UserList name="admin" userListData={userListData} orgName={orgName} />
       </SimpleGrid>
     </Stack>
   )

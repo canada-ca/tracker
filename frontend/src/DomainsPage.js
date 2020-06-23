@@ -15,12 +15,11 @@ import {
 } from '@chakra-ui/core'
 import { DOMAINS } from './graphql/queries'
 import { useUserState } from './UserState'
-import { Domain } from './Domain'
 import { DomainList } from './DomainList'
 import { PaginationButtons } from './PaginationButtons'
 
 export default function DomainsPage() {
-  const { currentUser, isAdmin } = useUserState()
+  const { currentUser } = useUserState()
   const toast = useToast()
   const { loading, _error, data } = useQuery(DOMAINS, {
     context: {
@@ -40,10 +39,10 @@ export default function DomainsPage() {
     },
   })
 
-  let domains = []
-  if (data && data.domains.edges) {
-    domains = data.domains.edges.map((e) => e.node)
-  }
+  // let domains = []
+  // if (data && data.domains.edges) {
+  //   domains = data.domains.edges.map((e) => e.node)
+  // }
 
   if (loading)
     return (
@@ -65,29 +64,26 @@ export default function DomainsPage() {
             </InputLeftElement>
             <Input type="text" placeholder="Search for domain" />
           </InputGroup>
-          {isAdmin() && (
-            <Button
-              width={'70%'}
-              leftIcon="add"
-              variantColor="blue"
-              onClick={() => {
-                window.alert('add domain')
-              }}
-            >
-              Add Domain
-            </Button>
-          )}
+          <Button
+            width={'70%'}
+            leftIcon="add"
+            variantColor="blue"
+            onClick={() => {
+              window.alert('add domain')
+            }}
+          >
+            Add Domain
+          </Button>
+          )
         </SimpleGrid>
-        {data && data.domains && (
-          <Stack spacing={4}>
-            <Stack spacing={4} direction="row" flexWrap="wrap">
-              <DomainList domains={domains}>
-                {(domain) => <Domain key={domain.url} url={domain.url} />}
-              </DomainList>
-            </Stack>
-            <PaginationButtons next={false} previous={false} />
+        {/* {data && data.domains && ( */}
+        <Stack spacing={4}>
+          <Stack spacing={4} direction="row" flexWrap="wrap">
+            <DomainList domainsData={data} />
           </Stack>
-        )}
+          <PaginationButtons next={false} previous={false} />
+        </Stack>
+        {/* )} */}
       </Stack>
     </Layout>
   )

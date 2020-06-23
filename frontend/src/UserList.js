@@ -16,11 +16,11 @@ import {
 import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
-import { object, string } from 'prop-types'
+import { string, object } from 'prop-types'
 
 export default function UserList({ ...props }) {
-  const { data, orgName } = props
-  const [userList, setUserList] = React.useState(data.userList.edges)
+  const { userListData, orgName } = props
+  const [userList, setUserList] = React.useState(userListData.userList.edges)
   const [userSearch, setUserSearch] = React.useState('')
   const toast = useToast()
   const { i18n } = useLingui()
@@ -146,8 +146,8 @@ export default function UserList({ ...props }) {
       )}
       <Divider />
       <PaginationButtons
-        next={data.userList.pageInfo.hasNextPage}
-        previous={data.userList.pageInfo.hasPreviousPage}
+        next={userListData.userList.pageInfo.hasNextPage}
+        previous={userListData.userList.pageInfo.hasPreviousPage}
       />
     </Stack>
   )
@@ -177,6 +177,6 @@ export default function UserList({ ...props }) {
 </Box> */
 
 UserList.propTypes = {
-  data: object,
+  userListData: object,
   orgName: string,
 }
