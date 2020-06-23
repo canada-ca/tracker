@@ -97,7 +97,7 @@ msgid "Create Account"
 msgstr "Créer un compte"
 
 #: src/UserList.js:58
-msgid "Create user"
+msgid "Create User"
 msgstr "Créer un utilisateur"
 
 #: src/CreateUserPage.js:103
