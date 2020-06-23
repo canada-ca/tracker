@@ -193,10 +193,7 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save):
         fail("Expected to generate error, instead: {}".format(json(update_result)))
 
     [error] = update_result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to edit "
-        "domains belonging to another organization"
-    )
+    assert error["message"] == "Error, unable to update domain."
 
 
 def test_domain_update_user_write(save):
@@ -307,10 +304,7 @@ def test_domain_creation_user_write_cant_update_in_different_org(save):
         fail("Expected to generate error, instead: {}".format(json(update_result)))
 
     [error] = update_result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to edit "
-        "domains belonging to another organization"
-    )
+    assert error["message"] == "Error, unable to update domain."
 
 
 def test_domain_creation_user_read_cant_update_domain(save):
@@ -355,7 +349,4 @@ def test_domain_creation_user_read_cant_update_domain(save):
         fail("Expected to generate error, instead: {}".format(json(update_result)))
 
     [error] = update_result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to edit "
-        "domains belonging to another organization"
-    )
+    assert error["message"] == "Error, unable to update domain."

@@ -41,7 +41,7 @@ def resolve_users(self, info, **kwargs):
 
     # Ensure that requested orm exists
     if org_orm is None:
-        raise GraphQLError("Error, no organization related to that enum")
+        raise GraphQLError("Error, unable to find organization.")
     else:
         org_id = org_orm.id
 
@@ -80,4 +80,4 @@ def resolve_users(self, info, **kwargs):
         return query.all()
 
     else:
-        raise GraphQLError("Error, you do not have access to view this organization")
+        raise GraphQLError("Error, unable to find organization.")

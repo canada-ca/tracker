@@ -119,9 +119,9 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
                 data.get("categoryTotals"),
             )
         else:
-            raise GraphQLError("Error, you do not have access to this domain.")
+            raise GraphQLError("Error, dmarc summary cannot be found.")
     else:
-        raise GraphQLError("Error, you do not have access to this domain.")
+        raise GraphQLError("Error, dmarc summary cannot be found.")
 
 
 def resolve_demo_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:

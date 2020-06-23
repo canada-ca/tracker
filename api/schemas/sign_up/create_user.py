@@ -72,7 +72,8 @@ def create_user(display_name, password, confirm_password, user_name, preferred_l
 
         except HTTPError:
             raise GraphQLError(
-                "Error, when sending verification email, please try again"
+                "Error, when sending verification email, please try go to "
+                "user page to verify account"
             )
 
         except Exception as e:

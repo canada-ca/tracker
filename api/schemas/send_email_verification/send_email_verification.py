@@ -36,7 +36,7 @@ class SendEmailVerification(graphene.Mutation):
 
         # Check to see if user is found, or if they are already validated
         if user is None:
-            raise GraphQLError("Error, cannot find user.")
+            raise GraphQLError("Error, unable to send verification email.")
         elif user.email_validated:
             raise GraphQLError("Error, user is already validated.")
 

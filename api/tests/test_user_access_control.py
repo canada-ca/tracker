@@ -181,10 +181,7 @@ def test_get_user_admin_from_different_org(save):
         )
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, user does not belong to any of your "
-        "organizations"
-    )
+    assert error["message"] == "Error, user cannot be found."
 
 
 # User write tests
@@ -235,10 +232,7 @@ def test_get_user_user_write(save):
         fail("User query as user write should fail, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to view this "
-        "users information"
-    )
+    assert error["message"] == "Error, user cannot be found."
 
 
 # User read tests
@@ -329,7 +323,4 @@ def test_get_user_user_read(save):
         fail("User query as user read should fail, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to view this "
-        "users information"
-    )
+    assert error["message"] == "Error, user cannot be found."

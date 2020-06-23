@@ -118,7 +118,7 @@ def test_get_another_users_information_user_does_not_exist(save):
 
     [err] = actual["errors"]
     [message, _, _] = err.values()
-    assert message == "Error, user cannot be found"
+    assert message == "Error, user cannot be found."
 
 
 # User read tests

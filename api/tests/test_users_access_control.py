@@ -274,7 +274,7 @@ def test_get_users_admin_from_different_org(save):
 
     [err] = actual["errors"]
     [message, _, _] = err.values()
-    assert message == "Error, you do not have access to view this organization"
+    assert message == "Error, unable to find organization."
 
 
 # User write tests
@@ -355,7 +355,7 @@ def test_get_users_user_write(save):
 
     [err] = actual["errors"]
     [message, _, _] = err.values()
-    assert message == "Error, you do not have access to view this organization"
+    assert message == "Error, unable to find organization."
 
 
 def test_get_users_user_read(save):
@@ -435,4 +435,4 @@ def test_get_users_user_read(save):
 
     [err] = actual["errors"]
     [message, _, _] = err.values()
-    assert message == "Error, you do not have access to view this organization"
+    assert message == "Error, unable to find organization."

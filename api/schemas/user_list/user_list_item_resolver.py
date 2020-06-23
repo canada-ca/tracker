@@ -28,7 +28,7 @@ def resolve_user_item(self, info, **kwargs):
     )
 
     if org_orm is None:
-        raise GraphQLError("Error, organization does not exist")
+        raise GraphQLError("Error, unable to access user list.")
 
     query = UserListItem.get_query(info)
 
@@ -36,4 +36,4 @@ def resolve_user_item(self, info, **kwargs):
         query = query.filter(User_affiliations.organization_id == org_orm.id).all()
         return query
     else:
-        raise GraphQLError("Error, you do not have permission to view this user lists")
+        raise GraphQLError("Error, unable to access user list.")

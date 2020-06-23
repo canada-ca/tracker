@@ -222,7 +222,7 @@ def test_remove_domain_org_admin_cant_remove_diff_org(db):
         fail("Expected to generate an error, instead: {}".format(json(remove_result)))
 
     [error] = remove_result["errors"]
-    assert error["message"] == "Error, you do not have permission to remove domains."
+    assert error["message"] == "Error, unable to remove domain."
 
 
 def test_remove_domain_user_write(db):
@@ -347,7 +347,7 @@ def test_remove_domain_user_write_cant_remove_diff_org(db):
         fail("Expected to generate an error, instead: {}".format(json(remove_result)))
 
     [error] = remove_result["errors"]
-    assert error["message"] == "Error, you do not have permission to remove domains."
+    assert error["message"] == "Error, unable to remove domain."
 
 
 def test_remove_domain_user_read_cant_remove_domains(db):
@@ -394,4 +394,4 @@ def test_remove_domain_user_read_cant_remove_domains(db):
         fail("Expected to generate an error, instead: {}".format(json(remove_result)))
 
     [error] = remove_result["errors"]
-    assert error["message"] == "Error, you do not have permission to remove domains."
+    assert error["message"] == "Error, unable to remove domain."

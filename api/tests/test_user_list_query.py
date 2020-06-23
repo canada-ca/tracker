@@ -255,9 +255,7 @@ def test_admin_cant_see_user_list_in_different_org(save):
         fail("Expected to get an error. Instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to view this user lists"
-    )
+    assert error["message"] == "Error, unable to access user list."
 
 
 # User Write Tests
@@ -317,9 +315,7 @@ def test_user_write_cant_see_user_list(save):
         )
 
     [error] = result["errors"]
-    assert (
-        error["message"] == "Error, you do not have permission to view this user lists"
-    )
+    assert error["message"] == "Error, unable to access user list."
 
 
 # User Read Tests
@@ -378,4 +374,4 @@ def test_user_read_cant_see_user_list(save):
 
     [err] = result["errors"]
     [message, _location, _path] = err.values()
-    assert message == "Error, you do not have permission to view this user lists"
+    assert message == "Error, unable to access user list."

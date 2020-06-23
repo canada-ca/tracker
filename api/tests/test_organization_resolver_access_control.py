@@ -211,4 +211,4 @@ def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
             )
         )
     [err] = result["errors"]
-    assert err["message"] == "Error, organization does not exist"
+    assert err["message"] == "Error, unable to find organization."
