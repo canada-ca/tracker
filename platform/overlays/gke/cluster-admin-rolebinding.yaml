@@ -9,5 +9,5 @@ roleRef:
   name: cluster-admin
 subjects:
 - apiGroup: rbac.authorization.k8s.io
-  kind: User
+  kind: user
   name: mike.williamson@gcdigital.canada.ca

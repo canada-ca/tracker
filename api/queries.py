@@ -45,7 +45,7 @@ from schemas.user_page import user_page, resolve_user_page
 # Need to be updated
 from schemas.users import Users
 from resolvers.users import resolve_users
-from schemas.User.user import User
+from schemas.user.user import User
 from resolvers.user import resolve_user
 from resolvers.notification_emails import (
     resolve_send_password_reset,
@@ -84,14 +84,14 @@ from schemas.send_email_verification.send_email_verification import (
     SendEmailVerification,
 )
 
+# Update Users Password
+from schemas.update_user_password.update_user_password import UpdateUserPassword
+
 # Update User Role Mutation
 from schemas.user_affiliations import UpdateUserRole
 
-# Need to be updated
-from schemas.user import (
-    UpdateUserPassword,
-    ValidateTwoFactor,
-)
+# Validate Two Factor
+from schemas.validate_two_factor.validate_two_factor import ValidateTwoFactor
 
 # --- End Mutation Imports ---
 

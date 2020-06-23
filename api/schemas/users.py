@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from schemas.user import User
+from schemas.user.user import User
 from schemas.organizations import Organization
 from models import Users as UserModel
 from models import User_affiliations
