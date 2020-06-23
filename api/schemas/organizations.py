@@ -1,12 +1,8 @@
-from base64 import b64encode
-
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from graphene_sqlalchemy.types import ORMField
-from graphql import ResolveInfo
 
-from schemas.domain import Domain as DomainsSchema
+from schemas.shared_structures.domain import Domain as DomainsSchema
 from schemas.user_affiliations import UserAffClass
 from scalars.organization_acronym import Acronym
 from scalars.slug import Slug

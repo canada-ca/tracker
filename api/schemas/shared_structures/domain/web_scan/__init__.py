@@ -6,8 +6,8 @@ from models import Web_scans, Ssl_scans, Https_scans
 from scalars.url import URL
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
-from schemas.domain.web_scan.https import HTTPS
-from schemas.domain.web_scan.ssl import SSL
+from schemas.shared_structures.domain.web_scan.https import HTTPS
+from schemas.shared_structures.domain.web_scan.ssl import SSL
 
 
 class WebScan(SQLAlchemyObjectType):

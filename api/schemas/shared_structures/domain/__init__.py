@@ -6,8 +6,8 @@ from graphene_sqlalchemy.types import ORMField
 from models import Domains, Web_scans, Mail_scans
 from scalars.slug import Slug
 from scalars.url import URL
-from schemas.domain.mail_scan import MailScan
-from schemas.domain.web_scan import WebScan
+from schemas.shared_structures.domain.mail_scan import MailScan
+from schemas.shared_structures.domain.web_scan import WebScan
 
 
 class Domain(SQLAlchemyObjectType):

@@ -4,11 +4,11 @@ from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from functions.get_domain import get_domain
 from functions.get_timestamp import get_timestamp
-from models import Web_scans, Mail_scans, Dmarc_scans, Spf_scans, Dkim_scans
+from models import Mail_scans, Dmarc_scans, Spf_scans, Dkim_scans
 from scalars.url import URL
-from schemas.domain.mail_scan.dkim import DKIM
-from schemas.domain.mail_scan.dmarc import DMARC
-from schemas.domain.mail_scan.spf import SPF
+from schemas.shared_structures.domain.mail_scan.dkim import DKIM
+from schemas.shared_structures.domain.mail_scan.dmarc import DMARC
+from schemas.shared_structures.domain.mail_scan.spf import SPF
 
 
 class MailScan(SQLAlchemyObjectType):

@@ -3,7 +3,7 @@ from base64 import b64encode
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from schemas.domain import Domain as DomainsSchema
+from schemas.shared_structures.domain import Domain as DomainsSchema
 from scalars.organization_acronym import Acronym
 from scalars.slug import Slug
 from models import Domains as DomainsModel

@@ -7,7 +7,7 @@ from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read
 from functions.input_validators import cleanse_input
 from models import Domains, Organizations
-from schemas.domain import Domain
+from schemas.shared_structures.domain import Domain
 
 
 @require_token

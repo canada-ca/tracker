@@ -8,8 +8,9 @@ from enums.roles import RoleEnums
 
 # --- Query Imports ---
 # Domain Imports
-from schemas.domain import Domain
-from resolvers.domains import resolve_domain, resolve_domains
+from schemas.find_domain_detail_by_slug import find_domain_by_slug
+from schemas.shared_structures.domain import Domain
+from resolvers.domains import resolve_domains
 
 # Get Dmarc Report Bar Graph Data
 from schemas.dmarc_report_summary_list import (
@@ -156,14 +157,8 @@ class Query(graphene.ObjectType):
     # --- End Organization Queries ---
 
     # --- Start Domain Queries ---
-    domain = graphene.List(
-        lambda: Domain,
-        url_slug=graphene.Argument(Slug, required=True),
-        description="Select information on a specific domain.",
-    )
 
-    def resolve_domain(self, info, **kwargs):
-        return resolve_domain(self, info, **kwargs)
+    find_domain_by_slug = find_domain_by_slug
 
     domains = SQLAlchemyConnectionField(
         Domain._meta.connection,
