@@ -16,7 +16,7 @@ describe('<UserCard />', () => {
             <I18nProvider i18n={setupI18n()}>
               <UserCard
                 userName="testuser@testemail.gc.ca"
-                displayName="Test user"
+                displayName="Test User"
                 tfa={true}
                 admin={true}
               />
@@ -44,7 +44,7 @@ describe('<UserCard />', () => {
             <I18nProvider i18n={setupI18n()}>
               <UserCard
                 userName="testuser@testemail.gc.ca"
-                displayName="Test user"
+                displayName="Test User"
                 tfa={false}
                 admin={false}
               />

@@ -75,10 +75,3 @@ class Users(Base):
     def verify_account(self):
         # Set user email_validated field to true0
         self.email_validated = True
-
-    @hybrid_method
-    def update_password(self, password):
-        """ Used To Update Users Password"""
-        self.password = password
-        self.failed_login_attempts = 0
-        self.failed_login_attempt_time = 0

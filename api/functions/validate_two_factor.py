@@ -1,12 +1,11 @@
 import os
-import pyotp
 
+import pyotp
 from graphql import GraphQLError
 
-from app import logger
-from db import db_session
+from models import Users as User
 from functions.error_messages import *
-from models import Users
+from db import db_session
 
 
 def validate_two_factor(user_name, otp_code):
@@ -17,32 +16,22 @@ def validate_two_factor(user_name, otp_code):
     :param otp_code - The one time password (otp) that they are attempting to verify
     :returns User object if queried successfully, null if not
     """
-    user = Users.find_by_user_name(user_name=user_name)
+    user = db_session.query(User).filter(User.user_name == user_name)
 
-    if user is None:
-        logger.warning(
-            f"User {user_name} attempted to verify account, but no account associated with that username."
-        )
+    if user.first() is None:
         raise GraphQLError(error_user_does_not_exist())
 
     valid_code = pyotp.totp.TOTP(os.getenv("BASE32_SECRET")).verify(otp_code)
 
-    if valid_code is True:
+    if valid_code:
         user.tfa_validated = True
         try:
             db_session.commit()
-            logger.info(f"User: {user.id} successfully tfa validated their account.")
-            return user
+            return user.first()
         except Exception as e:
             db_session.rollback()
             db_session.flush()
-            logger.error(
-                f"User: {user.id} attempted to tfa validate their account but a db error occurred: {str(e)}"
-            )
             raise GraphQLError(error_user_not_updated())
 
     else:
-        logger.warning(
-            f"User: {user.id} attempted to tfa validate their account but their otp code was incorrect."
-        )
         raise GraphQLError(error_otp_code_is_invalid())
