@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -17,7 +19,7 @@ def save():
     cleanup()
 
 
-def test_mutation_updateOrganization_succeeds_as_super_user(save):
+def test_mutation_updateOrganization_succeeds_as_super_user(save, caplog):
     sa_user = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
@@ -38,6 +40,7 @@ def test_mutation_updateOrganization_succeeds_as_super_user(save):
 
     save(sa_user)
 
+    caplog.set_level(logging.INFO)
     result = run(
         mutation="""
         mutation {
@@ -68,9 +71,12 @@ def test_mutation_updateOrganization_succeeds_as_super_user(save):
     [status] = created_org
 
     assert status == {"status": True}
+    assert (
+        f"User: {sa_user.id} successfully updated org-one organization." in caplog.text
+    )
 
 
-def test_mutation_updateOrganization_fails_if_names_clash(save):
+def test_mutation_updateOrganization_fails_if_org_is_sa_org(save, caplog):
     sa_user = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
@@ -91,6 +97,7 @@ def test_mutation_updateOrganization_fails_if_names_clash(save):
 
     save(sa_user)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
          mutation {
@@ -121,6 +128,7 @@ def test_mutation_updateOrganization_fails_if_names_clash(save):
     [first] = errors
     message, _, _ = first.values()
     assert message == "Error, unable to update organization."
+    assert f"User: {sa_user.id} tried to update super-admin org." in caplog.text
 
 
 def test_mutation_updateOrganization_fails_if_org_does_not_exist(save):
@@ -170,7 +178,67 @@ def test_mutation_updateOrganization_fails_if_org_does_not_exist(save):
     assert message == "Error, unable to update organization."
 
 
-def test_mutation_updateOrganization_fails_for_admin_users(save):
+def test_mutation_updateOrganization_fails_if_names_clash(save, caplog):
+    sa_user = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+    )
+    sa_user.user_affiliation.append(
+        User_affiliations(
+            permission="super_admin",
+            user_organization=Organizations(acronym="SA", name="Super Admin"),
+        )
+    )
+    sa_user.user_affiliation.append(
+        User_affiliations(
+            permission="organization-1",
+            user_organization=Organizations(acronym="ORG1", name="Org One"),
+        )
+    )
+    save(sa_user)
+
+    org_two = Organizations(acronym="ORG2", name="Org two")
+    save(org_two)
+
+    caplog.set_level(logging.WARNING)
+    result = run(
+        mutation="""
+         mutation {
+             updateOrganization(
+                 slug: "org-one"
+                 name: "Org two"
+                 acronym: "ORG2"
+                 zone: "Test Zone"
+                 sector: "Test Sector"
+                 province: "Nova Scotia"
+                 city: "Halifax"
+             ) {
+                 status
+             }
+         }
+        """,
+        as_user=sa_user,
+    )
+
+    if "errors" not in result:
+        fail(
+            "expected updateOrganization to fail when renaming clashes. Instead: {}".format(
+                json(result)
+            )
+        )
+
+    errors, data = result.values()
+    [first] = errors
+    message, _, _ = first.values()
+    assert message == "Error, unable to update organization."
+    assert (
+        f"User: {sa_user.id} tried to update org-one but org settings already in use."
+        in caplog.text
+    )
+
+
+def test_mutation_updateOrganization_fails_for_admin_users(save, caplog):
     admin = Users(
         display_name="admin", user_name="admin@example.com", password="testpassword123",
     )
@@ -184,6 +252,7 @@ def test_mutation_updateOrganization_fails_for_admin_users(save):
 
     save(admin)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
          mutation {
@@ -214,9 +283,13 @@ def test_mutation_updateOrganization_fails_for_admin_users(save):
     [first] = errors
     message, _, _ = first.values()
     assert message == "Error, unable to update organization."
+    assert (
+        f"User: {admin.id} tried to update org-one organization but does not have access to update organizations."
+        in caplog.text
+    )
 
 
-def test_mutation_updateOrganization_fails_for_write_users(save):
+def test_mutation_updateOrganization_fails_for_write_users(save, caplog):
     write_user = Users(
         display_name="writer",
         user_name="write_user@example.com",
@@ -232,6 +305,7 @@ def test_mutation_updateOrganization_fails_for_write_users(save):
 
     save(write_user)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
          mutation {
@@ -262,9 +336,13 @@ def test_mutation_updateOrganization_fails_for_write_users(save):
     [first] = errors
     message, _, _ = first.values()
     assert message == "Error, unable to update organization."
+    assert (
+        f"User: {write_user.id} tried to update org-one organization but does not have access to update organizations."
+        in caplog.text
+    )
 
 
-def test_mutation_updateOrganization_fails_for_read_users(save):
+def test_mutation_updateOrganization_fails_for_read_users(save, caplog):
     reader = Users(
         display_name="reader",
         user_name="reader@example.com",
@@ -280,6 +358,7 @@ def test_mutation_updateOrganization_fails_for_read_users(save):
 
     save(reader)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
          mutation {
@@ -310,3 +389,7 @@ def test_mutation_updateOrganization_fails_for_read_users(save):
     [first] = errors
     message, _, _ = first.values()
     assert message == "Error, unable to update organization."
+    assert (
+        f"User: {reader.id} tried to update org-one organization but does not have access to update organizations."
+        in caplog.text
+    )

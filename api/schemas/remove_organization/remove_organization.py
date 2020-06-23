@@ -1,6 +1,8 @@
 import graphene
+
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin
@@ -34,11 +36,13 @@ class RemoveOrganization(graphene.Mutation):
     @require_token
     def mutate(self, info, **kwargs):
         # Get arguments from mutation
+        user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
         slug = cleanse_input(kwargs.get("slug"))
 
         # Restrict the deletion of SA Org
         if slug == "super-admin":
+            logger.warning(f"User: {user_id} tried to remove super-admin org.")
             raise GraphQLError("Error, unable to remove organization.")
 
         # Check to see if org exists
@@ -47,6 +51,9 @@ class RemoveOrganization(graphene.Mutation):
         )
 
         if org_orm is None:
+            logger.warning(
+                f"User: {user_id} tried to remove {slug} but org does not exist."
+            )
             raise GraphQLError("Error, unable to remove organization.")
 
         # Check Permissions
@@ -74,7 +81,9 @@ class RemoveOrganization(graphene.Mutation):
                                 Ssl_scans.query.filter(Ssl_scans.id == scan.id).delete()
                                 Web_scans.query.filter(Web_scans.id == scan.id).delete()
                             except Exception as e:
-                                print("Scans: " + e)
+                                logger.error(
+                                    f"User: {user_id} tried removing {slug}, but error occured when removing web scans {str(e)}"
+                                )
                                 return RemoveOrganization(status=False)
 
                         # Get All Web Scans
@@ -96,13 +105,17 @@ class RemoveOrganization(graphene.Mutation):
                                     Mail_scans.id == scan.id
                                 ).delete()
                             except Exception as e:
-                                print("Scans: " + e)
+                                logger.error(
+                                    f"User: {user_id} tried removing {slug}, but error occured when removing mail scans {str(e)}"
+                                )
                                 return RemoveOrganization(status=False)
                         # Delete Domains
                         try:
                             Domains.query.filter(Domains.id == domain.id).delete()
                         except Exception as e:
-                            print("Domain: " + str(e))
+                            logger.error(
+                                f"User: {user_id} tried removing {slug}, but error occured when removing domains {str(e)}"
+                            )
                             return RemoveOrganization(status=False)
 
                 try:
@@ -111,17 +124,27 @@ class RemoveOrganization(graphene.Mutation):
                         User_affiliations.organization_id == org_orm.id
                     ).delete()
                 except Exception as e:
-                    print("user_aff: " + str(e))
+                    logger.error(
+                        f"User: {user_id} tried removing {slug}, but error occured when removing user affiliations {str(e)}"
+                    )
                     return RemoveOrganization(status=False)
 
                 db_session.delete(org_orm)
                 db_session.commit()
+                logger.info(
+                    f"User: {user_id} successfully removed {slug} organization."
+                )
                 return RemoveOrganization(status=True)
 
             except Exception as e:
-                print("organization: " + str(e))
                 db_session.rollback()
                 db_session.flush()
+                logger.error(
+                    f"User: {user_id} tried removing {slug}, but error occured when removing the organization {str(e)}"
+                )
                 return RemoveOrganization(status=False)
         else:
+            logger.warning(
+                f"User: {user_id} tried to remove {slug} organization but does not have access to remove organizations."
+            )
             raise GraphQLError("Error, unable to remove organization.")

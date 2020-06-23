@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -26,7 +28,7 @@ def db():
     cleanup()
 
 
-def test_remove_domain_super_admin(db):
+def test_remove_domain_super_admin(db, caplog):
     """
     Test to see if super admins can remove domains
     """
@@ -49,7 +51,6 @@ def test_remove_domain_super_admin(db):
                     acronym="SA", name="Super Admin", slug="super-admin"
                 ),
             ),
-            User_affiliations(permission="admin", user_organization=org_one,),
         ],
     )
     save(super_admin)
@@ -75,6 +76,7 @@ def test_remove_domain_super_admin(db):
     test_spf = Spf_scans(id=test_mail_scan.id)
     save(test_spf)
 
+    caplog.set_level(logging.INFO)
     remove_result = run(
         mutation="""
         mutation{
@@ -102,9 +104,65 @@ def test_remove_domain_super_admin(db):
     assert not session.query(Mx_scans).filter(Mx_scans.id == mail_scan_id).all()
     assert not session.query(Ssl_scans).filter(Ssl_scans.id == web_scan_id).all()
     assert not session.query(Spf_scans).filter(Spf_scans.id == mail_scan_id).all()
+    assert (
+        f"User: {super_admin.id} successfully removed sa.remove.domain.ca and all related scans."
+        in caplog.text
+    )
 
 
-def test_remove_domain_org_admin(db):
+def test_remove_domain_super_admin_cant_remove_domain_doesnt_exist(db, caplog):
+    """
+    Test to see if super admin cant remove domains from that don't exist
+    """
+    [save, _] = db
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            ),
+        ],
+    )
+    save(super_admin)
+
+    caplog.set_level(logging.WARNING)
+    remove_result = run(
+        mutation="""
+        mutation{
+            removeDomain(
+                url: "sa.remove.domain.ca"
+            ) {
+                status
+            }
+        }
+        """,
+        as_user=super_admin,
+    )
+
+    if "errors" not in remove_result:
+        fail("Expected to generate an error, instead: {}".format(json(remove_result)))
+
+    [error] = remove_result["errors"]
+    assert error["message"] == "Error, unable to remove domain."
+    assert (
+        f"User: {super_admin.id} tried to remove domain: sa.remove.domain.ca, but it does not exist."
+        in caplog.text
+    )
+
+
+def test_remove_domain_org_admin(db, caplog):
     """
     Test to see if org admins can remove domains
     """
@@ -147,6 +205,7 @@ def test_remove_domain_org_admin(db):
     test_spf = Spf_scans(id=test_mail_scan.id)
     save(test_spf)
 
+    caplog.set_level(logging.INFO)
     remove_result = run(
         mutation="""
         mutation{
@@ -174,9 +233,13 @@ def test_remove_domain_org_admin(db):
     assert not session.query(Mx_scans).filter(Mx_scans.id == mail_scan_id).all()
     assert not session.query(Ssl_scans).filter(Ssl_scans.id == web_scan_id).all()
     assert not session.query(Spf_scans).filter(Spf_scans.id == mail_scan_id).all()
+    assert (
+        f"User: {org_admin.id} successfully removed admin.remove.domain.ca and all related scans."
+        in caplog.text
+    )
 
 
-def test_remove_domain_org_admin_cant_remove_diff_org(db):
+def test_remove_domain_org_admin_cant_remove_diff_org(db, caplog):
     """
     Test to see if org admins cant remove domains from different orgs
     """
@@ -205,6 +268,7 @@ def test_remove_domain_org_admin_cant_remove_diff_org(db):
     test_domain = Domains(domain="admin.remove.domain.ca", organization_id=org_two.id,)
     save(test_domain)
 
+    caplog.set_level(logging.WARNING)
     remove_result = run(
         mutation="""
         mutation{
@@ -223,9 +287,57 @@ def test_remove_domain_org_admin_cant_remove_diff_org(db):
 
     [error] = remove_result["errors"]
     assert error["message"] == "Error, unable to remove domain."
+    assert f"User: {org_admin.id} tried to remove admin.remove.domain.ca but does not have proper access to remove this domain."
 
 
-def test_remove_domain_user_write(db):
+def test_remove_domain_org_admin_cant_remove_domain_doesnt_exist(db, caplog):
+    """
+    Test to see if org admin cant remove domains from that don't exist
+    """
+    [save, _] = db
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    org_admin = Users(
+        display_name="testadmin",
+        user_name="testadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="admin", user_organization=org_one,),
+        ],
+    )
+    save(org_admin)
+
+    caplog.set_level(logging.WARNING)
+    remove_result = run(
+        mutation="""
+        mutation{
+            removeDomain(
+                url: "admin.remove.domain.ca"
+            ) {
+                status
+            }
+        }
+        """,
+        as_user=org_admin,
+    )
+
+    if "errors" not in remove_result:
+        fail("Expected to generate an error, instead: {}".format(json(remove_result)))
+
+    [error] = remove_result["errors"]
+    assert error["message"] == "Error, unable to remove domain."
+    assert (
+        f"User: {org_admin.id} tried to remove domain: admin.remove.domain.ca, but it does not exist."
+        in caplog.text
+    )
+
+
+def test_remove_domain_user_write(db, caplog):
     """
     Test to see if user write can remove domains
     """
@@ -270,6 +382,7 @@ def test_remove_domain_user_write(db):
     test_spf = Spf_scans(id=test_mail_scan.id)
     save(test_spf)
 
+    caplog.set_level(logging.INFO)
     remove_result = run(
         mutation="""
         mutation{
@@ -297,9 +410,13 @@ def test_remove_domain_user_write(db):
     assert not session.query(Mx_scans).filter(Mx_scans.id == mail_scan_id).all()
     assert not session.query(Ssl_scans).filter(Ssl_scans.id == web_scan_id).all()
     assert not session.query(Spf_scans).filter(Spf_scans.id == mail_scan_id).all()
+    assert (
+        f"User: {user_write.id} successfully removed user.write.remove.domain.ca and all related scans."
+        in caplog.text
+    )
 
 
-def test_remove_domain_user_write_cant_remove_diff_org(db):
+def test_remove_domain_user_write_cant_remove_diff_org(db, caplog):
     """
     Test to see if user write cant remove domains from different orgs
     """
@@ -330,6 +447,7 @@ def test_remove_domain_user_write_cant_remove_diff_org(db):
     )
     save(test_domain)
 
+    caplog.set_level(logging.WARNING)
     remove_result = run(
         mutation="""
         mutation{
@@ -348,9 +466,60 @@ def test_remove_domain_user_write_cant_remove_diff_org(db):
 
     [error] = remove_result["errors"]
     assert error["message"] == "Error, unable to remove domain."
+    assert (
+        f"User: {user_write.id} tried to remove user.write.remove.domain.ca but does not have proper access to remove this domain."
+        in caplog.text
+    )
 
 
-def test_remove_domain_user_read_cant_remove_domains(db):
+def test_remove_domain_user_write_cant_remove_domain_doesnt_exist(db, caplog):
+    """
+    Test to see if user write cant remove domains from that don't exist
+    """
+    [save, _] = db
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1"
+    )
+    save(org_one)
+
+    user_write = Users(
+        display_name="testuserwrite",
+        user_name="testuserwrite@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_write", user_organization=org_one,),
+        ],
+    )
+    save(user_write)
+
+    caplog.set_level(logging.WARNING)
+    remove_result = run(
+        mutation="""
+        mutation{
+            removeDomain(
+                url: "user.write.remove.domain.ca"
+            ) {
+                status
+            }
+        }
+        """,
+        as_user=user_write,
+    )
+
+    if "errors" not in remove_result:
+        fail("Expected to generate an error, instead: {}".format(json(remove_result)))
+
+    [error] = remove_result["errors"]
+    assert error["message"] == "Error, unable to remove domain."
+    assert (
+        f"User: {user_write.id} tried to remove domain: user.write.remove.domain.ca, but it does not exist."
+        in caplog.text
+    )
+
+
+def test_remove_domain_user_read_cant_remove_domains(db, caplog):
     """
     Test to see if user read cant remove domains from orgs
     """
@@ -377,6 +546,7 @@ def test_remove_domain_user_read_cant_remove_domains(db):
     )
     save(test_domain)
 
+    caplog.set_level(logging.WARNING)
     remove_result = run(
         mutation="""
         mutation{
@@ -395,3 +565,7 @@ def test_remove_domain_user_read_cant_remove_domains(db):
 
     [error] = remove_result["errors"]
     assert error["message"] == "Error, unable to remove domain."
+    assert (
+        f"User: {user_read.id} tried to remove user.read.remove.domain.ca but does not have proper access to remove this domain."
+        in caplog.text
+    )

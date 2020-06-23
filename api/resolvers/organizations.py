@@ -1,11 +1,10 @@
 from graphql import GraphQLError
-from db import db_session
 
+from app import logger
+from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read
-
 from models import Organizations
-
 from schemas.organizations import Organization
 from functions.input_validators import cleanse_input
 
@@ -24,6 +23,7 @@ def resolve_organization(self: Organization, info, **kwargs):
     """
     # Get Information from kwargs
     slug = cleanse_input(kwargs.get("slug"))
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
 
     # Gather Initial Organization Query Object
@@ -34,13 +34,23 @@ def resolve_organization(self: Organization, info, **kwargs):
 
     # if org cannot be found
     if not org_orm:
+        logger.warning(
+            f"User: {user_id} attempted to access an organization using {slug}, but no organization was not found."
+        )
         raise GraphQLError("Error, unable to find organization.")
     org_id = org_orm.id
 
     # Check to ensure user has access to given org
     if is_user_read(user_roles=user_roles, org_id=org_id):
         query_rtn = query.filter(Organizations.slug == slug).first()
+        logger.info(
+            f"User: {user_id} successfully retrieved organization info for {slug}"
+        )
+
     else:
+        logger.warning(
+            f"User: {user_id} attempted to access an organization using {slug}, but does not have access to this organization"
+        )
         raise GraphQLError("Error, unable to find organization.")
 
     return query_rtn
@@ -58,6 +68,7 @@ def resolve_organizations(self, info, **kwargs):
     :return: Filtered Organization SQLAlchemyObject Type
     """
     # Get Information from kwargs
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
 
     # Generate user Org ID list
@@ -73,7 +84,12 @@ def resolve_organizations(self, info, **kwargs):
         query_rtn = query.all()
         # If no org can be matched
         if not len(query_rtn):
+            logger.info(
+                f"Super admin: {user_id} tried to access all organzations but none were found"
+            )
             raise GraphQLError("Error, unable to find organizations.")
+
+        logger.info(f"Super admin: {user_id} successfully retrieved all organizations.")
         return query_rtn
     # If user fails super admin check
     else:
@@ -83,6 +99,14 @@ def resolve_organizations(self, info, **kwargs):
             if is_user_read(user_roles=user_roles, org_id=org_id):
                 tmp_query = query.filter(Organizations.id == org_id).first()
                 query_rtr.append(tmp_query)
+
         if not query_rtr:
+            logger.info(
+                f"User: {user_id} tried to access all organizations, but does not have any affiliations."
+            )
             raise GraphQLError("Error, unable to find organizations.")
+
+        logger.info(
+            f"User: {user_id} successfully retrieved all organizations that they belong to."
+        )
         return query_rtr

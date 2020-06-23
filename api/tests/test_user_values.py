@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -13,7 +15,7 @@ def save():
     cleanup()
 
 
-def test_get_another_users_information(save):
+def test_get_another_users_information(save, caplog):
     """
     Test to see if an admin can select another users information
     """
@@ -40,6 +42,7 @@ def test_get_another_users_information(save):
     )
     save(super_admin)
 
+    caplog.set_level(logging.INFO)
     actual = run(
         query="""
         {
@@ -70,9 +73,13 @@ def test_get_another_users_information(save):
         }
     }
     assert actual == expected
+    assert (
+        f"Super admin {super_admin.id} successfully retrieved the user information for this user testuserread@testemail.ca."
+        in caplog.text
+    )
 
 
-def test_get_another_users_information_user_does_not_exist(save):
+def test_get_another_users_information_user_does_not_exist(save, caplog):
     """
     Test to see that error message appears when user does not exist
     """
@@ -99,6 +106,7 @@ def test_get_another_users_information_user_does_not_exist(save):
     )
     save(super_admin)
 
+    caplog.set_level(logging.WARNING)
     actual = run(
         query="""
         {
@@ -119,10 +127,14 @@ def test_get_another_users_information_user_does_not_exist(save):
     [err] = actual["errors"]
     [message, _, _] = err.values()
     assert message == "Error, user cannot be found."
+    assert (
+        f"User: {super_admin.id}, tried to find this user IdontThinkSo@testemail.ca but the account does not exist."
+        in caplog.text
+    )
 
 
 # User read tests
-def test_get_own_user_information(save):
+def test_get_own_user_information(save, caplog):
     """
     Test to see if user can access all user object values
     """
@@ -141,6 +153,7 @@ def test_get_own_user_information(save):
     )
     save(user)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -171,3 +184,6 @@ def test_get_own_user_information(save):
         }
     }
     assert result == expected_result
+    assert (
+        f"User {user.id} successfully retrieved their own information." in caplog.text
+    )

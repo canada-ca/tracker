@@ -1,6 +1,8 @@
 import graphene
+
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_write
@@ -42,6 +44,9 @@ class RequestScan(graphene.Mutation):
 
         # Check to make sure domain exists
         if domain_orm is None:
+            logger.warning(
+                f"User: {user_id} tried to request a scan for {url} but domain does not exist."
+            )
             raise GraphQLError("Error, unable to request scan.")
 
         # Check to ensure user has admin rights
@@ -62,8 +67,20 @@ class RequestScan(graphene.Mutation):
             )
 
             # Return status information to user
-            return RequestScan(status=status)
+            if status is True:
+                logger.info(
+                    f"User: {user_id} successfully dispatched a scan for {url}."
+                )
+                return RequestScan(status=True)
+            else:
+                logger.warning(
+                    f"User: {user_id} attempted to dispatch a scan, but dispatcher returned {status}."
+                )
+                raise GraphQLError("Error, unable to request scan.")
 
         # If user doesn't have rights error out
         else:
+            logger.warning(
+                f"User: {user_id} tried to dispatch a scan for {url} but does not have permissions to do so."
+            )
             raise GraphQLError("Error, unable to request scan.")

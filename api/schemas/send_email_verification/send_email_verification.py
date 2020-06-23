@@ -4,6 +4,7 @@ import os
 from graphql import GraphQLError
 from notifications_python_client.notifications import NotificationsAPIClient
 
+from app import logger
 from db import db_session
 from functions.input_validators import cleanse_input
 from functions.verification_email import send_verification_email
@@ -36,8 +37,14 @@ class SendEmailVerification(graphene.Mutation):
 
         # Check to see if user is found, or if they are already validated
         if user is None:
+            logger.warning(
+                f"User: {user_name} tried to verify an account but it does not exist."
+            )
             raise GraphQLError("Error, unable to send verification email.")
-        elif user.email_validated:
+        elif user.email_validated is True:
+            logger.info(
+                f"User: {user.id} tried to verify an account but it has already been verified."
+            )
             raise GraphQLError("Error, user is already validated.")
 
         # Send validation email
@@ -50,8 +57,12 @@ class SendEmailVerification(graphene.Mutation):
         )
 
         if email_status.__contains__("Email Send Error"):
+            logger.warning(
+                f"User: {user.id} tried to send verification email, but error occurred {email_status}"
+            )
             raise GraphQLError(
                 "Error, when sending verification email, please try again."
             )
 
+        logger.info(f"User: {user.id} successfully sent verification email.")
         return SendEmailVerification(status=True)

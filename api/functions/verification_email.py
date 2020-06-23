@@ -1,10 +1,8 @@
-import time
-
 from flask import request
 from graphql import GraphQLError
 from notifications_python_client.notifications import NotificationsAPIClient
-from requests import HTTPError
 
+from app import logger
 from json_web_token import tokenize
 from models import Users
 
@@ -16,8 +14,9 @@ def get_verification_email_status(notify_client, response):
         )
         return email_status
 
-    except HTTPError:
-        raise GraphQLError("Error, when retrieving email status, error: HTTPError")
+    except Exception as e:
+        logger.error(f"Error when retrieving email status: {str(e)}")
+        return "Error, when sending verification email, please try again."
 
 
 def send_verification_email(user: Users, client: NotificationsAPIClient):
@@ -38,7 +37,7 @@ def send_verification_email(user: Users, client: NotificationsAPIClient):
         email_template_id = "6e3368a7-0d75-47b1-b4b2-878234e554c9"
 
     # URL Generation
-    token = tokenize(user_id=user.user_name, exp_period=24)
+    token = tokenize(user_id=user.id, exp_period=24)
     url = str(request.url_root) + "validate/" + str(token)
 
     # Send Email
@@ -49,8 +48,11 @@ def send_verification_email(user: Users, client: NotificationsAPIClient):
             personalisation={"user": user.display_name, "verify_email_url": url},
         )
 
-    except HTTPError as e:
-        raise GraphQLError("Error, when sending verification email, error: HTTPError")
+    except Exception as e:
+        logger.error(
+            f"Error when sending user: {user.id}'s verification email: {str(e)}"
+        )
+        raise GraphQLError("Error, when sending verification email, please try again.")
 
     # Check Email status
     email_status = get_verification_email_status(
@@ -62,6 +64,10 @@ def send_verification_email(user: Users, client: NotificationsAPIClient):
         or email_status == "temporary-failure"
         or email_status == "technical-failure"
     ):
-        return "Email Send Error: {}".format(email_status)
+        logger.warning(
+            f"{email_status} occurred when attempting to send {user.id}'s verification email."
+        )
+        return f"Email Send Error: {email_status}"
     else:
+        logger.info(f"User: {user.id} successfully sent verification email.")
         return email_status

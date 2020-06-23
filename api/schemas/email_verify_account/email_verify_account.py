@@ -1,9 +1,10 @@
 import os
-
 import graphene
 import jwt
+
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 from functions.input_validators import cleanse_input
 from models.Users import Users
@@ -36,12 +37,16 @@ class EmailVerifyAccount(graphene.Mutation):
             raise GraphQLError("Signature expired, please login again")
         except jwt.InvalidTokenError:
             raise GraphQLError("Invalid token, please login again")
-        user_name = payload.get("user_id")
+
+        user_id = payload.get("user_id")
 
         # Check to see if user exists
-        user = db_session.query(Users).filter(Users.user_name == user_name).first()
+        user = db_session.query(Users).filter(Users.id == user_id).first()
 
         if not user:
+            logger.warning(
+                f"User: {user_id} attempted to verify their account but it does not exist."
+            )
             raise GraphQLError("Error, unable to verify account.")
 
         user.verify_account()
@@ -51,6 +56,10 @@ class EmailVerifyAccount(graphene.Mutation):
         except Exception as e:
             db_session.rollback()
             db_session.flush()
+            logger.error(
+                f"Database error occured when user: {user_id} attempted to verify their account, error: {str(e)}"
+            )
             raise GraphQLError("Error, unable to verify account.")
 
+        logger.info(f"User: {user_id} successfully verified their account.")
         return EmailVerifyAccount(status=True)

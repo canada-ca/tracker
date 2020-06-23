@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -14,7 +16,7 @@ def save():
 
 
 # Super Admin Tests
-def test_get_user_as_super_admin(save):
+def test_get_user_as_super_admin(save, caplog):
     """
     Test to see if user resolver access control allows super admin to
     request users inside and outside of their organization
@@ -52,6 +54,7 @@ def test_get_user_as_super_admin(save):
     )
     save(user_read)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -71,10 +74,14 @@ def test_get_user_as_super_admin(save):
     expected_result = {"data": {"user": [{"displayName": "testuserread"}]}}
 
     assert result == expected_result
+    assert (
+        f"Super admin {super_admin.id} successfully retrieved the user information for this user testuserread@testemail.ca."
+        in caplog.text
+    )
 
 
 # Admin Same Org
-def test_get_user_from_same_org(save):
+def test_get_user_from_same_org(save, caplog):
     """
     Test to see if user resolver access control allows admin to
     request users inside and not outside of their organization
@@ -106,6 +113,7 @@ def test_get_user_from_same_org(save):
     )
     save(user_read)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -123,10 +131,14 @@ def test_get_user_from_same_org(save):
     expected_result = {"data": {"user": [{"displayName": "testuserread"}]}}
 
     assert result == expected_result
+    assert (
+        f"User {org_admin.id} successfully retrieved the user information for this user testuserread@testemail.ca."
+        in caplog.text
+    )
 
 
 # Admin different org
-def test_get_user_admin_from_different_org(save):
+def test_get_user_admin_from_different_org(save, caplog):
     """
     Test to see if user resolver access control does not  allow  admin
     from another organization to select them
@@ -162,6 +174,7 @@ def test_get_user_admin_from_different_org(save):
     )
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
         {
@@ -182,10 +195,14 @@ def test_get_user_admin_from_different_org(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, user cannot be found."
+    assert (
+        f"User: {org_admin.id}, tried to find this user testuserread@testemail.ca but does not have admin access to any similar organizations."
+        in caplog.text
+    )
 
 
 # User write tests
-def test_get_user_user_write(save):
+def test_get_user_user_write(save, caplog):
     """
     Test to see if user resolver access control to ensure users with user
     write access cannot access this query
@@ -217,6 +234,7 @@ def test_get_user_user_write(save):
     )
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
         {
@@ -233,13 +251,16 @@ def test_get_user_user_write(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, user cannot be found."
+    assert (
+        f"User: {user_write.id}, tried to find this user testuserread@testemail.ca but does not have admin access to any similar organizations."
+        in caplog.text
+    )
 
 
 # User read tests
-def test_get_reader_can_access_their_own_info(save):
+def test_get_reader_can_access_their_own_info(save, caplog):
     """
-    Test to see if user resolver access control to ensure users with user
-    write access cannot access this query
+    Test to see that user can access their own information
     """
     org_one = Organizations(
         acronym="ORG1", name="Organization 1", slug="organization-1"
@@ -257,6 +278,7 @@ def test_get_reader_can_access_their_own_info(save):
     )
     save(user_read)
 
+    caplog.set_level(logging.INFO)
     results = run(
         query="""
         {
@@ -274,12 +296,15 @@ def test_get_reader_can_access_their_own_info(save):
     expected_result = {"data": {"user": [{"displayName": "testuserread"}]}}
 
     assert results == expected_result
+    assert (
+        f"User {user_read.id} successfully retrieved their own user information using this username testuserread@testemail.ca."
+        in caplog.text
+    )
 
 
-def test_get_user_user_read(save):
+def test_get_user_user_read(save, caplog):
     """
-    Test to see if user resolver access control to ensure users with user
-    write access cannot access this query
+    Test to ensure that user read's cannot access other users information
     """
     org_one = Organizations(
         acronym="ORG1", name="Organization 1", slug="organization-1"
@@ -308,6 +333,7 @@ def test_get_user_user_read(save):
     )
     save(user_read_two)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
         {
@@ -324,3 +350,7 @@ def test_get_user_user_read(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, user cannot be found."
+    assert (
+        f"User: {user_read_one.id}, tried to find this user testuserreadtwo@testemail.ca but does not have admin access to any similar organizations."
+        in caplog.text
+    )

@@ -1,6 +1,8 @@
 import graphene
+
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin
@@ -38,6 +40,7 @@ class CreateOrganization(graphene.Mutation):
 
     @require_token
     def mutate(self, info, **kwargs):
+        user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
         name = cleanse_input(kwargs.get("name"))
         acronym = cleanse_input(kwargs.get("acronym"))
@@ -56,6 +59,9 @@ class CreateOrganization(graphene.Mutation):
             )
 
             if org_orm is not None:
+                logger.warning(
+                    f"Super admin: {user_id} tried to create an organization, but it already exists."
+                )
                 raise GraphQLError("Error, unable to create organization.")
 
             # Generate org tags
@@ -75,10 +81,19 @@ class CreateOrganization(graphene.Mutation):
             # Push update to db and return status
             try:
                 db_session.commit()
+                logger.info(
+                    f"Super admin: {user_id} successfully created a new org: {new_org.slug}."
+                )
                 return CreateOrganization(status=True)
             except Exception as e:
                 db_session.rollback()
                 db_session.flush()
-                return CreateOrganization(status=False)
+                logger.error(
+                    f"Database error occured when {user_id} tried to create a new organization {str(e)}"
+                )
+                raise GraphQLError("Error, unable to create organization.")
         else:
+            logger.warning(
+                f"User: {user_id} tried to create a new organization, but is not a super admin."
+            )
             raise GraphQLError("Error, unable to create organization.")

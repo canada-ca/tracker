@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -17,7 +19,7 @@ def save():
     cleanup()
 
 
-def test_domain_creation_super_admin(save):
+def test_domain_creation_super_admin(save, caplog):
     """
     Test to see if super admins can create domains
     """
@@ -44,6 +46,7 @@ def test_domain_creation_super_admin(save):
     )
     save(super_admin)
 
+    caplog.set_level(logging.INFO)
     create_result = run(
         mutation="""
         mutation{
@@ -61,6 +64,10 @@ def test_domain_creation_super_admin(save):
     create_result_expected = {"data": {"createDomain": {"status": True}}}
 
     assert create_result == create_result_expected
+    assert (
+        f"User: {super_admin.id} successfully created sa.create.domain.ca for the organization-1 organization."
+        in caplog.text
+    )
 
     result = run(
         query="""
@@ -78,7 +85,7 @@ def test_domain_creation_super_admin(save):
     assert result == result_expected
 
 
-def test_domain_creation_super_admin_cant_create_in_sa_org(save):
+def test_domain_creation_super_admin_cant_create_in_sa_org(save, caplog):
     """
     Test to ensure that super admins cant create domains in sa org
     """
@@ -99,6 +106,7 @@ def test_domain_creation_super_admin_cant_create_in_sa_org(save):
     )
     save(super_admin)
 
+    caplog.set_level(logging.WARNING)
     create_result = run(
         mutation="""
         mutation{
@@ -115,9 +123,60 @@ def test_domain_creation_super_admin_cant_create_in_sa_org(save):
 
     [error] = create_result["errors"]
     assert error["message"] == "Error, unable to create domain."
+    assert (
+        f"User: {super_admin.id} tried to create a domain in the super admin org."
+        in caplog.text
+    )
 
 
-def test_domain_creation_org_admin(save):
+def test_domain_creation_super_admin_cant_create_in_an_org_that_doesnt_exist(
+    save, caplog
+):
+    """
+    Test to ensure that super admin cant create domains in an org that doesn't exist
+    """
+
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            ),
+        ],
+    )
+    save(super_admin)
+
+    caplog.set_level(logging.INFO)
+    create_result = run(
+        mutation="""
+        mutation{
+            createDomain(orgSlug: "organization-3", url: "user.write.create.domain.ca") {
+                status
+            }
+        }
+        """,
+        as_user=super_admin,
+    )
+
+    if "errors" not in create_result:
+        fail("Expected to generate error, instead: {}".format(json(create_result)))
+
+    [error] = create_result["errors"]
+    assert error["message"] == "Error, unable to create domain."
+    assert (
+        f"User: {super_admin.id} tried to create a domain in organization-3, but organization does not exist."
+        in caplog.text
+    )
+
+
+def test_domain_creation_org_admin(save, caplog):
     """
     Test to see if org admins can create domains
     """
@@ -138,6 +197,7 @@ def test_domain_creation_org_admin(save):
     )
     save(org_admin)
 
+    caplog.set_level(logging.INFO)
     create_result = run(
         mutation="""
         mutation{
@@ -155,6 +215,10 @@ def test_domain_creation_org_admin(save):
     create_result_expected = {"data": {"createDomain": {"status": True}}}
 
     assert create_result == create_result_expected
+    assert (
+        f"User: {org_admin.id} successfully created admin.create.domain.ca for the organization-1 organization."
+        in caplog.text
+    )
 
     result = run(
         query="""
@@ -172,7 +236,7 @@ def test_domain_creation_org_admin(save):
     assert result == result_expected
 
 
-def test_domain_creation_org_admin_cant_create_in_different_org(save):
+def test_domain_creation_org_admin_cant_create_in_different_org(save, caplog):
     """
     Test to ensure that org admins cant create domains in different org
     """
@@ -198,6 +262,7 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save):
     )
     save(org_admin)
 
+    caplog.set_level(logging.WARNING)
     create_result = run(
         mutation="""
         mutation{
@@ -214,9 +279,57 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save):
 
     [error] = create_result["errors"]
     assert error["message"] == "Error, unable to create domain."
+    assert f"User: {org_admin.id} tried to create a domain for this org: organization-2, but does not have the proper permissions."
 
 
-def test_domain_creation_user_write(save):
+def test_domain_creation_org_admin_cant_create_in_an_org_that_doesnt_exist(
+    save, caplog
+):
+    """
+    Test to ensure that org admin cant create domains in an org that doesn't exist
+    """
+
+    admin = Users(
+        display_name="testadmin",
+        user_name="testadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="admin",
+                user_organization=Organizations(
+                    acronym="ORG1", name="Organization 1", slug="organization-1"
+                ),
+            ),
+        ],
+    )
+    save(admin)
+
+    caplog.set_level(logging.INFO)
+    create_result = run(
+        mutation="""
+        mutation{
+            createDomain(orgSlug: "organization-3", url: "user.write.create.domain.ca") {
+                status
+            }
+        }
+        """,
+        as_user=admin,
+    )
+
+    if "errors" not in create_result:
+        fail("Expected to generate error, instead: {}".format(json(create_result)))
+
+    [error] = create_result["errors"]
+    assert error["message"] == "Error, unable to create domain."
+    assert (
+        f"User: {admin.id} tried to create a domain in organization-3, but organization does not exist."
+        in caplog.text
+    )
+
+
+def test_domain_creation_user_write(save, caplog):
     """
     Test to see if user write can create domains
     """
@@ -237,6 +350,7 @@ def test_domain_creation_user_write(save):
     )
     save(user_write)
 
+    caplog.set_level(logging.INFO)
     create_result = run(
         mutation="""
         mutation{
@@ -254,6 +368,10 @@ def test_domain_creation_user_write(save):
     create_result_expected = {"data": {"createDomain": {"status": True}}}
 
     assert create_result == create_result_expected
+    assert (
+        f"User: {user_write.id} successfully created user.write.create.domain.ca for the organization-1 organization."
+        in caplog.text
+    )
 
     result = run(
         query="""
@@ -271,7 +389,7 @@ def test_domain_creation_user_write(save):
     assert result == result_expected
 
 
-def test_domain_creation_user_write_cant_create_in_different_org(save):
+def test_domain_creation_user_write_cant_create_in_different_org(save, caplog):
     """
     Test to ensure that user write cant create domains in different org
     """
@@ -297,6 +415,7 @@ def test_domain_creation_user_write_cant_create_in_different_org(save):
     )
     save(user_write)
 
+    caplog.set_level(logging.INFO)
     create_result = run(
         mutation="""
         mutation{
@@ -313,9 +432,60 @@ def test_domain_creation_user_write_cant_create_in_different_org(save):
 
     [error] = create_result["errors"]
     assert error["message"] == "Error, unable to create domain."
+    assert (
+        f"User: {user_write.id} tried to create a domain for this org: organization-2, but does not have the proper permissions."
+        in caplog.text
+    )
 
 
-def test_domain_creation_user_read_cant_create_domain(save):
+def test_domain_creation_user_write_cant_create_in_an_org_that_doesnt_exist(
+    save, caplog
+):
+    """
+    Test to ensure that user write cant create domains in an org that doesn't exist
+    """
+
+    user_write = Users(
+        display_name="testuserwrite",
+        user_name="testuserwrite@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="user_write",
+                user_organization=Organizations(
+                    acronym="ORG1", name="Organization 1", slug="organization-1"
+                ),
+            ),
+        ],
+    )
+    save(user_write)
+
+    caplog.set_level(logging.INFO)
+    create_result = run(
+        mutation="""
+        mutation{
+            createDomain(orgSlug: "organization-3", url: "user.write.create.domain.ca") {
+                status
+            }
+        }
+        """,
+        as_user=user_write,
+    )
+
+    if "errors" not in create_result:
+        fail("Expected to generate error, instead: {}".format(json(create_result)))
+
+    [error] = create_result["errors"]
+    assert error["message"] == "Error, unable to create domain."
+    assert (
+        f"User: {user_write.id} tried to create a domain in organization-3, but organization does not exist."
+        in caplog.text
+    )
+
+
+def test_domain_creation_user_read_cant_create_domain(save, caplog):
     """
     Test to ensure that user read cant create domains
     """
@@ -337,6 +507,7 @@ def test_domain_creation_user_read_cant_create_domain(save):
     )
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     create_result = run(
         mutation="""
         mutation{
@@ -353,3 +524,7 @@ def test_domain_creation_user_read_cant_create_domain(save):
 
     [error] = create_result["errors"]
     assert error["message"] == "Error, unable to create domain."
+    assert (
+        f"User: {user_read.id} tried to create a domain for this org: organization-1, but does not have the proper permissions."
+        in caplog.text
+    )

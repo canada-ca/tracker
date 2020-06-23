@@ -55,3 +55,4 @@ def create_sa():
             )
             db_session.add(new_user_aff)
             db_session.commit()
+            print("Created Super Admin User")

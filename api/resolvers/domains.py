@@ -1,9 +1,11 @@
 from graphql import GraphQLError
 from sqlalchemy.orm import load_only
 
+from app import logger
 from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_super_admin, is_user_read
+from functions.input_validators import cleanse_input
 from models import Domains, Organizations
 from schemas.domain import Domain
 
@@ -20,11 +22,19 @@ def resolve_domain(self: Domain, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in via kwargs
-    url_slug = kwargs.get("url_slug")
+    url_slug = cleanse_input(kwargs.get("url_slug"))
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
 
     # Get initial Domain Query Object
     query = Domain.get_query(info)
+
+    domain_orm = db_session.query(Domains).filter(Domains.slug == url_slug).first()
+    if not domain_orm:
+        logger.warning(
+            f"User: {user_id} attempted to access a domain using {url_slug}, but domain was not found."
+        )
+        raise GraphQLError("Error, unable to find domain.")
 
     # Get org id that is related to the domain
     org_orm = (
@@ -36,6 +46,9 @@ def resolve_domain(self: Domain, info, **kwargs):
 
     # If org cannot be found
     if not org_orm:
+        logger.warning(
+            f"User: {user_id} attempted to access a domain using {url_slug}, but no organization was not found."
+        )
         raise GraphQLError("Error, unable to find domain.")
     org_id = org_orm.id
 
@@ -46,7 +59,18 @@ def resolve_domain(self: Domain, info, **kwargs):
             .filter(Domains.organization_id == org_id)
             .all()
         )
+        logger.info(
+            f"User: {user_id} successfully retrieved the domain information for {url_slug}"
+        )
+        if not query_rtn:
+            logger.info(
+                f"User: {user_id} attempted to access a domain using {url_slug}, but no domain was found."
+            )
+            raise GraphQLError("Error, unable to find domain.")
     else:
+        logger.warning(
+            f"User: {user_id} attempted to access a domain using {url_slug}, but does not have access to {org_orm.slug}."
+        )
         raise GraphQLError("Error, unable to find domain.")
 
     return query_rtn
@@ -64,7 +88,8 @@ def resolve_domains(self, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in from kwargs
-    org_slug = kwargs.get("org_slug")
+    org_slug = cleanse_input(kwargs.get("org_slug"))
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
 
     # Generate list of org's the user has access to
@@ -73,6 +98,9 @@ def resolve_domains(self, info, **kwargs):
         org_ids.append(role["org_id"])
 
     if not org_ids:
+        logger.warning(
+            f"User: {user_id} attempted to access domains for this org {org_slug}, but has no roles assigned."
+        )
         raise GraphQLError("Error, unable to find domains.")
 
     # Retrieve information based on query
@@ -88,27 +116,46 @@ def resolve_domains(self, info, **kwargs):
 
         # Check if org exists
         if not len(org_orms.all()):
+            logger.warning(
+                f"User: {user_id} attempted to access an orgnaizations domains using {org_slug}, but no organization was found."
+            )
             raise GraphQLError("Error, unable to find organization.")
 
         # Convert to int id
         org_id = org_orms.first().id
 
         # Check if user has permission to view org
-        if is_user_read(user_roles, org_id):
+        if is_user_read(user_roles=user_roles, org_id=org_id):
             query_rtn = query.filter(Domains.organization_id == org_id).all()
 
             # If org has no domains related to it
             if not len(query_rtn):
+                logger.info(
+                    f"User: {user_id} attempted to access an organizations domains using {org_slug}, but no domains were found."
+                )
                 raise GraphQLError("Error, unable to find domains.")
         else:
+            logger.warning(
+                f"User: {user_id} attempted to access an organizations domains using {org_slug}, but does not have access to this organization."
+            )
             raise GraphQLError("Error, unable to find domains.")
 
+        logger.info(
+            f"User: {user_id}, successfully retrieved all domains for this org {org_slug}."
+        )
         return query_rtn
     else:
         if is_super_admin(user_roles=user_roles):
             query_rtn = query.all()
             if not query_rtn:
+                logger.info(
+                    f"Super Admin: {user_id} tried to gather all domains, but none were found."
+                )
                 raise GraphQLError("Error, unable to find domains.")
+
+            logger.info(
+                f"Super Admin: {user_id}, successfully retrieved all domains for all orgs that they have access to."
+            )
             return query_rtn
         else:
             query_rtr = []
@@ -117,6 +164,14 @@ def resolve_domains(self, info, **kwargs):
                     tmp_query = query.filter(Domains.organization_id == org_id).all()
                     for item in tmp_query:
                         query_rtr.append(item)
+
             if not query_rtr:
+                logger.info(
+                    f"User: {user_id}, tried to access all the domains for all the orgs that they belong to but none were found."
+                )
                 raise GraphQLError("Error, unable to find domains.")
+
+            logger.info(
+                f"User: {user_id}, successfully retrieved all domains for all orgs that they have access to."
+            )
             return query_rtr

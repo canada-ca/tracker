@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -18,7 +20,7 @@ def save():
 
 
 # Super Admin Tests
-def test_super_admin_can_see_other_user_in_different_org(save):
+def test_super_admin_can_see_other_user_in_different_org(save, caplog):
     """
     Test to see if a super admin can see their other users userPage info
     """
@@ -57,6 +59,7 @@ def test_super_admin_can_see_other_user_in_different_org(save):
     user_read.verify_account()
     save(user_read)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -94,10 +97,14 @@ def test_super_admin_can_see_other_user_in_different_org(save):
     }
 
     assert result == expected
+    assert (
+        f"Super Admin: {sa_user.id} successfully retrieved {user_read.id} information."
+        in caplog.text
+    )
 
 
 # Admin Tests
-def test_admin_can_see_user_in_same_org(save):
+def test_admin_can_see_user_in_same_org(save, caplog):
     """
     Test to see that an admin can see user information from their own org
     """
@@ -131,6 +138,7 @@ def test_admin_can_see_user_in_same_org(save):
 
     save(user_read)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -165,9 +173,13 @@ def test_admin_can_see_user_in_same_org(save):
     }
 
     assert result == expected
+    assert (
+        f"User: {admin_user.id} successfully retrieved {user_read.id} information."
+        in caplog.text
+    )
 
 
-def test_admin_cant_see_user_in_different_org(save):
+def test_admin_cant_see_user_in_different_org(save, caplog):
     """
     Test to see that an admin can't see user in different org
     """
@@ -199,6 +211,7 @@ def test_admin_cant_see_user_in_different_org(save):
 
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
         {
@@ -222,10 +235,11 @@ def test_admin_cant_see_user_in_different_org(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, user cannot be found."
+    assert f"User: {admin_user.id} tried to access user page for {user_read.id} but does not have proper permissions."
 
 
 # User Write Tests
-def test_user_write_cant_see_user_in_same_org(save):
+def test_user_write_cant_see_user_in_same_org(save, caplog):
     """
     Test to see that an user write cant see user information from their own org
     """
@@ -259,6 +273,7 @@ def test_user_write_cant_see_user_in_same_org(save):
 
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
         {
@@ -282,9 +297,10 @@ def test_user_write_cant_see_user_in_same_org(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, user cannot be found."
+    assert f"User: {user_write.id} tried to access user page for {user_read.id} but does not have proper permissions."
 
 
-def test_user_write_cant_see_user_in_different_org(save):
+def test_user_write_cant_see_user_in_different_org(save, caplog):
     """
     Test to see that an user write cant see user information from different org
     """
@@ -314,6 +330,7 @@ def test_user_write_cant_see_user_in_different_org(save):
 
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
         {
@@ -337,10 +354,11 @@ def test_user_write_cant_see_user_in_different_org(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, user cannot be found."
+    assert f"User: {user_write.id} tried to access user page for {user_read.id} but does not have proper permissions."
 
 
 # User Read Tests
-def test_user_read_cant_see_user_in_same_org(save):
+def test_user_read_cant_see_user_in_same_org(save, caplog):
     """
     Test to see that an user read cant see user information from their own org
     """
@@ -374,6 +392,7 @@ def test_user_read_cant_see_user_in_same_org(save):
 
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
         {
@@ -397,9 +416,10 @@ def test_user_read_cant_see_user_in_same_org(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, user cannot be found."
+    assert f"User: {user_read.id} tried to access user page for {user_read.id} but does not have proper permissions."
 
 
-def test_user_read_cant_see_user_in_different_org(save):
+def test_user_read_cant_see_user_in_different_org(save, caplog):
     """
     Test to see that an user read cant see user information from different org
     """
@@ -429,6 +449,7 @@ def test_user_read_cant_see_user_in_different_org(save):
 
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
         {
@@ -452,9 +473,10 @@ def test_user_read_cant_see_user_in_different_org(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, user cannot be found."
+    assert f"User: {user_read.id} tried to access user page for {user_read.id} but does not have proper permissions."
 
 
-def test_user_read_can_see_own_information(save):
+def test_user_read_can_see_own_information(save, caplog):
     """
     Test to see that a user read can see their own information
     """
@@ -475,6 +497,7 @@ def test_user_read_can_see_own_information(save):
     user_read.verify_account()
     save(user_read)
 
+    caplog.set_level(logging.INFO)
     result = run(
         """
         {
@@ -512,3 +535,7 @@ def test_user_read_can_see_own_information(save):
     }
 
     assert result == expected
+    assert (
+        f"User: {user_read.id} successfully retrieved their own information."
+        in caplog.text
+    )

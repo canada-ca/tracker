@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -18,7 +20,7 @@ def save():
 
 
 # Super Admin Tests
-def test_super_admin_can_see_any_user_list(save):
+def test_super_admin_can_see_any_user_list(save, caplog):
     """
     Test to see if super admins can view user list of different org
     """
@@ -56,6 +58,7 @@ def test_super_admin_can_see_any_user_list(save):
     )
     save(reader)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
           {
@@ -95,10 +98,65 @@ def test_super_admin_can_see_any_user_list(save):
     }
 
     assert result == expected
+    assert (
+        f"User: {super_admin.id} successfully retrieved user list for organization-1."
+        in caplog.text
+    )
+
+
+def test_super_admin_cant_see_user_list_for_org_doesnt_exist(save, caplog):
+    """
+    Test to error occurs when super admin requests an org that doesn't exist
+    """
+    super_admin = Users(
+        display_name="testsuperadmin",
+        user_name="testsuperadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(
+                    acronym="SA", name="Super Admin", slug="super-admin"
+                ),
+            )
+        ],
+    )
+    save(super_admin)
+
+    caplog.set_level(logging.WARNING)
+    result = run(
+        """
+        {
+            userList(orgSlug: "organization-2") {
+                edges {
+                    node {
+                        userName
+                        displayName
+                        tfa
+                        admin
+                    }
+                }
+            }
+        }
+        """,
+        as_user=super_admin,
+    )
+
+    if "errors" not in result:
+        fail("Expected to get an error. Instead: {}".format(json(result)))
+
+    [error] = result["errors"]
+    assert error["message"] == "Error, unable to access user list."
+    assert (
+        f"User: {super_admin.id} tried to access user list for org organization-2 but org does not exist."
+        in caplog.text
+    )
 
 
 # Admin Tests
-def test_admin_can_see_user_list_in_same_org(save):
+def test_admin_can_see_user_list_in_same_org(save, caplog):
     """
     Test to see if admin can view user list of same org
     """
@@ -128,6 +186,7 @@ def test_admin_can_see_user_list_in_same_org(save):
     )
     save(user_read)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -199,9 +258,13 @@ def test_admin_can_see_user_list_in_same_org(save):
     }
 
     assert result == (expected or expected_2)
+    assert (
+        f"User: {admin_user.id} successfully retrieved user list for organization-1."
+        in caplog.text
+    )
 
 
-def test_admin_cant_see_user_list_in_different_org(save):
+def test_admin_cant_see_user_list_in_different_org(save, caplog):
     """
     Test to see if admin cant view user list of different org
     """
@@ -233,6 +296,7 @@ def test_admin_cant_see_user_list_in_different_org(save):
     )
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         """
         {
@@ -256,10 +320,63 @@ def test_admin_cant_see_user_list_in_different_org(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, unable to access user list."
+    assert (
+        f"User: {admin_user.id} tried to access user list for organization-2 but does not have access to org."
+        in caplog.text
+    )
+
+
+def test_admin_cant_see_user_list_for_org_doesnt_exist(save, caplog):
+    """
+    Test to error occurs when admin requests an org that doesn't exist
+    """
+    org_one = Organizations(acronym="ORG1", name="Organization 1")
+    save(org_one)
+
+    admin_user = Users(
+        display_name="testadmin",
+        user_name="testadmin@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+    )
+    admin_user.user_affiliation.append(
+        User_affiliations(permission="admin", user_organization=org_one,)
+    )
+    save(admin_user)
+
+    caplog.set_level(logging.WARNING)
+    result = run(
+        """
+        {
+            userList(orgSlug: "organization-2") {
+                edges {
+                    node {
+                        userName
+                        displayName
+                        tfa
+                        admin
+                    }
+                }
+            }
+        }
+        """,
+        as_user=admin_user,
+    )
+
+    if "errors" not in result:
+        fail("Expected to get an error. Instead: {}".format(json(result)))
+
+    [error] = result["errors"]
+    assert error["message"] == "Error, unable to access user list."
+    assert (
+        f"User: {admin_user.id} tried to access user list for org organization-2 but org does not exist."
+        in caplog.text
+    )
 
 
 # User Write Tests
-def test_user_write_cant_see_user_list(save):
+def test_user_write_cant_see_user_list(save, caplog):
     """
     Test to see if user write cant view user list of any org
     """
@@ -291,6 +408,7 @@ def test_user_write_cant_see_user_list(save):
     )
     save(user_read)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
         {
@@ -316,10 +434,14 @@ def test_user_write_cant_see_user_list(save):
 
     [error] = result["errors"]
     assert error["message"] == "Error, unable to access user list."
+    assert (
+        f"User: {user_write.id} tried to access user list for organization-2 but does not have access to org."
+        in caplog.text
+    )
 
 
 # User Read Tests
-def test_user_read_cant_see_user_list(save):
+def test_user_read_cant_see_user_list(save, caplog):
     """
     Test to see if user Read cant view user list of any org
     """
@@ -351,6 +473,7 @@ def test_user_read_cant_see_user_list(save):
     )
     save(org2_reader)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         as_user=org1_reader,
         query="""
@@ -375,3 +498,7 @@ def test_user_read_cant_see_user_list(save):
     [err] = result["errors"]
     [message, _location, _path] = err.values()
     assert message == "Error, unable to access user list."
+    assert (
+        f"User: {org1_reader.id} tried to access user list for organization-2 but does not have access to org."
+        in caplog.text
+    )

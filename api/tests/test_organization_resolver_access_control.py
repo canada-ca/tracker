@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -13,18 +15,12 @@ def save():
     cleanup()
 
 
-def test_get_org_resolvers_by_org_super_admin_single_node(save):
+def test_get_org_resolvers_by_org_super_admin_single_node(save, caplog):
     """
     Test org resolver by organization as a super admin, single node return
     """
     org1 = Organizations(
         name="Org1", acronym="ORG1", org_tags={"name": "Organization 1"}
-    )
-    org2 = Organizations(
-        name="Org2", acronym="ORG2", org_tags={"name": "Organization 2"}
-    )
-    org3 = Organizations(
-        name="Org3", acronym="ORG3", org_tags={"name": "Organization 3"}
     )
 
     super_admin = Users(
@@ -38,13 +34,15 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
     )
 
     save(super_admin)
+
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
-		{
-		  organization:findOrganizationDetailBySlug(slug: "org1") {
-			acronym
-		  }
-		}
+        {
+            organization:findOrganizationDetailBySlug(slug: "org1") {
+                acronym
+            }
+        }
         """,
         as_user=super_admin,
     )
@@ -55,9 +53,13 @@ def test_get_org_resolvers_by_org_super_admin_single_node(save):
     expected_result = {"data": {"organization": {"acronym": "ORG1"}}}
 
     assert result == expected_result
+    assert (
+        f"User: {super_admin.id} successfully retrieved organization info for org1"
+        in caplog.text
+    )
 
 
-def test_org_resolvers_returns_all_orgs_to_super_admin(save):
+def test_org_resolvers_returns_all_orgs_to_super_admin(save, caplog):
     """
     Test organization resolver as a super admin, multi node return
     """
@@ -86,6 +88,7 @@ def test_org_resolvers_returns_all_orgs_to_super_admin(save):
     save(reader)
     save(super_admin)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -117,9 +120,15 @@ def test_org_resolvers_returns_all_orgs_to_super_admin(save):
     }
 
     assert result == expected_result
+    assert (
+        f"Super admin: {super_admin.id} successfully retrieved all organizations."
+        in caplog.text
+    )
 
 
-def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save):
+def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(
+    save, caplog
+):
     org1 = Organizations(name="Org1", acronym="ORG1")
     org2 = Organizations(name="SA", acronym="SA")
 
@@ -147,6 +156,7 @@ def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save
     save(reader)
     save(super_admin)
 
+    caplog.set_level(logging.INFO)
     result = run(
         query="""
         {
@@ -177,11 +187,16 @@ def test_org_resolvers_returns_single_org1_and_users_own_org_for_read_users(save
     }
 
     assert result == expected_result
+    assert (
+        f"User: {reader.id} successfully retrieved all organizations that they belong to."
+        in caplog.text
+    )
 
 
-def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
+def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save, caplog):
     org1 = Organizations(name="Org1", acronym="ORG1")
     org2 = Organizations(name="Org2", acronym="ORG2")
+    save(org2)
 
     reader = Users(
         display_name="testuserread",
@@ -194,13 +209,14 @@ def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
 
     save(reader)
 
+    caplog.set_level(logging.WARNING)
     result = run(
         query="""
-		{
-		  organization:findOrganizationDetailBySlug(slug: "org2") {
-			name
-		  }
-		}
+        {
+            organization:findOrganizationDetailBySlug(slug: "org2") {
+                name
+            }
+        }
         """,
         as_user=reader,
     )
@@ -212,3 +228,7 @@ def test_org_resolvers_does_not_show_orgs_reader_is_not_affiliated_with(save):
         )
     [err] = result["errors"]
     assert err["message"] == "Error, unable to find organization."
+    assert (
+        f"User: {reader.id} attempted to access an organization using org2, but does not have access to this organization"
+        in caplog.text
+    )

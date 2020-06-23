@@ -1,19 +1,13 @@
-import pyotp
-import os
-
 from sqlalchemy.orm import load_only
-
 from graphql import GraphQLError
 
+from app import logger
 from db import db_session
-
-from models import Users, User_affiliations, Organizations
-
-from schemas.users import Users as UsersSchema
-
 from functions.auth_wrappers import require_token
-from functions.auth_functions import is_super_admin, is_user_read, is_admin
+from functions.auth_functions import is_super_admin, is_admin
 from functions.input_validators import cleanse_input
+from models import User_affiliations, Organizations
+from schemas.users import Users as UsersSchema
 
 
 @require_token
@@ -28,6 +22,7 @@ def resolve_users(self, info, **kwargs):
     """
 
     # Get information from kwargs
+    user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
     org_slug = cleanse_input(kwargs.get("org_slug"))
 
@@ -41,6 +36,9 @@ def resolve_users(self, info, **kwargs):
 
     # Ensure that requested orm exists
     if org_orm is None:
+        logger.warning(
+            f"User: {user_id} tried to access an organizations users using {org_slug}, but no organization was found."
+        )
         raise GraphQLError("Error, unable to find organization.")
     else:
         org_id = org_orm.id
@@ -60,6 +58,8 @@ def resolve_users(self, info, **kwargs):
         query = query.filter(
             User_affiliations.user_id == user_id_list.c.user_id
         ).filter(User_affiliations.organization_id == org_id)
+
+        logger.info(f"Super admin: {user_id}, successfully retrieved all users.")
         return query.all()
 
     # Check if user has admin claim for the requested organization
@@ -77,7 +77,14 @@ def resolve_users(self, info, **kwargs):
         query = query.filter(
             User_affiliations.user_id == user_id_list.c.user_id
         ).filter(User_affiliations.organization_id == org_id)
+
+        logger.info(
+            f"User: {user_id}, successfully retrieved all users for the {org_slug} organization."
+        )
         return query.all()
 
     else:
+        logger.warning(
+            f"User: {user_id} tried to access all users from {org_slug} organization, but is not an admin for that organization."
+        )
         raise GraphQLError("Error, unable to find organization.")

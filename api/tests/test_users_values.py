@@ -1,4 +1,6 @@
+import logging
 import pytest
+
 from pytest import fail
 
 from db import DB
@@ -13,7 +15,7 @@ def save():
     cleanup()
 
 
-def test_get_users_as_super_admin(save):
+def test_get_users_as_super_admin(save, caplog):
     """
     Test to see if users resolver will return all information to super admin
     """
@@ -57,6 +59,7 @@ def test_get_users_as_super_admin(save):
     save(org1_admin)
     save(writer)
 
+    caplog.set_level(logging.INFO)
     actual = run(
         query="""
         {
@@ -108,9 +111,13 @@ def test_get_users_as_super_admin(save):
     }
 
     assert actual == expected
+    assert (
+        f"Super admin: {super_admin.id}, successfully retrieved all users."
+        in caplog.text
+    )
 
 
-def test_get_users_as_admin(save):
+def test_get_users_as_admin(save, caplog):
     """
     Test to see if users resolver will return all information to org admin
     """
@@ -154,6 +161,7 @@ def test_get_users_as_admin(save):
     save(org1_admin)
     save(writer)
 
+    caplog.set_level(logging.INFO)
     actual = run(
         query="""
         {
@@ -208,3 +216,4 @@ def test_get_users_as_admin(save):
         }
     }
     assert actual == expected
+    assert f"User: {org1_admin.id}, successfully retrieved all users for the {org1.slug} organization."
