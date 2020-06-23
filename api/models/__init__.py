@@ -8,34 +8,8 @@ from db import Base
 from functions.slugify import slugify_value
 from models.Users import Users
 from models.User_affiliations import User_affiliations
+from models.Domains import Domains
 from models.Organizations import Organizations
-
-
-class Domains(Base):
-    __tablename__ = "domains"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    domain = Column(String)
-    last_run = Column(DateTime)
-    selectors = Column(ARRAY(String))
-    organization_id = Column(Integer, ForeignKey("organizations.id"))
-    slug = Column(String, index=True)
-    organization = relationship(
-        "Organizations", back_populates="domains", cascade="all, delete"
-    )
-    web_scans = relationship(
-        "Web_scans", back_populates="domain", cascade="all, delete"
-    )
-    mail_scans = relationship(
-        "Mail_scans", back_populates="domain", cascade="all, delete"
-    )
-    dmarc_reports = relationship(
-        "Dmarc_Reports", back_populates="domain", cascade="all, delete"
-    )
-
-    def __init__(self, **kwargs):
-        super(Domains, self).__init__(**kwargs)
-        self.slug = slugify_value(kwargs.get("domain", ""))
 
 
 class Dmarc_Reports(Base):
