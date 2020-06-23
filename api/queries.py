@@ -33,8 +33,9 @@ from schemas.dmarc_report_summary import (
 from schemas.is_user_admin import is_user_admin
 
 # Organization Imports
-from schemas.organizations import Organization, OrganizationDetail
-from resolvers.organizations import resolve_organization, resolve_organizations
+from schemas.find_organization_detail_by_slug import find_organization_detail_by_slug
+from schemas.organizations import Organization
+from resolvers.organizations import resolve_organizations
 
 # User List Imports
 from schemas.user_list import user_list, resolve_user_list
@@ -140,13 +141,7 @@ class Query(graphene.ObjectType):
     # --- End User Queries
 
     # --- Start Organization Queries ---
-    find_organization_detail_by_slug = graphene.Field(
-        lambda: OrganizationDetail,
-        slug=graphene.Argument(Slug, required=True),
-        resolver=resolve_organization,
-        description="Select all information on a selected organization that a "
-        "user has access to.",
-    )
+    find_organization_detail_by_slug = find_organization_detail_by_slug
 
     organizations = SQLAlchemyConnectionField(
         Organization._meta.connection,
