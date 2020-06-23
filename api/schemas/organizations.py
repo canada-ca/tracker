@@ -44,6 +44,12 @@ class OrganizationDetail(SQLAlchemyObjectType):
         DomainsSchema._meta.connection,
         description="The domains which belong to this organization.",
     )
+    domain_count = graphene.Int(
+        description="The number of domains associated with this organization."
+    )
+
+    def resolve_domain_count(self: OrgModel, info):
+       return self.domain_count
 
     def resolve_id(self: OrgModel, info):
         return b64encode("Organization:{}".format(self.id).encode("ascii")).decode(
