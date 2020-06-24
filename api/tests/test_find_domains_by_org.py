@@ -15,10 +15,9 @@ def save():
     cleanup()
 
 
-def test_get_domains_resolvers_by_org_super_admin_single_node(save, caplog):
+def test_find_domains_by_org_super_admin_single_node(save, caplog):
     """
-    Test domain resolver by organization as a super admin, single node
-    return
+    Test find domains by org as super admin, one node return
     """
     org_one = Organizations(
         acronym="ORG1", name="Organization 1", slug="organization-1"
@@ -78,9 +77,9 @@ def test_get_domains_resolvers_by_org_super_admin_single_node(save, caplog):
     )
 
 
-def test_get_domain_resolvers_by_org_super_admin_multi_node(save, caplog):
+def test_find_domains_by_org_super_admin_multi_node(save, caplog):
     """
-    Test domain resolver by organization as a super admin, multi node return
+    Test findDomainsByOrg as a super admin, multi node return
     """
     org_one = Organizations(
         acronym="ORG1", name="Organization 1", slug="organization-1"
@@ -145,9 +144,9 @@ def test_get_domain_resolvers_by_org_super_admin_multi_node(save, caplog):
     )
 
 
-def test_get_domain_resolvers_by_org_super_admin_org_no_domains(save, caplog):
+def test_find_domains_by_org_super_admin_org_no_domains(save, caplog):
     """
-    Test domain resolver by org as a super admin, org has no domains
+    Test find domains by org as a super admin, org has no domains
     """
     org_one = Organizations(
         acronym="ORG1", name="Organization 1", slug="organization-1"
@@ -198,9 +197,9 @@ def test_get_domain_resolvers_by_org_super_admin_org_no_domains(save, caplog):
     )
 
 
-def test_get_domain_resolvers_by_org_user_read_multi_node(save, caplog):
+def test_find_domains_by_org_user_read_multi_node(save, caplog):
     """
-    Test domain resolver get domain by org as user read, return as
+    Test find domains by org as user read, return as
     multi node
     """
     org_one = Organizations(
@@ -261,9 +260,9 @@ def test_get_domain_resolvers_by_org_user_read_multi_node(save, caplog):
     assert f"User: {user_read.id}, successfully retrieved all domains for this org organization-1."
 
 
-def test_get_domain_resolvers_by_org_user_read_no_access(save, caplog):
+def test_find_domains_by_org_user_read_no_access(save, caplog):
     """
-    Test domain resolver get domain by org as user read, user has no rights
+    Test find domains by org as user read, user has no rights
     to view domains related to that org
     """
     org_one = Organizations(
@@ -317,9 +316,9 @@ def test_get_domain_resolvers_by_org_user_read_no_access(save, caplog):
     )
 
 
-def test_get_domain_resolvers_by_org_user_read_org_no_domains(save, caplog):
+def test_find_domains_by_org_user_read_org_no_domains(save, caplog):
     """
-    Test domain resolver get domain by org as user read, org has no related
+    Test find domains by org as user read, org has no related
     domains
     """
     org_one = Organizations(
