@@ -72,7 +72,7 @@ def test_domain_creation_super_admin(save, caplog):
     result = run(
         query="""
         {
-            domain(urlSlug: "sa-create-domain-ca") {
+            findDomainBySlug(urlSlug: "sa-create-domain-ca") {
                 url
             }
         }
@@ -80,7 +80,7 @@ def test_domain_creation_super_admin(save, caplog):
         as_user=super_admin,
     )
 
-    result_expected = {"data": {"domain": [{"url": "sa.create.domain.ca"}]}}
+    result_expected = {"data": {"findDomainBySlug": {"url": "sa.create.domain.ca"}}}
 
     assert result == result_expected
 
@@ -223,7 +223,7 @@ def test_domain_creation_org_admin(save, caplog):
     result = run(
         query="""
         {
-            domain(urlSlug: "admin-create-domain-ca") {
+            findDomainBySlug(urlSlug: "admin-create-domain-ca") {
                 url
             }
         }
@@ -231,7 +231,7 @@ def test_domain_creation_org_admin(save, caplog):
         as_user=org_admin,
     )
 
-    result_expected = {"data": {"domain": [{"url": "admin.create.domain.ca"}]}}
+    result_expected = {"data": {"findDomainBySlug": {"url": "admin.create.domain.ca"}}}
 
     assert result == result_expected
 
@@ -376,7 +376,7 @@ def test_domain_creation_user_write(save, caplog):
     result = run(
         query="""
         {
-            domain(urlSlug: "user-write-create-domain-ca") {
+            findDomainBySlug(urlSlug: "user-write-create-domain-ca") {
                 url
             }
         }
@@ -384,7 +384,9 @@ def test_domain_creation_user_write(save, caplog):
         as_user=user_write,
     )
 
-    result_expected = {"data": {"domain": [{"url": "user.write.create.domain.ca"}]}}
+    result_expected = {
+        "data": {"findDomainBySlug": {"url": "user.write.create.domain.ca"}}
+    }
 
     assert result == result_expected
 

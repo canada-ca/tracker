@@ -61,7 +61,7 @@ def test_find_domain_by_slug_super_admin(save, caplog):
             "Error occurred when trying to get a domain, error: {}".format(json(result))
         )
 
-    expected_result = {"data": {"findDomainBySlug": [{"url": "sa.test.domain.ca"}]}}
+    expected_result = {"data": {"findDomainBySlug": {"url": "sa.test.domain.ca"}}}
     assert result == expected_result
     assert (
         f"User: {super_admin.id} successfully retrieved the domain information for sa-test-domain-ca"
@@ -160,7 +160,7 @@ def test_find_domain_by_slug_user_read(save, caplog):
         )
 
     expected_result = {
-        "data": {"findDomainBySlug": [{"url": "user.read.test.domain.ca"}]}
+        "data": {"findDomainBySlug": {"url": "user.read.test.domain.ca"}}
     }
     assert result == expected_result
     assert (

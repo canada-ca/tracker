@@ -157,6 +157,7 @@ class Query(graphene.ObjectType):
 
     # --- Start Domain Queries ---
     find_domain_by_slug = find_domain_by_slug
+
     find_domains_by_org = find_domains_by_org
 
     def resolve_find_domains_by_org(self, info, **kwargs):
