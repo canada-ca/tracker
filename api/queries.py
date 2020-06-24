@@ -44,8 +44,6 @@ from schemas.user_list import user_list, resolve_user_list
 from schemas.user_page import user_page, resolve_user_page
 
 # Need to be updated
-from schemas.users import Users
-from resolvers.users import resolve_users
 from schemas.User.user import User
 from resolvers.user import resolve_user
 from resolvers.notification_emails import (
@@ -103,17 +101,6 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
 
     # --- Start User Queries ---
-
-    users = SQLAlchemyConnectionField(
-        Users._meta.connection,
-        org_slug=graphene.Argument(Slug, required=True),
-        sort=None,
-        description="Select list of users belonging to an organization.",
-    )
-
-    def resolve_users(self, info, **kwargs):
-        return resolve_users(self, info, **kwargs)
-
     user = graphene.List(
         lambda: User,
         user_name=graphene.Argument(EmailAddress, required=False),
