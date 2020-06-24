@@ -34,14 +34,4 @@ spec:
                   secretKeyRef:
                     name: scanners
                     key: DB_NAME
-              - name: SYSTEM_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: SYSTEM_USER
-              - name: SYSTEM_PASS
-                valueFrom:
-                  secretKeyRef:
-                    name: scanners
-                    key: SYSTEM_PASS
           restartPolicy: OnFailure
