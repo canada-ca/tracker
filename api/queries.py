@@ -7,6 +7,7 @@ from scalars.email_address import EmailAddress
 # Domain Imports
 from schemas.find_domain_by_slug import find_domain_by_slug
 from schemas.find_domains_by_org import find_domains_by_org, resolve_find_domains_by_org
+from schemas.find_my_domains import find_my_domains, resolve_find_my_domains
 
 # Get Dmarc Report Bar Graph Data
 from schemas.dmarc_report_summary_list import (
@@ -148,6 +149,11 @@ class Query(graphene.ObjectType):
 
     def resolve_find_domains_by_org(self, info, **kwargs):
         return resolve_find_domains_by_org(self, info, **kwargs)
+
+    find_my_domains = find_my_domains
+
+    def resolve_find_my_domains(self, info, **kwargs):
+        return resolve_find_my_domains(self, info, **kwargs)
 
     # --- End Domain Queries ---
 
