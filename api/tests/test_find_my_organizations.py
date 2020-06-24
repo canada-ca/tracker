@@ -308,64 +308,127 @@ def test_find_my_organizations_admin(db, caplog):
     """
     save, _ = db
 
-    org_one = Organizations(
-        acronym="ORG1", name="Organization 1", slug="organization-1"
+    org1 = Organizations(
+        acronym="ORG1",
+        domains=[Domains(domain="somecooldomain.ca")],
+        name="Organization 1",
+        org_tags={
+            "zone": "Prov",
+            "sector": "Banking",
+            "province": "Alberta",
+            "city": "Calgary",
+        },
     )
-    save(org_one)
-    org_two = Organizations(
-        acronym="ORG2", name="Organization 2", slug="organization-2"
-    )
-    save(org_two)
-
-    admin = Users(
+    save(org1)
+    user = Users(
         display_name="testadmin",
         user_name="testadmin@testemail.ca",
         password="testpassword123",
-        preferred_lang="English",
-        tfa_validated=False,
         user_affiliation=[
-            User_affiliations(permission="admin", user_organization=org_one),
+            User_affiliations(user_organization=org1, permission="admin"),
         ],
     )
-    save(admin)
+    user.verify_account()
+    save(user)
 
     caplog.set_level(logging.INFO)
     result = run(
-        query="""
+        """
         {
-            findMyOrganizations {
+            organizations: findMyOrganizations {
                 edges {
                     node {
                         acronym
+                        name
+                        slug
+                        zone
+                        sector
+                        province
+                        city
+                        domains {
+                            edges {
+                                node {
+                                    url
+                                }
+                            }
+                        }
+                        affiliatedUsers {
+                            edges {
+                                node {
+                                    user {
+                                        displayName
+                                    }
+                                    permission
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
         """,
-        as_user=admin,
+        as_user=user,
     )
-
-    if "errors" in result:
-        fail(
-            "Error occurred when trying to get organizations, error: {}".format(
-                json(result)
-            )
-        )
-
     expected_result = {
         "data": {
-            "findMyOrganizations": {
+            "organizations": {
                 "edges": [
-                    {"node": {"acronym": "ORG1"}},
-                    {"node": {"acronym": "TESTADMIN-TESTEMAIL-CA"}},
+                    {
+                        "node": {
+                            "acronym": "ORG1",
+                            "name": "Organization 1",
+                            "slug": "organization-1",
+                            "zone": "Prov",
+                            "sector": "Banking",
+                            "province": "Alberta",
+                            "city": "Calgary",
+                            "domains": {
+                                "edges": [{"node": {"url": "somecooldomain.ca"}}]
+                            },
+                            "affiliatedUsers": {
+                                "edges": [
+                                    {
+                                        "node": {
+                                            "user": {"displayName": "testadmin"},
+                                            "permission": "ADMIN",
+                                        }
+                                    }
+                                ]
+                            },
+                        }
+                    },
+                    {
+                        "node": {
+                            "acronym": "TESTADMIN-TESTEMAIL-CA",
+                            "name": "testadmin@testemail.ca",
+                            "slug": "testadmin-testemail-ca",
+                            "zone": None,
+                            "sector": None,
+                            "province": None,
+                            "city": None,
+                            "domains": {"edges": []},
+                            "affiliatedUsers": {
+                                "edges": [
+                                    {
+                                        "node": {
+                                            "user": {"displayName": "testadmin"},
+                                            "permission": "ADMIN",
+                                        }
+                                    }
+                                ]
+                            },
+                        }
+                    },
                 ]
             }
         }
     }
 
+    if "errors" in result:
+        fail("Expect success but errors were returned: {}".format(result["errors"]))
     assert result == expected_result
     assert (
-        f"User: {admin.id} successfully retrieved all organizations that they belong to."
+        f"User: {user.id} successfully retrieved all organizations that they belong to."
         in caplog.text
     )
 
@@ -389,8 +452,130 @@ def test_find_my_organizations_user_write(db, caplog):
     )
     save(org1)
     user = Users(
-        display_name="testuserread",
-        user_name="testuserread@testemail.ca",
+        display_name="testwriter",
+        user_name="testwriter@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(user_organization=org1, permission="user_write"),
+        ],
+    )
+    user.verify_account()
+    save(user)
+
+    caplog.set_level(logging.INFO)
+    result = run(
+        """
+        {
+            organizations: findMyOrganizations {
+                edges {
+                    node {
+                        acronym
+                        name
+                        slug
+                        zone
+                        sector
+                        province
+                        city
+                        domains {
+                            edges {
+                                node {
+                                    url
+                                }
+                            }
+                        }
+                        affiliatedUsers {
+                            edges {
+                                node {
+                                    user {
+                                        displayName
+                                    }
+                                    permission
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        """,
+        as_user=user,
+    )
+    expected_result = {
+        "data": {
+            "organizations": {
+                "edges": [
+                    {
+                        "node": {
+                            "acronym": "ORG1",
+                            "name": "Organization 1",
+                            "slug": "organization-1",
+                            "zone": "Prov",
+                            "sector": "Banking",
+                            "province": "Alberta",
+                            "city": "Calgary",
+                            "domains": {
+                                "edges": [{"node": {"url": "somecooldomain.ca"}}]
+                            },
+                            "affiliatedUsers": {"edges": []},
+                        }
+                    },
+                    {
+                        "node": {
+                            "acronym": "TESTWRITER-TESTEMAIL-CA",
+                            "name": "testwriter@testemail.ca",
+                            "slug": "testwriter-testemail-ca",
+                            "zone": None,
+                            "sector": None,
+                            "province": None,
+                            "city": None,
+                            "domains": {"edges": []},
+                            "affiliatedUsers": {
+                                "edges": [
+                                    {
+                                        "node": {
+                                            "user": {"displayName": "testwriter"},
+                                            "permission": "ADMIN",
+                                        }
+                                    }
+                                ]
+                            },
+                        }
+                    },
+                ]
+            }
+        }
+    }
+
+    if "errors" in result:
+        fail("Expect success but errors were returned: {}".format(result["errors"]))
+    assert result == expected_result
+    assert (
+        f"User: {user.id} successfully retrieved all organizations that they belong to."
+        in caplog.text
+    )
+
+
+def test_find_my_organizations_user_read(db, caplog):
+    """
+    Test that user read only retrieve information that they are privy to
+    """
+    save, _ = db
+
+    org1 = Organizations(
+        acronym="ORG1",
+        domains=[Domains(domain="somecooldomain.ca")],
+        name="Organization 1",
+        org_tags={
+            "zone": "Prov",
+            "sector": "Banking",
+            "province": "Alberta",
+            "city": "Calgary",
+        },
+    )
+    save(org1)
+    user = Users(
+        display_name="testreader",
+        user_name="testreader@testemail.ca",
         password="testpassword123",
         user_affiliation=[
             User_affiliations(user_organization=org1, permission="user_read"),
@@ -458,9 +643,9 @@ def test_find_my_organizations_user_write(db, caplog):
                     },
                     {
                         "node": {
-                            "acronym": "TESTUSERREAD-TESTEMAIL-CA",
-                            "name": "testuserread@testemail.ca",
-                            "slug": "testuserread-testemail-ca",
+                            "acronym": "TESTREADER-TESTEMAIL-CA",
+                            "name": "testreader@testemail.ca",
+                            "slug": "testreader-testemail-ca",
                             "zone": None,
                             "sector": None,
                             "province": None,
@@ -470,7 +655,7 @@ def test_find_my_organizations_user_write(db, caplog):
                                 "edges": [
                                     {
                                         "node": {
-                                            "user": {"displayName": "testuserread"},
+                                            "user": {"displayName": "testreader"},
                                             "permission": "ADMIN",
                                         }
                                     }
@@ -488,73 +673,5 @@ def test_find_my_organizations_user_write(db, caplog):
     assert result == expected_result
     assert (
         f"User: {user.id} successfully retrieved all organizations that they belong to."
-        in caplog.text
-    )
-
-
-def test_find_my_organizations_user_read(db, caplog):
-    """
-    Test that user read only retrieve information that they are privy to
-    """
-    save, _ = db
-
-    org_one = Organizations(
-        acronym="ORG1", name="Organization 1", slug="organization-1"
-    )
-    save(org_one)
-    org_two = Organizations(
-        acronym="ORG2", name="Organization 2", slug="organization-2"
-    )
-    save(org_two)
-
-    reader = Users(
-        display_name="testreader",
-        user_name="testreader@testemail.ca",
-        password="testpassword123",
-        preferred_lang="English",
-        tfa_validated=False,
-        user_affiliation=[
-            User_affiliations(permission="admin", user_organization=org_one),
-        ],
-    )
-    save(reader)
-
-    caplog.set_level(logging.INFO)
-    result = run(
-        query="""
-        {
-            findMyOrganizations {
-                edges {
-                    node {
-                        acronym
-                    }
-                }
-            }
-        }
-        """,
-        as_user=reader,
-    )
-
-    if "errors" in result:
-        fail(
-            "Error occurred when trying to get organizations, error: {}".format(
-                json(result)
-            )
-        )
-
-    expected_result = {
-        "data": {
-            "findMyOrganizations": {
-                "edges": [
-                    {"node": {"acronym": "ORG1"}},
-                    {"node": {"acronym": "TESTREADER-TESTEMAIL-CA"}},
-                ]
-            }
-        }
-    }
-
-    assert result == expected_result
-    assert (
-        f"User: {reader.id} successfully retrieved all organizations that they belong to."
         in caplog.text
     )
