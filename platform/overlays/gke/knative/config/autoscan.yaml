@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: autoscan
 spec:
-  schedule: "0 2 * * * *"
+  schedule: "0 2 * * *"
   jobTemplate:
     spec:
       template:
@@ -23,7 +23,10 @@ spec:
                     name: scanners
                     key: DB_PASS
               - name: DB_HOST
-                value: postgres
+                valueFrom:
+                  secretKeyRef:
+                    name: scanners
+                    key: DB_HOST
               - name: DB_PORT
                 value: "5432"
               - name: DB_NAME
@@ -32,13 +35,13 @@ spec:
                     name: scanners
                     key: DB_NAME
               - name: SYSTEM_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: scanners
-                      key: SYSTEM_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: scanners
+                    key: SYSTEM_USER
               - name: SYSTEM_PASS
-                  valueFrom:
-                    secretKeyRef:
-                      name: scanners
-                      key: SYSTEM_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: scanners
+                    key: SYSTEM_PASS
           restartPolicy: OnFailure
