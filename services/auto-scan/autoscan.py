@@ -17,8 +17,6 @@ DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
-SYSTEM_USER = os.getenv("SYSTEM_USER")
-SYSTEM_PASS = os.getenv("SYSTEM_PASS")
 
 DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 DISPATCHER_URL = "http://dispatcher.tracker.svc.cluster.local"
@@ -234,9 +232,8 @@ def Service(database=databases.Database(DATABASE_URI), client=requests):
     async def dispatch_web(domain, scan_id):
 
         payload = {
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=10),
             "scan_id": scan_id,
-            "domain": domain,
+            "domain": domain.get("domain"),
             "selectors": domain.get("selectors"),
             "user_init": True,
         }
@@ -250,9 +247,8 @@ def Service(database=databases.Database(DATABASE_URI), client=requests):
     async def dispatch_mail(domain, scan_id):
 
         payload = {
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=10),
             "scan_id": scan_id,
-            "domain": domain,
+            "domain": domain.get("domain"),
             "selectors": domain.get("selectors"),
             "user_init": True,
         }
