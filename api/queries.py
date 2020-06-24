@@ -8,7 +8,7 @@ from enums.roles import RoleEnums
 
 # --- Query Imports ---
 # Domain Imports
-from schemas.find_domain_detail_by_slug import find_domain_by_slug
+from schemas.find_domain_by_slug import find_domain_by_slug
 from schemas.find_domains_by_org import find_domains_by_org, resolve_find_domains_by_org
 
 # Get Dmarc Report Bar Graph Data

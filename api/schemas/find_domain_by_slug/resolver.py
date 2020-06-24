@@ -56,7 +56,7 @@ def resolve_find_domain_by_slug(self: Domain, info, **kwargs):
         query_rtn = (
             query.filter(Domains.slug == url_slug)
             .filter(Domains.organization_id == org_id)
-            .all()
+            .first()
         )
         logger.info(
             f"User: {user_id} successfully retrieved the domain information for {url_slug}"
