@@ -1,14 +1,14 @@
 steps:
   - name: 'gcr.io/track-compliance/ci'
     id: test-dispatcher
-    dir: scanners/dispatcher
+    dir: services/scanners/dispatcher
     entrypoint: /bin/sh
     args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-dispatcher-if-master
     entrypoint: 'bash'
-    dir: scanners/dispatcher
+    dir: services/scanners/dispatcher
     args:
     -  '-c'
     - |

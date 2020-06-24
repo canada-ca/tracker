@@ -1,14 +1,14 @@
 steps:
   - name: 'gcr.io/track-compliance/ci'
     id: test-dns
-    dir: scanners/dns
+    dir: services/scanners/dns
     entrypoint: /bin/sh
     args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-dns-if-master
     entrypoint: 'bash'
-    dir: scanners/dns
+    dir: services/scanners/dns
     args:
     -  '-c'
     - |
