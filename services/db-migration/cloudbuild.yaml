@@ -1,33 +1,33 @@
 steps:
   - name: 'gcr.io/track-compliance/ci'
-    id: test-dns
-    dir: services/scanners/dns
+    id: test-db-migration-heads
+    dir: services/db-migration
     entrypoint: /bin/sh
-    args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
+    args: ["-c", "pip3 install psycopg2-binary pytest alembic SQLAlchemy && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
-    id: build-dns-if-master
+    id: build-db-migration-if-master
     entrypoint: 'bash'
-    dir: services/scanners/dns
+    dir: services/db-migration
     args:
     -  '-c'
     - |
       if [[ "$BRANCH_NAME" == "master" ]]
       then
-        docker build -t gcr.io/$PROJECT_ID/scanners/dns:$BRANCH_NAME .
+        docker build -t gcr.io/$PROJECT_ID/services/db-migration:$BRANCH_NAME .
       else
         exit 0
       fi
 
   - name: 'gcr.io/cloud-builders/docker'
-    id: push-dns-if-master
+    id: push-db-migration-if-master
     entrypoint: 'bash'
     args:
     -  '-c'
     -  |
        if [[ "$BRANCH_NAME" == "master" ]]
        then
-         docker push gcr.io/$PROJECT_ID/scanners/dns:$BRANCH_NAME
+         docker push gcr.io/$PROJECT_ID/services/autoscan:$BRANCH_NAME
        else
          exit 0
        fi
