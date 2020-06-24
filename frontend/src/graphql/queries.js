@@ -22,7 +22,7 @@ export const ORGANIZATION_BY_SLUG = gql`
 
 export const ORGANIZATIONS = gql`
   query Organisations {
-    organizations(first: 10) {
+    organizations:findMyOrganizations(first: 10) {
       edges {
         node {
           name
@@ -35,7 +35,7 @@ export const ORGANIZATIONS = gql`
 
 export const DOMAINS = gql`
   query Domains($number: Int, $cursor: String) {
-    domains(first: $number, after: $cursor) {
+    domains: findMyDomains(first: $number, after: $cursor) {
       edges {
         node {
           url

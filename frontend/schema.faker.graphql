@@ -1403,6 +1403,16 @@ type Query {
 ): DomainConnection
 
   """
+  Select information on  all domains a user has access to.
+  """
+  findMyDomains(
+    before: String,
+    after: String,
+    first: Int,
+    last: Int
+  ): DomainConnection
+
+  """
   An api endpoint used to generate a OTP url used for two factor authentication.
   """
   generateOtpUrl(email: EmailAddress!): String
