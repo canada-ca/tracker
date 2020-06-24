@@ -1,14 +1,14 @@
 steps:
   - name: 'gcr.io/track-compliance/ci'
     id: test-https
-    dir: scanners/https
+    dir: services/scanners/https
     entrypoint: /bin/sh
     args: ["-c", "pip3 install -r requirements.txt && python3 -m pytest"]
 
   - name: 'gcr.io/cloud-builders/docker'
     id: build-https-if-master
     entrypoint: 'bash'
-    dir: scanners/https
+    dir: services/scanners/https
     args:
     -  '-c'
     - |
