@@ -9,8 +9,7 @@ from enums.roles import RoleEnums
 # --- Query Imports ---
 # Domain Imports
 from schemas.find_domain_detail_by_slug import find_domain_by_slug
-from schemas.shared_structures.domain import Domain
-from resolvers.domains import resolve_domains
+from schemas.find_domains_by_org import find_domains_by_org, resolve_find_domains_by_org
 
 # Get Dmarc Report Bar Graph Data
 from schemas.dmarc_report_summary_list import (
@@ -157,19 +156,11 @@ class Query(graphene.ObjectType):
     # --- End Organization Queries ---
 
     # --- Start Domain Queries ---
-
     find_domain_by_slug = find_domain_by_slug
+    find_domains_by_org = find_domains_by_org
 
-    domains = SQLAlchemyConnectionField(
-        Domain._meta.connection,
-        org_slug=graphene.Argument(Slug, required=False),
-        sort=None,
-        description="Select information on an organizations domains, or all "
-        "domains a user has access to.",
-    )
-
-    def resolve_domains(self, info, **kwargs):
-        return resolve_domains(self, info, **kwargs)
+    def resolve_find_domains_by_org(self, info, **kwargs):
+        return resolve_find_domains_by_org(self, info, **kwargs)
 
     # --- End Domain Queries ---
 

@@ -49,7 +49,7 @@ def test_get_domains_resolvers_by_org_super_admin_single_node(save, caplog):
     result = run(
         query="""
         {
-            domains(orgSlug: "organization-1") {
+            findDomainsByOrg(orgSlug: "organization-1") {
                 edges {
                     node {
                         url
@@ -67,7 +67,9 @@ def test_get_domains_resolvers_by_org_super_admin_single_node(save, caplog):
         )
 
     expected_result = {
-        "data": {"domains": {"edges": [{"node": {"url": "sa.test.domain.ca"}}]}}
+        "data": {
+            "findDomainsByOrg": {"edges": [{"node": {"url": "sa.test.domain.ca"}}]}
+        }
     }
     assert result == expected_result
     assert (
@@ -111,7 +113,7 @@ def test_get_domain_resolvers_by_org_super_admin_multi_node(save, caplog):
     result = run(
         query="""
         {
-            domains(orgSlug: "organization-1") {
+            findDomainsByOrg(orgSlug: "organization-1") {
                 edges {
                     node {
                         url
@@ -128,7 +130,7 @@ def test_get_domain_resolvers_by_org_super_admin_multi_node(save, caplog):
 
     expected_result = {
         "data": {
-            "domains": {
+            "findDomainsByOrg": {
                 "edges": [
                     {"node": {"url": "sa.1.test.domain.ca"}},
                     {"node": {"url": "sa.2.test.domain.ca"}},
@@ -173,7 +175,7 @@ def test_get_domain_resolvers_by_org_super_admin_org_no_domains(save, caplog):
     result = run(
         query="""
         {
-            domains(orgSlug: "organization-1") {
+            findDomainsByOrg(orgSlug: "organization-1") {
                 edges {
                     node {
                         url
@@ -228,7 +230,7 @@ def test_get_domain_resolvers_by_org_user_read_multi_node(save, caplog):
     result = run(
         query="""
         {
-            domains(orgSlug: "organization-1") {
+            findDomainsByOrg(orgSlug: "organization-1") {
                 edges {
                     node {
                         url
@@ -247,7 +249,7 @@ def test_get_domain_resolvers_by_org_user_read_multi_node(save, caplog):
 
     expected_result = {
         "data": {
-            "domains": {
+            "findDomainsByOrg": {
                 "edges": [
                     {"node": {"url": "user.read.1.test.domain.ca"}},
                     {"node": {"url": "user.read.2.test.domain.ca"}},
@@ -292,7 +294,7 @@ def test_get_domain_resolvers_by_org_user_read_no_access(save, caplog):
     result = run(
         query="""
         {
-            domains(orgSlug: "organization-2") {
+            findDomainsByOrg(orgSlug: "organization-2") {
                 edges {
                     node {
                         url
@@ -341,7 +343,7 @@ def test_get_domain_resolvers_by_org_user_read_org_no_domains(save, caplog):
     result = run(
         query="""
         {
-            domains(orgSlug: "organization-1") {
+            findDomainsByOrg(orgSlug: "organization-1") {
                 edges {
                     node {
                         url
