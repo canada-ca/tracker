@@ -1,0 +1,44 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: autoscan
+spec:
+  schedule: "0 2 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: autoscan
+            image: gcr.io/track-compliance/services/autoscan:master
+            env:
+              - name: DB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: scanners
+                    key: DB_USER
+              - name: DB_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: scanners
+                    key: DB_PASS
+              - name: DB_HOST
+                value: postgres
+              - name: DB_PORT
+                value: "5432"
+              - name: DB_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: scanners
+                    key: DB_NAME
+              - name: SYSTEM_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: SYSTEM_USER
+              - name: SYSTEM_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanners
+                      key: SYSTEM_PASS
+          restartPolicy: OnFailure
