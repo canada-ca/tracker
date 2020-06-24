@@ -40,72 +40,40 @@ def resolve_find_domains_by_org(self, info, **kwargs):
     # Retrieve information based on query
     query = Domain.get_query(info)
 
-    if org_slug:
-        # Retrieve org id from organization enum
-        org_orms = (
-            db_session.query(Organizations)
-            .filter(Organizations.slug == org_slug)
-            .options(load_only("id"))
+    # Retrieve org id from organization enum
+    org_orms = (
+        db_session.query(Organizations)
+        .filter(Organizations.slug == org_slug)
+        .options(load_only("id"))
+    )
+
+    # Check if org exists
+    if not len(org_orms.all()):
+        logger.warning(
+            f"User: {user_id} attempted to access an orgnaizations domains using {org_slug}, but no organization was found."
         )
+        raise GraphQLError("Error, unable to find organization.")
 
-        # Check if org exists
-        if not len(org_orms.all()):
-            logger.warning(
-                f"User: {user_id} attempted to access an orgnaizations domains using {org_slug}, but no organization was found."
-            )
-            raise GraphQLError("Error, unable to find organization.")
+    # Convert to int id
+    org_id = org_orms.first().id
 
-        # Convert to int id
-        org_id = org_orms.first().id
+    # Check if user has permission to view org
+    if is_user_read(user_roles=user_roles, org_id=org_id):
+        query_rtn = query.filter(Domains.organization_id == org_id).all()
 
-        # Check if user has permission to view org
-        if is_user_read(user_roles=user_roles, org_id=org_id):
-            query_rtn = query.filter(Domains.organization_id == org_id).all()
-
-            # If org has no domains related to it
-            if not len(query_rtn):
-                logger.info(
-                    f"User: {user_id} attempted to access an organizations domains using {org_slug}, but no domains were found."
-                )
-                raise GraphQLError("Error, unable to find domains.")
-        else:
-            logger.warning(
-                f"User: {user_id} attempted to access an organizations domains using {org_slug}, but does not have access to this organization."
+        # If org has no domains related to it
+        if not len(query_rtn):
+            logger.info(
+                f"User: {user_id} attempted to access an organizations domains using {org_slug}, but no domains were found."
             )
             raise GraphQLError("Error, unable to find domains.")
-
-        logger.info(
-            f"User: {user_id}, successfully retrieved all domains for this org {org_slug}."
-        )
-        return query_rtn
     else:
-        if is_super_admin(user_roles=user_roles):
-            query_rtn = query.all()
-            if not query_rtn:
-                logger.info(
-                    f"Super Admin: {user_id} tried to gather all domains, but none were found."
-                )
-                raise GraphQLError("Error, unable to find domains.")
+        logger.warning(
+            f"User: {user_id} attempted to access an organizations domains using {org_slug}, but does not have access to this organization."
+        )
+        raise GraphQLError("Error, unable to find domains.")
 
-            logger.info(
-                f"Super Admin: {user_id}, successfully retrieved all domains for all orgs that they have access to."
-            )
-            return query_rtn
-        else:
-            query_rtr = []
-            for org_id in org_ids:
-                if is_user_read(user_roles=user_roles, org_id=org_id):
-                    tmp_query = query.filter(Domains.organization_id == org_id).all()
-                    for item in tmp_query:
-                        query_rtr.append(item)
-
-            if not query_rtr:
-                logger.info(
-                    f"User: {user_id}, tried to access all the domains for all the orgs that they belong to but none were found."
-                )
-                raise GraphQLError("Error, unable to find domains.")
-
-            logger.info(
-                f"User: {user_id}, successfully retrieved all domains for all orgs that they have access to."
-            )
-            return query_rtr
+    logger.info(
+        f"User: {user_id}, successfully retrieved all domains for this org {org_slug}."
+    )
+    return query_rtn
