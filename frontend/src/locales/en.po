@@ -587,3 +587,63 @@ msgstr "back to organizations"
 #: src/OrganizationDetails.js:62
 msgid "{0}"
 msgstr "{0}"
+
+#: src/App.js:94
+msgid "Admin Portal"
+msgstr "Admin Portal"
+
+#: src/AdminPage.js:17
+msgid "Select an organization"
+msgstr "Select an organization"
+
+#: src/AdminPage.js:40
+msgid "Welcome, Admin"
+msgstr "Welcome, Admin"
+
+#: src/AdminPage.js:44
+msgid "Organization: "
+msgstr "Organization: "
+
+#: src/AdminPage.js:62
+msgid "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
+msgstr "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
+
+#: src/AdminPage.js:68
+msgid "Select an organization to view admin options"
+msgstr "Select an organization to view admin options"
+
+#: src/DomainList.js:81
+msgid "Domain List"
+msgstr "Domain List"
+
+#: src/DomainList.js:105
+msgid "Add Domain"
+msgstr "Add Domain"
+
+#: src/DomainList.js:112
+msgid "No domains scanned yet"
+msgstr "No domains scanned yet"
+
+#: src.DomainList.js:92
+msgid "Search for a domain"
+msgstr "Search for a domain"
+
+#: src.DomainList.js:41
+msgid "was added to"
+msgstr "was added to"
+
+#: src/UserList.js:83
+msgid "User List"
+msgstr "User List"
+
+#: src/UserList.js:107
+msgid "Invite User"
+msgstr "Invite User"
+
+#: src/UserList.js:114
+msgid "No users in this organization"
+msgstr "No users in this organization"
+
+#: src.UserList.js:94
+msgid "Search for a user"
+msgstr "Search for a user"

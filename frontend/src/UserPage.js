@@ -115,7 +115,11 @@ export default function UserPage() {
                 />
               </Stack>
 
-              <LanguageSelect name="lang" />
+              <Stack>
+                <Text fontSize="xl">Preferred Language:</Text>
+                <LanguageSelect name="lang" />
+              </Stack>
+
               <Button type="submit" variantColor="teal" w={'50%'} mt={5}>
                 Save Changes
               </Button>

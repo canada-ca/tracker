@@ -51,7 +51,13 @@ export default function DomainsPage() {
           <Stack spacing={4}>
             <Stack spacing={4} direction="row" flexWrap="wrap">
               <DomainList domains={domains}>
-                {(domain) => <Domain key={domain.url} url={domain.url} />}
+                {(domain) => (
+                  <Domain
+                    key={domain.url}
+                    url={domain.url}
+                    lastRan={domain.lastRan}
+                  />
+                )}
               </DomainList>
             </Stack>
           </Stack>
