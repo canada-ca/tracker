@@ -1,8 +1,6 @@
-import os
 import datetime
 
 import requests
-import jwt
 from typing import List
 
 from enums.scan_types import ScanTypeEnums

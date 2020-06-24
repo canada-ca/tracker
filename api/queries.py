@@ -74,7 +74,7 @@ from schemas.remove_organization import RemoveOrganization
 from schemas.update_organization import UpdateOrganization
 
 # Request Scan Mutation
-from schemas.scans_mutation import RequestScan
+from schemas.request_scan import RequestScan
 
 # Verify Account Through Email
 from schemas.email_verify_account.email_verify_account import EmailVerifyAccount
