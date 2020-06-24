@@ -37,6 +37,9 @@ from schemas.find_organization_detail_by_slug import find_organization_detail_by
 from schemas.organizations import Organization
 from resolvers.organizations import resolve_organizations
 
+# Test User Claims
+from schemas.test_user_claims import test_user_claims
+
 # User List Imports
 from schemas.user_list import user_list, resolve_user_list
 
@@ -50,7 +53,6 @@ from resolvers.notification_emails import (
     resolve_send_password_reset,
     resolve_send_validation_email,
 )
-from resolvers.user_affiliations import resolve_test_user_claims
 from resolvers.user import resolve_generate_otp_url
 from schemas.notification_email import NotificationEmail
 
@@ -125,6 +127,9 @@ class Query(graphene.ObjectType):
     # Is user an admin or super admin
     is_user_admin = is_user_admin
 
+    # Test User Claims
+    test_user_claims = test_user_claims
+
     # --- End User Queries
 
     # --- Start Organization Queries ---
@@ -170,13 +175,6 @@ class Query(graphene.ObjectType):
         email=graphene.Argument(EmailAddress, required=True),
         resolver=resolve_generate_otp_url,
         description="An api endpoint used to generate a OTP url used for two factor authentication.",
-    )
-
-    test_user_claims = graphene.String(
-        org_slug=graphene.Argument(Slug, required=True),
-        role=graphene.Argument(RoleEnums, required=True),
-        resolver=resolve_test_user_claims,
-        description="An api endpoint to view a current user's claims -- Requires an active JWT.",
     )
 
     send_password_reset = graphene.Field(
