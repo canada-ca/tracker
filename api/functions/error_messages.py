@@ -69,6 +69,18 @@ def scalar_error_type(value_type, value):
     return str("Value is not a valid " + str(value_type) + ": " + str(value))
 
 
+def url_contains_credentials():
+    """Function that returns an error message when a scalar type is invalid"""
+    return str("URLs must not contain credentials.")
+
+def url_contains_no_scheme():
+    """Function that returns an error message when a scalar type is invalid"""
+    return str("URLs scheme must be http, https, mailto or ftp.")
+
+def url_contains_unacceptable_scheme():
+    """Function that returns an error message when a scalar type is invalid"""
+    return str("URLs scheme must be http, https, mailto or ftp.")
+
 def scalar_error_only_types(value_types, expected_types, value):
     """Function that returns an error message when a scalar type can not be validated due to mismatched types"""
     return str(

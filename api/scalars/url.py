@@ -1,13 +1,17 @@
+from urllib.parse import urlparse
 from re import compile
+
 from graphene.types import Scalar
 from graphql.language import ast
 from graphql import GraphQLError
 
+# >>> urlparse("https://asdf.com")
+# ParseResult(scheme='https', netloc='asdf.com', path='', params='', query='', fragment='')
+
+
 from functions.error_messages import *
 
-URL_REGEX = r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
-
-URL_REGEX_CHECK = compile(URL_REGEX)
+safe_schemes = ["https", "http", "mailto", "ftp"]
 
 
 class URL(Scalar):
@@ -16,12 +20,22 @@ class URL(Scalar):
     https://www.ietf.org/rfc/rfc3986.txt.
     """
 
+    # >>> urlparse("https://asdf.com")
+    # ParseResult(scheme='https', netloc='asdf.com', path='', params='', query='', fragment='')
+
     @staticmethod
     def serialize(value):
         if not isinstance(value, str):
             raise GraphQLError(scalar_error_type("String", value))
 
-        if not URL_REGEX_CHECK.search(value):
+        parsed = urlparse(value)
+        if parsed.username or parsed.password:
+            raise GraphQLError(url_contains_credentials("URL", value))
+        if parsed.scheme == "":
+            raise GraphQLError(url_contains_no_scheme())
+        if parsed.scheme not in safe_schemes:
+            raise GraphQLError(url_contains_unacceptable_scheme())
+        if parsed.netloc == "":
             raise GraphQLError(scalar_error_type("URL", value))
 
         return value
@@ -31,7 +45,16 @@ class URL(Scalar):
         if not isinstance(value, str):
             raise GraphQLError(scalar_error_type("String", value))
 
-        if not URL_REGEX_CHECK.search(value):
+        parsed = urlparse(value)
+        print(parsed)
+
+        if parsed.username or parsed.password:
+            raise GraphQLError(url_contains_credentials())
+        if parsed.scheme == "":
+            raise GraphQLError(url_contains_no_scheme())
+        if parsed.scheme not in safe_schemes:
+            raise GraphQLError(url_contains_unacceptable_scheme())
+        if parsed.netloc == "":
             raise GraphQLError(scalar_error_type("URL", value))
 
         return value
@@ -43,7 +66,16 @@ class URL(Scalar):
                 scalar_error_only_types("strings", "URLs", str(type(node)))
             )
 
-        if not URL_REGEX_CHECK.search(node.value):
+        parsed = urlparse(node.value)
+        if parsed.username or parsed.password:
+            raise GraphQLError(url_contains_credentials())
+        if parsed.username or parsed.password:
+            raise GraphQLError(url_contains_credentials("URL", node.value))
+        if parsed.scheme == "":
+            raise GraphQLError(url_contains_no_scheme())
+        if parsed.scheme not in safe_schemes:
+            raise GraphQLError(url_contains_unacceptable_scheme())
+        if parsed.netloc == "":
             raise GraphQLError(scalar_error_type("URL", node.value))
 
         return node.value
