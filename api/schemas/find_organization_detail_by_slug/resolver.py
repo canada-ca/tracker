@@ -5,12 +5,12 @@ from db import db_session
 from functions.auth_wrappers import require_token
 from functions.auth_functions import is_user_read
 from models import Organizations
-from schemas.organizations import Organization
+from schemas.shared_structures.organization_detail import OrganizationDetail
 from functions.input_validators import cleanse_input
 
 
 @require_token
-def resolve_find_organization_detail_by_slug(self: Organization, info, **kwargs):
+def resolve_find_organization_detail_by_slug(self: OrganizationDetail, info, **kwargs):
     """
     This function is to resolve the organization query which takes in an
     organization enum as an argument, which is then checked against the user
@@ -27,7 +27,7 @@ def resolve_find_organization_detail_by_slug(self: Organization, info, **kwargs)
     user_roles = kwargs.get("user_roles")
 
     # Gather Initial Organization Query Object
-    query = Organization.get_query(info)
+    query = OrganizationDetail.get_query(info)
 
     # Get org orm to gather its id
     org_orm = db_session.query(Organizations).filter(Organizations.slug == slug).first()

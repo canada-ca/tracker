@@ -1,10 +1,7 @@
 # Utility Imports
 import graphene
 from graphene import relay
-from graphene_sqlalchemy import SQLAlchemyConnectionField
 from scalars.email_address import EmailAddress
-from scalars.slug import Slug
-from enums.roles import RoleEnums
 
 # --- Query Imports ---
 # Domain Imports
@@ -34,8 +31,10 @@ from schemas.is_user_admin import is_user_admin
 
 # Organization Imports
 from schemas.find_organization_detail_by_slug import find_organization_detail_by_slug
-from schemas.organizations import Organization
-from resolvers.organizations import resolve_organizations
+from schemas.find_my_organizations import (
+    find_my_organizations,
+    resolve_find_my_organizations,
+)
 
 # Test User Claims
 from schemas.test_user_claims import test_user_claims
@@ -135,15 +134,10 @@ class Query(graphene.ObjectType):
     # --- Start Organization Queries ---
     find_organization_detail_by_slug = find_organization_detail_by_slug
 
-    organizations = SQLAlchemyConnectionField(
-        Organization._meta.connection,
-        sort=None,
-        description="Select all information on all organizations that a user "
-        "has access to.",
-    )
+    find_my_organizations = find_my_organizations
 
-    def resolve_organizations(self, info, **kwargs):
-        return resolve_organizations(self, info, **kwargs)
+    def resolve_find_my_organizations(self, info, **kwargs):
+        return resolve_find_my_organizations(self, info, **kwargs)
 
     # --- End Organization Queries ---
 

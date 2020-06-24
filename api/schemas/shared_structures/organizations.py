@@ -13,7 +13,7 @@ from functions.auth_functions import is_admin
 from functions.auth_wrappers import require_token
 
 
-class Organization(SQLAlchemyObjectType):
+class Organizations(SQLAlchemyObjectType):
     class Meta:
         model = OrgModel
         interfaces = (relay.Node,)
@@ -83,4 +83,4 @@ class Organization(SQLAlchemyObjectType):
 
 class OrganizationConnection(relay.Connection):
     class Meta:
-        node = Organization
+        node = Organizations
