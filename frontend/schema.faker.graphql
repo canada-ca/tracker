@@ -982,7 +982,7 @@ type OrganizationDetail {
   ): DomainConnection
 }
 
-type Organization implements Node {
+type Organizations implements Node {
   """
   The ID of the object.
   """
@@ -1054,7 +1054,7 @@ type Organization implements Node {
   ): UserAffClassConnection
 }
 
-type OrganizationConnection {
+type OrganizationsConnection {
   """
   Pagination data for this connection.
   """
@@ -1063,17 +1063,17 @@ type OrganizationConnection {
   """
   Contains the nodes in this connection.
   """
-  edges: [OrganizationEdge]!
+  edges: [OrganizationsEdge]!
 }
 
 """
-A Relay edge containing a `Organization` and its cursor.
+A Relay edge containing a `Organizations` and its cursor.
 """
-type OrganizationEdge {
+type OrganizationsEdge {
   """
   The item at the end of the edge
   """
-  node: Organization
+  node: Organizations
 
   """
   A cursor for use in pagination
@@ -1368,17 +1368,6 @@ type Query {
   node(id: ID!): Node
 
   """
-  Select list of users belonging to an organization.
-  """
-  users(
-    orgSlug: Slug!
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): UsersConnection
-
-  """
   Query the currently logged in user if no user name isgiven, or query a specific user by user name.
   """
   user(userName: EmailAddress): [User]
@@ -1391,28 +1380,27 @@ type Query {
   """
   Select all information on all organizations that a user has access to.
   """
-  organizations(
-    before: String
-    after: String
-    first: Int
+  findMyOrganizations(
+    before: String,
+    after: String,
+    first: Int,
     last: Int
-  ): OrganizationConnection
+  ): OrganizationsConnection
 
   """
   Select information on a specific domain.
   """
-  domain(urlSlug: Slug!): [Domain]
+  findDomainBySlug(urlSlug: Slug!): Domain
 
   """
   Select information on an organizations domains, or all domains a user has access to.
   """
-  domains(
-    orgSlug: Slug
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): DomainConnection
+  findDomainsByOrg(
+    orgSlug: Slug,
+    before: String,
+    after: String,
+    first: Int, last: Int
+): DomainConnection
 
   """
   An api endpoint used to generate a OTP url used for two factor authentication.
@@ -1951,58 +1939,6 @@ type UserPageAffiliations implements Node {
   organization: Acronym @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
 }
 
-"""
-This object is used to return a list of users with their user name, display
-name and their permission for the requested organization
-"""
-type Users implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-
-  """
-  Email that the user signed up with
-  """
-  userName: EmailAddress @fake(type: email)
-
-  """
-  Name displayed to other users
-  """
-  displayName: String @fake(type: firstName)
-
-  """
-  The level of access this user has to the requested organization
-  """
-  permission: RoleEnums
-}
-
-type UsersConnection {
-  """
-  Pagination data for this connection.
-  """
-  pageInfo: PageInfo!
-
-  """
-  Contains the nodes in this connection.
-  """
-  edges: [UsersEdge]!
-}
-
-"""
-A Relay edge containing a `Users` and its cursor.
-"""
-type UsersEdge {
-  """
-  The item at the end of the edge
-  """
-  node: Users
-
-  """
-  A cursor for use in pagination
-  """
-  cursor: String!
-}
 
 type ValidateTwoFactor {
   user: User
