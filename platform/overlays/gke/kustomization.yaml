@@ -20,7 +20,7 @@ images:
 - name: gcr.io/track-compliance/api
   newTag: master-87b7c78
 - name: gcr.io/track-compliance/frontend
-  newTag: master-7d8f6cf
+  newTag: master-fe8a78f
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
