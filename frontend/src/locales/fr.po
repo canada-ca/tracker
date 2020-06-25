@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/DmarcReportPage.js:244
+#: src/DmarcReportPage.js:251
 #: src/LandingPage.js:31
 msgid "*All data represented is mocked for demonstration purposes"
 msgstr "*Toutes les données représentées sont simulées à des fins de démonstration"
@@ -87,7 +87,7 @@ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-têt
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: src/DmarcReportPage.js:118
+#: src/DmarcReportPage.js:125
 msgid "Country Code"
 msgstr "Code pays"
 
@@ -114,26 +114,26 @@ msgstr "Échec du contrôle DKIM"
 msgid "DKIM Domain Alignment Failed"
 msgstr "Échec de l'alignement du domaine DKIM"
 
-#: src/DmarcReportPage.js:115
+#: src/DmarcReportPage.js:122
 msgid "DKIM Domains"
 msgstr "Domaines DKIM"
 
-#: src/DmarcReportPage.js:176
-#: src/DmarcReportPage.js:287
+#: src/DmarcReportPage.js:183
+#: src/DmarcReportPage.js:294
 msgid "DKIM Failures by IP Address"
 msgstr "Défaillances DKIM par adresse IP"
 
-#: src/DmarcReportPage.js:193
-#: src/DmarcReportPage.js:294
+#: src/DmarcReportPage.js:200
+#: src/DmarcReportPage.js:301
 msgid "DKIM Misalignment by IP Address"
 msgstr "Désalignement DKIM par adresse IP"
 
-#: src/DmarcReportPage.js:116
+#: src/DmarcReportPage.js:123
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
-#: src/DmarcReportPage.js:210
-#: src/DmarcReportPage.js:301
+#: src/DmarcReportPage.js:217
+#: src/DmarcReportPage.js:308
 msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
@@ -142,19 +142,19 @@ msgstr "Défaillances du DMARC par adresse IP"
 msgid "DMARC Policy Applied"
 msgstr "Politique de la DMARC appliquée"
 
-#: src/DmarcReportPage.js:250
+#: src/DmarcReportPage.js:257
 msgid "DMARC Report"
 msgstr "Rapport de la DMARC"
 
-#: src/DmarcReportPage.js:120
+#: src/DmarcReportPage.js:127
 msgid "DNS Host"
 msgstr "Hôte DNS"
 
-#: src/DmarcReportPage.js:251
+#: src/DmarcReportPage.js:258
 msgid "Description of DMARC report"
 msgstr "Description du rapport de la DMARC"
 
-#: src/Domain.js:20
+#: src/Domain.js:21
 msgid "Domain:"
 msgstr ""
 
@@ -192,11 +192,11 @@ msgstr "Assurez-vous que l'enregistrement DKIM pour le domaine et le sélecteur 
 msgid "Ensure the SPF record is present and valid."
 msgstr "Assurez-vous que le dossier du SPF est présent et valide."
 
-#: src/DmarcReportPage.js:114
+#: src/DmarcReportPage.js:121
 msgid "Envelope From"
 msgstr "Enveloppe De"
 
-#: src/DmarcReportPage.js:76
+#: src/DmarcReportPage.js:83
 msgid "Fail"
 msgstr "Échec"
 
@@ -210,8 +210,8 @@ msgstr "Oublié votre mot de passe?"
 msgid "Forwarding by an intermediate server."
 msgstr "Redirection par un serveur intermédiaire."
 
-#: src/DmarcReportPage.js:126
-#: src/DmarcReportPage.js:266
+#: src/DmarcReportPage.js:133
+#: src/DmarcReportPage.js:273
 msgid "Fully Aligned by IP Address"
 msgstr "Entièrement aligné par adresse IP"
 
@@ -219,7 +219,7 @@ msgstr "Entièrement aligné par adresse IP"
 msgid "Fully Implemented"
 msgstr "Entièrement mis en œuvre"
 
-#: src/DmarcReportTable.js:278
+#: src/DmarcReportTable.js:277
 msgid "Go to page:"
 msgstr "Aller à la page"
 
@@ -245,6 +245,10 @@ msgstr "Masquer les conseils"
 msgid "Home"
 msgstr "Accueil"
 
+#: src/Organization.js:16
+msgid "Internet facing services: {domainCount}"
+msgstr "Services d'accès à Internet: {domainCount}"
+
 #: src/CreateUserPage.js:24
 #: src/SignInPage.js:24
 msgid "Invalid email"
@@ -254,7 +258,7 @@ msgstr "Courriel non valide"
 msgid "LAST30DAYS"
 msgstr "30DERNIERSJOURS"
 
-#: src/Domain.js:35
+#: src/Domain.js:38
 msgid "Last scanned:"
 msgstr "Dernier scan:"
 
@@ -296,7 +300,7 @@ msgstr "Non appliqué"
 msgid "Not Implemented"
 msgstr "Pas entièrement mis en œuvre"
 
-#: src/Domain.js:43
+#: src/Domain.js:46
 msgid "Not scanned yet."
 msgstr "Pas encore scanné."
 
@@ -309,15 +313,15 @@ msgstr "Organisations"
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: src/DmarcReportTable.js:271
+#: src/DmarcReportTable.js:270
 msgid "Page {0} of {1}"
 msgstr "Page {0} de {1}"
 
-#: src/DmarcReportPage.js:72
+#: src/DmarcReportPage.js:79
 msgid "Partial Pass"
 msgstr "Passage partiel"
 
-#: src/DmarcReportPage.js:68
+#: src/DmarcReportPage.js:75
 msgid "Pass"
 msgstr "Passez"
 
@@ -377,7 +381,7 @@ msgstr "Résolutions possibles"
 msgid "Pre-Alpha"
 msgstr "préalpha"
 
-#: src/DmarcReportPage.js:119
+#: src/DmarcReportPage.js:126
 msgid "Prefix Org"
 msgstr "Préfixe Org"
 
@@ -411,17 +415,17 @@ msgstr "Echec du contrôle du SPF"
 msgid "SPF Domain Alignment Failed"
 msgstr "Échec de l'alignement des domaines du SPF"
 
-#: src/DmarcReportPage.js:121
+#: src/DmarcReportPage.js:128
 msgid "SPF Domains"
 msgstr "Domaine SPF"
 
-#: src/DmarcReportPage.js:144
-#: src/DmarcReportPage.js:273
+#: src/DmarcReportPage.js:151
+#: src/DmarcReportPage.js:280
 msgid "SPF Failures by IP Address"
 msgstr "Défaillances du SPF par adresse IP"
 
-#: src/DmarcReportPage.js:160
-#: src/DmarcReportPage.js:280
+#: src/DmarcReportPage.js:167
+#: src/DmarcReportPage.js:287
 msgid "SPF Misalignment by IP Address"
 msgstr "Désalignement du SPF par adresse IP"
 
@@ -437,7 +441,7 @@ msgstr "Sélectionnez votre langue préférée"
 msgid "Show Guidance"
 msgstr "Afficher les conseils"
 
-#: src/DmarcReportTable.js:297
+#: src/DmarcReportTable.js:296
 msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
@@ -463,7 +467,7 @@ msgstr "Passer au contenu principal"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Désolé, la page que vous essayiez de consulter n'existe pas."
 
-#: src/DmarcReportPage.js:113
+#: src/DmarcReportPage.js:120
 msgid "Source IP Address"
 msgstr "Adresse IP source"
 
@@ -532,7 +536,7 @@ msgstr "Ces notes d'orientation ont été conçues pour vous aider à résoudre 
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
-#: src/DmarcReportPage.js:117
+#: src/DmarcReportPage.js:124
 msgid "Total Messages"
 msgstr "Total des messages"
 
