@@ -48,13 +48,7 @@ def test_findOrganizationDetailsBySlug_returns_a_type_with_a_domainCount(save):
         as_user=admin,
     )
 
-    expected_result = {
-        "data": {
-            "organization": {
-              "domainCount": 1
-            }
-        }
-    }
+    expected_result = {"data": {"organization": {"domainCount": 1}}}
 
     if "errors" in result:
         fail(
@@ -64,5 +58,3 @@ def test_findOrganizationDetailsBySlug_returns_a_type_with_a_domainCount(save):
         )
 
     assert result == expected_result
-
-

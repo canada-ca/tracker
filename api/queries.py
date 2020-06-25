@@ -1,15 +1,13 @@
 # Utility Imports
 import graphene
 from graphene import relay
-from graphene_sqlalchemy import SQLAlchemyConnectionField
 from scalars.email_address import EmailAddress
-from scalars.slug import Slug
-from enums.roles import RoleEnums
 
 # --- Query Imports ---
 # Domain Imports
-from schemas.domain import Domain
-from resolvers.domains import resolve_domain, resolve_domains
+from schemas.find_domain_by_slug import find_domain_by_slug
+from schemas.find_domains_by_org import find_domains_by_org, resolve_find_domains_by_org
+from schemas.find_my_domains import find_my_domains, resolve_find_my_domains
 
 # Get Dmarc Report Bar Graph Data
 from schemas.dmarc_report_summary_list import (
@@ -33,8 +31,14 @@ from schemas.dmarc_report_summary import (
 from schemas.is_user_admin import is_user_admin
 
 # Organization Imports
-from schemas.organizations import Organization, OrganizationDetail
-from resolvers.organizations import resolve_organization, resolve_organizations
+from schemas.find_organization_detail_by_slug import find_organization_detail_by_slug
+from schemas.find_my_organizations import (
+    find_my_organizations,
+    resolve_find_my_organizations,
+)
+
+# Test User Claims
+from schemas.test_user_claims import test_user_claims
 
 # User List Imports
 from schemas.user_list import user_list, resolve_user_list
@@ -43,15 +47,12 @@ from schemas.user_list import user_list, resolve_user_list
 from schemas.user_page import user_page, resolve_user_page
 
 # Need to be updated
-from schemas.users import Users
-from resolvers.users import resolve_users
 from schemas.User.user import User
 from resolvers.user import resolve_user
 from resolvers.notification_emails import (
     resolve_send_password_reset,
     resolve_send_validation_email,
 )
-from resolvers.user_affiliations import resolve_test_user_claims
 from resolvers.user import resolve_generate_otp_url
 from schemas.notification_email import NotificationEmail
 
@@ -102,17 +103,6 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
 
     # --- Start User Queries ---
-
-    users = SQLAlchemyConnectionField(
-        Users._meta.connection,
-        org_slug=graphene.Argument(Slug, required=True),
-        sort=None,
-        description="Select list of users belonging to an organization.",
-    )
-
-    def resolve_users(self, info, **kwargs):
-        return resolve_users(self, info, **kwargs)
-
     user = graphene.List(
         lambda: User,
         user_name=graphene.Argument(EmailAddress, required=False),
@@ -137,49 +127,33 @@ class Query(graphene.ObjectType):
     # Is user an admin or super admin
     is_user_admin = is_user_admin
 
+    # Test User Claims
+    test_user_claims = test_user_claims
+
     # --- End User Queries
 
     # --- Start Organization Queries ---
-    find_organization_detail_by_slug = graphene.Field(
-        lambda: OrganizationDetail,
-        slug=graphene.Argument(Slug, required=True),
-        resolver=resolve_organization,
-        description="Select all information on a selected organization that a "
-        "user has access to.",
-    )
+    find_organization_detail_by_slug = find_organization_detail_by_slug
 
-    organizations = SQLAlchemyConnectionField(
-        Organization._meta.connection,
-        sort=None,
-        description="Select all information on all organizations that a user "
-        "has access to.",
-    )
+    find_my_organizations = find_my_organizations
 
-    def resolve_organizations(self, info, **kwargs):
-        return resolve_organizations(self, info, **kwargs)
+    def resolve_find_my_organizations(self, info, **kwargs):
+        return resolve_find_my_organizations(self, info, **kwargs)
 
     # --- End Organization Queries ---
 
     # --- Start Domain Queries ---
-    domain = graphene.List(
-        lambda: Domain,
-        url_slug=graphene.Argument(Slug, required=True),
-        description="Select information on a specific domain.",
-    )
+    find_domain_by_slug = find_domain_by_slug
 
-    def resolve_domain(self, info, **kwargs):
-        return resolve_domain(self, info, **kwargs)
+    find_domains_by_org = find_domains_by_org
 
-    domains = SQLAlchemyConnectionField(
-        Domain._meta.connection,
-        org_slug=graphene.Argument(Slug, required=False),
-        sort=None,
-        description="Select information on an organizations domains, or all "
-        "domains a user has access to.",
-    )
+    def resolve_find_domains_by_org(self, info, **kwargs):
+        return resolve_find_domains_by_org(self, info, **kwargs)
 
-    def resolve_domains(self, info, **kwargs):
-        return resolve_domains(self, info, **kwargs)
+    find_my_domains = find_my_domains
+
+    def resolve_find_my_domains(self, info, **kwargs):
+        return resolve_find_my_domains(self, info, **kwargs)
 
     # --- End Domain Queries ---
 
@@ -201,13 +175,6 @@ class Query(graphene.ObjectType):
         email=graphene.Argument(EmailAddress, required=True),
         resolver=resolve_generate_otp_url,
         description="An api endpoint used to generate a OTP url used for two factor authentication.",
-    )
-
-    test_user_claims = graphene.String(
-        org_slug=graphene.Argument(Slug, required=True),
-        role=graphene.Argument(RoleEnums, required=True),
-        resolver=resolve_test_user_claims,
-        description="An api endpoint to view a current user's claims -- Requires an active JWT.",
     )
 
     send_password_reset = graphene.Field(

@@ -56,7 +56,7 @@ def test_dkim_guidance_tags_dkim_2(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -82,7 +82,7 @@ def test_dkim_guidance_tags_dkim_2(save):
 
     assert (
         "dkim2"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )
@@ -123,7 +123,7 @@ def test_dkim_guidance_tags_dkim_5(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -149,7 +149,7 @@ def test_dkim_guidance_tags_dkim_5(save):
 
     assert (
         "dkim5"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )
@@ -190,7 +190,7 @@ def test_dkim_guidance_tags_dkim_6(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -216,7 +216,7 @@ def test_dkim_guidance_tags_dkim_6(save):
 
     assert (
         "dkim6"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )
@@ -257,7 +257,7 @@ def test_dkim_guidance_tags_dkim_7(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -283,7 +283,7 @@ def test_dkim_guidance_tags_dkim_7(save):
 
     assert (
         "dkim7"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )
@@ -324,7 +324,7 @@ def test_dkim_guidance_tags_dkim_8(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -350,7 +350,7 @@ def test_dkim_guidance_tags_dkim_8(save):
 
     assert (
         "dkim8"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )
@@ -391,7 +391,7 @@ def test_dkim_guidance_tags_dkim_9(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -417,7 +417,7 @@ def test_dkim_guidance_tags_dkim_9(save):
 
     assert (
         "dkim9"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )
@@ -458,7 +458,7 @@ def test_dkim_guidance_tags_dkim_10(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -484,7 +484,7 @@ def test_dkim_guidance_tags_dkim_10(save):
 
     assert (
         "dkim10"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )
@@ -525,7 +525,7 @@ def test_dkim_guidance_tags_dkim_11(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -551,7 +551,7 @@ def test_dkim_guidance_tags_dkim_11(save):
 
     assert (
         "dkim11"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )
@@ -592,7 +592,7 @@ def test_dkim_guidance_tags_dkim_12(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -618,7 +618,7 @@ def test_dkim_guidance_tags_dkim_12(save):
 
     assert (
         "dkim12"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )
@@ -659,7 +659,7 @@ def test_dkim_guidance_tags_dkim_13(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 email {
@@ -685,7 +685,7 @@ def test_dkim_guidance_tags_dkim_13(save):
 
     assert (
         "dkim13"
-        in result["data"]["domain"][0]["email"]["edges"][0]["node"]["dkim"][
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
             "dkimGuidanceTags"
         ]
     )

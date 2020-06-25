@@ -56,7 +56,7 @@ def test_dkim_guidance_tags_https_2(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -82,7 +82,7 @@ def test_dkim_guidance_tags_https_2(save):
 
     assert (
         "https2"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -123,7 +123,7 @@ def test_dkim_guidance_tags_https_3(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -149,7 +149,7 @@ def test_dkim_guidance_tags_https_3(save):
 
     assert (
         "https3"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -190,7 +190,7 @@ def test_dkim_guidance_tags_https_4(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -216,7 +216,7 @@ def test_dkim_guidance_tags_https_4(save):
 
     assert (
         "https4"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -257,7 +257,7 @@ def test_dkim_guidance_tags_https_5(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -283,7 +283,7 @@ def test_dkim_guidance_tags_https_5(save):
 
     assert (
         "https5"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -324,7 +324,7 @@ def test_dkim_guidance_tags_https_6(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -350,7 +350,7 @@ def test_dkim_guidance_tags_https_6(save):
 
     assert (
         "https6"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -391,7 +391,7 @@ def test_dkim_guidance_tags_https_7(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -417,7 +417,7 @@ def test_dkim_guidance_tags_https_7(save):
 
     assert (
         "https7"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -458,7 +458,7 @@ def test_dkim_guidance_tags_https_8(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -484,7 +484,7 @@ def test_dkim_guidance_tags_https_8(save):
 
     assert (
         "https8"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -525,7 +525,7 @@ def test_dkim_guidance_tags_https_9(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -551,7 +551,7 @@ def test_dkim_guidance_tags_https_9(save):
 
     assert (
         "https9"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -592,7 +592,7 @@ def test_dkim_guidance_tags_https_10(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -618,7 +618,7 @@ def test_dkim_guidance_tags_https_10(save):
 
     assert (
         "https10"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -659,7 +659,7 @@ def test_dkim_guidance_tags_https_11(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -685,7 +685,7 @@ def test_dkim_guidance_tags_https_11(save):
 
     assert (
         "https11"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -726,7 +726,7 @@ def test_dkim_guidance_tags_https_12(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -752,7 +752,7 @@ def test_dkim_guidance_tags_https_12(save):
 
     assert (
         "https12"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -793,7 +793,7 @@ def test_dkim_guidance_tags_https_13(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -819,7 +819,7 @@ def test_dkim_guidance_tags_https_13(save):
 
     assert (
         "https13"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )
@@ -860,7 +860,7 @@ def test_dkim_guidance_tags_https_14(save):
     result = run(
         mutation="""
         {
-            domain(
+            findDomainBySlug(
                 urlSlug: "test-domain-ca"
             ) {
                 web {
@@ -886,7 +886,7 @@ def test_dkim_guidance_tags_https_14(save):
 
     assert (
         "https14"
-        in result["data"]["domain"][0]["web"]["edges"][0]["node"]["https"][
+        in result["data"]["findDomainBySlug"]["web"]["edges"][0]["node"]["https"][
             "httpsGuidanceTags"
         ]
     )

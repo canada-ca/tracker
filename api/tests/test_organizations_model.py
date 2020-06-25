@@ -16,6 +16,7 @@ def test_orgs_make_a_slug_from_the_name():
     org = Organizations(name="Treasury Board Secretariat")
     assert org.slug == "treasury-board-secretariat"
 
+
 def test_count_of_related_domains_is_available_via_domain_count(save):
     org = Organizations(
         acronym="ORG1",

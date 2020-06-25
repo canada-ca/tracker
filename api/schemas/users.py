@@ -3,10 +3,10 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from schemas.user import User
-from schemas.organizations import Organization
+from schemas.shared_structures.organizations import Organizations
 from models import Users as UserModel
 from models import User_affiliations
-from models import Organizations
+from models import Organizations as OrgModel
 from scalars.email_address import EmailAddress
 from enums.roles import RoleEnums
 
@@ -51,8 +51,8 @@ class Users(SQLAlchemyObjectType):
         return self.permission
 
     def resolve_affiliations(self: User_affiliations, info):
-        query = Organization.get_query(info)
-        query = query.filter(Organizations.users.user_id == self.id)
+        query = Organizations.get_query(info)
+        query = query.filter(OrgModel.users.user_id == self.id)
         return query.all()
 
 
