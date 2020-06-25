@@ -10,6 +10,7 @@ import {
   Text,
   ListItem,
 } from '@chakra-ui/core'
+import { sanitizeUrl } from './sanitizeUrl'
 
 export function Domain({ url, lastRan, ...rest }) {
   return (
@@ -20,7 +21,9 @@ export function Domain({ url, lastRan, ...rest }) {
             <Trans>Domain:</Trans>
           </Text>
           <Link
-            href={`http://${encodeURIComponent(url)}`}
+            // TODO: have the API enforce a scheme
+            // so we don't need to guess badly here.
+            href={`http://${sanitizeUrl(url)}`}
             isExternal
             target="_blank"
             rel="noopener noreferrer"
