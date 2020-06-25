@@ -23,12 +23,14 @@ const mocks = [
               node: {
                 name: 'Fisheries and Oceans Canada',
                 slug: 'fisheries-and-oceans-canada',
+                domainCount: 2,
               },
             },
             {
               node: {
                 name: 'Treasury Board of Canada Secretariat',
                 slug: 'treasury-board-secretariat',
+                domainCount: 5,
               },
             },
           ],

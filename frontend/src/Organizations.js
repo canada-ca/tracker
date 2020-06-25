@@ -57,8 +57,13 @@ export default function Organisations() {
               elements={organizations}
               ifEmpty={() => <Trans>No Organizations</Trans>}
             >
-              {({ name, slug }, index) => (
-                <Organization key={'org' + index} slug={slug} name={name} />
+              {({ name, slug, domainCount }, index) => (
+                <Organization
+                  key={'org' + index}
+                  slug={slug}
+                  name={name}
+                  domainCount={domainCount}
+                />
               )}
             </ListOf>
           </Stack>

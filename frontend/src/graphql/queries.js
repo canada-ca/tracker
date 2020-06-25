@@ -26,6 +26,7 @@ export const ORGANIZATIONS = gql`
       edges {
         node {
           name
+          domainCount
           slug
         }
       }

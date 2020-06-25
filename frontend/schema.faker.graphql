@@ -402,7 +402,7 @@ type DmarcReportEdge {
 }
 
 type Domain implements Node {
-  organization: Organization
+  organization: Organizations
   dmarcReports(
     before: String
     after: String
@@ -952,6 +952,15 @@ type OrganizationDetail {
     )
 
   """
+  The number of domains under this organization
+  """
+  domainCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+
+  """
   The zone which the organization belongs to.
   """
   zone: String
@@ -984,6 +993,14 @@ type OrganizationDetail {
 
 type Organizations implements Node {
   """
+  The number of domains under this organization
+  """
+  domainCount: Int
+    @fake(
+      type: number
+      options: { minNumber: 0, maxNumber: 20, precisionNumber: 1 }
+    )
+  """
   The ID of the object.
   """
   id: ID!
@@ -1011,7 +1028,6 @@ type Organizations implements Node {
         "fisheries-and-oceans-canada"
       ]
     )
-
 
   """
   The zone which the organization belongs to.
@@ -1381,9 +1397,9 @@ type Query {
   Select all information on all organizations that a user has access to.
   """
   findMyOrganizations(
-    before: String,
-    after: String,
-    first: Int,
+    before: String
+    after: String
+    first: Int
     last: Int
   ): OrganizationsConnection
 
@@ -1396,19 +1412,20 @@ type Query {
   Select information on an organizations domains, or all domains a user has access to.
   """
   findDomainsByOrg(
-    orgSlug: Slug,
-    before: String,
-    after: String,
-    first: Int, last: Int
-): DomainConnection
+    orgSlug: Slug
+    before: String
+    after: String
+    first: Int
+    last: Int
+  ): DomainConnection
 
   """
   Select information on  all domains a user has access to.
   """
   findMyDomains(
-    before: String,
-    after: String,
-    first: Int,
+    before: String
+    after: String
+    first: Int
     last: Int
   ): DomainConnection
 
@@ -1529,10 +1546,14 @@ enum RoleEnums {
 }
 
 enum ScanTypeEnums {
-  """Used for defining if DMARC and DKIM scans should be performed"""
+  """
+  Used for defining if DMARC and DKIM scans should be performed
+  """
   MAIL
 
-  """Used for defining if HTTPS and SSL scans should be performed"""
+  """
+  Used for defining if HTTPS and SSL scans should be performed
+  """
   WEB
 }
 
@@ -1796,7 +1817,7 @@ type UserAffClass implements Node {
   """
   The organization this affiliation belongs to
   """
-  organization: Organization
+  organization: Organizations
 
   """
   The ID of the object.
@@ -1948,7 +1969,6 @@ type UserPageAffiliations implements Node {
   """
   organization: Acronym @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
 }
-
 
 type ValidateTwoFactor {
   user: User
