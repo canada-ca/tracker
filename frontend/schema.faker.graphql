@@ -827,19 +827,9 @@ type Mutation {
   """
   requestScan(
     """
-    If this is a DKIM scan please set to true.
+    Input object with fields used for requesting mutation
     """
-    dkim: Boolean
-
-    """
-    If this scan if for testing purposes set to true.
-    """
-    test: Boolean
-
-    """
-    The domain that you would like the scan to be ran on.
-    """
-    url: URL
+    input: RequestScanInput!
   ): RequestScan
 
   """
@@ -1500,7 +1490,22 @@ type RemoveOrganization {
 This mutation is used to send a domain to the scanners to be scanned
 """
 type RequestScan {
-  status: String
+  requestStatus: String
+}
+
+"""
+This Object is used to create fields for the RequestScan Mutation
+"""
+input RequestScanInput {
+  """
+  The domain that you would like the scan to be ran on.
+  """
+  urlSlug: Slug!
+
+  """
+  Type of scan to perform on designated domain ('Web' or 'Mail').
+  """
+  scanType: ScanTypeEnums!
 }
 
 enum RoleEnums {
@@ -1523,6 +1528,14 @@ enum RoleEnums {
   A user who has the same access as an admin, but can define new admins
   """
   SUPER_ADMIN
+}
+
+enum ScanTypeEnums {
+  """Used for defining if DMARC and DKIM scans should be performed"""
+  MAIL
+
+  """Used for defining if HTTPS and SSL scans should be performed"""
+  WEB
 }
 
 """
