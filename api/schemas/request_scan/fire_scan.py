@@ -60,7 +60,6 @@ def fire_scan(
         scan_id = scan_orm.id
 
     payload = {
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=10),
         "scan_id": scan_id,
         "domain": url,
         "selectors": selectors,
