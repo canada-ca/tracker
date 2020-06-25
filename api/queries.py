@@ -47,7 +47,7 @@ from schemas.user_list import user_list, resolve_user_list
 from schemas.user_page import user_page, resolve_user_page
 
 # Need to be updated
-from schemas.User.user import User
+from schemas.user.user import User
 from resolvers.user import resolve_user
 from resolvers.notification_emails import (
     resolve_send_password_reset,
