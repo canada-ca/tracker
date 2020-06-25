@@ -13,17 +13,30 @@ from models import Domains
 from scalars.slug import Slug
 
 
+class RequestScanInput(graphene.InputObjectType):
+    """
+    This Object is used to create fields for the RequestScan Mutation
+    """
+
+    url_slug = Slug(
+        description="The domain that you would like the scan to be ran on.",
+        required=True,
+    )
+    scan_type = ScanTypeEnums(
+        description="Type of scan to perform on designated domain ('Web' or 'Mail').",
+        required=True,
+    )
+
+
 class RequestScan(graphene.Mutation):
     """
     This mutation is used to send a domain to the scanners to be scanned
     """
 
     class Arguments:
-        url_slug = Slug(
-            description="The domain that you would like the scan to be ran on."
-        )
-        scan_type = ScanTypeEnums(
-            description="Type of scan to perform on designated domain ('Web' or 'Mail')."
+        input = RequestScanInput(
+            description="Input object with fields used for requesting mutation",
+            required=True,
         )
 
     request_status = graphene.String()
@@ -39,8 +52,8 @@ class RequestScan(graphene.Mutation):
         # Get variables from kwargs
         user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
-        slug = cleanse_input(kwargs.get("url_slug"))
-        scan_type = kwargs.get("scan_type")
+        slug = cleanse_input(kwargs.get("input", {}).get("url_slug"))
+        scan_type = kwargs.get("input", {}).get("scan_type")
 
         # Get Domain ORM related to requested domain
         domain_orm = db_session.query(Domains).filter(Domains.slug == slug).first()

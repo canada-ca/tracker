@@ -51,8 +51,10 @@ def test_request_scan_mutation(save, mocker, caplog):
         mutation="""
         mutation {
             requestScan (
-                scanType: WEB,
-                urlSlug: "test-domain-gc-ca"
+                input: {
+                    scanType: WEB,
+                    urlSlug: "test-domain-gc-ca"
+                }
             ) {
                 requestStatus
             }
@@ -114,8 +116,10 @@ def test_request_scan_mutation_bad_dispatcher_response(save, mocker, caplog):
         mutation="""
         mutation {
             requestScan (
-                scanType: WEB,
-                urlSlug: "test-domain-gc-ca"
+                input: {
+                    scanType: WEB,
+                    urlSlug: "test-domain-gc-ca"
+                }
             ) {
                 requestStatus
             }
@@ -161,8 +165,10 @@ def test_request_scan_mutation_no_domains_found(save, caplog):
         mutation="""
         mutation {
             requestScan (
-                scanType: WEB,
-                urlSlug: "test-domain-gc-ca"
+                input: {
+                    scanType: WEB,
+                    urlSlug: "test-domain-gc-ca"
+                }
             ) {
                 requestStatus
             }
@@ -211,8 +217,10 @@ def test_request_scan_mutation_user_read_cant_access(save, caplog):
         mutation="""
         mutation {
             requestScan (
-                scanType: WEB,
-                urlSlug: "test-domain-gc-ca"
+                input: {
+                    scanType: WEB,
+                    urlSlug: "test-domain-gc-ca"
+                }
             ) {
                 requestStatus
             }
