@@ -55,12 +55,11 @@ def fire_scan(
     if scan_type == "mail":
         scan_orm = db_session.query(Mail_scans).order_by(Mail_scans.id.desc()).first()
         scan_id = scan_orm.id
-    else:
+    elif scan_type == "web":
         scan_orm = db_session.query(Web_scans).order_by(Web_scans.id.desc()).first()
         scan_id = scan_orm.id
 
     payload = {
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=10),
         "scan_id": scan_id,
         "domain": url,
         "selectors": selectors,
@@ -76,6 +75,22 @@ def fire_scan(
     try:
         status = requests.post(DISPATCHER_URL + "/receive", headers=headers)
     except Exception as e:
+        # If scan fails delete latest scan entry to keep db clear of scans with no data
+        try:
+            if scan_type == "mail":
+                db_session.query(Mail_scans).filter(
+                    Mail_scans.id == scan_orm.id
+                ).delete()
+            elif scan_type == "web":
+                db_session.query(Web_scans).filter(Web_scans.id == scan_orm.id).delete()
+            db_session.commit()
+
+        except Exception as se:
+            logger.error(
+                f"User: {user_id} an error occurred while scan was being deleted from database: {str(se)}"
+            )
+            raise GraphQLError("Error, unable to request scan.")
+
         logger.error(
             f"User: {user_id} attempted to request a scan but an error arouse with the dispatcher: {str(e)}"
         )
