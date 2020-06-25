@@ -235,7 +235,7 @@ def Service(database=databases.Database(DATABASE_URI), client=requests):
             "scan_id": scan_id,
             "domain": domain.get("domain"),
             "selectors": domain.get("selectors"),
-            "user_init": True,
+            "user_init": False,
         }
         headers = {
             "Content-Type": "application/json",
@@ -250,7 +250,7 @@ def Service(database=databases.Database(DATABASE_URI), client=requests):
             "scan_id": scan_id,
             "domain": domain.get("domain"),
             "selectors": domain.get("selectors"),
-            "user_init": True,
+            "user_init": False,
         }
         headers = {
             "Content-Type": "application/json",
