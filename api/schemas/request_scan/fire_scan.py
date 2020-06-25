@@ -42,7 +42,7 @@ def fire_scan(
         db_session.add(new_scan)
     else:
         logger.warning(
-            f"User: {user_id} attmpeted to request a scan with an invalid type."
+            f"User: {user_id} attempted to request a scan with an invalid type."
         )
         raise GraphQLError("Error, unable to request scan.")
 
@@ -73,6 +73,12 @@ def fire_scan(
         "Scan-Type": scan_type,
     }
 
-    status = requests.post(DISPATCHER_URL + "/receive", headers=headers)
+    try:
+        status = requests.post(DISPATCHER_URL + "/receive", headers=headers)
+    except Exception as e:
+        logger.error(
+            f"User: {user_id} attempted to request a scan but an error arouse with the dispatcher: {str(e)}"
+        )
+        raise GraphQLError("Error, unable to request scan.")
 
     return str(status.text)
