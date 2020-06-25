@@ -13,8 +13,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core'
-import { Trans } from '@lingui/macro'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 import WithPseudoBox from './withPseudoBox'
