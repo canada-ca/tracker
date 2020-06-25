@@ -5,6 +5,9 @@ ENV HOME /autoscan
 WORKDIR $HOME
 COPY . ./
 
+RUN useradd -r -u 1001 -g autoscan autoscan
+USER autoscan
+
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends apt-utils && \
 apt-get install -y --no-install-recommends python3 python3-pip && \

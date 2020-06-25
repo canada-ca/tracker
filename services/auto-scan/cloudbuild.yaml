@@ -8,10 +8,12 @@ steps:
     id: wait_testdb
     args: ['testdb:5432']
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/track-compliance/services/db-migration'
     id: start_dbmigrate
-    entrypoint: /bin/sh
-    args: ["-c", "docker run --net cloudbuild --name dbmigrate -d --rm -e POSTGRES_USER=track_dmarc -e POSTGRES_PASSWORD=postgres -e DB_HOST=testdb gcr.io/track-compliance/services/db-migration"]
+    env:
+      - POSTGRES_USER=track_dmarc
+      - POSTGRES_PASSWORD=postgres
+      - DB_HOST=testdb
 
   - name: 'gcr.io/track-compliance/ci'
     id: test-auto-scan
