@@ -69,7 +69,10 @@ spec:
                   name: scanners
                   key: DB_PASS
             - name: DB_HOST
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_HOST
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
