@@ -1,9 +1,10 @@
 import datetime
-
 import requests
-from typing import List
 
-from enums.scan_types import ScanTypeEnums
+from typing import List
+from graphql import GraphQLError
+
+from app import logger
 from db import db_session
 from models import Web_scans, Mail_scans, Domains
 
@@ -25,11 +26,6 @@ def fire_scan(
     # Get Time
     scan_datetime = datetime.datetime.utcnow()
 
-    try:
-        scan_type = ScanTypeEnums.get(scan_type)
-    except ValueError:
-        return "Error: Invalid scan type provided"
-
     # Create Scan Object
     if scan_type == "mail":
         new_scan = Mail_scans(
@@ -39,11 +35,16 @@ def fire_scan(
             initiated_by=user_id,
         )
         db_session.add(new_scan)
-    else:
+    elif scan_type == "web":
         new_scan = Web_scans(
             domain_id=domain_id, scan_date=scan_datetime, initiated_by=user_id
         )
         db_session.add(new_scan)
+    else:
+        logger.warning(
+            f"User: {user_id} attmpeted to request a scan with an invalid type."
+        )
+        raise GraphQLError("Error, unable to request scan.")
 
     # Update Domain Tables Last Run
     Domains.query.filter(Domains.id == domain_id).update({"last_run": scan_datetime})
