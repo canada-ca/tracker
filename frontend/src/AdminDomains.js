@@ -42,7 +42,7 @@ export function AdminDomains({ ...props }) {
       setDomainList([...domainList, newDomain])
       setDomainSearch('')
       toast({
-        title: 'User added',
+        title: 'Domain added',
         description: `${newDomain.url} was added to ${orgName}`,
         status: 'info',
         duration: 9000,
@@ -65,7 +65,7 @@ export function AdminDomains({ ...props }) {
     if (temp) {
       setDomainList(temp)
       toast({
-        title: 'User removed',
+        title: 'Domain removed',
         description: `${url} was removed from ${orgName}`,
         status: 'info',
         duration: 9000,
@@ -73,7 +73,7 @@ export function AdminDomains({ ...props }) {
       })
     } else {
       toast({
-        title: 'User removal failed',
+        title: 'Domain removal failed',
         description: `${url} could not be removed from ${orgName}`,
         status: 'error',
         duration: 9000,
