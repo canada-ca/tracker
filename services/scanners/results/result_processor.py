@@ -443,7 +443,7 @@ async def insert_https(report, scan_id, db):
         await db.execute(insert_query)
         await db.disconnect()
     except Exception as e:
-        logging.info(str(e))
+        logging.error(str(e))
         await db.disconnect()
         return f"Failed database insertion(s): {str(e)}"
 
@@ -477,7 +477,7 @@ async def insert_dns(report, scan_id, db):
         scan = await db.fetch_one(scan_query)
         logging.info(f"Retrieved corresponding scan from database: {str(scan)}")
 
-        if report["dkim"]["missing"] is not True:
+        if report["dkim"].get("missing", False) is not True:
             # Check for previous dkim scans on this domain
             previous_scan_query = select([Mail_scans]).where(
                 Mail_scans.c.domain_id == scan.get("domain_id")
@@ -523,7 +523,7 @@ async def insert_dns(report, scan_id, db):
         await db.execute(dkim_insert_query)
         await db.disconnect()
     except Exception as e:
-        logging.info(str(e))
+        logging.error(str(e))
         await db.disconnect()
         return f"Failed database insertion(s): {str(e)}"
 
