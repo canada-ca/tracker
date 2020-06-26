@@ -61,7 +61,7 @@ export default function SignInPage() {
         <Trans>Loading...</Trans>
       </p>
     )
-  if (error) return <p>{String(error)}</p>
+  if (error) return <p>Sign-in: {String(error)}</p>
 
   return (
     <Box mx="auto">
