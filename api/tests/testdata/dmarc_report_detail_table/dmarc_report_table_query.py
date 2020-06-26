@@ -1,9 +1,11 @@
 test_query = """
 {
     dmarcReportDetailTables(
-        domainSlug: "test-domain-gc-ca"
-        year: "2020"
-        period: MAY
+        input: {
+            domainSlug: "test-domain-gc-ca"
+            year: "2020"
+            period: MAY
+        }
     ) {
         month
         year
