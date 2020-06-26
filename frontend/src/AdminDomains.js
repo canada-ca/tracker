@@ -125,8 +125,8 @@ export function AdminDomains({ ...props }) {
                 </Text>
               )}
             >
-              {({ url, lastRan }) => (
-                <Stack isInline align="center">
+              {({ url, lastRan }, index) => (
+                <Stack key={'admindomain' + index} isInline align="center">
                   <IconButton
                     size="xs"
                     variantColor="red"

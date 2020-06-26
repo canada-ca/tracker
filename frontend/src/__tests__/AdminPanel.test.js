@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -81,7 +81,7 @@ describe('<AdminPanel />', () => {
       },
     ]
 
-    render(
+    const { getByText } = render(
       <UserStateProvider
         initialState={{
           userName: 'testuser@testemail.gc.ca',
@@ -100,5 +100,8 @@ describe('<AdminPanel />', () => {
         </I18nProvider>
       </UserStateProvider>,
     )
+    waitFor(() => {
+      expect(getByText('orgName')).toBeInTheDocument()
+    })
   })
 })
