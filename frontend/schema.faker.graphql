@@ -670,7 +670,7 @@ type HTTPS {
   preloaded: String
 
   httpsGuidanceTags: [String]
-    @example(
+    @examples(
       values: [
         "https1"
         "https2"
