@@ -5,14 +5,14 @@ import { useLingui } from '@lingui/react'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
 import { array } from 'prop-types'
-import { IS_USER_ADMIN } from './graphql/queries'
+import { USER_AFFILIATIONS } from './graphql/queries'
 import { useQuery } from '@apollo/react-hooks'
 
 export default function AdminPage() {
   const [orgName, setOrgName] = React.useState('')
   const { i18n } = useLingui()
 
-  const { loading, error, data } = useQuery(IS_USER_ADMIN, {
+  const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
     onError: (error) => {
       const [_, message] = error.message.split(': ')
       console.log(message)
