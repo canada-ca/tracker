@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLingui } from '@lingui/react'
 import {
   Stack,
   SimpleGrid,
@@ -8,71 +9,149 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
+  Text,
+  IconButton,
+  useToast,
 } from '@chakra-ui/core'
-import { Trans } from '@lingui/macro'
-import { QUERY_USERLIST } from './graphql/queries'
-import { useQuery } from '@apollo/react-hooks'
+import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
-import { useUserState } from './UserState'
-import { slugify } from './slugify'
+import { string, object } from 'prop-types'
 
-export default function UserList() {
-  const { currentUser } = useUserState()
-  // This function generates the URL when the page loads
-  const { loading, error, data } = useQuery(QUERY_USERLIST, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: {
-      slug: slugify(currentUser.userName),
-    },
-  })
-  if (loading) {
-    return <p>Loading...</p>
+export default function UserList({ ...props }) {
+  const { name, userListData, orgName } = props
+  const [userList, setUserList] = React.useState(userListData.userList.edges)
+  const [userSearch, setUserSearch] = React.useState('')
+  const toast = useToast()
+  const { i18n } = useLingui()
+
+  const addUser = (name, id) => {
+    if (name !== '') {
+      const newUser = {
+        node: {
+          id: id,
+          userName: String(id),
+          admin: false,
+          tfa: false,
+          displayName: name,
+        },
+      }
+      setUserList([...userList, newUser])
+      setUserSearch('')
+      toast({
+        title: 'User added',
+        description: `${newUser.node.displayName} was invited to ${orgName}`,
+        status: 'info',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'An error occurred.',
+        description: 'Search for a user to add them',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
   }
-  if (error) {
-    console.log(error)
-    return <p>Error :(</p>
+
+  const removeUser = (user) => {
+    const temp = userList.filter((c) => c.node.id !== user.id)
+
+    if (temp) {
+      setUserList(temp)
+      toast({
+        title: 'User removed',
+        description: `${user.displayName} was removed from ${orgName}`,
+        status: 'info',
+        duration: 9000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: 'User removal failed',
+        description: `${user.displayName} could not be removed from ${orgName}`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
   }
 
   return (
     <Stack mb={6} w="100%">
+      <Text fontSize="2xl" fontWeight="bold">
+        <Trans>User List</Trans>
+      </Text>
       <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
         <InputGroup>
           <InputLeftElement>
             <Icon name="search" color="gray.300" />
           </InputLeftElement>
-          <Input type="text" placeholder="Search for user" />
+          <Input
+            type="text"
+            placeholder={i18n._(t`Search for a user`)}
+            value={userSearch}
+            onChange={(e) => {
+              setUserSearch(e.target.value)
+            }}
+          />
         </InputGroup>
         <Button
-          width={['100%', '40%']}
+          width={'70%'}
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
-            window.alert('create user')
+            addUser(userSearch, Math.random())
           }}
         >
-          <Trans>Create User</Trans>
+          <Trans>Invite User</Trans>
         </Button>
       </SimpleGrid>
       <Divider />
-      {data.userList.edges.map(({ node }) => {
-        return (
-          <UserCard
-            key={node.id}
-            userName={node.userName}
-            tfa={node.tfa}
-            admin={node.admin}
-            displayName={node.displayName}
-          />
-        )
-      })}
+
+      {userList.length === 0 ? (
+        <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
+          <Trans>No users in this organization</Trans>
+        </Text>
+      ) : (
+        userList.map(({ node }) => {
+          return (
+            <Stack isInline key={node.id} align="center">
+              {name === 'admin' && (
+                <Stack isInline>
+                  <IconButton
+                    icon="minus"
+                    size="sm"
+                    variantColor="red"
+                    isDisabled={node.admin}
+                    onClick={() => removeUser(node)}
+                  />
+                  <IconButton
+                    icon="edit"
+                    size="sm"
+                    variantColor="blue"
+                    onClick={() => window.alert('edit user')}
+                    isDisabled={node.admin}
+                  />
+                </Stack>
+              )}
+
+              <UserCard
+                userName={node.userName}
+                tfa={node.tfa}
+                admin={node.admin}
+                displayName={node.displayName}
+              />
+            </Stack>
+          )
+        })
+      )}
+      <Divider />
       <PaginationButtons
-        next={data.userList.pageInfo.hasNextPage}
-        previous={data.userList.pageInfo.hasPreviousPage}
+        next={userListData.userList.pageInfo.hasNextPage}
+        previous={userListData.userList.pageInfo.hasPreviousPage}
       />
     </Stack>
   )
@@ -100,3 +179,9 @@ export default function UserList() {
     })}
   </Box>
 </Box> */
+
+UserList.propTypes = {
+  userListData: object,
+  orgName: string,
+  name: string,
+}

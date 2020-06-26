@@ -4,43 +4,31 @@ import { render, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
-import { MockedProvider } from '@apollo/react-testing'
 import { createMemoryHistory } from 'history'
 import { UserStateProvider } from '../UserState'
-import { QUERY_USERLIST } from '../graphql/queries'
 import { setupI18n } from '@lingui/core'
 
 describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
-    const mocks = [
-      {
-        request: {
-          query: QUERY_USERLIST,
-          variables: { slug: 'testuser-testemail-gc-ca' },
+    const mocks = {
+      userList: {
+        pageInfo: {
+          hasNextPage: false,
+          hasPreviousPage: false,
         },
-        result: {
-          data: {
-            userList: {
-              pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-              },
-              edges: [
-                {
-                  node: {
-                    id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
-                    userName: 'testuser@testemail.gc.ca',
-                    admin: true,
-                    tfa: false,
-                    displayName: 'Test User Esq.',
-                  },
-                },
-              ],
+        edges: [
+          {
+            node: {
+              id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
+              userName: 'testuser@testemail.gc.ca',
+              admin: true,
+              tfa: false,
+              displayName: 'Test User Esq.',
             },
           },
-        },
+        ],
       },
-    ]
+    }
 
     // Set the inital history item to user-list
     const { getAllByText } = render(
@@ -54,9 +42,7 @@ describe('<UserList />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']}>
-              <MockedProvider mocks={mocks} addTypename={false}>
-                <UserList />
-              </MockedProvider>
+              <UserList userListData={mocks} />
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>
@@ -72,35 +58,25 @@ describe('<UserList />', () => {
   })
 
   it('redirects to userPage when a list element is clicked', async () => {
-    const mocks = [
-      {
-        request: {
-          query: QUERY_USERLIST,
-          variables: { slug: 'testuser-testemail-gc-ca' },
+    const mocks = {
+      userList: {
+        pageInfo: {
+          hasNextPage: false,
+          hasPreviousPage: false,
         },
-        result: {
-          data: {
-            userList: {
-              pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
-              },
-              edges: [
-                {
-                  node: {
-                    id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
-                    userName: 'testuser@testemail.gc.ca',
-                    admin: true,
-                    tfa: false,
-                    displayName: 'Test User Esq.',
-                  },
-                },
-              ],
+        edges: [
+          {
+            node: {
+              id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
+              userName: 'testuser@testemail.gc.ca',
+              admin: true,
+              tfa: false,
+              displayName: 'Test User Esq.',
             },
           },
-        },
+        ],
       },
-    ]
+    }
 
     // create a history object and inject it so we can inspect it afterwards
     // for the side effects of our form submission (a redirect to /!).
@@ -121,9 +97,7 @@ describe('<UserList />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <Router history={history}>
-              <MockedProvider mocks={mocks} addTypename={false}>
-                <UserList />
-              </MockedProvider>
+              <UserList userListData={mocks} />
             </Router>
           </I18nProvider>
         </ThemeProvider>

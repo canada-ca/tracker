@@ -16,8 +16,8 @@ export function Domain({ url, lastRan, ...rest }) {
   return (
     <ListItem {...rest}>
       <Stack spacing={4} padding={[1, 2, 3]}>
-        <Box>
-          <Text py={2} fontWeight="bold">
+        <Stack isInline>
+          <Text fontWeight="bold">
             <Trans>Domain:</Trans>
           </Text>
           <Link
@@ -31,18 +31,18 @@ export function Domain({ url, lastRan, ...rest }) {
             {url}
             <Icon name="external-link" mx="2px" />
           </Link>
-        </Box>
+        </Stack>
         {lastRan && (
-          <Box>
-            <Text py={2} fontWeight="bold">
+          <Stack isInline>
+            <Text fontWeight="bold">
               <Trans>Last scanned:</Trans>
             </Text>
             <Text>{lastRan}</Text>
-          </Box>
+          </Stack>
         )}
         {!lastRan && (
           <Box>
-            <Text py={2} fontWeight="bold">
+            <Text fontWeight="bold">
               <Trans>Not scanned yet.</Trans>
             </Text>
           </Box>

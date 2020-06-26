@@ -13,6 +13,8 @@ import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
+import { IS_USER_ADMIN } from './graphql/queries'
+import { useQuery } from '@apollo/react-hooks'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -24,11 +26,39 @@ const SignInPage = lazy(() => import('./SignInPage'))
 const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 const Organizations = lazy(() => import('./Organizations'))
 const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
+const AdminPage = lazy(() => import('./AdminPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
   const { currentUser, isLoggedIn } = useUserState()
+
+  const { loading, error, data } = useQuery(IS_USER_ADMIN, {
+    onError: (error) => {
+      const [_, message] = error.message.split(': ')
+      console.log(message)
+    },
+  })
+
+  if (loading) {
+    return <p>Loading user list...</p>
+  }
+
+  if (error) {
+    return <p>{String(error)}</p>
+  }
+
+  const isAdmin = (userData) => {
+    for (let i = 0; i < userData.length; i++) {
+      if (
+        userData[i].node.permission === 'ADMIN' ||
+        userData[i].node.permission === 'SUPER_ADMIN'
+      ) {
+        return true
+      }
+    }
+    return false
+  }
 
   return (
     <>
@@ -63,13 +93,19 @@ export default function App() {
               <Trans>Sign In</Trans>
             </Link>
           )}
-          <Link to="/user-list">
+          {/* <Link to="/user-list">
             <Trans>User List</Trans>
-          </Link>
+          </Link> */}
 
           <Link to="/dmarc-report">
             <Trans>Report</Trans>
           </Link>
+
+          {isLoggedIn() && isAdmin(data.user[0].affiliations.edges) && (
+            <Link to="/admin">
+              <Trans>Admin Portal</Trans>
+            </Link>
+          )}
         </Navigation>
         {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
         <Main>
@@ -99,6 +135,14 @@ export default function App() {
                   </>
                 )}
               />
+
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
+                path="/admin"
+              >
+                <AdminPage orgs={data.user[0].affiliations.edges} />
+              </RouteIf>
 
               <RouteIf
                 condition={isLoggedIn()}

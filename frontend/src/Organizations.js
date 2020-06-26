@@ -37,7 +37,7 @@ export default function Organisations() {
   if (data && data.organizations.edges) {
     organizations = data.organizations.edges.map((e) => e.node)
   }
-
+  console.log(organizations)
   if (loading)
     return (
       <p>

@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 export const ORGANIZATION_BY_SLUG = gql`
   query FindOrganizationDetailBySlug($slug: Slug!) {
-    organization:findOrganizationDetailBySlug(slug: $slug) {
+    organization: findOrganizationDetailBySlug(slug: $slug) {
       id
       name
       acronym
@@ -129,11 +129,7 @@ export const DMARC_REPORT_SUMMARY = gql`
     $period: PeriodEnums!
     $year: Year!
   ) {
-    dmarcReportSummary(
-      domainSlug: $domainSlug
-      period: $period
-      year: $year
-    ) {
+    dmarcReportSummary(domainSlug: $domainSlug, period: $period, year: $year) {
       month
       year
       categoryTotals {
@@ -321,6 +317,24 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
           spfDomains
           dkimDomains
           dkimSelectors
+        }
+      }
+    }
+  }
+`
+
+export const IS_USER_ADMIN = gql`
+  query IsUserAdmin {
+    user {
+      affiliations {
+        edges {
+          node {
+            organization {
+              id
+              acronym
+            }
+            permission
+          }
         }
       }
     }

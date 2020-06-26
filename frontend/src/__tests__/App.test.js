@@ -4,13 +4,42 @@ import { MemoryRouter } from 'react-router-dom'
 import { waitFor, render, cleanup } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { UserStateProvider } from '../UserState'
-import { DOMAINS } from '../graphql/queries'
+import { IS_USER_ADMIN } from '../graphql/queries'
 import App from '../App'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
 describe('<App/>', () => {
   afterEach(cleanup)
+
+  const isAdmin = [
+    {
+      request: {
+        query: IS_USER_ADMIN,
+      },
+      result: {
+        data: {
+          user: [
+            {
+              affiliations: {
+                edges: [
+                  {
+                    node: {
+                      organization: {
+                        id: 'YXBwIGFkbWluIHRlc3Q=',
+                        acronym: 'ABC',
+                      },
+                      permission: 'ADMIN',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  ]
 
   describe('routes', () => {
     describe('/', () => {
@@ -22,7 +51,7 @@ describe('<App/>', () => {
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={setupI18n()}>
                 <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                  <MockedProvider>
+                  <MockedProvider mocks={isAdmin} addTypename={false}>
                     <App />
                   </MockedProvider>
                 </MemoryRouter>
@@ -36,47 +65,16 @@ describe('<App/>', () => {
       })
     })
 
-    describe('/domains', () => {
-      const mocks = [
-        {
-          request: {
-            query: DOMAINS,
-          },
-          result: {
-            data: {
-              domains: {
-                edges: [
-                  {
-                    node: {
-                      organization: {
-                        acronym: 'BC',
-                      },
-                      url: 'bonita.com',
-                    },
-                  },
-                  {
-                    node: {
-                      organization: {
-                        acronym: 'BC',
-                      },
-                      url: 'elenora.com',
-                    },
-                  },
-                ],
-              },
-            },
-          },
-        },
-      ]
-      it('renders the domains page', async () => {
-        const { queryByText } = render(
+    describe('/sign-in', () => {
+      it('renders the sign-in page', async () => {
+        const { getByText } = render(
           <UserStateProvider
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={setupI18n()}>
-                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
-                  <MockedProvider mocks={mocks} addTypename={false}>
+                <MemoryRouter initialEntries={['/sign-in']} initialIndex={0}>
+                  <MockedProvider mocks={isAdmin} addTypename={false}>
                     <App />
                   </MockedProvider>
                 </MemoryRouter>
@@ -84,7 +82,7 @@ describe('<App/>', () => {
             </ThemeProvider>
           </UserStateProvider>,
         )
-        const domains = await waitFor(() => queryByText(/Domains/i))
+        const domains = await waitFor(() => getByText(/Sign in/i))
         await waitFor(() => {
           expect(domains).toBeInTheDocument()
         })
