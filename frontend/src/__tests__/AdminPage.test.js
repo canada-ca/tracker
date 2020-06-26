@@ -8,7 +8,7 @@ import { USER_AFFILIATIONS } from '../graphql/queries'
 import AdminPage from '../AdminPage'
 
 describe('<AdminPage />', () => {
-  const isAdmin = [
+  const mocks = [
     {
       request: {
         query: USER_AFFILIATIONS,
@@ -41,7 +41,7 @@ describe('<AdminPage />', () => {
     render(
       <I18nProvider i18n={setupI18n()}>
         <ThemeProvider theme={theme}>
-          <MockedProvider mocks={isAdmin} addTypename={false}>
+          <MockedProvider mocks={mocks} addTypename={false}>
             <AdminPage />
           </MockedProvider>
         </ThemeProvider>

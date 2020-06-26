@@ -30,7 +30,7 @@ export default function UserList({ ...props }) {
       const newUser = {
         node: {
           id: id,
-          userName: `example${id}@gmail.com`,
+          userName: `${name}${id}@gmail.com`,
           admin: false,
           tfa: false,
           displayName: name,

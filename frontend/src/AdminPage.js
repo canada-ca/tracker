@@ -20,7 +20,7 @@ export default function AdminPage() {
   })
 
   if (loading) {
-    return <p>Loading user list...</p>
+    return <p>Loading user affilliations...</p>
   }
 
   if (error) {
