@@ -146,6 +146,42 @@ type CreateOrganization {
 }
 
 """
+Input object type containing all the fields for the create organization
+mutation
+"""
+input CreateOrganizationInput {
+  """
+  Acronym of organization.
+  """
+  acronym: Acronym!
+
+  """
+  Full name of organization.
+  """
+  name: String!
+
+  """
+  The zone which the organization belongs to.
+  """
+  zone: String!
+
+  """
+  The sector which the organization belongs to.
+  """
+  sector: String!
+
+  """
+  The province in which the organization is located in.
+  """
+  province: String!
+
+  """
+  The city in which the organization is located in.
+  """
+  city: String!
+}
+
+"""
 The `Date` scalar type represents a Date
 value as specified by
 [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
@@ -776,34 +812,9 @@ type Mutation {
   """
   createOrganization(
     """
-    Acronym of organization.
+    Input object containing all the fields required for the createOrganization mutation
     """
-    acronym: Acronym!
-
-    """
-    The city in which the organization is located in.
-    """
-    city: String!
-
-    """
-    Full name of organization.
-    """
-    name: String!
-
-    """
-    The province in which the organization is located in.
-    """
-    province: String!
-
-    """
-    The sector which the organization belongs to.
-    """
-    sector: String!
-
-    """
-    The zone which the organization belongs to.
-    """
-    zone: String!
+    input: CreateOrganizationInput!
   ): CreateOrganization
 
   """
