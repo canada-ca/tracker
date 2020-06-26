@@ -6,6 +6,17 @@ from schemas.authenticate.sign_in_user import sign_in_user
 from scalars.email_address import EmailAddress
 
 
+class AuthenticateInput(graphene.InputObjectType):
+    """
+    Object containing input fields for Authenticate Mutation
+    """
+
+    user_name = EmailAddress(
+        description="User email that they signed up with.", required=True,
+    )
+    password = graphene.String(description="Users password", required=True,)
+
+
 class Authenticate(graphene.Mutation):
     """
     This mutation allows users to give their credentials and retrieve a token
@@ -14,10 +25,10 @@ class Authenticate(graphene.Mutation):
 
     # Define mutation arguments
     class Arguments:
-        user_name = EmailAddress(
-            description="User email that they signed up with.", required=True,
+        input = AuthenticateInput(
+            required=True,
+            description="AuthenticateInput object containing input fields",
         )
-        password = graphene.String(description="Users password", required=True,)
 
     # Define mutation fields
     auth_result = graphene.Field(
@@ -28,8 +39,8 @@ class Authenticate(graphene.Mutation):
     @staticmethod
     def mutate(self, info, **kwargs):
         # Get arguments
-        user_name = cleanse_input(kwargs.get("user_name"))
-        password = cleanse_input(kwargs.get("password"))
+        user_name = cleanse_input(kwargs.get("input", {}).get("user_name"))
+        password = cleanse_input(kwargs.get("input", {}).get("password"))
 
         # Create user and JWT
         user_info = sign_in_user(user_name=user_name, password=password)

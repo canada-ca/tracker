@@ -42,8 +42,10 @@ def test_authenticate_with_valid_credentials(db, caplog):
         mutation="""
         mutation{
             authenticate(
-                userName:"testuser@testemail.ca",
-                password:"testpassword123"
+                input: {
+                    userName:"testuser@testemail.ca",
+                    password:"testpassword123"
+                }
             ) {
                 authResult {
                     user {
@@ -88,8 +90,10 @@ def test_authenticate_with_invalid_credentials_fails(db, caplog):
         mutation="""
         mutation {
             authenticate(
-                userName:"testuser@testemail.ca",
-                password:"invalidpassword"
+                input: {
+                    userName:"testuser@testemail.ca",
+                    password:"invalidpassword"
+                }
             ){
                 authResult {
                     user {
@@ -135,8 +139,10 @@ def test_authenticate_failed_login_attempts_are_recorded(db, caplog):
         mutation="""
         mutation {
             authenticate(
-                userName:"testuser@testemail.ca"
-                password:"invalidpassword"
+                input: {
+                    userName:"testuser@testemail.ca"
+                    password:"invalidpassword"
+                }
             ){
                 authResult {
                     user {
@@ -188,8 +194,10 @@ def test_authenticate_successful_login_sets_failed_attempts_to_zero(db, caplog):
         mutation="""
         mutation {
             authenticate(
-                userName:"failedb4@example.com",
-                password:"testpassword123"
+                input: {
+                    userName:"failedb4@example.com",
+                    password:"testpassword123"
+                }
             ){
                 authResult {
                     user {
@@ -225,8 +233,10 @@ def test_authenticate_too_many_failed_attempts(db, caplog):
         """
         mutation{
             authenticate(
-                userName:"failed2much@example.com",
-                password:"testpassword123"
+                input: {
+                    userName:"failed2much@example.com",
+                    password:"testpassword123"
+                }
             ){
                 authResult {
                     user {
@@ -259,8 +269,10 @@ def test_authenticating_in_with_unknown_users_returns_error(caplog):
         """
         mutation{
             authenticate(
-                userName:"null@example.com",
-                password:"testpassword123"
+                input: {
+                    userName:"null@example.com",
+                    password:"testpassword123"
+                }
             ){
                 authResult {
                     user {
