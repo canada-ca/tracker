@@ -201,7 +201,25 @@ type DKIM {
   Key tags found during scan
   """
   dkimGuidanceTags: [String]
+    @examples(
+      values: [
+        "dkim1"
+        "dkim2"
+        "dkim3"
+        "dkim4"
+        "dkim5"
+        "dkim6"
+        "dkim7"
+        "dkim8"
+        "dkim9"
+        "dkim10"
+        "dkim11"
+        "dkim12"
+        "dkim13"
+      ]
+    )
 }
+
 """
 DKIM report results
 """
@@ -272,6 +290,32 @@ type DMARC {
   Key tags found during DMARC Scan
   """
   dmarcGuidanceTags: [String]
+    @examples(
+      values: [
+        "dmarc1"
+        "dmarc2"
+        "dmarc3"
+        "dmarc4"
+        "dmarc5"
+        "dmarc6"
+        "dmarc7"
+        "dmarc8"
+        "dmarc9"
+        "dmarc10"
+        "dmarc11"
+        "dmarc12"
+        "dmarc13"
+        "dmarc14"
+        "dmarc15"
+        "dmarc16"
+        "dmarc17"
+        "dmarc18"
+        "dmarc19"
+        "dmarc20"
+        "dmarc21"
+        "dmarc22"
+      ]
+    )
 }
 
 """
@@ -459,7 +503,7 @@ type Domain implements Node {
   """
   DKIM, DMARC, and SPF scan results
   """
-  mail(before: String, after: String, first: Int, last: Int): MailScanConnection
+  email(before: String, after: String, first: Int, last: Int): MailScanConnection
   """
   HTTPS, and SSL scan results
   """
@@ -530,17 +574,17 @@ type MailScan implements Node {
   """
   Domain-based Message Authentication, Reporting, and Conformance (DMARC)
   """
-  dmarc: [DMARC]
+  dmarc: DMARC
 
   """
   Sender Policy Framework (SPF) for Authorizing Use of Domains in Email
   """
-  spf: [SPF]
+  spf: SPF
 
   """
   DomainKeys Identified Mail (DKIM) Signatures
   """
-  dkim: [DKIM]
+  dkim: DKIM
 }
 
 type MailScanConnection {
@@ -625,15 +669,25 @@ type HTTPS {
   """
   preloaded: String
 
-  httpsGuidanceTags: [HTTPSTags]
-}
-
-type HTTPSTags {
-  value: String
-  """
-  Key tags found during scan
-  """
   httpsGuidanceTags: [String]
+    @examples(
+      values: [
+        "https1"
+        "https2"
+        "https3"
+        "https4"
+        "https5"
+        "https6"
+        "https7"
+        "https8"
+        "https9"
+        "https10"
+        "https11"
+        "https12"
+        "https13"
+        "https14"
+      ]
+    )
 }
 
 """
@@ -1662,7 +1716,24 @@ type SPF {
   """
   Key tags found during SPF scan
   """
-  spfGuidanceTags: [SPFTags]
+  spfGuidanceTags: [String]
+    @examples(
+      values: [
+        "spf1"
+        "spf2"
+        "spf3"
+        "spf4"
+        "spf5"
+        "spf6"
+        "spf7"
+        "spf8"
+        "spf9"
+        "spf10"
+        "spf11"
+        "spf12"
+        "spf13"
+      ]
+    )
 }
 
 """
@@ -1683,25 +1754,6 @@ type SpfReport {
   SPF raw result
   """
   result: String @examples(values: ["softfail"])
-}
-
-"""
-Current settings of the currently configured SPF
-"""
-type SPFTags {
-  """
-  Important tags retrieved during scan
-  """
-  value: String
-    @examples(
-      values: [
-        "SPF-GC"
-        "SPF-missing"
-        "SPF-bad-path"
-        "ALL-missing"
-        "INCLUDE-limit"
-      ]
-    )
 }
 
 """
@@ -1727,6 +1779,9 @@ type SSL {
   Key tags found during scan
   """
   sslGuidanceTags: [String]
+    @examples(
+      values: ["ssl1", "ssl2", "ssl3", "ssl4", "ssl5", "ssl6", "ssl7", "ssl8"]
+    )
 }
 
 """
@@ -1992,8 +2047,8 @@ type WebScan implements Node {
   The time the scan was initiated
   """
   timestamp: DateTime
-  https: [HTTPS]
-  ssl: [SSL]
+  https: HTTPS
+  ssl: SSL
 }
 
 type WebScanConnection {
