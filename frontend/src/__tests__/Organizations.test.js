@@ -89,7 +89,6 @@ describe('<Organisations />', () => {
     )
 
     const link = await waitFor(() => getByText(/Fisheries and oceans/i))
-    console.log(link)
     await waitFor(() => {
       fireEvent.click(link)
     })
