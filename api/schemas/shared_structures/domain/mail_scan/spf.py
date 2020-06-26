@@ -78,9 +78,10 @@ class SPF(SQLAlchemyObjectType):
 
         if dkim_orm is not None:
             dkim_record = dkim_orm.dkim_scan.get("dkim", {}).get("txt_record", None)
-            for key in dkim_record:
-                if key == "a" or key == "include":
-                    tags.append("spf3")
+            if dkim_record is not None:
+                for key in dkim_record:
+                    if key == "a" or key == "include":
+                        tags.append("spf3")
 
         if dmarc_orm is not None:
             dmarc_record = dmarc_orm.dmarc_scan.get("dmarc", {}).get("record", None)
@@ -89,7 +90,7 @@ class SPF(SQLAlchemyObjectType):
                 or ("a:" in dmarc_record)
                 or ("all" in dmarc_record)
             ):
-                if not "spf3" in tags:
+                if "spf3" not in tags:
                     tags.append("spf3")
 
         # Check all tag
