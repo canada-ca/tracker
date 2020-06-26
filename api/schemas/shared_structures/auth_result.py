@@ -1,6 +1,6 @@
 import graphene
 
-from schemas.User.user import User
+from schemas.user.user import User
 
 
 class AuthResult(graphene.ObjectType):
