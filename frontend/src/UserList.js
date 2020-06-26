@@ -30,7 +30,7 @@ export default function UserList({ ...props }) {
       const newUser = {
         node: {
           id: id,
-          userName: String(id),
+          userName: `${name}${id}@gmail.com`,
           admin: false,
           tfa: false,
           displayName: name,
@@ -103,7 +103,7 @@ export default function UserList({ ...props }) {
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
-            addUser(userSearch, Math.random())
+            addUser(userSearch, Math.floor(Math.random() * 1000))
           }}
         >
           <Trans>Invite User</Trans>

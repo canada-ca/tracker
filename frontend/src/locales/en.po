@@ -616,6 +616,10 @@ msgstr "*search bars do not actively search databases currently. They are used t
 msgid "Select an organization to view admin options"
 msgstr "Select an organization to view admin options"
 
+# src/AdminPage.js:93
+msgid "You do not have admin permissions in any organization"
+msgstr "You do not have admin permissions in any organization"
+
 #: src/DomainList.js:81
 msgid "Domain List"
 msgstr "Domain List"

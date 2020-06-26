@@ -22,7 +22,7 @@ export const ORGANIZATION_BY_SLUG = gql`
 
 export const ORGANIZATIONS = gql`
   query Organisations {
-    organizations:findMyOrganizations(first: 10) {
+    organizations: findMyOrganizations(first: 10) {
       edges {
         node {
           name
@@ -323,8 +323,8 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
   }
 `
 
-export const IS_USER_ADMIN = gql`
-  query IsUserAdmin {
+export const USER_AFFILIATIONS = gql`
+  query UserAffiliations {
     user {
       affiliations {
         edges {
