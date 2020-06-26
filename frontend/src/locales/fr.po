@@ -616,6 +616,10 @@ msgstr "*Les barres de recherche ne recherchent pas activement les bases de donn
 msgid "Select an organization to view admin options"
 msgstr "Sélectionnez une organisation pour voir les options d'administration"
 
+# src/AdminPage.js:93
+msgid "You do not have admin permissions in any organization"
+msgstr "Vous n'avez pas d'autorisations administratives dans une organisation"
+
 #: src/DomainList.js:81
 msgid "Domain List"
 msgstr "Liste des domaines"

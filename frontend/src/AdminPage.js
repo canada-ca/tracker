@@ -90,7 +90,7 @@ export default function AdminPage() {
   } else {
     return (
       <Text fontSize="3xl" fontWeight="bold">
-        You do not have admin permissions in any organization
+        <Trans>You do not have admin permissions in any organization</Trans>
       </Text>
     )
   }
