@@ -72,4 +72,5 @@ class OrganizationDetail(SQLAlchemyObjectType):
 
     def resolve_domains(self: OrgModel, info):
         query = DomainsSchema.get_query(info)
-        return query.filter(DomainsModel.organization_id == self.id).all()
+        query = query.filter(DomainsModel.organization_id == self.id).all()
+        return query
