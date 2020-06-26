@@ -27,7 +27,7 @@ steps:
     -  |
        if [[ "$BRANCH_NAME" == "master" ]]
        then
-         docker push gcr.io/$PROJECT_ID/services/autoscan:$BRANCH_NAME
+         docker push gcr.io/$PROJECT_ID/services/db-migration:$BRANCH_NAME
        else
          exit 0
        fi
