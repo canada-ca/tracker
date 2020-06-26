@@ -574,17 +574,17 @@ type MailScan implements Node {
   """
   Domain-based Message Authentication, Reporting, and Conformance (DMARC)
   """
-  dmarc: [DMARC]
+  dmarc: DMARC
 
   """
   Sender Policy Framework (SPF) for Authorizing Use of Domains in Email
   """
-  spf: [SPF]
+  spf: SPF
 
   """
   DomainKeys Identified Mail (DKIM) Signatures
   """
-  dkim: [DKIM]
+  dkim: DKIM
 }
 
 type MailScanConnection {
@@ -2047,8 +2047,8 @@ type WebScan implements Node {
   The time the scan was initiated
   """
   timestamp: DateTime
-  https: [HTTPS]
-  ssl: [SSL]
+  https: HTTPS
+  ssl: SSL
 }
 
 type WebScanConnection {
