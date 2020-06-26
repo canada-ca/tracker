@@ -200,29 +200,24 @@ type DKIM {
   """
   Key tags found during scan
   """
-  dkimGuidanceTags: [DKIMTags]
-}
-
-"""
-Current settings of the currently configured DKIM
-"""
-enum DKIMTags {
-  """
-  Important tags retrieved during scan
-  """
-  dkim1
-  dkim2
-  dkim3
-  dkim4
-  dkim5
-  dkim6
-  dkim7
-  dkim8
-  dkim9
-  dkim10
-  dkim11
-  dkim12
-  dkim13
+  dkimGuidanceTags: [String]
+    @examples(
+      values: [
+        "dkim1"
+        "dkim2"
+        "dkim3"
+        "dkim4"
+        "dkim5"
+        "dkim6"
+        "dkim7"
+        "dkim8"
+        "dkim9"
+        "dkim10"
+        "dkim11"
+        "dkim12"
+        "dkim13"
+      ]
+    )
 }
 
 """
@@ -294,38 +289,33 @@ type DMARC {
   """
   Key tags found during DMARC Scan
   """
-  dmarcGuidanceTags: [DMARCTags]
-}
-
-"""
-Current settings of the currently configured DMARC
-"""
-enum DMARCTags {
-  """
-  Important tags retrieved during scan
-  """
-  dmarc1
-  dmarc2
-  dmarc3
-  dmarc4
-  dmarc5
-  dmarc6
-  dmarc7
-  dmarc8
-  dmarc9
-  dmarc10
-  dmarc11
-  dmarc12
-  dmarc13
-  dmarc14
-  dmarc15
-  dmarc16
-  dmarc17
-  dmarc18
-  dmarc19
-  dmarc20
-  dmarc21
-  dmarc22
+  dmarcGuidanceTags: [String]
+    @examples(
+      values: [
+        "dmarc1"
+        "dmarc2"
+        "dmarc3"
+        "dmarc4"
+        "dmarc5"
+        "dmarc6"
+        "dmarc7"
+        "dmarc8"
+        "dmarc9"
+        "dmarc10"
+        "dmarc11"
+        "dmarc12"
+        "dmarc13"
+        "dmarc14"
+        "dmarc15"
+        "dmarc16"
+        "dmarc17"
+        "dmarc18"
+        "dmarc19"
+        "dmarc20"
+        "dmarc21"
+        "dmarc22"
+      ]
+    )
 }
 
 """
@@ -679,30 +669,25 @@ type HTTPS {
   """
   preloaded: String
 
-  httpsGuidanceTags: [HTTPSTags]
-}
-
-"""
-Current settings of the currently configured https
-"""
-enum HTTPSTags {
-  """
-  Important tags retrieved during scan
-  """
-  https1
-  https2
-  https3
-  https4
-  https5
-  https6
-  https7
-  https8
-  https9
-  https10
-  https11
-  https12
-  https13
-  https14
+  httpsGuidanceTags: [String]
+    @example(
+      values: [
+        "https1"
+        "https2"
+        "https3"
+        "https4"
+        "https5"
+        "https6"
+        "https7"
+        "https8"
+        "https9"
+        "https10"
+        "https11"
+        "https12"
+        "https13"
+        "https14"
+      ]
+    )
 }
 
 """
@@ -1731,29 +1716,24 @@ type SPF {
   """
   Key tags found during SPF scan
   """
-  spfGuidanceTags: [SPFTags]
-}
-
-"""
-Current settings of the currently configured SPF
-"""
-enum SPFTags {
-  """
-  Important tags retrieved during scan
-  """
-  spf1
-  spf2
-  spf3
-  spf4
-  spf5
-  spf6
-  spf7
-  spf8
-  spf9
-  spf10
-  spf11
-  spf12
-  spf13
+  spfGuidanceTags: [String]
+    @examples(
+      values: [
+        "spf1"
+        "spf2"
+        "spf3"
+        "spf4"
+        "spf5"
+        "spf6"
+        "spf7"
+        "spf8"
+        "spf9"
+        "spf10"
+        "spf11"
+        "spf12"
+        "spf13"
+      ]
+    )
 }
 
 """
@@ -1798,24 +1778,10 @@ type SSL {
   """
   Key tags found during scan
   """
-  sslGuidanceTags: [SSLTags]
-}
-
-"""
-Current settings of the currently configured ssl
-"""
-enum SSLTags {
-  """
-  Important tags retrieved during scan
-  """
-  ssl1
-  ssl2
-  ssl3
-  ssl4
-  ssl5
-  ssl6
-  ssl7
-  ssl8
+  sslGuidanceTags: [String]
+    @examples(
+      values: ["ssl1", "ssl2", "ssl3", "ssl4", "ssl5", "ssl6", "ssl7", "ssl8"]
+    )
 }
 
 """
