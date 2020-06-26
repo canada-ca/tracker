@@ -49,12 +49,7 @@ from schemas.user_page import user_page, resolve_user_page
 # Need to be updated
 from schemas.user.user import User
 from resolvers.user import resolve_user
-from resolvers.notification_emails import (
-    resolve_send_password_reset,
-    resolve_send_validation_email,
-)
 from resolvers.user import resolve_generate_otp_url
-from schemas.notification_email import NotificationEmail
 
 # --- End Query Imports ---
 
@@ -175,20 +170,6 @@ class Query(graphene.ObjectType):
         email=graphene.Argument(EmailAddress, required=True),
         resolver=resolve_generate_otp_url,
         description="An api endpoint used to generate a OTP url used for two factor authentication.",
-    )
-
-    send_password_reset = graphene.Field(
-        NotificationEmail,
-        email=graphene.Argument(EmailAddress, required=True),
-        resolver=resolve_send_password_reset,
-        description="An api endpoint that will send an email to a given email address so a user can reset their password for the web app.",
-    )
-
-    send_validation_email = graphene.Field(
-        NotificationEmail,
-        email=graphene.Argument(EmailAddress, required=True),
-        resolver=resolve_send_validation_email,
-        description="An api endpoint that will send a verification email to a given email address.",
     )
 
 
