@@ -503,7 +503,7 @@ type Domain implements Node {
   """
   DKIM, DMARC, and SPF scan results
   """
-  mail(before: String, after: String, first: Int, last: Int): MailScanConnection
+  email(before: String, after: String, first: Int, last: Int): MailScanConnection
   """
   HTTPS, and SSL scan results
   """
