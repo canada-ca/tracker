@@ -7,12 +7,19 @@ import AdminPanel from './AdminPanel'
 import { array } from 'prop-types'
 import { USER_AFFILIATIONS } from './graphql/queries'
 import { useQuery } from '@apollo/react-hooks'
+import { useUserState } from './UserState'
 
 export default function AdminPage() {
+  const { currentUser } = useUserState()
   const [orgName, setOrgName] = React.useState('')
   const { i18n } = useLingui()
 
   const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
     onError: (error) => {
       const [_, message] = error.message.split(': ')
       console.log(message)
@@ -41,7 +48,7 @@ export default function AdminPage() {
       orgs[i].node.permission === 'SUPER_ADMIN'
     ) {
       options.push(
-        <option value={orgs[i].node.organization.acronym}>
+        <option key={'option' + i} value={orgs[i].node.organization.acronym}>
           {orgs[i].node.organization.acronym}
         </option>,
       )
