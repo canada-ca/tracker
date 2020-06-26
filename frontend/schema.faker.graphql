@@ -405,6 +405,27 @@ type DmarcReportDetailTables {
 }
 
 """
+Input object containing fields which map to the required arguments for
+dmarcReportDetailTablesInput
+"""
+input DmarcReportDetailTablesInput {
+  """
+  The slugified version of the domain you wish to retrieve data for.
+  """
+  domainSlug: Slug!
+
+  """
+  The period in which the returned data is relevant to.
+  """
+  period: PeriodEnums!
+
+  """
+  The year in which the returned data is relevant to.
+  """
+  year: Year!
+}
+
+"""
 A query object used to grab the data to create dmarc report doughnuts
 """
 type DmarcReportSummary {
@@ -1347,34 +1368,15 @@ type Query {
     """
     domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
-  """
-  A query object used to grab the data to create dmarc report bar graph.
-  """
-  demoDmarcReportSummaryList(
-    """
-    The slugified version of the domain you wish to retrieve data for.
-    """
-    domainSlug: Slug!
-  ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
   Query used for gathering data for dmarc report detail tables.
   """
   dmarcReportDetailTables(
     """
-    The slugified version of the domain you wish to retrieve data for.
+    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
     """
-    domainSlug: Slug!
-
-    """
-    The period in which the returned data is relevant to.
-    """
-    period: PeriodEnums!
-
-    """
-    The year in which the returned data is relevant to.
-    """
-    year: Year!
+    input: DmarcReportDetailTablesInput!
   ): DmarcReportDetailTables
 
   """
@@ -1382,19 +1384,9 @@ type Query {
   """
   demoDmarcReportDetailTables(
     """
-    The slugified version of the domain you wish to retrieve data for.
+    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
     """
-    domainSlug: Slug!
-
-    """
-    The period in which the returned data is relevant to.
-    """
-    period: PeriodEnums!
-
-    """
-    The year in which the returned data is relevant to.
-    """
-    year: Year!
+    input: DmarcReportDetailTablesInput!
   ): DmarcReportDetailTables
 
   """
