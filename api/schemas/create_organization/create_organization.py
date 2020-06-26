@@ -12,27 +12,39 @@ from models import Organizations
 from scalars.organization_acronym import Acronym
 
 
+class CreateOrganizationInput(graphene.InputObjectType):
+    """
+    Input object type containing all the fields for the create organization
+    mutation
+    """
+
+    acronym = Acronym(description="Acronym of organization.", required=True)
+    name = graphene.String(description="Full name of organization.", required=True)
+    zone = graphene.String(
+        description="The zone which the organization belongs to.", required=True
+    )
+    sector = graphene.String(
+        description="The sector which the organization belongs to.", required=True
+    )
+    province = graphene.String(
+        description="The province in which the organization is located in.",
+        required=True,
+    )
+    city = graphene.String(
+        description="The city in which the organization is located in.", required=True,
+    )
+
+
 class CreateOrganization(graphene.Mutation):
     """
     Mutation allows the creation of an organization inside the database.
     """
 
     class Arguments:
-        acronym = Acronym(description="Acronym of organization.", required=True)
-        name = graphene.String(description="Full name of organization.", required=True)
-        zone = graphene.String(
-            description="The zone which the organization belongs to.", required=True
-        )
-        sector = graphene.String(
-            description="The sector which the organization belongs to.", required=True
-        )
-        province = graphene.String(
-            description="The province in which the organization is located in.",
+        input = CreateOrganizationInput(
             required=True,
-        )
-        city = graphene.String(
-            description="The city in which the organization is located in.",
-            required=True,
+            description="Input object containing all the fields required for"
+            " the createOrganization mutation",
         )
 
     # If the update passed or failed
@@ -42,12 +54,12 @@ class CreateOrganization(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
-        name = cleanse_input(kwargs.get("name"))
-        acronym = cleanse_input(kwargs.get("acronym"))
-        zone = cleanse_input(kwargs.get("zone"))
-        sector = cleanse_input(kwargs.get("sector"))
-        province = cleanse_input(kwargs.get("province"))
-        city = cleanse_input(kwargs.get("city"))
+        name = cleanse_input(kwargs.get("input", {}).get("name"))
+        acronym = cleanse_input(kwargs.get("input", {}).get("acronym"))
+        zone = cleanse_input(kwargs.get("input", {}).get("zone"))
+        sector = cleanse_input(kwargs.get("input", {}).get("sector"))
+        province = cleanse_input(kwargs.get("input", {}).get("province"))
+        city = cleanse_input(kwargs.get("input", {}).get("city"))
 
         if is_super_admin(user_roles=user_roles):
             # Check to see if organization already exists
