@@ -28,7 +28,11 @@ class EmailVerifyAccount(graphene.Mutation):
     """
 
     class Arguments:
-        input = EmailVerifyAccountInput(required=True, description="")
+        input = EmailVerifyAccountInput(
+            required=True,
+            description="Input object containing various fields required for"
+            " emailVerifyAccount mutation.",
+        )
 
     status = graphene.Boolean(
         description="Informs user if account was successfully verified."
