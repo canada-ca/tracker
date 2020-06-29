@@ -85,13 +85,14 @@ class SPF(SQLAlchemyObjectType):
 
         if dmarc_orm is not None:
             dmarc_record = dmarc_orm.dmarc_scan.get("dmarc", {}).get("record", None)
-            if (
-                ("include:" in dmarc_record)
-                or ("a:" in dmarc_record)
-                or ("all" in dmarc_record)
-            ):
-                if "spf3" not in tags:
-                    tags.append("spf3")
+            if dmarc_record is not None:
+                if (
+                    ("include:" in dmarc_record)
+                    or ("a:" in dmarc_record)
+                    or ("all" in dmarc_record)
+                ):
+                    if "spf3" not in tags:
+                        tags.append("spf3")
 
         # Check all tag
         all_tag = self.spf_scan.get("spf", {}).get("parsed", {}).get("all", None)
