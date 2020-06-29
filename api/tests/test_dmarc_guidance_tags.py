@@ -57,7 +57,9 @@ def test_dkim_guidance_tags_dmarc_2(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -124,7 +126,9 @@ def test_dkim_guidance_tags_dmarc_3(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -191,7 +195,9 @@ def test_dkim_guidance_tags_dmarc_4(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -258,7 +264,9 @@ def test_dkim_guidance_tags_dmarc_5(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -325,7 +333,9 @@ def test_dkim_guidance_tags_dmarc_6(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -392,7 +402,9 @@ def test_dkim_guidance_tags_dmarc_7(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -459,7 +471,9 @@ def test_dkim_guidance_tags_dmarc_8(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -526,7 +540,9 @@ def test_dkim_guidance_tags_dmarc_9(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -594,7 +610,9 @@ def test_dkim_guidance_tags_dmarc_10_dmarc_11(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -668,7 +686,9 @@ def test_dkim_guidance_tags_dmarc_12_dmarc_13(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -741,7 +761,9 @@ def test_dkim_guidance_tags_dmarc_14(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -808,7 +830,9 @@ def test_dkim_guidance_tags_dmarc_15(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -875,7 +899,9 @@ def test_dkim_guidance_tags_dmarc_16(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -942,7 +968,9 @@ def test_dkim_guidance_tags_dmarc_17(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -1009,7 +1037,9 @@ def test_dkim_guidance_tags_dmarc_18(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -1076,7 +1106,9 @@ def test_dkim_guidance_tags_dmarc_19(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -1143,7 +1175,9 @@ def test_dkim_guidance_tags_dmarc_20(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -1210,7 +1244,9 @@ def test_dkim_guidance_tags_dmarc_21(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {

@@ -59,7 +59,9 @@ def test_spf_guidance_tags_spf_2(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -135,7 +137,9 @@ def test_spf_guidance_tags_spf_3_dkim(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -211,7 +215,9 @@ def test_spf_guidance_tags_spf_3_dmarc(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -278,7 +284,9 @@ def test_spf_guidance_tags_spf_4(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -345,7 +353,9 @@ def test_spf_guidance_tags_spf_5(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -412,7 +422,9 @@ def test_spf_guidance_tags_spf_6(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -479,7 +491,9 @@ def test_spf_guidance_tags_spf_7(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -546,7 +560,9 @@ def test_spf_guidance_tags_spf_8(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -613,7 +629,9 @@ def test_spf_guidance_tags_spf_9(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -680,7 +698,9 @@ def test_spf_guidance_tags_spf_10(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -747,7 +767,9 @@ def test_spf_guidance_tags_spf_11(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -814,7 +836,9 @@ def test_spf_guidance_tags_spf_12(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -881,7 +905,9 @@ def test_spf_guidance_tags_spf_13(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {

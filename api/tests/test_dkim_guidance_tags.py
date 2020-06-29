@@ -57,7 +57,9 @@ def test_dkim_guidance_tags_dkim_2(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -124,7 +126,9 @@ def test_dkim_guidance_tags_dkim_5(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -191,7 +195,9 @@ def test_dkim_guidance_tags_dkim_6(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -258,7 +264,9 @@ def test_dkim_guidance_tags_dkim_7(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -325,7 +333,9 @@ def test_dkim_guidance_tags_dkim_8(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -392,7 +402,9 @@ def test_dkim_guidance_tags_dkim_9(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -459,7 +471,9 @@ def test_dkim_guidance_tags_dkim_10(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -526,7 +540,9 @@ def test_dkim_guidance_tags_dkim_11(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -593,7 +609,9 @@ def test_dkim_guidance_tags_dkim_12(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {
@@ -660,7 +678,9 @@ def test_dkim_guidance_tags_dkim_13(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 email {
                     edges {

@@ -57,7 +57,9 @@ def test_spf_guidance_tags_spf_2(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -124,7 +126,9 @@ def test_spf_guidance_tags_spf_3(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -191,7 +195,9 @@ def test_spf_guidance_tags_spf_4(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -258,7 +264,9 @@ def test_spf_guidance_tags_spf_5(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -325,7 +333,9 @@ def test_spf_guidance_tags_spf_6(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -392,7 +402,9 @@ def test_spf_guidance_tags_spf_7(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -459,7 +471,9 @@ def test_spf_guidance_tags_spf_8(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {

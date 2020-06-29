@@ -77,7 +77,11 @@ def test_domain_creation_super_admin(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "sa-create-domain-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "sa-create-domain-ca"
+                }
+            ) {
                 url
             }
         }
@@ -243,7 +247,11 @@ def test_domain_creation_org_admin(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "admin-create-domain-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "admin-create-domain-ca"
+                }
+            ) {
                 url
             }
         }
@@ -411,7 +419,11 @@ def test_domain_creation_user_write(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "user-write-create-domain-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "user-write-create-domain-ca"
+                }
+            ) {
                 url
             }
         }

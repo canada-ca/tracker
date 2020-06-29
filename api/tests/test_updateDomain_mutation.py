@@ -79,7 +79,11 @@ def test_domain_update_super_admin(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "updated-sa-update-domain-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "updated-sa-update-domain-ca"
+                }
+            ) {
                 url
             }
         }
@@ -194,7 +198,11 @@ def test_domain_update_org_admin(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "updated-admin-create-domain-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "updated-admin-create-domain-ca"
+                }
+            ) {
                 url
             }
         }
@@ -365,7 +373,11 @@ def test_domain_update_user_write(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "updated-user-write-domain-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "updated-user-write-domain-ca"
+                }
+            ) {
                 url
             }
         }

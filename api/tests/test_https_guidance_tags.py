@@ -57,7 +57,9 @@ def test_dkim_guidance_tags_https_2(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -124,7 +126,9 @@ def test_dkim_guidance_tags_https_3(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -191,7 +195,9 @@ def test_dkim_guidance_tags_https_4(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -258,7 +264,9 @@ def test_dkim_guidance_tags_https_5(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -325,7 +333,9 @@ def test_dkim_guidance_tags_https_6(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -392,7 +402,9 @@ def test_dkim_guidance_tags_https_7(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -459,7 +471,9 @@ def test_dkim_guidance_tags_https_8(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -526,7 +540,9 @@ def test_dkim_guidance_tags_https_9(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -593,7 +609,9 @@ def test_dkim_guidance_tags_https_10(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -660,7 +678,9 @@ def test_dkim_guidance_tags_https_11(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -727,7 +747,9 @@ def test_dkim_guidance_tags_https_12(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -794,7 +816,9 @@ def test_dkim_guidance_tags_https_13(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
@@ -861,7 +885,9 @@ def test_dkim_guidance_tags_https_14(save):
         mutation="""
         {
             findDomainBySlug(
-                urlSlug: "test-domain-ca"
+                input: {
+                    urlSlug: "test-domain-ca"
+                }
             ) {
                 web {
                     edges {
