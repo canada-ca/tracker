@@ -7,6 +7,7 @@ resources:
 - letsencrypt-issuer.yaml
 - knative/config/domain-config.yaml
 - knative/config/config.yaml
+- knative/config/autoscan.yaml
 - knative/monitoring/prometheus.yaml
 - knative/monitoring/grafana/grafana.yaml
 - pgo/operatorconfiguration.crd.yaml

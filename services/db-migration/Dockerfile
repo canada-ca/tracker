@@ -1,12 +1,13 @@
-FROM alpine:3.12.0
+FROM alpine
 
 RUN apk update && apk add --no-cache \
 python3-dev py3-pip gcc musl-dev postgresql-dev postgresql-contrib bash
 
-COPY . ./
+COPY . /app
+
+WORKDIR /app
 
 # Install dependencies.
 RUN python3 -m pip install -r requirements.txt
 
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]
+CMD ["alembic","--config=/migrations/alembic.ini", "upgrade", "head"]
