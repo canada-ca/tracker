@@ -3,14 +3,13 @@ import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
 import { FIND_DOMAIN_BY_SLUG } from './graphql/queries'
 import { Stack, Text } from '@chakra-ui/core'
-import { string } from 'prop-types'
 import { dmarc, spf, dkim, ssl, https } from './GuidanceTagConstants'
+import { useParams } from 'react-router-dom'
 
-export function DmarcGuidancePage({ match }) {
+export function DmarcGuidancePage() {
   const { currentUser } = useUserState()
-  const {
-    params: { urlSlug },
-  } = match
+
+  const { domainSlug } = useParams()
 
   const { loading, error, data } = useQuery(FIND_DOMAIN_BY_SLUG, {
     context: {
@@ -19,7 +18,7 @@ export function DmarcGuidancePage({ match }) {
       },
     },
     variables: {
-      urlSlug: urlSlug,
+      urlSlug: domainSlug,
     },
   })
 
@@ -38,8 +37,8 @@ export function DmarcGuidancePage({ match }) {
 
   return (
     <Stack>
-      <Text as="b">WEB</Text>
-      <Text as="b">https</Text>
+      <Text fontWeight="bold">WEB</Text>
+      <Text fontWeight="bold">https</Text>
       {httpsTags.map((tag) => {
         return (
           <Stack isInline>
@@ -49,7 +48,7 @@ export function DmarcGuidancePage({ match }) {
           </Stack>
         )
       })}
-      <Text as="b">ssl</Text>
+      <Text fontWeight="bold">ssl</Text>
       {sslTags.map((tag) => {
         return (
           <Stack isInline>
@@ -59,8 +58,8 @@ export function DmarcGuidancePage({ match }) {
           </Stack>
         )
       })}
-      <Text as="B">EMAIL</Text>
-      <Text as="b">dmarc</Text>
+      <Text fontWeight="bold">EMAIL</Text>
+      <Text fontWeight="bold">dmarc</Text>
       {dmarcTags.map((tag) => {
         return (
           <Stack isInline>
@@ -70,7 +69,7 @@ export function DmarcGuidancePage({ match }) {
           </Stack>
         )
       })}
-      <Text as="b">spf</Text>
+      <Text fontWeight="bold">spf</Text>
       {spfTags.map((tag) => {
         return (
           <Stack isInline>
@@ -80,7 +79,7 @@ export function DmarcGuidancePage({ match }) {
           </Stack>
         )
       })}
-      <Text as="b">dkim</Text>
+      <Text fontWeight="bold">dkim</Text>
       {dkimTags.map((tag) => {
         return (
           <Stack isInline>
@@ -94,10 +93,4 @@ export function DmarcGuidancePage({ match }) {
   )
 }
 
-DmarcGuidancePage.propTypes = {
-  match: {
-    params: {
-      urlSlug: string,
-    },
-  },
-}
+DmarcGuidancePage.propTypes = {}
