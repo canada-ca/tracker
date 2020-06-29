@@ -51,13 +51,13 @@ class Domain(SQLAlchemyObjectType):
 
     def resolve_email(self: Domains, info):
         query = MailScan.get_query(info)
-        query = query.filter(Mail_scans.domain_id == self.id)
-        return query.all()
+        query = query.filter(Mail_scans.domain_id == self.id).all()
+        return query
 
     def resolve_web(self: Domains, info):
         query = WebScan.get_query(info)
-        query = query.filter(Web_scans.domain_id == self.id)
-        return query.all()
+        query = query.filter(Web_scans.domain_id == self.id).all()
+        return query
 
 
 class DomainConnection(relay.Connection):

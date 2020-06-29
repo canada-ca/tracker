@@ -66,8 +66,8 @@ class UserPage(SQLAlchemyObjectType):
 
         if user_id == self.id or is_super_admin(user_roles=user_roles):
             query = UserPageAffiliations.get_query(info)
-            query = query.filter(User_affiliations.user_id == self.id)
-            return query.all()
+            query = query.filter(User_affiliations.user_id == self.id).all()
+            return query
         else:
             rtr_list = []
             for role in user_roles:

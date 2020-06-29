@@ -51,15 +51,18 @@ class MailScan(SQLAlchemyObjectType):
 
     def resolve_dmarc(self: Mail_scans, info):
         query = DMARC.get_query(info)
-        return query.filter(self.id == Dmarc_scans.id).first()
+        query = query.filter(self.id == Dmarc_scans.id).first()
+        return query
 
     def resolve_spf(self: Mail_scans, info):
         query = SPF.get_query(info)
-        return query.filter(self.id == Spf_scans.id).first()
+        query = query.filter(self.id == Spf_scans.id).first()
+        return query
 
     def resolve_dkim(self: Mail_scans, info):
         query = DKIM.get_query(info)
-        return query.filter(self.id == Dkim_scans.id).first()
+        query = query.filter(self.id == Dkim_scans.id).first()
+        return query
 
 
 class MailScanConnection(relay.Connection):

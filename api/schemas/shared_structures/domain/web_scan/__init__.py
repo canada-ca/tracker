@@ -33,11 +33,13 @@ class WebScan(SQLAlchemyObjectType):
 
     def resolve_https(self: Web_scans, info):
         query = HTTPS.get_query(info)
-        return query.filter(self.id == Https_scans.id).first()
+        query = query.filter(self.id == Https_scans.id).first()
+        return query
 
     def resolve_ssl(self: Web_scans, info):
         query = SSL.get_query(info)
-        return query.filter(self.id == Ssl_scans.id).first()
+        query = query.filter(self.id == Ssl_scans.id).first()
+        return query
 
 
 class WebScanConnection(relay.Connection):
