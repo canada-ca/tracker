@@ -648,6 +648,15 @@ type EmailVerifyAccount {
 }
 
 """
+Input object with the various fields required for the EmailVerifyAccount
+mutation
+"""
+input EmailVerifyAccountInput {
+  """Token in sent via email, and located in url"""
+  tokenString: String!
+}
+
+"""
 Http Scan Object
 """
 type HTTPS {
@@ -878,9 +887,9 @@ type Mutation {
   """
   emailVerifyAccount(
     """
-    Token in sent via email, and located in url
+    Input object containing various fields required for emailVerifyAccount mutation.
     """
-    tokenString: String!
+    input: EmailVerifyAccountInput!
   ): EmailVerifyAccount
 
   """
