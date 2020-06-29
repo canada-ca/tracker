@@ -124,6 +124,21 @@ type CreateDomain {
 }
 
 """
+Input object used to define the argument fields for the createDomain
+mutation
+"""
+input CreateDomainInput {
+  """Organizations slug that you would like to connect this domain to."""
+  orgSlug: Slug!
+
+  """URL that you would like to be added to database."""
+  url: URL!
+
+  """DKIM selector strings corresponding to this domain"""
+  selectors: Selectors
+}
+
+"""
 Mutation allows the creation of an organization inside the database.
 """
 type CreateOrganization {
@@ -846,19 +861,9 @@ type Mutation {
   """
   createDomain(
     """
-    Organizations slug that you would like to connect this domain to.
+    Input object containing all arguement fields.
     """
-    orgSlug: Slug!
-
-    """
-    DKIM selector strings corresponding to this domain
-    """
-    selectors: Selectors
-
-    """
-    URL that you would like to be added to database.
-    """
-    url: URL!
+    input: CreateDomainInput!
   ): CreateDomain
 
   """
