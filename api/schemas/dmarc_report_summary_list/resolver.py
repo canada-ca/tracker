@@ -35,7 +35,7 @@ def resolve_dmarc_report_summary_list(self, info, **kwargs):
     """
     user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
-    domain_slug = cleanse_input(kwargs.get("domain_slug"))
+    domain_slug = cleanse_input(kwargs.get("input", {}).get("domain_slug"))
 
     # Get Domain ORM
     domain_orm = db_session.query(Domains).filter(Domains.slug == domain_slug).first()
