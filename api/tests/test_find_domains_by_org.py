@@ -48,7 +48,11 @@ def test_find_domains_by_org_super_admin_single_node(save, caplog):
     result = run(
         query="""
         {
-            findDomainsByOrg(orgSlug: "organization-1") {
+            findDomainsByOrg(
+                input: {
+                    orgSlug: "organization-1"
+                }
+            ) {
                 edges {
                     node {
                         url
@@ -112,7 +116,11 @@ def test_find_domains_by_org_super_admin_multi_node(save, caplog):
     result = run(
         query="""
         {
-            findDomainsByOrg(orgSlug: "organization-1") {
+            findDomainsByOrg(
+                input: {
+                    orgSlug: "organization-1"
+                }
+            ) {
                 edges {
                     node {
                         url
@@ -174,7 +182,11 @@ def test_find_domains_by_org_super_admin_org_no_domains(save, caplog):
     result = run(
         query="""
         {
-            findDomainsByOrg(orgSlug: "organization-1") {
+            findDomainsByOrg(
+                input: {
+                    orgSlug: "organization-1"
+                }
+            ) {
                 edges {
                     node {
                         url
@@ -229,7 +241,11 @@ def test_find_domains_by_org_user_read_multi_node(save, caplog):
     result = run(
         query="""
         {
-            findDomainsByOrg(orgSlug: "organization-1") {
+            findDomainsByOrg(
+                input: {
+                    orgSlug: "organization-1"
+                }
+            ) {
                 edges {
                     node {
                         url
@@ -296,7 +312,11 @@ def test_find_domains_by_org_user_read_no_access(save, caplog):
     result = run(
         query="""
         {
-            findDomainsByOrg(orgSlug: "organization-2") {
+            findDomainsByOrg(
+                input: {
+                    orgSlug: "organization-2"
+                }
+            ) {
                 edges {
                     node {
                         url
@@ -345,7 +365,11 @@ def test_find_domains_by_org_user_read_org_no_domains(save, caplog):
     result = run(
         query="""
         {
-            findDomainsByOrg(orgSlug: "organization-1") {
+            findDomainsByOrg(
+                input: {
+                    orgSlug: "organization-1"
+                }
+            ) {
                 edges {
                     node {
                         url

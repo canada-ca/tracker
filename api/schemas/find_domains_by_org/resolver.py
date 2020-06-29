@@ -22,9 +22,9 @@ def resolve_find_domains_by_org(self, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in from kwargs
-    org_slug = cleanse_input(kwargs.get("org_slug"))
     user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
+    org_slug = cleanse_input(kwargs.get("input", {}).get("org_slug"))
 
     # Generate list of org's the user has access to
     org_ids = []
