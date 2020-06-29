@@ -95,7 +95,11 @@ export const QUERY_USER = gql`
 
 export const DMARC_REPORT_SUMMARY_LIST = gql`
   query DmarcReportSummaryList($domainSlug: Slug!) {
-    dmarcReportSummaryList(domainSlug: $domainSlug) {
+    dmarcReportSummaryList(
+      input: {
+        domainSlug: $domainSlug
+      }
+    ) {
       month
       year
       categoryTotals {
@@ -110,7 +114,11 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
 
 export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
   query DemoDmarcReportSummaryList($domainSlug: Slug!) {
-    demoDmarcReportSummaryList(domainSlug: $domainSlug) {
+    demoDmarcReportSummaryList(
+      input: {
+        domainSlug: $domainSlug
+      }
+    ) {
       month
       year
       categoryTotals {
@@ -129,7 +137,13 @@ export const DMARC_REPORT_SUMMARY = gql`
     $period: PeriodEnums!
     $year: Year!
   ) {
-    dmarcReportSummary(domainSlug: $domainSlug, period: $period, year: $year) {
+    dmarcReportSummary(
+      input: {
+        domainSlug: $domainSlug,
+        period: $period,
+        year: $year
+      }
+    ) {
       month
       year
       categoryTotals {
@@ -149,9 +163,11 @@ export const DEMO_DMARC_REPORT_SUMMARY = gql`
     $year: Year!
   ) {
     demoDmarcReportSummary(
-      domainSlug: $domainSlug
-      period: $period
-      year: $year
+      input: {
+        domainSlug: $domainSlug,
+        period: $period,
+        year: $year
+      }
     ) {
       month
       year

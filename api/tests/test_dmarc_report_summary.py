@@ -64,9 +64,11 @@ def test_valid_get_dmarc_report_summary_query_as_super_admin(save, mocker, caplo
         query="""
         {
             dmarcReportSummary (
-                domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
+                input: {
+                    domainSlug: "test-domain-gc-ca"
+                    period: MAY
+                    year: "2020"
+                }
             ) {
                 year
                 month
@@ -142,9 +144,11 @@ def test_valid_get_dmarc_report_summary_query_as_org_admin(save, mocker, caplog)
         query="""
         {
             dmarcReportSummary (
-                domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
+                input: {
+                    domainSlug: "test-domain-gc-ca"
+                    period: MAY
+                    year: "2020"
+                }
             ) {
                 year
                 month
@@ -220,9 +224,11 @@ def test_valid_get_dmarc_report_summary_query_as_user_write(save, mocker, caplog
         query="""
         {
             dmarcReportSummary (
-                domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
+                input: {
+                    domainSlug: "test-domain-gc-ca"
+                    period: MAY
+                    year: "2020"
+                }
             ) {
                 year
                 month
@@ -298,9 +304,11 @@ def test_valid_get_dmarc_report_summary_query_as_user_read(save, mocker, caplog)
         query="""
         {
             dmarcReportSummary (
-                domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
+                input: {
+                    domainSlug: "test-domain-gc-ca"
+                    period: MAY
+                    year: "2020"
+                }
             ) {
                 year
                 month
@@ -383,9 +391,11 @@ def test_dmarc_report_summary_admin_from_different_org_cant_access_data(
         query="""
         {
             dmarcReportSummary (
-                domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
+                input: {
+                    domainSlug: "test-domain-gc-ca"
+                    period: MAY
+                    year: "2020"
+                }
             ) {
                 year
                 month
@@ -454,9 +464,11 @@ def test_dmarc_report_summary_user_write_from_different_org_cant_access_data(
         query="""
         {
             dmarcReportSummary (
-                domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
+                input: {
+                    domainSlug: "test-domain-gc-ca"
+                    period: MAY
+                    year: "2020"
+                }
             ) {
                 year
                 month
@@ -525,9 +537,11 @@ def test_dmarc_report_summary_user_read_from_different_org_cant_access_data(
         query="""
         {
             dmarcReportSummary (
-                domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
+                input: {
+                    domainSlug: "test-domain-gc-ca"
+                    period: MAY
+                    year: "2020"
+                }
             ) {
                 year
                 month
@@ -588,9 +602,11 @@ def test_dmarc_report_summary_to_ensure_error_occurs_when_domain_does_not_exist(
         query="""
         {
             dmarcReportSummary (
-                domainSlug: "test-domain-gc-ca"
-                period: MAY
-                year: "2020"
+                input: {
+                    domainSlug: "test-domain-gc-ca"
+                    period: MAY
+                    year: "2020"
+                }
             ) {
                 year
                 month
