@@ -11,7 +11,8 @@ steps:
   - name: 'gcr.io/track-compliance/services/db-migration'
     id: start_dbmigrate
     entrypoint: /bin/sh
-    args: ["-c", "ls && cd .. && ls && alembic --config=/app/migrations/alembic.ini upgrade head"]
+    dir: ../app
+    args: ["-c", "alembic --config=/app/migrations/alembic.ini upgrade head"]
     env:
       - POSTGRES_USER=track_dmarc
       - POSTGRES_PASSWORD=postgres
