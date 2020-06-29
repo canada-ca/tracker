@@ -746,6 +746,16 @@ input EmailVerifyAccountInput {
 }
 
 """
+This object contains the fields required for the findDomainsBySlug query
+"""
+input FindDomainBySlugInput {
+  """
+  Slugified version of the domain that you are requesting information on.
+  """
+  urlSlug: Slug!
+}
+
+"""
 Http Scan Object
 """
 type HTTPS {
@@ -1497,7 +1507,12 @@ type Query {
   """
   Select information on a specific domain.
   """
-  findDomainBySlug(urlSlug: Slug!): Domain
+  findDomainBySlug(
+    """
+    Input object containing required fields for the findDomainsBySlug query
+    """
+    input: FindDomainBySlugInput!
+  ): Domain
 
   """
   Select information on an organizations domains, or all domains a user has access to.
