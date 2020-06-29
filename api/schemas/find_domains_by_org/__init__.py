@@ -9,7 +9,8 @@ from schemas.shared_structures.domain import Domain
 
 class FindDomainsByOrgInput(graphene.InputObjectType):
     """
-    This object contains all required fields required for
+    This object contains all required fields required for the findDomainsByOrg
+    query.
     """
 
     org_slug = Slug(
