@@ -13,6 +13,8 @@ import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
+import { DmarcReportGuidance } from './DmarcReportGuidance'
+import { DmarcGuidancePage } from './DmarcGuidancePage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -149,6 +151,8 @@ export default function App() {
               <Route path="/dmarc-report">
                 <DmarcReportPage />
               </Route>
+
+              <Route path="/domain/:urlSlug" component={DmarcGuidancePage} />
 
               <Route component={PageNotFound} />
             </Switch>
