@@ -11,22 +11,33 @@ from schemas.dmarc_report_detail_tables.resolver import (
     resolve_demo_dmarc_report_detail_tables,
 )
 
-dmarc_report_detail_tables = graphene.Field(
-    lambda: DmarcReportDetailTables,
-    domain_slug=graphene.Argument(
-        Slug,
+
+class DmarcReportDetailTablesInput(graphene.InputObjectType):
+    """
+    Input object containing fields which map to the required arguments for
+    dmarcReportDetailTablesInput
+    """
+
+    domain_slug = Slug(
         description="The slugified version of the domain you wish to retrieve data for.",
         required=True,
-    ),
-    period=graphene.Argument(
-        PeriodEnums,
+    )
+    period = PeriodEnums(
         description="The period in which the returned data is relevant to.",
         required=True,
-    ),
-    year=graphene.Argument(
-        Year,
+    )
+    year = Year(
         description="The year in which the returned data is relevant to.",
         required=True,
+    )
+
+
+dmarc_report_detail_tables = graphene.Field(
+    lambda: DmarcReportDetailTables,
+    input=DmarcReportDetailTablesInput(
+        required=True,
+        description="Input object containing fields which map to the required "
+        "arguments for dmarcReportDetailTablesInput",
     ),
     resolver=resolve_dmarc_report_detail_tables,
     description="Query used for gathering data for dmarc report detail tables.",
@@ -35,20 +46,10 @@ dmarc_report_detail_tables = graphene.Field(
 
 demo_dmarc_report_detail_tables = graphene.Field(
     lambda: DmarcReportDetailTables,
-    domain_slug=graphene.Argument(
-        Slug,
-        description="The slugified version of the domain you wish to retrieve data for.",
+    input=DmarcReportDetailTablesInput(
         required=True,
-    ),
-    period=graphene.Argument(
-        PeriodEnums,
-        description="The period in which the returned data is relevant to.",
-        required=True,
-    ),
-    year=graphene.Argument(
-        Year,
-        description="The year in which the returned data is relevant to.",
-        required=True,
+        description="Input object containing fields which map to the required "
+        "arguments for dmarcReportDetailTablesInput",
     ),
     resolver=resolve_demo_dmarc_report_detail_tables,
     description="Query used for gathering data for dmarc report detail tables.",
