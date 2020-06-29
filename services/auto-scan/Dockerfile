@@ -5,7 +5,7 @@ ENV HOME /autoscan
 WORKDIR $HOME
 COPY . ./
 
-RUN useradd -r -u 1001 -g autoscan autoscan
+RUN useradd -r -u 1001 autoscan
 USER autoscan
 
 RUN apt-get update
