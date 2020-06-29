@@ -40,16 +40,56 @@ export function DmarcGuidancePage({ match }) {
     <Stack>
       <Text as="b">WEB</Text>
       <Text as="b">https</Text>
-      <Text>{httpsTags}</Text>
+      {httpsTags.map((tag) => {
+        return (
+          <Stack isInline>
+            <Text>{tag}</Text>
+            <Text>{https[tag].tag_name}</Text>
+            <Text>{https[tag].guidance}</Text>
+          </Stack>
+        )
+      })}
       <Text as="b">ssl</Text>
-      <Text>{sslTags}</Text>
+      {sslTags.map((tag) => {
+        return (
+          <Stack isInline>
+            <Text>{tag}</Text>
+            <Text>{ssl[tag].tag_name}</Text>
+            <Text>{ssl[tag].guidance}</Text>
+          </Stack>
+        )
+      })}
       <Text as="B">EMAIL</Text>
       <Text as="b">dmarc</Text>
-      <Text>{dmarcTags}</Text>
+      {dmarcTags.map((tag) => {
+        return (
+          <Stack isInline>
+            <Text>{tag}</Text>
+            <Text>{dmarc[tag].tag_name}</Text>
+            <Text>{dmarc[tag].guidance}</Text>
+          </Stack>
+        )
+      })}
       <Text as="b">spf</Text>
-      <Text>{spfTags}</Text>
+      {spfTags.map((tag) => {
+        return (
+          <Stack isInline>
+            <Text>{tag}</Text>
+            <Text>{spf[tag].tag_name}</Text>
+            <Text>{spf[tag].guidance}</Text>
+          </Stack>
+        )
+      })}
       <Text as="b">dkim</Text>
-      <Text>{dkimTags}</Text>
+      {dkimTags.map((tag) => {
+        return (
+          <Stack isInline>
+            <Text>{tag}</Text>
+            <Text>{dkim[tag].tag_name}</Text>
+            <Text>{dkim[tag].guidance}</Text>
+          </Stack>
+        )
+      })}
     </Stack>
   )
 }
