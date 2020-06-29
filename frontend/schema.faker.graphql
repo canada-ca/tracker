@@ -858,9 +858,9 @@ type Mutation {
   """
   removeDomain(
     """
-    URL of domain that is being removed
+    Input object containing all required fields for mutation to run.
     """
-    url: URL!
+    input: RemoveDomainInputObject!
   ): RemoveDomain
 
   """
@@ -1466,6 +1466,16 @@ This mutation allows the removal of unused domains
 """
 type RemoveDomain {
   status: Boolean
+}
+
+"""
+Input object containing all required fields for the removeDomain mutation
+"""
+input RemoveDomainInputObject {
+  """
+  URL of domain that is being removed
+  """
+  url: URL!
 }
 
 """
