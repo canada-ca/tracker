@@ -1,4 +1,5 @@
 import graphene
+
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
@@ -50,13 +51,21 @@ class Domain(SQLAlchemyObjectType):
         return self.last_run
 
     def resolve_email(self: Domains, info):
-        query = MailScan.get_query(info)
-        query = query.filter(Mail_scans.domain_id == self.id).all()
+        query = (
+            MailScan.get_query(info)
+            .filter(Mail_scans.domain_id == self.id)
+            .order_by(Mail_scans.id.desc())
+            .all()
+        )
         return query
 
     def resolve_web(self: Domains, info):
-        query = WebScan.get_query(info)
-        query = query.filter(Web_scans.domain_id == self.id).all()
+        query = (
+            WebScan.get_query(info)
+            .filter(Web_scans.domain_id == self.id)
+            .order_by(Web_scans.id.desc())
+            .all()
+        )
         return query
 
 
