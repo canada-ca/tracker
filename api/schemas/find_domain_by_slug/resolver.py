@@ -21,9 +21,9 @@ def resolve_find_domain_by_slug(self: Domain, info, **kwargs):
     :return: Filtered Domain SQLAlchemyObject Type
     """
     # Get Information passed in via kwargs
-    url_slug = cleanse_input(kwargs.get("url_slug"))
     user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
+    url_slug = cleanse_input(kwargs.get("input", {}).get("url_slug"))
 
     # Get initial Domain Query Object
     query = Domain.get_query(info)

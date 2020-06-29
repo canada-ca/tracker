@@ -48,7 +48,11 @@ def test_find_domain_by_slug_super_admin(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "sa-test-domain-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "sa-test-domain-ca"
+                }
+            ) {
                 url
             }
         }
@@ -99,7 +103,11 @@ def test_find_domain_by_slug_super_admin_invalid_domain(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "google-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "google-ca"
+                }
+            ) {
                 url
             }
         }
@@ -146,7 +154,11 @@ def test_find_domain_by_slug_user_read(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "user-read-test-domain-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "user-read-test-domain-ca"
+                }
+            ) {
                 url
             }
         }
@@ -202,7 +214,11 @@ def test_find_domain_by_slug_user_read_no_access(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "user-read-1-test-domain-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "user-read-1-test-domain-ca"
+                }
+            ) {
                 url
             }
         }
@@ -243,7 +259,11 @@ def test_find_domain_by_slug_user_read_invalid_domain(save, caplog):
     result = run(
         query="""
         {
-            findDomainBySlug(urlSlug: "google-ca") {
+            findDomainBySlug(
+                input: {
+                    urlSlug: "google-ca"
+                }
+            ) {
                 url
             }
         }
