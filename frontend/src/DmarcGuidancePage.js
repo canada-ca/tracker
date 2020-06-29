@@ -5,6 +5,7 @@ import { FIND_DOMAIN_BY_SLUG } from './graphql/queries'
 import { Stack, Text } from '@chakra-ui/core'
 import { dmarc, spf, dkim, ssl, https } from './GuidanceTagConstants'
 import { useParams } from 'react-router-dom'
+import { ScanCard } from './ScanCard'
 
 export function DmarcGuidancePage() {
   const { currentUser } = useUserState()
@@ -23,7 +24,7 @@ export function DmarcGuidancePage() {
   })
 
   if (loading) return <p>Loading</p>
-  if (error) return <p>Error</p>
+  if (error) return <p>Error</p> // TODO: Handle this error
 
   const httpsTags =
     data.findDomainBySlug.web.edges[0].node.https.httpsGuidanceTags
@@ -35,8 +36,14 @@ export function DmarcGuidancePage() {
   const dkimTags =
     data.findDomainBySlug.email.edges[0].node.dkim.dkimGuidanceTags
 
+  const webScan = data.findDomainBySlug.web.edges[0].node
+  const emailScan = data.findDomainBySlug.email.edges[0].node
+
+  console.log(webScan)
+
   return (
     <Stack>
+      <ScanCard scanType="web" scanData={webScan} />
       <Text fontWeight="bold">WEB</Text>
       <Text fontWeight="bold">https</Text>
       {httpsTags.map((tag) => {

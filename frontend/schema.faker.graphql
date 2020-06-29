@@ -200,7 +200,7 @@ type DKIM {
   """
   Key tags found during scan
   """
-  dkimGuidanceTags: [String]
+  dkimGuidanceTags: [String] @listLength(min: 0, max: 4)
     @examples(
       values: [
         "dkim1"
@@ -289,7 +289,7 @@ type DMARC {
   """
   Key tags found during DMARC Scan
   """
-  dmarcGuidanceTags: [String]
+  dmarcGuidanceTags: [String] @listLength(min: 0, max: 4)
     @examples(
       values: [
         "dmarc1"
@@ -669,7 +669,7 @@ type HTTPS {
   """
   preloaded: String
 
-  httpsGuidanceTags: [String]
+  httpsGuidanceTags: [String] @listLength(min: 0, max: 4)
     @examples(
       values: [
         "https1"
@@ -1716,7 +1716,7 @@ type SPF {
   """
   Key tags found during SPF scan
   """
-  spfGuidanceTags: [String]
+  spfGuidanceTags: [String] @listLength(min: 0, max: 4)
     @examples(
       values: [
         "spf1"
@@ -1778,7 +1778,7 @@ type SSL {
   """
   Key tags found during scan
   """
-  sslGuidanceTags: [String]
+  sslGuidanceTags: [String] @listLength(min: 0, max: 4)
     @examples(
       values: ["ssl1", "ssl2", "ssl3", "ssl4", "ssl5", "ssl6", "ssl7", "ssl8"]
     )
