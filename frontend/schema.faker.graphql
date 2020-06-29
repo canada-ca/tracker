@@ -481,6 +481,15 @@ type DmarcReportSummaryList {
 }
 
 """
+This object is used to define the various arguments used in the dmarc report
+summary list query
+"""
+input DmarcReportSummaryListInput {
+  """The slugified version of the domain you wish to retrieve data for."""
+  domainSlug: Slug!
+}
+
+"""
 Generated DMARC Aggregated Report's
 """
 type DmarcReport implements Node {
@@ -1379,9 +1388,19 @@ type Query {
   """
   dmarcReportSummaryList(
     """
-    The slugified version of the domain you wish to retrieve data for.
+    Input argument with various input fields required for the dmarc report summary list query
     """
-    domainSlug: Slug!
+    input: DmarcReportSummaryListInput!
+  ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
+
+  """
+  A query object used to grab the data to create dmarc report bar graph.
+  """
+  demoDmarcReportSummaryList(
+    """
+    Input argument with various input fields required for the dmarc report summary list query
+    """
+    input: DmarcReportSummaryListInput!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
