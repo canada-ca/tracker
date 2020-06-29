@@ -756,6 +756,16 @@ input FindDomainBySlugInput {
 }
 
 """
+This object contains all required fields required for the findDomainsByOrg query.
+"""
+input FindDomainsByOrgInput {
+  """
+  Slugified version of the organization's name that you are requesting domain information on.
+  """
+  orgSlug: Slug!
+}
+
+"""
 Http Scan Object
 """
 type HTTPS {
@@ -1518,7 +1528,10 @@ type Query {
   Select information on an organizations domains, or all domains a user has access to.
   """
   findDomainsByOrg(
-    orgSlug: Slug
+    """
+    Input object conataining all required input fields.
+    """
+    input: FindDomainsByOrgInput!
     before: String
     after: String
     first: Int
