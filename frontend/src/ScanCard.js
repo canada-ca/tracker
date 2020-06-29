@@ -2,8 +2,9 @@ import React from 'react'
 import { Stack, Text } from '@chakra-ui/core'
 import { object, string } from 'prop-types'
 import { ScanCategoryDetails } from './ScanCategoryDetails'
+import WithPseudoBox from './withPseudoBox'
 
-export function ScanCard({ scanType, scanData }) {
+function ScanCard({ scanType, scanData }) {
   const cardTitle =
     scanType === 'web'
       ? 'Web Scan Results'
@@ -19,26 +20,17 @@ export function ScanCard({ scanType, scanData }) {
 
   const scanCategories = ['https', 'ssl', 'dmarc', 'spf', 'dkim']
 
-  console.log(scanData)
-  console.log(Object.entries(scanData))
-
-  console.log(
-    Object.entries(scanData).filter(([categoryName, _categoryData]) => {
-      return scanCategories.includes(categoryName)
-    }),
-  )
-
   return (
     <Stack bg="gray.300" px="6px">
-      <Text fontSize="xl">{cardTitle}</Text>
+      <Text fontSize="xl" fontWeight="bold">
+        {cardTitle}
+      </Text>
       <Text>{cardDescription}</Text>
       {Object.entries(scanData)
         .filter(([categoryName, _categoryData]) =>
           scanCategories.includes(categoryName),
         )
         .map(([categoryName, categoryData]) => {
-          console.log('catname', categoryName)
-          console.log('data', categoryData)
           return (
             <ScanCategoryDetails
               categoryName={categoryName}
@@ -49,6 +41,8 @@ export function ScanCard({ scanType, scanData }) {
     </Stack>
   )
 }
+
+export default WithPseudoBox(ScanCard)
 
 ScanCard.propTypes = {
   scanType: string,

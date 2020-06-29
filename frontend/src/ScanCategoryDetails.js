@@ -1,15 +1,19 @@
 import React from 'react'
 import { object, string } from 'prop-types'
-import { Icon, Text } from '@chakra-ui/core'
+import { Box, Icon, Text } from '@chakra-ui/core'
+import { guidanceTags } from './GuidanceTagConstants'
 
 export function ScanCategoryDetails({ categoryName, categoryData }) {
-  const output = categoryData[`${categoryName}GuidanceTags`].length ? (
+  const categories = categoryData[`${categoryName}GuidanceTags`].length ? (
     categoryData[`${categoryName}GuidanceTags`].map((guidanceTag) => {
       return (
-        <Text>
-          <Icon name="warning" color="weak" />
-          {guidanceTag}
-        </Text>
+        <Box>
+          <Text>
+            <Icon name="warning" color="weak" />
+            {`${guidanceTag}: ${guidanceTags[categoryName][guidanceTag].tag_name}`}
+          </Text>
+          <Text paddingLeft="3rem" fontWeight="bold">{`Guidance: ${guidanceTags[categoryName][guidanceTag].guidance}`}</Text>
+        </Box>
       )
     })
   ) : (
@@ -21,8 +25,8 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
 
   return (
     <div>
-      <Text>{categoryName}</Text>
-      {output}
+      <Text fontWeight="bold">{categoryName}</Text>
+      {categories}
     </div>
   )
 }

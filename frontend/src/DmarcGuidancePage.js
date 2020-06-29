@@ -2,10 +2,9 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
 import { FIND_DOMAIN_BY_SLUG } from './graphql/queries'
-import { Stack, Text } from '@chakra-ui/core'
-import { dmarc, spf, dkim, ssl, https } from './GuidanceTagConstants'
+import { Stack } from '@chakra-ui/core'
 import { useParams } from 'react-router-dom'
-import { ScanCard } from './ScanCard'
+import ScanCard from './ScanCard'
 
 export function DmarcGuidancePage() {
   const { currentUser } = useUserState()
@@ -26,76 +25,13 @@ export function DmarcGuidancePage() {
   if (loading) return <p>Loading</p>
   if (error) return <p>Error</p> // TODO: Handle this error
 
-  const httpsTags =
-    data.findDomainBySlug.web.edges[0].node.https.httpsGuidanceTags
-  const sslTags = data.findDomainBySlug.web.edges[0].node.ssl.sslGuidanceTags
-
-  const dmarcTags =
-    data.findDomainBySlug.email.edges[0].node.dmarc.dmarcGuidanceTags
-  const spfTags = data.findDomainBySlug.email.edges[0].node.spf.spfGuidanceTags
-  const dkimTags =
-    data.findDomainBySlug.email.edges[0].node.dkim.dkimGuidanceTags
-
   const webScan = data.findDomainBySlug.web.edges[0].node
   const emailScan = data.findDomainBySlug.email.edges[0].node
 
-  console.log(webScan)
-
   return (
-    <Stack>
+    <Stack spacing="25px">
       <ScanCard scanType="web" scanData={webScan} />
-      <Text fontWeight="bold">WEB</Text>
-      <Text fontWeight="bold">https</Text>
-      {httpsTags.map((tag) => {
-        return (
-          <Stack isInline>
-            <Text>{tag}</Text>
-            <Text>{https[tag].tag_name}</Text>
-            <Text>{https[tag].guidance}</Text>
-          </Stack>
-        )
-      })}
-      <Text fontWeight="bold">ssl</Text>
-      {sslTags.map((tag) => {
-        return (
-          <Stack isInline>
-            <Text>{tag}</Text>
-            <Text>{ssl[tag].tag_name}</Text>
-            <Text>{ssl[tag].guidance}</Text>
-          </Stack>
-        )
-      })}
-      <Text fontWeight="bold">EMAIL</Text>
-      <Text fontWeight="bold">dmarc</Text>
-      {dmarcTags.map((tag) => {
-        return (
-          <Stack isInline>
-            <Text>{tag}</Text>
-            <Text>{dmarc[tag].tag_name}</Text>
-            <Text>{dmarc[tag].guidance}</Text>
-          </Stack>
-        )
-      })}
-      <Text fontWeight="bold">spf</Text>
-      {spfTags.map((tag) => {
-        return (
-          <Stack isInline>
-            <Text>{tag}</Text>
-            <Text>{spf[tag].tag_name}</Text>
-            <Text>{spf[tag].guidance}</Text>
-          </Stack>
-        )
-      })}
-      <Text fontWeight="bold">dkim</Text>
-      {dkimTags.map((tag) => {
-        return (
-          <Stack isInline>
-            <Text>{tag}</Text>
-            <Text>{dkim[tag].tag_name}</Text>
-            <Text>{dkim[tag].guidance}</Text>
-          </Stack>
-        )
-      })}
+      <ScanCard scanType="email" scanData={emailScan} />
     </Stack>
   )
 }
