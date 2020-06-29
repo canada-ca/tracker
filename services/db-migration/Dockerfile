@@ -10,4 +10,4 @@ WORKDIR /app
 # Install dependencies.
 RUN python3 -m pip install -r requirements.txt
 
-CMD ["alembic","--config=/app/migrations/alembic.ini", "upgrade", "head"]
+CMD ["alembic","--config=/migrations/alembic.ini", "upgrade", "head"]
