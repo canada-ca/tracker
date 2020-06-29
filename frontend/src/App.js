@@ -25,6 +25,7 @@ const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 const Organizations = lazy(() => import('./Organizations'))
 const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
+// const SummaryTablePage = lazy(() => import('./SummaryTablePage'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -91,6 +92,8 @@ export default function App() {
               </Route>
 
               <Route path="/sign-in" component={SignInPage} />
+
+              {/* <Route path="/summary-table" component={SummaryTablePage} /> */}
 
               <RouteIf
                 condition={isLoggedIn()}

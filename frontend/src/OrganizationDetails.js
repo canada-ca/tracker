@@ -49,7 +49,7 @@ export default function OrganizationDetails() {
   return (
     <Layout>
       <Stack spacing={10} shouldWrapChildren>
-        <Stack isInline>
+        <Stack isInline align="center">
           <Link as={ReactRouterLink} to={'/organizations'}>
             <Icon
               alt={i18n._(t`back to organizations`)}
