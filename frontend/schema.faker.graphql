@@ -39,6 +39,21 @@ type Authenticate {
 }
 
 """
+Object containing input fields for Authenticate Mutation
+"""
+input AuthenticateInput {
+  """
+  User email that they signed up with.
+  """
+  userName: EmailAddress!
+
+  """
+  Users password
+  """
+  password: String!
+}
+
+"""
 A type used to return information when users sign up or authenticate
 """
 type AuthResult {
@@ -891,14 +906,9 @@ type Mutation {
   """
   authenticate(
     """
-    Users password
+    AuthenticateInput object containing input fields
     """
-    password: String!
-
-    """
-    User email that they signed up with.
-    """
-    userName: EmailAddress!
+    input: AuthenticateInput!
   ): Authenticate
 
   """

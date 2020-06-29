@@ -63,8 +63,10 @@ def test_update_password_success(save, caplog):
         mutation="""
         mutation{
             authenticate(
-                userName:"testuser@testemail.ca",
-                password:"another-super-long-password"
+                input: {
+                    userName:"testuser@testemail.ca",
+                    password:"another-super-long-password"
+                }
             ) {
                 authResult {
                     user {
