@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { FIND_DOMAIN_BY_SLUG } from './graphql/queries'
 import { Stack, Text } from '@chakra-ui/core'
 import { string } from 'prop-types'
+import { dmarc, spf, dkim, ssl, https } from './GuidanceTagConstants'
 
 export function DmarcGuidancePage({ match }) {
   const { currentUser } = useUserState()
