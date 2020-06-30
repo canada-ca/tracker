@@ -26,7 +26,7 @@ from scalars.slug import Slug
 class RemoveOrganizationInput(graphene.InputObjectType):
     """
     Input object containing the required fields for the removeOrganization
-    mutation
+    mutation.
     """
 
     slug = Slug(
