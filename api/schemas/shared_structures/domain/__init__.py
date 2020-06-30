@@ -33,6 +33,7 @@ class Domain(SQLAlchemyObjectType):
     last_ran = graphene.DateTime(
         description="The last time that a scan was ran on this domain"
     )
+    selectors = graphene.List(lambda: graphene.String, description="",)
     organization = ORMField(model_attr="organization")
     email = graphene.ConnectionField(
         MailScan._meta.connection, description="DKIM, DMARC, and SPF scan results"
@@ -49,6 +50,9 @@ class Domain(SQLAlchemyObjectType):
 
     def resolve_last_ran(self: Domains, info, **kwargs):
         return self.last_run
+
+    def resolve_selectors(self: Domains, info, **kwargs):
+        return self.selectors
 
     def resolve_email(self: Domains, info, **kwargs):
         query = (
