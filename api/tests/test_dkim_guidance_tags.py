@@ -21,9 +21,9 @@ def save():
     cleanup()
 
 
-def test_dkim_guidance_tags_dkim_2(save):
+def test_dkim_guidance_tags_dkim_2_1(save):
     """
-    Test that dkim guidance tag dkim 2 shows up
+    Test that dkim guidance tag dkim 2 shows up when no selectors were scanned
     """
     org_one = Organizations(
         acronym="ORG1", name="Organization 1", slug="organization-1",
@@ -39,7 +39,7 @@ def test_dkim_guidance_tags_dkim_2(save):
     save(test_scan)
 
     test_dkim_scan = Dkim_scans(
-        id=test_scan.id, dkim_scan=dkim_mock_data.get("dkim_mock_data_dkim2")
+        id=test_scan.id, dkim_scan=dkim_mock_data.get("dkim_mock_data_dkim2_1")
     )
     save(test_dkim_scan)
 
@@ -63,7 +63,9 @@ def test_dkim_guidance_tags_dkim_2(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -83,8 +85,77 @@ def test_dkim_guidance_tags_dkim_2(save):
     assert (
         "dkim2"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
+    )
+
+
+def test_dkim_guidance_tags_dkim_2_2(save):
+    """
+    Test that dkim guidance tag dkim 2 shows up when selector scan failed
+    """
+    org_one = Organizations(
+        acronym="ORG1", name="Organization 1", slug="organization-1",
+    )
+    save(org_one)
+
+    test_domain = Domains(
+        organization=org_one, domain="test.domain.ca", slug="test-domain-ca"
+    )
+    save(test_domain)
+
+    test_scan = Mail_scans(domain=test_domain)
+    save(test_scan)
+
+    test_dkim_scan = Dkim_scans(
+        id=test_scan.id, dkim_scan=dkim_mock_data.get("dkim_mock_data_dkim2_2")
+    )
+    save(test_dkim_scan)
+
+    user = Users(
+        display_name="testuser",
+        user_name="testuser@testemail.ca",
+        password="testpassword123",
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one),
+        ],
+    )
+    save(user)
+
+    result = run(
+        mutation="""
+        {
+            findDomainBySlug(
+                urlSlug: "test-domain-ca"
+            ) {
+                email {
+                    edges {
+                        node {
+                            dkim {
+                                selectors {
+                                    dkimGuidanceTags
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        """,
+        as_user=user,
+    )
+
+    if "errors" in result:
+        fail(
+            "expected dkim guidance tags to be returned. Instead:"
+            "{}".format(json(result))
+        )
+
+    assert (
+        "dkim2"
+        in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )
 
 
@@ -130,7 +201,9 @@ def test_dkim_guidance_tags_dkim_5(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -150,8 +223,8 @@ def test_dkim_guidance_tags_dkim_5(save):
     assert (
         "dkim5"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )
 
 
@@ -197,7 +270,9 @@ def test_dkim_guidance_tags_dkim_6(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -217,8 +292,8 @@ def test_dkim_guidance_tags_dkim_6(save):
     assert (
         "dkim6"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )
 
 
@@ -264,7 +339,9 @@ def test_dkim_guidance_tags_dkim_7(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -284,8 +361,8 @@ def test_dkim_guidance_tags_dkim_7(save):
     assert (
         "dkim7"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )
 
 
@@ -331,7 +408,9 @@ def test_dkim_guidance_tags_dkim_8(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -351,8 +430,8 @@ def test_dkim_guidance_tags_dkim_8(save):
     assert (
         "dkim8"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )
 
 
@@ -398,7 +477,9 @@ def test_dkim_guidance_tags_dkim_9(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -418,8 +499,8 @@ def test_dkim_guidance_tags_dkim_9(save):
     assert (
         "dkim9"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )
 
 
@@ -465,7 +546,9 @@ def test_dkim_guidance_tags_dkim_10(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -485,8 +568,8 @@ def test_dkim_guidance_tags_dkim_10(save):
     assert (
         "dkim10"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )
 
 
@@ -532,7 +615,9 @@ def test_dkim_guidance_tags_dkim_11(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -552,8 +637,8 @@ def test_dkim_guidance_tags_dkim_11(save):
     assert (
         "dkim11"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )
 
 
@@ -599,7 +684,9 @@ def test_dkim_guidance_tags_dkim_12(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -619,8 +706,8 @@ def test_dkim_guidance_tags_dkim_12(save):
     assert (
         "dkim12"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )
 
 
@@ -666,7 +753,9 @@ def test_dkim_guidance_tags_dkim_13(save):
                     edges {
                         node {
                             dkim {
-                                dkimGuidanceTags
+                                selectors {
+                                    dkimGuidanceTags
+                                }
                             }
                         }
                     }
@@ -686,6 +775,6 @@ def test_dkim_guidance_tags_dkim_13(save):
     assert (
         "dkim13"
         in result["data"]["findDomainBySlug"]["email"]["edges"][0]["node"]["dkim"][
-            "dkimGuidanceTags"
-        ]
+            "selectors"
+        ][0]["dkimGuidanceTags"]
     )

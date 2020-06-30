@@ -39,10 +39,22 @@ class DKIM(SQLAlchemyObjectType):
         dkim_record = self.dkim_scan.get("dkim", None)
 
         if dkim_record is not None:
-            for k, v in dkim_record.items():
+            missing_check = dkim_record.get("missing")
+
+            if missing_check is True:
                 rtr_list.append(
                     DkimSelectors(
-                        selector=k, record=v, key_length=v, dkim_guidance_tags=v,
+                        selector=None,
+                        record=None,
+                        key_length=None,
+                        dkim_guidance_tags={"missing": True},
                     )
                 )
+            else:
+                for k, v in dkim_record.items():
+                    rtr_list.append(
+                        DkimSelectors(
+                            selector=k, record=v, key_length=v, dkim_guidance_tags=v,
+                        )
+                    )
         return rtr_list
