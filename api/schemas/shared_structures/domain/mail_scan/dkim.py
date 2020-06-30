@@ -38,10 +38,12 @@ class DKIM(SQLAlchemyObjectType):
         get_timestamp(self, info)
 
     def resolve_record(self, info, **kwargs):
-        return self.dkim_scan["dkim"]["txt_record"]
+        record = self.dkim_scan.get("dkim", {}).get("txt_record", None)
+        return record
 
     def resolve_key_length(self, info, **kwargs):
-        return self.dkim_scan["dkim"]["key_size"]
+        key_length = self.dkim_scan.get("dkim", {}).get("key_size", None)
+        return key_length
 
     def resolve_dkim_guidance_tags(self, info, **kwargs):
         tags = []
