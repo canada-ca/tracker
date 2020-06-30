@@ -3,7 +3,6 @@ import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
 import {
   DEMO_DMARC_REPORT_DETAIL_TABLES,
-  DEMO_DMARC_REPORT_SUMMARY,
   DEMO_DMARC_REPORT_SUMMARY_LIST,
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
@@ -13,28 +12,13 @@ import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
+import theme from './theme/canada'
 
-export default function DmarcReportPage({ ...props }) {
-  const { summaryListResponsiveWidth } = props
+const { colors } = theme
+
+export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
   const { i18n } = useLingui()
-
-  const {
-    loading: summaryLoading,
-    error: summaryError,
-    data: summaryData,
-  } = useQuery(DEMO_DMARC_REPORT_SUMMARY, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: {
-      domainSlug: 'test-domain-slug',
-      period: 'LAST30DAYS',
-      year: '2020',
-    },
-  })
 
   const { loading: barLoading, error: barError, data: barData } = useQuery(
     DEMO_DMARC_REPORT_SUMMARY_LIST,
@@ -65,9 +49,31 @@ export default function DmarcReportPage({ ...props }) {
     },
   })
 
-  if (tableLoading || summaryLoading || barLoading) return <p>Loading...</p>
+  if (tableLoading || barLoading) return <p>Loading...</p>
   // TODO: Properly handle these errors
-  if (tableError || summaryError || barError) return <p>Error</p>
+  if (tableError || barError) return <p>Error</p>
+
+  // TODO: remove this after the new api function lands.
+  const summaryData = {
+    categories: [
+      {
+        name: 'fullPass',
+        count: 33,
+        percentage: 33,
+      },
+      {
+        name: 'partialPass',
+        count: 33,
+        percentage: 33,
+      },
+      {
+        name: 'fail',
+        count: 33,
+        percentage: 33,
+      },
+    ],
+    total: 100,
+  }
 
   const strengths = {
     strong: {
@@ -83,9 +89,6 @@ export default function DmarcReportPage({ ...props }) {
       name: i18n._(t`Fail`),
     },
   }
-
-  const reportCardData = summaryData.demoDmarcReportSummary
-  reportCardData.strengths = { ...strengths }
 
   const formattedBarData = {
     periods: barData.demoDmarcReportSummaryList.map((entry) => {
@@ -256,7 +259,21 @@ export default function DmarcReportPage({ ...props }) {
         <SummaryCard
           title={i18n._(t`DMARC Report`)}
           description={i18n._(t`Description of DMARC report`)}
-          data={reportCardData}
+          categoryDisplay={{
+            fullPass: {
+              name: i18n._(t`Pass`),
+              color: colors.strong,
+            },
+            partialPass: {
+              name: i18n._(t`Partial Pass`),
+              color: colors.moderate,
+            },
+            fail: {
+              name: i18n._(t`Fail`),
+              color: colors.weak,
+            },
+          }}
+          data={summaryData}
           width={cardWidth}
           mx="auto"
         />

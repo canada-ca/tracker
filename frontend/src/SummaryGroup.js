@@ -4,130 +4,80 @@ import { useLingui } from '@lingui/react'
 import { Stack, SimpleGrid, Box } from '@chakra-ui/core'
 import SummaryCard from './SummaryCard'
 import { string } from 'prop-types'
+import theme from './theme/canada'
 
-export function SummaryGroup({ ...props }) {
-  const { name } = props
+const { colors } = theme
+
+export function SummaryGroup() {
   const { i18n } = useLingui()
 
-  const makeData = () => {
-    return {
-      categoryTotals: {
-        strongExample1: Math.floor(Math.random() * 1000 + 1),
-        strongExample2: Math.floor(Math.random() * 1000 + 1),
-        // conditionally add moderate categories
-        ...(name !== 'web' && {
-          moderateExample1:
-            name === 'web' ? null : Math.floor(Math.random() * 300 + 1),
-          moderateExample2:
-            name === 'web' ? null : Math.floor(Math.random() * 300 + 1),
-        }),
-        weakExample: Math.floor(Math.random() * 500 + 1),
-      },
-      strengths: {
-        strong: {
-          types: ['strongExample1', 'strongExample2'],
-          name:
-            name === 'web' ? i18n._(t`Enforced`) : i18n._(t`Fully Implemented`),
-        },
-        // conditionally add moderate strength
-        ...(name !== 'web' && {
-          moderate: {
-            types: ['moderateExample1', 'moderateExample2'],
-            name: 'Partially Implemented',
+  const { data } = {
+    data: {
+      webSummary: {
+        categories: [
+          {
+            name: 'moderate',
+            count: 33,
+            percentage: 33,
           },
-        }),
-        weak: {
-          types: ['weakExample'],
-          name:
-            name === 'web'
-              ? i18n._(t`Not Enforced`)
-              : i18n._(t`Not Implemented`),
-        },
+          {
+            name: 'strong',
+            count: 33,
+            percentage: 33,
+          },
+          {
+            name: 'weak',
+            count: 33,
+            percentage: 33,
+          },
+        ],
+        total: 100,
       },
-    }
-  }
-
-  const dashOverview = [
-    {
-      title: i18n._(t`Web Configuration`),
-      description: i18n._(t`Web encryption settings summary`),
     },
-    {
-      title: i18n._(t`Email Configuration`),
-      description: i18n._(t`Email security settings summary`),
-    },
-  ]
-
-  const webOverview = [
-    {
-      title: 'HTTPS',
-      description: 'description',
-    },
-    {
-      title: 'HSTS',
-      description: 'description',
-    },
-    {
-      title: i18n._(t`HSTS Preloaded`),
-      description: 'description',
-    },
-    {
-      title: 'SSL',
-      description: 'description',
-    },
-    {
-      title: i18n._(t`Protocols & Ciphers`),
-      description: 'description',
-    },
-    {
-      title: i18n._(t`Approved Certificate Use`),
-      description: 'description',
-    },
-  ]
-
-  const emailOverview = [
-    {
-      title: 'SPF',
-      description: 'description',
-    },
-    {
-      title: 'DKIM',
-      description: 'description',
-    },
-    {
-      title: 'DMARC',
-      description: 'description',
-    },
-  ]
-
-  const createReports = () => {
-    const reports = []
-    const reportData =
-      name === 'dashboard'
-        ? dashOverview
-        : name === 'web'
-        ? webOverview
-        : emailOverview
-
-    reportData.forEach((dataEntry) => {
-      reports.push(
-        <SummaryCard
-          name={name}
-          key={dataEntry.title}
-          title={dataEntry.title}
-          description={dataEntry.description}
-          data={makeData()}
-        />,
-      )
-    })
-    return reports
   }
 
   return (
     <Box>
       <Stack textAlign="center" align="center">
         <SimpleGrid columns={[1, 1, 1, 1, 2]} spacing="30px">
-          {createReports()}
+          <SummaryCard
+            title={i18n._(t`Web Configuration`)}
+            description={i18n._(t`Web encryption settings summary`)}
+            categoryDisplay={{
+              strong: {
+                name: i18n._(t`Compliant TLS`),
+                color: colors.strong,
+              },
+              moderate: {
+                name: i18n._(t`TLS`),
+                color: colors.moderate,
+              },
+              weak: {
+                name: i18n._(t`No TLS`),
+                color: colors.weak,
+              },
+            }}
+            data={data.webSummary}
+          />
+          <SummaryCard
+            title={i18n._(t`Email Configuration`)}
+            description={i18n._(t`Email security settings summary`)}
+            categoryDisplay={{
+              strong: {
+                name: i18n._(t`Dmarc pass`),
+                color: colors.strong,
+              },
+              moderate: {
+                name: i18n._(t`Dmarc partial`),
+                color: colors.moderate,
+              },
+              weak: {
+                name: i18n._(t`Dmarc fail`),
+                color: colors.weak,
+              },
+            }}
+            data={data.webSummary}
+          />
         </SimpleGrid>
         )
       </Stack>
@@ -136,7 +86,6 @@ export function SummaryGroup({ ...props }) {
 }
 
 SummaryGroup.propTypes = {
-  name: string,
   title: string,
   description: string,
 }
