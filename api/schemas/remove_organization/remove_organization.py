@@ -23,13 +23,29 @@ from models import (
 from scalars.slug import Slug
 
 
+class RemoveOrganizationInput(graphene.InputObjectType):
+    """
+    Input object containing the required fields for the removeOrganization
+    mutation
+    """
+
+    slug = Slug(
+        required=True,
+        description="The slugified organization name of the organization you"
+        " wish to remove.",
+    )
+
+
 class RemoveOrganization(graphene.Mutation):
     """
     Mutation allows the removal of an organization inside the database.
     """
 
     class Arguments:
-        slug = Slug(description="The organization you wish to remove", required=True)
+        input = RemoveOrganizationInput(
+            required=True,
+            description="Input fields required for the removeOrganization mutation.",
+        )
 
     status = graphene.Boolean()
 
@@ -38,7 +54,7 @@ class RemoveOrganization(graphene.Mutation):
         # Get arguments from mutation
         user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
-        slug = cleanse_input(kwargs.get("slug"))
+        slug = cleanse_input(kwargs.get("input", {}).get("slug"))
 
         # Restrict the deletion of SA Org
         if slug == "super-admin":
