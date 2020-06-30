@@ -48,19 +48,24 @@ class HTTPS(SQLAlchemyObjectType):
         return get_timestamp(self, info)
 
     def resolve_implementation(self: Https_scans, info, **kwargs):
-        return self.https_scan["https"]["implementation"]
+        implementation = self.https_scan.get("https", {}).get("implementation", None)
+        return implementation
 
     def resolve_enforced(self: Https_scans, info, **kwargs):
-        return self.https_scan["https"]["enforced"]
+        enforced = self.https_scan.get("https", {}).get("enforced", None)
+        return enforced
 
     def resolve_hsts(self: Https_scans, info, **kwargs):
-        return self.https_scan["https"]["hsts"]
+        hsts = self.https_scan.get("https", {}).get("hsts", None)
+        return hsts
 
     def resolve_hsts_age(self: Https_scans, info, **kwargs):
-        return self.https_scan["https"]["hsts_age"]
+        hsts_age = self.https_scan.get("https", {}).get("hsts_age", None)
+        return hsts_age
 
     def resolve_preloaded(self: Https_scans, info, **kwargs):
-        return self.https_scan["https"]["preloaded"]
+        preloaded = self.https_scan.get("https", {}).get("preloaded", None)
+        return preloaded
 
     def resolve_https_guidance_tags(self: Https_scans, info, **kwargs):
         tags = []

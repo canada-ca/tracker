@@ -52,34 +52,39 @@ class DMARC(SQLAlchemyObjectType):
         return get_timestamp(self, info)
 
     def resolve_dmarc_phase(self: Dmarc_scans, info, **kwargs):
-        return self.dmarc_phase
+        dmarc_phase = self.dmarc_phase
+        return dmarc_phase
 
     def resolve_record(self: Dmarc_scans, info, **kwargs):
-        return self.dmarc_scan.get("dmarc", {}).get("record", None)
+        record = self.dmarc_scan.get("dmarc", {}).get("record", None)
+        return record
 
     def resolve_p_policy(self: Dmarc_scans, info, **kwargs):
-        return (
+        p_policy = (
             self.dmarc_scan.get("dmarc", {})
             .get("tags", {})
             .get("p", {})
             .get("value", None)
         )
+        return p_policy
 
     def resolve_sp_policy(self: Dmarc_scans, info, **kwargs):
-        return (
+        sp_policy = (
             self.dmarc_scan.get("dmarc", {})
             .get("tags", {})
             .get("sp", {})
             .get("value", None)
         )
+        return sp_policy
 
     def resolve_pct(self: Dmarc_scans, info, **kwargs):
-        return (
+        pct = (
             self.dmarc_scan.get("dmarc", {})
             .get("tags", {})
             .get("pct", {})
             .get("value", None)
         )
+        return pct
 
     def resolve_dmarc_guidance_tags(self: Dmarc_scans, info, **kwargs):
         tags = []

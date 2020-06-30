@@ -47,19 +47,26 @@ class SPF(SQLAlchemyObjectType):
         return get_timestamp(self, info, **kwargs)
 
     def resolve_lookups(self: Spf_scans, info, **kwargs):
-        return self.spf_scan["spf"]["dns_lookups"]
+        lookups = self.spf_scan.get("spf", {}).get("dns_lookups", None)
+        return lookups
 
     def resolve_record(self: Spf_scans, info, **kwargs):
-        return self.spf_scan["spf"]["record"]
+        record = self.spf_scan.get("spf", {}).get("record", None)
+        return record
 
     def resolve_spf_default(self: Spf_scans, info, **kwargs):
-        if self.spf_scan["spf"]["parsed"]["all"] == "fail":
-            if self.spf_scan["spf"]["record"][-4:] == "-all":
+        all_parsed = self.spf_scan.get("spf", {}).get("parsed", {}).get("all", None)
+        record = self.spf_scan.get("spf", {}).get("record", None)
+
+        if record is not None and len(record) > 4:
+            record_all_tag = record[-4:]
+        if all_parsed == "fail":
+            if record_all_tag == "-all":
                 return "hardfail"
-            elif self.spf_scan["spf"]["record"][-4:] == "~all":
+            elif record_all_tag == "~all":
                 return "softfail"
         else:
-            return self.spf_scan["spf"]["parsed"]["all"]
+            return all_parsed
 
     def resolve_spf_guidance_tags(self: Spf_scans, info, **kwargs):
         tags = []
@@ -96,27 +103,28 @@ class SPF(SQLAlchemyObjectType):
 
         # Check all tag
         all_tag = self.spf_scan.get("spf", {}).get("parsed", {}).get("all", None)
-        record_all_tag = self.spf_scan.get("spf", {}).get("record", "")[-4:].lower()
+        record_all_tag = self.spf_scan.get("spf", {}).get("record", None)
 
         if (all_tag is not None) and (record_all_tag is not None):
-            if isinstance(all_tag, str):
+            if isinstance(all_tag, str) and isinstance(record_all_tag, str):
                 all_tag = all_tag.lower()
+                record_all_tag = record_all_tag[-4:].lower()
 
-            if record_all_tag != "-all" and record_all_tag != "~all":
-                tags.append("spf10")
-            elif all_tag == "missing":
-                tags.append("spf4")
-            elif all_tag == "allow":
-                tags.append("spf5")
-            elif all_tag == "neutral":
-                tags.append("spf6")
-            elif all_tag == "redirect":
-                tags.append("spf9")
-            elif all_tag == "fail":
-                if record_all_tag == "-all":
-                    tags.append("spf8")
-                elif record_all_tag == "~all":
-                    tags.append("spf7")
+                if record_all_tag != "-all" and record_all_tag != "~all":
+                    tags.append("spf10")
+                elif all_tag == "missing":
+                    tags.append("spf4")
+                elif all_tag == "allow":
+                    tags.append("spf5")
+                elif all_tag == "neutral":
+                    tags.append("spf6")
+                elif all_tag == "redirect":
+                    tags.append("spf9")
+                elif all_tag == "fail":
+                    if record_all_tag == "-all":
+                        tags.append("spf8")
+                    elif record_all_tag == "~all":
+                        tags.append("spf7")
 
         # Check for no host
         record = self.spf_scan.get("spf", {}).get("record", None)
