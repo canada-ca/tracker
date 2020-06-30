@@ -69,21 +69,6 @@ type AuthResult {
 }
 
 """
-DKIM and SPF domain results
-"""
-type AuthResults {
-  """
-  DKIM domain raw results
-  """
-  dkim: [DkimReport]
-
-  """
-  SPF domain raw results
-  """
-  spf: [SpfReport]
-}
-
-"""
 This object displays the total amount of messages that fit into each category
 """
 type CategoryTotals {
@@ -251,6 +236,22 @@ type DKIM {
   """
   timestamp: DateTime @fake(type: pastDate)
   """
+  Various dkim selectors used on this domain.
+  """
+  selectors: [DkimSelectors]
+
+}
+
+"""
+This object contains the scan result data for each individual selector that
+has been scanned.
+"""
+type DkimSelectors {
+  """
+  Selector domain that has been scanned.
+  """
+  selector: String @examples(values: ["selector1._domainkey", "selector2._domainkey"])
+  """
   DKIM record retrieved during the scan of the given domain
   """
   record: String
@@ -286,23 +287,6 @@ type DKIM {
     )
 }
 
-"""
-DKIM report results
-"""
-type DkimReport {
-  """
-  DKIM domain
-  """
-  domain: String
-  """
-  Selector used for DKIM authentication
-  """
-  selector: String
-  """
-  DKIM raw result
-  """
-  result: String
-}
 """
 Domain-based Message Authentication, Reporting, and Conformance
 (DMARC) is a scalable mechanism by which a mail-originating
@@ -489,81 +473,8 @@ input DmarcReportSummaryListInput {
   domainSlug: Slug!
 }
 
-"""
-Generated DMARC Aggregated Report's
-"""
-type DmarcReport implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  """
-  ID of the report.
-  """
-  reportId: String @examples(values: ["example.com:1538463741"])
-  """
-  The organization name the report was generated from.
-  """
-  orgName: String @examples(values: ["accurateplastics.com"])
-  """
-  The organization email name the report was generated from.
-  """
-  orgEmail: String @examples(values: ["administrator@accurateplastics.com"])
-  """
-  Start date & time of aggregate report
-  """
-  startDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
-  """
-  End date & time of aggregate report
-  """
-  endDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
-  """
-  Errors that occurred during the report generation
-  """
-  errors: [String]
-  """
-  DMARC published policies
-  """
-  policyPublished: PolicyPublished
-  """
-  Aggregate report records
-  """
-  records: [Record]
-}
-
-type DmarcReportConnection {
-  """
-  Pagination data for this connection.
-  """
-  pageInfo: PageInfo!
-  """
-  Contains the nodes in this connection.
-  """
-  edges: [DmarcReportEdge]!
-}
-"""
-A Relay edge containing a `DmarcReport` and its cursor.
-"""
-type DmarcReportEdge {
-  """
-  The item at the end of the edge
-  """
-  node: DmarcReport
-
-  """
-  A cursor for use in pagination
-  """
-  cursor: String!
-}
-
 type Domain implements Node {
   organization: Organizations
-  dmarcReports(
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): DmarcReportConnection
 
   """
   The ID of the object.
@@ -619,19 +530,8 @@ type Domain implements Node {
   HTTPS, and SSL scan results
   """
   web(before: String, after: String, first: Int, last: Int): WebScanConnection
-
-  """
-  DMARC aggregate report
-  """
-  dmarcReport(
-    startDate: Date
-    endDate: Date
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): DmarcReportConnection
 }
+
 type DomainConnection {
   """
   Pagination data for this connection.
@@ -1535,38 +1435,6 @@ type Query {
   An api endpoint that will send a verification email to a given email address.
   """
   sendValidationEmail(email: EmailAddress!): NotificationEmail
-}
-
-"""
-DMARC aggregate report record
-"""
-type Record {
-  count: Int @examples(values: [1])
-
-  """
-  DMARC source information
-  """
-  source: Source
-
-  """
-  DMARC alignment object
-  """
-  alignment: Alignment
-
-  """
-  DMARC policy evaluation object
-  """
-  policyEvaluated: PolicyEvaluated
-
-  """
-  Identifiers Object
-  """
-  identifiers: Identifiers
-
-  """
-  Raw DKIM, and SPF results
-  """
-  authResults: AuthResults
 }
 
 """
