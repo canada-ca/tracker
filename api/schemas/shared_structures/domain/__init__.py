@@ -41,16 +41,16 @@ class Domain(SQLAlchemyObjectType):
         WebScan._meta.connection, description="HTTPS, and SSL scan results"
     )
 
-    def resolve_url(self: Domains, info):
+    def resolve_url(self: Domains, info, **kwargs):
         return self.domain
 
-    def resolve_slug(self: Domains, info):
+    def resolve_slug(self: Domains, info, **kwargs):
         return self.slug
 
-    def resolve_last_ran(self: Domains, info):
+    def resolve_last_ran(self: Domains, info, **kwargs):
         return self.last_run
 
-    def resolve_email(self: Domains, info):
+    def resolve_email(self: Domains, info, **kwargs):
         query = (
             MailScan.get_query(info)
             .filter(Mail_scans.domain_id == self.id)
@@ -59,7 +59,7 @@ class Domain(SQLAlchemyObjectType):
         )
         return query
 
-    def resolve_web(self: Domains, info):
+    def resolve_web(self: Domains, info, **kwargs):
         query = (
             WebScan.get_query(info)
             .filter(Web_scans.domain_id == self.id)

@@ -40,19 +40,19 @@ class SPF(SQLAlchemyObjectType):
         lambda: graphene.String, description="Key tags found during scan"
     )
 
-    def resolve_domain(self: Spf_scans, info):
+    def resolve_domain(self: Spf_scans, info, **kwargs):
         return get_domain(self, info)
 
-    def resolve_timestamp(self: Spf_scans, info):
-        return get_timestamp(self, info)
+    def resolve_timestamp(self: Spf_scans, info, **kwargs):
+        return get_timestamp(self, info, **kwargs)
 
-    def resolve_lookups(self: Spf_scans, info):
+    def resolve_lookups(self: Spf_scans, info, **kwargs):
         return self.spf_scan["spf"]["dns_lookups"]
 
-    def resolve_record(self: Spf_scans, info):
+    def resolve_record(self: Spf_scans, info, **kwargs):
         return self.spf_scan["spf"]["record"]
 
-    def resolve_spf_default(self: Spf_scans, info):
+    def resolve_spf_default(self: Spf_scans, info, **kwargs):
         if self.spf_scan["spf"]["parsed"]["all"] == "fail":
             if self.spf_scan["spf"]["record"][-4:] == "-all":
                 return "hardfail"
@@ -61,7 +61,7 @@ class SPF(SQLAlchemyObjectType):
         else:
             return self.spf_scan["spf"]["parsed"]["all"]
 
-    def resolve_spf_guidance_tags(self: Spf_scans, info):
+    def resolve_spf_guidance_tags(self: Spf_scans, info, **kwargs):
         tags = []
 
         if self.spf_scan.get("spf", {}).get("missing", None) is not None:
@@ -98,24 +98,25 @@ class SPF(SQLAlchemyObjectType):
         all_tag = self.spf_scan.get("spf", {}).get("parsed", {}).get("all", None)
         record_all_tag = self.spf_scan.get("spf", {}).get("record", "")[-4:].lower()
 
-        if isinstance(all_tag, str):
-            all_tag = all_tag.lower()
+        if (all_tag is not None) and (record_all_tag is not None):
+            if isinstance(all_tag, str):
+                all_tag = all_tag.lower()
 
-        if record_all_tag != "-all" and record_all_tag != "~all":
-            tags.append("spf10")
-        elif all_tag == "missing":
-            tags.append("spf4")
-        elif all_tag == "allow":
-            tags.append("spf5")
-        elif all_tag == "neutral":
-            tags.append("spf6")
-        elif all_tag == "redirect":
-            tags.append("spf9")
-        elif all_tag == "fail":
-            if record_all_tag == "-all":
-                tags.append("spf8")
-            elif record_all_tag == "~all":
-                tags.append("spf7")
+            if record_all_tag != "-all" and record_all_tag != "~all":
+                tags.append("spf10")
+            elif all_tag == "missing":
+                tags.append("spf4")
+            elif all_tag == "allow":
+                tags.append("spf5")
+            elif all_tag == "neutral":
+                tags.append("spf6")
+            elif all_tag == "redirect":
+                tags.append("spf9")
+            elif all_tag == "fail":
+                if record_all_tag == "-all":
+                    tags.append("spf8")
+                elif record_all_tag == "~all":
+                    tags.append("spf7")
 
         # Check for no host
         record = self.spf_scan.get("spf", {}).get("record", None)
@@ -137,7 +138,7 @@ class SPF(SQLAlchemyObjectType):
         include = self.spf_scan.get("spf", {}).get("parsed", {}).get("include", None)
         record = self.spf_scan.get("spf", {}).get("record", None)
 
-        if include is not None and record is not None:
+        if (include is not None) and (record is not None):
             for item in include:
                 check_item = item.get("domain", None)
                 if check_item is not None and f"include:{check_item}" not in record:

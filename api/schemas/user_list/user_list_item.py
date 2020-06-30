@@ -32,7 +32,7 @@ class UserListItem(SQLAlchemyObjectType):
         "specified in the UserList query"
     )
 
-    def resolve_user_name(self: User_affiliations, info):
+    def resolve_user_name(self: User_affiliations, info, **kwargs):
         user_orm = (
             db_session.query(Users)
             .filter(Users.id == self.user_id)
@@ -41,7 +41,7 @@ class UserListItem(SQLAlchemyObjectType):
         )
         return user_orm.user_name
 
-    def resolve_display_name(self: User_affiliations, info):
+    def resolve_display_name(self: User_affiliations, info, **kwargs):
         user_orm = (
             db_session.query(Users)
             .filter(Users.id == self.user_id)
@@ -50,7 +50,7 @@ class UserListItem(SQLAlchemyObjectType):
         )
         return user_orm.display_name
 
-    def resolve_tfa(self: User_affiliations, info):
+    def resolve_tfa(self: User_affiliations, info, **kwargs):
         user_orm = (
             db_session.query(Users)
             .filter(Users.id == self.user_id)
@@ -59,7 +59,7 @@ class UserListItem(SQLAlchemyObjectType):
         )
         return user_orm.tfa_validated
 
-    def resolve_admin(self: User_affiliations, info):
+    def resolve_admin(self: User_affiliations, info, **kwargs):
         if self.permission == "super_admin" or self.permission == "admin":
             return True
         else:

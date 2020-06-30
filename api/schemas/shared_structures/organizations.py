@@ -66,7 +66,7 @@ class Organizations(SQLAlchemyObjectType):
     def resolve_city(self: OrgModel, info):
         return self.org_tags.get("city", None)
 
-    def resolve_domains(self: OrgModel, info):
+    def resolve_domains(self: OrgModel, info, **kwargs):
         query = DomainsSchema.get_query(info)
         query = query.filter(DomainsModel.organization_id == self.id).all()
         return query

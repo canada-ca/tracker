@@ -35,22 +35,22 @@ class Users(SQLAlchemyObjectType):
         description="The level of access this user has to the requested " "organization"
     )
 
-    def resolve_user_name(self: User_affiliations, info):
+    def resolve_user_name(self: User_affiliations, info, **kwargs):
         query = User.get_query(info)
         query = query.filter(Organizations.id == self.organization_id)
         query = query.filter(UserModel.id == self.user_id).first()
         return query.user_name
 
-    def resolve_display_name(self: User_affiliations, info):
+    def resolve_display_name(self: User_affiliations, info, **kwargs):
         query = User.get_query(info)
         query = query.filter(Organizations.id == self.organization_id)
         query = query.filter(UserModel.id == self.user_id).first()
         return query.display_name
 
-    def resolve_permission(self: User_affiliations, info):
+    def resolve_permission(self: User_affiliations, info, **kwargs):
         return self.permission
 
-    def resolve_affiliations(self: User_affiliations, info):
+    def resolve_affiliations(self: User_affiliations, info, **kwargs):
         query = Organizations.get_query(info)
         query = query.filter(OrgModel.users.user_id == self.id)
         return query.all()

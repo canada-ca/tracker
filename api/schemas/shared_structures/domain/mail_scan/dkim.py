@@ -31,19 +31,19 @@ class DKIM(SQLAlchemyObjectType):
         lambda: graphene.String, description="Key tags found during scan"
     )
 
-    def resolve_domain(self, info):
+    def resolve_domain(self, info, **kwargs):
         get_domain(self, info)
 
-    def resolve_timestamp(self, info):
+    def resolve_timestamp(self, info, **kwargs):
         get_timestamp(self, info)
 
-    def resolve_record(self, info):
+    def resolve_record(self, info, **kwargs):
         return self.dkim_scan["dkim"]["txt_record"]
 
-    def resolve_key_length(self, info):
+    def resolve_key_length(self, info, **kwargs):
         return self.dkim_scan["dkim"]["key_size"]
 
-    def resolve_dkim_guidance_tags(self, info):
+    def resolve_dkim_guidance_tags(self, info, **kwargs):
         tags = []
 
         if self.dkim_scan.get("dkim", {}).get("missing", None) is not None:
@@ -73,16 +73,19 @@ class DKIM(SQLAlchemyObjectType):
         # Update Recommended
         key_invalid = self.dkim_scan.get("dkim", {}).get("update-recommend", None)
 
-        if key_invalid:
-            tags.append("dkim10")
+        if key_invalid is not None:
+            if key_invalid is True:
+                tags.append("dkim10")
 
         # Invalid Crypto
         invalid_crypto = (
             self.dkim_scan.get("dkim", {}).get("txt_record", {}).get("k", None)
         )
-        # if k != rsa
-        if invalid_crypto != "rsa":
-            tags.append("dkim11")
+
+        if invalid_crypto is not None:
+            # if k != rsa
+            if invalid_crypto != "rsa":
+                tags.append("dkim11")
 
         # Dkim value invalid
         # Check if v, k, and p exist in txt_record
@@ -95,7 +98,7 @@ class DKIM(SQLAlchemyObjectType):
                 tags.append("dkim12")
 
         # Testing Enabled
-        t_enabled = self.dkim_scan.get("dkim", {}).get("t_value")
+        t_enabled = self.dkim_scan.get("dkim", {}).get("t_value", None)
         if t_enabled is not None:
             tags.append("dkim13")
 
