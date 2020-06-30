@@ -98,24 +98,25 @@ class SPF(SQLAlchemyObjectType):
         all_tag = self.spf_scan.get("spf", {}).get("parsed", {}).get("all", None)
         record_all_tag = self.spf_scan.get("spf", {}).get("record", "")[-4:].lower()
 
-        if isinstance(all_tag, str):
-            all_tag = all_tag.lower()
+        if (all_tag is not None) and (record_all_tag is not None):
+            if isinstance(all_tag, str):
+                all_tag = all_tag.lower()
 
-        if record_all_tag != "-all" and record_all_tag != "~all":
-            tags.append("spf10")
-        elif all_tag == "missing":
-            tags.append("spf4")
-        elif all_tag == "allow":
-            tags.append("spf5")
-        elif all_tag == "neutral":
-            tags.append("spf6")
-        elif all_tag == "redirect":
-            tags.append("spf9")
-        elif all_tag == "fail":
-            if record_all_tag == "-all":
-                tags.append("spf8")
-            elif record_all_tag == "~all":
-                tags.append("spf7")
+            if record_all_tag != "-all" and record_all_tag != "~all":
+                tags.append("spf10")
+            elif all_tag == "missing":
+                tags.append("spf4")
+            elif all_tag == "allow":
+                tags.append("spf5")
+            elif all_tag == "neutral":
+                tags.append("spf6")
+            elif all_tag == "redirect":
+                tags.append("spf9")
+            elif all_tag == "fail":
+                if record_all_tag == "-all":
+                    tags.append("spf8")
+                elif record_all_tag == "~all":
+                    tags.append("spf7")
 
         # Check for no host
         record = self.spf_scan.get("spf", {}).get("record", None)
@@ -137,7 +138,7 @@ class SPF(SQLAlchemyObjectType):
         include = self.spf_scan.get("spf", {}).get("parsed", {}).get("include", None)
         record = self.spf_scan.get("spf", {}).get("record", None)
 
-        if include is not None and record is not None:
+        if (include is not None) and (record is not None):
             for item in include:
                 check_item = item.get("domain", None)
                 if check_item is not None and f"include:{check_item}" not in record:
