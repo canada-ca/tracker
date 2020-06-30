@@ -40,19 +40,19 @@ class SPF(SQLAlchemyObjectType):
         lambda: graphene.String, description="Key tags found during scan"
     )
 
-    def resolve_domain(self: Spf_scans, info):
+    def resolve_domain(self: Spf_scans, info, **kwargs):
         return get_domain(self, info)
 
-    def resolve_timestamp(self: Spf_scans, info):
-        return get_timestamp(self, info)
+    def resolve_timestamp(self: Spf_scans, info, **kwargs):
+        return get_timestamp(self, info, **kwargs)
 
-    def resolve_lookups(self: Spf_scans, info):
+    def resolve_lookups(self: Spf_scans, info, **kwargs):
         return self.spf_scan["spf"]["dns_lookups"]
 
-    def resolve_record(self: Spf_scans, info):
+    def resolve_record(self: Spf_scans, info, **kwargs):
         return self.spf_scan["spf"]["record"]
 
-    def resolve_spf_default(self: Spf_scans, info):
+    def resolve_spf_default(self: Spf_scans, info, **kwargs):
         if self.spf_scan["spf"]["parsed"]["all"] == "fail":
             if self.spf_scan["spf"]["record"][-4:] == "-all":
                 return "hardfail"
@@ -61,7 +61,7 @@ class SPF(SQLAlchemyObjectType):
         else:
             return self.spf_scan["spf"]["parsed"]["all"]
 
-    def resolve_spf_guidance_tags(self: Spf_scans, info):
+    def resolve_spf_guidance_tags(self: Spf_scans, info, **kwargs):
         tags = []
 
         if self.spf_scan.get("spf", {}).get("missing", None) is not None:

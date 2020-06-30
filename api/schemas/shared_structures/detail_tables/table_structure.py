@@ -27,44 +27,44 @@ class TableStructure(graphene.ObjectType):
         description="Domain from reverse DNS of source IP address"
     )
 
-    def resolve_source_ip_address(self: dict, info):
+    def resolve_source_ip_address(self: dict, info, **kwargs):
         return self.get("sourceIpAddress")
 
-    def resolve_envelope_from(self: dict, info):
+    def resolve_envelope_from(self: dict, info, **kwargs):
         return self.get("envelopeFrom")
 
-    def resolve_spf_domains(self: dict, info):
+    def resolve_spf_domains(self: dict, info, **kwargs):
         return self.get("spfDomains")
 
-    def resolve_dkim_domains(self: dict, info):
+    def resolve_dkim_domains(self: dict, info, **kwargs):
         return self.get("dkimDomains")
 
-    def resolve_dkim_selectors(self: dict, info):
+    def resolve_dkim_selectors(self: dict, info, **kwargs):
         return self.get("dkimSelectors")
 
-    def resolve_total_messages(self: dict, info):
+    def resolve_total_messages(self: dict, info, **kwargs):
         return self.get("totalMessages")
 
-    def resolve_country_code(self: dict, info):
+    def resolve_country_code(self: dict, info, **kwargs):
         return self.get("countryCode")
 
-    def resolve_isp_org(self: dict, info):
+    def resolve_isp_org(self: dict, info, **kwargs):
         return self.get("ispOrg")
 
-    def resolve_prefix_org(self: dict, info):
+    def resolve_prefix_org(self: dict, info, **kwargs):
         return self.get("prefixOrg")
 
-    def resolve_as_name(self: dict, info):
+    def resolve_as_name(self: dict, info, **kwargs):
         return self.get("asName")
 
-    def resolve_as_num(self: dict, info):
+    def resolve_as_num(self: dict, info, **kwargs):
         return self.get("asNum")
 
-    def resolve_as_org(self: dict, info):
+    def resolve_as_org(self: dict, info, **kwargs):
         return self.get("asOrg")
 
-    def resolve_dns_host(self: dict, info):
+    def resolve_dns_host(self: dict, info, **kwargs):
         return self.get("dnsHost")
 
-    def resolve_dns_domain(self: dict, info):
+    def resolve_dns_domain(self: dict, info, **kwargs):
         return self.get("dnsDomain")

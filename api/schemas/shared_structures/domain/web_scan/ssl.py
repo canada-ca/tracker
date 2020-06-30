@@ -23,13 +23,13 @@ class SSL(SQLAlchemyObjectType):
         lambda: graphene.String, description="Key tags found during scan"
     )
 
-    def resolve_domain(self, info):
-        return get_domain(self, info)
+    def resolve_domain(self, info, **kwargs):
+        return get_domain(self, info, **kwargs)
 
-    def resolve_timestamp(self, info):
+    def resolve_timestamp(self, info, **kwargs):
         return get_timestamp(self, info)
 
-    def resolve_ssl_guidance_tags(self: Ssl_scans, info):
+    def resolve_ssl_guidance_tags(self: Ssl_scans, info, **kwargs):
         tags = []
 
         if self.ssl_scan.get("ssl", {}).get("missing", None) is not None:

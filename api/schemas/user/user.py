@@ -48,19 +48,19 @@ class User(SQLAlchemyObjectType):
         UserAffClass._meta.connection, description="Users access to organizations"
     )
 
-    def resolve_user_name(self: UserModel, info):
+    def resolve_user_name(self: UserModel, info, **kwargs):
         return self.user_name
 
-    def resolve_display_name(self: UserModel, info):
+    def resolve_display_name(self: UserModel, info, **kwargs):
         return self.display_name
 
-    def resolve_lang(self: UserModel, info):
+    def resolve_lang(self: UserModel, info, **kwargs):
         return self.preferred_lang
 
-    def resolve_tfa(self: UserModel, info):
+    def resolve_tfa(self: UserModel, info, **kwargs):
         return self.tfa_validated
 
-    def resolve_email_validated(self: UserModel, info):
+    def resolve_email_validated(self: UserModel, info, **kwargs):
         return self.email_validated
 
     @require_token

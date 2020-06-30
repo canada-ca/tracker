@@ -25,18 +25,18 @@ class WebScan(SQLAlchemyObjectType):
     https = graphene.Field(lambda: HTTPS)
     ssl = graphene.Field(lambda: SSL)
 
-    def resolve_domain(self: Web_scans, info):
+    def resolve_domain(self: Web_scans, info, **kwargs):
         return get_domain(self, info)
 
-    def resolve_timestamp(self: Web_scans, info):
+    def resolve_timestamp(self: Web_scans, info, **kwargs):
         return get_timestamp(self, info)
 
-    def resolve_https(self: Web_scans, info):
+    def resolve_https(self: Web_scans, info, **kwargs):
         query = HTTPS.get_query(info)
         query = query.filter(self.id == Https_scans.id).first()
         return query
 
-    def resolve_ssl(self: Web_scans, info):
+    def resolve_ssl(self: Web_scans, info, **kwargs):
         query = SSL.get_query(info)
         query = query.filter(self.id == Ssl_scans.id).first()
         return query

@@ -41,28 +41,28 @@ class HTTPS(SQLAlchemyObjectType):
         lambda: graphene.String, description="Key tags found during scan"
     )
 
-    def resole_domain(self: Https_scans, info):
+    def resole_domain(self: Https_scans, info, **kwargs):
         return get_domain(self, info)
 
-    def resolve_timestamp(self: Https_scans, info):
+    def resolve_timestamp(self: Https_scans, info, **kwargs):
         return get_timestamp(self, info)
 
-    def resolve_implementation(self: Https_scans, info):
+    def resolve_implementation(self: Https_scans, info, **kwargs):
         return self.https_scan["https"]["implementation"]
 
-    def resolve_enforced(self: Https_scans, info):
+    def resolve_enforced(self: Https_scans, info, **kwargs):
         return self.https_scan["https"]["enforced"]
 
-    def resolve_hsts(self: Https_scans, info):
+    def resolve_hsts(self: Https_scans, info, **kwargs):
         return self.https_scan["https"]["hsts"]
 
-    def resolve_hsts_age(self: Https_scans, info):
+    def resolve_hsts_age(self: Https_scans, info, **kwargs):
         return self.https_scan["https"]["hsts_age"]
 
-    def resolve_preloaded(self: Https_scans, info):
+    def resolve_preloaded(self: Https_scans, info, **kwargs):
         return self.https_scan["https"]["preloaded"]
 
-    def resolve_https_guidance_tags(self: Https_scans, info):
+    def resolve_https_guidance_tags(self: Https_scans, info, **kwargs):
         tags = []
 
         if self.https_scan.get("https", {}).get("missing", None) is not None:

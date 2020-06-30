@@ -31,19 +31,19 @@ class DKIM(SQLAlchemyObjectType):
         lambda: graphene.String, description="Key tags found during scan"
     )
 
-    def resolve_domain(self, info):
+    def resolve_domain(self, info, **kwargs):
         get_domain(self, info)
 
-    def resolve_timestamp(self, info):
+    def resolve_timestamp(self, info, **kwargs):
         get_timestamp(self, info)
 
-    def resolve_record(self, info):
+    def resolve_record(self, info, **kwargs):
         return self.dkim_scan["dkim"]["txt_record"]
 
-    def resolve_key_length(self, info):
+    def resolve_key_length(self, info, **kwargs):
         return self.dkim_scan["dkim"]["key_size"]
 
-    def resolve_dkim_guidance_tags(self, info):
+    def resolve_dkim_guidance_tags(self, info, **kwargs):
         tags = []
 
         if self.dkim_scan.get("dkim", {}).get("missing", None) is not None:
