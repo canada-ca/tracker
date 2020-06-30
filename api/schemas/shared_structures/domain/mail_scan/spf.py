@@ -47,19 +47,26 @@ class SPF(SQLAlchemyObjectType):
         return get_timestamp(self, info, **kwargs)
 
     def resolve_lookups(self: Spf_scans, info, **kwargs):
-        return self.spf_scan["spf"]["dns_lookups"]
+        lookups = self.spf_scan.get("spf", {}).get("dns_lookups", None)
+        return lookups
 
     def resolve_record(self: Spf_scans, info, **kwargs):
-        return self.spf_scan["spf"]["record"]
+        record = self.spf_scan.get("spf", {}).get("record", None)
+        return record
 
     def resolve_spf_default(self: Spf_scans, info, **kwargs):
-        if self.spf_scan["spf"]["parsed"]["all"] == "fail":
-            if self.spf_scan["spf"]["record"][-4:] == "-all":
+        all_parsed = self.spf_scan.get("spf", {}).get("parsed", {}).get("all", None)
+        record = self.spf_scan.get("spf", {}).get("record", None)
+
+        if record is not None and len(record) > 4:
+            record_all_tag = record[-4:]
+        if all_parsed == "fail":
+            if record_all_tag == "-all":
                 return "hardfail"
-            elif self.spf_scan["spf"]["record"][-4:] == "~all":
+            elif record_all_tag == "~all":
                 return "softfail"
         else:
-            return self.spf_scan["spf"]["parsed"]["all"]
+            return all_parsed
 
     def resolve_spf_guidance_tags(self: Spf_scans, info, **kwargs):
         tags = []
