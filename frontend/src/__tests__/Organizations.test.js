@@ -40,6 +40,14 @@ const mocks = [
   },
 ]
 
+// Object.defineProperty(window, 'matchMedia', {
+//   writable: true,
+//   value: jest.fn().mockImplementation((query) => ({
+//     matches: false,
+//     media: query,
+//   })),
+// })
+
 describe('<Organisations />', () => {
   it('displays a list of organizations', async () => {
     const { getByText } = render(

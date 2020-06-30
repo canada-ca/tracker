@@ -11,8 +11,8 @@ import {
   Input,
   Collapse,
   IconButton,
+  Tooltip,
 } from '@chakra-ui/core'
-
 import WithPseudoBox from './withPseudoBox'
 
 const Table = styled.table`
@@ -87,44 +87,70 @@ const Table = styled.table`
 
 const columns = [
   {
-    Header: 'Domain',
+    Header: (
+      <Tooltip label="Domains included in this organization">Domain</Tooltip>
+    ),
     accessor: 'host_domain',
   },
   {
-    Header: 'HTTPS',
+    Header: <Tooltip label="Is HTTPS implemented and enforced?">HTTPS</Tooltip>,
     accessor: 'https_result',
   },
   {
-    Header: 'HSTS',
+    Header: <Tooltip label="Is HSTS properly implemented?">HSTS</Tooltip>,
     accessor: 'hsts_result',
   },
   {
-    Header: 'HSTS Preloaded',
+    Header: <Tooltip label="Is HSTS Preloaded?">HSTS Preloaded</Tooltip>,
     accessor: 'preloaded_result',
   },
   {
-    Header: 'SSL',
+    Header: (
+      <Tooltip label="Is the domain free of known SSL vulnerabilities?">
+        SSL
+      </Tooltip>
+    ),
     accessor: 'ssl_result',
   },
   {
-    Header: 'Protocols & Ciphers',
+    Header: (
+      <Tooltip label="Is the domain free of weak protocols & ciphers">
+        Protocols & Ciphers
+      </Tooltip>
+    ),
     accessor: 'protocol_cipher_result',
   },
   {
-    Header: 'Certificate Use',
+    Header: (
+      <Tooltip label="Is the domain using acceptable certificates?">
+        Certificate Use
+      </Tooltip>
+    ),
     accessor: 'cert_use_result',
   },
   {
-    Header: 'DMARC',
-    accessor: 'dmarc_result',
+    Header: (
+      <Tooltip label="Is SPF fully, partially, or not implemented?">
+        SPF
+      </Tooltip>
+    ),
+    accessor: 'spf_result',
   },
   {
-    Header: 'DKIM',
+    Header: (
+      <Tooltip label="Is DKIM fully, partially, or not implemented?">
+        DKIM
+      </Tooltip>
+    ),
     accessor: 'dkim_result',
   },
   {
-    Header: 'SPF',
-    accessor: 'spf_result',
+    Header: (
+      <Tooltip label="Is DMARC fully enforced (implemented and no corrective guidance given)?">
+        DMARC
+      </Tooltip>
+    ),
+    accessor: 'dmarc_result',
   },
 ]
 

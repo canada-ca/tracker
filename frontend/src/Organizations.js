@@ -58,21 +58,17 @@ export default function Organisations() {
             >
               {({ name, slug, domainCount }, index) => (
                 <Box>
-                  <Stack>
-                    <Organization
-                      key={'org' + index}
-                      slug={slug}
-                      name={name}
-                      domainCount={domainCount}
-                      size="2xl"
-                    />
-                  </Stack>
-                  <SummaryTable
-                    data={makeSummaryTableData(
-                      Math.floor(Math.random() * 100 + 30),
-                    )}
+                  <Organization
+                    key={'org' + index}
+                    slug={slug}
+                    name={name}
+                    domainCount={domainCount}
+                    size="2xl"
                   />
-                  <Divider />
+                  {domainCount > 0 && (
+                    <SummaryTable data={makeSummaryTableData(domainCount)} />
+                  )}
+                  <Divider borderColor="gray.900" />
                 </Box>
               )}
             </ListOf>

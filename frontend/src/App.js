@@ -24,6 +24,7 @@ const SignInPage = lazy(() => import('./SignInPage'))
 const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 const Organizations = lazy(() => import('./Organizations'))
 const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
+const DomainDetails = lazy(() => import('./DomainDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
 // const SummaryTablePage = lazy(() => import('./SummaryTablePage'))
 
@@ -105,6 +106,12 @@ export default function App() {
                     <Route
                       path={`${url}/:orgSlug`}
                       component={OrganizationDetails}
+                      exact
+                    />
+                    <Route
+                      path={`${url}/domain/:orgSlug`}
+                      component={DomainDetails}
+                      exact
                     />
                   </>
                 )}
