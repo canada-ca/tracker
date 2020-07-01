@@ -39,7 +39,7 @@
     "react-minimal-pie-chart": "^8.0.1",
     "react-router-dom": "^5.2.0",
     "react-swipe": "^6.0.4",
-    "react-table": "^7.2.1",
+    "react-table": "^7.2.2",
     "react-test-renderer": "^16.13.1",
     "recharts": "^2.0.0-beta.6",
     "yup": "^0.29.1"
