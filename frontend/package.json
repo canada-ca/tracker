@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
-    "@babel/runtime": "^7.10.3",
+    "@babel/runtime": "^7.10.4",
     "@chakra-ui/core": "^0.8.0",
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
@@ -51,7 +51,7 @@
     "@babel/plugin-transform-runtime": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-react": "^7.10.1",
-    "@babel/runtime": "^7.10.3",
+    "@babel/runtime": "^7.10.4",
     "@hot-loader/react-dom": "^16.13.0",
     "@lingui/cli": "^3.0.0-13",
     "@lingui/loader": "^3.0.0-13",
