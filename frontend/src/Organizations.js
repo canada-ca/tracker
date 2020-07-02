@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
-import { Heading, Stack, useToast, Box, Divider } from '@chakra-ui/core'
+import { Heading, Stack, useToast, Box, Divider, Text } from '@chakra-ui/core'
 import { ORGANIZATIONS } from './graphql/queries'
 import { useUserState } from './UserState'
 import { Organization } from './Organization'
@@ -75,6 +75,7 @@ export default function Organisations() {
           </Stack>
         </Stack>
       </Stack>
+      <Text>*all table data is mocked for demonstration purposes</Text>
     </Layout>
   )
 }

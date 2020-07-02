@@ -41,7 +41,7 @@ const generateEmailStatusIcon = () => {
 }
 
 const newDomain = (names) => {
-  const ind = Math.floor(Math.random() * 9)
+  const ind = Math.floor(Math.random() * 13)
   return {
     host_domain: names[ind],
     https_result: generateWebStatusIcon(),
@@ -58,32 +58,44 @@ const newDomain = (names) => {
 
 export default function MakeSummaryTableData(...lens) {
   const domainNames = [
-    <Link as={RouteLink} to={'organizations/domain/cyber'}>
+    <Link as={RouteLink} to={'organizations/:orgSlug/cyber'}>
       cyber.gc.ca
     </Link>,
-    <Link as={RouteLink} to={'organizations/domain/tbs'}>
+    <Link as={RouteLink} to={'organizations/:orgSlug/tbs'}>
       tbs-sct.gc.ca
     </Link>,
-    <Link as={RouteLink} to={'organizations/domain/canada'}>
+    <Link as={RouteLink} to={'organizations/:orgSlug/canada'}>
       canada.ca
     </Link>,
-    <Link as={RouteLink} to={'organizations/domain/cra'}>
+    <Link as={RouteLink} to={'organizations/:orgSlug/cra'}>
       cra-arc.gc.ca
     </Link>,
-    <Link as={RouteLink} to={'organizations/domain/prime-minister'}>
+    <Link as={RouteLink} to={'organizations/:orgSlug/prime-minister'}>
       pm.gc.ca
     </Link>,
-    <Link as={RouteLink} to={'organizations/domain/cse'}>
+    <Link as={RouteLink} to={'organizations/:orgSlug/cse'}>
       cse-cst.gc.ca
     </Link>,
-    <Link as={RouteLink} to={'organizations/domain/forces'}>
+    <Link as={RouteLink} to={'organizations/:orgSlug/forces'}>
       forces.gc.ca
     </Link>,
-    <Link as={RouteLink} to={'organizations/domain/faker'}>
+    <Link as={RouteLink} to={'organizations/:orgSlug/faker'}>
       faker.gc.ca
     </Link>,
-    <Link as={RouteLink} to={'organizations/domain/rcmp'}>
+    <Link as={RouteLink} to={'organizations/:orgSlug/rcmp'}>
       rcmp-grc.gc.ca
+    </Link>,
+    <Link as={RouteLink} to={'organizations/:orgSlug/health'}>
+      hc-sc.gc.ca
+    </Link>,
+    <Link as={RouteLink} to={'organizations/:orgSlug/global'}>
+      dfait-maeci.gc.ca
+    </Link>,
+    <Link as={RouteLink} to={'organizations/:orgSlug/environment'}>
+      ec.gc.ca
+    </Link>,
+    <Link as={RouteLink} to={'organizations/:orgSlug/fish'}>
+      dfo-mpo.gc.ca
     </Link>,
   ]
 

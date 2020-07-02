@@ -109,7 +109,7 @@ export default function App() {
                       exact
                     />
                     <Route
-                      path={`${url}/domain/:orgSlug`}
+                      path={`${url}/:orgSlug/:domain`}
                       component={DomainDetails}
                       exact
                     />

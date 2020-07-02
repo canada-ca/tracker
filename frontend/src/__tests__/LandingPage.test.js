@@ -5,19 +5,24 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { LandingPage } from '../LandingPage'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
 
 describe('<LandingPage />', () => {
   afterEach(cleanup)
 
   it('renders', () => {
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
-            <LandingPage />
-          </I18nProvider>
-        </ThemeProvider>
-      </MemoryRouter>,
+      <UserStateProvider
+        initialState={{ userName: null, jwt: null, tfa: null }}
+      >
+        <MemoryRouter initialEntries={['/']}>
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={setupI18n()}>
+              <LandingPage />
+            </I18nProvider>
+          </ThemeProvider>
+        </MemoryRouter>
+      </UserStateProvider>,
     )
   })
 })

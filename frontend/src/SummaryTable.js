@@ -87,69 +87,68 @@ const Table = styled.table`
 
 const columns = [
   {
-    Header: (
-      <Tooltip label="Domains included in this organization">Domain</Tooltip>
-    ),
+    Header: 'Domain',
+    // <Tooltip label="Domains included in this organization">Domain</Tooltip>
     accessor: 'host_domain',
   },
   {
-    Header: <Tooltip label="Is HTTPS implemented and enforced?">HTTPS</Tooltip>,
+    Header: 'HTTPS', // <Tooltip label="Is HTTPS implemented and enforced?">HTTPS</Tooltip>,
     accessor: 'https_result',
   },
   {
-    Header: <Tooltip label="Is HSTS properly implemented?">HSTS</Tooltip>,
+    Header: 'HSTS', // '<Tooltip label="Is HSTS properly implemented?">HSTS</Tooltip>,
     accessor: 'hsts_result',
   },
   {
-    Header: <Tooltip label="Is HSTS Preloaded?">HSTS Preloaded</Tooltip>,
+    Header: 'HSTS Prelaoded', // <Tooltip label="Is HSTS Preloaded?">HSTS Preloaded</Tooltip>,
     accessor: 'preloaded_result',
   },
   {
-    Header: (
-      <Tooltip label="Is the domain free of known SSL vulnerabilities?">
-        SSL
-      </Tooltip>
-    ),
+    Header: 'SSL',
+    // <Tooltip label="Is the domain free of known SSL vulnerabilities?">
+    //   {'SSL'}
+    // </Tooltip>
+
     accessor: 'ssl_result',
   },
   {
-    Header: (
-      <Tooltip label="Is the domain free of weak protocols & ciphers">
-        Protocols & Ciphers
-      </Tooltip>
-    ),
+    Header: 'Protocols & Ciphers',
+    // <Tooltip label="Is the domain free of weak protocols & ciphers">
+    //   Protocols & Ciphers
+    // </Tooltip>
+
     accessor: 'protocol_cipher_result',
   },
   {
-    Header: (
-      <Tooltip label="Is the domain using acceptable certificates?">
-        Certificate Use
-      </Tooltip>
-    ),
+    Header: 'Certificate Use',
+    // <Tooltip label="Is the domain using acceptable certificates?">
+    //   Certificate Use
+    // </Tooltip>
+
     accessor: 'cert_use_result',
   },
   {
-    Header: (
-      <Tooltip label="Is SPF fully, partially, or not implemented?">
-        SPF
-      </Tooltip>
-    ),
+    Header: 'SPF',
+    // <Tooltip label="Is SPF fully, partially, or not implemented?">
+    //   SPF
+    // </Tooltip>
+
     accessor: 'spf_result',
   },
   {
-    Header: (
-      <Tooltip label="Is DKIM fully, partially, or not implemented?">
-        DKIM
-      </Tooltip>
-    ),
+    Header: 'DKIM',
+    // <Tooltip label="Is DKIM fully, partially, or not implemented?">
+    //   DKIM
+    // </Tooltip>
+
     accessor: 'dkim_result',
   },
   {
-    Header: (
-      <Tooltip label="Is DMARC fully enforced (implemented and no corrective guidance given)?">
-        DMARC
-      </Tooltip>
-    ),
+    Header: 'DMARC',
+    // <Tooltip label="Is DMARC fully enforced (implemented and no corrective guidance given)?">
+    //   DMARC
+    // </Tooltip>
+
     accessor: 'dmarc_result',
   },
 ]
