@@ -171,7 +171,7 @@ class Query(graphene.ObjectType):
 
     # -- Start Summaries Queries --
     web_summary = web_summary
-    demo_web_summery = demo_web_summary
+    demo_web_summary = demo_web_summary
     # -- End Summaries Queries --
 
     generate_otp_url = graphene.String(
