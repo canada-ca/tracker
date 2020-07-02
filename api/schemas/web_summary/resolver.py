@@ -67,7 +67,7 @@ def resolve_web_summary(self, info, **kwargs):
             # In the CategorizedSummary Object
             summary_catagories.append(
                 SummaryCategory(
-                    category=summary.name,
+                    name=summary.name,
                     count=summary.count,
                     percentage=summary.percentage,
                 )
