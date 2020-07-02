@@ -21,7 +21,7 @@ def upgrade():
     op.create_table(
         "summaries",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("category", sa.String(), nullable=True),
+        sa.Column("name", sa.String(), nullable=True),
         sa.Column("count", sa.Integer(), nullable=True),
         sa.Column("percentage", sa.Float(), nullable=True),
         sa.Column("type", sa.String(), nullable=True),

@@ -6,7 +6,7 @@ class Summaries(Base):
     __tablename__ = "summaries"
 
     id = Column(Integer, primary_key=True)
-    category = Column(String)
+    name = Column(String)
     count = Column(Integer)
     percentage = Column(Float)
     type = Column(String)

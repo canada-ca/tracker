@@ -67,7 +67,7 @@ def resolve_web_summary(self, info, **kwargs):
             # In the CategorizedSummary Object
             summary_catagories.append(
                 SummaryCategory(
-                    category=summary.category,
+                    category=summary.name,
                     count=summary.count,
                     percentage=summary.percentage,
                 )
@@ -106,7 +106,7 @@ def resolve_demo_web_summary(self, info, **kwargs):
     for summary in summaries:
         summary_catagories.append(
             SummaryCategory(
-                name=summary.get("category"),
+                name=summary.get("name"),
                 count=summary.get("count"),
                 percentage=summary.get("percentage"),
             )
@@ -134,12 +134,12 @@ def generate_demo_data(full_pass_count=None, full_fail_count=None):
 
     summaries = [
         {
-            "category": "full-pass",
+            "name": "full-pass",
             "count": full_pass_count,
             "percentage": full_pass_percentage,
         },
         {
-            "category": "full-fail",
+            "name": "full-fail",
             "count": full_fail_count,
             "percentage": full_fail_percentage,
         },

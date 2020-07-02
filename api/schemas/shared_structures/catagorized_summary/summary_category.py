@@ -7,7 +7,7 @@ class SummaryCategory(graphene.ObjectType):
     pre-computed
     """
 
-    category = graphene.String(
+    name = graphene.String(
         description="Category of computed summary which the other fields relate to."
     )
     count = graphene.Int(
@@ -15,8 +15,8 @@ class SummaryCategory(graphene.ObjectType):
     )
     percentage = graphene.Float(description="Percentage compared to other categories.")
 
-    def resolve_category(self, info, **kwargs):
-        return self.category
+    def resolve_name(self, info, **kwargs):
+        return self.name
 
     def resolve_count(self, info, **kwargs):
         return self.count
