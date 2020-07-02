@@ -15,21 +15,26 @@ def db():
     cleanup()
 
 
-def test_web_summary_super_admin(db, caplog):
+def test_email_summary_super_admin(db, caplog):
     """"
-    Test to see if super admin can successfully query the webSummary Query
+    Test to see if super admin can successfully query the emailSummary Query
     """
     save, _ = db
 
     full_pass_summary = Summaries(
-        name="full-pass", count=100, percentage=50, type="web",
+        name="full-pass", count=100, percentage=50, type="email",
     )
     save(full_pass_summary)
 
     full_fail_summary = Summaries(
-        name="full-fail", count=100, percentage=50, type="web",
+        name="full-fail", count=50, percentage=25, type="email",
     )
     save(full_fail_summary)
+
+    partial_pass_summary = Summaries(
+        name="partial-pass", count=50, percentage=25, type="email",
+    )
+    save(partial_pass_summary)
 
     super_admin = Users(
         display_name="testsuperadmin",
@@ -52,7 +57,7 @@ def test_web_summary_super_admin(db, caplog):
     result = run(
         query="""
         {
-            webSummary {
+            emailSummary {
                 categories {
                     name
                     count
@@ -74,9 +79,10 @@ def test_web_summary_super_admin(db, caplog):
 
     expected_result = {
         "data": {
-            "webSummary": {
+            "emailSummary": {
                 "categories": [
-                    {"name": "full-fail", "count": 100, "percentage": 50},
+                    {"name": "partial-pass", "count": 50, "percentage": 25},
+                    {"name": "full-fail", "count": 50, "percentage": 25},
                     {"name": "full-pass", "count": 100, "percentage": 50},
                 ],
                 "total": 200,
@@ -86,26 +92,31 @@ def test_web_summary_super_admin(db, caplog):
 
     assert result == expected_result
     assert (
-        f"User: {super_admin.id} successfully retrieved web summary information."
+        f"User: {super_admin.id} successfully retrieved email summary information."
         in caplog.text
     )
 
 
-def test_web_summary_org_admin(db, caplog):
+def test_email_summary_org_admin(db, caplog):
     """"
-    Test to see if org admin can successfully query the webSummary Query
+    Test to see if org admin can successfully query the emailSummary Query
     """
     save, _ = db
 
     full_pass_summary = Summaries(
-        name="full-pass", count=100, percentage=50, type="web",
+        name="full-pass", count=100, percentage=50, type="email",
     )
     save(full_pass_summary)
 
     full_fail_summary = Summaries(
-        name="full-fail", count=100, percentage=50, type="web",
+        name="full-fail", count=50, percentage=25, type="email",
     )
     save(full_fail_summary)
+
+    partial_pass_summary = Summaries(
+        name="partial-pass", count=50, percentage=25, type="email",
+    )
+    save(partial_pass_summary)
 
     org_admin = Users(
         display_name="testadmin",
@@ -128,7 +139,7 @@ def test_web_summary_org_admin(db, caplog):
     result = run(
         query="""
         {
-            webSummary {
+            emailSummary {
                 categories {
                     name
                     count
@@ -150,9 +161,10 @@ def test_web_summary_org_admin(db, caplog):
 
     expected_result = {
         "data": {
-            "webSummary": {
+            "emailSummary": {
                 "categories": [
-                    {"name": "full-fail", "count": 100, "percentage": 50},
+                    {"name": "partial-pass", "count": 50, "percentage": 25},
+                    {"name": "full-fail", "count": 50, "percentage": 25},
                     {"name": "full-pass", "count": 100, "percentage": 50},
                 ],
                 "total": 200,
@@ -162,26 +174,31 @@ def test_web_summary_org_admin(db, caplog):
 
     assert result == expected_result
     assert (
-        f"User: {org_admin.id} successfully retrieved web summary information."
+        f"User: {org_admin.id} successfully retrieved email summary information."
         in caplog.text
     )
 
 
-def test_web_summary_user_write(db, caplog):
+def test_email_summary_user_write(db, caplog):
     """"
-    Test to see if user write can successfully query the webSummary Query
+    Test to see if user write can successfully query the emailSummary Query
     """
     save, _ = db
 
     full_pass_summary = Summaries(
-        name="full-pass", count=100, percentage=50, type="web",
+        name="full-pass", count=100, percentage=50, type="email",
     )
     save(full_pass_summary)
 
     full_fail_summary = Summaries(
-        name="full-fail", count=100, percentage=50, type="web",
+        name="full-fail", count=50, percentage=25, type="email",
     )
     save(full_fail_summary)
+
+    partial_pass_summary = Summaries(
+        name="partial-pass", count=50, percentage=25, type="email",
+    )
+    save(partial_pass_summary)
 
     user_write = Users(
         display_name="testuserwrite",
@@ -204,7 +221,7 @@ def test_web_summary_user_write(db, caplog):
     result = run(
         query="""
         {
-            webSummary {
+            emailSummary {
                 categories {
                     name
                     count
@@ -226,9 +243,10 @@ def test_web_summary_user_write(db, caplog):
 
     expected_result = {
         "data": {
-            "webSummary": {
+            "emailSummary": {
                 "categories": [
-                    {"name": "full-fail", "count": 100, "percentage": 50},
+                    {"name": "partial-pass", "count": 50, "percentage": 25},
+                    {"name": "full-fail", "count": 50, "percentage": 25},
                     {"name": "full-pass", "count": 100, "percentage": 50},
                 ],
                 "total": 200,
@@ -238,26 +256,31 @@ def test_web_summary_user_write(db, caplog):
 
     assert result == expected_result
     assert (
-        f"User: {user_write.id} successfully retrieved web summary information."
+        f"User: {user_write.id} successfully retrieved email summary information."
         in caplog.text
     )
 
 
-def test_web_summary_user_read(db, caplog):
+def test_email_summary_user_read(db, caplog):
     """"
-    Test to see if user read can successfully query the webSummary Query
+    Test to see if user read can successfully query the emailSummary Query
     """
     save, _ = db
 
     full_pass_summary = Summaries(
-        name="full-pass", count=100, percentage=50, type="web",
+        name="full-pass", count=100, percentage=50, type="email",
     )
     save(full_pass_summary)
 
     full_fail_summary = Summaries(
-        name="full-fail", count=100, percentage=50, type="web",
+        name="full-fail", count=50, percentage=25, type="email",
     )
     save(full_fail_summary)
+
+    partial_pass_summary = Summaries(
+        name="partial-pass", count=50, percentage=25, type="email",
+    )
+    save(partial_pass_summary)
 
     user_read = Users(
         display_name="testuserread",
@@ -280,7 +303,7 @@ def test_web_summary_user_read(db, caplog):
     result = run(
         query="""
         {
-            webSummary {
+            emailSummary {
                 categories {
                     name
                     count
@@ -302,9 +325,10 @@ def test_web_summary_user_read(db, caplog):
 
     expected_result = {
         "data": {
-            "webSummary": {
+            "emailSummary": {
                 "categories": [
-                    {"name": "full-fail", "count": 100, "percentage": 50},
+                    {"name": "partial-pass", "count": 50, "percentage": 25},
+                    {"name": "full-fail", "count": 50, "percentage": 25},
                     {"name": "full-pass", "count": 100, "percentage": 50},
                 ],
                 "total": 200,
@@ -314,12 +338,12 @@ def test_web_summary_user_read(db, caplog):
 
     assert result == expected_result
     assert (
-        f"User: {user_read.id} successfully retrieved web summary information."
+        f"User: {user_read.id} successfully retrieved email summary information."
         in caplog.text
     )
 
 
-def test_web_summary_user_has_no_data_in_db(db, caplog):
+def test_email_summary_user_has_no_data_in_db(db, caplog):
     """"
     Test to see if error occurs when there is no data in the db
     """
@@ -339,7 +363,7 @@ def test_web_summary_user_has_no_data_in_db(db, caplog):
     result = run(
         query="""
         {
-            webSummary {
+            emailSummary {
                 categories {
                     name
                     count
@@ -354,34 +378,39 @@ def test_web_summary_user_has_no_data_in_db(db, caplog):
 
     if "errors" not in result:
         fail(
-            "Error should have occurred when trying to get web summary when there is no summary data in the db, instead: {}".format(
+            "Error should have occurred when trying to get email summary when there is no summary data in the db, instead: {}".format(
                 json(result)
             )
         )
 
     [error] = result["errors"]
-    assert error["message"] == "Error, web summary could not be found."
+    assert error["message"] == "Error, email summary could not be found."
     assert (
-        f"User: {user_read.id} tried to access web summary query but no web summaries could be found."
+        f"User: {user_read.id} tried to access email summary query but no web summaries could be found."
         in caplog.text
     )
 
 
-def test_web_summary_user_has_no_permissions(db, caplog):
+def test_email_summary_user_has_no_permissions(db, caplog):
     """"
     Test to see if error occurs when user has no permissions
     """
     save, session = db
 
     full_pass_summary = Summaries(
-        name="full-pass", count=100, percentage=50, type="web",
+        name="full-pass", count=100, percentage=50, type="email",
     )
     save(full_pass_summary)
 
     full_fail_summary = Summaries(
-        name="full-fail", count=100, percentage=50, type="web",
+        name="full-fail", count=50, percentage=25, type="email",
     )
     save(full_fail_summary)
+
+    partial_pass_summary = Summaries(
+        name="partial-pass", count=50, percentage=25, type="email",
+    )
+    save(partial_pass_summary)
 
     user_read = Users(
         display_name="testuserread",
@@ -401,7 +430,7 @@ def test_web_summary_user_has_no_permissions(db, caplog):
     result = run(
         query="""
         {
-            webSummary {
+            emailSummary {
                 categories {
                     name
                     count
@@ -416,14 +445,14 @@ def test_web_summary_user_has_no_permissions(db, caplog):
 
     if "errors" not in result:
         fail(
-            "Error should have occurred when trying to get web summary when user has no permissions, instead: {}".format(
+            "Error should have occurred when trying to get email summary when user has no permissions, instead: {}".format(
                 json(result)
             )
         )
 
     [error] = result["errors"]
-    assert error["message"] == "Error, web summary could not be found."
+    assert error["message"] == "Error, email summary could not be found."
     assert (
-        f"User: {user_read.id} tried to access web summary query but does not have any user read or higher access."
+        f"User: {user_read.id} tried to access email summary query but does not have any user read or higher access."
         in caplog.text
     )
