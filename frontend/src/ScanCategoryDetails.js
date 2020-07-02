@@ -1,7 +1,7 @@
 import React from 'react'
 import { object, string } from 'prop-types'
 import { Box, Icon, Text } from '@chakra-ui/core'
-import { guidanceTags } from './GuidanceTagConstants'
+import { guidanceTags } from './guidanceTagConstants'
 
 export function ScanCategoryDetails({ categoryName, categoryData }) {
   const categories = categoryData[`${categoryName}GuidanceTags`].length ? (
