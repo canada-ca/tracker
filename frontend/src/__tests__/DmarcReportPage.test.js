@@ -6,7 +6,6 @@ import { MockedProvider } from '@apollo/react-testing'
 import DmarcReportPage from '../DmarcReportPage'
 import {
   DEMO_DMARC_REPORT_DETAIL_TABLES,
-  DEMO_DMARC_REPORT_SUMMARY,
   DEMO_DMARC_REPORT_SUMMARY_LIST,
 } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
@@ -14,24 +13,8 @@ import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { rawSummaryListData } from '../fixtures/summaryListData'
 import { rawDmarcReportDetailTablesData } from '../fixtures/dmarcReportDetailTablesData'
-import { rawSummaryCardData } from '../fixtures/summaryCardData'
 
 const mocks = [
-  {
-    request: {
-      query: DEMO_DMARC_REPORT_SUMMARY,
-      variables: {
-        domainSlug: 'test-domain-slug',
-        period: 'LAST30DAYS',
-        year: '2020',
-      },
-    },
-    result: {
-      data: {
-        demoDmarcReportSummary: rawSummaryCardData,
-      },
-    },
-  },
   {
     request: {
       query: DEMO_DMARC_REPORT_SUMMARY_LIST,

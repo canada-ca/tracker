@@ -156,31 +156,6 @@ export const DMARC_REPORT_SUMMARY = gql`
   }
 `
 
-export const DEMO_DMARC_REPORT_SUMMARY = gql`
-  query DemoDmarcReportSummary(
-    $domainSlug: Slug!
-    $period: PeriodEnums!
-    $year: Year!
-  ) {
-    demoDmarcReportSummary(
-      input: {
-        domainSlug: $domainSlug,
-        period: $period,
-        year: $year
-      }
-    ) {
-      month
-      year
-      categoryTotals {
-        fullPass
-        partialPass
-        fail
-        total
-      }
-    }
-  }
-`
-
 export const DMARC_REPORT_DETAIL_TABLES = gql`
   query DmarcReportDetailTables(
     $domainSlug: Slug!
