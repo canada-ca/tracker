@@ -8,6 +8,7 @@ function Server() {
   const server = express()
   server.use(bodyParser.json())
   server.disable('x-powered-by')
+  server.set('trust proxy', true)
 
   server.get('/alive', (_req, res) => {
     res.json({ status: 'ok' })
