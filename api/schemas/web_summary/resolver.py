@@ -7,7 +7,7 @@ from app import logger
 from db import db_session
 from functions.auth_functions import is_user_read
 from functions.auth_wrappers import require_token
-from models import Summaries
+from models import Summaries, Organizations
 from schemas.shared_structures.catagorized_summary import (
     CatagorizedSummary,
     SummaryCategory,
@@ -51,7 +51,7 @@ def resolve_web_summary(self, info, **kwargs):
         )
 
         # Check to ensure that there is data returned from the db
-        if summaries is None:
+        if not summaries:
             logger.warning(
                 f"User: {user_id} tried to access web summary query but no web summaries could be found."
             )
