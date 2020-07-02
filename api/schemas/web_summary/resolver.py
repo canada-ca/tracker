@@ -55,7 +55,7 @@ def resolve_web_summary(self, info, **kwargs):
             logger.warning(
                 f"User: {user_id} tried to access web summary query but no web summaries could be found."
             )
-            raise GraphQLError("Error, landing page summmaries could not be found.")
+            raise GraphQLError("Error, web summaries could not be found.")
 
         # Generate return data
         total = 0
@@ -85,7 +85,7 @@ def resolve_web_summary(self, info, **kwargs):
         logger.warning(
             f"User: {user_id} tried to access web summary query but does not have any user read or higher access."
         )
-        raise GraphQLError("Error, landing page summmaries could not be found.")
+        raise GraphQLError("Error, web summaries could not be found.")
 
 
 def resolve_demo_web_summary(self, info, **kwargs):
