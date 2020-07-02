@@ -10,6 +10,7 @@ from models.Users import Users
 from models.User_affiliations import User_affiliations
 from models.Domains import Domains
 from models.Organizations import Organizations
+from models.Summaries import Summaries
 
 
 class Dmarc_Reports(Base):
