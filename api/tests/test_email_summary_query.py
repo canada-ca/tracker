@@ -72,7 +72,7 @@ def test_email_summary_super_admin(db, caplog):
 
     if "errors" in result:
         fail(
-            "Error occurred when trying to get web summary, error: {}".format(
+            "Error occurred when trying to get email summary, error: {}".format(
                 json(result)
             )
         )
@@ -154,7 +154,7 @@ def test_email_summary_org_admin(db, caplog):
 
     if "errors" in result:
         fail(
-            "Error occurred when trying to get web summary, error: {}".format(
+            "Error occurred when trying to get email summary, error: {}".format(
                 json(result)
             )
         )
@@ -236,7 +236,7 @@ def test_email_summary_user_write(db, caplog):
 
     if "errors" in result:
         fail(
-            "Error occurred when trying to get web summary, error: {}".format(
+            "Error occurred when trying to get email summary, error: {}".format(
                 json(result)
             )
         )
@@ -318,7 +318,7 @@ def test_email_summary_user_read(db, caplog):
 
     if "errors" in result:
         fail(
-            "Error occurred when trying to get web summary, error: {}".format(
+            "Error occurred when trying to get email summary, error: {}".format(
                 json(result)
             )
         )
@@ -386,7 +386,7 @@ def test_email_summary_user_has_no_data_in_db(db, caplog):
     [error] = result["errors"]
     assert error["message"] == "Error, email summary could not be found."
     assert (
-        f"User: {user_read.id} tried to access email summary query but no web summaries could be found."
+        f"User: {user_read.id} tried to access email summary query but no email summaries could be found."
         in caplog.text
     )
 
