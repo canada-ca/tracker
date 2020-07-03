@@ -69,6 +69,23 @@ type AuthResult {
 }
 
 """
+This object contains the list of different categories for pre-computed
+summary data with the computed total for how many domains in total are
+being compared.
+"""
+type CatagorizedSummary {
+  """
+  List of SummaryCategory objects with data for different computed categories.
+  """
+  categories: [SummaryCategory]
+
+  """
+  Total domains that were checked under this summary.
+  """
+  total: Int @examples(values: [86954, 57896, 54386, 93456, 23452])
+}
+
+"""
 This object displays the total amount of messages that fit into each category
 """
 type CategoryTotals {
@@ -1405,6 +1422,26 @@ type Query {
   ): DomainConnection
 
   """
+  Email summary computed values, used to build summary cards.
+  """
+  emailSummary: CatagorizedSummary
+
+  """
+  Demo email summary computed values, used to build summary cards.
+  """
+  demoEmailSummary: CatagorizedSummary
+
+  """
+  Web summary computed values, used to build summary cards.
+  """
+  webSummary: CatagorizedSummary
+
+  """
+  Demo web summary computed values, used to build summary cards.
+  """
+  demoWebSummary: CatagorizedSummary
+
+  """
   An api endpoint used to generate a OTP url used for two factor authentication.
   """
   generateOtpUrl(email: EmailAddress!): String
@@ -1692,6 +1729,27 @@ type SSL {
     @examples(
       values: ["ssl1", "ssl2", "ssl3", "ssl4", "ssl5", "ssl6", "ssl7", "ssl8"]
     )
+}
+
+"""
+This object contains the information for each type of summary that has been
+pre-computed
+"""
+type SummaryCategory {
+  """
+  Category of computed summary which the other fields relate to.
+  """
+  name: String
+
+  """
+  Total count of domains that fall into this category.
+  """
+  count: Int @examples(values: [6577, 5433, 7435, 3245, 9876])
+
+  """
+  Percentage compared to other categories.
+  """
+  percentage: Float @examples(values: [50.0, 43.5, 76.8, 23.4, 54.6])
 }
 
 """
