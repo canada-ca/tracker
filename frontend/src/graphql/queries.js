@@ -20,7 +20,7 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
-export const FIND_DOMAIN_BY_SLUG= gql`
+export const FIND_DOMAIN_BY_SLUG = gql`
   query FindDomainBySlug($urlSlug: Slug!) {
     findDomainBySlug(urlSlug: $urlSlug) {
       url
@@ -54,7 +54,10 @@ export const FIND_DOMAIN_BY_SLUG= gql`
               spfGuidanceTags
             }
             dkim {
-              dkimGuidanceTags
+              selectors {
+                selector
+                dkimGuidanceTags
+              }
             }
           }
         }
@@ -138,11 +141,7 @@ export const QUERY_USER = gql`
 
 export const DMARC_REPORT_SUMMARY_LIST = gql`
   query DmarcReportSummaryList($domainSlug: Slug!) {
-    dmarcReportSummaryList(
-      input: {
-        domainSlug: $domainSlug
-      }
-    ) {
+    dmarcReportSummaryList(input: { domainSlug: $domainSlug }) {
       month
       year
       categoryTotals {
@@ -157,11 +156,7 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
 
 export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
   query DemoDmarcReportSummaryList($domainSlug: Slug!) {
-    demoDmarcReportSummaryList(
-      input: {
-        domainSlug: $domainSlug
-      }
-    ) {
+    demoDmarcReportSummaryList(input: { domainSlug: $domainSlug }) {
       month
       year
       categoryTotals {
@@ -181,11 +176,7 @@ export const DMARC_REPORT_SUMMARY = gql`
     $year: Year!
   ) {
     dmarcReportSummary(
-      input: {
-        domainSlug: $domainSlug,
-        period: $period,
-        year: $year
-      }
+      input: { domainSlug: $domainSlug, period: $period, year: $year }
     ) {
       month
       year
@@ -206,11 +197,7 @@ export const DMARC_REPORT_DETAIL_TABLES = gql`
     $year: Year!
   ) {
     dmarcReportDetailTables(
-      input: {
-        domainSlug: $domainSlug
-        period: $period
-        year: $year
-      }
+      input: { domainSlug: $domainSlug, period: $period, year: $year }
     ) {
       month
       year
@@ -287,11 +274,7 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
     $year: Year!
   ) {
     demoDmarcReportDetailTables(
-      input: {
-        domainSlug: $domainSlug
-        period: $period
-        year: $year
-      }
+      input: { domainSlug: $domainSlug, period: $period, year: $year }
     ) {
       month
       year
