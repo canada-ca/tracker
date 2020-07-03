@@ -205,3 +205,13 @@ Classification = sqlalchemy.Table(
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("UNCLASSIFIED", sqlalchemy.String),
 )
+
+Summaries = sqlalchemy.Table(
+    "summaries",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("name", sqlalchemy.String),
+    sqlalchemy.Column("count", sqlalchemy.Integer),
+    sqlalchemy.Column("percentage", sqlalchemy.Float),
+    sqlalchemy.Column("type", sqlalchemy.String),
+)
