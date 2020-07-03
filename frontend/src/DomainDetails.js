@@ -173,7 +173,7 @@ export default function DomainDetails() {
           })}
         </Stack>
       </Stack>
-      <Text>*all data is mocked for demonstration purposes</Text>
+      <Text>*All data represented is mocked for demonstration purposes</Text>
     </Layout>
   )
 }

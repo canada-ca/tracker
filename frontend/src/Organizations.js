@@ -75,7 +75,7 @@ export default function Organisations() {
           </Stack>
         </Stack>
       </Stack>
-      <Text>*all table data is mocked for demonstration purposes</Text>
+      <Text>*All data represented is mocked for demonstration purposes</Text>
     </Layout>
   )
 }

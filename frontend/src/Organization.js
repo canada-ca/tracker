@@ -6,7 +6,7 @@ import { string, number } from 'prop-types'
 
 export function Organization({ name, slug, domainCount, size, ...rest }) {
   const { path, _url } = useRouteMatch()
-  // console.log(`path: ${path}, url: ${_url}`)
+  console.log(`path: ${path}, url: ${_url}`)
   return (
     <ListItem {...rest}>
       <Stack spacing={4} padding={[1, 2, 3]} flexWrap="wrap">

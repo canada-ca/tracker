@@ -88,67 +88,42 @@ const Table = styled.table`
 const columns = [
   {
     Header: 'Domain',
-    // <Tooltip label="Domains included in this organization">Domain</Tooltip>
     accessor: 'host_domain',
   },
   {
-    Header: 'HTTPS', // <Tooltip label="Is HTTPS implemented and enforced?">HTTPS</Tooltip>,
+    Header: 'HTTPS',
     accessor: 'https_result',
   },
   {
-    Header: 'HSTS', // '<Tooltip label="Is HSTS properly implemented?">HSTS</Tooltip>,
+    Header: 'HSTS',
     accessor: 'hsts_result',
   },
   {
-    Header: 'HSTS Prelaoded', // <Tooltip label="Is HSTS Preloaded?">HSTS Preloaded</Tooltip>,
+    Header: 'HSTS Prelaoded',
     accessor: 'preloaded_result',
   },
   {
     Header: 'SSL',
-    // <Tooltip label="Is the domain free of known SSL vulnerabilities?">
-    //   {'SSL'}
-    // </Tooltip>
-
     accessor: 'ssl_result',
   },
   {
     Header: 'Protocols & Ciphers',
-    // <Tooltip label="Is the domain free of weak protocols & ciphers">
-    //   Protocols & Ciphers
-    // </Tooltip>
-
     accessor: 'protocol_cipher_result',
   },
   {
     Header: 'Certificate Use',
-    // <Tooltip label="Is the domain using acceptable certificates?">
-    //   Certificate Use
-    // </Tooltip>
-
     accessor: 'cert_use_result',
   },
   {
     Header: 'SPF',
-    // <Tooltip label="Is SPF fully, partially, or not implemented?">
-    //   SPF
-    // </Tooltip>
-
     accessor: 'spf_result',
   },
   {
     Header: 'DKIM',
-    // <Tooltip label="Is DKIM fully, partially, or not implemented?">
-    //   DKIM
-    // </Tooltip>
-
     accessor: 'dkim_result',
   },
   {
     Header: 'DMARC',
-    // <Tooltip label="Is DMARC fully enforced (implemented and no corrective guidance given)?">
-    //   DMARC
-    // </Tooltip>
-
     accessor: 'dmarc_result',
   },
 ]
