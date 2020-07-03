@@ -9,19 +9,21 @@ import {
   Divider,
 } from '@chakra-ui/core'
 import { Layout } from './Layout'
-import { Link as ReactRouterLink } from 'react-router-dom'
+import { Link as ReactRouterLink, useParams } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import { useQuery } from '@apollo/react-hooks'
-import { DOMAINS } from './graphql/queries'
+import { ORGANIZATION_BY_SLUG } from './graphql/queries'
 import { useUserState } from './UserState'
 import { sanitizeUrl } from './sanitizeUrl'
 
 export default function DomainDetails() {
   const { i18n } = useLingui()
+  const { orgSlug } = useParams()
   const { currentUser } = useUserState()
   const toast = useToast()
-  const { loading, _error, data } = useQuery(DOMAINS, {
+  const { loading, _error, data } = useQuery(ORGANIZATION_BY_SLUG, {
+    variables: { slug: orgSlug },
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -40,17 +42,17 @@ export default function DomainDetails() {
   })
 
   let domains = []
-  if (data && data.domains.edges) {
-    domains = data.domains.edges.map((e) => e.node)
+  if (data && data.organization.domains.edges) {
+    domains = data.organization.domains.edges.map((e) => e.node)
   }
-  console.log(domains)
 
-  if (loading)
+  if (loading) {
     return (
       <p>
         <Trans>Loading...</Trans>
       </p>
     )
+  }
 
   const genWebStatus = () => {
     const randNum = Math.floor(Math.random() * 100 + 1)
@@ -107,6 +109,12 @@ export default function DomainDetails() {
         </Stack>
 
         <Stack>
+          <Stack isInline>
+            <Text fontSize="xl" fontWeight="bold">
+              Organization:
+            </Text>
+            <Text fontSize="xl">{data.organization.name}</Text>
+          </Stack>
           <Stack isInline align="center">
             <Text fontSize="xl" fontWeight="bold">
               URL:

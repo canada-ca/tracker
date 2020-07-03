@@ -66,9 +66,6 @@ export default function App() {
               <Trans>Sign In</Trans>
             </Link>
           )}
-          {/* <Link to="/user-list">
-            <Trans>User List</Trans>
-          </Link> */}
 
           <Link to="/dmarc-report">
             <Trans>Report</Trans>
@@ -93,8 +90,6 @@ export default function App() {
               </Route>
 
               <Route path="/sign-in" component={SignInPage} />
-
-              {/* <Route path="/summary-table" component={SummaryTablePage} /> */}
 
               <RouteIf
                 condition={isLoggedIn()}
