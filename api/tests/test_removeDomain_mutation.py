@@ -81,7 +81,9 @@ def test_remove_domain_super_admin(db, caplog):
         mutation="""
         mutation{
             removeDomain(
-                url: "sa.remove.domain.ca"
+                input: {
+                    url: "sa.remove.domain.ca"
+                }
             ) {
                 status
             }
@@ -142,7 +144,9 @@ def test_remove_domain_super_admin_cant_remove_domain_doesnt_exist(db, caplog):
         mutation="""
         mutation{
             removeDomain(
-                url: "sa.remove.domain.ca"
+                input: {
+                    url: "sa.remove.domain.ca"
+                }
             ) {
                 status
             }
@@ -210,7 +214,9 @@ def test_remove_domain_org_admin(db, caplog):
         mutation="""
         mutation{
             removeDomain(
-                url: "admin.remove.domain.ca"
+                input: {
+                    url: "admin.remove.domain.ca"
+                }
             ) {
                 status
             }
@@ -273,7 +279,9 @@ def test_remove_domain_org_admin_cant_remove_diff_org(db, caplog):
         mutation="""
         mutation{
             removeDomain(
-                url: "admin.remove.domain.ca"
+                input: {
+                    url: "admin.remove.domain.ca"
+                }
             ) {
                 status
             }
@@ -317,7 +325,9 @@ def test_remove_domain_org_admin_cant_remove_domain_doesnt_exist(db, caplog):
         mutation="""
         mutation{
             removeDomain(
-                url: "admin.remove.domain.ca"
+                input: {
+                    url: "admin.remove.domain.ca"
+                }
             ) {
                 status
             }
@@ -387,7 +397,9 @@ def test_remove_domain_user_write(db, caplog):
         mutation="""
         mutation{
             removeDomain(
-                url: "user.write.remove.domain.ca"
+                input: {
+                    url: "user.write.remove.domain.ca"
+                }
             ) {
                 status
             }
@@ -452,7 +464,9 @@ def test_remove_domain_user_write_cant_remove_diff_org(db, caplog):
         mutation="""
         mutation{
             removeDomain(
-                url: "user.write.remove.domain.ca"
+                input: {
+                    url: "user.write.remove.domain.ca"
+                }
             ) {
                 status
             }
@@ -499,7 +513,9 @@ def test_remove_domain_user_write_cant_remove_domain_doesnt_exist(db, caplog):
         mutation="""
         mutation{
             removeDomain(
-                url: "user.write.remove.domain.ca"
+                input: {
+                    url: "user.write.remove.domain.ca"
+                }
             ) {
                 status
             }
@@ -551,7 +567,9 @@ def test_remove_domain_user_read_cant_remove_domains(db, caplog):
         mutation="""
         mutation{
             removeDomain(
-                url: "user.read.remove.domain.ca"
+                input: {
+                    url: "user.read.remove.domain.ca"
+                }
             ) {
                 status
             }

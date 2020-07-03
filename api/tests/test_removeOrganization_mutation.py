@@ -43,7 +43,11 @@ def test_mutation_removeOrganization_succeeds_for_super_admin(save, caplog):
     result = run(
         query="""
          mutation {
-             removed:removeOrganization(slug: "org-one") {
+             removed:removeOrganization(
+                input: {
+                    slug: "org-one"
+                }
+             ) {
                  status
              }
          }
@@ -86,7 +90,11 @@ def test_mutation_removeOrganization_does_not_remove_super_admin_org(save, caplo
     result = run(
         query="""
          mutation {
-             removed:removeOrganization(slug: "super-admin") {
+             removed:removeOrganization(
+                input: {
+                    slug: "super-admin"
+                }
+             ) {
                  status
              }
          }
@@ -128,7 +136,9 @@ def test_mutation_removeOrganization_fails_if_org_does_not_exist(save, caplog):
         """
          mutation {
              removeOrganization(
-                 slug: "random"
+                input: {
+                    slug: "random"
+                }
              ) {
                  status
              }
@@ -172,7 +182,9 @@ def test_mutation_removeOrganization_fails_for_admin_users(save, caplog):
         """
          mutation {
              removeOrganization(
-                 slug: "org-one"
+                input: {
+                    slug: "org-one"
+                }
              ) {
                  status
              }
@@ -219,7 +231,9 @@ def test_mutation_removeOrganization_fails_for_write_users(save, caplog):
         """
          mutation {
              removeOrganization(
-                 slug: "org-one"
+                input: {
+                    slug: "org-one"
+                }
              ) {
                  status
              }
@@ -266,7 +280,9 @@ def test_mutation_removeOrganization_fails_for_read_users(save, caplog):
         """
          mutation {
              removeOrganization(
-                 slug: "org-one"
+                input: {
+                    slug: "org-one"
+                }
              ) {
                  status
              }
