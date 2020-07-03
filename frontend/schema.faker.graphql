@@ -778,39 +778,9 @@ type Mutation {
   """
   updateOrganization(
     """
-    Organization Acronym you would like updated
+    UpdateOrganizationInput object containing all arguement fields.
     """
-    acronym: Acronym
-
-    """
-    The city in which the organization is located in.
-    """
-    city: String
-
-    """
-    Full name of organization.
-    """
-    name: String
-
-    """
-    The province in which the organization is located in.
-    """
-    province: String
-
-    """
-    The sector which the organization belongs to.
-    """
-    sector: String
-
-    """
-    Organization that will be updated
-    """
-    slug: Slug!
-
-    """
-    The zone which the organization belongs to.
-    """
-    zone: String
+    input: UpdateOrganizationInput!
   ): UpdateOrganization
 
   """
@@ -1753,8 +1723,56 @@ input UpdateDomainInput {
   updatedSelectors: Selectors
 }
 
+"""
+Mutation allows the modification of organizations if any changes to the
+organization may occur.
+"""
 type UpdateOrganization {
+  """
+  Returns true if organization was successfully updated.
+  """
   status: Boolean
+}
+
+"""
+Input object used to define the argument fields for the updateOrganization
+mutation.
+"""
+input UpdateOrganizationInput {
+  """
+  Organization that will be updated.
+  """
+  slug: Slug!
+
+  """
+  Organization Acronym you would like updated.
+  """
+  acronym: Acronym
+
+  """
+  Full name of organization.
+  """
+  name: String
+
+  """
+  The zone which the organization belongs to.
+  """
+  zone: String
+
+  """
+  The sector which the organization belongs to.
+  """
+  sector: String
+
+  """
+  The province in which the organization is located in.
+  """
+  province: String
+
+  """
+  The city in which the organization is located in.
+  """
+  city: String
 }
 
 type UpdateUserPassword {
