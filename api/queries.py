@@ -171,12 +171,10 @@ class Query(graphene.ObjectType):
     # -- End Dmarc Report Queries
 
     # -- Start Summaries Queries --
-    # TODO Un-comment once summary service is in more of a working order
-    # email_summary = email_summary
+    email_summary = email_summary
     demo_email_summary = demo_email_summary
 
-    # TODO Un-comment here as well :point-up:
-    # web_summary = web_summary
+    web_summary = web_summary
     demo_web_summary = demo_web_summary
 
     # -- End Summaries Queries --
