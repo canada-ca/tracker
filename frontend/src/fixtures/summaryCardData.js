@@ -1,14 +1,22 @@
 export const rawSummaryCardData = {
-  month: 'MAY',
-  year: 2020,
-  categoryTotals: {
-    fullPass: 81205,
-    partialPass: 62023,
-    fail: 60283,
-    total: 4774,
-    __typename: 'CategoryTotals',
-  },
-  __typename: 'DmarcReportSummary',
+  categories: [
+    {
+      name: 'fullPass',
+      value: 33,
+      percentage: 33,
+    },
+    {
+      name: 'partialPass',
+      value: 33,
+      percentage: 33,
+    },
+    {
+      name: 'fail',
+      value: 33,
+      percentage: 33,
+    },
+  ],
+  total: 100,
 }
 
 export const formattedSummaryCardData = { ...rawSummaryCardData }

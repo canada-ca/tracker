@@ -43,23 +43,26 @@ class MailScan(SQLAlchemyObjectType):
         lambda: DKIM, description="DomainKeys Identified Mail (DKIM) Signatures"
     )
 
-    def resolve_domain(self: Mail_scans, info):
+    def resolve_domain(self: Mail_scans, info, **kwargs):
         return get_domain(self, info)
 
-    def resolve_timestamp(self: Mail_scans, info):
+    def resolve_timestamp(self: Mail_scans, info, **kwargs):
         return get_timestamp(self, info)
 
-    def resolve_dmarc(self: Mail_scans, info):
+    def resolve_dmarc(self: Mail_scans, info, **kwargs):
         query = DMARC.get_query(info)
-        return query.filter(self.id == Dmarc_scans.id).first()
+        query = query.filter(self.id == Dmarc_scans.id).first()
+        return query
 
-    def resolve_spf(self: Mail_scans, info):
+    def resolve_spf(self: Mail_scans, info, **kwargs):
         query = SPF.get_query(info)
-        return query.filter(self.id == Spf_scans.id).first()
+        query = query.filter(self.id == Spf_scans.id).first()
+        return query
 
-    def resolve_dkim(self: Mail_scans, info):
+    def resolve_dkim(self: Mail_scans, info, **kwargs):
         query = DKIM.get_query(info)
-        return query.filter(self.id == Dkim_scans.id).first()
+        query = query.filter(self.id == Dkim_scans.id).first()
+        return query
 
 
 class MailScanConnection(relay.Connection):

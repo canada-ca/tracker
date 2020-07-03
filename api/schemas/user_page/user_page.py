@@ -44,19 +44,19 @@ class UserPage(SQLAlchemyObjectType):
         "specified",
     )
 
-    def resolve_user_name(self: Users, info):
+    def resolve_user_name(self: Users, info, **kwargs):
         return self.user_name
 
-    def resolve_display_name(self: Users, info):
+    def resolve_display_name(self: Users, info, **kwargs):
         return self.display_name
 
-    def resolve_lang(self: Users, info):
+    def resolve_lang(self: Users, info, **kwargs):
         return self.preferred_lang
 
-    def resolve_tfa(self: Users, info):
+    def resolve_tfa(self: Users, info, **kwargs):
         return self.tfa_validated
 
-    def resolve_email_validated(self: Users, info):
+    def resolve_email_validated(self: Users, info, **kwargs):
         return self.email_validated
 
     @require_token
@@ -66,8 +66,8 @@ class UserPage(SQLAlchemyObjectType):
 
         if user_id == self.id or is_super_admin(user_roles=user_roles):
             query = UserPageAffiliations.get_query(info)
-            query = query.filter(User_affiliations.user_id == self.id)
-            return query.all()
+            query = query.filter(User_affiliations.user_id == self.id).all()
+            return query
         else:
             rtr_list = []
             for role in user_roles:

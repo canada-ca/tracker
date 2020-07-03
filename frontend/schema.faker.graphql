@@ -39,6 +39,21 @@ type Authenticate {
 }
 
 """
+Object containing input fields for Authenticate Mutation
+"""
+input AuthenticateInput {
+  """
+  User email that they signed up with.
+  """
+  userName: EmailAddress!
+
+  """
+  Users password
+  """
+  password: String!
+}
+
+"""
 A type used to return information when users sign up or authenticate
 """
 type AuthResult {
@@ -51,21 +66,6 @@ type AuthResult {
   User that has just been created or signed in
   """
   user: User
-}
-
-"""
-DKIM and SPF domain results
-"""
-type AuthResults {
-  """
-  DKIM domain raw results
-  """
-  dkim: [DkimReport]
-
-  """
-  SPF domain raw results
-  """
-  spf: [SpfReport]
 }
 
 """
@@ -109,10 +109,67 @@ type CreateDomain {
 }
 
 """
+Input object used to define the argument fields for the createDomain
+mutation
+"""
+input CreateDomainInput {
+  """
+  Organizations slug that you would like to connect this domain to.
+  """
+  orgSlug: Slug!
+
+  """
+  URL that you would like to be added to database.
+  """
+  url: URL!
+
+  """
+  DKIM selector strings corresponding to this domain
+  """
+  selectors: Selectors
+}
+
+"""
 Mutation allows the creation of an organization inside the database.
 """
 type CreateOrganization {
   status: Boolean
+}
+
+"""
+Input object type containing all the fields for the create organization
+mutation
+"""
+input CreateOrganizationInput {
+  """
+  Acronym of organization.
+  """
+  acronym: Acronym!
+
+  """
+  Full name of organization.
+  """
+  name: String!
+
+  """
+  The zone which the organization belongs to.
+  """
+  zone: String!
+
+  """
+  The sector which the organization belongs to.
+  """
+  sector: String!
+
+  """
+  The province in which the organization is located in.
+  """
+  province: String!
+
+  """
+  The city in which the organization is located in.
+  """
+  city: String!
 }
 
 """
@@ -185,6 +242,22 @@ type DKIM {
   """
   timestamp: DateTime @fake(type: pastDate)
   """
+  Various dkim selectors used on this domain.
+  """
+  selectors: [DkimSelectors]
+
+}
+
+"""
+This object contains the scan result data for each individual selector that
+has been scanned.
+"""
+type DkimSelectors {
+  """
+  Selector domain that has been scanned.
+  """
+  selector: String @examples(values: ["selector1._domainkey", "selector2._domainkey"])
+  """
   DKIM record retrieved during the scan of the given domain
   """
   record: String
@@ -220,23 +293,6 @@ type DKIM {
     )
 }
 
-"""
-DKIM report results
-"""
-type DkimReport {
-  """
-  DKIM domain
-  """
-  domain: String
-  """
-  Selector used for DKIM authentication
-  """
-  selector: String
-  """
-  DKIM raw result
-  """
-  result: String
-}
 """
 Domain-based Message Authentication, Reporting, and Conformance
 (DMARC) is a scalable mechanism by which a mail-originating
@@ -339,6 +395,27 @@ type DmarcReportDetailTables {
 }
 
 """
+Input object containing fields which map to the required arguments for
+dmarcReportDetailTablesInput
+"""
+input DmarcReportDetailTablesInput {
+  """
+  The slugified version of the domain you wish to retrieve data for.
+  """
+  domainSlug: Slug!
+
+  """
+  The period in which the returned data is relevant to.
+  """
+  period: PeriodEnums!
+
+  """
+  The year in which the returned data is relevant to.
+  """
+  year: Year!
+}
+
+"""
 A query object used to grab the data to create dmarc report doughnuts
 """
 type DmarcReportSummary {
@@ -356,6 +433,21 @@ type DmarcReportSummary {
   Category totals for building dmarc report page doughnuts.
   """
   categoryTotals: CategoryTotals
+}
+
+"""
+This object is used to define the various arguments used in the dmarc report
+summary query
+"""
+input DmarcReportSummaryInput {
+  """The slugified version of the domain you wish to retrieve data for."""
+  domainSlug: Slug!
+
+  """The period in which the returned data is relevant to."""
+  period: PeriodEnums!
+
+  """The year in which the returned data is relevant to."""
+  year: Year!
 }
 
 """
@@ -379,80 +471,16 @@ type DmarcReportSummaryList {
 }
 
 """
-Generated DMARC Aggregated Report's
+This object is used to define the various arguments used in the dmarc report
+summary list query
 """
-type DmarcReport implements Node {
-  """
-  The ID of the object.
-  """
-  id: ID!
-  """
-  ID of the report.
-  """
-  reportId: String @examples(values: ["example.com:1538463741"])
-  """
-  The organization name the report was generated from.
-  """
-  orgName: String @examples(values: ["accurateplastics.com"])
-  """
-  The organization email name the report was generated from.
-  """
-  orgEmail: String @examples(values: ["administrator@accurateplastics.com"])
-  """
-  Start date & time of aggregate report
-  """
-  startDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
-  """
-  End date & time of aggregate report
-  """
-  endDate: DateTime @examples(values: ["2018-10-01 13:07:12"])
-  """
-  Errors that occurred during the report generation
-  """
-  errors: [String]
-  """
-  DMARC published policies
-  """
-  policyPublished: PolicyPublished
-  """
-  Aggregate report records
-  """
-  records: [Record]
-}
-
-type DmarcReportConnection {
-  """
-  Pagination data for this connection.
-  """
-  pageInfo: PageInfo!
-  """
-  Contains the nodes in this connection.
-  """
-  edges: [DmarcReportEdge]!
-}
-"""
-A Relay edge containing a `DmarcReport` and its cursor.
-"""
-type DmarcReportEdge {
-  """
-  The item at the end of the edge
-  """
-  node: DmarcReport
-
-  """
-  A cursor for use in pagination
-  """
-  cursor: String!
+input DmarcReportSummaryListInput {
+  """The slugified version of the domain you wish to retrieve data for."""
+  domainSlug: Slug!
 }
 
 type Domain implements Node {
   organization: Organizations
-  dmarcReports(
-    before: String
-    after: String
-    first: Int
-    last: Int
-  ): DmarcReportConnection
 
   """
   The ID of the object.
@@ -503,24 +531,18 @@ type Domain implements Node {
   """
   DKIM, DMARC, and SPF scan results
   """
-  email(before: String, after: String, first: Int, last: Int): MailScanConnection
-  """
-  HTTPS, and SSL scan results
-  """
-  web(before: String, after: String, first: Int, last: Int): WebScanConnection
-
-  """
-  DMARC aggregate report
-  """
-  dmarcReport(
-    startDate: Date
-    endDate: Date
+  email(
     before: String
     after: String
     first: Int
     last: Int
-  ): DmarcReportConnection
+  ): MailScanConnection
+  """
+  HTTPS, and SSL scan results
+  """
+  web(before: String, after: String, first: Int, last: Int): WebScanConnection
 }
+
 type DomainConnection {
   """
   Pagination data for this connection.
@@ -746,34 +768,9 @@ type Mutation {
   """
   createOrganization(
     """
-    Acronym of organization.
+    Input object containing all the fields required for the createOrganization mutation
     """
-    acronym: Acronym!
-
-    """
-    The city in which the organization is located in.
-    """
-    city: String!
-
-    """
-    Full name of organization.
-    """
-    name: String!
-
-    """
-    The province in which the organization is located in.
-    """
-    province: String!
-
-    """
-    The sector which the organization belongs to.
-    """
-    sector: String!
-
-    """
-    The zone which the organization belongs to.
-    """
-    zone: String!
+    input: CreateOrganizationInput!
   ): CreateOrganization
 
   """
@@ -831,19 +828,9 @@ type Mutation {
   """
   createDomain(
     """
-    Organizations slug that you would like to connect this domain to.
+    Input object containing all arguement fields.
     """
-    orgSlug: Slug!
-
-    """
-    DKIM selector strings corresponding to this domain
-    """
-    selectors: Selectors
-
-    """
-    URL that you would like to be added to database.
-    """
-    url: URL!
+    input: CreateDomainInput!
   ): CreateDomain
 
   """
@@ -891,14 +878,9 @@ type Mutation {
   """
   authenticate(
     """
-    Users password
+    AuthenticateInput object containing input fields
     """
-    password: String!
-
-    """
-    User email that they signed up with.
-    """
-    userName: EmailAddress!
+    input: AuthenticateInput!
   ): Authenticate
 
   """
@@ -1308,27 +1290,41 @@ type PolicyPublished {
   fo: Int @examples(values: [0])
 }
 
+type SummaryCategory {
+  name: String @examples(values: ["strong", "moderate", "weak"])
+  count: Int @examples(values: [33, 33, 33])
+  percentage: Int @examples(values: [33, 33, 33])
+}
+
+type CategorizedSummary {
+  categories: [SummaryCategory]
+  total: Int @examples(values: [100])
+}
+
 """
 The central gathering point for all of the GraphQL queries.
 """
 type Query {
+  webSummary: CategorizedSummary
+  emailSummary: CategorizedSummary
   """
   A query object used to grab the data to create dmarc report bar graph.
   """
   dmarcReportSummaryList(
     """
-    The slugified version of the domain you wish to retrieve data for.
+    Input argument with various input fields required for the dmarc report summary list query
     """
-    domainSlug: Slug!
+    input: DmarcReportSummaryListInput!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
+
   """
   A query object used to grab the data to create dmarc report bar graph.
   """
   demoDmarcReportSummaryList(
     """
-    The slugified version of the domain you wish to retrieve data for.
+    Input argument with various input fields required for the dmarc report summary list query
     """
-    domainSlug: Slug!
+    input: DmarcReportSummaryListInput!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
@@ -1336,19 +1332,9 @@ type Query {
   """
   dmarcReportDetailTables(
     """
-    The slugified version of the domain you wish to retrieve data for.
+    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
     """
-    domainSlug: Slug!
-
-    """
-    The period in which the returned data is relevant to.
-    """
-    period: PeriodEnums!
-
-    """
-    The year in which the returned data is relevant to.
-    """
-    year: Year!
+    input: DmarcReportDetailTablesInput!
   ): DmarcReportDetailTables
 
   """
@@ -1356,59 +1342,25 @@ type Query {
   """
   demoDmarcReportDetailTables(
     """
-    The slugified version of the domain you wish to retrieve data for.
+    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
     """
-    domainSlug: Slug!
-
-    """
-    The period in which the returned data is relevant to.
-    """
-    period: PeriodEnums!
-
-    """
-    The year in which the returned data is relevant to.
-    """
-    year: Year!
+    input: DmarcReportDetailTablesInput!
   ): DmarcReportDetailTables
 
-  """
-  A query object used to grab the data to create dmarc report doughnuts
-  """
+  """A query object used to grab the data to create dmarc report doughnuts"""
   dmarcReportSummary(
     """
-    The slugified version of the domain you wish to retrieve data for.
+    Input argument with various input fields required for the dmarc report summary query
     """
-    domainSlug: Slug!
-
-    """
-    The period in which the returned data is relevant to.
-    """
-    period: PeriodEnums!
-
-    """
-    The year in which the returned data is relevant to.
-    """
-    year: Year!
+    input: DmarcReportSummaryInput!
   ): DmarcReportSummary
 
-  """
-  A query object used to grab the data to create dmarc report doughnuts
-  """
+  """A query object used to grab the data to create dmarc report doughnuts"""
   demoDmarcReportSummary(
     """
-    The slugified version of the domain you wish to retrieve data for.
+    Input argument with various input fields required for the dmarc report summary query
     """
-    domainSlug: Slug!
-
-    """
-    The period in which the returned data is relevant to.
-    """
-    period: PeriodEnums!
-
-    """
-    The year in which the returned data is relevant to.
-    """
-    year: Year!
+    input: DmarcReportSummaryInput!
   ): DmarcReportSummary
 
   """
@@ -1507,38 +1459,6 @@ type Query {
   An api endpoint that will send a verification email to a given email address.
   """
   sendValidationEmail(email: EmailAddress!): NotificationEmail
-}
-
-"""
-DMARC aggregate report record
-"""
-type Record {
-  count: Int @examples(values: [1])
-
-  """
-  DMARC source information
-  """
-  source: Source
-
-  """
-  DMARC alignment object
-  """
-  alignment: Alignment
-
-  """
-  DMARC policy evaluation object
-  """
-  policyEvaluated: PolicyEvaluated
-
-  """
-  Identifiers Object
-  """
-  identifiers: Identifiers
-
-  """
-  Raw DKIM, and SPF results
-  """
-  authResults: AuthResults
 }
 
 """

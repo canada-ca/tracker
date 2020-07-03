@@ -16,24 +16,34 @@ from scalars.slug import Slug
 from scalars.selectors import Selectors
 
 
+class CreateDomainInput(graphene.InputObjectType):
+    """
+    Input object used to define the argument fields for the createDomain
+    mutation
+    """
+
+    org_slug = Slug(
+        description="Organizations slug that you would like to connect "
+        "this domain to.",
+        required=True,
+    )
+    url = URL(
+        description="URL that you would like to be added to database.", required=True,
+    )
+    selectors = Selectors(
+        description="DKIM selector strings corresponding to this domain",
+        required=False,
+    )
+
+
 class CreateDomain(graphene.Mutation):
     """
     Mutation used to create a new domain for an organization
     """
 
     class Arguments:
-        org_slug = Slug(
-            description="Organizations slug that you would like to connect "
-            "this domain to.",
-            required=True,
-        )
-        url = URL(
-            description="URL that you would like to be added to database.",
-            required=True,
-        )
-        selectors = Selectors(
-            description="DKIM selector strings corresponding to this domain",
-            required=False,
+        input = CreateDomainInput(
+            required=True, description="Input object containing all arguement fields."
         )
 
     status = graphene.Boolean()
@@ -42,9 +52,9 @@ class CreateDomain(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
-        org_slug = cleanse_input(kwargs.get("org_slug"))
-        domain = cleanse_input(kwargs.get("url"))
-        selectors = cleanse_input_list(kwargs.get("selectors", []))
+        org_slug = cleanse_input(kwargs.get("input", {}).get("org_slug"))
+        domain = cleanse_input(kwargs.get("input", {}).get("url"))
+        selectors = cleanse_input_list(kwargs.get("input", {}).get("selectors", []))
 
         # Check to see if org acronym is SA Org
         if org_slug == "super-admin":

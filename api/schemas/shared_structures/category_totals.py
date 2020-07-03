@@ -15,15 +15,15 @@ class CategoryTotals(graphene.ObjectType):
     fail = graphene.Int(description="Amount of messages that fail both SPF and DKIM.")
     total = graphene.Int(description="Sum of all categories.")
 
-    def resolve_full_pass(self: dict, info):
+    def resolve_full_pass(self: dict, info, **kwargs):
         return self.get("fullPass")
 
-    def resolve_partial_pass(self: dict, info):
+    def resolve_partial_pass(self: dict, info, **kwargs):
         return self.get("partialPass")
 
-    def resolve_fail(self: dict, info):
+    def resolve_fail(self: dict, info, **kwargs):
         return self.get("fail")
 
-    def resolve_total(self: dict, info):
+    def resolve_total(self: dict, info, **kwargs):
         total = sum((self.get("fullPass"), self.get("partialPass"), self.get("fail"),))
         return total

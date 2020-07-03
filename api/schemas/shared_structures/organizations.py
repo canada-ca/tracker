@@ -66,9 +66,10 @@ class Organizations(SQLAlchemyObjectType):
     def resolve_city(self: OrgModel, info):
         return self.org_tags.get("city", None)
 
-    def resolve_domains(self: OrgModel, info):
+    def resolve_domains(self: OrgModel, info, **kwargs):
         query = DomainsSchema.get_query(info)
-        return query.filter(DomainsModel.organization_id == self.id).all()
+        query = query.filter(DomainsModel.organization_id == self.id).all()
+        return query
 
     @require_token
     def resolve_affiliated_users(self: OrgModel, info, **kwargs):

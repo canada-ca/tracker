@@ -45,43 +45,48 @@ class DMARC(SQLAlchemyObjectType):
         lambda: graphene.String, description="Key tags found during scan"
     )
 
-    def resolve_domain(self: Dmarc_scans, info):
+    def resolve_domain(self: Dmarc_scans, info, **kwargs):
         return get_domain(self, info)
 
-    def resolve_timestamp(self: Dmarc_scans, info):
+    def resolve_timestamp(self: Dmarc_scans, info, **kwargs):
         return get_timestamp(self, info)
 
-    def resolve_dmarc_phase(self: Dmarc_scans, info):
-        return self.dmarc_phase
+    def resolve_dmarc_phase(self: Dmarc_scans, info, **kwargs):
+        dmarc_phase = self.dmarc_phase
+        return dmarc_phase
 
-    def resolve_record(self: Dmarc_scans, info):
-        return self.dmarc_scan.get("dmarc", {}).get("record", None)
+    def resolve_record(self: Dmarc_scans, info, **kwargs):
+        record = self.dmarc_scan.get("dmarc", {}).get("record", None)
+        return record
 
-    def resolve_p_policy(self: Dmarc_scans, info):
-        return (
+    def resolve_p_policy(self: Dmarc_scans, info, **kwargs):
+        p_policy = (
             self.dmarc_scan.get("dmarc", {})
             .get("tags", {})
             .get("p", {})
             .get("value", None)
         )
+        return p_policy
 
-    def resolve_sp_policy(self: Dmarc_scans, info):
-        return (
+    def resolve_sp_policy(self: Dmarc_scans, info, **kwargs):
+        sp_policy = (
             self.dmarc_scan.get("dmarc", {})
             .get("tags", {})
             .get("sp", {})
             .get("value", None)
         )
+        return sp_policy
 
-    def resolve_pct(self: Dmarc_scans, info):
-        return (
+    def resolve_pct(self: Dmarc_scans, info, **kwargs):
+        pct = (
             self.dmarc_scan.get("dmarc", {})
             .get("tags", {})
             .get("pct", {})
             .get("value", None)
         )
+        return pct
 
-    def resolve_dmarc_guidance_tags(self: Dmarc_scans, info):
+    def resolve_dmarc_guidance_tags(self: Dmarc_scans, info, **kwargs):
         tags = []
 
         if self.dmarc_scan.get("dmarc", {}).get("missing", None) is not None:
@@ -96,17 +101,18 @@ class DMARC(SQLAlchemyObjectType):
             .get("value", None)
         )
 
-        if isinstance(p_policy_tag, str):
-            p_policy_tag = p_policy_tag.lower()
+        if p_policy_tag is not None:
+            if isinstance(p_policy_tag, str):
+                p_policy_tag = p_policy_tag.lower()
 
-        if p_policy_tag == "missing":
-            tags.append("dmarc3")
-        elif p_policy_tag == "none":
-            tags.append("dmarc4")
-        elif p_policy_tag == "quarantine":
-            tags.append("dmarc5")
-        elif p_policy_tag == "reject":
-            tags.append("dmarc6")
+            if p_policy_tag == "missing":
+                tags.append("dmarc3")
+            elif p_policy_tag == "none":
+                tags.append("dmarc4")
+            elif p_policy_tag == "quarantine":
+                tags.append("dmarc5")
+            elif p_policy_tag == "reject":
+                tags.append("dmarc6")
 
         # Check PCT Tag
         pct_tag = (
@@ -116,19 +122,20 @@ class DMARC(SQLAlchemyObjectType):
             .get("value", None)
         )
 
-        if isinstance(pct_tag, str):
-            pct_tag = pct_tag.lower()
-            if pct_tag == "invalid":
-                tags.append("dmarc9")
-            elif pct_tag == "none":
-                tags.append("dmarc20")
-        elif isinstance(pct_tag, int):
-            if pct_tag == 100:
-                tags.append("dmarc7")
-            elif 100 > pct_tag > 0:
-                tags.append("dmarc8")
-            else:
-                tags.append("dmarc21")
+        if pct_tag is not None:
+            if isinstance(pct_tag, str):
+                pct_tag = pct_tag.lower()
+                if pct_tag == "invalid":
+                    tags.append("dmarc9")
+                elif pct_tag == "none":
+                    tags.append("dmarc20")
+            elif isinstance(pct_tag, int):
+                if pct_tag == 100:
+                    tags.append("dmarc7")
+                elif 100 > pct_tag > 0:
+                    tags.append("dmarc8")
+                else:
+                    tags.append("dmarc21")
 
         # Check RUA Tag
         rua_tag = (
@@ -138,12 +145,11 @@ class DMARC(SQLAlchemyObjectType):
             .get("value", None)
         )
 
-        if isinstance(rua_tag, str):
-            rua_tag = rua_tag.lower()
-
         if rua_tag is None or not rua_tag:
             tags.append("dmarc12")
         else:
+            if isinstance(rua_tag, str):
+                rua_tag = rua_tag.lower()
             for value in rua_tag:
                 if value["address"] == "dmarc@cyber.gc.ca":
                     tags.append("dmarc10")
@@ -161,6 +167,8 @@ class DMARC(SQLAlchemyObjectType):
         if ruf_tag is None or not ruf_tag:
             tags.append("dmarc13")
         else:
+            if isinstance(ruf_tag, str):
+                ruf_tag = ruf_tag.lower()
             for value in ruf_tag:
                 if value["address"] == "dmarc@cyber.gc.ca":
                     tags.append("dmarc11")
@@ -182,16 +190,17 @@ class DMARC(SQLAlchemyObjectType):
             .get("value", None)
         )
 
-        if isinstance(sp_tag, str):
-            sp_tag = sp_tag.lower()
+        if sp_tag is not None:
+            if isinstance(sp_tag, str):
+                sp_tag = sp_tag.lower()
 
-        if sp_tag == "missing":
-            tags.append("dmarc16")
-        elif sp_tag == "none":
-            tags.append("dmarc17")
-        elif sp_tag == "quarantine":
-            tags.append("dmarc18")
-        elif sp_tag == "reject":
-            tags.append("dmarc19")
+            if sp_tag == "missing":
+                tags.append("dmarc16")
+            elif sp_tag == "none":
+                tags.append("dmarc17")
+            elif sp_tag == "quarantine":
+                tags.append("dmarc18")
+            elif sp_tag == "reject":
+                tags.append("dmarc19")
 
         return tags

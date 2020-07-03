@@ -6,6 +6,18 @@ from pytest import fail
 from db import DB
 from models import Domains, Organizations, Users, User_affiliations
 from tests.test_functions import json, run
+from tests.testdata.find_my_organizations import (
+    super_admin_expected_result_1,
+    super_admin_expected_result_2,
+    super_admin_expected_result_3,
+    super_admin_expected_result_4,
+    org_admin_expected_result_1,
+    org_admin_expected_result_2,
+    user_write_expected_result_1,
+    user_write_expected_result_2,
+    user_read_expected_result_1,
+    user_read_expected_result_2,
+)
 
 
 @pytest.fixture()
@@ -45,18 +57,7 @@ def test_find_my_organizations_super_admin(db, caplog):
         },
     )
     save(org2)
-    org3 = Organizations(
-        acronym="ORG3",
-        domains=[Domains(domain="somelamedomain.ca")],
-        name="Organization 3",
-        org_tags={
-            "zone": "Federal",
-            "sector": "Arts",
-            "province": "Ontario",
-            "city": "Toronto",
-        },
-    )
-    save(org3)
+
     user = Users(
         display_name="testuserread",
         user_name="testuserread@testemail.ca",
@@ -118,119 +119,6 @@ def test_find_my_organizations_super_admin(db, caplog):
         as_user=super_admin,
     )
 
-    expected_result = {
-        "data": {
-            "organizations": {
-                "edges": [
-                    {
-                        "node": {
-                            "acronym": "ORG1",
-                            "name": "Organization 1",
-                            "slug": "organization-1",
-                            "zone": "Prov",
-                            "sector": "Banking",
-                            "province": "Alberta",
-                            "city": "Calgary",
-                            "domains": {
-                                "edges": [{"node": {"url": "somecooldomain.ca"}}]
-                            },
-                            "affiliatedUsers": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testuserread"},
-                                            "permission": "USER_READ",
-                                        }
-                                    },
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testsuperadmin"},
-                                            "permission": "SUPER_ADMIN",
-                                        }
-                                    },
-                                ]
-                            },
-                        }
-                    },
-                    {
-                        "node": {
-                            "acronym": "ORG2",
-                            "name": "Organization 2",
-                            "slug": "organization-2",
-                            "zone": "Muni",
-                            "sector": "Transportation",
-                            "province": "NS",
-                            "city": "Halifax",
-                            "domains": {
-                                "edges": [{"node": {"url": "anothercooldomain.ca"}}]
-                            },
-                            "affiliatedUsers": {"edges": []},
-                        }
-                    },
-                    {
-                        "node": {
-                            "acronym": "ORG3",
-                            "name": "Organization 3",
-                            "slug": "organization-3",
-                            "zone": "Federal",
-                            "sector": "Arts",
-                            "province": "Ontario",
-                            "city": "Toronto",
-                            "domains": {
-                                "edges": [{"node": {"url": "somelamedomain.ca"}}]
-                            },
-                            "affiliatedUsers": {"edges": []},
-                        }
-                    },
-                    {
-                        "node": {
-                            "acronym": "TESTUSERREAD-TESTEMAIL-CA",
-                            "name": "testuserread@testemail.ca",
-                            "slug": "testuserread-testemail-ca",
-                            "zone": None,
-                            "sector": None,
-                            "province": None,
-                            "city": None,
-                            "domains": {"edges": []},
-                            "affiliatedUsers": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testuserread"},
-                                            "permission": "ADMIN",
-                                        }
-                                    }
-                                ]
-                            },
-                        }
-                    },
-                    {
-                        "node": {
-                            "acronym": "TESTSUPERADMIN-TESTEMAIL-CA",
-                            "name": "testsuperadmin@testemail.ca",
-                            "slug": "testsuperadmin-testemail-ca",
-                            "zone": None,
-                            "sector": None,
-                            "province": None,
-                            "city": None,
-                            "domains": {"edges": []},
-                            "affiliatedUsers": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testsuperadmin"},
-                                            "permission": "ADMIN",
-                                        }
-                                    }
-                                ]
-                            },
-                        }
-                    },
-                ]
-            }
-        }
-    }
-
     if "errors" in result:
         fail(
             "Expected super admin to return results for all users but got: {}".format(
@@ -238,7 +126,12 @@ def test_find_my_organizations_super_admin(db, caplog):
             )
         )
 
-    assert result == expected_result
+    assert result == (
+        super_admin_expected_result_1
+        or super_admin_expected_result_2
+        or super_admin_expected_result_3
+        or super_admin_expected_result_4
+    )
     assert (
         f"Super admin: {super_admin.id} successfully retrieved all organizations."
         in caplog.text
@@ -369,64 +262,10 @@ def test_find_my_organizations_admin(db, caplog):
         """,
         as_user=user,
     )
-    expected_result = {
-        "data": {
-            "organizations": {
-                "edges": [
-                    {
-                        "node": {
-                            "acronym": "ORG1",
-                            "name": "Organization 1",
-                            "slug": "organization-1",
-                            "zone": "Prov",
-                            "sector": "Banking",
-                            "province": "Alberta",
-                            "city": "Calgary",
-                            "domains": {
-                                "edges": [{"node": {"url": "somecooldomain.ca"}}]
-                            },
-                            "affiliatedUsers": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testadmin"},
-                                            "permission": "ADMIN",
-                                        }
-                                    }
-                                ]
-                            },
-                        }
-                    },
-                    {
-                        "node": {
-                            "acronym": "TESTADMIN-TESTEMAIL-CA",
-                            "name": "testadmin@testemail.ca",
-                            "slug": "testadmin-testemail-ca",
-                            "zone": None,
-                            "sector": None,
-                            "province": None,
-                            "city": None,
-                            "domains": {"edges": []},
-                            "affiliatedUsers": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testadmin"},
-                                            "permission": "ADMIN",
-                                        }
-                                    }
-                                ]
-                            },
-                        }
-                    },
-                ]
-            }
-        }
-    }
 
     if "errors" in result:
         fail("Expect success but errors were returned: {}".format(result["errors"]))
-    assert result == expected_result
+    assert result == (org_admin_expected_result_1 or org_admin_expected_result_2)
     assert (
         f"User: {user.id} successfully retrieved all organizations that they belong to."
         in caplog.text
@@ -500,55 +339,10 @@ def test_find_my_organizations_user_write(db, caplog):
         """,
         as_user=user,
     )
-    expected_result = {
-        "data": {
-            "organizations": {
-                "edges": [
-                    {
-                        "node": {
-                            "acronym": "ORG1",
-                            "name": "Organization 1",
-                            "slug": "organization-1",
-                            "zone": "Prov",
-                            "sector": "Banking",
-                            "province": "Alberta",
-                            "city": "Calgary",
-                            "domains": {
-                                "edges": [{"node": {"url": "somecooldomain.ca"}}]
-                            },
-                            "affiliatedUsers": {"edges": []},
-                        }
-                    },
-                    {
-                        "node": {
-                            "acronym": "TESTWRITER-TESTEMAIL-CA",
-                            "name": "testwriter@testemail.ca",
-                            "slug": "testwriter-testemail-ca",
-                            "zone": None,
-                            "sector": None,
-                            "province": None,
-                            "city": None,
-                            "domains": {"edges": []},
-                            "affiliatedUsers": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testwriter"},
-                                            "permission": "ADMIN",
-                                        }
-                                    }
-                                ]
-                            },
-                        }
-                    },
-                ]
-            }
-        }
-    }
 
     if "errors" in result:
         fail("Expect success but errors were returned: {}".format(result["errors"]))
-    assert result == expected_result
+    assert result == (user_write_expected_result_1 or user_write_expected_result_2)
     assert (
         f"User: {user.id} successfully retrieved all organizations that they belong to."
         in caplog.text
@@ -622,55 +416,10 @@ def test_find_my_organizations_user_read(db, caplog):
         """,
         as_user=user,
     )
-    expected_result = {
-        "data": {
-            "organizations": {
-                "edges": [
-                    {
-                        "node": {
-                            "acronym": "ORG1",
-                            "name": "Organization 1",
-                            "slug": "organization-1",
-                            "zone": "Prov",
-                            "sector": "Banking",
-                            "province": "Alberta",
-                            "city": "Calgary",
-                            "domains": {
-                                "edges": [{"node": {"url": "somecooldomain.ca"}}]
-                            },
-                            "affiliatedUsers": {"edges": []},
-                        }
-                    },
-                    {
-                        "node": {
-                            "acronym": "TESTREADER-TESTEMAIL-CA",
-                            "name": "testreader@testemail.ca",
-                            "slug": "testreader-testemail-ca",
-                            "zone": None,
-                            "sector": None,
-                            "province": None,
-                            "city": None,
-                            "domains": {"edges": []},
-                            "affiliatedUsers": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "user": {"displayName": "testreader"},
-                                            "permission": "ADMIN",
-                                        }
-                                    }
-                                ]
-                            },
-                        }
-                    },
-                ]
-            }
-        }
-    }
 
     if "errors" in result:
         fail("Expect success but errors were returned: {}".format(result["errors"]))
-    assert result == expected_result
+    assert result == (user_read_expected_result_1 or user_read_expected_result_2)
     assert (
         f"User: {user.id} successfully retrieved all organizations that they belong to."
         in caplog.text

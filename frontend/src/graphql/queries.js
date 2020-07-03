@@ -138,7 +138,11 @@ export const QUERY_USER = gql`
 
 export const DMARC_REPORT_SUMMARY_LIST = gql`
   query DmarcReportSummaryList($domainSlug: Slug!) {
-    dmarcReportSummaryList(domainSlug: $domainSlug) {
+    dmarcReportSummaryList(
+      input: {
+        domainSlug: $domainSlug
+      }
+    ) {
       month
       year
       categoryTotals {
@@ -153,7 +157,11 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
 
 export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
   query DemoDmarcReportSummaryList($domainSlug: Slug!) {
-    demoDmarcReportSummaryList(domainSlug: $domainSlug) {
+    demoDmarcReportSummaryList(
+      input: {
+        domainSlug: $domainSlug
+      }
+    ) {
       month
       year
       categoryTotals {
@@ -172,29 +180,12 @@ export const DMARC_REPORT_SUMMARY = gql`
     $period: PeriodEnums!
     $year: Year!
   ) {
-    dmarcReportSummary(domainSlug: $domainSlug, period: $period, year: $year) {
-      month
-      year
-      categoryTotals {
-        fullPass
-        partialPass
-        fail
-        total
+    dmarcReportSummary(
+      input: {
+        domainSlug: $domainSlug,
+        period: $period,
+        year: $year
       }
-    }
-  }
-`
-
-export const DEMO_DMARC_REPORT_SUMMARY = gql`
-  query DemoDmarcReportSummary(
-    $domainSlug: Slug!
-    $period: PeriodEnums!
-    $year: Year!
-  ) {
-    demoDmarcReportSummary(
-      domainSlug: $domainSlug
-      period: $period
-      year: $year
     ) {
       month
       year
@@ -215,9 +206,11 @@ export const DMARC_REPORT_DETAIL_TABLES = gql`
     $year: Year!
   ) {
     dmarcReportDetailTables(
-      domainSlug: $domainSlug
-      period: $period
-      year: $year
+      input: {
+        domainSlug: $domainSlug
+        period: $period
+        year: $year
+      }
     ) {
       month
       year
@@ -294,9 +287,11 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
     $year: Year!
   ) {
     demoDmarcReportDetailTables(
-      domainSlug: $domainSlug
-      period: $period
-      year: $year
+      input: {
+        domainSlug: $domainSlug
+        period: $period
+        year: $year
+      }
     ) {
       month
       year

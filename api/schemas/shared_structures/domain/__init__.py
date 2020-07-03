@@ -1,4 +1,5 @@
 import graphene
+
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
@@ -32,6 +33,7 @@ class Domain(SQLAlchemyObjectType):
     last_ran = graphene.DateTime(
         description="The last time that a scan was ran on this domain"
     )
+    selectors = graphene.List(lambda: graphene.String, description="",)
     organization = ORMField(model_attr="organization")
     email = graphene.ConnectionField(
         MailScan._meta.connection, description="DKIM, DMARC, and SPF scan results"
@@ -40,24 +42,35 @@ class Domain(SQLAlchemyObjectType):
         WebScan._meta.connection, description="HTTPS, and SSL scan results"
     )
 
-    def resolve_url(self: Domains, info):
+    def resolve_url(self: Domains, info, **kwargs):
         return self.domain
 
-    def resolve_slug(self: Domains, info):
+    def resolve_slug(self: Domains, info, **kwargs):
         return self.slug
 
-    def resolve_last_ran(self: Domains, info):
+    def resolve_last_ran(self: Domains, info, **kwargs):
         return self.last_run
 
-    def resolve_email(self: Domains, info):
-        query = MailScan.get_query(info)
-        query = query.filter(Mail_scans.domain_id == self.id)
-        return query.all()
+    def resolve_selectors(self: Domains, info, **kwargs):
+        return self.selectors
 
-    def resolve_web(self: Domains, info):
-        query = WebScan.get_query(info)
-        query = query.filter(Web_scans.domain_id == self.id)
-        return query.all()
+    def resolve_email(self: Domains, info, **kwargs):
+        query = (
+            MailScan.get_query(info)
+            .filter(Mail_scans.domain_id == self.id)
+            .order_by(Mail_scans.id.desc())
+            .all()
+        )
+        return query
+
+    def resolve_web(self: Domains, info, **kwargs):
+        query = (
+            WebScan.get_query(info)
+            .filter(Web_scans.domain_id == self.id)
+            .order_by(Web_scans.id.desc())
+            .all()
+        )
+        return query
 
 
 class DomainConnection(relay.Connection):

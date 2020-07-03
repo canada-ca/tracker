@@ -32,10 +32,10 @@ class UserAffClass(SQLAlchemyObjectType):
         description="The organization this affiliation belongs to",
     )
 
-    def resolve_user_id(self: UserAff, info):
+    def resolve_user_id(self: UserAff, info, **kwargs):
         return self.user_id
 
-    def resolve_permission(self: UserAff, info):
+    def resolve_permission(self: UserAff, info, **kwargs):
         return self.permission
 
 

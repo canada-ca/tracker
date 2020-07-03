@@ -2,6 +2,7 @@ import { theme as chakraTheme } from '@chakra-ui/core'
 
 const shadows = {
   outline: '0 0 0 4px #F6C95E',
+  medium: `0.4em 0.4em 0.3em #D5D5D5`,
   outlineHover: '0 0 0 6px #D5D5D5',
   outlineLeft: '-2px 0 0 0 #D5D5D5, 2px 0 0 0 inset #D5D5D5',
 }

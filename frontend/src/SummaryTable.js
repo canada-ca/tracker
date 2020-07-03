@@ -6,6 +6,7 @@ import { Box, Text, Button, Stack, Select, Input } from '@chakra-ui/core'
 
 import WithPseudoBox from './withPseudoBox'
 
+// TODO: replace with values from the theme
 const Table = styled.table`
   & {
     width: 100%;

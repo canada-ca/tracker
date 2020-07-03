@@ -34,9 +34,9 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
     """
     user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
-    domain_slug = cleanse_input(kwargs.get("domain_slug"))
-    period = cleanse_input(kwargs.get("period"))
-    year = cleanse_input(kwargs.get("year"))
+    domain_slug = cleanse_input(kwargs.get("input", {}).get("domain_slug"))
+    period = cleanse_input(kwargs.get("input", {}).get("period"))
+    year = cleanse_input(kwargs.get("input", {}).get("year"))
 
     # Get Domains org_id
     domain_orm = db_session.query(Domains).filter(Domains.slug == domain_slug).first()

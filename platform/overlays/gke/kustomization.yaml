@@ -7,6 +7,7 @@ resources:
 - letsencrypt-issuer.yaml
 - knative/config/domain-config.yaml
 - knative/config/config.yaml
+- knative/config/autoscan.yaml
 - knative/monitoring/prometheus.yaml
 - knative/monitoring/grafana/grafana.yaml
 - pgo/operatorconfiguration.crd.yaml
@@ -18,9 +19,9 @@ resources:
 - http-01-challenge-destination-rule.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-03bd505
+  newTag: master-f836b11
 - name: gcr.io/track-compliance/frontend
-  newTag: master-2a17a7e
+  newTag: master-c9d4479
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml

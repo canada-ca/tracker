@@ -44,12 +44,14 @@ def test_mutation_createOrganization_as_super_user(save, caplog):
         mutation="""
         mutation {
             created_org:createOrganization(
-                name: "Test Organization"
-                acronym: "TEST_ORG"
-                zone: "Test Zone"
-                sector: "Test Sector"
-                province: "Nova Scotia"
-                city: "Halifax"
+                input: {
+                    name: "Test Organization"
+                    acronym: "TEST_ORG"
+                    zone: "Test Zone"
+                    sector: "Test Sector"
+                    province: "Nova Scotia"
+                    city: "Halifax"
+                }
             ) {
                 status
             }
@@ -103,12 +105,14 @@ def test_mutation_createOrganization_fails_for_existing_orgs(save, caplog):
         mutation="""
             mutation {
                 created_org:createOrganization(
-                    name: "Super Admin"
-                    acronym: "SA"
-                    zone: "Test Zone"
-                    sector: "Test Sector"
-                    province: "Nova Scotia"
-                    city: "Halifax"
+                    input: {
+                        name: "Super Admin"
+                        acronym: "SA"
+                        zone: "Test Zone"
+                        sector: "Test Sector"
+                        province: "Nova Scotia"
+                        city: "Halifax"
+                    }
                 ) {
                     status
                 }
@@ -150,12 +154,14 @@ def test_mutation_createOrganization_fails_for_admin_users(save, caplog):
         mutation="""
          mutation {
              createOrganization(
-                 name: "New thing"
-                 acronym: "NEW"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
+                input: {
+                    name: "New thing"
+                    acronym: "NEW"
+                    zone: "Test Zone"
+                    sector: "Test Sector"
+                    province: "Nova Scotia"
+                    city: "Halifax"
+                }
              ) {
                  status
              }
@@ -206,12 +212,14 @@ def test_mutation_createOrganization_fails_for_write_users(save, caplog):
         mutation="""
          mutation {
              createOrganization(
-                 acronym: "USER_W_NEW"
-                 name: "Test Organization"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
+                 input: {
+                     acronym: "USER_W_NEW"
+                     name: "Test Organization"
+                     zone: "Test Zone"
+                     sector: "Test Sector"
+                     province: "Nova Scotia"
+                     city: "Halifax"
+                 }
              ) {
                  status
              }
@@ -262,12 +270,14 @@ def test_mutation_createOrganization_fails_for_read_users(save, caplog):
         mutation="""
          mutation {
              createOrganization(
-                 acronym: "USER_R_NEW"
-                 name: "Test Organization"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
+                 input: {
+                     acronym: "USER_R_NEW"
+                     name: "Test Organization"
+                     zone: "Test Zone"
+                     sector: "Test Sector"
+                     province: "Nova Scotia"
+                     city: "Halifax"
+                 }
              ) {
                  status
              }

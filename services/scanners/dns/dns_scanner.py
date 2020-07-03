@@ -131,7 +131,7 @@ async def scan_dkim(domain, selectors):
                 "Failed to perform DomainKeys Identified Mail scan on given domain (selector: %s): %s"
                 % (selector, str(e))
             )
-            record[selector] = None
+            record[selector] = {"missing": True}
 
     return record
 

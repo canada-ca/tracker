@@ -50,7 +50,12 @@ def test_domain_creation_super_admin(save, caplog):
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "organization-1", url: "sa.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "organization-1",
+                    url: "sa.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
@@ -110,7 +115,12 @@ def test_domain_creation_super_admin_cant_create_in_sa_org(save, caplog):
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "super-admin", url: "sa.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "super-admin",
+                    url: "sa.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
@@ -157,7 +167,12 @@ def test_domain_creation_super_admin_cant_create_in_an_org_that_doesnt_exist(
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "organization-3", url: "user.write.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "organization-3",
+                    url: "user.write.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
@@ -201,7 +216,12 @@ def test_domain_creation_org_admin(save, caplog):
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "organization-1", url: "admin.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "organization-1",
+                    url: "admin.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
@@ -266,7 +286,12 @@ def test_domain_creation_org_admin_cant_create_in_different_org(save, caplog):
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "organization-2", url: "admin.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "organization-2",
+                    url: "admin.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
@@ -310,7 +335,12 @@ def test_domain_creation_org_admin_cant_create_in_an_org_that_doesnt_exist(
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "organization-3", url: "user.write.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "organization-3",
+                     url: "user.write.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
@@ -354,7 +384,12 @@ def test_domain_creation_user_write(save, caplog):
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "organization-1", url: "user.write.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "organization-1",
+                    url: "user.write.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
@@ -421,7 +456,12 @@ def test_domain_creation_user_write_cant_create_in_different_org(save, caplog):
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "organization-2", url: "user.write.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "organization-2",
+                    url: "user.write.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
@@ -468,7 +508,12 @@ def test_domain_creation_user_write_cant_create_in_an_org_that_doesnt_exist(
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "organization-3", url: "user.write.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "organization-3",
+                    url: "user.write.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
@@ -513,7 +558,12 @@ def test_domain_creation_user_read_cant_create_domain(save, caplog):
     create_result = run(
         mutation="""
         mutation{
-            createDomain(orgSlug: "organization-1", url: "user.read.create.domain.ca") {
+            createDomain(
+                input: {
+                    orgSlug: "organization-1",
+                    url: "user.read.create.domain.ca"
+                }
+            ) {
                 status
             }
         }
