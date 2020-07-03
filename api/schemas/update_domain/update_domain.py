@@ -16,7 +16,7 @@ from scalars.selectors import Selectors
 class UpdateDomainInput(graphene.InputObjectType):
     """
     Input object used to define the argument fields for the updateDomain
-    mutation
+    mutation.
     """
 
     current_url = URL(
@@ -28,7 +28,7 @@ class UpdateDomainInput(graphene.InputObjectType):
         required=True,
     )
     updated_selectors = Selectors(
-        description="The new DKIM selector strings corresponding to this domain",
+        description="The new DKIM selector strings corresponding to this domain.",
         required=False,
     )
 
@@ -45,7 +45,9 @@ class UpdateDomain(graphene.Mutation):
             description="updateDomain input object containing all arguement fields.",
         )
 
-    status = graphene.Boolean()
+    status = graphene.Boolean(
+        description="Returns true if domain was successfully updated."
+    )
 
     @require_token
     def mutate(self, info, **kwargs):
