@@ -19,9 +19,9 @@ class UpdateOrganizationInput(graphene.InputObjectType):
     mutation.
     """
 
-    slug = Slug(description="Organization that will be updated", required=True)
+    slug = Slug(description="Organization that will be updated.", required=True)
     acronym = Acronym(
-        description="Organization Acronym you would like updated", required=False
+        description="Organization Acronym you would like updated.", required=False
     )
     name = graphene.String(description="Full name of organization.", required=False)
     zone = graphene.String(

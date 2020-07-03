@@ -186,10 +186,10 @@ class Mutation(graphene.ObjectType):
         description="Allows modification of an organization inside the database."
     )
     remove_organization = RemoveOrganization.Field(
-        description="Allows the removal of an organization inside the database"
+        description="Allows the removal of an organization inside the database."
     )
     create_domain = CreateDomain.Field(
-        description="Allows the creation of domains for a given organization"
+        description="Allows the creation of domains for a given organization."
     )
     update_domain = UpdateDomain.Field(
         description="Allows the modification of a given domain."
