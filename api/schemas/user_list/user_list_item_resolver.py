@@ -37,7 +37,11 @@ def resolve_user_item(self, info, **kwargs):
     query = UserListItem.get_query(info)
 
     if is_admin(user_roles=user_roles, org_id=org_orm.id):
-        query = query.filter(User_affiliations.organization_id == org_orm.id).all()
+        query = (
+            query.filter(User_affiliations.organization_id == org_orm.id)
+            .order_by(User_affiliations.id.asc())
+            .all()
+        )
         logger.info(f"User: {user_id} successfully retrieved user list for {org_slug}.")
         return query
     else:
