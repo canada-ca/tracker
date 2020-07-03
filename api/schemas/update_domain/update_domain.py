@@ -13,6 +13,26 @@ from scalars.url import URL
 from scalars.selectors import Selectors
 
 
+class UpdateDomainInput(graphene.InputObjectType):
+    """
+    Input object used to define the argument fields for the updateDomain
+    mutation.
+    """
+
+    current_url = URL(
+        description="The current domain that is being requested to be updated.",
+        required=True,
+    )
+    updated_url = URL(
+        description="The new domain you wish to update the current domain to be.",
+        required=True,
+    )
+    updated_selectors = Selectors(
+        description="The new DKIM selector strings corresponding to this domain.",
+        required=False,
+    )
+
+
 class UpdateDomain(graphene.Mutation):
     """
     Mutation allows the modification of domains if domain is updated through
@@ -20,29 +40,24 @@ class UpdateDomain(graphene.Mutation):
     """
 
     class Arguments:
-        current_url = URL(
-            description="The current domain that is being requested to be updated.",
+        input = UpdateDomainInput(
             required=True,
-        )
-        updated_url = URL(
-            description="The new domain you wish to update the current domain "
-            "to be.",
-            required=True,
-        )
-        updated_selectors = Selectors(
-            description="The new DKIM selector strings corresponding to this domain",
-            required=False,
+            description="updateDomain input object containing all arguement fields.",
         )
 
-    status = graphene.Boolean()
+    status = graphene.Boolean(
+        description="Returns true if domain was successfully updated."
+    )
 
     @require_token
     def mutate(self, info, **kwargs):
         user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
-        current_domain = cleanse_input(kwargs.get("current_url"))
-        updated_domain = cleanse_input(kwargs.get("updated_url"))
-        updated_selectors = cleanse_input_list(kwargs.get("updated_selectors", []))
+        current_domain = cleanse_input(kwargs.get("input", {}).get("current_url"))
+        updated_domain = cleanse_input(kwargs.get("input", {}).get("updated_url"))
+        updated_selectors = cleanse_input_list(
+            kwargs.get("input", {}).get("updated_selectors", [])
+        )
 
         # Check to see if current domain exists
         domain_orm = Domains.query.filter(Domains.domain == current_domain).first()

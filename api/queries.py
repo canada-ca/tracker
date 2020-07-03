@@ -180,24 +180,26 @@ class Mutation(graphene.ObjectType):
     authenticate_two_factor = ValidateTwoFactor.Field()
     update_user_role = UpdateUserRole.Field()
     create_organization = CreateOrganization.Field(
-        description="Allows the creation of an organization inside the " "database.",
+        description="Allows the creation of an organization inside the database.",
     )
     update_organization = UpdateOrganization.Field(
-        description="Allows modification of an organization inside the " "database."
+        description="Allows modification of an organization inside the database."
     )
     remove_organization = RemoveOrganization.Field(
-        description="Allows the removal of an organization inside the database"
+        description="Allows the removal of an organization inside the database."
     )
     create_domain = CreateDomain.Field(
-        description="Allows the creation of domains for a given organization"
+        description="Allows the creation of domains for a given organization."
     )
-    update_domain = UpdateDomain.Field(description="Allows the modification of domains")
+    update_domain = UpdateDomain.Field(
+        description="Allows the modification of a given domain."
+    )
     remove_domain = RemoveDomain.Field(
-        description="Allows the removal of a given domain"
+        description="Allows the removal of a given domain."
     )
     request_scan = RequestScan.Field()
     authenticate = Authenticate.Field(
-        description="Allows users to give their credentials and be " "authenticated"
+        description="Allows users to give their credentials and be authenticated"
     )
     sign_up = SignUp.Field(description="Allows users to sign up to our service")
     email_verify_account = EmailVerifyAccount.Field(

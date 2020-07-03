@@ -55,8 +55,10 @@ def test_domain_update_super_admin(save, caplog):
         mutation="""
         mutation{
             updateDomain(
-                currentUrl: "sa.update.domain.ca",
-                updatedUrl: "updated.sa.update.domain.ca"
+                input: {
+                    currentUrl: "sa.update.domain.ca",
+                    updatedUrl: "updated.sa.update.domain.ca"
+                }
             ) {
                 status
             }
@@ -121,8 +123,10 @@ def test_domain_update_super_admin_cant_update_domain_doesnt_exist(save, caplog)
         mutation="""
         mutation{
             updateDomain(
-                currentUrl: "sa.update.domain.ca",
-                updatedUrl: "updated.sa.update.domain.ca"
+                input: {
+                    currentUrl: "sa.update.domain.ca",
+                    updatedUrl: "updated.sa.update.domain.ca"
+                }
             ) {
                 status
             }
@@ -171,8 +175,10 @@ def test_domain_update_org_admin(save, caplog):
         mutation="""
         mutation{
             updateDomain(
-                currentUrl: "admin.update.domain.ca",
-                updatedUrl: "updated.admin.create.domain.ca"
+                input: {
+                    currentUrl: "admin.update.domain.ca",
+                    updatedUrl: "updated.admin.create.domain.ca"
+                }
             ) {
                 status
             }
@@ -243,8 +249,10 @@ def test_domain_update_org_admin_cant_update_in_different_org(save, caplog):
         mutation="""
         mutation{
             updateDomain(
-                currentUrl: "admin2.update.domain.ca",
-                updatedUrl: "updated.admin2.update.domain.ca"
+                input: {
+                    currentUrl: "admin2.update.domain.ca",
+                    updatedUrl: "updated.admin2.update.domain.ca"
+                }
             ) {
                 status
             }
@@ -291,8 +299,10 @@ def test_domain_update_org_admin_cant_update_domain_doesnt_exist(save, caplog):
         mutation="""
         mutation{
             updateDomain(
-                currentUrl: "admin2.update.domain.ca",
-                updatedUrl: "updated.admin2.update.domain.ca"
+                input: {
+                    currentUrl: "admin2.update.domain.ca",
+                    updatedUrl: "updated.admin2.update.domain.ca"
+                }
             ) {
                 status
             }
@@ -341,8 +351,10 @@ def test_domain_update_user_write(save, caplog):
         mutation="""
         mutation{
             updateDomain(
-                currentUrl: "user.write.domain.ca",
-                updatedUrl: "updated.user.write.domain.ca"
+                input: {
+                    currentUrl: "user.write.domain.ca",
+                    updatedUrl: "updated.user.write.domain.ca"
+                }
             ) {
                 status
             }
@@ -414,8 +426,10 @@ def test_domain_update_user_write_cant_update_in_different_org(save, caplog):
         mutation="""
         mutation{
             updateDomain(
-                currentUrl: "user.write.domain.ca",
-                updatedUrl: "updated.user.write.domain.ca"
+                input: {
+                    currentUrl: "user.write.domain.ca",
+                    updatedUrl: "updated.user.write.domain.ca"
+                }
             ) {
                 status
             }
@@ -462,8 +476,10 @@ def test_domain_update_user_write_cant_update_domain_doesnt_exist(save, caplog):
         mutation="""
         mutation{
             updateDomain(
-                currentUrl: "user.write.domain.ca",
-                updatedUrl: "updated.user.write.domain.ca"
+                input: {
+                    currentUrl: "user.write.domain.ca",
+                    updatedUrl: "updated.user.write.domain.ca"
+                }
             ) {
                 status
             }
@@ -512,8 +528,10 @@ def test_domain_update_user_read_cant_update_domain(save, caplog):
         mutation="""
         mutation{
             updateDomain(
-                currentUrl: "user.read.domain.ca",
-                updatedUrl: "updated.user.read.domain.ca"
+                input: {
+                    currentUrl: "user.read.domain.ca",
+                    updatedUrl: "updated.user.read.domain.ca"
+                }
             ) {
                 status
             }

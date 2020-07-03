@@ -45,13 +45,15 @@ def test_mutation_updateOrganization_succeeds_as_super_user(save, caplog):
         mutation="""
         mutation {
             updateOrganization(
-                slug: "org-one"
-                name: "Org One"
-                acronym: "O1"
-                zone: "Test Zone"
-                sector: "Test Sector"
-                province: "Nova Scotia"
-                city: "Halifax"
+                input: {
+                    slug: "org-one"
+                    name: "Org One"
+                    acronym: "O1"
+                    zone: "Test Zone"
+                    sector: "Test Sector"
+                    province: "Nova Scotia"
+                    city: "Halifax"
+                }
             ) {
                 status
             }
@@ -100,19 +102,21 @@ def test_mutation_updateOrganization_fails_if_org_is_sa_org(save, caplog):
     caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
-         mutation {
-             updateOrganization(
-                 slug: "super-admin"
-                 name: "Org One"
-                 acronym: "SA"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
-             ) {
-                 status
-             }
-         }
+        mutation {
+            updateOrganization(
+                input: {
+                    slug: "super-admin"
+                    name: "Org One"
+                    acronym: "SA"
+                    zone: "Test Zone"
+                    sector: "Test Sector"
+                    province: "Nova Scotia"
+                    city: "Halifax"
+                }
+            ) {
+                status
+            }
+        }
         """,
         as_user=sa_user,
     )
@@ -148,19 +152,21 @@ def test_mutation_updateOrganization_fails_if_org_does_not_exist(save):
 
     result = run(
         mutation="""
-         mutation {
-             updateOrganization(
-                 slug: "org-one"
-                 name: "Org One"
-                 acronym: "O1"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
-             ) {
-                 status
-             }
-         }
+        mutation {
+            updateOrganization(
+                input: {
+                    slug: "org-one"
+                    name: "Org One"
+                    acronym: "O1"
+                    zone: "Test Zone"
+                    sector: "Test Sector"
+                    province: "Nova Scotia"
+                    city: "Halifax"
+                }
+            ) {
+                status
+            }
+        }
         """,
         as_user=sa_user,
     )
@@ -204,19 +210,21 @@ def test_mutation_updateOrganization_fails_if_names_clash(save, caplog):
     caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
-         mutation {
-             updateOrganization(
-                 slug: "org-one"
-                 name: "Org two"
-                 acronym: "ORG2"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
-             ) {
-                 status
-             }
-         }
+        mutation {
+            updateOrganization(
+                input: {
+                    slug: "org-one"
+                    name: "Org two"
+                    acronym: "ORG2"
+                    zone: "Test Zone"
+                    sector: "Test Sector"
+                    province: "Nova Scotia"
+                    city: "Halifax"
+                }
+            ) {
+                status
+            }
+        }
         """,
         as_user=sa_user,
     )
@@ -255,19 +263,21 @@ def test_mutation_updateOrganization_fails_for_admin_users(save, caplog):
     caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
-         mutation {
-             updateOrganization(
-                 slug: "org-one"
-                 acronym: "O1"
-                 name: "Test Organization"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
-             ) {
-                 status
-             }
-         }
+        mutation {
+            updateOrganization(
+                input: {
+                    slug: "org-one"
+                    acronym: "O1"
+                    name: "Test Organization"
+                    zone: "Test Zone"
+                    sector: "Test Sector"
+                    province: "Nova Scotia"
+                    city: "Halifax"
+                }
+            ) {
+                status
+            }
+        }
         """,
         as_user=admin,
     )
@@ -308,19 +318,21 @@ def test_mutation_updateOrganization_fails_for_write_users(save, caplog):
     caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
-         mutation {
-             updateOrganization(
-                 slug: "org-one"
-                 acronym: "O1"
-                 name: "Test Organization"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
-             ) {
-                 status
-             }
-         }
+        mutation {
+            updateOrganization(
+                input: {
+                    slug: "org-one"
+                    acronym: "O1"
+                    name: "Test Organization"
+                    zone: "Test Zone"
+                    sector: "Test Sector"
+                    province: "Nova Scotia"
+                    city: "Halifax"
+                }
+            ) {
+                status
+            }
+        }
         """,
         as_user=write_user,
     )
@@ -361,19 +373,21 @@ def test_mutation_updateOrganization_fails_for_read_users(save, caplog):
     caplog.set_level(logging.WARNING)
     result = run(
         mutation="""
-         mutation {
-             updateOrganization(
-                 slug: "org-one"
-                 acronym: "O1"
-                 name: "Test Organization"
-                 zone: "Test Zone"
-                 sector: "Test Sector"
-                 province: "Nova Scotia"
-                 city: "Halifax"
-             ) {
-                 status
-             }
-         }
+        mutation {
+            updateOrganization(
+                input: {
+                    slug: "org-one"
+                    acronym: "O1"
+                    name: "Test Organization"
+                    zone: "Test Zone"
+                    sector: "Test Sector"
+                    province: "Nova Scotia"
+                    city: "Halifax"
+                }
+            ) {
+                status
+            }
+        }
         """,
         as_user=reader,
     )
