@@ -834,23 +834,13 @@ type Mutation {
   ): CreateDomain
 
   """
-  Allows the modification of domains
+  Allows the modification of domains.
   """
   updateDomain(
     """
-    The current domain that is being requested to be updated.
+    updateDomain input object containing all arguement fields.
     """
-    currentUrl: URL!
-
-    """
-    The new DKIM selector strings corresponding to this domain
-    """
-    updatedSelectors: Selectors
-
-    """
-    The new domain you wish to update the current domain to be.
-    """
-    updatedUrl: URL!
+    input: UpdateDomainInput!
   ): UpdateDomain
 
   """
@@ -1740,6 +1730,27 @@ out its life-cycle
 """
 type UpdateDomain {
   status: Boolean
+}
+
+"""
+Input object used to define the argument fields for the updateDomain
+mutation.
+"""
+input UpdateDomainInput {
+  """
+  The current domain that is being requested to be updated.
+  """
+  currentUrl: URL!
+
+  """
+  The new domain you wish to update the current domain to be.
+  """
+  updatedUrl: URL!
+
+  """
+  The new DKIM selector strings corresponding to this domain.
+  """
+  updatedSelectors: Selectors
 }
 
 type UpdateOrganization {
