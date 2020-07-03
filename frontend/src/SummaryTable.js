@@ -11,7 +11,6 @@ import {
   Input,
   Collapse,
   IconButton,
-  Tooltip,
 } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 
