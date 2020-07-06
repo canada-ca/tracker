@@ -13,21 +13,7 @@ Domains = sqlalchemy.Table(
     sqlalchemy.Column(
         "organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")
     ),
-)
-
-Dmarc_Reports = sqlalchemy.Table(
-    "dmarc_reports",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
-    sqlalchemy.Column(
-        "domain_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("domains.id")
-    ),
-    sqlalchemy.Column("start_date", sqlalchemy.DateTime),
-    sqlalchemy.Column("end_date", sqlalchemy.DateTime),
-    sqlalchemy.Column("report", sqlalchemy.JSON),
-    sqlalchemy.Column(
-        "organization_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("organizations.id")
-    ),
+    sqlalchemy.Column("slug", sqlalchemy.String, index=True),
 )
 
 Organizations = sqlalchemy.Table(
@@ -53,6 +39,7 @@ Users = sqlalchemy.Table(
         "failed_login_attempt_time", sqlalchemy.Float, default=0, nullable=True
     ),
     sqlalchemy.Column("tfa_validated", sqlalchemy.Boolean, default=False),
+    sqlalchemy.Column("email_validated", sqlalchemy.Boolean, default=False),
 )
 
 User_affiliations = sqlalchemy.Table(
