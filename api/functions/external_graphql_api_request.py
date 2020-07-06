@@ -18,7 +18,7 @@ def create_transport(api_domain, auth_token) -> RequestsHTTPTransport:
     """
 
     transport = RequestsHTTPTransport(
-        url=api_domain, verify=False, retries=3, headers={"Authorization": auth_token}
+        url=api_domain, verify=True, retries=3, headers={"Authorization": auth_token},
     )
     return transport
 
