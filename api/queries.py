@@ -37,6 +37,10 @@ from schemas.find_my_organizations import (
     resolve_find_my_organizations,
 )
 
+# Summaries Import
+from schemas.email_summary import email_summary, demo_email_summary
+from schemas.web_summary import web_summary, demo_web_summary
+
 # Test User Claims
 from schemas.test_user_claims import test_user_claims
 
@@ -165,6 +169,15 @@ class Query(graphene.ObjectType):
     demo_dmarc_report_summary = demo_dmarc_report_summary
 
     # -- End Dmarc Report Queries
+
+    # -- Start Summaries Queries --
+    email_summary = email_summary
+    demo_email_summary = demo_email_summary
+
+    web_summary = web_summary
+    demo_web_summary = demo_web_summary
+
+    # -- End Summaries Queries --
 
     generate_otp_url = graphene.String(
         email=graphene.Argument(EmailAddress, required=True),
