@@ -451,15 +451,6 @@ type DmarcReportSummaryList {
   categoryTotals: CategoryTotals
 }
 
-"""
-This object is used to define the various arguments used in the dmarc report
-summary list query
-"""
-input DmarcReportSummaryListInput {
-  """The slugified version of the domain you wish to retrieve data for."""
-  domainSlug: Slug!
-}
-
 type Domain implements Node {
   organization: Organizations
 
@@ -1257,14 +1248,15 @@ The central gathering point for all of the GraphQL queries.
 type Query {
   webSummary: CategorizedSummary
   emailSummary: CategorizedSummary
+
   """
   A query object used to grab the data to create dmarc report bar graph.
   """
   dmarcReportSummaryList(
     """
-    Input argument with various input fields required for the dmarc report summary list query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryListInput!
+    domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
@@ -1272,9 +1264,9 @@ type Query {
   """
   demoDmarcReportSummaryList(
     """
-    Input argument with various input fields required for the dmarc report summary list query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryListInput!
+    domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """

@@ -96,9 +96,7 @@ export const QUERY_USER = gql`
 export const DMARC_REPORT_SUMMARY_LIST = gql`
   query DmarcReportSummaryList($domainSlug: Slug!) {
     dmarcReportSummaryList(
-      input: {
-        domainSlug: $domainSlug
-      }
+      domainSlug: $domainSlug
     ) {
       month
       year
@@ -115,9 +113,7 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
 export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
   query DemoDmarcReportSummaryList($domainSlug: Slug!) {
     demoDmarcReportSummaryList(
-      input: {
-        domainSlug: $domainSlug
-      }
+      domainSlug: $domainSlug
     ) {
       month
       year
