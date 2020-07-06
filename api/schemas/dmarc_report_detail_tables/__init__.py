@@ -11,6 +11,24 @@ from schemas.dmarc_report_detail_tables.resolver import (
     resolve_demo_dmarc_report_detail_tables,
 )
 
+dmarc_report_detail_tables = graphene.Field(
+    lambda: DmarcReportDetailTables,
+    domain_slug=Slug(
+        description="The slugified version of the domain you wish to retrieve data for.",
+        required=True,
+    ),
+    period=PeriodEnums(
+        description="The period in which the returned data is relevant to.",
+        required=True,
+    ),
+    year=Year(
+        description="The year in which the returned data is relevant to.",
+        required=True,
+    ),
+    resolver=resolve_dmarc_report_detail_tables,
+    description="Query used for gathering data for dmarc report detail tables.",
+)
+
 
 demo_dmarc_report_detail_tables = graphene.Field(
     lambda: DmarcReportDetailTables,
