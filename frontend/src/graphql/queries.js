@@ -138,11 +138,32 @@ export const DMARC_REPORT_SUMMARY = gql`
     $year: Year!
   ) {
     dmarcReportSummary(
-      input: {
-        domainSlug: $domainSlug,
-        period: $period,
-        year: $year
+      domainSlug: $domainSlug,
+      period: $period,
+      year: $year
+    ) {
+      month
+      year
+      categoryTotals {
+        fullPass
+        partialPass
+        fail
+        total
       }
+    }
+  }
+`
+
+export const DEMO_DMARC_REPORT_SUMMARY = gql`
+  query DmarcReportSummary(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
+  ) {
+    demoDmarcReportSummary(
+      domainSlug: $domainSlug,
+      period: $period,
+      year: $year
     ) {
       month
       year
