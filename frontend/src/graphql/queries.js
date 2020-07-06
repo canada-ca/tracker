@@ -163,11 +163,9 @@ export const DMARC_REPORT_DETAIL_TABLES = gql`
     $year: Year!
   ) {
     dmarcReportDetailTables(
-      input: {
-        domainSlug: $domainSlug
-        period: $period
-        year: $year
-      }
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
     ) {
       month
       year
@@ -244,11 +242,9 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
     $year: Year!
   ) {
     demoDmarcReportDetailTables(
-      input: {
-        domainSlug: $domainSlug
-        period: $period
-        year: $year
-      }
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
     ) {
       month
       year
