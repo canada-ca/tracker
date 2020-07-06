@@ -53,6 +53,7 @@ Users = sqlalchemy.Table(
         "failed_login_attempt_time", sqlalchemy.Float, default=0, nullable=True
     ),
     sqlalchemy.Column("tfa_validated", sqlalchemy.Boolean, default=False),
+    sqlalchemy.Column("email_validated", sqlalchemy.Boolean, default=False),
 )
 
 User_affiliations = sqlalchemy.Table(
