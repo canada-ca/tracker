@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -7,9 +7,13 @@ import { DOMAINS } from './graphql/queries'
 import { useUserState } from './UserState'
 import { Domain } from './Domain'
 import { DomainList } from './DomainList'
+import { PaginationButtons } from './PaginationButtons'
 
 export default function DomainsPage() {
   const { currentUser } = useUserState()
+  const [domains, setDomains] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [domainsPerPage] = useState(1)
   const toast = useToast()
   const { loading, _error, data } = useQuery(DOMAINS, {
     context: {
@@ -29,10 +33,16 @@ export default function DomainsPage() {
     },
   })
 
-  let domains = []
-  if (data && data.domains.edges) {
-    domains = data.domains.edges.map((e) => e.node)
-  }
+  useEffect(() => {
+    const fetchDomains = async () => {
+      let domainsData = []
+      if (data && data.domains.edges) {
+        domainsData = data.domains.edges.map((e) => e.node)
+        setDomains(domainsData)
+      }
+    }
+    fetchDomains()
+  }, [data])
 
   if (loading)
     return (
@@ -40,6 +50,14 @@ export default function DomainsPage() {
         <Trans>Loading...</Trans>
       </p>
     )
+
+  // Get current domains
+  const indexOfLastDomain = currentPage * domainsPerPage
+  const indexOfFirstDomain = indexOfLastDomain - domainsPerPage
+  const currentDomains = domains.slice(indexOfFirstDomain, indexOfLastDomain)
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   return (
     <Layout>
@@ -50,7 +68,7 @@ export default function DomainsPage() {
         {data && data.domains && (
           <Stack spacing={4}>
             <Stack spacing={4} direction="row" flexWrap="wrap">
-              <DomainList domains={domains}>
+              <DomainList domains={currentDomains}>
                 {(domain) => (
                   <Domain
                     key={domain.url}
@@ -60,6 +78,13 @@ export default function DomainsPage() {
                 )}
               </DomainList>
             </Stack>
+            {domains.length > domainsPerPage && (
+              <PaginationButtons
+                perPage={domainsPerPage}
+                total={domains.length}
+                paginate={paginate}
+              />
+            )}
           </Stack>
         )}
       </Stack>
