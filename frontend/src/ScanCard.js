@@ -13,15 +13,15 @@ function ScanCard({ scanType, scanData }) {
       : ''
   const cardDescription =
     scanType === 'web'
-      ? 'Results for scans of web technologies (SSL, HTTPS)'
+      ? 'Results for scans of web technologies (SSL, HTTPS). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac.'
       : scanType === 'email'
-      ? 'Results for scans of email technologies (DMARC, SPF, DKIM)'
+      ? 'Results for scans of email technologies (DMARC, SPF, DKIM). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac.'
       : ''
 
   const scanCategories = ['https', 'ssl', 'dmarc', 'spf', 'dkim']
 
   return (
-    <Stack bg="gray.300" px="6px">
+    <Stack bg="gray.200" px="6px">
       <Text fontSize="xl" fontWeight="bold">
         {cardTitle}
       </Text>
