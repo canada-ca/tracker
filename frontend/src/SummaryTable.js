@@ -2,8 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { useTable, usePagination } from 'react-table'
 import { array } from 'prop-types'
-import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import { Box, Text, Stack, Select, Input, IconButton } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 
@@ -79,7 +78,6 @@ const Table = styled.table`
 
 function SummaryTable({ ...props }) {
   const { data, columns } = props
-  const { i18n } = useLingui()
   const defaultPageSize = window.matchMedia('screen and (max-width: 760px)')
     .matches
     ? 5
