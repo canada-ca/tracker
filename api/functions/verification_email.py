@@ -37,7 +37,8 @@ def send_verification_email(user: Users, client: NotificationsAPIClient):
         email_template_id = "6e3368a7-0d75-47b1-b4b2-878234e554c9"
 
     # URL Generation
-    token = tokenize(user_id=user.id, exp_period=24)
+    parameters = {"user_id": user.id}
+    token = tokenize(parameters=parameters, exp_period=24)
     url = str(request.url_root) + "validate/" + str(token)
 
     # Send Email

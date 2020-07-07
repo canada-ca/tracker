@@ -71,7 +71,8 @@ def create_user(**kwargs):
                 )
 
             # Get user id
-            auth_token = tokenize(user_id=user.id)
+
+            auth_token = tokenize(parameters={"user_id": user.id})
 
             logger.info(f"Successfully created new user: {user.id}")
             return {"auth_token": auth_token, "user": user}
