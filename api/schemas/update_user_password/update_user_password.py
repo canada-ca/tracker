@@ -86,6 +86,10 @@ class UpdateUserPassword(graphene.Mutation):
         # Get the id from the token payload
         user_id = payload.get("user_id")
 
+        # Coming soon
+        password_reset_code = payload.get("parameters", {}).get("password_reset_code")
+        user_id = payload.get("parameters", {}).get("user_id")
+
         # Check to see if the token returned none
         if user_id is not None:
             # Find the user who is requesting a password reset
@@ -94,7 +98,10 @@ class UpdateUserPassword(graphene.Mutation):
             if user is not None:
                 # Dispatch password updating to update_password functions
                 successful_update = update_password(
-                    user=user, password=password, confirm_password=confirm_password
+                    user=user,
+                    password=password,
+                    confirm_password=confirm_password,
+                    password_reset_code=password_reset_code,
                 )
 
                 # Check to make sure that update_password was successful, and inform the user

@@ -1,5 +1,6 @@
 import bcrypt
 
+from random import randint
 from sqlalchemy.types import Integer, Boolean, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
@@ -27,6 +28,7 @@ class Users(Base):
         "User_affiliations", back_populates="user", passive_deletes=True,
     )
     email_validated = Column(Boolean, default=False)
+    password_reset_code = Column(Integer, nullable=True)
 
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
@@ -45,6 +47,17 @@ class Users(Base):
     @hybrid_method
     def find_by_id(self, id):
         return self.query.filter(self.id == id).first()
+
+    @hybrid_method
+    def generate_password_code(self):
+        range_start = 10 ** (6 - 1)
+        range_end = (10 ** 6) - 1
+        self.password_reset_code = int(randint(range_start, range_end))
+        return self.password_reset_code
+
+    @hybrid_method
+    def clear_password_code(self):
+        self.password_reset_code = None
 
     @hybrid_property
     def roles(self):

@@ -15,7 +15,7 @@ def create_sa():
             user_name=SA_USER_NAME,
             display_name=SA_DISPLAY_NAME,
             password=SA_PASSWORD,
-            preferred_lang="English",
+            preferred_lang="english",
             failed_login_attempt_time=0,
             failed_login_attempts=0,
             tfa_validated=False,
