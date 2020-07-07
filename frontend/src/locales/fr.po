@@ -672,3 +672,7 @@ msgstr "Protocoles et Codes"
 #: src.OrganizationDetails.js:60
 msgid "Certificate Use"
 msgstr "Utilisation des Certificats"
+
+#: src/SummaryTable.js:174
+msgid "of"
+msgstr "de"

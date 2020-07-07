@@ -633,11 +633,11 @@ msgstr "Add Domain"
 msgid "No domains scanned yet"
 msgstr "No domains scanned yet"
 
-#: src.DomainList.js:92
+#: src/DomainList.js:92
 msgid "Search for a domain"
 msgstr "Search for a domain"
 
-#: src.DomainList.js:41
+#: src/DomainList.js:41
 msgid "was added to"
 msgstr "was added to"
 
@@ -653,22 +653,26 @@ msgstr "Invite User"
 msgid "No users in this organization"
 msgstr "No users in this organization"
 
-#: src.UserList.js:94
+#: src/UserList.js:94
 msgid "Search for a user"
 msgstr "Search for a user"
 
-#: src.OrganizationDetails.js:60
+#: src/OrganizationDetails.js:60
 msgid "Domain"
 msgstr "Domain"
 
-#: src.OrganizationDetails.js:60
+#: src/OrganizationDetails.js:60
 msgid "HSTS Preloaded"
 msgstr "HSTS Preloaded"
 
-#: src.OrganizationDetails.js:60
+#: src/OrganizationDetails.js:60
 msgid "Protocols & Ciphers"
 msgstr "Protocols & Ciphers"
 
-#: src.OrganizationDetails.js:60
+#: src/OrganizationDetails.js:60
 msgid "Certificate Use"
 msgstr "Certificate Use"
+
+#: src/SummaryTable.js:174
+msgid "of"
+msgstr "of"

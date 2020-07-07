@@ -2,6 +2,8 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { useTable, usePagination } from 'react-table'
 import { array } from 'prop-types'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { Box, Text, Stack, Select, Input, IconButton } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 
@@ -75,51 +77,9 @@ const Table = styled.table`
       })}
 `
 
-// const columns = [
-//   {
-//     Header: 'Domain',
-//     accessor: 'host_domain',
-//   },
-//   {
-//     Header: 'HTTPS',
-//     accessor: 'https_result',
-//   },
-//   {
-//     Header: 'HSTS',
-//     accessor: 'hsts_result',
-//   },
-//   {
-//     Header: 'HSTS Preloaded',
-//     accessor: 'preloaded_result',
-//   },
-//   {
-//     Header: 'SSL',
-//     accessor: 'ssl_result',
-//   },
-//   {
-//     Header: 'Protocols & Ciphers',
-//     accessor: 'protocol_cipher_result',
-//   },
-//   {
-//     Header: 'Certificate Use',
-//     accessor: 'cert_use_result',
-//   },
-//   {
-//     Header: 'SPF',
-//     accessor: 'spf_result',
-//   },
-//   {
-//     Header: 'DKIM',
-//     accessor: 'dkim_result',
-//   },
-//   {
-//     Header: 'DMARC',
-//     accessor: 'dmarc_result',
-//   },
-// ]
-
 function SummaryTable({ ...props }) {
   const { data, columns } = props
+  const { i18n } = useLingui()
   const defaultPageSize = window.matchMedia('screen and (max-width: 760px)')
     .matches
     ? 5
@@ -211,11 +171,14 @@ function SummaryTable({ ...props }) {
               disabled={!canNextPage}
             />
             <Text fontWeight="semibold">
-              Page {pageIndex + 1} of {pageOptions.length}{' '}
+              <Trans>Page</Trans> {pageIndex + 1} <Trans>of</Trans>{' '}
+              {pageOptions.length}{' '}
             </Text>
           </Stack>
           <Stack spacing="1em" isInline align="center" flexWrap="wrap">
-            <Text fontWeight="semibold">Go to page: </Text>
+            <Text fontWeight="semibold">
+              <Trans>Go to page: </Trans>
+            </Text>
             <Input
               variant="outline"
               width="60px"
