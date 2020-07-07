@@ -42,6 +42,10 @@ class Users(Base):
     def find_by_user_name(self, user_name):
         return self.query.filter(self.user_name == user_name).first()
 
+    @hybrid_method
+    def find_by_id(self, id):
+        return self.query.filter(self.id == id).first()
+
     @hybrid_property
     def roles(self):
         affiliations = orm_to_dict(self.user_affiliation)
