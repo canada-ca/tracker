@@ -15,6 +15,7 @@ msgstr ""
 
 #: src/DmarcReportPage.js:251
 #: src/LandingPage.js:31
+#: src/OrganizationDetails.js:87
 msgid "*All data represented is mocked for demonstration purposes"
 msgstr "*All data represented is mocked for demonstration purposes"
 
@@ -288,7 +289,7 @@ msgstr "No Organizations"
 msgid "No domains scanned yet."
 msgstr "No domains scanned yet."
 
-#: src/OrganizationDetails.js:69
+#: src/OrganizationDetails.js:80
 msgid "No domains yet."
 msgstr "No domains yet."
 

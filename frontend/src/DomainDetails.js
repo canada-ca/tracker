@@ -97,7 +97,7 @@ export default function DomainDetails() {
     <Layout>
       <Stack spacing={5} shouldWrapChildren>
         <Stack isInline align="center">
-          <Link as={ReactRouterLink} to={'/organizations'}>
+          <Link as={ReactRouterLink} to={`/organizations/${orgSlug}`}>
             <Icon
               alt={i18n._(t`back to organizations`)}
               color="gray.900"

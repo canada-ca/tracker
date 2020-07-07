@@ -1,15 +1,10 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Heading, Text, Stack, Button, Divider } from '@chakra-ui/core'
-import { useUserState } from './UserState'
+import { Heading, Text, Stack, Divider } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
-import { Link as RouteLink } from 'react-router-dom'
 
 export function LandingPage() {
-  const { isLoggedIn } = useUserState()
-  const domainsScanned = Math.floor(Math.random() * 100 + 30)
-
   return (
     <Layout>
       <Stack spacing={10} shouldWrapChildren>
@@ -30,24 +25,6 @@ export function LandingPage() {
         </Stack>
         <Stack align="center">
           <SummaryGroup name="dashboard" />
-          <Divider />
-          <Button
-            as={RouteLink}
-            to="/organizations"
-            variantColor="teal"
-            size="lg"
-          >
-            <Stack align="center">
-              {isLoggedIn() ? (
-                <Text fontSize="lg" fontWeight="bold">
-                  {domainsScanned} Domains Scanned
-                </Text>
-              ) : (
-                <Text>Sign in to</Text>
-              )}
-              <Text fontSize="sm">View Summary Tables</Text>
-            </Stack>
-          </Button>
         </Stack>
       </Stack>
       <Divider />

@@ -23,14 +23,14 @@ const mocks = [
               node: {
                 name: 'Fisheries and Oceans Canada',
                 slug: 'fisheries-and-oceans-canada',
-                domainCount: 2,
+                domainCount: 3,
               },
             },
             {
               node: {
                 name: 'Treasury Board of Canada Secretariat',
                 slug: 'treasury-board-secretariat',
-                domainCount: 5,
+                domainCount: 0,
               },
             },
           ],
@@ -39,14 +39,6 @@ const mocks = [
     },
   },
 ]
-
-// Object.defineProperty(window, 'matchMedia', {
-//   writable: true,
-//   value: jest.fn().mockImplementation((query) => ({
-//     matches: false,
-//     media: query,
-//   })),
-// })
 
 describe('<Organisations />', () => {
   it('displays a list of organizations', async () => {

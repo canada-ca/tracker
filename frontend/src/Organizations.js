@@ -3,12 +3,10 @@ import { useQuery } from '@apollo/react-hooks'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
-import { Heading, Stack, useToast, Box, Divider, Text } from '@chakra-ui/core'
+import { Heading, Stack, useToast, Box, Divider } from '@chakra-ui/core'
 import { ORGANIZATIONS } from './graphql/queries'
 import { useUserState } from './UserState'
 import { Organization } from './Organization'
-import SummaryTable from './SummaryTable'
-import makeSummaryTableData from './makeSummaryTableData'
 
 export default function Organisations() {
   const { currentUser } = useUserState()
@@ -65,9 +63,6 @@ export default function Organisations() {
                     domainCount={domainCount}
                     size="2xl"
                   />
-                  {domainCount > 0 && (
-                    <SummaryTable data={makeSummaryTableData(domainCount)} />
-                  )}
                   <Divider borderColor="gray.900" />
                 </Box>
               )}
@@ -75,7 +70,6 @@ export default function Organisations() {
           </Stack>
         </Stack>
       </Stack>
-      <Text>*All data represented is mocked for demonstration purposes</Text>
     </Layout>
   )
 }

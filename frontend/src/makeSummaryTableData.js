@@ -1,12 +1,11 @@
-/* eslint-disable react/jsx-key */
 /*
   Temporary file to populate the summary table with data
   delete file once table is connected to API
 */
 
 import React from 'react'
-import { Icon, Link } from '@chakra-ui/core'
-import { Link as RouteLink } from 'react-router-dom'
+import { Icon } from '@chakra-ui/core'
+import { useRouteMatch } from 'react-router-dom'
 
 const range = (len) => {
   const arr = []
@@ -57,46 +56,65 @@ const newDomain = (names) => {
 }
 
 export default function MakeSummaryTableData(...lens) {
+  const { path, _url } = useRouteMatch()
+  console.log(path)
+
+  // const domainNames = [
+  //   <Link as={RouteLink} to={`${path}/cyber`}>
+  //     cyber.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/tbs-sct`}>
+  //     tbs-sct.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/canada`}>
+  //     canada.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/cra-arc`}>
+  //     cra-arc.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/pm`}>
+  //     pm.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/cse-cst`}>
+  //     cse-cst.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/forces`}>
+  //     forces.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/faker`}>
+  //     faker.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/rcmp-grc`}>
+  //     rcmp-grc.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/hc-sc`}>
+  //     hc-sc.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/dfait-maeci`}>
+  //     dfait-maeci.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/ec`}>
+  //     ec.gc.ca
+  //   </Link>,
+  //   <Link as={RouteLink} to={`${path}/dfo-mpo`}>
+  //     dfo-mpo.gc.ca
+  //   </Link>,
+  // ]
+
   const domainNames = [
-    <Link as={RouteLink} to={'organizations/:orgSlug/cyber'}>
-      cyber.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/tbs'}>
-      tbs-sct.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/canada'}>
-      canada.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/cra'}>
-      cra-arc.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/prime-minister'}>
-      pm.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/cse'}>
-      cse-cst.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/forces'}>
-      forces.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/faker'}>
-      faker.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/rcmp'}>
-      rcmp-grc.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/health'}>
-      hc-sc.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/global'}>
-      dfait-maeci.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/environment'}>
-      ec.gc.ca
-    </Link>,
-    <Link as={RouteLink} to={'organizations/:orgSlug/fish'}>
-      dfo-mpo.gc.ca
-    </Link>,
+    'cyber.gc.ca',
+    'tbs-sct.gc.ca',
+    'canada.ca',
+    'cra-arc.gc.ca',
+    'pm.gc.ca',
+    'cse-cst.gc.ca',
+    'forces.gc.ca',
+    'faker.gc.ca',
+    'rcmp-grc.gc.ca',
+    'hc-sc.gc.ca',
+    'dfait-maeci.gc.ca',
+    'ec.gc.ca',
+    'dfo-mpo.gc.ca',
   ]
 
   const makeDataLevel = (depth = 0) => {
