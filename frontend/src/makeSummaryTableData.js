@@ -5,7 +5,6 @@
 
 import React from 'react'
 import { Icon } from '@chakra-ui/core'
-import { useRouteMatch } from 'react-router-dom'
 
 const range = (len) => {
   const arr = []
@@ -56,9 +55,6 @@ const newDomain = (names) => {
 }
 
 export default function MakeSummaryTableData(...lens) {
-  const { path, _url } = useRouteMatch()
-  console.log(path)
-
   // const domainNames = [
   //   <Link as={RouteLink} to={`${path}/cyber`}>
   //     cyber.gc.ca

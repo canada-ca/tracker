@@ -656,3 +656,19 @@ msgstr "No users in this organization"
 #: src.UserList.js:94
 msgid "Search for a user"
 msgstr "Search for a user"
+
+#: src.OrganizationDetails.js:60
+msgid "Domain"
+msgstr "Domain"
+
+#: src.OrganizationDetails.js:60
+msgid "HSTS Preloaded"
+msgstr "HSTS Preloaded"
+
+#: src.OrganizationDetails.js:60
+msgid "Protocols & Ciphers"
+msgstr "Protocols & Ciphers"
+
+#: src.OrganizationDetails.js:60
+msgid "Certificate Use"
+msgstr "Certificate Use"

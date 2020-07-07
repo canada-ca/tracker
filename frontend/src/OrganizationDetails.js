@@ -55,6 +55,49 @@ export default function OrganizationDetails() {
     )
   }
 
+  const columns = [
+    {
+      Header: i18n._(t`Domain`),
+      accessor: 'host_domain',
+    },
+    {
+      Header: 'HTTPS',
+      accessor: 'https_result',
+    },
+    {
+      Header: 'HSTS',
+      accessor: 'hsts_result',
+    },
+    {
+      Header: i18n._(t`HSTS Preloaded`),
+      accessor: 'preloaded_result',
+    },
+    {
+      Header: 'SSL',
+      accessor: 'ssl_result',
+    },
+    {
+      Header: i18n._(t`Protocols & Ciphers`),
+      accessor: 'protocol_cipher_result',
+    },
+    {
+      Header: i18n._(t`Certificate Use`),
+      accessor: 'cert_use_result',
+    },
+    {
+      Header: 'SPF',
+      accessor: 'spf_result',
+    },
+    {
+      Header: 'DKIM',
+      accessor: 'dkim_result',
+    },
+    {
+      Header: 'DMARC',
+      accessor: 'dmarc_result',
+    },
+  ]
+
   const tableEntries = Math.floor(Math.random() * 20)
   return (
     <Layout>
@@ -74,7 +117,10 @@ export default function OrganizationDetails() {
         </Stack>
         <Stack>
           {tableEntries > 0 ? (
-            <SummaryTable data={makeSummaryTableData(tableEntries)} />
+            <SummaryTable
+              data={makeSummaryTableData(tableEntries)}
+              columns={columns}
+            />
           ) : (
             <Text fontSize="2xl" fontWeight="bold">
               <Trans>No domains yet.</Trans>

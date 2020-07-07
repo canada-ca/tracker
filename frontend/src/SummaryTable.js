@@ -75,51 +75,51 @@ const Table = styled.table`
       })}
 `
 
-const columns = [
-  {
-    Header: 'Domain',
-    accessor: 'host_domain',
-  },
-  {
-    Header: 'HTTPS',
-    accessor: 'https_result',
-  },
-  {
-    Header: 'HSTS',
-    accessor: 'hsts_result',
-  },
-  {
-    Header: 'HSTS Preloaded',
-    accessor: 'preloaded_result',
-  },
-  {
-    Header: 'SSL',
-    accessor: 'ssl_result',
-  },
-  {
-    Header: 'Protocols & Ciphers',
-    accessor: 'protocol_cipher_result',
-  },
-  {
-    Header: 'Certificate Use',
-    accessor: 'cert_use_result',
-  },
-  {
-    Header: 'SPF',
-    accessor: 'spf_result',
-  },
-  {
-    Header: 'DKIM',
-    accessor: 'dkim_result',
-  },
-  {
-    Header: 'DMARC',
-    accessor: 'dmarc_result',
-  },
-]
+// const columns = [
+//   {
+//     Header: 'Domain',
+//     accessor: 'host_domain',
+//   },
+//   {
+//     Header: 'HTTPS',
+//     accessor: 'https_result',
+//   },
+//   {
+//     Header: 'HSTS',
+//     accessor: 'hsts_result',
+//   },
+//   {
+//     Header: 'HSTS Preloaded',
+//     accessor: 'preloaded_result',
+//   },
+//   {
+//     Header: 'SSL',
+//     accessor: 'ssl_result',
+//   },
+//   {
+//     Header: 'Protocols & Ciphers',
+//     accessor: 'protocol_cipher_result',
+//   },
+//   {
+//     Header: 'Certificate Use',
+//     accessor: 'cert_use_result',
+//   },
+//   {
+//     Header: 'SPF',
+//     accessor: 'spf_result',
+//   },
+//   {
+//     Header: 'DKIM',
+//     accessor: 'dkim_result',
+//   },
+//   {
+//     Header: 'DMARC',
+//     accessor: 'dmarc_result',
+//   },
+// ]
 
 function SummaryTable({ ...props }) {
-  const { data } = props
+  const { data, columns } = props
   const defaultPageSize = window.matchMedia('screen and (max-width: 760px)')
     .matches
     ? 5
@@ -247,6 +247,7 @@ function SummaryTable({ ...props }) {
 
 SummaryTable.propTypes = {
   data: array.isRequired,
+  columns: array.isRequired,
 }
 
 export default WithPseudoBox(SummaryTable)
