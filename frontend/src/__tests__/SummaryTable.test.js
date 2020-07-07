@@ -5,6 +5,14 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import SummaryTable from '../SummaryTable'
 
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+  })),
+})
+
 describe('<SummaryTable />', () => {
   it('renders correctly', async () => {
     const columns = [{ Header: 'header', accessor: 'accessor' }]

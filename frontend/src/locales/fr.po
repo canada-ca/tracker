@@ -642,3 +642,23 @@ msgstr "retour aux organisations"
 #: src/OrganizationDetails.js:62
 msgid "{0}"
 msgstr ""
+
+#: src.OrganizationDetails.js:60
+msgid "Domain"
+msgstr "Domaine"
+
+#: src.OrganizationDetails.js:60
+msgid "HSTS Preloaded"
+msgstr "HSTS Préchargé"
+
+#: src.OrganizationDetails.js:60
+msgid "Protocols & Ciphers"
+msgstr "Protocoles et Codes"
+
+#: src.OrganizationDetails.js:60
+msgid "Certificate Use"
+msgstr "Utilisation des Certificats"
+
+#: src/SummaryTable.js:174
+msgid "of"
+msgstr "de"

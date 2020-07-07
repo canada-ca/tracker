@@ -1276,12 +1276,6 @@ type PolicyPublished {
   fo: Int @examples(values: [0])
 }
 
-type SummaryCategory {
-  name: String @examples(values: ["strong", "moderate", "weak"])
-  count: Int @examples(values: [33, 33, 33])
-  percentage: Int @examples(values: [33, 33, 33])
-}
-
 type CategorizedSummary {
   categories: [SummaryCategory]
   total: Int @examples(values: [100])
@@ -1291,8 +1285,6 @@ type CategorizedSummary {
 The central gathering point for all of the GraphQL queries.
 """
 type Query {
-  webSummary: CategorizedSummary
-  emailSummary: CategorizedSummary
   """
   A query object used to grab the data to create dmarc report bar graph.
   """
