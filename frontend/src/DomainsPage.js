@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Heading, Stack, useToast } from '@chakra-ui/core'
+import { Heading, Stack, useToast, Text } from '@chakra-ui/core'
 import { DOMAINS } from './graphql/queries'
 import { useUserState } from './UserState'
 import { Domain } from './Domain'
@@ -13,7 +13,7 @@ export default function DomainsPage() {
   const { currentUser } = useUserState()
   const [domains, setDomains] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [domainsPerPage] = useState(1)
+  const [domainsPerPage] = useState(5)
   const toast = useToast()
   const { loading, _error, data } = useQuery(DOMAINS, {
     context: {
@@ -79,11 +79,17 @@ export default function DomainsPage() {
               </DomainList>
             </Stack>
             {domains.length > domainsPerPage && (
-              <PaginationButtons
-                perPage={domainsPerPage}
-                total={domains.length}
-                paginate={paginate}
-              />
+              <Stack>
+                <PaginationButtons
+                  perPage={domainsPerPage}
+                  total={domains.length}
+                  paginate={paginate}
+                />
+                <Text>
+                  Page {currentPage} of{' '}
+                  {Math.ceil(domains.length / domainsPerPage)}
+                </Text>
+              </Stack>
             )}
           </Stack>
         )}

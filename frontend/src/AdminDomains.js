@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import {
@@ -27,10 +27,20 @@ export function AdminDomains({ ...props }) {
     domains = domainsData.domains.edges.map((e) => e.node)
   }
 
-  const [domainList, setDomainList] = React.useState(domains)
-  const [domainSearch, setDomainSearch] = React.useState('')
+  const [domainList, setDomainList] = useState(domains)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [domainsPerPage] = useState(4)
+  const [domainSearch, setDomainSearch] = useState('')
   const toast = useToast()
   const { i18n } = useLingui()
+
+  // Get current domains
+  const indexOfLastDomain = currentPage * domainsPerPage
+  const indexOfFirstDomain = indexOfLastDomain - domainsPerPage
+  const currentDomains = domainList.slice(indexOfFirstDomain, indexOfLastDomain)
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   const addDomain = (url) => {
     if (url !== '') {
@@ -64,6 +74,7 @@ export function AdminDomains({ ...props }) {
 
     if (temp) {
       setDomainList(temp)
+      setCurrentPage(1)
       toast({
         title: 'Domain removed',
         description: `${url} was removed from ${orgName}`,
@@ -118,7 +129,7 @@ export function AdminDomains({ ...props }) {
         <Stack direction="row" spacing={4}>
           <Stack spacing={4} flexWrap="wrap">
             <ListOf
-              elements={domainList}
+              elements={currentDomains}
               ifEmpty={() => (
                 <Text fontSize="lg" fontWeight="bold">
                   <Trans>No Domains</Trans>
@@ -150,7 +161,19 @@ export function AdminDomains({ ...props }) {
       </Stack>
 
       <Divider />
-      <PaginationButtons next={false} previous={false} />
+      {domainList.length > domainsPerPage && (
+        <Stack>
+          <PaginationButtons
+            perPage={domainsPerPage}
+            total={domainList.length}
+            paginate={paginate}
+          />
+          <Text>
+            Page {currentPage} of{' '}
+            {Math.ceil(domainList.length / domainsPerPage)}
+          </Text>
+        </Stack>
+      )}
     </Stack>
   )
 }

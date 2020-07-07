@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLingui } from '@lingui/react'
 import {
   Stack,
@@ -20,10 +20,20 @@ import { string, object } from 'prop-types'
 
 export default function UserList({ ...props }) {
   const { name, userListData, orgName } = props
-  const [userList, setUserList] = React.useState(userListData.userList.edges)
-  const [userSearch, setUserSearch] = React.useState('')
+  const [userList, setUserList] = useState(userListData.userList.edges)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [usersPerPage] = useState(4)
+  const [userSearch, setUserSearch] = useState('')
   const toast = useToast()
   const { i18n } = useLingui()
+
+  // Get current users
+  const indexOfLastUser = currentPage * usersPerPage
+  const indexOfFirstUser = indexOfLastUser - usersPerPage
+  const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser)
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   const addUser = (name, id) => {
     if (name !== '') {
@@ -116,7 +126,7 @@ export default function UserList({ ...props }) {
           <Trans>No users in this organization</Trans>
         </Text>
       ) : (
-        userList.map(({ node }) => {
+        currentUsers.map(({ node }) => {
           return (
             <Stack isInline key={node.id} align="center">
               {name === 'admin' && (
@@ -149,10 +159,18 @@ export default function UserList({ ...props }) {
         })
       )}
       <Divider />
-      <PaginationButtons
-        next={userListData.userList.pageInfo.hasNextPage}
-        previous={userListData.userList.pageInfo.hasPreviousPage}
-      />
+      {userList.length > usersPerPage && (
+        <Stack>
+          <PaginationButtons
+            perPage={usersPerPage}
+            total={userList.length}
+            paginate={paginate}
+          />
+          <Text>
+            Page {currentPage} of {Math.ceil(userList.length / usersPerPage)}
+          </Text>
+        </Stack>
+      )}
     </Stack>
   )
 }
