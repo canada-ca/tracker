@@ -88,7 +88,7 @@ const spfTechnical = {
   },
 }
 
-export const guidanceTagsOld = {
+export const guidanceTags = {
   dmarc: {
     dmarc1: {
       tag_name: 'DMARC-GC',

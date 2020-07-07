@@ -9,7 +9,7 @@ function ScanCard({ scanType, scanData }) {
     scanType === 'web'
       ? 'Web Scan Results'
       : scanType === 'email'
-      ? 'Email scan results'
+      ? 'Email Scan Results'
       : ''
   const cardDescription =
     scanType === 'web'
