@@ -1,6 +1,6 @@
 import React from 'react'
 import { array, string } from 'prop-types'
-import { Box, Heading, Icon, Stack, Text } from '@chakra-ui/core'
+import { Box, Divider, Heading, Icon, Stack, Text } from '@chakra-ui/core'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
 
 export function GuidanceTagList({ guidanceTags, categoryName, selector }) {
@@ -11,9 +11,17 @@ export function GuidanceTagList({ guidanceTags, categoryName, selector }) {
   )
 
   const tagList = guidanceTags.length ? (
-    guidanceTags.map((guidanceTag) => (
-      <GuidanceTagDetails guidanceTag={guidanceTag} categoryName={categoryName} />
-    ))
+    guidanceTags.map((guidanceTag, index) => {
+      return (
+        <Box>
+          <GuidanceTagDetails
+            guidanceTag={guidanceTag}
+            categoryName={categoryName}
+          />
+          {guidanceTags[index + 1] && <Divider borderColor="gray.700" />}
+        </Box>
+      )
+    })
   ) : (
     <Stack isInline align="center">
       <Icon name="check-circle" color="strong" />

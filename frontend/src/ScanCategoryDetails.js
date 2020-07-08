@@ -1,6 +1,6 @@
 import React from 'react'
 import { object, string } from 'prop-types'
-import { Box, Divider, Heading} from '@chakra-ui/core'
+import { Box, Divider, Heading } from '@chakra-ui/core'
 import { GuidanceTagList } from './GuidanceTagList'
 
 export function ScanCategoryDetails({ categoryName, categoryData }) {
@@ -8,17 +8,22 @@ export function ScanCategoryDetails({ categoryName, categoryData }) {
 
   const tagDetails =
     categoryName === 'dkim' ? (
-      categoryData.selectors.map((selectorData) => {
+      categoryData.selectors.map((selectorData, index) => {
         return (
-          <GuidanceTagList
-            guidanceTags={selectorData[guidanceTagPropertyName]}
-            selector={selectorData.selector}
-            categoryName={categoryName}
-          />
+          <Box>
+            <GuidanceTagList
+              guidanceTags={selectorData[guidanceTagPropertyName]}
+              selector={selectorData.selector}
+              categoryName={categoryName}
+            />
+          </Box>
         )
       })
     ) : (
-      <GuidanceTagList guidanceTags={categoryData[guidanceTagPropertyName]} />
+      <GuidanceTagList
+        guidanceTags={categoryData[guidanceTagPropertyName]}
+        categoryName={categoryName}
+      />
     )
 
   // categoryName === 'dkim' && dkimTagsExist() ? (
