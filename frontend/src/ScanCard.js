@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Heading, Stack, Text } from '@chakra-ui/core'
 import { object, string } from 'prop-types'
-import { ScanCategoryDetails } from './ScanCategoryDetails'
+import ScanCategoryDetails from './ScanCategoryDetails'
 import WithPseudoBox from './withPseudoBox'
 
 function ScanCard({ scanType, scanData }) {
@@ -20,6 +20,19 @@ function ScanCard({ scanType, scanData }) {
 
   const scanCategories = ['https', 'ssl', 'dmarc', 'spf', 'dkim']
 
+  const categoryList = Object.entries(scanData)
+    .filter(([categoryName, _categoryData]) =>
+      scanCategories.includes(categoryName),
+    )
+    .map(([categoryName, categoryData]) => {
+      return (
+        <ScanCategoryDetails
+          categoryName={categoryName}
+          categoryData={categoryData}
+        />
+      )
+    })
+
   return (
     <Box bg="gray.200" py="10px">
       <Stack px="15px">
@@ -27,18 +40,8 @@ function ScanCard({ scanType, scanData }) {
           {cardTitle}
         </Heading>
         <Text>{cardDescription}</Text>
-        {Object.entries(scanData)
-          .filter(([categoryName, _categoryData]) =>
-            scanCategories.includes(categoryName),
-          )
-          .map(([categoryName, categoryData]) => {
-            return (
-              <ScanCategoryDetails
-                categoryName={categoryName}
-                categoryData={categoryData}
-              />
-            )
-          })}
+        <Stack spacing="30px">
+        {categoryList}</Stack>
       </Stack>
     </Box>
   )

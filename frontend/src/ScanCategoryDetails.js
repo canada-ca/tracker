@@ -1,78 +1,32 @@
 import React from 'react'
 import { object, string } from 'prop-types'
-import { Box, Divider, Heading } from '@chakra-ui/core'
+import { Box, Heading } from '@chakra-ui/core'
 import { GuidanceTagList } from './GuidanceTagList'
+import WithPseudoBox from './withPseudoBox'
 
-export function ScanCategoryDetails({ categoryName, categoryData }) {
+function ScanCategoryDetails({ categoryName, categoryData }) {
   const guidanceTagPropertyName = `${categoryName}GuidanceTags`
 
   const tagDetails =
-    categoryName === 'dkim' ? (
-      categoryData.selectors.map((selectorData, index) => {
-        return (
-          <Box>
+    categoryName === 'dkim'
+      ? categoryData.selectors.map((selectorData) => {
+          return (
             <GuidanceTagList
               guidanceTags={selectorData[guidanceTagPropertyName]}
               selector={selectorData.selector}
               categoryName={categoryName}
             />
-          </Box>
-        )
-      })
-    ) : (
-      <GuidanceTagList
-        guidanceTags={categoryData[guidanceTagPropertyName]}
-        categoryName={categoryName}
-      />
-    )
-
-  // categoryName === 'dkim' && dkimTagsExist() ? (
-  //   categoryData.selectors
-  //     .filter((selector) => selector.dkimGuidanceTags.length)
-  //     .map((selector) => {
-  //       return (
-  //         <Box>
-  //           <Stack isInline>
-  //             <Icon name="warning" color="weak" />
-  //             <Text fontWeight="bold">Selector:</Text>
-  //             <Text>{selector.selector}</Text>
-  //           </Stack>
-  //           {selector.dkimGuidanceTags.map((guidanceTag) => {
-  //             return (
-  //               <Box>
-  //                 <Text>{`${guidanceTag}: ${guidanceTags[categoryName][guidanceTag].tag_name}`}</Text>
-  //                 <Text fontWeight="bold">{`Guidance: ${guidanceTags[categoryName][guidanceTag].guidance}`}</Text>
-  //                 <Text>{`Summary: ${guidanceTags[categoryName][guidanceTag].summary}`}</Text>
-  //               </Box>
-  //             )
-  //           })}
-  //         </Box>
-  //       )
-  //     })
-  // ) : categoryName !== 'dkim' &&
-  //   categoryData[`${categoryName}GuidanceTags`].length ? (
-  //   categoryData[`${categoryName}GuidanceTags`].map((guidanceTag) => {
-  //     return (
-  //       <Box>
-  //         <Text>
-  //           <Icon name="warning" color="weak" />
-  //           {`${guidanceTag}: ${guidanceTags[categoryName][guidanceTag].tag_name}`}
-  //         </Text>
-  //         <Text fontWeight="bold">{`Guidance: ${guidanceTags[categoryName][guidanceTag].guidance}`}</Text>
-  //         <Text>{`Summary: ${guidanceTags[categoryName][guidanceTag].summary}`}</Text>
-  //       </Box>
-  //     )
-  //   })
-  // ) : (
-  //   <Text>
-  //     <Icon name="check-circle" color="strong" />
-  //     Properly configured!
-  //   </Text>
-  // )
+          )
+        })
+      : [
+          <GuidanceTagList
+            guidanceTags={categoryData[guidanceTagPropertyName]}
+            categoryName={categoryName}
+          />,
+        ]
 
   return (
     <Box>
-      <Divider borderColor="gray.700" />
       <Heading as="h2" size="md">
         {categoryName.toUpperCase()}
       </Heading>
@@ -85,3 +39,5 @@ ScanCategoryDetails.propTypes = {
   categoryName: string,
   categoryData: object,
 }
+
+export default WithPseudoBox(ScanCategoryDetails)
