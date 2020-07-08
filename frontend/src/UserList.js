@@ -70,7 +70,6 @@ export default function UserList({ ...props }) {
 
   const removeUser = (user) => {
     const temp = userList.filter((c) => c.node.id !== user.id)
-
     if (temp) {
       setUserList(temp)
       setCurrentPage(1)

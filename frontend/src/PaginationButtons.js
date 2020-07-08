@@ -1,13 +1,13 @@
 import React from 'react'
 import { number, func } from 'prop-types'
-import { Button, Stack, Text, IconButton } from '@chakra-ui/core'
+import { Stack, Text, IconButton } from '@chakra-ui/core'
 
 export function PaginationButtons({ perPage, total, paginate, currentPage }) {
-  const pageNumbers = []
+  // const pageNumbers = []
 
-  for (let i = 1; i <= Math.ceil(total / perPage); i++) {
-    pageNumbers.push(i)
-  }
+  // for (let i = 1; i <= Math.ceil(total / perPage); i++) {
+  //   pageNumbers.push(i)
+  // }
 
   return (
     // Number Pagination
@@ -30,21 +30,25 @@ export function PaginationButtons({ perPage, total, paginate, currentPage }) {
         icon="arrow-left"
         onClick={() => paginate(1)}
         disabled={currentPage === 1}
+        aria-label="Skip to first page"
       />
       <IconButton
         icon="chevron-left"
         onClick={() => paginate(currentPage - 1)}
         disabled={currentPage === 1}
+        aria-label="Previous page"
       />
       <IconButton
         icon="chevron-right"
         onClick={() => paginate(currentPage + 1)}
         disabled={currentPage === Math.ceil(total / perPage)}
+        aria-label="Next page"
       />
       <IconButton
         icon="arrow-right"
         onClick={() => paginate(Math.ceil(total / perPage))}
         disabled={currentPage === Math.ceil(total / perPage)}
+        aria-label="Skip to last page"
       />
       <Text fontWeight="semibold">
         Page {currentPage} of {Math.ceil(total / perPage)}

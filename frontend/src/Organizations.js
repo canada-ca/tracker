@@ -15,7 +15,7 @@ export default function Organisations() {
   const [currentPage, setCurrentPage] = useState(1)
   const [orgsPerPage] = useState(10)
   const toast = useToast()
-  // XXX: This component needs pagination
+
   // This query is currently requesting the first 10 orgs
   const { loading, _error, data } = useQuery(ORGANIZATIONS, {
     context: {
