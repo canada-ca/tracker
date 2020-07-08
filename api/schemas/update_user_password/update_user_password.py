@@ -83,11 +83,10 @@ class UpdateUserPassword(graphene.Mutation):
                 "Error, token has expired please request another password reset email."
             )
 
-        # Get the id from the token payload
-        user_id = payload.get("user_id")
-
-        # Coming soon
-        password_reset_code = payload.get("parameters", {}).get("password_reset_code")
+        # Get information from token
+        current_password_from_token = payload.get("parameters", {}).get(
+            "current_password"
+        )
         user_id = payload.get("parameters", {}).get("user_id")
 
         # Check to see if the token returned none
@@ -101,13 +100,13 @@ class UpdateUserPassword(graphene.Mutation):
                     user=user,
                     password=password,
                     confirm_password=confirm_password,
-                    password_reset_code=password_reset_code,
+                    current_password=current_password_from_token,
                 )
 
                 # Check to make sure that update_password was successful, and inform the user
                 if successful_update is True:
                     return UpdateUserPassword(
-                        status="Successfully updated user password, please sign in with new password."
+                        successful_password_update="Successfully updated user password, please sign in with new password."
                     )
             else:
                 logger.warning(

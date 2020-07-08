@@ -2,9 +2,7 @@ from flask import request
 from graphql import GraphQLError
 
 from app import logger
-from db import db_session
 from json_web_token import tokenize
-from models import Users
 
 
 def send_password_reset_email(user, client):
@@ -22,24 +20,11 @@ def send_password_reset_email(user, client):
     else:
         email_template_id = "8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1"
 
-    # Generate password reset code
-    user_orm = Users.query.filter(Users.id == user.id).first()
-    try:
-        password_code = user_orm.generate_password_code()
-        db_session.commit()
-    except Exception as e:
-        db_session.rollback()
-        db_session.flush()
-        logger.error(
-            f"User: {user.id} attempted to create a password reset code, but a db error occured: {str(e)}"
-        )
-        raise GraphQLError("Error, sending password reset email, please try again.")
-
     # Token parameters
-    parameters = {"user_id": user.id, "password_reset_code": password_code}
+    parameters = {"user_id": user.id, "current_password": user.password}
 
     # Url Generation
-    token = tokenize(user_id=user.id, exp_period=1)
+    token = tokenize(parameters=parameters, exp_period=1)
     url = str(request.url_root) + "reset-password/" + str(token)
 
     # Try to send password reset email

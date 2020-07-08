@@ -8,15 +8,15 @@ from models import Users
 
 
 def update_password(
-    user: Users, password: str, confirm_password: str, password_reset_code: int
+    user: Users, password: str, confirm_password: str, current_password: int
 ) -> bool:
     """
     This function allows a user's password to be updated / reset.
     :param user: The user who requested a password change
     :param password: The new password to be set.
     :param confirm_password: A confirmation of the new password -- must be identical to password
-    :param password_reset_code: A code found in the users row of the db, used to
-    "cancel" the jwt if the reset is tried again
+    :param current_password: The users current password to make this a one time
+    token
     :return user: Returns the freshly updated user object retrieved from the database
     """
 
@@ -35,16 +35,15 @@ def update_password(
         raise GraphQLError(error_passwords_do_not_match())
 
     # Check to ensure that password reset code's match
-    if user.password_reset_code != password_reset_code:
+    if user.password != current_password:
         logger.warning(
-            f"User: {user.id} attempted to reset password, but the password reset code did not match."
+            f"User: {user.id} attempted to reset password, but the hashed password in the token did not match."
         )
         raise GraphQLError("Error, please trying resetting password again.")
 
     # Update the users password, and reset the password code
     try:
         user.update_password(password=password)
-        user.clear_password_code()
 
         db_session.commit()
         user = Users.find_by_id(user.id)
