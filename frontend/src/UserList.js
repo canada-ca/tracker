@@ -54,6 +54,7 @@ export default function UserList({ ...props }) {
         status: 'info',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     } else {
       toast({
@@ -62,6 +63,7 @@ export default function UserList({ ...props }) {
         status: 'error',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     }
   }
@@ -78,6 +80,7 @@ export default function UserList({ ...props }) {
         status: 'info',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     } else {
       toast({
@@ -86,6 +89,7 @@ export default function UserList({ ...props }) {
         status: 'error',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     }
   }

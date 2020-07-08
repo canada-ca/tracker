@@ -13,7 +13,7 @@ export default function DomainsPage() {
   const { currentUser } = useUserState()
   const [domains, setDomains] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [domainsPerPage] = useState(5)
+  const [domainsPerPage] = useState(10)
   const toast = useToast()
   const { loading, _error, data } = useQuery(DOMAINS, {
     context: {

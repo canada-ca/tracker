@@ -57,6 +57,7 @@ export function AdminDomains({ ...props }) {
         status: 'info',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     } else {
       toast({
@@ -65,6 +66,7 @@ export function AdminDomains({ ...props }) {
         status: 'error',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     }
   }
@@ -81,6 +83,7 @@ export function AdminDomains({ ...props }) {
         status: 'info',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     } else {
       toast({
@@ -89,6 +92,7 @@ export function AdminDomains({ ...props }) {
         status: 'error',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     }
   }
