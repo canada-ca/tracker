@@ -1,42 +1,25 @@
 import React from 'react'
 import { object, string } from 'prop-types'
-import { Box, Divider, Heading, Icon, Stack, Text } from '@chakra-ui/core'
+import { Box, Divider, Heading} from '@chakra-ui/core'
 import { GuidanceTagList } from './GuidanceTagList'
 
 export function ScanCategoryDetails({ categoryName, categoryData }) {
-  const tagsExist = () => {
-    if (categoryName === 'dkim') {
-      return categoryData.selectors.filter(
-        (selector) => selector.dkimGuidanceTags.length,
-      ).length
-    }
-    return categoryData[`${categoryName}GuidanceTags`].length
-  }
+  const guidanceTagPropertyName = `${categoryName}GuidanceTags`
 
   const tagDetails =
-    categoryName === 'dkim'
-      ? categoryData.selectors.map((selectorData) => {
-          console.log(selectorData)
-          if (!selectorData.dkimGuidanceTags.length) return 'no tags!'
-          return (
-            <GuidanceTagList
-              guidanceTags={selectorData.dkimGuidanceTags}
-              selector={selectorData.selector}
-            />
-          )
-
-          // return (
-          //   <Box>
-          //     <Heading as="h3" size="sm">
-          //       {selectorData.selector}
-          //     </Heading>
-          //     {selectorData.dkimGuidanceTags.map((guidanceTag) => {
-          //       return <GuidanceTagList guidanceTag={guidanceTag} />
-          //     })}
-          //   </Box>
-          // )
-        })
-      : 'zz'
+    categoryName === 'dkim' ? (
+      categoryData.selectors.map((selectorData) => {
+        return (
+          <GuidanceTagList
+            guidanceTags={selectorData[guidanceTagPropertyName]}
+            selector={selectorData.selector}
+            categoryName={categoryName}
+          />
+        )
+      })
+    ) : (
+      <GuidanceTagList guidanceTags={categoryData[guidanceTagPropertyName]} />
+    )
 
   // categoryName === 'dkim' && dkimTagsExist() ? (
   //   categoryData.selectors
