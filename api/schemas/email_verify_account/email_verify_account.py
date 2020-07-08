@@ -53,7 +53,7 @@ class EmailVerifyAccount(graphene.Mutation):
         except jwt.InvalidTokenError:
             raise GraphQLError("Invalid token, please try and verify again.")
 
-        user_id = payload.get("user_id")
+        user_id = payload.get("parameters", {}).get("user_id")
 
         # Check to see if user exists
         user = db_session.query(Users).filter(Users.id == user_id).first()

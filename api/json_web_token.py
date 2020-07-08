@@ -7,7 +7,7 @@ from os import environ
 
 
 def tokenize(
-    user_id,
+    parameters={},
     iat=None,
     exp=None,
     # TODO: SUPER_SECRET_SALT isn't actually a salt! Give this a better name.
@@ -19,7 +19,7 @@ def tokenize(
     if not exp:
         exp = dt.timestamp(dt.utcnow() + timedelta(hours=exp_period))
     return jwt.encode(
-        {"exp": exp, "iat": iat, "user_id": user_id}, secret, algorithm="HS256",
+        {"exp": exp, "iat": iat, "parameters": parameters}, secret, algorithm="HS256",
     ).decode("utf-8")
 
 

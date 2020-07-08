@@ -27,7 +27,7 @@ def test_successful_account_verification(save, caplog):
     )
     save(user)
 
-    token = tokenize(user_id=user.id, exp_period=24)
+    token = tokenize(parameters={"user_id": user.id}, exp_period=24)
 
     caplog.set_level(logging.INFO)
     result = run(
@@ -79,7 +79,7 @@ def test_email_account_verification_where_account_doesnt_exist(save, caplog):
     """
     Test that log, and error occurs when user doesn't exist
     """
-    token = tokenize(user_id=5, exp_period=24)
+    token = tokenize(parameters={"user_id": 5}, exp_period=24)
 
     caplog.set_level(logging.WARNING)
     result = run(
