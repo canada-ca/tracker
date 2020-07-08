@@ -25,7 +25,7 @@ class SendPasswordResetLink(graphene.Mutation):
             description="User name for the account you would like to receive a password reset link for.",
         )
 
-    status = graphene.String()
+    status = graphene.String(description="Status of a successful password reset email.")
 
     def mutate(self, info, **kwargs):
         """
