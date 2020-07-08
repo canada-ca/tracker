@@ -71,6 +71,7 @@ export default function UserList({ ...props }) {
 
     if (temp) {
       setUserList(temp)
+      setCurrentPage(1)
       toast({
         title: 'User removed',
         description: `${user.displayName} was removed from ${orgName}`,
@@ -165,10 +166,8 @@ export default function UserList({ ...props }) {
             perPage={usersPerPage}
             total={userList.length}
             paginate={paginate}
+            currentPage={currentPage}
           />
-          <Text>
-            Page {currentPage} of {Math.ceil(userList.length / usersPerPage)}
-          </Text>
         </Stack>
       )}
     </Stack>

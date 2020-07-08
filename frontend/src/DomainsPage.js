@@ -84,11 +84,8 @@ export default function DomainsPage() {
                   perPage={domainsPerPage}
                   total={domains.length}
                   paginate={paginate}
+                  currentPage={currentPage}
                 />
-                <Text>
-                  Page {currentPage} of{' '}
-                  {Math.ceil(domains.length / domainsPerPage)}
-                </Text>
               </Stack>
             )}
           </Stack>

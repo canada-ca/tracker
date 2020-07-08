@@ -167,11 +167,8 @@ export function AdminDomains({ ...props }) {
             perPage={domainsPerPage}
             total={domainList.length}
             paginate={paginate}
+            currentPage={currentPage}
           />
-          <Text>
-            Page {currentPage} of{' '}
-            {Math.ceil(domainList.length / domainsPerPage)}
-          </Text>
         </Stack>
       )}
     </Stack>

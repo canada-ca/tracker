@@ -90,10 +90,8 @@ export default function Organisations() {
               perPage={orgsPerPage}
               total={orgs.length}
               paginate={paginate}
+              currentPage={currentPage}
             />
-            <Text>
-              Page {currentPage} of {Math.ceil(orgs.length / orgsPerPage)}
-            </Text>
           </Stack>
         )}
       </Stack>

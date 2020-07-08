@@ -39,9 +39,9 @@
 
 import React from 'react'
 import { number, func } from 'prop-types'
-import { Button, Stack } from '@chakra-ui/core'
+import { Button, Stack, Text } from '@chakra-ui/core'
 
-export function PaginationButtons({ perPage, total, paginate }) {
+export function PaginationButtons({ perPage, total, paginate, currentPage }) {
   const pageNumbers = []
 
   for (let i = 1; i <= Math.ceil(total / perPage); i++) {
@@ -49,12 +49,17 @@ export function PaginationButtons({ perPage, total, paginate }) {
   }
 
   return (
-    <Stack isInline align="center">
-      {pageNumbers.map((number) => (
-        <Button key={number} onClick={() => paginate(number)}>
-          {number}
-        </Button>
-      ))}
+    <Stack>
+      <Stack isInline align="center">
+        {pageNumbers.map((number) => (
+          <Button key={number} onClick={() => paginate(number)}>
+            {number}
+          </Button>
+        ))}
+      </Stack>
+      <Text>
+        Page {currentPage} of {Math.ceil(total / perPage)}
+      </Text>
     </Stack>
   )
 }
@@ -63,4 +68,5 @@ PaginationButtons.propTypes = {
   perPage: number.isRequired,
   total: number.isRequired,
   paginate: func.isRequired,
+  currentPage: number.isRequired,
 }
