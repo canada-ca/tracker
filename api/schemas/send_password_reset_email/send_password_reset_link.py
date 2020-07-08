@@ -51,12 +51,15 @@ class SendPasswordResetLink(graphene.Mutation):
 
         # If user orm exists send email
         if user_orm is not None:
-            if send_password_reset_email(
-                user=user_orm,
-                client=NotificationsAPIClient(
-                    api_key=os.getenv("NOTIFICATION_API_KEY"),
-                    base_url=os.getenv("NOTIFICATION_API_URL"),
-                ),
+            if (
+                send_password_reset_email(
+                    user=user_orm,
+                    client=NotificationsAPIClient(
+                        api_key=os.getenv("NOTIFICATION_API_KEY"),
+                        base_url=os.getenv("NOTIFICATION_API_URL"),
+                    ),
+                )
+                is True
             ):
                 logger.info(
                     f"User: {user_orm.id}, successfully sent a password reset email."
