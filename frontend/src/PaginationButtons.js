@@ -1,45 +1,6 @@
-// import React from 'react'
-// import { Stack, IconButton } from '@chakra-ui/core'
-// import { bool } from 'prop-types'
-
-// export function PaginationButtons({ previous, next }) {
-//   return (
-//     <Stack isInline justifyContent="end">
-//       <IconButton
-//         variantColor="blue"
-//         aria-label="Previous page"
-//         icon="arrow-back"
-//         onClick={() => {
-//           window.alert('previous page')
-//         }}
-//         isDisabled={
-//           // Determine if the previous button should be disabled
-//           !previous
-//         }
-//       />
-//       <IconButton
-//         variantColor="blue"
-//         aria-label="Next page"
-//         icon="arrow-forward"
-//         onClick={() => {
-//           window.alert('next page')
-//         }}
-//         isDisabled={
-//           // Determine if the next button should be disabled
-//           !next
-//         }
-//       />
-//     </Stack>
-//   )
-// }
-// PaginationButtons.propTypes = {
-//   next: bool.isRequired,
-//   previous: bool.isRequired,
-// }
-
 import React from 'react'
 import { number, func } from 'prop-types'
-import { Button, Stack, Text } from '@chakra-ui/core'
+import { Button, Stack, Text, IconButton } from '@chakra-ui/core'
 
 export function PaginationButtons({ perPage, total, paginate, currentPage }) {
   const pageNumbers = []
@@ -49,15 +10,43 @@ export function PaginationButtons({ perPage, total, paginate, currentPage }) {
   }
 
   return (
-    <Stack>
-      <Stack isInline align="center">
-        {pageNumbers.map((number) => (
-          <Button key={number} onClick={() => paginate(number)}>
-            {number}
-          </Button>
-        ))}
-      </Stack>
-      <Text>
+    // Number Pagination
+    // <Stack>
+    //   <Stack isInline align="center">
+    //     {pageNumbers.map((number) => (
+    //       <Button key={number} onClick={() => paginate(number)}>
+    //         {number}
+    //       </Button>
+    //     ))}
+    //   </Stack>
+    //   <Text fontWeight="semibold">
+    //     Page {currentPage} of {Math.ceil(total / perPage)}
+    //   </Text>
+    // </Stack>
+
+    // Arrow Pagination
+    <Stack isInline align="center">
+      <IconButton
+        icon="arrow-left"
+        onClick={() => paginate(1)}
+        disabled={currentPage === 1}
+      />
+      <IconButton
+        icon="chevron-left"
+        onClick={() => paginate(currentPage - 1)}
+        disabled={currentPage === 1}
+      />
+      <IconButton
+        icon="chevron-right"
+        onClick={() => paginate(currentPage + 1)}
+        disabled={currentPage === Math.ceil(total / perPage)}
+      />
+      <IconButton
+        icon="arrow-right"
+        onClick={() => paginate(Math.ceil(total / perPage))}
+        disabled={currentPage === Math.ceil(total / perPage)}
+      />
+      <Text fontWeight="semibold">
         Page {currentPage} of {Math.ceil(total / perPage)}
       </Text>
     </Stack>
