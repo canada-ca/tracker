@@ -13,7 +13,7 @@ export default function DomainsPage() {
   const { currentUser } = useUserState()
   const [domains, setDomains] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [domainsPerPage] = useState(10)
+  const [domainsPerPage, setDomainsPerPage] = useState(10)
   const toast = useToast()
   const { loading, _error, data } = useQuery(DOMAINS, {
     context: {
@@ -78,16 +78,13 @@ export default function DomainsPage() {
                 )}
               </DomainList>
             </Stack>
-            {domains.length > domainsPerPage && (
-              <Stack>
-                <PaginationButtons
-                  perPage={domainsPerPage}
-                  total={domains.length}
-                  paginate={paginate}
-                  currentPage={currentPage}
-                />
-              </Stack>
-            )}
+            <PaginationButtons
+              perPage={domainsPerPage}
+              total={domains.length}
+              paginate={paginate}
+              currentPage={currentPage}
+              setPerPage={setDomainsPerPage}
+            />
           </Stack>
         )}
       </Stack>

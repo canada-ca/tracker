@@ -166,16 +166,12 @@ export function AdminDomains({ ...props }) {
       </Stack>
 
       <Divider />
-      {domainList.length > domainsPerPage && (
-        <Stack>
-          <PaginationButtons
-            perPage={domainsPerPage}
-            total={domainList.length}
-            paginate={paginate}
-            currentPage={currentPage}
-          />
-        </Stack>
-      )}
+      <PaginationButtons
+        perPage={domainsPerPage}
+        total={domainList.length}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
     </Stack>
   )
 }

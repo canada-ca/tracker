@@ -1,8 +1,14 @@
 import React from 'react'
 import { number, func } from 'prop-types'
-import { Stack, Text, IconButton } from '@chakra-ui/core'
+import { Stack, Text, IconButton, Select } from '@chakra-ui/core'
 
-export function PaginationButtons({ perPage, total, paginate, currentPage }) {
+export function PaginationButtons({
+  perPage,
+  total,
+  paginate,
+  currentPage,
+  setPerPage,
+}) {
   return (
     <Stack isInline align="center">
       <IconButton
@@ -32,6 +38,21 @@ export function PaginationButtons({ perPage, total, paginate, currentPage }) {
       <Text fontWeight="semibold">
         Page {currentPage} of {Math.ceil(total / perPage)}
       </Text>
+      {setPerPage && (
+        <Select
+          w="30"
+          value={perPage}
+          onChange={(e) => {
+            setPerPage(Number(e.target.value))
+          }}
+        >
+          {[5, 10, 20].map((perPage) => (
+            <option key={perPage} value={perPage}>
+              Show {perPage}
+            </option>
+          ))}
+        </Select>
+      )}
     </Stack>
   )
 }
@@ -41,4 +62,5 @@ PaginationButtons.propTypes = {
   total: number.isRequired,
   paginate: func.isRequired,
   currentPage: number.isRequired,
+  setPerPage: func,
 }

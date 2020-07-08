@@ -165,16 +165,12 @@ export default function UserList({ ...props }) {
         })
       )}
       <Divider />
-      {userList.length > usersPerPage && (
-        <Stack>
-          <PaginationButtons
-            perPage={usersPerPage}
-            total={userList.length}
-            paginate={paginate}
-            currentPage={currentPage}
-          />
-        </Stack>
-      )}
+      <PaginationButtons
+        perPage={usersPerPage}
+        total={userList.length}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
     </Stack>
   )
 }

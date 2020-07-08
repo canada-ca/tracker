@@ -13,7 +13,7 @@ export default function Organisations() {
   const { currentUser } = useUserState()
   const [orgs, setOrgs] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [orgsPerPage] = useState(10)
+  const [orgsPerPage, setOrgsPerPage] = useState(10)
   const toast = useToast()
 
   // This query is currently requesting the first 10 orgs
@@ -84,16 +84,13 @@ export default function Organisations() {
             </ListOf>
           </Stack>
         </Stack>
-        {orgs.length > orgsPerPage && (
-          <Stack>
-            <PaginationButtons
-              perPage={orgsPerPage}
-              total={orgs.length}
-              paginate={paginate}
-              currentPage={currentPage}
-            />
-          </Stack>
-        )}
+        <PaginationButtons
+          perPage={orgsPerPage}
+          total={orgs.length}
+          paginate={paginate}
+          currentPage={currentPage}
+          setPerPage={setOrgsPerPage}
+        />
       </Stack>
     </Layout>
   )
