@@ -6,8 +6,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: tcp-8080
+  - port: 8080
     protocol: TCP
-    targetPort: tcp-8080
+    targetPort: 8080
   selector:
     name: postgres-operator
