@@ -41,7 +41,7 @@ class UpdateUserPassword(graphene.Mutation):
             description="An input object containing all fields for this mutation.",
         )
 
-    successful_password_update = graphene.String(
+    status = graphene.String(
         description="Informs the user if the password update was successful."
     )
 
@@ -90,7 +90,7 @@ class UpdateUserPassword(graphene.Mutation):
         user_id = payload.get("parameters", {}).get("user_id")
 
         # Check to see if the token returned none
-        if user_id is not None:
+        if (user_id is not None) and (current_password_from_token is not None):
             # Find the user who is requesting a password reset
             user = Users.find_by_id(id=user_id)
             # Ensure that user exists
@@ -105,20 +105,28 @@ class UpdateUserPassword(graphene.Mutation):
 
                 # Check to make sure that update_password was successful, and inform the user
                 if successful_update is True:
+                    logger.info(f"User: {user_id} successfully updated their password.")
                     return UpdateUserPassword(
-                        successful_password_update="Successfully updated user password, please sign in with new password."
+                        status="Successfully updated user password, please sign in with new password."
                     )
             else:
                 logger.warning(
                     f"User: {user_id} attempted to reset password, but there is no account affiliated with that id."
                 )
                 raise GraphQLError(
-                    "Error, token has expired please request another password reset email."
+                    "Error, please request another password reset email."
                 )
         else:
-            logger.warning(
-                f"A user attempted to change password but user id was not found in the reset token."
-            )
-            raise GraphQLError(
-                "Error, token has expired please request another password reset email."
-            )
+            if user_id is None and current_password_from_token is not None:
+                logger.warning(
+                    f"A user attempted to change password but user_id was not found in the reset token."
+                )
+            elif current_password_from_token is None and user_id is not None:
+                logger.warning(
+                    f"A user attempted to change password but current_password was not found in the reset token."
+                )
+            else:
+                logger.warning(
+                    f"A user attempted to change password but user_id and current_password was not found in the reset token."
+                )
+            raise GraphQLError("Error, please request another password reset email.")

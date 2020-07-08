@@ -47,7 +47,6 @@ def update_password(
 
         db_session.commit()
         user = Users.find_by_id(user.id)
-        logger.info(f"User: {user.id} successfully updated their password.")
         return True
     except Exception as e:
         db_session.rollback()
