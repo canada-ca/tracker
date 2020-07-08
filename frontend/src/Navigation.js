@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link as ReactRouterLink } from 'react-router-dom'
-import { Box, Flex } from '@chakra-ui/core'
+import { Flex, Stack } from '@chakra-ui/core'
 import { node } from 'prop-types'
 
 export const Navigation = ({ children, ...props }) => {
@@ -24,23 +24,20 @@ export const Navigation = ({ children, ...props }) => {
         align="center"
         direction="row"
       >
-        <Box
-          display={{ sm: 'inline-block', md: 'flex' }}
-          width={{ sm: 'full', md: 'auto' }}
+        <Stack
+          isInline
           alignItems="center"
-          flexGrow={1}
+          flexWrap="wrap"
+          spacing={6}
         >
           {React.Children.map(children, (child) => {
             if (child !== null) {
               return React.cloneElement(child, {
                 as: ReactRouterLink,
-                mt: { base: 4, md: 0 },
-                mr: 6,
-                display: 'inline',
               })
             }
           })}
-        </Box>
+        </Stack>
       </Flex>
     </Flex>
   )
