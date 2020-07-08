@@ -412,27 +412,6 @@ type DmarcReportDetailTables {
 }
 
 """
-Input object containing fields which map to the required arguments for
-dmarcReportDetailTablesInput
-"""
-input DmarcReportDetailTablesInput {
-  """
-  The slugified version of the domain you wish to retrieve data for.
-  """
-  domainSlug: Slug!
-
-  """
-  The period in which the returned data is relevant to.
-  """
-  period: PeriodEnums!
-
-  """
-  The year in which the returned data is relevant to.
-  """
-  year: Year!
-}
-
-"""
 A query object used to grab the data to create dmarc report doughnuts
 """
 type DmarcReportSummary {
@@ -453,21 +432,6 @@ type DmarcReportSummary {
 }
 
 """
-This object is used to define the various arguments used in the dmarc report
-summary query
-"""
-input DmarcReportSummaryInput {
-  """The slugified version of the domain you wish to retrieve data for."""
-  domainSlug: Slug!
-
-  """The period in which the returned data is relevant to."""
-  period: PeriodEnums!
-
-  """The year in which the returned data is relevant to."""
-  year: Year!
-}
-
-"""
 A query object used to grab the data to create dmarc report bar graph
 """
 type DmarcReportSummaryList {
@@ -485,15 +449,6 @@ type DmarcReportSummaryList {
   Category totals for building dmarc report page bar graph.
   """
   categoryTotals: CategoryTotals
-}
-
-"""
-This object is used to define the various arguments used in the dmarc report
-summary list query
-"""
-input DmarcReportSummaryListInput {
-  """The slugified version of the domain you wish to retrieve data for."""
-  domainSlug: Slug!
 }
 
 type Domain implements Node {
@@ -1276,11 +1231,6 @@ type PolicyPublished {
   fo: Int @examples(values: [0])
 }
 
-type CategorizedSummary {
-  categories: [SummaryCategory]
-  total: Int @examples(values: [100])
-}
-
 """
 The central gathering point for all of the GraphQL queries.
 """
@@ -1290,9 +1240,9 @@ type Query {
   """
   dmarcReportSummaryList(
     """
-    Input argument with various input fields required for the dmarc report summary list query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryListInput!
+    domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
@@ -1300,9 +1250,9 @@ type Query {
   """
   demoDmarcReportSummaryList(
     """
-    Input argument with various input fields required for the dmarc report summary list query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryListInput!
+    domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
@@ -1310,9 +1260,19 @@ type Query {
   """
   dmarcReportDetailTables(
     """
-    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportDetailTablesInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportDetailTables
 
   """
@@ -1320,25 +1280,59 @@ type Query {
   """
   demoDmarcReportDetailTables(
     """
-    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportDetailTablesInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportDetailTables
 
-  """A query object used to grab the data to create dmarc report doughnuts"""
+  """
+  A query object used to grab the data to create dmarc report doughnuts
+  """
   dmarcReportSummary(
     """
-    Input argument with various input fields required for the dmarc report summary query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportSummary
 
-  """A query object used to grab the data to create dmarc report doughnuts"""
+  """
+  A query object used to grab the data to create dmarc report doughnuts
+  """
   demoDmarcReportSummary(
     """
-    Input argument with various input fields required for the dmarc report summary query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportSummary
 
   """
