@@ -56,18 +56,16 @@ export const VALIDATE_TWO_FACTOR = gql`
 
 export const UPDATE_PASSWORD = gql`
   mutation UpdatePassword(
-    $userName: EmailAddress!
+    $resetToken: String!
     $password: String!
     $confirmPassword: String!
   ) {
     updatePassword(
-      userName: $userName
+      resetToken: $resetToken
       password: $password
       confirmPassword: $confirmPassword
     ) {
-      user {
-        userName
-      }
+      status
     }
   }
 `
