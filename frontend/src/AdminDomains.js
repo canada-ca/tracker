@@ -76,7 +76,8 @@ export function AdminDomains({ ...props }) {
 
     if (temp) {
       setDomainList(temp)
-      setCurrentPage(1)
+      if (currentDomains.length <= 1)
+        setCurrentPage(Math.ceil(domainList.length / domainsPerPage) - 1)
       toast({
         title: 'Domain removed',
         description: `${url} was removed from ${orgName}`,
@@ -87,7 +88,7 @@ export function AdminDomains({ ...props }) {
       })
     } else {
       toast({
-        title: 'Domain removal failed',
+        title: 'An error occurred.',
         description: `${url} could not be removed from ${orgName}`,
         status: 'error',
         duration: 9000,

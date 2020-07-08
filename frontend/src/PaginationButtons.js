@@ -3,28 +3,7 @@ import { number, func } from 'prop-types'
 import { Stack, Text, IconButton } from '@chakra-ui/core'
 
 export function PaginationButtons({ perPage, total, paginate, currentPage }) {
-  // const pageNumbers = []
-
-  // for (let i = 1; i <= Math.ceil(total / perPage); i++) {
-  //   pageNumbers.push(i)
-  // }
-
   return (
-    // Number Pagination
-    // <Stack>
-    //   <Stack isInline align="center">
-    //     {pageNumbers.map((number) => (
-    //       <Button key={number} onClick={() => paginate(number)}>
-    //         {number}
-    //       </Button>
-    //     ))}
-    //   </Stack>
-    //   <Text fontWeight="semibold">
-    //     Page {currentPage} of {Math.ceil(total / perPage)}
-    //   </Text>
-    // </Stack>
-
-    // Arrow Pagination
     <Stack isInline align="center">
       <IconButton
         icon="arrow-left"

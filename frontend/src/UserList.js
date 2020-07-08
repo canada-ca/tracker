@@ -70,9 +70,11 @@ export default function UserList({ ...props }) {
 
   const removeUser = (user) => {
     const temp = userList.filter((c) => c.node.id !== user.id)
+
     if (temp) {
       setUserList(temp)
-      setCurrentPage(1)
+      if (currentUsers.length <= 1)
+        setCurrentPage(Math.ceil(userList.length / usersPerPage) - 1)
       toast({
         title: 'User removed',
         description: `${user.displayName} was removed from ${orgName}`,
@@ -83,7 +85,7 @@ export default function UserList({ ...props }) {
       })
     } else {
       toast({
-        title: 'User removal failed',
+        title: 'An error occurred.',
         description: `${user.displayName} could not be removed from ${orgName}`,
         status: 'error',
         duration: 9000,
