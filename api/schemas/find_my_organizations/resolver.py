@@ -32,7 +32,7 @@ def resolve_find_my_organizations(self, info, **kwargs):
 
     # Check to see if user has a super admin claim
     if is_super_admin(user_roles=user_roles):
-        query_rtn = query.all()
+        query_rtn = query.order_by(OrgModel.id.asc()).all()
         # If no org can be matched
         if not len(query_rtn):
             logger.warning(
