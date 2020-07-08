@@ -68,9 +68,7 @@ def test_valid_dmarc_report_summary_list_query_as_super_admin(save, mocker, capl
         query="""
         {
             dmarcReportSummaryList (
-                input: {
-                    domainSlug: "test-domain-gc-ca"
-                }
+                domainSlug: "test-domain-gc-ca"
             ) {
                 year
                 month
@@ -131,9 +129,7 @@ def test_valid_dmarc_report_summary_list_query_as_org_admin(save, mocker, caplog
         query="""
         {
             dmarcReportSummaryList (
-                input: {
-                    domainSlug: "test-domain-gc-ca"
-                }
+                domainSlug: "test-domain-gc-ca"
             ) {
                 year
                 month
@@ -194,9 +190,7 @@ def test_valid_dmarc_report_summary_list_query_as_user_write(save, mocker, caplo
         query="""
         {
             dmarcReportSummaryList (
-                input: {
-                    domainSlug: "test-domain-gc-ca"
-                }
+                domainSlug: "test-domain-gc-ca"
             ) {
                 year
                 month
@@ -257,9 +251,7 @@ def test_valid_dmarc_report_summary_list_query_as_user_read(save, mocker, caplog
         query="""
         {
             dmarcReportSummaryList (
-                input: {
-                    domainSlug: "test-domain-gc-ca"
-                }
+                domainSlug: "test-domain-gc-ca"
             ) {
                 year
                 month
@@ -327,9 +319,7 @@ def test_dmarc_report_summary_list_admin_from_different_org_cant_access_data(
         query="""
         {
             dmarcReportSummaryList (
-                input: {
-                    domainSlug: "test-domain-gc-ca"
-                }
+                domainSlug: "test-domain-gc-ca"
             ) {
                 year
                 month
@@ -398,9 +388,7 @@ def test_dmarc_report_summary_list_user_write_from_different_org_cant_access_dat
         query="""
         {
             dmarcReportSummaryList (
-                input: {
-                    domainSlug: "test-domain-gc-ca"
-                }
+                domainSlug: "test-domain-gc-ca"
             ) {
                 year
                 month
@@ -469,9 +457,7 @@ def test_dmarc_report_summary_list_user_read_from_different_org_cant_access_data
         query="""
         {
             dmarcReportSummaryList (
-                input: {
-                    domainSlug: "test-domain-gc-ca"
-                }
+                domainSlug: "test-domain-gc-ca"
             ) {
                 year
                 month
@@ -532,9 +518,7 @@ def test_dmarc_report_summary_list_to_ensure_error_occurs_when_domain_does_not_e
         query="""
         {
             dmarcReportSummaryList (
-                input: {
-                    domainSlug: "test-domain-gc-ca"
-                }
+                domainSlug: "test-domain-gc-ca"
             ) {
                 year
                 month
