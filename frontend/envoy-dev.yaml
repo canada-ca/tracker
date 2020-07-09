@@ -33,7 +33,7 @@ static_resources:
                 route:
                   cluster: frontend
           http_filters:
-          - name: envoy.router
+          - name: envoy.filters.http.router
   clusters:
   - name: frontend
     connect_timeout: 0.25s
