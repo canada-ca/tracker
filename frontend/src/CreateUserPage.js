@@ -11,6 +11,7 @@ import PasswordConfirmation from './PasswordConfirmation'
 import LanguageSelect from './LanguageSelect'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import DisplayNameField from './DisplayNameField'
 
 export default function CreateUserPage() {
   const { login } = useUserState()
@@ -22,6 +23,7 @@ export default function CreateUserPage() {
     email: string()
       .required(i18n._(t`Email cannot be empty`))
       .email(i18n._(t`Invalid email`)),
+    displayName: string().required(i18n._(t`Display name cannot be empty`)),
     password: string()
       .required(i18n._(t`Password cannot be empty`))
       .min(12, i18n._(t`Password must be at least 12 characters long`)),
@@ -81,6 +83,7 @@ export default function CreateUserPage() {
         validationSchema={validationSchema}
         initialValues={{
           email: '',
+          displayName: '',
           password: '',
           confirmPassword: '',
           lang: '',
@@ -106,6 +109,8 @@ export default function CreateUserPage() {
             </Text>
 
             <EmailField name="email" mb="4" />
+
+            <DisplayNameField name="displayName" mb="4" />
 
             <PasswordConfirmation mb="4" spacing="4" />
 
