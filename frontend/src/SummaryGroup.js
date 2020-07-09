@@ -1,39 +1,35 @@
 import React from 'react'
-import { t } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Stack, SimpleGrid, Box } from '@chakra-ui/core'
 import SummaryCard from './SummaryCard'
 import { string } from 'prop-types'
 import theme from './theme/canada'
+import { useQuery } from '@apollo/react-hooks'
+import { WEB_AND_EMAIL_SUMMARIES } from './graphql/queries'
 
 const { colors } = theme
 
 export function SummaryGroup() {
   const { i18n } = useLingui()
 
-  const { data } = {
-    data: {
-      webSummary: {
-        categories: [
-          {
-            name: 'moderate',
-            count: 33,
-            percentage: 33,
-          },
-          {
-            name: 'strong',
-            count: 33,
-            percentage: 33,
-          },
-          {
-            name: 'weak',
-            count: 33,
-            percentage: 33,
-          },
-        ],
-        total: 100,
-      },
+  const { loading, error, data } = useQuery(WEB_AND_EMAIL_SUMMARIES, {
+    onError: error => {
+      const [_, message] = error.message.split(': ')
+      console.log(message)
     },
+  })
+
+  if (loading) {
+    return (
+      <p>
+        <Trans>Loading...</Trans>
+      </p>
+    )
+  }
+
+  if (error) {
+    return <p>{String(error)}</p>
   }
 
   return (
@@ -44,17 +40,13 @@ export function SummaryGroup() {
             title={i18n._(t`Web Configuration`)}
             description={i18n._(t`Web encryption settings summary`)}
             categoryDisplay={{
-              strong: {
-                name: i18n._(t`Compliant TLS`),
-                color: colors.strong,
-              },
-              moderate: {
-                name: i18n._(t`TLS`),
-                color: colors.moderate,
-              },
-              weak: {
-                name: i18n._(t`No TLS`),
+              "full-fail": {
+                name: i18n._(t`Non-compliant TLS`),
                 color: colors.weak,
+              },
+              "full-pass": {
+                name: i18n._(t`Policy compliant TLS`),
+                color: colors.strong,
               },
             }}
             data={data.webSummary}
@@ -63,20 +55,20 @@ export function SummaryGroup() {
             title={i18n._(t`Email Configuration`)}
             description={i18n._(t`Email security settings summary`)}
             categoryDisplay={{
-              strong: {
+              "full-pass": {
                 name: i18n._(t`Dmarc pass`),
                 color: colors.strong,
               },
-              moderate: {
+              "partial-pass": {
                 name: i18n._(t`Dmarc partial`),
                 color: colors.moderate,
               },
-              weak: {
+              "full-fail": {
                 name: i18n._(t`Dmarc fail`),
                 color: colors.weak,
               },
             }}
-            data={data.webSummary}
+            data={data.emailSummary}
           />
         </SimpleGrid>
         )

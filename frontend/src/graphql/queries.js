@@ -1,5 +1,26 @@
 import gql from 'graphql-tag'
 
+export const WEB_AND_EMAIL_SUMMARIES = gql`
+  query LandingPageSummaries {
+    webSummary: demoWebSummary {
+      categories {
+        name
+        count
+        percentage
+      }
+      total
+    }
+    emailSummary: demoEmailSummary {
+      categories {
+        name
+        count
+        percentage
+      }
+      total
+    }
+  }
+`
+
 export const ORGANIZATION_BY_SLUG = gql`
   query FindOrganizationDetailBySlug($slug: Slug!) {
     organization: findOrganizationDetailBySlug(slug: $slug) {
@@ -95,9 +116,7 @@ export const QUERY_USER = gql`
 
 export const DMARC_REPORT_SUMMARY_LIST = gql`
   query DmarcReportSummaryList($domainSlug: Slug!) {
-    dmarcReportSummaryList(
-      domainSlug: $domainSlug
-    ) {
+    dmarcReportSummaryList(domainSlug: $domainSlug) {
       month
       year
       categoryTotals {
@@ -112,9 +131,7 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
 
 export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
   query DemoDmarcReportSummaryList($domainSlug: Slug!) {
-    demoDmarcReportSummaryList(
-      domainSlug: $domainSlug
-    ) {
+    demoDmarcReportSummaryList(domainSlug: $domainSlug) {
       month
       year
       categoryTotals {
@@ -133,11 +150,7 @@ export const DMARC_REPORT_SUMMARY = gql`
     $period: PeriodEnums!
     $year: Year!
   ) {
-    dmarcReportSummary(
-      domainSlug: $domainSlug,
-      period: $period,
-      year: $year
-    ) {
+    dmarcReportSummary(domainSlug: $domainSlug, period: $period, year: $year) {
       month
       year
       categoryTotals {
@@ -157,8 +170,8 @@ export const DEMO_DMARC_REPORT_SUMMARY = gql`
     $year: Year!
   ) {
     demoDmarcReportSummary(
-      domainSlug: $domainSlug,
-      period: $period,
+      domainSlug: $domainSlug
+      period: $period
       year: $year
     ) {
       month
