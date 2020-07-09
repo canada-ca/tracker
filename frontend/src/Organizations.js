@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
-import { Heading, Stack, useToast, Divider } from '@chakra-ui/core'
+import { Heading, Stack, useToast, Box, Divider } from '@chakra-ui/core'
 import { ORGANIZATIONS } from './graphql/queries'
 import { useUserState } from './UserState'
 import { Organization } from './Organization'
@@ -74,12 +74,15 @@ export default function Organisations() {
               ifEmpty={() => <Trans>No Organizations</Trans>}
             >
               {({ name, slug, domainCount }, index) => (
-                <Organization
-                  key={'org' + index}
-                  slug={slug}
-                  name={name}
-                  domainCount={domainCount}
-                />
+                <Box>
+                  <Organization
+                    key={'org' + index}
+                    slug={slug}
+                    name={name}
+                    domainCount={domainCount}
+                  />
+                  <Divider borderColor="gray.900" />
+                </Box>
               )}
             </ListOf>
           </Stack>
