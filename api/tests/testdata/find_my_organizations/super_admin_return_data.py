@@ -12,44 +12,14 @@ super_admin_expected_result = {
                         "province": "Alberta",
                         "city": "Calgary",
                         "domains": {"edges": [{"node": {"url": "somecooldomain.ca"}}]},
-                        "affiliatedUsers": {
-                            "edges": [
-                                {
-                                    "node": {
-                                        "user": {"displayName": "testuserread"},
-                                        "permission": "USER_READ",
-                                    }
-                                },
-                                {
-                                    "node": {
-                                        "user": {"displayName": "testsuperadmin"},
-                                        "permission": "SUPER_ADMIN",
-                                    }
-                                },
-                            ]
-                        },
-                    }
-                },
-                {
-                    "node": {
-                        "acronym": "ORG2",
-                        "name": "Organization 2",
-                        "slug": "organization-2",
-                        "zone": "Muni",
-                        "sector": "Transportation",
-                        "province": "NS",
-                        "city": "Halifax",
-                        "domains": {
-                            "edges": [{"node": {"url": "anothercooldomain.ca"}}]
-                        },
                         "affiliatedUsers": {"edges": []},
                     }
                 },
                 {
                     "node": {
-                        "acronym": "TESTUSERREAD-TESTEMAIL-CA",
-                        "name": "testuserread@testemail.ca",
-                        "slug": "testuserread-testemail-ca",
+                        "acronym": "SA",
+                        "name": "Super Admin",
+                        "slug": "super-admin",
                         "zone": None,
                         "sector": None,
                         "province": None,
@@ -59,8 +29,8 @@ super_admin_expected_result = {
                             "edges": [
                                 {
                                     "node": {
-                                        "user": {"displayName": "testuserread"},
-                                        "permission": "ADMIN",
+                                        "permission": "SUPER_ADMIN",
+                                        "user": {"displayName": "testsuperadmin"},
                                     }
                                 }
                             ]
