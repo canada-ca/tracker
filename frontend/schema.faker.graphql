@@ -77,7 +77,7 @@ type CatagorizedSummary {
   """
   List of SummaryCategory objects with data for different computed categories.
   """
-  categories: [SummaryCategory]
+  categories: [SummaryCategory] @listLength(min: 2, max: 2)
 
   """
   Total domains that were checked under this summary.
@@ -1751,7 +1751,7 @@ type SummaryCategory {
   """
   Category of computed summary which the other fields relate to.
   """
-  name: String
+  name: String @examples(values: ["full-pass" "full-fail" ])
 
   """
   Total count of domains that fall into this category.
