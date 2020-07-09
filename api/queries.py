@@ -96,6 +96,9 @@ from schemas.user_affiliations import UpdateUserRole
 # Validate Two Factor
 from schemas.validate_two_factor.validate_two_factor import ValidateTwoFactor
 
+# Invite user to org
+from schemas.invite_user_to_org import InviteUserToOrg
+
 # --- End Mutation Imports ---
 
 
@@ -235,6 +238,8 @@ class Mutation(graphene.ObjectType):
     update_user_role = UpdateUserRole.Field(
         description="Updates the users permission to an organization."
     )
+
+    invite_user_to_org = InviteUserToOrg.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
