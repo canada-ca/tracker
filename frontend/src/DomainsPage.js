@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Heading, Stack, useToast } from '@chakra-ui/core'
+import { Heading, Stack, useToast, Divider } from '@chakra-ui/core'
 import { DOMAINS } from './graphql/queries'
 import { useUserState } from './UserState'
 import { Domain } from './Domain'
@@ -87,6 +87,7 @@ export default function DomainsPage() {
             />
           </Stack>
         )}
+        <Divider />
       </Stack>
     </Layout>
   )
