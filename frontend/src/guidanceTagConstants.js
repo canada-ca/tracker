@@ -270,7 +270,7 @@ export const guidanceTags = {
     dmarc22: {
       tag_name: 'CNAME-DMARC',
       guidance: 'Domain uses potentially-outsourced DMARC service',
-      ref_links_guide: 'link',
+      ref_links_guide: {},
       ref_links_technical: dmarcTechnical.tech71,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
@@ -281,16 +281,15 @@ export const guidanceTags = {
     spf1: {
       tag_name: 'SPF-GC',
       guidance: 'Government of Canada domains subject to TBS guidelines',
-      ref_links_guide: 'IT PIN',
+      ref_links_guide: {},
       ref_links_technical: {},
       summary:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
+        'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     spf2: {
       tag_name: 'SPF-missing',
       guidance: 'Follow implementation guide',
       ref_links_guide: refLinksGuide.anna33,
-
       ref_links_technical: {},
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
