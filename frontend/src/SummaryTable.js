@@ -2,11 +2,10 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { useTable, usePagination } from 'react-table'
 import { array } from 'prop-types'
-import { Box, Text, Button, Stack, Select, Input } from '@chakra-ui/core'
-
+import { Trans } from '@lingui/macro'
+import { Box, Text, Stack, Select, Input, IconButton } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 
-// TODO: replace with values from the theme
 const Table = styled.table`
   & {
     width: 100%;
@@ -22,6 +21,10 @@ const Table = styled.table`
     padding: 6px;
     border: 1px solid #ccc;
     text-align: center;
+  }
+
+  .pagination {
+    padding: 0.5rem;
   }
 
   .title {
@@ -75,6 +78,10 @@ const Table = styled.table`
 
 function SummaryTable({ ...props }) {
   const { data, columns } = props
+  const defaultPageSize = window.matchMedia('screen and (max-width: 760px)')
+    .matches
+    ? 5
+    : 10
 
   const {
     getTableProps,
@@ -96,18 +103,14 @@ function SummaryTable({ ...props }) {
     {
       columns,
       data,
-      initialState: { pageIndex: 0 },
+      initialState: { pageIndex: 0, pageSize: defaultPageSize },
     },
     usePagination,
   )
 
   return (
-    <Stack align="center">
-      <Box overflowX="auto">
-        <Text fontWeight="bold" fontSize="3xl" textAlign={['center']}>
-          Domain Summary Table
-        </Text>
-        <br />
+    <Box>
+      <Box width="100%" overflowX="auto">
         <Table {...getTableProps()} flatHeaders={flatHeaders}>
           <thead>
             {headerGroups.map((headerGroup, idx) => (
@@ -142,46 +145,64 @@ function SummaryTable({ ...props }) {
           </tbody>
         </Table>
       </Box>
-      <Stack className="pagination" isInline>
-        <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </Button>{' '}
-        <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </Button>{' '}
-        <Button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </Button>{' '}
-        <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </Button>{' '}
-        <Text fontWeight="semibold">
-          Page {pageIndex + 1} of {pageOptions.length}{' '}
-        </Text>
-        <Text>| Go to page: </Text>
-        <Input
-          width="60px"
-          type="number"
-          onChange={(e) => {
-            const page = e.target.value ? Number(e.target.value) - 1 : 0
-            gotoPage(page)
-          }}
-        />{' '}
-        <Select
-          w="30"
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </Select>
-      </Stack>
-    </Stack>
+      <Box className="pagination">
+        <Stack isInline align="center" flexWrap="wrap" justify="space-between">
+          <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+            <IconButton
+              icon="arrow-left"
+              onClick={() => gotoPage(0)}
+              disabled={!canPreviousPage}
+            />
+            <IconButton
+              icon="chevron-left"
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+            />
+            <IconButton
+              icon="chevron-right"
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+            />
+            <IconButton
+              icon="arrow-right"
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+            />
+            <Text fontWeight="semibold">
+              <Trans>Page</Trans> {pageIndex + 1} <Trans>of</Trans>{' '}
+              {pageOptions.length}{' '}
+            </Text>
+          </Stack>
+          <Stack spacing="1em" isInline align="center" flexWrap="wrap">
+            <Text fontWeight="semibold">
+              <Trans>Go to page: </Trans>
+            </Text>
+            <Input
+              variant="outline"
+              width="60px"
+              type="number"
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0
+                gotoPage(page)
+              }}
+            />{' '}
+            <Select
+              w="30"
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value))
+              }}
+            >
+              {[5, 10, 20].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </Select>
+          </Stack>
+        </Stack>
+      </Box>
+    </Box>
   )
 }
 
