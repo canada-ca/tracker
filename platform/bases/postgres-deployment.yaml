@@ -23,11 +23,11 @@ spec:
   postgresql:
     version: "12"
     parameters:
-      shared_buffers: "32MB"
-      max_connections: "10"
-      log_statement: "all"
+      shared_buffers: "64MB"
+      max_connections: "20"
+      log_statement: "none"
   volume:
-    size: 1Gi
+    size: 20Gi
   enableShmVolume: true
   # Resources go here
   patroni:
