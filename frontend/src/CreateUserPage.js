@@ -92,9 +92,9 @@ export default function CreateUserPage() {
           signUp({
             variables: {
               userName: values.email,
+              displayName: values.displayName,
               password: values.password,
               confirmPassword: values.confirmPassword,
-              displayName: values.email,
               preferredLang: values.lang,
             },
           })
