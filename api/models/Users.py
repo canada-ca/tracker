@@ -1,5 +1,6 @@
 import bcrypt
 
+from random import randint
 from sqlalchemy.types import Integer, Boolean, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
@@ -41,6 +42,10 @@ class Users(Base):
     @hybrid_method
     def find_by_user_name(self, user_name):
         return self.query.filter(self.user_name == user_name).first()
+
+    @hybrid_method
+    def find_by_id(self, id):
+        return self.query.filter(self.id == id).first()
 
     @hybrid_property
     def roles(self):

@@ -729,11 +729,6 @@ enum LanguageEnums {
 The central gathering point for all of the GraphQL mutations.
 """
 type Mutation {
-  updatePassword(
-    confirmPassword: String!
-    password: String!
-    userName: EmailAddress!
-  ): UpdateUserPassword
   authenticateTwoFactor(
     otpCode: String!
     userName: EmailAddress!
@@ -873,6 +868,26 @@ type Mutation {
     """
     userName: EmailAddress!
   ): SendEmailVerification
+
+  """
+  Allows users to update their password, using a token sent to them via email.
+  """
+  updatePassword(
+    """
+    An input object containing all fields for this mutation.
+    """
+    input: UpdateUserPasswordInput!
+  ): UpdateUserPassword
+
+  """
+  Allows the user to request an email to reset their account password.
+  """
+  sendPasswordResetLink(
+    """
+    User name for the account you would like to receive a password reset link for.
+    """
+    userName: EmailAddress!
+  ): SendPasswordResetLink
 }
 
 """
@@ -1561,6 +1576,17 @@ type SendEmailVerification {
 }
 
 """
+This mutation allows a user to provide their username and request that a
+password reset email be sent to their account with a reset token in a url.
+"""
+type SendPasswordResetLink {
+  """
+  Status of a successful password reset email.
+  """
+  status: String
+}
+
+"""
 This method allows for new users to sign up for our sites services.
 """
 type SignUp {
@@ -1828,8 +1854,35 @@ input UpdateOrganizationInput {
   city: String
 }
 
+"""
+This mutation allows users to use a token sent to them by email to update
+their account password.
+"""
 type UpdateUserPassword {
-  user: User
+  """
+  Informs the user if the password update was successful.
+  """
+  status: String
+}
+
+"""
+Input object containing all fields for the UpdateUserPassword mutation
+"""
+input UpdateUserPasswordInput {
+  """
+  Reset token found in the url, which was sent to the users inbox, by the sendPasswordReset mutation.
+  """
+  resetToken: String!
+
+  """
+  The new password the user wishes to change to.
+  """
+  password: String!
+
+  """
+  A confirmation of the password field to ensure the user has entered the new password correctly.
+  """
+  confirmPassword: String!
 }
 
 type UpdateUserRole {
