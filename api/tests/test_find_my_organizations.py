@@ -39,36 +39,16 @@ def test_find_my_organizations_super_admin(db, caplog):
         },
     )
     save(org1)
-    org2 = Organizations(
-        acronym="ORG2",
-        domains=[Domains(domain="anothercooldomain.ca")],
-        name="Organization 2",
-        org_tags={
-            "zone": "Muni",
-            "sector": "Transportation",
-            "province": "NS",
-            "city": "Halifax",
-        },
-    )
-    save(org2)
-
-    user = Users(
-        display_name="testuserread",
-        user_name="testuserread@testemail.ca",
-        password="testpassword123",
-        user_affiliation=[
-            User_affiliations(user_organization=org1, permission="user_read"),
-        ],
-    )
-    user.verify_account()
-    save(user)
 
     super_admin = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(user_organization=org1, permission="super_admin"),
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(name="Super Admin", acronym="SA",),
+            ),
         ],
     )
     super_admin.verify_account()
