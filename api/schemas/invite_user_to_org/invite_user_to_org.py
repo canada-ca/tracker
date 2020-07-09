@@ -23,7 +23,7 @@ class InviteUserToOrgInput(graphene.InputObjectType):
 
     """
 
-    user_email = EmailAddress(
+    user_name = EmailAddress(
         required=True,
         description="User's email that you would like to invite to your org.",
     )
@@ -79,9 +79,24 @@ class InviteUserToOrg(graphene.Mutation):
             if user is not None and org is not None:
                 if is_admin(user_roles=user_roles, org_id=org.id) is True:
                     # Stop if permission is super_admin
-                    if requested_role is "super_admin":
+                    if requested_role == "super_admin":
                         raise GraphQLError(
                             "Error, you cannot invite a user with a super admin role."
+                        )
+
+                    # Check to see if affiliation already exists
+                    check_affiliation = (
+                        db_session.query(User_affiliations)
+                        .filter(User_affiliations.user_id == user.id)
+                        .filter(User_affiliations.organization_id == org.id)
+                        .first()
+                    )
+                    if check_affiliation is not None:
+                        logger.warning(
+                            f"User: {user_id}, attempted to add {user.id} to {org_slug}, but that user is already assigned to that organization."
+                        )
+                        raise GraphQLError(
+                            f"Error, that user is already part of {org_slug}."
                         )
 
                     new_user_affilition = User_affiliations(
@@ -89,6 +104,7 @@ class InviteUserToOrg(graphene.Mutation):
                         user_organization=org,
                         user_id=user_id,
                         user=user,
+                        permission=requested_role,
                     )
 
                     try:

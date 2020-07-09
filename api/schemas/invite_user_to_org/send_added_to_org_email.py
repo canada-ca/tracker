@@ -21,15 +21,18 @@ def send_invite_notification_email(
     else:
         email_template_id = "eccc6a60-44e8-40ff-8b15-ed82155b769f"
 
-    # Email Details
-    personalisation = {"display_name": user.display_name, "organization_name": org_name}
+    display_name = user.display_name if user.display_name != "" else "User"
+    organization = org_name if org_name != "" else "Organization"
 
     # Send Email
     try:
         response = client.send_email_notification(
             email_address=user.user_name,
             template_id=email_template_id,
-            personalisation=personalisation,
+            personalisation={
+                "display_name": display_name,
+                "organization_name": organization,
+            },
         )
     except Exception as e:
         logger.error(
