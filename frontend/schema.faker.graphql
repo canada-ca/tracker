@@ -412,27 +412,6 @@ type DmarcReportDetailTables {
 }
 
 """
-Input object containing fields which map to the required arguments for
-dmarcReportDetailTablesInput
-"""
-input DmarcReportDetailTablesInput {
-  """
-  The slugified version of the domain you wish to retrieve data for.
-  """
-  domainSlug: Slug!
-
-  """
-  The period in which the returned data is relevant to.
-  """
-  period: PeriodEnums!
-
-  """
-  The year in which the returned data is relevant to.
-  """
-  year: Year!
-}
-
-"""
 A query object used to grab the data to create dmarc report doughnuts
 """
 type DmarcReportSummary {
@@ -453,21 +432,6 @@ type DmarcReportSummary {
 }
 
 """
-This object is used to define the various arguments used in the dmarc report
-summary query
-"""
-input DmarcReportSummaryInput {
-  """The slugified version of the domain you wish to retrieve data for."""
-  domainSlug: Slug!
-
-  """The period in which the returned data is relevant to."""
-  period: PeriodEnums!
-
-  """The year in which the returned data is relevant to."""
-  year: Year!
-}
-
-"""
 A query object used to grab the data to create dmarc report bar graph
 """
 type DmarcReportSummaryList {
@@ -485,15 +449,6 @@ type DmarcReportSummaryList {
   Category totals for building dmarc report page bar graph.
   """
   categoryTotals: CategoryTotals
-}
-
-"""
-This object is used to define the various arguments used in the dmarc report
-summary list query
-"""
-input DmarcReportSummaryListInput {
-  """The slugified version of the domain you wish to retrieve data for."""
-  domainSlug: Slug!
 }
 
 type Domain implements Node {
@@ -774,11 +729,6 @@ enum LanguageEnums {
 The central gathering point for all of the GraphQL mutations.
 """
 type Mutation {
-  updatePassword(
-    confirmPassword: String!
-    password: String!
-    userName: EmailAddress!
-  ): UpdateUserPassword
   authenticateTwoFactor(
     otpCode: String!
     userName: EmailAddress!
@@ -918,6 +868,26 @@ type Mutation {
     """
     userName: EmailAddress!
   ): SendEmailVerification
+
+  """
+  Allows users to update their password, using a token sent to them via email.
+  """
+  updatePassword(
+    """
+    An input object containing all fields for this mutation.
+    """
+    input: UpdateUserPasswordInput!
+  ): UpdateUserPassword
+
+  """
+  Allows the user to request an email to reset their account password.
+  """
+  sendPasswordResetLink(
+    """
+    User name for the account you would like to receive a password reset link for.
+    """
+    userName: EmailAddress!
+  ): SendPasswordResetLink
 }
 
 """
@@ -1276,11 +1246,6 @@ type PolicyPublished {
   fo: Int @examples(values: [0])
 }
 
-type CategorizedSummary {
-  categories: [SummaryCategory]
-  total: Int @examples(values: [100])
-}
-
 """
 The central gathering point for all of the GraphQL queries.
 """
@@ -1290,9 +1255,9 @@ type Query {
   """
   dmarcReportSummaryList(
     """
-    Input argument with various input fields required for the dmarc report summary list query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryListInput!
+    domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
@@ -1300,9 +1265,9 @@ type Query {
   """
   demoDmarcReportSummaryList(
     """
-    Input argument with various input fields required for the dmarc report summary list query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryListInput!
+    domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
@@ -1310,9 +1275,19 @@ type Query {
   """
   dmarcReportDetailTables(
     """
-    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportDetailTablesInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportDetailTables
 
   """
@@ -1320,25 +1295,59 @@ type Query {
   """
   demoDmarcReportDetailTables(
     """
-    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportDetailTablesInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportDetailTables
 
-  """A query object used to grab the data to create dmarc report doughnuts"""
+  """
+  A query object used to grab the data to create dmarc report doughnuts
+  """
   dmarcReportSummary(
     """
-    Input argument with various input fields required for the dmarc report summary query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportSummary
 
-  """A query object used to grab the data to create dmarc report doughnuts"""
+  """
+  A query object used to grab the data to create dmarc report doughnuts
+  """
   demoDmarcReportSummary(
     """
-    Input argument with various input fields required for the dmarc report summary query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportSummary
 
   """
@@ -1564,6 +1573,17 @@ type SendEmailVerification {
   If email is successfully sent status will be true
   """
   status: Boolean
+}
+
+"""
+This mutation allows a user to provide their username and request that a
+password reset email be sent to their account with a reset token in a url.
+"""
+type SendPasswordResetLink {
+  """
+  Status of a successful password reset email.
+  """
+  status: String
 }
 
 """
@@ -1834,8 +1854,35 @@ input UpdateOrganizationInput {
   city: String
 }
 
+"""
+This mutation allows users to use a token sent to them by email to update
+their account password.
+"""
 type UpdateUserPassword {
-  user: User
+  """
+  Informs the user if the password update was successful.
+  """
+  status: String
+}
+
+"""
+Input object containing all fields for the UpdateUserPassword mutation
+"""
+input UpdateUserPasswordInput {
+  """
+  Reset token found in the url, which was sent to the users inbox, by the sendPasswordReset mutation.
+  """
+  resetToken: String!
+
+  """
+  The new password the user wishes to change to.
+  """
+  password: String!
+
+  """
+  A confirmation of the password field to ensure the user has entered the new password correctly.
+  """
+  confirmPassword: String!
 }
 
 type UpdateUserRole {
