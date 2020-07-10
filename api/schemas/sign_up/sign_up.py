@@ -64,7 +64,9 @@ class SignUp(graphene.Mutation):
             kwargs.get("input", {}).get("confirm_password")
         )
         preferred_lang = cleanse_input(kwargs.get("input", {}).get("preferred_lang"))
-        sign_up_token = cleanse_input(kwargs.get("input", {}).get("sign_up_token"))
+        sign_up_token = cleanse_input(
+            kwargs.get("input", {}).get("sign_up_token", None)
+        )
 
         # Create user and JWT
         user_info = create_user(

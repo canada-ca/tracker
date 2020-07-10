@@ -37,11 +37,13 @@ def test_successful_creation_english(db, mocker, caplog):
             mutation="""
             mutation {
                 signUp(
-                    displayName: "user-test"
-                    userName: "different-email@testemail.ca"
-                    password: "testpassword123"
-                    confirmPassword: "testpassword123"
-                    preferredLang: ENGLISH
+                    input: {
+                        displayName: "user-test"
+                        userName: "different-email@testemail.ca"
+                        password: "testpassword123"
+                        confirmPassword: "testpassword123"
+                        preferredLang: ENGLISH
+                    }
                 ) {
                     authResult {
                         user {
@@ -101,11 +103,13 @@ def test_successful_creation_french(db, mocker, caplog):
             mutation="""
             mutation {
                 signUp(
-                    displayName: "user-test"
-                    userName: "different-email@testemail.ca"
-                    password: "testpassword123"
-                    confirmPassword: "testpassword123"
-                    preferredLang: FRENCH
+                    input: {
+                        displayName: "user-test"
+                        userName: "different-email@testemail.ca"
+                        password: "testpassword123"
+                        confirmPassword: "testpassword123"
+                        preferredLang: FRENCH
+                    }
                 ) {
                     authResult {
                         user {
@@ -162,11 +166,13 @@ def test_email_address_in_use(db, caplog):
         mutation="""
         mutation {
             signUp(
-                displayName: "testuser"
-                userName: "testuser@testemail.ca"
-                password: "testpassword123"
-                confirmPassword: "testpassword123"
-                preferredLang: ENGLISH
+                input: {
+                    displayName: "testuser"
+                    userName: "testuser@testemail.ca"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    preferredLang: ENGLISH
+                }
             ) {
                 authResult {
                     user {
@@ -209,11 +215,13 @@ def test_password_too_short(db, caplog):
         mutation="""
         mutation {
             signUp(
-                displayName: "testuser"
-                userName: "testuser@testemail.ca"
-                password: "test"
-                confirmPassword: "test"
-                preferredLang: FRENCH
+                input: {
+                    displayName: "testuser"
+                    userName: "testuser@testemail.ca"
+                    password: "test"
+                    confirmPassword: "test"
+                    preferredLang: FRENCH
+                }
             ) {
                 authResult {
                     user {
@@ -250,11 +258,13 @@ def test_passwords_do_not_match(caplog):
         mutation="""
         mutation {
             signUp(
-                displayName: "testuser"
-                userName: "testuser@testemail.ca"
-                password: "testpassword123"
-                confirmPassword: "passwordtest123"
-                preferredLang: ENGLISH
+                input: {
+                    displayName: "testuser"
+                    userName: "testuser@testemail.ca"
+                    password: "testpassword123"
+                    confirmPassword: "passwordtest123"
+                    preferredLang: ENGLISH
+                }
             ) {
                 authResult {
                     user {
