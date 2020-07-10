@@ -4,8 +4,23 @@ import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
+import { MockedProvider } from '@apollo/react-testing'
 import { UserStateProvider } from '../UserState'
 import ChangePasswordPage from '../ChangePasswordPage'
+import { UPDATE_PASSWORD } from '../graphql/mutations'
+
+const mocks = [
+  {
+    request: {
+      query: UPDATE_PASSWORD,
+    },
+    result: {
+      data: {
+        status: 'string',
+      },
+    },
+  },
+]
 
 describe('<CreateUserPage />', () => {
   describe('given no input', () => {
@@ -19,7 +34,9 @@ describe('<CreateUserPage />', () => {
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={setupI18n()}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <ChangePasswordPage />
+                    <MockedProvider mocks={mocks}>
+                      <ChangePasswordPage />
+                    </MockedProvider>
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>
@@ -50,7 +67,9 @@ describe('<CreateUserPage />', () => {
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={setupI18n()}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <ChangePasswordPage />
+                    <MockedProvider mocks={mocks}>
+                      <ChangePasswordPage />
+                    </MockedProvider>
                   </MemoryRouter>
                 </I18nProvider>
               </ThemeProvider>

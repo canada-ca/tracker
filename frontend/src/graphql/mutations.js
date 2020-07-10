@@ -27,12 +27,7 @@ export const SIGN_UP = gql`
 
 export const AUTHENTICATE = gql`
   mutation authenticate($userName: EmailAddress!, $password: String!) {
-    authenticate(
-      input: {
-        userName: $userName,
-        password: $password
-      }
-    ) {
+    authenticate(input: { userName: $userName, password: $password }) {
       authResult {
         authToken
         user {
@@ -65,6 +60,14 @@ export const UPDATE_PASSWORD = gql`
       password: $password
       confirmPassword: $confirmPassword
     ) {
+      status
+    }
+  }
+`
+
+export const SEND_PASSWORD_RESET_LINK = gql`
+  mutation SendPasswordResetLink($userName: EmailAddress!) {
+    sendPasswordResetLink(userName: $userName) {
       status
     }
   }

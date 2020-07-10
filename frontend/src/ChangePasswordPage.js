@@ -1,15 +1,18 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Text, Stack, Button, Box } from '@chakra-ui/core'
+import { Text, Stack, Button, Box, useToast } from '@chakra-ui/core'
 import PasswordConfirmation from './PasswordConfirmation'
 import { object, string, ref } from 'yup'
 import { Formik } from 'formik'
 import { useHistory } from 'react-router-dom'
+import { useMutation } from '@apollo/react-hooks'
+import { UPDATE_PASSWORD } from './graphql/mutations'
 
 export default function ChangePasswordPage() {
   const { i18n } = useLingui()
   const history = useHistory()
+  const toast = useToast()
 
   const validationSchema = object().shape({
     password: string()
@@ -20,17 +23,54 @@ export default function ChangePasswordPage() {
       .oneOf([ref('password')], i18n._(t`Passwords must match`)),
   })
 
+  const [UpdatePassword, { loading, error }] = useMutation(UPDATE_PASSWORD, {
+    onError() {
+      console.log(error)
+      toast({
+        title: 'An error occured',
+        description: 'Unable to update password',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+    onCompleted() {
+      history.push('/sign-in')
+      toast({
+        title: 'Password Updated',
+        description: 'You may now sign in with your new password',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+  })
+
+  if (loading)
+    return (
+      <p>
+        <Trans>Loading...</Trans>
+      </p>
+    )
+  if (error) return <p>{String(error)}</p>
+
   return (
     <Box mx="auto">
       <Formik
         validationSchema={validationSchema}
         initialValues={{
+          resetToken: '',
           password: '',
           confirmPassword: '',
         }}
         onSubmit={async (values) => {
-          window.alert(`change password to ${values.password}`)
-          history.push('/sign-in')
+          UpdatePassword({
+            variables: {
+              resetToken: values.resetToken,
+              password: values.password,
+              confirmPassword: values.confirmPassword,
+            },
+          })
         }}
       >
         {({ handleSubmit, isSubmitting }) => (
