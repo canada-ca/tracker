@@ -34,28 +34,28 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
 
   console.log(guidanceTag)
 
-  const technicalGuidance =
-    guidanceTags[categoryName][guidanceTag].ref_links_technical !==
-    (undefined || null) ? (
-      <Stack isInline>
-        <Text fontWeight="bold">For technical implementation guidance:</Text>
-        <Link
-          color="teal.500"
-          href={
-            guidanceTags[categoryName][guidanceTag].ref_links_technical.link
-          }
-        >
-          <Stack isInline spacing="2px" align="center">
-            <Text>
-              <Trans>zzz</Trans>
-            </Text>
-            <Icon name="external-link" />
-          </Stack>
-        </Link>
-      </Stack>
-    ) : (
-      ''
-    )
+  // const technicalGuidance =
+  //   guidanceTags[categoryName][guidanceTag].ref_links_technical !==
+  //   (undefined || null) ? (
+  //     <Stack isInline>
+  //       <Text fontWeight="bold">For technical implementation guidance:</Text>
+  //       <Link
+  //         color="teal.500"
+  //         href={
+  //           guidanceTags[categoryName][guidanceTag].ref_links_technical.link
+  //         }
+  //       >
+  //         <Stack isInline spacing="2px" align="center">
+  //           <Text>
+  //             <Trans>zzz</Trans>
+  //           </Text>
+  //           <Icon name="external-link" />
+  //         </Stack>
+  //       </Link>
+  //     </Stack>
+  //   ) : (
+  //     ''
+  //   )
 
   return (
     <Stack isInline align="center">

@@ -94,6 +94,10 @@ const dkimTechnical = {
     link:
       'https://docs.microsoft.com/en-ca/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide',
   },
+  tech361: {
+    heading: 'Textual Representation',
+    link: 'https://tools.ietf.org/html/rfc6376#section-3.6.1',
+  },
 }
 
 export const guidanceTags = {
@@ -210,7 +214,7 @@ export const guidanceTags = {
     dmarc14: {
       tag_name: 'TXT-DMARC-enabled',
       guidance: 'Verification TXT records for all 3rd party senders exist',
-      ref_links_guide: 'TBD',
+      ref_links_guide: null,
       ref_links_technical: null,
       summary: 'TBD',
     },
@@ -260,7 +264,7 @@ export const guidanceTags = {
     dmarc20: {
       tag_name: 'PCT-none-exists',
       guidance: 'PCT should be 100, or not included, if p=none',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       ref_links_technical: dmarcTechnical.tech63,
       ref_links_technical_subheading: 'PCT',
       summary:
@@ -353,7 +357,7 @@ export const guidanceTags = {
     spf9: {
       tag_name: 'ALL-redirect',
       guidance: 'Uses redirect tag with All',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       ref_links_technical: spfTechnical.tech61,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
@@ -380,10 +384,10 @@ export const guidanceTags = {
     dkim1: {
       tag_name: 'DKIM-GC',
       guidance: 'Government of Canada domains subject to TBS guidelines',
-      ref_links_guide: 'IT PIN',
+      ref_links_guide: null,
       ref_links_technical: null,
       summary:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
+        'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     dkim2: {
       tag_name: 'DKIM-missing',
@@ -414,28 +418,28 @@ export const guidanceTags = {
     dkim5: {
       tag_name: 'P-sub1024',
       guidance: 'Public key RSA and key length <1024',
-      ref_links_guide: refLinksGuide.annb322,
+      ref_links_guide: refLinksGuide.annb22,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     dkim6: {
       tag_name: 'P-1024',
       guidance: 'Public key RSA and key length 1024',
-      ref_links_guide: refLinksGuide.annb322,
+      ref_links_guide: refLinksGuide.annb22,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     dkim7: {
       tag_name: 'P-2048',
       guidance: 'Public key RSA and key length 2048',
-      ref_links_guide: refLinksGuide.annb322,
+      ref_links_guide: refLinksGuide.annb22,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     dkim8: {
       tag_name: 'P-4096',
       guidance: 'Public key RSA and key length 4096 or higher',
-      ref_links_guide: refLinksGuide.annb322,
+      ref_links_guide: refLinksGuide.annb22,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
@@ -456,7 +460,7 @@ export const guidanceTags = {
     dkim11: {
       tag_name: 'DKIM-invalid-crypto',
       guidance: 'DKIM key does not use RSA',
-      ref_links_guide: refLinksGuide.annb322,
+      ref_links_guide: refLinksGuide.annb22,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
@@ -471,11 +475,8 @@ export const guidanceTags = {
       tag_name: 'T-enabled',
       guidance:
         'As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.',
-      ref_links_guide: 'DKIM Flag t',
-      ref_links_technical: {
-        link:
-          'As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled.',
-      },
+      ref_links_guide: null,
+      ref_links_technical: dkimTechnical.tech361,
       summary: 'DKIM Flag t',
     },
   },
@@ -484,14 +485,14 @@ export const guidanceTags = {
     ssl1: {
       tag_name: 'SSL-GC',
       guidance: 'Government of Canada domains subject to TBS guidelines',
-      ref_links_guide: 'IT PIN',
+      ref_links_guide: null,
       summary:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
+        'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     ssl2: {
       tag_name: 'SSL-missing',
       guidance: 'Follow implementation guide',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
@@ -499,7 +500,7 @@ export const guidanceTags = {
       tag_name: 'SSL-rc4',
       guidance:
         'Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
@@ -507,35 +508,35 @@ export const guidanceTags = {
       tag_name: 'SSL-3des',
       guidance:
         'Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     ssl5: {
       tag_name: 'SSL-acceptable-certificate',
       guidance: 'Certificate chain signed using SHA-256/SHA-384/AEAD',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     ssl6: {
       tag_name: 'SSL-invalid-cipher',
       guidance: 'One or more ciphers in use are not compliant with guidelines',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     ssl7: {
       tag_name: 'Vulnerability-heartbleed',
       guidance: 'Vulnerable to Heartbleed bug',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     ssl8: {
       tag_name: 'Vulnerability-ccs-injection',
       guidance: 'Vulnerable to OpenSSL CCS Injection',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
@@ -545,14 +546,14 @@ export const guidanceTags = {
     https1: {
       tag_name: 'HTTPS-GC',
       guidance: 'Government of Canada domains subject to TBS guidelines',
-      ref_links_guide: 'IT PIN',
+      ref_links_guide: null,
       summary:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
+        'IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https2: {
       tag_name: 'HTTPS-missing',
       guidance: 'Follow implementation guide',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
@@ -560,49 +561,49 @@ export const guidanceTags = {
       tag_name: 'HTTPS-downgraded',
       guidance:
         'Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https4: {
       tag_name: 'HTTPS-bad-chain',
       guidance: 'HTTPS certificate chain is invalid',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https5: {
       tag_name: 'HTTPS-bad-hostname',
       guidance: 'HTTPS endpoint failed hostname validation',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https6: {
       tag_name: 'HTTPS-not-enforced',
       guidance: 'Domain does not enforce HTTPS',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https7: {
       tag_name: 'HTTPS-weakly-enforced',
       guidance: 'Domain does not default to HTTPS',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https8: {
       tag_name: 'HTTPS-moderately-enforced',
       guidance: 'Domain defaults to HTTPS, but eventually redirects to HTTP',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https9: {
       tag_name: 'HSTS-missing',
       guidance: 'HTTP Strict Transport Security (HSTS) not implemented',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
@@ -610,35 +611,35 @@ export const guidanceTags = {
       tag_name: 'HSTS-short-age',
       guidance:
         'HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https11: {
       tag_name: 'HSTS-preload-ready',
       guidance: 'Domain not pre-loaded by HSTS, but is pre-load ready',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https12: {
       tag_name: 'HSTS-not-preloaded',
       guidance: 'Domain not pre-loaded by HSTS',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https13: {
       tag_name: 'HTTPS-certificate-expired',
       guidance: 'HTTPS certificate is expired',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
     https14: {
       tag_name: 'HTTPS-certificate-self-signed',
       guidance: 'HTTPS certificate is self-signed',
-      ref_links_guide: 'link',
+      ref_links_guide: null,
       summary:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.',
     },
