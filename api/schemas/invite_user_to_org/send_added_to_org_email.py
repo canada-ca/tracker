@@ -6,13 +6,15 @@ from models import Users
 
 
 def send_invite_to_org_notification_email(
-    client: NotificationsAPIClient, user: Users, org_name
+    client: NotificationsAPIClient, user: Users, org_name: str
 ):
     """
-
-    :param client:
-    :param user:
-    :return:
+    This function organizes the data required for sending an invitation email
+    to an existing user to a organization.
+    :param client: Instantiated NotificationsAPIClient
+    :param user: A users model object with the invited users information
+    :param org_name: The name of the organization that the user is being invited to
+    :return: Returns True if successful, else error is raised
     """
 
     # Check to see if users preferred lang is English or French
@@ -34,6 +36,7 @@ def send_invite_to_org_notification_email(
                 "organization_name": organization,
             },
         )
+        return True
     except Exception as e:
         logger.error(
             f"Error when sending user: {user.id}'s invitation to {org_name} notification email."

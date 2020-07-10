@@ -24,7 +24,7 @@ from schemas.invite_user_to_org.send_invite_to_service_email import (
 
 class InviteUserToOrgInput(graphene.InputObjectType):
     """
-
+    An input object containing all input fields for the InviteUserToOrg mutation
     """
 
     user_name = EmailAddress(
@@ -45,7 +45,9 @@ class InviteUserToOrgInput(graphene.InputObjectType):
 
 class InviteUserToOrg(graphene.Mutation):
     """
-
+    This mutation allows admins and higher to invite users to any of their
+    organizations, if the invited user does not have an account, they will be
+    able to sign-up and be assigned to that organization in one mutation.
     """
 
     class Arguments:
@@ -59,10 +61,10 @@ class InviteUserToOrg(graphene.Mutation):
     @require_token
     def mutate(self, info, **kwargs):
         """
-
-        :param info:
-        :param kwargs:
-        :return:
+        This mutation does the work for the inviteUserToOrg mutation
+        :param info: Request information
+        :param kwargs: Various arguments from the user, and token information
+        :return: A InviteUserToOrg object with a status field set as a string
         """
         # Get Arguments
         user_id = kwargs.get("user_id")
@@ -119,22 +121,25 @@ class InviteUserToOrg(graphene.Mutation):
                     )
 
                     try:
-                        send_invite_to_org_notification_email(
-                            user=user,
-                            org_name=org.name,
-                            client=NotificationsAPIClient(
-                                api_key=os.getenv("NOTIFICATION_API_KEY"),
-                                base_url=os.getenv("NOTIFICATION_API_URL"),
-                            ),
-                        )
-                        db_session.add(new_user_affilition)
-                        db_session.commit()
-                        logger.info(
-                            f"User: {user_id} successfully added {user.id} to {org_slug}."
-                        )
-                        return InviteUserToOrg(
-                            status="Successfully invited user to organization, and sent notification email."
-                        )
+                        if (
+                            send_invite_to_org_notification_email(
+                                user=user,
+                                org_name=org.name,
+                                client=NotificationsAPIClient(
+                                    api_key=os.getenv("NOTIFICATION_API_KEY"),
+                                    base_url=os.getenv("NOTIFICATION_API_URL"),
+                                ),
+                            )
+                            is True
+                        ):
+                            db_session.add(new_user_affilition)
+                            db_session.commit()
+                            logger.info(
+                                f"User: {user_id} successfully added {user.id} to {org_slug}."
+                            )
+                            return InviteUserToOrg(
+                                status="Successfully invited user to organization, and sent notification email."
+                            )
                     except Exception as e:
                         logger.error(
                             f"User: {user_id} attempted to invite {user.id} to org, but a db error occurred when adding user: {str(e)}"
@@ -152,22 +157,25 @@ class InviteUserToOrg(graphene.Mutation):
 
             elif user is None and org is not None:
                 # Send Email
-                send_invite_to_service_email(
-                    user_name=user_name,
-                    org=org,
-                    preferred_language=preferred_language,
-                    requested_role=requested_role,
-                    client=NotificationsAPIClient(
-                        api_key=os.getenv("NOTIFICATION_API_KEY"),
-                        base_url=os.getenv("NOTIFICATION_API_URL"),
-                    ),
-                )
-                logger.info(
-                    f"User: {user_id}, sent an invitation email to {user_name}, for the {org_slug} organization."
-                )
-                return InviteUserToOrg(
-                    status="Successfully sent invitation to service, and organization email."
-                )
+                if (
+                    send_invite_to_service_email(
+                        user_name=user_name,
+                        org=org,
+                        preferred_language=preferred_language,
+                        requested_role=requested_role,
+                        client=NotificationsAPIClient(
+                            api_key=os.getenv("NOTIFICATION_API_KEY"),
+                            base_url=os.getenv("NOTIFICATION_API_URL"),
+                        ),
+                    )
+                    is True
+                ):
+                    logger.info(
+                        f"User: {user_id}, sent an invitation email to {user_name}, for the {org_slug} organization."
+                    )
+                    return InviteUserToOrg(
+                        status="Successfully sent invitation to service, and organization email."
+                    )
 
             elif org is None:
                 logger.warning(
