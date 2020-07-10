@@ -79,7 +79,7 @@
     "html-webpack-plugin": "4.3.0",
     "jest": "^26.1.0",
     "jest-emotion": "^10.0.32",
-    "prettier": "^2.0.5",
+    "prettier": "^1.9.1",
     "react-hot-loader": "^4.12.21",
     "supertest": "^4.0.2",
     "url-loader": "^4.1.0",
