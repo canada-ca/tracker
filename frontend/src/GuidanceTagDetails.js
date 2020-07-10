@@ -6,7 +6,8 @@ import { Trans } from '@lingui/macro'
 
 export function GuidanceTagDetails({ guidanceTag, categoryName }) {
   const cccsGuidance =
-    guidanceTags[categoryName][guidanceTag].ref_links_guide !== null ? (
+    guidanceTags[categoryName][guidanceTag].ref_links_guide !== null &&
+    guidanceTags[categoryName][guidanceTag].ref_links_guide !== undefined ? (
       <Stack isInline>
         <Text fontWeight="bold">
           For in-depth CCCS implementation guidance:
@@ -34,28 +35,28 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
 
   console.log(guidanceTag)
 
-  // const technicalGuidance =
-  //   guidanceTags[categoryName][guidanceTag].ref_links_technical !==
-  //   (undefined || null) ? (
-  //     <Stack isInline>
-  //       <Text fontWeight="bold">For technical implementation guidance:</Text>
-  //       <Link
-  //         color="teal.500"
-  //         href={
-  //           guidanceTags[categoryName][guidanceTag].ref_links_technical.link
-  //         }
-  //       >
-  //         <Stack isInline spacing="2px" align="center">
-  //           <Text>
-  //             <Trans>zzz</Trans>
-  //           </Text>
-  //           <Icon name="external-link" />
-  //         </Stack>
-  //       </Link>
-  //     </Stack>
-  //   ) : (
-  //     ''
-  //   )
+  const technicalGuidance =
+    guidanceTags[categoryName][guidanceTag].ref_links_technical !== undefined &&
+    guidanceTags[categoryName][guidanceTag].ref_links_technical !== null ? (
+      <Stack isInline>
+        <Text fontWeight="bold">For technical implementation guidance:</Text>
+        <Link
+          color="teal.500"
+          href={
+            guidanceTags[categoryName][guidanceTag].ref_links_technical.link
+          }
+        >
+          <Stack isInline spacing="2px" align="center">
+            <Text>
+              <Trans>zzz</Trans>
+            </Text>
+            <Icon name="external-link" />
+          </Stack>
+        </Link>
+      </Stack>
+    ) : (
+      ''
+    )
 
   return (
     <Stack isInline align="center">
@@ -73,7 +74,8 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
           <Text fontWeight="bold">Summary:</Text>
           <Text>{guidanceTags[categoryName][guidanceTag].summary}</Text>
         </Stack>
-        {cccsGuidance}
+        {/*{cccsGuidance}*/}
+        {technicalGuidance}
       </Box>
     </Stack>
   )
