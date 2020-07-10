@@ -13,6 +13,9 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+msgid "3.2.2 Third Parties and DKIM"
+msgstr "3.2.2 Third Parties and DKIM"
+
 #: src/DmarcReportPage.js:274
 #: src/LandingPage.js:31
 msgid "*All data represented is mocked for demonstration purposes"
