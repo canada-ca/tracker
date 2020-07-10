@@ -6,6 +6,7 @@ from notifications_python_client.notifications import NotificationsAPIClient
 
 from app import logger
 from db import db_session
+from enums.languages import LanguageEnums
 from enums.roles import RoleEnums
 from functions.auth_functions import is_admin
 from functions.auth_wrappers import require_token
@@ -14,7 +15,10 @@ from models import Organizations, User_affiliations, Users
 from scalars.email_address import EmailAddress
 from scalars.slug import Slug
 from schemas.invite_user_to_org.send_added_to_org_email import (
-    send_invite_notification_email,
+    send_invite_to_org_notification_email,
+)
+from schemas.invite_user_to_org.send_invite_to_service_email import (
+    send_invite_to_service_email,
 )
 
 
@@ -32,6 +36,10 @@ class InviteUserToOrgInput(graphene.InputObjectType):
     )
     org_slug = Slug(
         required=True, description="The organization you wish to invite the user to."
+    )
+    preferred_language = LanguageEnums(
+        required=True,
+        description="Select the language you would like the email to be sent in.",
     )
 
 
@@ -62,6 +70,9 @@ class InviteUserToOrg(graphene.Mutation):
         user_name = cleanse_input(kwargs.get("input", {}).get("user_name"))
         requested_role = cleanse_input(kwargs.get("input", {}).get("requested_role"))
         org_slug = cleanse_input(kwargs.get("input", {}).get("org_slug"))
+        preferred_language = cleanse_input(
+            kwargs.get("input", {}).get("preferred_language")
+        )
 
         # Check to make sure user_name and requested_role are not none
         if (
@@ -108,7 +119,7 @@ class InviteUserToOrg(graphene.Mutation):
                     )
 
                     try:
-                        send_invite_notification_email(
+                        send_invite_to_org_notification_email(
                             user=user,
                             org_name=org.name,
                             client=NotificationsAPIClient(
@@ -141,7 +152,22 @@ class InviteUserToOrg(graphene.Mutation):
 
             elif user is None and org is not None:
                 # Send Email
-                raise GraphQLError("Error, not implemented yet.")
+                send_invite_to_service_email(
+                    user_name=user_name,
+                    org=org,
+                    preferred_language=preferred_language,
+                    requested_role=requested_role,
+                    client=NotificationsAPIClient(
+                        api_key=os.getenv("NOTIFICATION_API_KEY"),
+                        base_url=os.getenv("NOTIFICATION_API_URL"),
+                    ),
+                )
+                logger.info(
+                    f"User: {user_id}, sent an invitation email to {user_name}, for the {org_slug} organization."
+                )
+                return InviteUserToOrg(
+                    status="Successfully sent invitation to service, and organization email."
+                )
 
             elif org is None:
                 logger.warning(

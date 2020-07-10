@@ -1,3 +1,4 @@
+import jwt
 import os
 
 from graphql import GraphQLError
@@ -7,7 +8,7 @@ from notifications_python_client.notifications import NotificationsAPIClient
 from app import logger
 from functions.input_validators import *
 from functions.error_messages import *
-from models import Users as User
+from models import Organizations, Users as User, User_affiliations
 from db import db_session
 from json_web_token import tokenize
 from functions.verification_email import send_verification_email
@@ -25,6 +26,7 @@ def create_user(**kwargs):
     confirm_password = cleanse_input(kwargs.get("confirm_password"))
     user_name = cleanse_input(kwargs.get("user_name"))
     preferred_lang = cleanse_input(kwargs.get("preferred_lang"))
+    sign_up_token = cleanse_input(kwargs.get("sign_up_token"))
 
     if not is_strong_password(password):
         logger.warning(
@@ -41,6 +43,32 @@ def create_user(**kwargs):
     user = User.find_by_user_name(user_name)
 
     if user is None:
+        if sign_up_token is not None:
+            # Decode token, and handle token errors
+            try:
+                payload = jwt.decode(
+                    sign_up_token, os.getenv("SUPER_SECRET_SALT"), algorithms=["HS256"]
+                )
+            except jwt.ExpiredSignatureError:
+                logger.warning(
+                    f"User attempted to reset password, but token was expired."
+                )
+                raise GraphQLError(
+                    "Error, token has expired please request another password reset email."
+                )
+            except jwt.InvalidTokenError:
+                logger.warning(
+                    f"User attempted to reset password, but the token was invalid."
+                )
+                raise GraphQLError(
+                    "Error, token has expired please request another password reset email."
+                )
+
+            # Get Values from token
+            user_name = payload.get("parameters", {}).get("user_name")
+            org_id = payload.get("parameters", {}).get("org_id")
+            requested_level = payload.get("parameters", {}).get("requested_level")
+
         user = User(
             user_name=user_name,
             display_name=display_name,
@@ -48,6 +76,22 @@ def create_user(**kwargs):
             password=password,
         )
         db_session.add(user)
+
+        # Create User Affiliation
+        if org_id is not None and requested_level is not None:
+            org = (
+                db_session.query(Organizations)
+                .filter(Organizations.id == org_id)
+                .first()
+            )
+            user_affiliation = User_affiliations(
+                permission=requested_level,
+                organization_id=org.id,
+                user_organization=org,
+                user_id=user.id,
+                user=user,
+            )
+            db_session.add(user_affiliation)
 
         try:
             # Add User to db

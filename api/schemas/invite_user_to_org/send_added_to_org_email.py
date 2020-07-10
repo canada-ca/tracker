@@ -5,7 +5,7 @@ from app import logger
 from models import Users
 
 
-def send_invite_notification_email(
+def send_invite_to_org_notification_email(
     client: NotificationsAPIClient, user: Users, org_name
 ):
     """
