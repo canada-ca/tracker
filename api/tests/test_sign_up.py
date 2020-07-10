@@ -4,7 +4,6 @@ import pytest_mock
 
 from pytest import fail
 
-from app import app
 from db import DB
 from models import Organizations, Users, User_affiliations
 from functions.error_messages import *
