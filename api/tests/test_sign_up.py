@@ -6,8 +6,9 @@ from pytest import fail
 
 from app import app
 from db import DB
-from models import Users
+from models import Organizations, Users, User_affiliations
 from functions.error_messages import *
+from json_web_token import tokenize
 from tests.test_functions import json, run
 
 
@@ -31,57 +32,55 @@ def test_successful_creation_english(db, mocker, caplog):
     )
 
     caplog.set_level(logging.INFO)
-    request_headers = {"Origin": "https://testserver.com"}
-    with app.test_request_context(headers=request_headers):
-        result = run(
-            mutation="""
-            mutation {
-                signUp(
-                    input: {
-                        displayName: "user-test"
-                        userName: "different-email@testemail.ca"
-                        password: "testpassword123"
-                        confirmPassword: "testpassword123"
-                        preferredLang: ENGLISH
-                    }
-                ) {
-                    authResult {
-                        user {
-                            userName
-                            displayName
-                            lang
-                        }
-                    }
+    result = run(
+        mutation="""
+        mutation {
+            signUp(
+                input: {
+                    displayName: "user-test"
+                    userName: "different-email@testemail.ca"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    preferredLang: ENGLISH
                 }
-            }
-            """,
-        )
-
-        if "errors" in result:
-            fail("Tried to create a user, instead: {}".format(json(result)))
-
-        expected_result = {
-            "data": {
-                "signUp": {
-                    "authResult": {
-                        "user": {
-                            "userName": "different-email@testemail.ca",
-                            "displayName": "user-test",
-                            "lang": "english",
-                        }
+            ) {
+                authResult {
+                    user {
+                        userName
+                        displayName
+                        lang
                     }
                 }
             }
         }
+        """,
+    )
 
-        user = (
-            session.query(Users)
-            .filter(Users.user_name == "different-email@testemail.ca")
-            .first()
-        )
+    if "errors" in result:
+        fail("Tried to create a user, instead: {}".format(json(result)))
 
-        assert result == expected_result
-        assert f"Successfully created new user: {user.id}" in caplog.text
+    expected_result = {
+        "data": {
+            "signUp": {
+                "authResult": {
+                    "user": {
+                        "userName": "different-email@testemail.ca",
+                        "displayName": "user-test",
+                        "lang": "english",
+                    }
+                }
+            }
+        }
+    }
+
+    user = (
+        session.query(Users)
+        .filter(Users.user_name == "different-email@testemail.ca")
+        .first()
+    )
+
+    assert result == expected_result
+    assert f"Successfully created new user: {user.id}" in caplog.text
 
 
 def test_successful_creation_french(db, mocker, caplog):
@@ -97,57 +96,55 @@ def test_successful_creation_french(db, mocker, caplog):
     )
 
     caplog.set_level(logging.INFO)
-    request_headers = {"Origin": "https://testserver.com"}
-    with app.test_request_context(headers=request_headers):
-        result = run(
-            mutation="""
-            mutation {
-                signUp(
-                    input: {
-                        displayName: "user-test"
-                        userName: "different-email@testemail.ca"
-                        password: "testpassword123"
-                        confirmPassword: "testpassword123"
-                        preferredLang: FRENCH
-                    }
-                ) {
-                    authResult {
-                        user {
-                            userName
-                            displayName
-                            lang
-                        }
-                    }
+    result = run(
+        mutation="""
+        mutation {
+            signUp(
+                input: {
+                    displayName: "user-test"
+                    userName: "different-email@testemail.ca"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    preferredLang: FRENCH
                 }
-            }
-            """,
-        )
-
-        if "errors" in result:
-            fail("Tried to create a user, instead: {}".format(json(result)))
-
-        expected_result = {
-            "data": {
-                "signUp": {
-                    "authResult": {
-                        "user": {
-                            "userName": "different-email@testemail.ca",
-                            "displayName": "user-test",
-                            "lang": "french",
-                        }
+            ) {
+                authResult {
+                    user {
+                        userName
+                        displayName
+                        lang
                     }
                 }
             }
         }
+        """,
+    )
 
-        user = (
-            session.query(Users)
-            .filter(Users.user_name == "different-email@testemail.ca")
-            .first()
-        )
+    if "errors" in result:
+        fail("Tried to create a user, instead: {}".format(json(result)))
 
-        assert result == expected_result
-        assert f"Successfully created new user: {user.id}" in caplog.text
+    expected_result = {
+        "data": {
+            "signUp": {
+                "authResult": {
+                    "user": {
+                        "userName": "different-email@testemail.ca",
+                        "displayName": "user-test",
+                        "lang": "french",
+                    }
+                }
+            }
+        }
+    }
+
+    user = (
+        session.query(Users)
+        .filter(Users.user_name == "different-email@testemail.ca")
+        .first()
+    )
+
+    assert result == expected_result
+    assert f"Successfully created new user: {user.id}" in caplog.text
 
 
 def test_email_address_in_use(db, caplog):
@@ -288,5 +285,343 @@ def test_passwords_do_not_match(caplog):
     assert error["message"] == error_passwords_do_not_match()
     assert (
         f"User: testuser@testemail.ca tried to sign up but passwords were not matching."
+        in caplog.text
+    )
+
+
+def test_sign_up_with_invite_token(db, caplog, mocker):
+    """
+    Test to see if a user can successfully sign up with a token and be
+    assigned automatically to an organization
+    """
+    save, session = db
+
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(
+        exp_period=1,
+        parameters={
+            "user_name": user_name,
+            "org_id": org.id,
+            "requested_level": "admin",
+        },
+    )
+
+    caplog.set_level(logging.INFO)
+    result = run(
+        mutation=f"""
+        mutation {{
+            signUp(
+                input: {{
+                    userName: "{user_name}"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    displayName: "test account"
+                    preferredLang: ENGLISH
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
+                        displayName
+                    }}
+                }}
+            }}
+        }}
+        """
+    )
+
+    if "errors" in result:
+        fail("Tried to sign up with a signUpToken, instead: {}".format(json(result)))
+
+    user = session.query(Users).filter(Users.user_name == user_name).first()
+    affiliation = (
+        session.query(User_affiliations)
+        .filter(User_affiliations.user_id == user.id)
+        .filter(User_affiliations.organization_id == org.id)
+        .first()
+    )
+
+    assert affiliation.permission == "admin"
+
+    expected_result = {
+        "data": {"signUp": {"authResult": {"user": {"displayName": "test account"}}}}
+    }
+
+    assert result == expected_result
+    assert (
+        f"Successfully created affiliation for {user.user_name} to {org.id}."
+        in caplog.text
+    )
+    assert f"Successfully created new user: {user.id}" in caplog.text
+
+
+def test_sign_up_with_invite_token_missing_user_name_in_token(db, caplog, mocker):
+    """
+    Test to see if error occurs when the user name is left empty
+    """
+    save, session = db
+
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(
+        exp_period=1, parameters={"org_id": org.id, "requested_level": "admin",}
+    )
+
+    caplog.set_level(logging.INFO)
+    result = run(
+        mutation=f"""
+        mutation {{
+            signUp(
+                input: {{
+                    userName: "{user_name}"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    displayName: "test account"
+                    preferredLang: ENGLISH
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
+                        displayName
+                    }}
+                }}
+            }}
+        }}
+        """
+    )
+
+    if "errors" not in result:
+        fail(
+            "Tried to create missing field in token error, instead: {}".format(
+                json(result)
+            )
+        )
+
+    user = session.query(Users).filter(Users.user_name == user_name).first()
+    assert user is None
+
+    [error] = result["errors"]
+    assert (
+        error["message"]
+        == "Error, please request a new invite email from the organization admin."
+    )
+    assert (
+        f"User: {user_name} attempted to sign up with an invite token but user_name field(s) were missing."
+        in caplog.text
+    )
+
+
+def test_sign_up_with_invite_token_missing_org_id_in_token(db, caplog, mocker):
+    """
+    Test to see if error occurs when the org id is left empty
+    """
+    save, session = db
+
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(
+        exp_period=1, parameters={"user_name": user_name, "requested_level": "admin",}
+    )
+
+    caplog.set_level(logging.INFO)
+    result = run(
+        mutation=f"""
+        mutation {{
+            signUp(
+                input: {{
+                    userName: "{user_name}"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    displayName: "test account"
+                    preferredLang: ENGLISH
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
+                        displayName
+                    }}
+                }}
+            }}
+        }}
+        """
+    )
+
+    if "errors" not in result:
+        fail(
+            "Tried to create missing field in token error, instead: {}".format(
+                json(result)
+            )
+        )
+
+    user = session.query(Users).filter(Users.user_name == user_name).first()
+    assert user is None
+
+    [error] = result["errors"]
+    assert (
+        error["message"]
+        == "Error, please request a new invite email from the organization admin."
+    )
+    assert (
+        f"User: {user_name} attempted to sign up with an invite token but org_id field(s) were missing."
+        in caplog.text
+    )
+
+
+def test_sign_up_with_invite_token_missing_requested_level_in_token(db, caplog, mocker):
+    """
+    Test to see if error occurs when the requested level is left empty
+    """
+    save, session = db
+
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(
+        exp_period=1, parameters={"user_name": user_name, "org_id": org.id,}
+    )
+
+    caplog.set_level(logging.INFO)
+    result = run(
+        mutation=f"""
+        mutation {{
+            signUp(
+                input: {{
+                    userName: "{user_name}"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    displayName: "test account"
+                    preferredLang: ENGLISH
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
+                        displayName
+                    }}
+                }}
+            }}
+        }}
+        """
+    )
+
+    if "errors" not in result:
+        fail(
+            "Tried to create missing field in token error, instead: {}".format(
+                json(result)
+            )
+        )
+
+    user = session.query(Users).filter(Users.user_name == user_name).first()
+    assert user is None
+
+    [error] = result["errors"]
+    assert (
+        error["message"]
+        == "Error, please request a new invite email from the organization admin."
+    )
+    assert (
+        f"User: {user_name} attempted to sign up with an invite token but requested_level field(s) were missing."
+        in caplog.text
+    )
+
+
+def test_sign_up_with_invite_token_missing_all_fields_in_token(db, caplog, mocker):
+    """
+    Test to see if error occurs when all fields are left empty
+    """
+    save, session = db
+
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(exp_period=1, parameters={})
+
+    caplog.set_level(logging.INFO)
+    result = run(
+        mutation=f"""
+        mutation {{
+            signUp(
+                input: {{
+                    userName: "{user_name}"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
+                    displayName: "test account"
+                    preferredLang: ENGLISH
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
+                        displayName
+                    }}
+                }}
+            }}
+        }}
+        """
+    )
+
+    if "errors" not in result:
+        fail(
+            "Tried to create missing field in token error, instead: {}".format(
+                json(result)
+            )
+        )
+
+    user = session.query(Users).filter(Users.user_name == user_name).first()
+    assert user is None
+
+    [error] = result["errors"]
+    assert (
+        error["message"]
+        == "Error, please request a new invite email from the organization admin."
+    )
+    assert (
+        f"User: {user_name} attempted to sign up with an invite token but user_name org_id requested_level field(s) were missing."
         in caplog.text
     )
