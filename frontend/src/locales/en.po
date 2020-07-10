@@ -22,9 +22,6 @@ msgstr "*All data represented is mocked for demonstration purposes"
 msgid "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
 msgstr "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
 
-#~ msgid "3.2.2 Third Parties and DKIM"
-#~ msgstr "3.2.2 Third Parties and DKIM"
-
 #: src/DmarcReportGuidance.js:213
 msgid "A server configured to use the wrong \"envelope from\" address."
 msgstr "A server configured to use the wrong \"envelope from\" address."
@@ -224,6 +221,10 @@ msgstr "Envelope From"
 msgid "Fail"
 msgstr "Fail"
 
+#: src/guidanceTagConstants.js:396
+msgid "Follow implementation guide"
+msgstr "Follow implementation guide"
+
 #: src/SignInPage.js:94
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
@@ -242,6 +243,10 @@ msgstr "Fully Aligned by IP Address"
 #: src/DmarcReportTable.js:277
 msgid "Go to page:"
 msgstr "Go to page:"
+
+#: src/guidanceTagConstants.js:109
+msgid "Government of Canada domains subject to TBS guidelines"
+msgstr "Government of Canada domains subject to TBS guidelines"
 
 #: src/DmarcReportGuidance.js:105
 #: src/DmarcReportGuidance.js:197

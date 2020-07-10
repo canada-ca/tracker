@@ -1,3 +1,5 @@
+import { t } from '@lingui/macro'
+
 const refLinksGuide = {
   a322: {
     heading: '3.2.2 Third Parties and DKIM',
@@ -104,7 +106,7 @@ export const guidanceTags = {
   dmarc: {
     dmarc1: {
       tag_name: 'DMARC-GC',
-      guidance: 'Government of Canada domains subject to TBS guidelines',
+      guidance: t`Government of Canada domains subject to TBS guidelines`,
       ref_links_guide: null,
       ref_links_technical: null,
       summary: 'IT PIN',
@@ -391,7 +393,7 @@ export const guidanceTags = {
     },
     dkim2: {
       tag_name: 'DKIM-missing',
-      guidance: 'Follow implementation guide',
+      guidance: t`Follow implementation guide`,
       ref_links_guide: refLinksGuide.anna34,
       ref_links_technical: null,
       summary:

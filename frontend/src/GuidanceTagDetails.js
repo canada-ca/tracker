@@ -67,15 +67,22 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
       <Box>
         <Stack isInline>
           <Text fontWeight="bold">Tag, Tag Name:</Text>
-          <Text>{`${guidanceTag}, ${guidanceTags[categoryName][guidanceTag].tag_name}`}</Text>
+          <Text>
+            <Trans id={guidanceTag} />
+            <Trans id={guidanceTags[categoryName][guidanceTag].tag_name} />
+          </Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">Guidance:</Text>
-          <Text>{guidanceTags[categoryName][guidanceTag].guidance}</Text>
+          <Text>
+            <Trans id={guidanceTags[categoryName][guidanceTag].guidance} />
+          </Text>
         </Stack>
         <Stack isInline>
           <Text fontWeight="bold">Summary:</Text>
-          <Text>{guidanceTags[categoryName][guidanceTag].summary}</Text>
+          <Text>
+            <Trans id={guidanceTags[categoryName][guidanceTag].summary} />
+          </Text>
         </Stack>
         {cccsGuidance}
         {technicalGuidance}
