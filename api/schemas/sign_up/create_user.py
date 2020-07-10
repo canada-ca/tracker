@@ -78,7 +78,11 @@ def create_user(**kwargs):
             requested_level = payload.get("parameters", {}).get("requested_level")
 
             # Create User Affiliation
-            if org_id is not None and requested_level is not None:
+            if (
+                user_name is not None
+                and org_id is not None
+                and requested_level is not None
+            ):
                 org = (
                     db_session.query(Organizations)
                     .filter(Organizations.id == org_id)
@@ -92,6 +96,23 @@ def create_user(**kwargs):
                     user=user,
                 )
                 db_session.add(user_affiliation)
+                logger.info(
+                    f"Successfully created affiliation for {user.user_name} to {org.id}."
+                )
+            else:
+                logging_str = ""
+                if user_name is None:
+                    logging_str += " user_name"
+                if org_id is None:
+                    logging_str += " org_id"
+                if requested_level is None:
+                    logging_str += " requested_level"
+                logger.warning(
+                    f"User: {user.user_name} attempted to sign up with an invite token but{logging_str} field(s) were missing."
+                )
+                raise GraphQLError(
+                    "Error, please request a new invite email from the organization admin."
+                )
 
         try:
             # Add User to db
@@ -115,7 +136,6 @@ def create_user(**kwargs):
                 )
 
             # Get user id
-
             auth_token = tokenize(parameters={"user_id": user.id})
 
             logger.info(f"Successfully created new user: {user.id}")
