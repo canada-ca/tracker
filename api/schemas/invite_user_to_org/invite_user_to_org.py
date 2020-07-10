@@ -186,33 +186,15 @@ class InviteUserToOrg(graphene.Mutation):
                 )
 
         else:
-            if (
-                user_name is None
-                and requested_role is not None
-                and org_slug is not None
-            ):
-                logger.warning(
-                    f"User: {user_id}, attempted to invite user to org, but user_name is None"
-                )
-            elif (
-                user_name is not None
-                and requested_role is None
-                and org_slug is not None
-            ):
-                logger.warning(
-                    f"User: {user_id}, attempted to invite user to org, but requested_role is None"
-                )
-            elif (
-                user_name is not None
-                and requested_role is not None
-                and org_slug is None
-            ):
-                logger.warning(
-                    f"User: {user_id}, attempted to invite user to org, but org_slug is None"
-                )
-            else:
-                logger.warning(
-                    f"User: {user_id}, attempted to invite user to org, but requested_role, and user_name is None"
-                )
+            logging_str = ""
+            if user_name is None:
+                logging_str += " user_name"
+            if requested_role is None:
+                logging_str += " requested_role"
+            if org_slug is None:
+                logging_str += " org_slug"
+            logger.warning(
+                f"User: {user_id} attempted to invite a user but{logging_str} field(s) were missing"
+            )
 
             raise GraphQLError("Error, invite user to org failed, please try again.")

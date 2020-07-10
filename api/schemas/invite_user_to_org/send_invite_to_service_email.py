@@ -58,6 +58,6 @@ def send_invite_to_service_email(
         return True
     except Exception as e:
         logger.error(
-            f"Error when sending user: {user_name}'s invitation to create an account and to {org_name} notification email."
+            f"Error when sending user: {user_name}'s invitation to create an account and to {org.id} notification email."
         )
         raise GraphQLError("Error, please try and invite the user again.")
