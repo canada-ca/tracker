@@ -238,8 +238,9 @@ class Mutation(graphene.ObjectType):
     update_user_role = UpdateUserRole.Field(
         description="Updates the users permission to an organization."
     )
-
-    invite_user_to_org = InviteUserToOrg.Field()
+    invite_user_to_org = InviteUserToOrg.Field(
+        description="Allows org admins to invite other users to their organizations"
+    )
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
