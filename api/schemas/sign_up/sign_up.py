@@ -9,7 +9,8 @@ from schemas.sign_up.create_user import create_user
 
 class SignUpInput(graphene.InputObjectType):
     """
-
+    An input object containing all input fields required for the signUp
+    mutation.
     """
 
     display_name = graphene.String(
