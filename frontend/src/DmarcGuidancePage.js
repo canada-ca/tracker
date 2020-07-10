@@ -29,7 +29,7 @@ export function DmarcGuidancePage() {
   const emailScan = data.findDomainBySlug.email.edges[0].node
 
   return (
-    <Stack spacing="25px">
+    <Stack spacing="25px" mb="25px">
       <ScanCard scanType="web" scanData={webScan} />
       <ScanCard scanType="email" scanData={emailScan} />
     </Stack>

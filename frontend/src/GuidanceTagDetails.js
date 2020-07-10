@@ -18,12 +18,12 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
         >
           <Stack isInline spacing="2px" align="center">
             <Text>
-              <Trans>
-                {
+              <Trans
+                id={
                   guidanceTags[categoryName][guidanceTag].ref_links_guide
                     .heading
                 }
-              </Trans>
+              />
             </Text>
             <Icon name="external-link" />
           </Stack>
@@ -32,8 +32,6 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
     ) : (
       ''
     )
-
-  console.log(guidanceTag)
 
   const technicalGuidance =
     guidanceTags[categoryName][guidanceTag].ref_links_technical !== undefined &&
@@ -48,7 +46,12 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
         >
           <Stack isInline spacing="2px" align="center">
             <Text>
-              <Trans>zzz</Trans>
+              <Trans
+                id={
+                  guidanceTags[categoryName][guidanceTag].ref_links_technical
+                    .heading
+                }
+              />
             </Text>
             <Icon name="external-link" />
           </Stack>
@@ -74,7 +77,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
           <Text fontWeight="bold">Summary:</Text>
           <Text>{guidanceTags[categoryName][guidanceTag].summary}</Text>
         </Stack>
-        {/*{cccsGuidance}*/}
+        {cccsGuidance}
         {technicalGuidance}
       </Box>
     </Stack>
