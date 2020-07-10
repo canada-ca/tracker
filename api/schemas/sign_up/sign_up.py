@@ -43,7 +43,10 @@ class SignUp(graphene.Mutation):
 
     # Define mutation arguments
     class Arguments:
-        input = SignUpInput(required=True, description="")
+        input = SignUpInput(
+            required=True,
+            description="Input object containing all fields for signUp mutation.",
+        )
 
     # Define mutation fields
     auth_result = graphene.Field(
