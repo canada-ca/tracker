@@ -1321,59 +1321,59 @@ msgstr "retour aux organisations"
 
 #: src/guidanceTagConstants.js:6
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#a322"
 
 #: src/guidanceTagConstants.js:10
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna23"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna23"
 
 #: src/guidanceTagConstants.js:14
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna33"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna33"
 
 #: src/guidanceTagConstants.js:18
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna34"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna34"
 
 #: src/guidanceTagConstants.js:22
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna35"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna35"
 
 #: src/guidanceTagConstants.js:26
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna4"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna4"
 
 #: src/guidanceTagConstants.js:30
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna5"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna5"
 
 #: src/guidanceTagConstants.js:34
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#anna53"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#anna53"
 
 #: src/guidanceTagConstants.js:38
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb11"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb11"
 
 #: src/guidanceTagConstants.js:42
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb13"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb13"
 
 #: src/guidanceTagConstants.js:46
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb21"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb21"
 
 #: src/guidanceTagConstants.js:50
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb22"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb22"
 
 #: src/guidanceTagConstants.js:54
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#annb31"
-msgstr ""
+msgstr "https://cyber.gc.ca/fr/orientation/directives-de-mise-en-oeuvre-protection-du-domaine-de-courrier#annb31"
 
 #: src/guidanceTagConstants.js:83
 msgid "https://docs.microsoft.com/en-ca/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
-msgstr ""
+msgstr "https://docs.microsoft.com/fr-ca/microsoft-365/security/office-365-security/use-dkim-to-validate-outbound-email?view=o365-worldwide"
 
 #: src/guidanceTagConstants.js:87
 msgid "https://tools.ietf.org/html/rfc6376#section-3.6.1"
