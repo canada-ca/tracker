@@ -907,9 +907,7 @@ type Mutation {
   ): SendPasswordResetLink
 
   """
-  This mutation allows admins and higher to invite users to any of their
-  organizations, if the invited user does not have an account, they will be
-  able to sign-up and be assigned to that organization in one mutation.
+  Allows org admins to invite other users to their organizations.
   """
   inviteUserToOrg(
     """
