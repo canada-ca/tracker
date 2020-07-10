@@ -726,6 +726,43 @@ enum LanguageEnums {
 }
 
 """
+This mutation allows admins and higher to invite users to any of their
+organizations, if the invited user does not have an account, they will be
+able to sign-up and be assigned to that organization in one mutation.
+"""
+type InviteUserToOrg {
+  """
+  Status of inviting user to organization.
+  """
+  status: String
+}
+
+"""
+An input object containing all input fields for the InviteUserToOrg mutation
+"""
+input InviteUserToOrgInput {
+  """
+  User's email that you would like to invite to your org.
+  """
+  userName: EmailAddress!
+
+  """
+  The role which you would like this user to have.
+  """
+  requestedRole: RoleEnums!
+
+  """
+  The organization you wish to invite the user to.
+  """
+  orgSlug: Slug!
+
+  """
+  Select the language you would like the email to be sent in.
+  """
+  preferredLanguage: LanguageEnums!
+}
+
+"""
 The central gathering point for all of the GraphQL mutations.
 """
 type Mutation {
@@ -820,33 +857,13 @@ type Mutation {
   ): Authenticate
 
   """
-  Allows users to sign up to our service
+  Allows users to sign up to our service.
   """
   signUp(
     """
-    A confirmation that the user submitted the correct password
+    Input object containing all fields for signUp mutation.
     """
-    confirmPassword: String!
-
-    """
-    The name that will be displayed to other users.
-    """
-    displayName: String!
-
-    """
-    The password the user will authenticate with
-    """
-    password: String!
-
-    """
-    Used to set users preferred language
-    """
-    preferredLang: LanguageEnums!
-
-    """
-    Email address that the user will use to authenticate with
-    """
-    userName: EmailAddress!
+    input: SignUpInput!
   ): SignUp
 
   """
@@ -888,6 +905,18 @@ type Mutation {
     """
     userName: EmailAddress!
   ): SendPasswordResetLink
+
+  """
+  This mutation allows admins and higher to invite users to any of their
+  organizations, if the invited user does not have an account, they will be
+  able to sign-up and be assigned to that organization in one mutation.
+  """
+  inviteUserToOrg(
+    """
+    Input object containing fields for inviteUserToOrg mutation.
+    """
+    input: InviteUserToOrgInput!
+  ): InviteUserToOrg
 }
 
 """
@@ -1595,6 +1624,43 @@ type SignUp {
   """
   authResult: AuthResult
 }
+
+"""
+An input object containing all input fields required for the signUp
+mutation.
+"""
+input SignUpInput {
+  """
+  The name that will be displayed to other users.
+  """
+  displayName: String!
+
+  """
+  Email address that the user will use to authenticate with.
+  """
+  userName: EmailAddress!
+
+  """
+  The password the user will authenticate with.
+  """
+  password: String!
+
+  """
+  A confirmation that the user submitted the correct password.
+  """
+  confirmPassword: String!
+
+  """
+  Used to set users preferred language
+  """
+  preferredLang: LanguageEnums!
+
+  """
+  A token sent by email, that will assign a user to an organization with a pre-determined role.
+  """
+  signUpToken: String
+}
+
 """
 A field whos values contain numbers, letters, dashes, and underscores
 """
