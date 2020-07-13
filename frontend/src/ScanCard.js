@@ -29,6 +29,7 @@ function ScanCard({ scanType, scanData }) {
         <ScanCategoryDetails
           categoryName={categoryName}
           categoryData={categoryData}
+          key={categoryName}
         />
       )
     })

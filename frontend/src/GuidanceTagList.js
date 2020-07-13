@@ -13,12 +13,14 @@ export function GuidanceTagList({ guidanceTags, categoryName, selector }) {
   const tagList = guidanceTags.length ? (
     guidanceTags.map((guidanceTag, index) => {
       return (
-        <Box>
+        <Box key={guidanceTag}>
           <GuidanceTagDetails
             guidanceTag={guidanceTag}
             categoryName={categoryName}
           />
-          {guidanceTags[index + 1] && <Divider borderColor="gray.700" />}
+          {
+            // Add divider if next entry exists
+            guidanceTags[index + 1] && <Divider borderColor="gray.700" />}
         </Box>
       )
     })

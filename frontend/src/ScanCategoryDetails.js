@@ -15,6 +15,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
               guidanceTags={selectorData[guidanceTagPropertyName]}
               selector={selectorData.selector}
               categoryName={categoryName}
+              key={categoryName}
             />
           )
         })
@@ -22,6 +23,7 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
           <GuidanceTagList
             guidanceTags={categoryData[guidanceTagPropertyName]}
             categoryName={categoryName}
+            key={categoryData}
           />,
         ]
 
