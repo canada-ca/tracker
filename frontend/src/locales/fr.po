@@ -846,8 +846,8 @@ msgid "PCT"
 msgstr ""
 
 #: src/guidanceTagConstants.js:239
-msgid "PCT doit être de 100, ou non inclus, si p=none"
-msgstr ""
+msgid "PCT should be 100, or not included, if p=none"
+msgstr "PCT doit être de 100, ou non inclus, si p=none"
 
 #: src/guidanceTagConstants.js:246
 msgid "PCT-0"
@@ -1354,7 +1354,7 @@ msgstr ""
 
 #: src/guidanceTagConstants.js:466
 msgid "Vulnerable to Heartbleed bug"
-msgstr ""
+msgstr "Vulnérable à la maladie du cœur"
 
 #: src/guidanceTagConstants.js:472
 msgid "Vulnerable to OpenSSL CCS Injection"
