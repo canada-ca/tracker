@@ -1229,7 +1229,7 @@ msgstr ""
 
 #: src/GuidanceTagDetails.js:84
 msgid "Tag, Tag Name:"
-msgstr ""
+msgstr "Le jour, le nom du jour :"
 
 #: src/App.js:180
 msgid "Terms & conditions"
