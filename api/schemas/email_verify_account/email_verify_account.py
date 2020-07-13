@@ -10,6 +10,17 @@ from functions.input_validators import cleanse_input
 from models.Users import Users
 
 
+class EmailVerifyAccountInput(graphene.InputObjectType):
+    """
+    Input object with the various fields required for the EmailVerifyAccount
+    mutation
+    """
+
+    token_string = graphene.String(
+        description="Token in sent via email, and located in url", required=True
+    )
+
+
 class EmailVerifyAccount(graphene.Mutation):
     """
     Mutation that allows the user to verify their account through a token
@@ -17,8 +28,10 @@ class EmailVerifyAccount(graphene.Mutation):
     """
 
     class Arguments:
-        token_string = graphene.String(
-            description="Token in sent via email, and located in url", required=True
+        input = EmailVerifyAccountInput(
+            required=True,
+            description="Input object containing various fields required for"
+            " emailVerifyAccount mutation.",
         )
 
     status = graphene.Boolean(
@@ -27,18 +40,20 @@ class EmailVerifyAccount(graphene.Mutation):
 
     @staticmethod
     def mutate(self, info, **kwargs):
-        token_string = cleanse_input(kwargs.get("token_string"))
+        token_string = cleanse_input(kwargs.get("input", {}).get("token_string"))
 
         try:
             payload = jwt.decode(
                 token_string, os.getenv("SUPER_SECRET_SALT"), algorithms=["HS256"]
             )
         except jwt.ExpiredSignatureError:
-            raise GraphQLError("Signature expired, please login again")
+            raise GraphQLError(
+                "Signature expired, please send new verification email and try again."
+            )
         except jwt.InvalidTokenError:
-            raise GraphQLError("Invalid token, please login again")
+            raise GraphQLError("Invalid token, please try and verify again.")
 
-        user_id = payload.get("user_id")
+        user_id = payload.get("parameters", {}).get("user_id")
 
         # Check to see if user exists
         user = db_session.query(Users).filter(Users.id == user_id).first()

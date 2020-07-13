@@ -42,6 +42,15 @@ describe('<OrganizationDetails />', () => {
           },
         },
       ]
+
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: jest.fn().mockImplementation((query) => ({
+          matches: false,
+          media: query,
+        })),
+      })
+
       const { getByText } = render(
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
@@ -67,7 +76,6 @@ describe('<OrganizationDetails />', () => {
 
       await waitFor(() => {
         expect(getByText(name)).toBeInTheDocument()
-        expect(getByText(/2020-06-18T00:42:12.414Z/)).toBeInTheDocument()
       })
     })
   })

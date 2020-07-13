@@ -7,9 +7,18 @@ default_backend = SecurityAnalysisBackend()
 
 
 def run(
-    query=None, mutation=None, as_user=None, schema=schema, backend=default_backend
+    query=None,
+    mutation=None,
+    as_user=None,
+    schema=schema,
+    backend=default_backend,
+    parameters={},
 ):
-    header = auth_header(tokenize(user_id=as_user.id)) if as_user is not None else None
+    if as_user is not None:
+        parameters.update({"user_id": as_user.id})
+        header = auth_header(tokenize(parameters=parameters))
+    else:
+        header = None
 
     return Client(schema).execute(
         query if query else mutation, context_value=header, backend=backend

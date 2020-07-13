@@ -65,9 +65,6 @@ export default function App() {
               <Trans>Sign In</Trans>
             </Link>
           )}
-          {/* <Link to="/user-list">
-            <Trans>User List</Trans>
-          </Link> */}
 
           <Link to="/dmarc-report">
             <Trans>Report</Trans>

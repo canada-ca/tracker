@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Heading, Text, Stack } from '@chakra-ui/core'
+import { Heading, Text, Stack, Divider } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
 
 export function LandingPage() {
@@ -27,6 +27,7 @@ export function LandingPage() {
           <SummaryGroup name="dashboard" />
         </Stack>
       </Stack>
+      <Divider />
       <Text>
         <Trans>
           *All data represented is mocked for demonstration purposes

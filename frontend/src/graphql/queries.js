@@ -1,5 +1,26 @@
 import gql from 'graphql-tag'
 
+export const WEB_AND_EMAIL_SUMMARIES = gql`
+  query LandingPageSummaries {
+    webSummary: demoWebSummary {
+      categories {
+        name
+        count
+        percentage
+      }
+      total
+    }
+    emailSummary: demoEmailSummary {
+      categories {
+        name
+        count
+        percentage
+      }
+      total
+    }
+  }
+`
+
 export const ORGANIZATION_BY_SLUG = gql`
   query FindOrganizationDetailBySlug($slug: Slug!) {
     organization: findOrganizationDetailBySlug(slug: $slug) {
@@ -141,7 +162,7 @@ export const QUERY_USER = gql`
 
 export const DMARC_REPORT_SUMMARY_LIST = gql`
   query DmarcReportSummaryList($domainSlug: Slug!) {
-    dmarcReportSummaryList(input: { domainSlug: $domainSlug }) {
+    dmarcReportSummaryList(domainSlug: $domainSlug) {
       month
       year
       categoryTotals {
@@ -156,7 +177,7 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
 
 export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
   query DemoDmarcReportSummaryList($domainSlug: Slug!) {
-    demoDmarcReportSummaryList(input: { domainSlug: $domainSlug }) {
+    demoDmarcReportSummaryList(domainSlug: $domainSlug) {
       month
       year
       categoryTotals {
@@ -175,8 +196,29 @@ export const DMARC_REPORT_SUMMARY = gql`
     $period: PeriodEnums!
     $year: Year!
   ) {
-    dmarcReportSummary(
-      input: { domainSlug: $domainSlug, period: $period, year: $year }
+    dmarcReportSummary(domainSlug: $domainSlug, period: $period, year: $year) {
+      month
+      year
+      categoryTotals {
+        fullPass
+        partialPass
+        fail
+        total
+      }
+    }
+  }
+`
+
+export const DEMO_DMARC_REPORT_SUMMARY = gql`
+  query DmarcReportSummary(
+    $domainSlug: Slug!
+    $period: PeriodEnums!
+    $year: Year!
+  ) {
+    demoDmarcReportSummary(
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
     ) {
       month
       year
@@ -197,7 +239,9 @@ export const DMARC_REPORT_DETAIL_TABLES = gql`
     $year: Year!
   ) {
     dmarcReportDetailTables(
-      input: { domainSlug: $domainSlug, period: $period, year: $year }
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
     ) {
       month
       year
@@ -274,7 +318,9 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
     $year: Year!
   ) {
     demoDmarcReportDetailTables(
-      input: { domainSlug: $domainSlug, period: $period, year: $year }
+      domainSlug: $domainSlug
+      period: $period
+      year: $year
     ) {
       month
       year

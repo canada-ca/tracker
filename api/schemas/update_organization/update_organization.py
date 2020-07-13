@@ -13,43 +13,61 @@ from scalars.organization_acronym import Acronym
 from scalars.slug import Slug
 
 
+class UpdateOrganizationInput(graphene.InputObjectType):
+    """
+    Input object used to define the argument fields for the updateOrganization
+    mutation.
+    """
+
+    slug = Slug(description="Organization that will be updated.", required=True)
+    acronym = Acronym(
+        description="Organization Acronym you would like updated.", required=False
+    )
+    name = graphene.String(description="Full name of organization.", required=False)
+    zone = graphene.String(
+        description="The zone which the organization belongs to.", required=False
+    )
+    sector = graphene.String(
+        description="The sector which the organization belongs to.", required=False
+    )
+    province = graphene.String(
+        description="The province in which the organization is located in.",
+        required=False,
+    )
+    city = graphene.String(
+        description="The city in which the organization is located in.", required=False,
+    )
+
+
 class UpdateOrganization(graphene.Mutation):
+    """
+    Mutation allows the modification of organizations if any changes to the
+    organization may occur.
+    """
+
     class Arguments:
-        slug = Slug(description="Organization that will be updated", required=True)
-        acronym = Acronym(
-            description="Organization Acronym you would like updated", required=False
-        )
-        name = graphene.String(description="Full name of organization.", required=False)
-        zone = graphene.String(
-            description="The zone which the organization belongs to.", required=False
-        )
-        sector = graphene.String(
-            description="The sector which the organization belongs to.", required=False
-        )
-        province = graphene.String(
-            description="The province in which the organization is located in.",
-            required=False,
-        )
-        city = graphene.String(
-            description="The city in which the organization is located in.",
-            required=False,
+        input = UpdateOrganizationInput(
+            required=True,
+            description="UpdateOrganizationInput object containing all arguement fields.",
         )
 
     # If the update passed or failed
-    status = graphene.Boolean()
+    status = graphene.Boolean(
+        description="Returns true if organization was successfully updated."
+    )
 
     @require_token
     def mutate(self, info, **kwargs):
         # Get arguments from mutation
         user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
-        slug = cleanse_input(kwargs.get("slug"))
-        name = cleanse_input(kwargs.get("name"))
-        acronym = cleanse_input(kwargs.get("acronym"))
-        zone = cleanse_input(kwargs.get("zone"))
-        sector = cleanse_input(kwargs.get("sector"))
-        province = cleanse_input(kwargs.get("province"))
-        city = cleanse_input(kwargs.get("city"))
+        slug = cleanse_input(kwargs.get("input", {}).get("slug"))
+        name = cleanse_input(kwargs.get("input", {}).get("name"))
+        acronym = cleanse_input(kwargs.get("input", {}).get("acronym"))
+        zone = cleanse_input(kwargs.get("input", {}).get("zone"))
+        sector = cleanse_input(kwargs.get("input", {}).get("sector"))
+        province = cleanse_input(kwargs.get("input", {}).get("province"))
+        city = cleanse_input(kwargs.get("input", {}).get("city"))
 
         # XXX: only the Super User can edit orgs?
         if is_super_admin(user_roles=user_roles):

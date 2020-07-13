@@ -61,9 +61,10 @@ def require_token(method):
     def wrapper(self, *args, **kwargs):
         auth_resp = decode_auth_token(args[0].context)
         if isinstance(auth_resp, dict):
-            kwargs["user_id"] = auth_resp["user_id"]
+            user_id = auth_resp.get("parameters", {}).get("user_id")
+            kwargs["user_id"] = user_id
 
-            user_claims = check_user_claims(auth_resp["user_id"])
+            user_claims = check_user_claims(user_id)
             kwargs["user_roles"] = user_claims
             return method(self, *args, **kwargs)
         raise GraphQLError(auth_resp)

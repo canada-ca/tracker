@@ -63,7 +63,7 @@ def sign_in_user(user_name, password):
 
         logger.info(f"User: {user.id} successfully authenticated their account.")
         return {
-            "auth_token": tokenize(user_id=user.id),
+            "auth_token": tokenize(parameters={"user_id": user.id}),
             "user": user,
         }
 

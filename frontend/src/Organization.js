@@ -8,9 +8,13 @@ export function Organization({ name, slug, domainCount, ...rest }) {
   return (
     <ListItem {...rest}>
       <Stack spacing={4} padding={[1, 2, 3]} flexWrap="wrap">
-        <Link as={RouteLink} to={`${path}/${slug}`}>
-          <Text fontWeight="bold">{name}</Text>
-        </Link>
+        <Stack isInline>
+          <Link as={RouteLink} to={`${path}/${slug}`}>
+            <Text fontWeight="bold" fontSize="xl">
+              {name}
+            </Text>
+          </Link>
+        </Stack>
         <Text>
           <Trans>Internet facing services: {domainCount}</Trans>
         </Text>

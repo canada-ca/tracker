@@ -25,9 +25,6 @@ class Domains(Base):
     mail_scans = relationship(
         "Mail_scans", back_populates="domain", cascade="all, delete"
     )
-    dmarc_reports = relationship(
-        "Dmarc_Reports", back_populates="domain", cascade="all, delete"
-    )
 
     def __init__(self, **kwargs):
         super(Domains, self).__init__(**kwargs)

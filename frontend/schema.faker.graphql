@@ -69,6 +69,23 @@ type AuthResult {
 }
 
 """
+This object contains the list of different categories for pre-computed
+summary data with the computed total for how many domains in total are
+being compared.
+"""
+type CategorizedSummary {
+  """
+  List of SummaryCategory objects with data for different computed categories.
+  """
+  categories: [SummaryCategory] @listLength(min: 2, max: 2)
+
+  """
+  Total domains that were checked under this summary.
+  """
+  total: Int @examples(values: [86954, 57896, 54386, 93456, 23452])
+}
+
+"""
 This object displays the total amount of messages that fit into each category
 """
 type CategoryTotals {
@@ -397,27 +414,6 @@ type DmarcReportDetailTables {
 }
 
 """
-Input object containing fields which map to the required arguments for
-dmarcReportDetailTablesInput
-"""
-input DmarcReportDetailTablesInput {
-  """
-  The slugified version of the domain you wish to retrieve data for.
-  """
-  domainSlug: Slug!
-
-  """
-  The period in which the returned data is relevant to.
-  """
-  period: PeriodEnums!
-
-  """
-  The year in which the returned data is relevant to.
-  """
-  year: Year!
-}
-
-"""
 A query object used to grab the data to create dmarc report doughnuts
 """
 type DmarcReportSummary {
@@ -658,6 +654,15 @@ type EmailVerifyAccount {
 }
 
 """
+Input object with the various fields required for the EmailVerifyAccount
+mutation
+"""
+input EmailVerifyAccountInput {
+  """Token in sent via email, and located in url"""
+  tokenString: String!
+}
+
+"""
 Http Scan Object
 """
 type HTTPS {
@@ -759,11 +764,6 @@ enum LanguageEnums {
 The central gathering point for all of the GraphQL mutations.
 """
 type Mutation {
-  updatePassword(
-    confirmPassword: String!
-    password: String!
-    userName: EmailAddress!
-  ): UpdateUserPassword
   authenticateTwoFactor(
     otpCode: String!
     userName: EmailAddress!
@@ -789,49 +789,19 @@ type Mutation {
   """
   updateOrganization(
     """
-    Organization Acronym you would like updated
+    UpdateOrganizationInput object containing all arguement fields.
     """
-    acronym: Acronym
-
-    """
-    The city in which the organization is located in.
-    """
-    city: String
-
-    """
-    Full name of organization.
-    """
-    name: String
-
-    """
-    The province in which the organization is located in.
-    """
-    province: String
-
-    """
-    The sector which the organization belongs to.
-    """
-    sector: String
-
-    """
-    Organization that will be updated
-    """
-    slug: Slug!
-
-    """
-    The zone which the organization belongs to.
-    """
-    zone: String
+    input: UpdateOrganizationInput!
   ): UpdateOrganization
 
   """
-  Allows the removal of an organization inside the database
+  Allows the removal of an organization inside the database.
   """
   removeOrganization(
     """
-    The organization you wish to remove
+    Input fields required for the removeOrganization mutation.
     """
-    slug: Slug!
+    input: RemoveOrganizationInput!
   ): RemoveOrganization
 
   """
@@ -845,23 +815,13 @@ type Mutation {
   ): CreateDomain
 
   """
-  Allows the modification of domains
+  Allows the modification of domains.
   """
   updateDomain(
     """
-    The current domain that is being requested to be updated.
+    updateDomain input object containing all arguement fields.
     """
-    currentUrl: URL!
-
-    """
-    The new DKIM selector strings corresponding to this domain
-    """
-    updatedSelectors: Selectors
-
-    """
-    The new domain you wish to update the current domain to be.
-    """
-    updatedUrl: URL!
+    input: UpdateDomainInput!
   ): UpdateDomain
 
   """
@@ -869,9 +829,9 @@ type Mutation {
   """
   removeDomain(
     """
-    URL of domain that is being removed
+    Input object containing all required fields for mutation to run.
     """
-    url: URL!
+    input: RemoveDomainInputObject!
   ): RemoveDomain
 
   """
@@ -929,9 +889,9 @@ type Mutation {
   """
   emailVerifyAccount(
     """
-    Token in sent via email, and located in url
+    Input object containing various fields required for emailVerifyAccount mutation.
     """
-    tokenString: String!
+    input: EmailVerifyAccountInput!
   ): EmailVerifyAccount
 
   """
@@ -943,6 +903,26 @@ type Mutation {
     """
     userName: EmailAddress!
   ): SendEmailVerification
+
+  """
+  Allows users to update their password, using a token sent to them via email.
+  """
+  updatePassword(
+    """
+    An input object containing all fields for this mutation.
+    """
+    input: UpdateUserPasswordInput!
+  ): UpdateUserPassword
+
+  """
+  Allows the user to request an email to reset their account password.
+  """
+  sendPasswordResetLink(
+    """
+    User name for the account you would like to receive a password reset link for.
+    """
+    userName: EmailAddress!
+  ): SendPasswordResetLink
 }
 
 """
@@ -1301,31 +1281,18 @@ type PolicyPublished {
   fo: Int @examples(values: [0])
 }
 
-type SummaryCategory {
-  name: String @examples(values: ["strong", "moderate", "weak"])
-  count: Int @examples(values: [33, 33, 33])
-  percentage: Int @examples(values: [33, 33, 33])
-}
-
-type CategorizedSummary {
-  categories: [SummaryCategory]
-  total: Int @examples(values: [100])
-}
-
 """
 The central gathering point for all of the GraphQL queries.
 """
 type Query {
-  webSummary: CategorizedSummary
-  emailSummary: CategorizedSummary
   """
   A query object used to grab the data to create dmarc report bar graph.
   """
   dmarcReportSummaryList(
     """
-    Input argument with various input fields required for the dmarc report summary list query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryListInput!
+    domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
@@ -1333,9 +1300,9 @@ type Query {
   """
   demoDmarcReportSummaryList(
     """
-    Input argument with various input fields required for the dmarc report summary list query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryListInput!
+    domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
@@ -1343,9 +1310,19 @@ type Query {
   """
   dmarcReportDetailTables(
     """
-    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportDetailTablesInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportDetailTables
 
   """
@@ -1353,9 +1330,19 @@ type Query {
   """
   demoDmarcReportDetailTables(
     """
-    Input object containing fields which map to the required arguments for dmarcReportDetailTablesInput
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportDetailTablesInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportDetailTables
 
   """
@@ -1363,9 +1350,19 @@ type Query {
   """
   dmarcReportSummary(
     """
-    Input argument with various input fields required for the dmarc report summary query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportSummary
 
   """
@@ -1373,9 +1370,19 @@ type Query {
   """
   demoDmarcReportSummary(
     """
-    Input argument with various input fields required for the dmarc report summary query
+    The slugified version of the domain you wish to retrieve data for.
     """
-    input: DmarcReportSummaryInput!
+    domainSlug: Slug!
+
+    """
+    The period in which the returned data is relevant to.
+    """
+    period: PeriodEnums!
+
+    """
+    The year in which the returned data is relevant to.
+    """
+    year: Year!
   ): DmarcReportSummary
 
   """
@@ -1451,6 +1458,26 @@ type Query {
   ): DomainConnection
 
   """
+  Email summary computed values, used to build summary cards.
+  """
+  emailSummary: CategorizedSummary
+
+  """
+  Demo email summary computed values, used to build summary cards.
+  """
+  demoEmailSummary: CategorizedSummary
+
+  """
+  Web summary computed values, used to build summary cards.
+  """
+  webSummary: CategorizedSummary
+
+  """
+  Demo web summary computed values, used to build summary cards.
+  """
+  demoWebSummary: CategorizedSummary
+
+  """
   An api endpoint used to generate a OTP url used for two factor authentication.
   """
   generateOtpUrl(email: EmailAddress!): String
@@ -1484,10 +1511,31 @@ type RemoveDomain {
 }
 
 """
+Input object containing all required fields for the removeDomain mutation
+"""
+input RemoveDomainInputObject {
+  """
+  URL of domain that is being removed
+  """
+  url: URL!
+}
+
+"""
 Mutation allows the removal of an organization inside the database.
 """
 type RemoveOrganization {
   status: Boolean
+}
+
+"""
+Input object containing the required fields for the removeOrganization
+mutation
+"""
+input RemoveOrganizationInput {
+  """
+  The slugified organization name of the organization you wish to remove.
+  """
+  slug: Slug!
 }
 
 """
@@ -1560,6 +1608,17 @@ type SendEmailVerification {
   If email is successfully sent status will be true
   """
   status: Boolean
+}
+
+"""
+This mutation allows a user to provide their username and request that a
+password reset email be sent to their account with a reset token in a url.
+"""
+type SendPasswordResetLink {
+  """
+  Status of a successful password reset email.
+  """
+  status: String
 }
 
 """
@@ -1720,6 +1779,27 @@ type SSL {
 }
 
 """
+This object contains the information for each type of summary that has been
+pre-computed
+"""
+type SummaryCategory {
+  """
+  Category of computed summary which the other fields relate to.
+  """
+  name: String @examples(values: ["full-pass" "full-fail" ])
+
+  """
+  Total count of domains that fall into this category.
+  """
+  count: Int @examples(values: [6577, 5433, 7435, 3245, 9876])
+
+  """
+  Percentage compared to other categories.
+  """
+  percentage: Float @examples(values: [50.0, 43.5, 76.8, 23.4, 54.6])
+}
+
+"""
 This class handles the inner nested dict given by key: 'template'.
 """
 type Template {
@@ -1736,12 +1816,108 @@ type UpdateDomain {
   status: Boolean
 }
 
+"""
+Input object used to define the argument fields for the updateDomain
+mutation.
+"""
+input UpdateDomainInput {
+  """
+  The current domain that is being requested to be updated.
+  """
+  currentUrl: URL!
+
+  """
+  The new domain you wish to update the current domain to be.
+  """
+  updatedUrl: URL!
+
+  """
+  The new DKIM selector strings corresponding to this domain.
+  """
+  updatedSelectors: Selectors
+}
+
+"""
+Mutation allows the modification of organizations if any changes to the
+organization may occur.
+"""
 type UpdateOrganization {
+  """
+  Returns true if organization was successfully updated.
+  """
   status: Boolean
 }
 
+"""
+Input object used to define the argument fields for the updateOrganization
+mutation.
+"""
+input UpdateOrganizationInput {
+  """
+  Organization that will be updated.
+  """
+  slug: Slug!
+
+  """
+  Organization Acronym you would like updated.
+  """
+  acronym: Acronym
+
+  """
+  Full name of organization.
+  """
+  name: String
+
+  """
+  The zone which the organization belongs to.
+  """
+  zone: String
+
+  """
+  The sector which the organization belongs to.
+  """
+  sector: String
+
+  """
+  The province in which the organization is located in.
+  """
+  province: String
+
+  """
+  The city in which the organization is located in.
+  """
+  city: String
+}
+
+"""
+This mutation allows users to use a token sent to them by email to update
+their account password.
+"""
 type UpdateUserPassword {
-  user: User
+  """
+  Informs the user if the password update was successful.
+  """
+  status: String
+}
+
+"""
+Input object containing all fields for the UpdateUserPassword mutation
+"""
+input UpdateUserPasswordInput {
+  """
+  Reset token found in the url, which was sent to the users inbox, by the sendPasswordReset mutation.
+  """
+  resetToken: String!
+
+  """
+  The new password the user wishes to change to.
+  """
+  password: String!
+
+  """
+  A confirmation of the password field to ensure the user has entered the new password correctly.
+  """
+  confirmPassword: String!
 }
 
 type UpdateUserRole {

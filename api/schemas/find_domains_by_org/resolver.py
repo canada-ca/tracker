@@ -59,7 +59,11 @@ def resolve_find_domains_by_org(self, info, **kwargs):
 
     # Check if user has permission to view org
     if is_user_read(user_roles=user_roles, org_id=org_id):
-        query_rtn = query.filter(Domains.organization_id == org_id).all()
+        query_rtn = (
+            query.filter(Domains.organization_id == org_id)
+            .order_by(Domains.id.asc())
+            .all()
+        )
 
         # If org has no domains related to it
         if not len(query_rtn):

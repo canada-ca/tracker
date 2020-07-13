@@ -7,16 +7,10 @@ from db import DB
 from models import Domains, Organizations, Users, User_affiliations
 from tests.test_functions import json, run
 from tests.testdata.find_my_organizations import (
-    super_admin_expected_result_1,
-    super_admin_expected_result_2,
-    super_admin_expected_result_3,
-    super_admin_expected_result_4,
-    org_admin_expected_result_1,
-    org_admin_expected_result_2,
-    user_write_expected_result_1,
-    user_write_expected_result_2,
-    user_read_expected_result_1,
-    user_read_expected_result_2,
+    super_admin_expected_result,
+    org_admin_expected_result,
+    user_write_expected_result,
+    user_read_expected_result,
 )
 
 
@@ -45,36 +39,16 @@ def test_find_my_organizations_super_admin(db, caplog):
         },
     )
     save(org1)
-    org2 = Organizations(
-        acronym="ORG2",
-        domains=[Domains(domain="anothercooldomain.ca")],
-        name="Organization 2",
-        org_tags={
-            "zone": "Muni",
-            "sector": "Transportation",
-            "province": "NS",
-            "city": "Halifax",
-        },
-    )
-    save(org2)
-
-    user = Users(
-        display_name="testuserread",
-        user_name="testuserread@testemail.ca",
-        password="testpassword123",
-        user_affiliation=[
-            User_affiliations(user_organization=org1, permission="user_read"),
-        ],
-    )
-    user.verify_account()
-    save(user)
 
     super_admin = Users(
         display_name="testsuperadmin",
         user_name="testsuperadmin@testemail.ca",
         password="testpassword123",
         user_affiliation=[
-            User_affiliations(user_organization=org1, permission="super_admin"),
+            User_affiliations(
+                permission="super_admin",
+                user_organization=Organizations(name="Super Admin", acronym="SA",),
+            ),
         ],
     )
     super_admin.verify_account()
@@ -126,12 +100,7 @@ def test_find_my_organizations_super_admin(db, caplog):
             )
         )
 
-    assert result == (
-        super_admin_expected_result_1
-        or super_admin_expected_result_2
-        or super_admin_expected_result_3
-        or super_admin_expected_result_4
-    )
+    assert result == super_admin_expected_result
     assert (
         f"Super admin: {super_admin.id} successfully retrieved all organizations."
         in caplog.text
@@ -265,7 +234,7 @@ def test_find_my_organizations_admin(db, caplog):
 
     if "errors" in result:
         fail("Expect success but errors were returned: {}".format(result["errors"]))
-    assert result == (org_admin_expected_result_1 or org_admin_expected_result_2)
+    assert result == org_admin_expected_result
     assert (
         f"User: {user.id} successfully retrieved all organizations that they belong to."
         in caplog.text
@@ -342,7 +311,7 @@ def test_find_my_organizations_user_write(db, caplog):
 
     if "errors" in result:
         fail("Expect success but errors were returned: {}".format(result["errors"]))
-    assert result == (user_write_expected_result_1 or user_write_expected_result_2)
+    assert result == user_write_expected_result
     assert (
         f"User: {user.id} successfully retrieved all organizations that they belong to."
         in caplog.text
@@ -419,7 +388,7 @@ def test_find_my_organizations_user_read(db, caplog):
 
     if "errors" in result:
         fail("Expect success but errors were returned: {}".format(result["errors"]))
-    assert result == (user_read_expected_result_1 or user_read_expected_result_2)
+    assert result == user_read_expected_result
     assert (
         f"User: {user.id} successfully retrieved all organizations that they belong to."
         in caplog.text

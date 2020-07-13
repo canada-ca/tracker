@@ -10,19 +10,7 @@ from models.Users import Users
 from models.User_affiliations import User_affiliations
 from models.Domains import Domains
 from models.Organizations import Organizations
-
-
-class Dmarc_Reports(Base):
-    __tablename__ = "dmarc_reports"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    domain_id = Column(Integer, ForeignKey("domains.id"))
-    start_date = Column(DateTime)
-    end_date = Column(DateTime)
-    report = Column(JSONB)
-    domain = relationship(
-        "Domains", back_populates="dmarc_reports", cascade="all, delete"
-    )
+from models.Summaries import Summaries
 
 
 class Web_scans(Base):

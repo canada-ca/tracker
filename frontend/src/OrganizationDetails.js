@@ -2,13 +2,21 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { ListOf } from './ListOf'
-import { Domain } from './Domain'
-import { Link, Icon, Heading, Stack, useToast } from '@chakra-ui/core'
+import {
+  Link,
+  Icon,
+  Heading,
+  Stack,
+  useToast,
+  Divider,
+  Text,
+} from '@chakra-ui/core'
 import { ORGANIZATION_BY_SLUG } from './graphql/queries'
 import { useLingui } from '@lingui/react'
 import { useUserState } from './UserState'
 import { Link as ReactRouterLink, useParams } from 'react-router-dom'
+import SummaryTable from './SummaryTable'
+import makeSummaryTableData from './makeSummaryTableData'
 
 export default function OrganizationDetails() {
   const { i18n } = useLingui()
@@ -34,9 +42,9 @@ export default function OrganizationDetails() {
     },
   })
 
-  let domains = []
+  let domainName = ''
   if (data && data.organization.domains.edges) {
-    domains = data.organization.domains.edges.map((e) => e.node)
+    domainName = data.organization.name
   }
 
   if (loading) {
@@ -46,10 +54,55 @@ export default function OrganizationDetails() {
       </p>
     )
   }
+
+  const columns = [
+    {
+      Header: i18n._(t`Domain`),
+      accessor: 'host_domain',
+    },
+    {
+      Header: 'HTTPS',
+      accessor: 'https_result',
+    },
+    {
+      Header: 'HSTS',
+      accessor: 'hsts_result',
+    },
+    {
+      Header: i18n._(t`HSTS Preloaded`),
+      accessor: 'preloaded_result',
+    },
+    {
+      Header: 'SSL',
+      accessor: 'ssl_result',
+    },
+    {
+      Header: i18n._(t`Protocols & Ciphers`),
+      accessor: 'protocol_cipher_result',
+    },
+    {
+      Header: i18n._(t`Certificate Use`),
+      accessor: 'cert_use_result',
+    },
+    {
+      Header: 'SPF',
+      accessor: 'spf_result',
+    },
+    {
+      Header: 'DKIM',
+      accessor: 'dkim_result',
+    },
+    {
+      Header: 'DMARC',
+      accessor: 'dmarc_result',
+    },
+  ]
+
+  const tableEntries = Math.floor(Math.random() * 20)
   return (
     <Layout>
       <Stack spacing={10} shouldWrapChildren>
-        <Stack isInline>
+        <Stack isInline align="center">
           <Link as={ReactRouterLink} to={'/organizations'}>
             <Icon
               alt={i18n._(t`back to organizations`)}
@@ -59,26 +112,25 @@ export default function OrganizationDetails() {
             />
           </Link>
           <Heading as="h1">
-            <Trans>{data.organization.name}</Trans>
+            <Trans>{domainName}</Trans>
           </Heading>
         </Stack>
-        <Stack direction="row" spacing={4}>
-          <Stack spacing={4} flexWrap="wrap">
-            <ListOf
-              elements={domains}
-              ifEmpty={() => <Trans>No domains yet.</Trans>}
-            >
-              {({ url, lastRan }, index) => (
-                <Domain
-                  key={'domaindetail' + index}
-                  url={url}
-                  lastRan={lastRan}
-                />
-              )}
-            </ListOf>
-          </Stack>
+        <Stack>
+          {tableEntries > 0 ? (
+            <SummaryTable
+              data={makeSummaryTableData(tableEntries)}
+              columns={columns}
+            />
+          ) : (
+            <Text fontSize="2xl" fontWeight="bold">
+              <Trans>No domains yet.</Trans>
+            </Text>
+          )}
+
+          <Divider />
         </Stack>
       </Stack>
+      <Trans>*All data represented is mocked for demonstration purposes</Trans>
     </Layout>
   )
 }

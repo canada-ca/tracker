@@ -37,6 +37,10 @@ from schemas.find_my_organizations import (
     resolve_find_my_organizations,
 )
 
+# Summaries Import
+from schemas.email_summary import email_summary, demo_email_summary
+from schemas.web_summary import web_summary, demo_web_summary
+
 # Test User Claims
 from schemas.test_user_claims import test_user_claims
 
@@ -79,6 +83,9 @@ from schemas.email_verify_account.email_verify_account import EmailVerifyAccount
 from schemas.send_email_verification.send_email_verification import (
     SendEmailVerification,
 )
+
+# Send Password Reset Link
+from schemas.send_password_reset_email import SendPasswordResetLink
 
 # Update Users Password
 from schemas.update_user_password.update_user_password import UpdateUserPassword
@@ -166,6 +173,15 @@ class Query(graphene.ObjectType):
 
     # -- End Dmarc Report Queries
 
+    # -- Start Summaries Queries --
+    email_summary = email_summary
+    demo_email_summary = demo_email_summary
+
+    web_summary = web_summary
+    demo_web_summary = demo_web_summary
+
+    # -- End Summaries Queries --
+
     generate_otp_url = graphene.String(
         email=graphene.Argument(EmailAddress, required=True),
         resolver=resolve_generate_otp_url,
@@ -176,35 +192,48 @@ class Query(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     """The central gathering point for all of the GraphQL mutations."""
 
-    update_password = UpdateUserPassword.Field()
-    authenticate_two_factor = ValidateTwoFactor.Field()
-    update_user_role = UpdateUserRole.Field()
-    create_organization = CreateOrganization.Field(
-        description="Allows the creation of an organization inside the " "database.",
+    authenticate = Authenticate.Field(
+        description="Allows users to give their credentials and be authenticated."
     )
-    update_organization = UpdateOrganization.Field(
-        description="Allows modification of an organization inside the " "database."
-    )
-    remove_organization = RemoveOrganization.Field(
-        description="Allows the removal of an organization inside the database"
+    authenticate_two_factor = ValidateTwoFactor.Field(
+        description="Allows users to authenticate two-factor for their account."
     )
     create_domain = CreateDomain.Field(
-        description="Allows the creation of domains for a given organization"
+        description="Allows the creation of domains for a given organization."
     )
-    update_domain = UpdateDomain.Field(description="Allows the modification of domains")
-    remove_domain = RemoveDomain.Field(
-        description="Allows the removal of a given domain"
+    create_organization = CreateOrganization.Field(
+        description="Allows the creation of an organization inside the database.",
     )
-    request_scan = RequestScan.Field()
-    authenticate = Authenticate.Field(
-        description="Allows users to give their credentials and be " "authenticated"
-    )
-    sign_up = SignUp.Field(description="Allows users to sign up to our service")
     email_verify_account = EmailVerifyAccount.Field(
         description="Allows users to use token sent through email to verify their account."
     )
+    remove_domain = RemoveDomain.Field(
+        description="Allows the removal of a given domain."
+    )
+    remove_organization = RemoveOrganization.Field(
+        description="Allows the removal of an organization inside the database."
+    )
+    request_scan = RequestScan.Field(
+        description="This function allows users to request a manual scan of a domain."
+    )
+    sign_up = SignUp.Field(description="Allows users to sign up to our service.")
     send_email_verification = SendEmailVerification.Field(
-        description="Allows users to resend verification if failed during sign-up"
+        description="Allows users to resend verification if failed during sign-up."
+    )
+    send_password_reset_link = SendPasswordResetLink.Field(
+        description="Allows the user to request an email to reset their account password."
+    )
+    update_domain = UpdateDomain.Field(
+        description="Allows the modification of a given domain."
+    )
+    update_organization = UpdateOrganization.Field(
+        description="Allows modification of an organization inside the database."
+    )
+    update_password = UpdateUserPassword.Field(
+        description="Allows users to update their password, using a token sent to them via email."
+    )
+    update_user_role = UpdateUserRole.Field(
+        description="Updates the users permission to an organization."
     )
 
 

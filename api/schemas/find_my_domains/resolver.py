@@ -37,7 +37,7 @@ def resolve_find_my_domains(self, info, **kwargs):
     query = Domain.get_query(info)
 
     if is_super_admin(user_roles=user_roles):
-        query_rtn = query.all()
+        query_rtn = query.order_by(Domains.id.asc()).all()
         if not query_rtn:
             logger.info(
                 f"Super Admin: {user_id} tried to gather all domains, but none were found."
@@ -52,7 +52,11 @@ def resolve_find_my_domains(self, info, **kwargs):
         query_rtr = []
         for org_id in org_ids:
             if is_user_read(user_roles=user_roles, org_id=org_id):
-                tmp_query = query.filter(Domains.organization_id == org_id).all()
+                tmp_query = (
+                    query.filter(Domains.organization_id == org_id)
+                    .order_by(Domains.id.asc())
+                    .all()
+                )
 
                 for item in tmp_query:
                     query_rtr.append(item)

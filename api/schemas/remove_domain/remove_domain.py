@@ -21,13 +21,25 @@ from models import (
 from scalars.url import URL
 
 
+class RemoveDomainInputObject(graphene.InputObjectType):
+    """
+    Input object containing all required fields for the removeDomain mutation
+    """
+
+    url = URL(description="URL of domain that is being removed", required=True,)
+
+
 class RemoveDomain(graphene.Mutation):
     """
     This mutation allows the removal of unused domains
     """
 
     class Arguments:
-        url = URL(description="URL of domain that is being removed", required=True)
+        input = RemoveDomainInputObject(
+            required=True,
+            description="Input object containing all required fields for "
+            "mutation to run.",
+        )
 
     status = graphene.Boolean()
 
@@ -35,7 +47,7 @@ class RemoveDomain(graphene.Mutation):
     def mutate(self, info, **kwargs):
         user_id = kwargs.get("user_id")
         user_roles = kwargs.get("user_roles")
-        domain = cleanse_input(kwargs.get("url"))
+        domain = cleanse_input(kwargs.get("input", {}).get("url"))
 
         # Check to see if domain exists
         domain_orm = Domains.query.filter(Domains.domain == domain).first()

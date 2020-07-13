@@ -2,6 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: autoscan
+  namespace: tracker
 spec:
   schedule: "0 2 * * *"
   jobTemplate:

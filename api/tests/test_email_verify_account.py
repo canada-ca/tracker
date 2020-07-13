@@ -5,11 +5,7 @@ from pytest import fail
 
 from db import DB
 from json_web_token import tokenize
-from models import (
-    Organizations,
-    Users,
-    User_affiliations,
-)
+from models import Users
 from tests.test_functions import json, run
 
 
@@ -31,13 +27,17 @@ def test_successful_account_verification(save, caplog):
     )
     save(user)
 
-    token = tokenize(user_id=user.id, exp_period=24)
+    token = tokenize(parameters={"user_id": user.id}, exp_period=24)
 
     caplog.set_level(logging.INFO)
     result = run(
         mutation=f"""
         mutation {{
-            emailVerifyAccount(tokenString: "{token}") {{
+            emailVerifyAccount(
+                input: {{
+                    tokenString: "{token}"
+                }}
+            ) {{
                 status
             }}
         }}
@@ -46,10 +46,7 @@ def test_successful_account_verification(save, caplog):
     )
 
     if "errors" in result:
-        fail(
-            "expected spf guidance tags to be returned. Instead:"
-            "{}".format(json(result))
-        )
+        fail("expected account to be verified. Instead:" "{}".format(json(result)))
 
     expected_result = {"data": {"emailVerifyAccount": {"status": True}}}
 
@@ -82,13 +79,17 @@ def test_email_account_verification_where_account_doesnt_exist(save, caplog):
     """
     Test that log, and error occurs when user doesn't exist
     """
-    token = tokenize(user_id=5, exp_period=24)
+    token = tokenize(parameters={"user_id": 5}, exp_period=24)
 
     caplog.set_level(logging.WARNING)
     result = run(
         mutation=f"""
         mutation {{
-            emailVerifyAccount(tokenString: "{token}") {{
+            emailVerifyAccount(
+                input: {{
+                    tokenString: "{token}"
+                }}
+            ) {{
                 status
             }}
         }}
