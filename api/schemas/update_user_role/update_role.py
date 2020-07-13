@@ -37,36 +37,102 @@ def update_user_role(**kwargs):
     # Check to see that org actually exists
     if org_orm is None:
         logger.warning(
-            f"User: {user_id} attempted to a users permission for {org_slug}, but no organization associated with that slug."
+            f"User: {user_id} attempted to change a users permission for {org_slug}, but no organization associated with that slug."
         )
         raise GraphQLError("Error, unable to update user role.")
 
     # Check to see if the user belongs to super admin org
-    super_admin_affiliation_check = (
+    current_user_role = (
         db_session.query(User_aff)
         .filter(User_aff.user_id == user.id)
         .filter(User_aff.organization_id == org_orm.id)
         .first()
     )
 
-    # Check if requesting user has correct permissions
-    if (
-        new_role == "super_admin"
-        and org_slug == "super-admin"
-        and super_admin_affiliation_check is not None
-        and is_super_admin(user_roles=user_roles) is True
-    ):
-        update_user_role_db(admin_id=user_id, user=user, org=org_orm, role=new_role)
-    elif (
-        new_role == "user_read"
-        or new_role == "user_write"
-        or new_role == "admin"
-        and is_admin(user_roles=user_roles, org_id=org_orm.id) is True
-    ):
-        update_user_role_db(admin_id=user_id, user=user, org=org_orm, role=new_role)
-    else:
+    if current_user_role is None:
         logger.warning(
-            f"User: {user_id} attempted to update {user.id}'s role, but they do not have the permission to {org_slug}."
+            f"User: {user_id}, attempted to invite {user.id} however they are not a member of {org_slug}."
+        )
+        raise GraphQLError("Error, unable to update user role.")
+
+    # Check if requesting user has correct permissions
+    if new_role == "super_admin":
+        # Only super admins can create new super admins
+        if is_super_admin(user_roles=user_roles):
+            update_user_role_db(admin_id=user_id, user=user, org=org_orm, role=new_role)
+            logger.info(
+                f"User: {user_id}, successfully update {user.id}'s permission to {new_role}"
+            )
+            return True
+        else:
+            logger.warning(
+                f"User: {user_id}, attempted to update {user.id}'s role, but they do not have permission to {org_slug}."
+            )
+            raise GraphQLError("Error, unable to update user role.")
+
+    elif new_role == "admin":
+        # Only org admins or super admins can create new admins
+        if is_admin(user_roles=user_roles, org_id=org_orm.id):
+            # Ensure that if a user is a super admin that they cannot be downgraded
+            if current_user_role.permission == "super_admin":
+                logger.warning(
+                    f"User: {user_id}, attempted to downgrade {user.id} from super admin."
+                )
+                raise GraphQLError("Error, unable to update user role.")
+            else:
+                update_user_role_db(
+                    admin_id=user_id, user=user, org=org_orm, role=new_role
+                )
+                logger.info(
+                    f"User: {user_id}, successfully update {user.id}'s permission to {new_role}"
+                )
+                return True
+        else:
+            logger.warning(
+                f"User: {user_id}, attempted to update {user.id}'s role, but they do not have permission to {org_slug}."
+            )
+            raise GraphQLError("Error, unable to update user role.")
+
+    elif new_role == "user_write" or new_role == "user_read":
+        # Only org admins or super admins can create new user reads/writes
+        if is_admin(user_roles=user_roles, org_id=org_orm.id):
+            # Only super admins can downgrade an admin account
+            if current_user_role.permission == "admin":
+                if is_super_admin(user_roles=user_roles):
+                    update_user_role_db(
+                        admin_id=user_id, user=user, org=org_orm, role=new_role
+                    )
+                    logger.info(
+                        f"User: {user_id}, successfully update {user.id}'s permission to {new_role}"
+                    )
+                    return True
+                else:
+                    logger.warning(
+                        f"User: {user_id}, attempted to downgrade {user.id} from admin."
+                    )
+                    raise GraphQLError("Error, unable to update user role.")
+            # Make sure super admins cannot be downgraded
+            elif current_user_role.permission == "super_admin":
+                logger.warning(
+                    f"User: {user_id}, attempted to downgrade {user.id} from super_admin."
+                )
+                raise GraphQLError("Error, unable to update user role.")
+            else:
+                update_user_role_db(
+                    admin_id=user_id, user=user, org=org_orm, role=new_role
+                )
+                logger.info(
+                    f"User: {user_id}, successfully update {user.id}'s permission to {new_role}"
+                )
+                return True
+        else:
+            logger.warning(
+                f"User: {user_id}, attempted to update {user.id}'s role, but they do not have permission to {org_slug}."
+            )
+            raise GraphQLError("Error, unable to update user role.")
+    else:
+        logger.error(
+            f"User: {user_id}, attempted to update a {user.id}'s role, to a role that does not exist."
         )
         raise GraphQLError("Error, unable to update user role.")
 
