@@ -40,8 +40,7 @@ function ScanCard({ scanType, scanData }) {
           {cardTitle}
         </Heading>
         <Text>{cardDescription}</Text>
-        <Stack spacing="30px">
-        {categoryList}</Stack>
+        <Stack spacing="30px">{categoryList}</Stack>
       </Stack>
     </Box>
   )

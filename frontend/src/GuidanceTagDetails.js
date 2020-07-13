@@ -57,7 +57,6 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
                     .heading
                 }
               />
-
               {
                 // Display subheading if exists
                 guidanceTags[categoryName][guidanceTag]
