@@ -73,7 +73,7 @@ This object contains the list of different categories for pre-computed
 summary data with the computed total for how many domains in total are
 being compared.
 """
-type CatagorizedSummary {
+type CategorizedSummary {
   """
   List of SummaryCategory objects with data for different computed categories.
   """
@@ -1425,22 +1425,22 @@ type Query {
   """
   Email summary computed values, used to build summary cards.
   """
-  emailSummary: CatagorizedSummary
+  emailSummary: CategorizedSummary
 
   """
   Demo email summary computed values, used to build summary cards.
   """
-  demoEmailSummary: CatagorizedSummary
+  demoEmailSummary: CategorizedSummary
 
   """
   Web summary computed values, used to build summary cards.
   """
-  webSummary: CatagorizedSummary
+  webSummary: CategorizedSummary
 
   """
   Demo web summary computed values, used to build summary cards.
   """
-  demoWebSummary: CatagorizedSummary
+  demoWebSummary: CategorizedSummary
 
   """
   An api endpoint used to generate a OTP url used for two factor authentication.
