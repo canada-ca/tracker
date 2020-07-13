@@ -20,6 +20,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
           href={i18n._(
             guidanceTags[categoryName][guidanceTag].ref_links_guide.link,
           )}
+          target="_blank"
         >
           <Stack isInline spacing="2px" align="center">
             <Text>
@@ -48,6 +49,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
           href={i18n._(
             guidanceTags[categoryName][guidanceTag].ref_links_technical.link,
           )}
+          target="_blank"
         >
           <Stack isInline spacing="2px" align="center">
             <Text>
