@@ -76,6 +76,14 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
       ''
     )
 
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+    })),
+  })
+
   const smallDevice = window.matchMedia('(max-width: 500px)').matches
 
   const warningIcon = <Icon name="warning" color="weak" />
