@@ -7,7 +7,7 @@ import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 function ScanCard({ scanType, scanData }) {
-  const {i18n} = useLingui()
+  const { i18n } = useLingui()
 
   const cardTitle =
     scanType === 'web'

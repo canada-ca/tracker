@@ -13,9 +13,7 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
     guidanceTags[categoryName][guidanceTag].ref_links_guide !== undefined ? (
       <Stack isInline>
         <Text fontWeight="bold">
-          <Trans>
-          For in-depth CCCS implementation guidance:
-            </Trans>
+          <Trans>For in-depth CCCS implementation guidance:</Trans>
         </Text>
         <Link
           color="teal.500"
@@ -45,7 +43,9 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
     guidanceTags[categoryName][guidanceTag].ref_links_technical !== undefined &&
     guidanceTags[categoryName][guidanceTag].ref_links_technical !== null ? (
       <Stack isInline>
-        <Text fontWeight="bold"><Trans>For technical implementation guidance:</Trans></Text>
+        <Text fontWeight="bold">
+          <Trans>For technical implementation guidance:</Trans>
+        </Text>
         <Link
           color="teal.500"
           href={i18n._(
@@ -86,20 +86,27 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
       <Box>
         <Stack isInline>
           {smallDevice && warningIcon}
-          <Text fontWeight="bold"><Trans>Tag, Tag Name:</Trans></Text>
+          <Text fontWeight="bold">
+            <Trans>Tag, Tag Name:</Trans>
+          </Text>
           <Text>
-            <Trans id={guidanceTag} />{", "}
+            <Trans id={guidanceTag} />
+            {', '}
             <Trans id={guidanceTags[categoryName][guidanceTag].tag_name} />
           </Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold"><Trans>Guidance:</Trans></Text>
+          <Text fontWeight="bold">
+            <Trans>Guidance:</Trans>
+          </Text>
           <Text>
             <Trans id={guidanceTags[categoryName][guidanceTag].guidance} />
           </Text>
         </Stack>
         <Stack isInline>
-          <Text fontWeight="bold"><Trans>Summary:</Trans></Text>
+          <Text fontWeight="bold">
+            <Trans>Summary:</Trans>
+          </Text>
           <Text>
             <Trans id={guidanceTags[categoryName][guidanceTag].summary} />
           </Text>

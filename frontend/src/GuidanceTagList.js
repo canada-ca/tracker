@@ -21,14 +21,17 @@ export function GuidanceTagList({ guidanceTags, categoryName, selector }) {
           />
           {
             // Add divider if next entry exists
-            guidanceTags[index + 1] && <Divider borderColor="gray.700" />}
+            guidanceTags[index + 1] && <Divider borderColor="gray.700" />
+          }
         </Box>
       )
     })
   ) : (
     <Stack isInline align="center">
       <Icon name="check-circle" color="strong" />
-      <Text><Trans>Properly configured!</Trans></Text>
+      <Text>
+        <Trans>Properly configured!</Trans>
+      </Text>
     </Stack>
   )
 
