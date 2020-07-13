@@ -6,7 +6,7 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { MockedProvider } from '@apollo/react-testing'
 import { UserStateProvider } from '../UserState'
-import ChangePasswordPage from '../ChangePasswordPage'
+import ResetPasswordPage from '../ResetPasswordPage'
 import { UPDATE_PASSWORD } from '../graphql/mutations'
 
 const mocks = [
@@ -35,7 +35,7 @@ describe('<CreateUserPage />', () => {
                 <I18nProvider i18n={setupI18n()}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <MockedProvider mocks={mocks}>
-                      <ChangePasswordPage />
+                      <ResetPasswordPage />
                     </MockedProvider>
                   </MemoryRouter>
                 </I18nProvider>
@@ -65,7 +65,7 @@ describe('<CreateUserPage />', () => {
                 <I18nProvider i18n={setupI18n()}>
                   <MemoryRouter initialEntries={['/']} initialIndex={0}>
                     <MockedProvider mocks={mocks}>
-                      <ChangePasswordPage />
+                      <ResetPasswordPage />
                     </MockedProvider>
                   </MemoryRouter>
                 </I18nProvider>

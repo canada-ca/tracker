@@ -26,7 +26,7 @@ const Organizations = lazy(() => import('./Organizations'))
 const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
 const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
-const ChangePasswordPage = lazy(() => import('./ChangePasswordPage'))
+const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -93,7 +93,7 @@ export default function App() {
 
               <Route path="/forgot-password" component={ForgotPasswordPage} />
 
-              <Route path="/change-password" component={ChangePasswordPage} />
+              <Route path="/reset-password/:resetToken" component={ResetPasswordPage} />
 
               <RouteIf
                 condition={isLoggedIn()}

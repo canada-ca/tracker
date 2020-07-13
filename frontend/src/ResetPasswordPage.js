@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_PASSWORD } from './graphql/mutations'
 
-export default function ChangePasswordPage() {
+export default function ResetPasswordPage() {
   const { i18n } = useLingui()
   const history = useHistory()
   const toast = useToast()
