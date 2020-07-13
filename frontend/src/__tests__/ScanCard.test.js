@@ -6,9 +6,9 @@ import ScanCard from '../ScanCard'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import {rawDmarcGuidancePageData} from '../fixtures/dmarcGuidancePageData'
+import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 
-const scanType = "web"
+const scanType = 'web'
 const scanData = rawDmarcGuidancePageData.findDomainBySlug.web.edges[0].node
 
 describe('<ScanCard />', () => {
@@ -20,7 +20,7 @@ describe('<ScanCard />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <ScanCard scanType={scanType} scanData={scanData}/>
+              <ScanCard scanType={scanType} scanData={scanData} />
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>

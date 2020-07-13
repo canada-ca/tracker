@@ -24,12 +24,7 @@ export const Navigation = ({ children, ...props }) => {
         align="center"
         direction="row"
       >
-        <Stack
-          isInline
-          alignItems="center"
-          flexWrap="wrap"
-          spacing={6}
-        >
+        <Stack isInline alignItems="center" flexWrap="wrap" spacing={6}>
           {React.Children.map(children, (child) => {
             if (child !== null) {
               return React.cloneElement(child, {

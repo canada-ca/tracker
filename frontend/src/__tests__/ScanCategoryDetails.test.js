@@ -6,10 +6,11 @@ import ScanCategoryDetails from '../ScanCategoryDetails'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import {rawDmarcGuidancePageData} from '../fixtures/dmarcGuidancePageData'
+import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 
-const categoryName = "https"
-const categoryData = rawDmarcGuidancePageData.findDomainBySlug.web.edges[0].node.https
+const categoryName = 'https'
+const categoryData =
+  rawDmarcGuidancePageData.findDomainBySlug.web.edges[0].node.https
 
 describe('<ScanCategoryDetails />', () => {
   it('renders', async () => {
@@ -20,7 +21,10 @@ describe('<ScanCategoryDetails />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                <ScanCategoryDetails categoryName={categoryName} categoryData={categoryData}/>
+              <ScanCategoryDetails
+                categoryName={categoryName}
+                categoryData={categoryData}
+              />
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>

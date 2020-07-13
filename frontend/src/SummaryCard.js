@@ -8,14 +8,11 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
   // This block will allow the donut to be as large as possible
   const ref = useRef(null)
   const [parentWidth, setParentWidth] = React.useState(0)
-  useEffect(
-    () => {
-      if (ref.current) {
-        setParentWidth(ref.current.offsetWidth)
-      }
-    },
-    [ref, setParentWidth],
-  )
+  useEffect(() => {
+    if (ref.current) {
+      setParentWidth(ref.current.offsetWidth)
+    }
+  }, [ref, setParentWidth])
 
   const compareStrengths = (a, b) =>
     a.count < b.count ? 1 : b.count < a.count ? -1 : 0
@@ -51,7 +48,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
         <ResponsiveContainer width="100%" height={parentWidth}>
           <PieChart>
             <Pie
-              data={data.categories.map(cat => ({
+              data={data.categories.map((cat) => ({
                 ...cat,
                 ...{ name: categoryDisplay[cat.name].name },
               }))}
