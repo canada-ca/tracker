@@ -11,6 +11,14 @@ import { rawDmarcGuidancePageData } from '../fixtures/dmarcGuidancePageData'
 const scanType = 'web'
 const scanData = rawDmarcGuidancePageData.findDomainBySlug.web.edges[0].node
 
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+  })),
+})
+
 describe('<ScanCard />', () => {
   it('renders', async () => {
     const { getAllByText } = render(

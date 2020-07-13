@@ -15,6 +15,14 @@ const guidanceTags = selectorNode.dkimGuidanceTags
 const selector = selectorNode.selector
 const categoryName = 'dkim'
 
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+  })),
+})
+
 describe('<GuidanceTagList />', () => {
   it('renders', async () => {
     const { getAllByText } = render(

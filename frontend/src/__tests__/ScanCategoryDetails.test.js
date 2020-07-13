@@ -12,6 +12,14 @@ const categoryName = 'https'
 const categoryData =
   rawDmarcGuidancePageData.findDomainBySlug.web.edges[0].node.https
 
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+  })),
+})
+
 describe('<ScanCategoryDetails />', () => {
   it('renders', async () => {
     const { getAllByText } = render(

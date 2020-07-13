@@ -13,6 +13,14 @@ const guidanceTag =
     .selectors[0].dkimGuidanceTags[0]
 const categoryName = 'dkim'
 
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+  })),
+})
+
 describe('<GuidanceTagDetails />', () => {
   it('renders', async () => {
     const { getAllByText } = render(
