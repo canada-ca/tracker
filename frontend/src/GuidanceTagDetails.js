@@ -57,6 +57,13 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
                     .heading
                 }
               />
+
+              {
+                // Display subheading if exists
+                guidanceTags[categoryName][guidanceTag]
+                  .ref_links_technical_subheading &&
+                  `, ${guidanceTags[categoryName][guidanceTag].ref_links_technical_subheading}`
+              }
             </Text>
             <Icon name="external-link" />
           </Stack>
