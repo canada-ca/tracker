@@ -2,6 +2,7 @@ import React from 'react'
 import { array, string } from 'prop-types'
 import { Box, Divider, Heading, Icon, Stack, Text } from '@chakra-ui/core'
 import { GuidanceTagDetails } from './GuidanceTagDetails'
+import { Trans } from '@lingui/macro'
 
 export function GuidanceTagList({ guidanceTags, categoryName, selector }) {
   const selectorHeading = (
@@ -27,7 +28,7 @@ export function GuidanceTagList({ guidanceTags, categoryName, selector }) {
   ) : (
     <Stack isInline align="center">
       <Icon name="check-circle" color="strong" />
-      <Text>Properly configured!</Text>
+      <Text><Trans>Properly configured!</Trans></Text>
     </Stack>
   )
 

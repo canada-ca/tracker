@@ -28,14 +28,14 @@ msgid "3.2.2 Third Parties and DKIM"
 msgstr "3.2.2 Third Parties and DKIM"
 
 #: src/DmarcReportGuidance.js:213
-msgid "A server configured to use the wrong \"envelope from\" address."
-msgstr "A server configured to use the wrong \"envelope from\" address."
+#~ msgid "A server configured to use the wrong \"envelope from\" address."
+#~ msgstr "A server configured to use the wrong \"envelope from\" address."
 
 #: src/DmarcReportGuidance.js:219
-msgid "A third party sender not using a custom return path."
-msgstr "A third party sender not using a custom return path."
+#~ msgid "A third party sender not using a custom return path."
+#~ msgstr "A third party sender not using a custom return path."
 
-#: src/guidanceTagConstants.js:327
+#: src/guidanceTagConstants.js:326
 msgid "A-all"
 msgstr "A-all"
 
@@ -67,35 +67,35 @@ msgstr "A.5 Maintain"
 msgid "A.5.3 Rotate DKIM Keys"
 msgstr "A.5.3 Rotate DKIM Keys"
 
-#: src/guidanceTagConstants.js:292
+#: src/guidanceTagConstants.js:291
 msgid "ALL-allow"
 msgstr "ALL-allow"
 
-#: src/guidanceTagConstants.js:313
+#: src/guidanceTagConstants.js:312
 msgid "ALL-hardfail"
 msgstr "ALL-hardfail"
 
-#: src/guidanceTagConstants.js:285
+#: src/guidanceTagConstants.js:284
 msgid "ALL-missing"
 msgstr "ALL-missing"
 
-#: src/guidanceTagConstants.js:299
+#: src/guidanceTagConstants.js:298
 msgid "ALL-neutral"
 msgstr "ALL-neutral"
 
-#: src/guidanceTagConstants.js:320
+#: src/guidanceTagConstants.js:319
 msgid "ALL-redirect"
 msgstr "ALL-redirect"
 
-#: src/guidanceTagConstants.js:306
+#: src/guidanceTagConstants.js:305
 msgid "ALL-softfail"
 msgstr "ALL-softfail"
 
-#: src/guidanceTagConstants.js:449
+#: src/guidanceTagConstants.js:448
 msgid "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01"
 msgstr "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01"
 
-#: src/guidanceTagConstants.js:443
+#: src/guidanceTagConstants.js:442
 msgid "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
 msgstr "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
 
@@ -108,20 +108,20 @@ msgid "Add Domain"
 msgstr "Add Domain"
 
 #: src/DmarcReportGuidance.js:323
-msgid "Add a CNAME record to refer to a DKIM record maintained by a third party sender."
-msgstr "Add a CNAME record to refer to a DKIM record maintained by a third party sender."
+#~ msgid "Add a CNAME record to refer to a DKIM record maintained by a third party sender."
+#~ msgstr "Add a CNAME record to refer to a DKIM record maintained by a third party sender."
 
 #: src/DmarcReportGuidance.js:239
-msgid "Add a custom return path for athird party sender."
-msgstr "Add a custom return path for athird party sender."
+#~ msgid "Add a custom return path for athird party sender."
+#~ msgstr "Add a custom return path for athird party sender."
 
 #: src/DmarcReportGuidance.js:154
-msgid "Add an \"include\" clause for a third party sender."
-msgstr "Add an \"include\" clause for a third party sender."
+#~ msgid "Add an \"include\" clause for a third party sender."
+#~ msgstr "Add an \"include\" clause for a third party sender."
 
 #: src/DmarcReportGuidance.js:464
-msgid "Adjust the policy portion of the DMARCrecord of the root domain or subdomain."
-msgstr "Adjust the policy portion of the DMARCrecord of the root domain or subdomain."
+#~ msgid "Adjust the policy portion of the DMARCrecord of the root domain or subdomain."
+#~ msgstr "Adjust the policy portion of the DMARCrecord of the root domain or subdomain."
 
 #: src/UserCard.js:38
 msgid "Admin"
@@ -136,7 +136,7 @@ msgstr "Admin Portal"
 msgid "An error occurred."
 msgstr "An error occurred."
 
-#: src/guidanceTagConstants.js:421
+#: src/guidanceTagConstants.js:420
 msgid "As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled."
 msgstr "As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled."
 
@@ -172,7 +172,7 @@ msgstr "CCCS added to Aggregate sender list"
 msgid "CCCS added to Forensic sender list"
 msgstr "CCCS added to Forensic sender list"
 
-#: src/guidanceTagConstants.js:254
+#: src/guidanceTagConstants.js:253
 msgid "CNAME-DMARC"
 msgstr "CNAME-DMARC"
 
@@ -180,7 +180,7 @@ msgstr "CNAME-DMARC"
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 
-#: src/guidanceTagConstants.js:494
+#: src/guidanceTagConstants.js:493
 msgid "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
 msgstr "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
 
@@ -188,7 +188,7 @@ msgstr "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
 msgid "Certificate Use"
 msgstr "Certificate Use"
 
-#: src/guidanceTagConstants.js:455
+#: src/guidanceTagConstants.js:454
 msgid "Certificate chain signed using SHA-256/SHA-384/AEAD"
 msgstr "Certificate chain signed using SHA-256/SHA-384/AEAD"
 
@@ -197,20 +197,20 @@ msgstr "Certificate chain signed using SHA-256/SHA-384/AEAD"
 #~ msgstr "Compliant TLS"
 
 #: src/DmarcReportGuidance.js:312
-msgid "Configure the server to sign outbound messages with DKIM."
-msgstr "Configure the server to sign outbound messages with DKIM."
+#~ msgid "Configure the server to sign outbound messages with DKIM."
+#~ msgstr "Configure the server to sign outbound messages with DKIM."
 
 #: src/DmarcReportGuidance.js:159
-msgid "Configure the server to use the correct domain for the \"headerfrom\" address."
-msgstr "Configure the server to use the correct domain for the \"headerfrom\" address."
+#~ msgid "Configure the server to use the correct domain for the \"headerfrom\" address."
+#~ msgstr "Configure the server to use the correct domain for the \"headerfrom\" address."
 
 #: src/DmarcReportGuidance.js:233
-msgid "Configure the server to use the same domain for the \"envelope from\" and \"header from\" addresses."
-msgstr "Configure the server to use the same domain for the \"envelope from\" and \"header from\" addresses."
+#~ msgid "Configure the server to use the same domain for the \"envelope from\" and \"header from\" addresses."
+#~ msgstr "Configure the server to use the same domain for the \"envelope from\" and \"header from\" addresses."
 
 #: src/DmarcReportGuidance.js:398
-msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
-msgstr "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
+#~ msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
+#~ msgstr "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 
 #: src/PasswordConfirmation.js:137
 msgid "Confirm password"
@@ -233,19 +233,19 @@ msgstr "Create Account"
 msgid "Create an account by entering an email and password."
 msgstr "Create an account by entering an email and password."
 
-#: src/guidanceTagConstants.js:366
+#: src/guidanceTagConstants.js:365
 msgid "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365."
 msgstr "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365."
 
 #: src/DmarcReportGuidance.js:262
 #: src/DmarcReportGuidance.js:283
-msgid "DKIM Check Failed"
-msgstr "DKIM Check Failed"
+#~ msgid "DKIM Check Failed"
+#~ msgstr "DKIM Check Failed"
 
 #: src/DmarcReportGuidance.js:347
 #: src/DmarcReportGuidance.js:368
-msgid "DKIM Domain Alignment Failed"
-msgstr "DKIM Domain Alignment Failed"
+#~ msgid "DKIM Domain Alignment Failed"
+#~ msgstr "DKIM Domain Alignment Failed"
 
 #: src/DmarcReportPage.js:125
 msgid "DKIM Domains"
@@ -256,7 +256,7 @@ msgstr "DKIM Domains"
 msgid "DKIM Failures by IP Address"
 msgstr "DKIM Failures by IP Address"
 
-#: src/guidanceTagConstants.js:424
+#: src/guidanceTagConstants.js:423
 msgid "DKIM Flag t"
 msgstr "DKIM Flag t"
 
@@ -269,39 +269,39 @@ msgstr "DKIM Misalignment by IP Address"
 msgid "DKIM Selectors"
 msgstr "DKIM Selectors"
 
-#: src/guidanceTagConstants.js:415
+#: src/guidanceTagConstants.js:414
 msgid "DKIM TXT record invalid"
 msgstr "DKIM TXT record invalid"
 
-#: src/guidanceTagConstants.js:409
+#: src/guidanceTagConstants.js:408
 msgid "DKIM key does not use RSA"
 msgstr "DKIM key does not use RSA"
 
-#: src/guidanceTagConstants.js:359
+#: src/guidanceTagConstants.js:358
 msgid "DKIM record missing but MX uses O365. Follow cloud-specific guidance"
 msgstr "DKIM record missing but MX uses O365. Follow cloud-specific guidance"
 
-#: src/guidanceTagConstants.js:344
+#: src/guidanceTagConstants.js:343
 msgid "DKIM-GC"
 msgstr "DKIM-GC"
 
-#: src/guidanceTagConstants.js:408
+#: src/guidanceTagConstants.js:407
 msgid "DKIM-invalid-crypto"
 msgstr "DKIM-invalid-crypto"
 
-#: src/guidanceTagConstants.js:351
+#: src/guidanceTagConstants.js:350
 msgid "DKIM-missing"
 msgstr "DKIM-missing"
 
-#: src/guidanceTagConstants.js:365
+#: src/guidanceTagConstants.js:364
 msgid "DKIM-missing-O365-misconfigured"
 msgstr "DKIM-missing-O365-misconfigured"
 
-#: src/guidanceTagConstants.js:358
+#: src/guidanceTagConstants.js:357
 msgid "DKIM-missing-mx-O365"
 msgstr "DKIM-missing-mx-O365"
 
-#: src/guidanceTagConstants.js:414
+#: src/guidanceTagConstants.js:413
 msgid "DKIM-value-invalid"
 msgstr "DKIM-value-invalid"
 
@@ -312,8 +312,8 @@ msgstr "DMARC Failures by IP Address"
 
 #: src/DmarcReportGuidance.js:422
 #: src/DmarcReportGuidance.js:443
-msgid "DMARC Policy Applied"
-msgstr "DMARC Policy Applied"
+#~ msgid "DMARC Policy Applied"
+#~ msgstr "DMARC Policy Applied"
 
 #: src/DmarcReportPage.js:260
 msgid "DMARC Report"
@@ -363,27 +363,27 @@ msgstr "Domain"
 msgid "Domain List"
 msgstr "Domain List"
 
-#: src/guidanceTagConstants.js:524
+#: src/guidanceTagConstants.js:523
 msgid "Domain defaults to HTTPS, but eventually redirects to HTTP"
 msgstr "Domain defaults to HTTPS, but eventually redirects to HTTP"
 
-#: src/guidanceTagConstants.js:518
+#: src/guidanceTagConstants.js:517
 msgid "Domain does not default to HTTPS"
 msgstr "Domain does not default to HTTPS"
 
-#: src/guidanceTagConstants.js:512
+#: src/guidanceTagConstants.js:511
 msgid "Domain does not enforce HTTPS"
 msgstr "Domain does not enforce HTTPS"
 
-#: src/guidanceTagConstants.js:548
+#: src/guidanceTagConstants.js:547
 msgid "Domain not pre-loaded by HSTS"
 msgstr "Domain not pre-loaded by HSTS"
 
-#: src/guidanceTagConstants.js:542
+#: src/guidanceTagConstants.js:541
 msgid "Domain not pre-loaded by HSTS, but is pre-load ready"
 msgstr "Domain not pre-loaded by HSTS, but is pre-load ready"
 
-#: src/guidanceTagConstants.js:255
+#: src/guidanceTagConstants.js:254
 msgid "Domain uses potentially-outsourced DMARC service"
 msgstr "Domain uses potentially-outsourced DMARC service"
 
@@ -404,6 +404,10 @@ msgstr "Email"
 msgid "Email Configuration"
 msgstr "Email Configuration"
 
+#: src/ScanCard.js:16
+msgid "Email Scan Results"
+msgstr "Email Scan Results"
+
 #: src/CreateUserPage.js:24
 #: src/SignInPage.js:23
 msgid "Email cannot be empty"
@@ -414,12 +418,12 @@ msgid "Email security settings summary"
 msgstr "Email security settings summary"
 
 #: src/DmarcReportGuidance.js:317
-msgid "Ensure the DKIM record for thedomain and selector is present andvalid."
-msgstr "Ensure the DKIM record for thedomain and selector is present andvalid."
+#~ msgid "Ensure the DKIM record for thedomain and selector is present andvalid."
+#~ msgstr "Ensure the DKIM record for thedomain and selector is present andvalid."
 
 #: src/DmarcReportGuidance.js:143
-msgid "Ensure the SPF record is present and valid."
-msgstr "Ensure the SPF record is present and valid."
+#~ msgid "Ensure the SPF record is present and valid."
+#~ msgstr "Ensure the SPF record is present and valid."
 
 #: src/DmarcReportPage.js:124
 msgid "Envelope From"
@@ -437,16 +441,24 @@ msgstr "Fail"
 #: src/guidanceTagConstants.js:208
 #: src/guidanceTagConstants.js:215
 #: src/guidanceTagConstants.js:223
-#: src/guidanceTagConstants.js:272
-#: src/guidanceTagConstants.js:286
-#: src/guidanceTagConstants.js:293
-#: src/guidanceTagConstants.js:300
-#: src/guidanceTagConstants.js:328
-#: src/guidanceTagConstants.js:352
-#: src/guidanceTagConstants.js:437
-#: src/guidanceTagConstants.js:488
+#: src/guidanceTagConstants.js:271
+#: src/guidanceTagConstants.js:285
+#: src/guidanceTagConstants.js:292
+#: src/guidanceTagConstants.js:299
+#: src/guidanceTagConstants.js:327
+#: src/guidanceTagConstants.js:351
+#: src/guidanceTagConstants.js:436
+#: src/guidanceTagConstants.js:487
 msgid "Follow implementation guide"
 msgstr "Follow implementation guide"
+
+#: src/GuidanceTagDetails.js:16
+msgid "For in-depth CCCS implementation guidance:"
+msgstr "For in-depth CCCS implementation guidance:"
+
+#: src/GuidanceTagDetails.js:48
+msgid "For technical implementation guidance:"
+msgstr "For technical implementation guidance:"
 
 #: src/SignInPage.js:94
 msgid "Forgot your password?"
@@ -455,8 +467,8 @@ msgstr "Forgot your password?"
 #: src/DmarcReportGuidance.js:134
 #: src/DmarcReportGuidance.js:224
 #: src/DmarcReportGuidance.js:389
-msgid "Forwarding by an intermediate server."
-msgstr "Forwarding by an intermediate server."
+#~ msgid "Forwarding by an intermediate server."
+#~ msgstr "Forwarding by an intermediate server."
 
 #: src/DmarcReportPage.js:136
 #: src/DmarcReportPage.js:290
@@ -469,10 +481,10 @@ msgid "Go to page:"
 msgstr "Go to page:"
 
 #: src/guidanceTagConstants.js:95
-#: src/guidanceTagConstants.js:265
-#: src/guidanceTagConstants.js:345
-#: src/guidanceTagConstants.js:431
-#: src/guidanceTagConstants.js:482
+#: src/guidanceTagConstants.js:264
+#: src/guidanceTagConstants.js:344
+#: src/guidanceTagConstants.js:430
+#: src/guidanceTagConstants.js:481
 msgid "Government of Canada domains subject to TBS guidelines"
 msgstr "Government of Canada domains subject to TBS guidelines"
 
@@ -482,103 +494,107 @@ msgstr "Government of Canada domains subject to TBS guidelines"
 #: src/DmarcReportGuidance.js:361
 #: src/DmarcReportGuidance.js:437
 #: src/DmarcReportGuidance.js:503
-msgid "Guidance"
-msgstr "Guidance"
+#~ msgid "Guidance"
+#~ msgstr "Guidance"
+
+#: src/GuidanceTagDetails.js:91
+msgid "Guidance:"
+msgstr "Guidance:"
 
 #: src/OrganizationDetails.js:72
 msgid "HSTS Preloaded"
 msgstr "HSTS Preloaded"
 
-#: src/guidanceTagConstants.js:529
+#: src/guidanceTagConstants.js:528
 msgid "HSTS-missing"
 msgstr "HSTS-missing"
 
-#: src/guidanceTagConstants.js:547
+#: src/guidanceTagConstants.js:546
 msgid "HSTS-not-preloaded"
 msgstr "HSTS-not-preloaded"
 
-#: src/guidanceTagConstants.js:541
+#: src/guidanceTagConstants.js:540
 msgid "HSTS-preload-ready"
 msgstr "HSTS-preload-ready"
 
-#: src/guidanceTagConstants.js:535
+#: src/guidanceTagConstants.js:534
 msgid "HSTS-short-age"
 msgstr "HSTS-short-age"
 
-#: src/guidanceTagConstants.js:530
+#: src/guidanceTagConstants.js:529
 msgid "HTTP Strict Transport Security (HSTS) not implemented"
 msgstr "HTTP Strict Transport Security (HSTS) not implemented"
 
-#: src/guidanceTagConstants.js:536
+#: src/guidanceTagConstants.js:535
 msgid "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
 msgstr "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
 
-#: src/guidanceTagConstants.js:500
+#: src/guidanceTagConstants.js:499
 msgid "HTTPS certificate chain is invalid"
 msgstr "HTTPS certificate chain is invalid"
 
-#: src/guidanceTagConstants.js:554
+#: src/guidanceTagConstants.js:553
 msgid "HTTPS certificate is expired"
 msgstr "HTTPS certificate is expired"
 
-#: src/guidanceTagConstants.js:560
+#: src/guidanceTagConstants.js:559
 msgid "HTTPS certificate is self-signed"
 msgstr "HTTPS certificate is self-signed"
 
-#: src/guidanceTagConstants.js:506
+#: src/guidanceTagConstants.js:505
 msgid "HTTPS endpoint failed hostname validation"
 msgstr "HTTPS endpoint failed hostname validation"
 
-#: src/guidanceTagConstants.js:481
+#: src/guidanceTagConstants.js:480
 msgid "HTTPS-GC"
 msgstr "HTTPS-GC"
 
-#: src/guidanceTagConstants.js:499
+#: src/guidanceTagConstants.js:498
 msgid "HTTPS-bad-chain"
 msgstr "HTTPS-bad-chain"
 
-#: src/guidanceTagConstants.js:505
+#: src/guidanceTagConstants.js:504
 msgid "HTTPS-bad-hostname"
 msgstr "HTTPS-bad-hostname"
 
-#: src/guidanceTagConstants.js:553
+#: src/guidanceTagConstants.js:552
 msgid "HTTPS-certificate-expired"
 msgstr "HTTPS-certificate-expired"
 
-#: src/guidanceTagConstants.js:559
+#: src/guidanceTagConstants.js:558
 msgid "HTTPS-certificate-self-signed"
 msgstr "HTTPS-certificate-self-signed"
 
-#: src/guidanceTagConstants.js:493
+#: src/guidanceTagConstants.js:492
 msgid "HTTPS-downgraded"
 msgstr "HTTPS-downgraded"
 
-#: src/guidanceTagConstants.js:487
+#: src/guidanceTagConstants.js:486
 msgid "HTTPS-missing"
 msgstr "HTTPS-missing"
 
-#: src/guidanceTagConstants.js:523
+#: src/guidanceTagConstants.js:522
 msgid "HTTPS-moderately-enforced"
 msgstr "HTTPS-moderately-enforced"
 
-#: src/guidanceTagConstants.js:511
+#: src/guidanceTagConstants.js:510
 msgid "HTTPS-not-enforced"
 msgstr "HTTPS-not-enforced"
 
-#: src/guidanceTagConstants.js:517
+#: src/guidanceTagConstants.js:516
 msgid "HTTPS-weakly-enforced"
 msgstr "HTTPS-weakly-enforced"
 
 #: src/DmarcReportGuidance.js:554
-msgid "Hide Guidance"
-msgstr "Hide Guidance"
+#~ msgid "Hide Guidance"
+#~ msgstr "Hide Guidance"
 
 #: src/App.js:50
 #: src/QRcodePage.js:67
 msgid "Home"
 msgstr "Home"
 
-#: src/guidanceTagConstants.js:334
+#: src/guidanceTagConstants.js:333
 msgid "INCLUDE-limit"
 msgstr "INCLUDE-limit"
 
@@ -586,10 +602,10 @@ msgstr "INCLUDE-limit"
 msgid "IT PIN"
 msgstr "IT PIN"
 
-#: src/guidanceTagConstants.js:268
-#: src/guidanceTagConstants.js:348
-#: src/guidanceTagConstants.js:433
-#: src/guidanceTagConstants.js:484
+#: src/guidanceTagConstants.js:267
+#: src/guidanceTagConstants.js:347
+#: src/guidanceTagConstants.js:432
+#: src/guidanceTagConstants.js:483
 msgid "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
 msgstr "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
 
@@ -606,7 +622,7 @@ msgstr "Invalid email"
 msgid "Invalid percent"
 msgstr "Invalid percent"
 
-#: src/guidanceTagConstants.js:397
+#: src/guidanceTagConstants.js:396
 msgid "Invalid public key"
 msgstr "Invalid public key"
 
@@ -646,73 +662,72 @@ msgstr "Loading..."
 #: src/guidanceTagConstants.js:227
 #: src/guidanceTagConstants.js:235
 #: src/guidanceTagConstants.js:243
-#: src/guidanceTagConstants.js:251
-#: src/guidanceTagConstants.js:258
-#: src/guidanceTagConstants.js:275
-#: src/guidanceTagConstants.js:282
-#: src/guidanceTagConstants.js:289
-#: src/guidanceTagConstants.js:296
-#: src/guidanceTagConstants.js:303
-#: src/guidanceTagConstants.js:310
-#: src/guidanceTagConstants.js:317
-#: src/guidanceTagConstants.js:324
-#: src/guidanceTagConstants.js:331
-#: src/guidanceTagConstants.js:338
-#: src/guidanceTagConstants.js:355
-#: src/guidanceTagConstants.js:362
-#: src/guidanceTagConstants.js:369
-#: src/guidanceTagConstants.js:375
-#: src/guidanceTagConstants.js:381
-#: src/guidanceTagConstants.js:387
-#: src/guidanceTagConstants.js:393
-#: src/guidanceTagConstants.js:399
-#: src/guidanceTagConstants.js:405
-#: src/guidanceTagConstants.js:411
-#: src/guidanceTagConstants.js:417
-#: src/guidanceTagConstants.js:439
-#: src/guidanceTagConstants.js:445
-#: src/guidanceTagConstants.js:451
-#: src/guidanceTagConstants.js:457
-#: src/guidanceTagConstants.js:463
-#: src/guidanceTagConstants.js:469
-#: src/guidanceTagConstants.js:475
-#: src/guidanceTagConstants.js:490
-#: src/guidanceTagConstants.js:496
-#: src/guidanceTagConstants.js:502
-#: src/guidanceTagConstants.js:508
-#: src/guidanceTagConstants.js:514
-#: src/guidanceTagConstants.js:520
-#: src/guidanceTagConstants.js:526
-#: src/guidanceTagConstants.js:532
-#: src/guidanceTagConstants.js:538
-#: src/guidanceTagConstants.js:544
-#: src/guidanceTagConstants.js:550
-#: src/guidanceTagConstants.js:556
-#: src/guidanceTagConstants.js:562
+#: src/guidanceTagConstants.js:257
+#: src/guidanceTagConstants.js:274
+#: src/guidanceTagConstants.js:281
+#: src/guidanceTagConstants.js:288
+#: src/guidanceTagConstants.js:295
+#: src/guidanceTagConstants.js:302
+#: src/guidanceTagConstants.js:309
+#: src/guidanceTagConstants.js:316
+#: src/guidanceTagConstants.js:323
+#: src/guidanceTagConstants.js:330
+#: src/guidanceTagConstants.js:337
+#: src/guidanceTagConstants.js:354
+#: src/guidanceTagConstants.js:361
+#: src/guidanceTagConstants.js:368
+#: src/guidanceTagConstants.js:374
+#: src/guidanceTagConstants.js:380
+#: src/guidanceTagConstants.js:386
+#: src/guidanceTagConstants.js:392
+#: src/guidanceTagConstants.js:398
+#: src/guidanceTagConstants.js:404
+#: src/guidanceTagConstants.js:410
+#: src/guidanceTagConstants.js:416
+#: src/guidanceTagConstants.js:438
+#: src/guidanceTagConstants.js:444
+#: src/guidanceTagConstants.js:450
+#: src/guidanceTagConstants.js:456
+#: src/guidanceTagConstants.js:462
+#: src/guidanceTagConstants.js:468
+#: src/guidanceTagConstants.js:474
+#: src/guidanceTagConstants.js:489
+#: src/guidanceTagConstants.js:495
+#: src/guidanceTagConstants.js:501
+#: src/guidanceTagConstants.js:507
+#: src/guidanceTagConstants.js:513
+#: src/guidanceTagConstants.js:519
+#: src/guidanceTagConstants.js:525
+#: src/guidanceTagConstants.js:531
+#: src/guidanceTagConstants.js:537
+#: src/guidanceTagConstants.js:543
+#: src/guidanceTagConstants.js:549
+#: src/guidanceTagConstants.js:555
+#: src/guidanceTagConstants.js:561
 msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
 msgstr "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
 
 #: src/guidanceTagConstants.js:132
 #: src/guidanceTagConstants.js:231
-#: src/guidanceTagConstants.js:307
-#: src/guidanceTagConstants.js:314
+#: src/guidanceTagConstants.js:306
+#: src/guidanceTagConstants.js:313
 msgid "Maintain deployment"
 msgstr "Maintain deployment"
 
 #: src/DmarcReportGuidance.js:488
 #: src/DmarcReportGuidance.js:510
-msgid "Messages Subject to DMARC Policy"
-msgstr "Messages Subject to DMARC Policy"
+#~ msgid "Messages Subject to DMARC Policy"
+#~ msgstr "Messages Subject to DMARC Policy"
 
 #: src/guidanceTagConstants.js:174
 msgid "Missing from guide- need v1.1"
 msgstr "Missing from guide- need v1.1"
 
 #: src/DmarcReportGuidance.js:149
-msgid "Modify the SPF record to include the sending IP address."
-msgstr "Modify the SPF record to include the sending IP address."
+#~ msgid "Modify the SPF record to include the sending IP address."
+#~ msgstr "Modify the SPF record to include the sending IP address."
 
-#: src/guidanceTagConstants.js:335
+#: src/guidanceTagConstants.js:334
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
 
@@ -756,7 +771,7 @@ msgstr "Non-compliant TLS"
 msgid "Not scanned yet."
 msgstr "Not scanned yet."
 
-#: src/guidanceTagConstants.js:461
+#: src/guidanceTagConstants.js:460
 msgid "One or more ciphers in use are not compliant with guidelines"
 msgstr "One or more ciphers in use are not compliant with guidelines"
 
@@ -783,19 +798,19 @@ msgstr "Owner has not configured Forensic reporting. Missing from guide- need v1
 msgid "P"
 msgstr "P"
 
-#: src/guidanceTagConstants.js:378
+#: src/guidanceTagConstants.js:377
 msgid "P-1024"
 msgstr "P-1024"
 
-#: src/guidanceTagConstants.js:384
+#: src/guidanceTagConstants.js:383
 msgid "P-2048"
 msgstr "P-2048"
 
-#: src/guidanceTagConstants.js:390
+#: src/guidanceTagConstants.js:389
 msgid "P-4096"
 msgstr "P-4096"
 
-#: src/guidanceTagConstants.js:396
+#: src/guidanceTagConstants.js:395
 msgid "P-invalid"
 msgstr "P-invalid"
 
@@ -815,11 +830,11 @@ msgstr "P-quarantine"
 msgid "P-reject"
 msgstr "P-reject"
 
-#: src/guidanceTagConstants.js:372
+#: src/guidanceTagConstants.js:371
 msgid "P-sub1024"
 msgstr "P-sub1024"
 
-#: src/guidanceTagConstants.js:402
+#: src/guidanceTagConstants.js:401
 msgid "P-update-recommended"
 msgstr "P-update-recommended"
 
@@ -903,12 +918,12 @@ msgid "Please choose your preferred language"
 msgstr "Please choose your preferred language"
 
 #: src/DmarcReportGuidance.js:519
-msgid "Please see the SPF and DKIM causes sections."
-msgstr "Please see the SPF and DKIM causes sections."
+#~ msgid "Please see the SPF and DKIM causes sections."
+#~ msgstr "Please see the SPF and DKIM causes sections."
 
 #: src/DmarcReportGuidance.js:528
-msgid "Please see the SPF and DKIM resolutions sections."
-msgstr "Please see the SPF and DKIM resolutions sections."
+#~ msgid "Please see the SPF and DKIM resolutions sections."
+#~ msgstr "Please see the SPF and DKIM resolutions sections."
 
 #: src/guidanceTagConstants.js:140
 msgid "Policy applies to all of mailflow"
@@ -932,8 +947,8 @@ msgstr "Policy compliant TLS"
 #: src/DmarcReportGuidance.js:373
 #: src/DmarcReportGuidance.js:448
 #: src/DmarcReportGuidance.js:515
-msgid "Possible Causes"
-msgstr "Possible Causes"
+#~ msgid "Possible Causes"
+#~ msgstr "Possible Causes"
 
 #: src/DmarcReportGuidance.js:139
 #: src/DmarcReportGuidance.js:229
@@ -941,8 +956,8 @@ msgstr "Possible Causes"
 #: src/DmarcReportGuidance.js:394
 #: src/DmarcReportGuidance.js:460
 #: src/DmarcReportGuidance.js:524
-msgid "Possible Resolutions"
-msgstr "Possible Resolutions"
+#~ msgid "Possible Resolutions"
+#~ msgstr "Possible Resolutions"
 
 #: src/App.js:43
 msgid "Pre-Alpha"
@@ -952,31 +967,35 @@ msgstr "Pre-Alpha"
 msgid "Prefix Org"
 msgstr "Prefix Org"
 
-#: src/App.js:172
+#: src/App.js:170
 msgid "Privacy"
 msgstr "Privacy"
+
+#: src/GuidanceTagList.js:31
+msgid "Properly configured!"
+msgstr "Properly configured!"
 
 #: src/OrganizationDetails.js:80
 msgid "Protocols & Ciphers"
 msgstr "Protocols & Ciphers"
 
-#: src/guidanceTagConstants.js:379
+#: src/guidanceTagConstants.js:378
 msgid "Public key RSA and key length 1024"
 msgstr "Public key RSA and key length 1024"
 
-#: src/guidanceTagConstants.js:385
+#: src/guidanceTagConstants.js:384
 msgid "Public key RSA and key length 2048"
 msgstr "Public key RSA and key length 2048"
 
-#: src/guidanceTagConstants.js:391
+#: src/guidanceTagConstants.js:390
 msgid "Public key RSA and key length 4096 or higher"
 msgstr "Public key RSA and key length 4096 or higher"
 
-#: src/guidanceTagConstants.js:373
+#: src/guidanceTagConstants.js:372
 msgid "Public key RSA and key length <1024"
 msgstr "Public key RSA and key length <1024"
 
-#: src/guidanceTagConstants.js:403
+#: src/guidanceTagConstants.js:402
 msgid "Public key in use for longer than 1 year"
 msgstr "Public key in use for longer than 1 year"
 
@@ -1021,16 +1040,32 @@ msgid "RUF-none"
 msgstr "RUF-none"
 
 #: src/DmarcReportGuidance.js:496
-msgid "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
-msgstr "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
+#~ msgid "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
+#~ msgstr "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
 
 #: src/DmarcReportGuidance.js:146
-msgid "Remove redundant SPF records."
-msgstr "Remove redundant SPF records."
+#~ msgid "Remove redundant SPF records."
+#~ msgstr "Remove redundant SPF records."
 
 #: src/App.js:70
 msgid "Report"
 msgstr "Report"
+
+#: src/ScanCard.js:22
+msgid "Results for scans of email technologies (DMARC, SPF, DKIM)."
+msgstr "Results for scans of email technologies (DMARC, SPF, DKIM)."
+
+#: src/ScanCard.js:22
+#~ msgid "Results for scans of email technologies (DMARC, SPF, DKIM). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac."
+#~ msgstr "Results for scans of email technologies (DMARC, SPF, DKIM). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac."
+
+#: src/ScanCard.js:20
+msgid "Results for scans of web technologies (SSL, HTTPS)."
+msgstr "Results for scans of web technologies (SSL, HTTPS)."
+
+#: src/ScanCard.js:20
+#~ msgid "Results for scans of web technologies (SSL, HTTPS). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac."
+#~ msgstr "Results for scans of web technologies (SSL, HTTPS). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac."
 
 #: src/guidanceTagConstants.js:218
 #: src/guidanceTagConstants.js:226
@@ -1056,13 +1091,13 @@ msgstr "SP-reject"
 
 #: src/DmarcReportGuidance.js:91
 #: src/DmarcReportGuidance.js:112
-msgid "SPF Check Failed"
-msgstr "SPF Check Failed"
+#~ msgid "SPF Check Failed"
+#~ msgstr "SPF Check Failed"
 
 #: src/DmarcReportGuidance.js:183
 #: src/DmarcReportGuidance.js:204
-msgid "SPF Domain Alignment Failed"
-msgstr "SPF Domain Alignment Failed"
+#~ msgid "SPF Domain Alignment Failed"
+#~ msgstr "SPF Domain Alignment Failed"
 
 #: src/DmarcReportPage.js:131
 msgid "SPF Domains"
@@ -1078,43 +1113,43 @@ msgstr "SPF Failures by IP Address"
 msgid "SPF Misalignment by IP Address"
 msgstr "SPF Misalignment by IP Address"
 
-#: src/guidanceTagConstants.js:279
+#: src/guidanceTagConstants.js:278
 msgid "SPF implemented in incorrect subdomain"
 msgstr "SPF implemented in incorrect subdomain"
 
-#: src/guidanceTagConstants.js:264
+#: src/guidanceTagConstants.js:263
 msgid "SPF-GC"
 msgstr "SPF-GC"
 
-#: src/guidanceTagConstants.js:278
+#: src/guidanceTagConstants.js:277
 msgid "SPF-bad-path"
 msgstr "SPF-bad-path"
 
-#: src/guidanceTagConstants.js:271
+#: src/guidanceTagConstants.js:270
 msgid "SPF-missing"
 msgstr "SPF-missing"
 
-#: src/guidanceTagConstants.js:448
+#: src/guidanceTagConstants.js:447
 msgid "SSL-3des"
 msgstr "SSL-3des"
 
-#: src/guidanceTagConstants.js:430
+#: src/guidanceTagConstants.js:429
 msgid "SSL-GC"
 msgstr "SSL-GC"
 
-#: src/guidanceTagConstants.js:454
+#: src/guidanceTagConstants.js:453
 msgid "SSL-acceptable-certificate"
 msgstr "SSL-acceptable-certificate"
 
-#: src/guidanceTagConstants.js:460
+#: src/guidanceTagConstants.js:459
 msgid "SSL-invalid-cipher"
 msgstr "SSL-invalid-cipher"
 
-#: src/guidanceTagConstants.js:436
+#: src/guidanceTagConstants.js:435
 msgid "SSL-missing"
 msgstr "SSL-missing"
 
-#: src/guidanceTagConstants.js:442
+#: src/guidanceTagConstants.js:441
 msgid "SSL-rc4"
 msgstr "SSL-rc4"
 
@@ -1143,8 +1178,8 @@ msgid "Select an organization to view admin options"
 msgstr "Select an organization to view admin options"
 
 #: src/DmarcReportGuidance.js:554
-msgid "Show Guidance"
-msgstr "Show Guidance"
+#~ msgid "Show Guidance"
+#~ msgstr "Show Guidance"
 
 #: src/DmarcReportTable.js:296
 msgid "Show {pageSize}"
@@ -1176,11 +1211,14 @@ msgstr "Sorry, the page you were trying to view does not exist."
 msgid "Source IP Address"
 msgstr "Source IP Address"
 
-#: src/guidanceTagConstants.js:420
+#: src/GuidanceTagDetails.js:97
+msgid "Summary:"
+msgstr "Summary:"
+
+#: src/guidanceTagConstants.js:419
 msgid "T-enabled"
 msgstr "T-enabled"
 
-#: src/guidanceTagConstants.js:149
 #: src/guidanceTagConstants.js:197
 msgid "TBD"
 msgstr "TBD"
@@ -1197,7 +1235,11 @@ msgstr "TXT-DMARC-enabled"
 msgid "TXT-DMARC-missing"
 msgstr "TXT-DMARC-missing"
 
-#: src/App.js:182
+#: src/GuidanceTagDetails.js:84
+msgid "Tag, Tag Name:"
+msgstr "Tag, Tag Name:"
+
+#: src/App.js:180
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -1206,61 +1248,61 @@ msgid "Textual Representation"
 msgstr "Textual Representation"
 
 #: src/DmarcReportGuidance.js:430
-msgid "The DMARC policy (i.e. none, quarantine, orreject) that was applied to messages which failured DMARC (i.e. failed both SPF and DKIM)."
-msgstr "The DMARC policy (i.e. none, quarantine, orreject) that was applied to messages which failured DMARC (i.e. failed both SPF and DKIM)."
+#~ msgid "The DMARC policy (i.e. none, quarantine, orreject) that was applied to messages which failured DMARC (i.e. failed both SPF and DKIM)."
+#~ msgstr "The DMARC policy (i.e. none, quarantine, orreject) that was applied to messages which failured DMARC (i.e. failed both SPF and DKIM)."
 
 #: src/DmarcReportGuidance.js:121
-msgid "The SPF record for the domain is missing or invalid."
-msgstr "The SPF record for the domain is missing or invalid."
+#~ msgid "The SPF record for the domain is missing or invalid."
+#~ msgstr "The SPF record for the domain is missing or invalid."
 
 #: src/DmarcReportGuidance.js:301
-msgid "The message was modified by an intermediate server."
-msgstr "The message was modified by an intermediate server."
+#~ msgid "The message was modified by an intermediate server."
+#~ msgstr "The message was modified by an intermediate server."
 
 #: src/DmarcReportGuidance.js:292
-msgid "The message was not signed with DKIM."
-msgstr "The message was not signed with DKIM."
+#~ msgid "The message was not signed with DKIM."
+#~ msgstr "The message was not signed with DKIM."
 
 #: src/DmarcReportGuidance.js:452
-msgid "The policy applied is based on the DMARC record of the root domain or subdomain."
-msgstr "The policy applied is based on the DMARC record of the root domain or subdomain."
+#~ msgid "The policy applied is based on the DMARC record of the root domain or subdomain."
+#~ msgstr "The policy applied is based on the DMARC record of the root domain or subdomain."
 
 #: src/DmarcReportGuidance.js:191
-msgid "The receiving server found that the domains used in the \"envelope from\" and \"header from\" email addresses did not match."
-msgstr "The receiving server found that the domains used in the \"envelope from\" and \"header from\" email addresses did not match."
+#~ msgid "The receiving server found that the domains used in the \"envelope from\" and \"header from\" email addresses did not match."
+#~ msgstr "The receiving server found that the domains used in the \"envelope from\" and \"header from\" email addresses did not match."
 
 #: src/DmarcReportGuidance.js:355
-msgid "The receiving server found that the domains usedin the DKIM header and the \"header from\" email address did not match."
-msgstr "The receiving server found that the domains usedin the DKIM header and the \"header from\" email address did not match."
+#~ msgid "The receiving server found that the domains usedin the DKIM header and the \"header from\" email address did not match."
+#~ msgstr "The receiving server found that the domains usedin the DKIM header and the \"header from\" email address did not match."
 
 #: src/DmarcReportGuidance.js:270
-msgid "The receiving server found that the message had no DKIM signature, or that verification of the signature failed."
-msgstr "The receiving server found that the message had no DKIM signature, or that verification of the signature failed."
+#~ msgid "The receiving server found that the message had no DKIM signature, or that verification of the signature failed."
+#~ msgstr "The receiving server found that the message had no DKIM signature, or that verification of the signature failed."
 
 #: src/DmarcReportGuidance.js:99
-msgid "The receiving server found that the sending IP address was not authorized to send mail on behalf of the domain."
-msgstr "The receiving server found that the sending IP address was not authorized to send mail on behalf of the domain."
+#~ msgid "The receiving server found that the sending IP address was not authorized to send mail on behalf of the domain."
+#~ msgstr "The receiving server found that the sending IP address was not authorized to send mail on behalf of the domain."
 
 #: src/DmarcReportGuidance.js:129
-msgid "The sending IP address is not included in the SPF record."
-msgstr "The sending IP address is not included in the SPF record."
+#~ msgid "The sending IP address is not included in the SPF record."
+#~ msgstr "The sending IP address is not included in the SPF record."
 
 #: src/DmarcReportGuidance.js:377
-msgid "The server is configured to use a different domain for the DKIM header than for the \"header from\" address."
-msgstr "The server is configured to use a different domain for the DKIM header than for the \"header from\" address."
+#~ msgid "The server is configured to use a different domain for the DKIM header than for the \"header from\" address."
+#~ msgstr "The server is configured to use a different domain for the DKIM header than for the \"header from\" address."
 
 #: src/DmarcReportGuidance.js:126
-msgid "There are multiple SPF records."
-msgstr "There are multiple SPF records."
+#~ msgid "There are multiple SPF records."
+#~ msgstr "There are multiple SPF records."
 
 #: src/DmarcReportGuidance.js:295
 #: src/DmarcReportGuidance.js:383
-msgid "There is no DKIM record for the domain and/or selector used or the record is invalid."
-msgstr "There is no DKIM record for the domain and/or selector used or the record is invalid."
+#~ msgid "There is no DKIM record for the domain and/or selector used or the record is invalid."
+#~ msgstr "There is no DKIM record for the domain and/or selector used or the record is invalid."
 
 #: src/DmarcReportGuidance.js:67
-msgid "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
-msgstr "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
+#~ msgid "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
+#~ msgstr "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
 
 #: src/App.js:44
 msgid "This service is being developed in the open"
@@ -1298,7 +1340,7 @@ msgstr "User List"
 msgid "User Profile"
 msgstr "User Profile"
 
-#: src/guidanceTagConstants.js:321
+#: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
 msgstr "Uses redirect tag with All"
 
@@ -1310,25 +1352,29 @@ msgstr "Verification TXT records for all 3rd party senders exist"
 msgid "Verification TXT records for some/all 3rd party senders missing"
 msgstr "Verification TXT records for some/all 3rd party senders missing"
 
-#: src/guidanceTagConstants.js:472
+#: src/guidanceTagConstants.js:471
 msgid "Vulnerability-ccs-injection"
 msgstr "Vulnerability-ccs-injection"
 
-#: src/guidanceTagConstants.js:466
+#: src/guidanceTagConstants.js:465
 msgid "Vulnerability-heartbleed"
 msgstr "Vulnerability-heartbleed"
 
-#: src/guidanceTagConstants.js:467
+#: src/guidanceTagConstants.js:466
 msgid "Vulnerable to Heartbleed bug"
 msgstr "Vulnerable to Heartbleed bug"
 
-#: src/guidanceTagConstants.js:473
+#: src/guidanceTagConstants.js:472
 msgid "Vulnerable to OpenSSL CCS Injection"
 msgstr "Vulnerable to OpenSSL CCS Injection"
 
 #: src/SummaryGroup.js:40
 msgid "Web Configuration"
 msgstr "Web Configuration"
+
+#: src/ScanCard.js:14
+msgid "Web Scan Results"
+msgstr "Web Scan Results"
 
 #: src/SummaryGroup.js:41
 msgid "Web encryption settings summary"

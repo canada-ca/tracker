@@ -3,19 +3,23 @@ import { Box, Heading, Stack, Text } from '@chakra-ui/core'
 import { object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
 import WithPseudoBox from './withPseudoBox'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 function ScanCard({ scanType, scanData }) {
+  const {i18n} = useLingui()
+
   const cardTitle =
     scanType === 'web'
-      ? 'Web Scan Results'
+      ? i18n._(t`Web Scan Results`)
       : scanType === 'email'
-      ? 'Email Scan Results'
+      ? i18n._(t`Email Scan Results`)
       : ''
   const cardDescription =
     scanType === 'web'
-      ? 'Results for scans of web technologies (SSL, HTTPS). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac.'
+      ? i18n._(t`Results for scans of web technologies (SSL, HTTPS).`)
       : scanType === 'email'
-      ? 'Results for scans of email technologies (DMARC, SPF, DKIM). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac.'
+      ? i18n._(t`Results for scans of email technologies (DMARC, SPF, DKIM).`)
       : ''
 
   const scanCategories = ['https', 'ssl', 'dmarc', 'spf', 'dkim']
