@@ -24,7 +24,7 @@ msgstr "*Les barres de recherche ne recherchent pas activement les bases de donn
 
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
-msgstr ""
+msgstr "3.2.2 Expéditeurs tiers et DKIM"
 
 #: src/DmarcReportGuidance.js:213
 msgid "A server configured to use the wrong \"envelope from\" address."
@@ -36,59 +36,59 @@ msgstr "Un expéditeur tiers n'utilisant pas une voie de retour personnalisée."
 
 #: src/guidanceTagConstants.js:327
 msgid "A-all"
-msgstr ""
+msgstr "A-all"
 
 #: src/guidanceTagConstants.js:9
 msgid "A.2.3 Deploy Initial DMARC record"
-msgstr ""
+msgstr "A.2.3 Déployer l’enregistrement DMARC initial"
 
 #: src/guidanceTagConstants.js:13
 msgid "A.3.3 Deploy SPF for All Domains"
-msgstr ""
+msgstr "A.3.3 Déployer le protocole SPF pour tous les domaines"
 
 #: src/guidanceTagConstants.js:17
 msgid "A.3.4 Deploy DKIM for All Domains and Senders"
-msgstr ""
+msgstr "A.3.4 Déployer le protocole DKIM pour tous les domaines et expéditeurs"
 
 #: src/guidanceTagConstants.js:21
 msgid "A.3.5 Monitor DMARC Reports and Correct Misconfigurations"
-msgstr ""
+msgstr "A.3.5 Surveiller les rapports DMARC et corriger les erreurs de configuration"
 
 #: src/guidanceTagConstants.js:25
 msgid "A.4 Enforce"
-msgstr ""
+msgstr "A.4 Appliquer"
 
 #: src/guidanceTagConstants.js:29
 msgid "A.5 Maintain"
-msgstr ""
+msgstr "A.5 Tenir les éléments à jour"
 
 #: src/guidanceTagConstants.js:33
 msgid "A.5.3 Rotate DKIM Keys"
-msgstr ""
+msgstr "A.5.3 Assurer la rotation des clés DKIM"
 
 #: src/guidanceTagConstants.js:292
 msgid "ALL-allow"
-msgstr ""
+msgstr "ALL-allow"
 
 #: src/guidanceTagConstants.js:313
 msgid "ALL-hardfail"
-msgstr ""
+msgstr "ALL-hardfail"
 
 #: src/guidanceTagConstants.js:285
 msgid "ALL-missing"
-msgstr ""
+msgstr "ALL-missing"
 
 #: src/guidanceTagConstants.js:299
 msgid "ALL-neutral"
-msgstr ""
+msgstr "ALL-neutral"
 
 #: src/guidanceTagConstants.js:320
 msgid "ALL-redirect"
-msgstr ""
+msgstr "ALL-redirect"
 
 #: src/guidanceTagConstants.js:306
 msgid "ALL-softfail"
-msgstr ""
+msgstr "ALL-softfail"
 
 #: src/guidanceTagConstants.js:449
 msgid "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01"
@@ -137,27 +137,27 @@ msgstr "Une erreur s'est produite."
 
 #: src/guidanceTagConstants.js:421
 msgid "As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled."
-msgstr ""
+msgstr "Conformément à la section 3.6.1 du RFC, l'indicateur de test t=y signifie que les vérificateurs DOIVENT traiter les messages comme non signés (c'est-à-dire que DKIM n'est pas activé), donc cet indicateur ne doit pas être activé."
 
 #: src/guidanceTagConstants.js:37
 msgid "B.1.1 SPF Records"
-msgstr ""
+msgstr "B.1.1 Enregistrements SPF"
 
 #: src/guidanceTagConstants.js:41
 msgid "B.1.3 DNS Lookup Limit"
-msgstr ""
+msgstr "B.1.3 Limite de recherches DNS"
 
 #: src/guidanceTagConstants.js:45
 msgid "B.2.1 DKIM Records"
-msgstr ""
+msgstr "B.2.1 Enregistrements DKIM"
 
 #: src/guidanceTagConstants.js:49
 msgid "B.2.2 Cryptographic Considerations"
-msgstr ""
+msgstr "B.2.2 Considérations cryptographiques"
 
 #: src/guidanceTagConstants.js:53
 msgid "B.3.1 DMARC Records"
-msgstr ""
+msgstr "B.3.1 Enregistrements DMARC"
 
 #: src/CreateUserPage.js:130
 msgid "Back"
@@ -165,7 +165,7 @@ msgstr "Retour"
 
 #: src/guidanceTagConstants.js:164
 msgid "CCCS added to Aggregate sender list"
-msgstr ""
+msgstr "Le CCCS ajouté à la liste agrégée des expéditeurs"
 
 #: src/guidanceTagConstants.js:171
 msgid "CCCS added to Forensic sender list"
@@ -173,7 +173,7 @@ msgstr ""
 
 #: src/guidanceTagConstants.js:254
 msgid "CNAME-DMARC"
-msgstr ""
+msgstr "CNAME-DMARC"
 
 #: src/LandingPage.js:17
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
@@ -181,7 +181,7 @@ msgstr "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre
 
 #: src/guidanceTagConstants.js:494
 msgid "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
-msgstr ""
+msgstr "Le CCCS ajouté à la liste des expéditeurs de la police scientifique"
 
 #: src/guidanceTagConstants.js:455
 msgid "Certificate chain signed using SHA-256/SHA-384/AEAD"
@@ -213,7 +213,7 @@ msgstr "Confirmer le mot de passe"
 
 #: src/guidanceTagConstants.js:204
 msgid "Contact 3rd party"
-msgstr ""
+msgstr "Contacter une tierce partie"
 
 #: src/DmarcReportPage.js:128
 msgid "Country Code"
@@ -253,7 +253,7 @@ msgstr "Défaillances DKIM par adresse IP"
 
 #: src/guidanceTagConstants.js:424
 msgid "DKIM Flag t"
-msgstr ""
+msgstr "DKIM Flag t"
 
 #: src/DmarcReportPage.js:203
 #: src/DmarcReportPage.js:318
@@ -266,39 +266,39 @@ msgstr "Sélecteurs DKIM"
 
 #: src/guidanceTagConstants.js:415
 msgid "DKIM TXT record invalid"
-msgstr ""
+msgstr "Enregistrement DKIM TXT non valable"
 
 #: src/guidanceTagConstants.js:409
 msgid "DKIM key does not use RSA"
-msgstr ""
+msgstr "La clé DKIM n'utilise pas le RSA"
 
 #: src/guidanceTagConstants.js:359
 msgid "DKIM record missing but MX uses O365. Follow cloud-specific guidance"
-msgstr ""
+msgstr "DKIM record missing but MX uses O365. Follow cloud-specific guidance"
 
 #: src/guidanceTagConstants.js:344
 msgid "DKIM-GC"
-msgstr ""
+msgstr "DKIM-GC"
 
 #: src/guidanceTagConstants.js:408
 msgid "DKIM-invalid-crypto"
-msgstr ""
+msgstr "DKIM-invalid-crypto"
 
 #: src/guidanceTagConstants.js:351
 msgid "DKIM-missing"
-msgstr ""
+msgstr "DKIM-missing"
 
 #: src/guidanceTagConstants.js:365
 msgid "DKIM-missing-O365-misconfigured"
-msgstr ""
+msgstr "DKIM-missing-O365-misconfigured"
 
 #: src/guidanceTagConstants.js:358
 msgid "DKIM-missing-mx-O365"
-msgstr ""
+msgstr "DKIM-missing-mx-O365"
 
 #: src/guidanceTagConstants.js:414
 msgid "DKIM-value-invalid"
-msgstr ""
+msgstr "DKIM-value-invalid"
 
 #: src/DmarcReportPage.js:220
 #: src/DmarcReportPage.js:325
@@ -316,11 +316,11 @@ msgstr "Rapport de la DMARC"
 
 #: src/guidanceTagConstants.js:94
 msgid "DMARC-GC"
-msgstr ""
+msgstr "DMARC-GC"
 
 #: src/guidanceTagConstants.js:101
 msgid "DMARC-missing"
-msgstr ""
+msgstr "DMARC-missing"
 
 #: src/DmarcReportPage.js:130
 msgid "DNS Host"
@@ -348,27 +348,27 @@ msgstr "Liste des domaines"
 
 #: src/guidanceTagConstants.js:524
 msgid "Domain defaults to HTTPS, but eventually redirects to HTTP"
-msgstr ""
+msgstr "Le domaine passe par défaut en HTTPS, mais finit par être redirigé vers HTTP"
 
 #: src/guidanceTagConstants.js:518
 msgid "Domain does not default to HTTPS"
-msgstr ""
+msgstr "Le domaine ne passe pas par défaut en HTTPS"
 
 #: src/guidanceTagConstants.js:512
 msgid "Domain does not enforce HTTPS"
-msgstr ""
+msgstr "Le domaine n'applique pas le HTTPS"
 
 #: src/guidanceTagConstants.js:548
 msgid "Domain not pre-loaded by HSTS"
-msgstr ""
+msgstr "Domaine non préchargé par le HSTS"
 
 #: src/guidanceTagConstants.js:542
 msgid "Domain not pre-loaded by HSTS, but is pre-load ready"
-msgstr ""
+msgstr "Le domaine n'est pas préchargé par le HSTS, mais est prêt à être préchargé"
 
 #: src/guidanceTagConstants.js:255
 msgid "Domain uses potentially-outsourced DMARC service"
-msgstr ""
+msgstr "Le domaine utilise un service DMARC potentiellement externalisé"
 
 #: src/Domain.js:23
 msgid "Domain:"
@@ -429,7 +429,7 @@ msgstr "Échec"
 #: src/guidanceTagConstants.js:437
 #: src/guidanceTagConstants.js:488
 msgid "Follow implementation guide"
-msgstr ""
+msgstr "Suivre le guide de mise en œuvre"
 
 #: src/SignInPage.js:94
 msgid "Forgot your password?"
@@ -456,7 +456,7 @@ msgstr "Aller à la page"
 #: src/guidanceTagConstants.js:431
 #: src/guidanceTagConstants.js:482
 msgid "Government of Canada domains subject to TBS guidelines"
-msgstr ""
+msgstr "Les domaines du gouvernement du Canada sont soumis aux directives du SCT"
 
 #: src/DmarcReportGuidance.js:105
 #: src/DmarcReportGuidance.js:197
@@ -469,11 +469,11 @@ msgstr "Conseils"
 
 #: src/guidanceTagConstants.js:529
 msgid "HSTS-missing"
-msgstr ""
+msgstr "HSTS-missing"
 
 #: src/guidanceTagConstants.js:547
 msgid "HSTS-not-preloaded"
-msgstr ""
+msgstr "HSTS-not-preloaded"
 
 #: src/guidanceTagConstants.js:541
 msgid "HSTS-preload-ready"
@@ -485,27 +485,27 @@ msgstr ""
 
 #: src/guidanceTagConstants.js:530
 msgid "HTTP Strict Transport Security (HSTS) not implemented"
-msgstr ""
+msgstr "HTTP Strict Transport Security (HSTS) non mis en œuvre"
 
 #: src/guidanceTagConstants.js:536
 msgid "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year"
-msgstr ""
+msgstr "L'âge maximum de la politique de sécurité stricte des transports HTTP (HSTS) est inférieur à un an"
 
 #: src/guidanceTagConstants.js:500
 msgid "HTTPS certificate chain is invalid"
-msgstr ""
+msgstr "La chaîne de certificats HTTPS n'est pas valable"
 
 #: src/guidanceTagConstants.js:554
 msgid "HTTPS certificate is expired"
-msgstr ""
+msgstr "Le certificat HTTPS est expiré"
 
 #: src/guidanceTagConstants.js:560
 msgid "HTTPS certificate is self-signed"
-msgstr ""
+msgstr "Le certificat HTTPS est auto-signé"
 
 #: src/guidanceTagConstants.js:506
 msgid "HTTPS endpoint failed hostname validation"
-msgstr ""
+msgstr "Le point terminal HTTPS a échoué dans la validation du nom d'hôte"
 
 #: src/guidanceTagConstants.js:481
 msgid "HTTPS-GC"
@@ -582,11 +582,11 @@ msgstr "Courriel non valide"
 
 #: src/guidanceTagConstants.js:156
 msgid "Invalid percent"
-msgstr ""
+msgstr "Pourcentage non valable"
 
 #: src/guidanceTagConstants.js:397
 msgid "Invalid public key"
-msgstr ""
+msgstr "Clé publique invalide"
 
 #: src/UserList.js:109
 msgid "Invite User"
@@ -674,7 +674,7 @@ msgstr ""
 #: src/guidanceTagConstants.js:307
 #: src/guidanceTagConstants.js:314
 msgid "Maintain deployment"
-msgstr ""
+msgstr "Maintenir le déploiement"
 
 #: src/DmarcReportGuidance.js:488
 #: src/DmarcReportGuidance.js:510
@@ -683,7 +683,7 @@ msgstr "Messages soumis à la politique de la DMARC"
 
 #: src/guidanceTagConstants.js:174
 msgid "Missing from guide- need v1.1"
-msgstr ""
+msgstr "Absent du guide - besoin v1.1"
 
 #: src/DmarcReportGuidance.js:149
 msgid "Modify the SPF record to include the sending IP address."
@@ -691,7 +691,7 @@ msgstr "Modifiez l'enregistrement SPF pour y inclure l'adresse IP d'envoi."
 
 #: src/guidanceTagConstants.js:335
 msgid "More than 10 lookups - Follow implementation guide"
-msgstr ""
+msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 
 #: src/AdminDomains.js:124
 msgid "No Domains"
@@ -703,11 +703,11 @@ msgstr "Aucune organisation"
 
 #: src/guidanceTagConstants.js:178
 msgid "No RUAs defined"
-msgstr ""
+msgstr "Pas de RUA définis"
 
 #: src/guidanceTagConstants.js:186
 msgid "No RUFs defined"
-msgstr ""
+msgstr "Pas de RUF définis"
 
 #: src/SummaryGroup.js:56
 msgid "No TLS"
@@ -744,11 +744,11 @@ msgstr "Organisations"
 
 #: src/guidanceTagConstants.js:182
 msgid "Owner has not configured Aggregate reporting."
-msgstr ""
+msgstr "Le propriétaire n'a pas configuré le rapport agrégé."
 
 #: src/guidanceTagConstants.js:190
 msgid "Owner has not configured Forensic reporting. Missing from guide- need v1.1"
-msgstr ""
+msgstr "Le propriétaire n'a pas configuré le rapport médico-légal. Manque dans le guide - besoin v1.1"
 
 #: src/guidanceTagConstants.js:119
 #: src/guidanceTagConstants.js:127
@@ -881,15 +881,15 @@ msgstr "Veuillez consulter les sections des résolutions SPF et DKIM."
 
 #: src/guidanceTagConstants.js:140
 msgid "Policy applies to all of mailflow"
-msgstr ""
+msgstr "La politique s'applique à l'ensemble du flux de courrier"
 
 #: src/guidanceTagConstants.js:247
 msgid "Policy applies to no part of mailflow - irregular config"
-msgstr ""
+msgstr "La politique ne s'applique à aucune partie du flux de courrier - configuration irrégulière"
 
 #: src/guidanceTagConstants.js:148
 msgid "Policy applies to percentage of mailflow"
-msgstr ""
+msgstr "La politique s'applique au pourcentage du flux de courrier"
 
 #: src/DmarcReportGuidance.js:117
 #: src/DmarcReportGuidance.js:209
@@ -923,23 +923,23 @@ msgstr "Confidentialité"
 
 #: src/guidanceTagConstants.js:379
 msgid "Public key RSA and key length 1024"
-msgstr ""
+msgstr "Clé publique RSA et longueur de la clé 1024"
 
 #: src/guidanceTagConstants.js:385
 msgid "Public key RSA and key length 2048"
-msgstr ""
+msgstr "Clé publique RSA et longueur de la clé 2048"
 
 #: src/guidanceTagConstants.js:391
 msgid "Public key RSA and key length 4096 or higher"
-msgstr ""
+msgstr "Clé publique RSA et longueur de clé 4096 ou plus"
 
 #: src/guidanceTagConstants.js:373
 msgid "Public key RSA and key length <1024"
-msgstr ""
+msgstr "RSA à clé publique et longueur de clé <1024"
 
 #: src/guidanceTagConstants.js:403
 msgid "Public key in use for longer than 1 year"
-msgstr ""
+msgstr "Clé publique en usage depuis plus d'un an"
 
 #: src/guidanceTagConstants.js:71
 msgid "RFC 4.6.4.  DNS Lookup Limits"
@@ -1041,7 +1041,7 @@ msgstr "Désalignement du SPF par adresse IP"
 
 #: src/guidanceTagConstants.js:279
 msgid "SPF implemented in incorrect subdomain"
-msgstr ""
+msgstr "SPF implémenté dans un sous-domaine incorrect"
 
 #: src/guidanceTagConstants.js:264
 msgid "SPF-GC"
@@ -1249,7 +1249,7 @@ msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
 #: src/guidanceTagConstants.js:82
 msgid "Use DKIM to validate outbound email sent from your custom domain"
-msgstr ""
+msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé"
 
 #: src/UserList.js:85
 msgid "User List"
@@ -1261,15 +1261,15 @@ msgstr "Profil de l'utilisateur"
 
 #: src/guidanceTagConstants.js:321
 msgid "Uses redirect tag with All"
-msgstr ""
+msgstr "Utilise la balise de redirection avec All"
 
 #: src/guidanceTagConstants.js:194
 msgid "Verification TXT records for all 3rd party senders exist"
-msgstr ""
+msgstr "Il existe des enregistrements TXT de vérification pour tous les expéditeurs tiers"
 
 #: src/guidanceTagConstants.js:201
 msgid "Verification TXT records for some/all 3rd party senders missing"
-msgstr ""
+msgstr "Vérification des enregistrements TXT pour certains/toutes les expéditeurs tiers manquants"
 
 #: src/guidanceTagConstants.js:472
 msgid "Vulnerability-ccs-injection"
@@ -1285,7 +1285,7 @@ msgstr ""
 
 #: src/guidanceTagConstants.js:473
 msgid "Vulnerable to OpenSSL CCS Injection"
-msgstr ""
+msgstr "Vulnérable à l'injection de CCS OpenSSL"
 
 #: src/SummaryGroup.js:44
 msgid "Web Configuration"
