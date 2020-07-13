@@ -76,11 +76,16 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
       ''
     )
 
+  const smallDevice = window.matchMedia('(max-width: 500px)').matches
+
+  const warningIcon = <Icon name="warning" color="weak" />
+
   return (
     <Stack isInline align="center">
-      <Icon name="warning" color="weak" />
+      {!smallDevice && warningIcon}
       <Box>
         <Stack isInline>
+          {smallDevice && warningIcon}
           <Text fontWeight="bold"><Trans>Tag, Tag Name:</Trans></Text>
           <Text>
             <Trans id={guidanceTag} />{", "}
