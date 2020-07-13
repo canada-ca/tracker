@@ -50,9 +50,6 @@ describe('<CreateUserPage />', () => {
           })
 
           await waitFor(() =>
-            // This should work exactly like the email field above, but it
-            // doesn't! The message is displayed but we can only get partial
-            // match for some reason.
             expect(queryByText(/Password cannot be empty/)).toBeInTheDocument(),
           )
         })
@@ -81,7 +78,7 @@ describe('<CreateUserPage />', () => {
           await waitFor(() => fireEvent.blur(confirmPassword))
 
           await waitFor(() =>
-            // This should work exactly like the email field above, but it
+            // This should work exactly like the password field above, but it
             // doesn't! The message is displayed but we can only get partial
             // match for some reason.
             expect(queryByText(/Password confirmation/)).toBeInTheDocument(),

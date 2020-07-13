@@ -361,24 +361,3 @@ export const USER_AFFILIATIONS = gql`
     }
   }
 `
-
-export const SEND_PASSWORD_RESET = gql`
-  query SendPasswordReset($userName: EmailAddress!) {
-    sendPasswordReset(email: $userName) {
-      uri
-      id
-      content {
-        body
-        fromEmail
-        subject
-      }
-      reference
-      template {
-        id
-        uri
-        version
-      }
-      scheduledFor
-    }
-  }
-`

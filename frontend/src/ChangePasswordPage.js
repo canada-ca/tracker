@@ -23,7 +23,7 @@ export default function ChangePasswordPage() {
       .oneOf([ref('password')], i18n._(t`Passwords must match`)),
   })
 
-  const [UpdatePassword, { loading, error }] = useMutation(UPDATE_PASSWORD, {
+  const [updatePassword, { loading, error }] = useMutation(UPDATE_PASSWORD, {
     onError() {
       console.log(error)
       toast({
@@ -34,7 +34,8 @@ export default function ChangePasswordPage() {
         isClosable: true,
       })
     },
-    onCompleted() {
+    onCompleted({ updatePassword }) {
+      console.log(updatePassword)
       history.push('/sign-in')
       toast({
         title: 'Password Updated',
@@ -59,16 +60,18 @@ export default function ChangePasswordPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{
-          resetToken: '',
+          resetToken: 'get-reset-token-from-url',
           password: '',
           confirmPassword: '',
         }}
         onSubmit={async (values) => {
-          UpdatePassword({
+          updatePassword({
             variables: {
-              resetToken: values.resetToken,
-              password: values.password,
-              confirmPassword: values.confirmPassword,
+              input: {
+                resetToken: values.resetToken,
+                password: values.password,
+                confirmPassword: values.confirmPassword,
+              },
             },
           })
         }}

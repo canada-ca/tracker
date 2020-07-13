@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
       .email(i18n._(t`Invalid email`)),
   })
 
-  const [SendPasswordResetLink, { loading, error }] = useMutation(
+  const [sendPasswordResetLink, { loading, error }] = useMutation(
     SEND_PASSWORD_RESET_LINK,
     {
       onError() {
@@ -59,7 +59,7 @@ export default function ForgotPasswordPage() {
         validationSchema={validationSchema}
         initialValues={{ email: '' }}
         onSubmit={async (values) => {
-          SendPasswordResetLink({
+          sendPasswordResetLink({
             variables: { userName: values.email },
           })
         }}
@@ -88,8 +88,6 @@ export default function ForgotPasswordPage() {
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}
-                // as={RouteLink}
-                // to="/change-password"
               >
                 <Trans>Submit</Trans>
               </Button>
