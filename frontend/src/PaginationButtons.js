@@ -1,38 +1,66 @@
 import React from 'react'
-import { Stack, IconButton } from '@chakra-ui/core'
-import { bool } from 'prop-types'
+import { number, func } from 'prop-types'
+import { Stack, Text, IconButton, Select } from '@chakra-ui/core'
 
-export function PaginationButtons({ previous, next }) {
+export function PaginationButtons({
+  perPage,
+  total,
+  paginate,
+  currentPage,
+  setPerPage,
+}) {
   return (
-    <Stack isInline justifyContent="end">
+    <Stack isInline align="center">
       <IconButton
-        variantColor="blue"
+        icon="arrow-left"
+        onClick={() => paginate(1)}
+        disabled={currentPage === 1}
+        aria-label="Skip to first page"
+      />
+      <IconButton
+        icon="chevron-left"
+        onClick={() => paginate(currentPage - 1)}
+        disabled={currentPage === 1}
         aria-label="Previous page"
-        icon="arrow-back"
-        onClick={() => {
-          window.alert('previous page')
-        }}
-        isDisabled={
-          // Determine if the previous button should be disabled
-          !previous
-        }
       />
       <IconButton
-        variantColor="blue"
+        icon="chevron-right"
+        onClick={() => paginate(currentPage + 1)}
+        disabled={currentPage === Math.ceil(total / perPage)}
         aria-label="Next page"
-        icon="arrow-forward"
-        onClick={() => {
-          window.alert('next page')
-        }}
-        isDisabled={
-          // Determine if the next button should be disabled
-          !next
-        }
       />
+      <IconButton
+        icon="arrow-right"
+        onClick={() => paginate(Math.ceil(total / perPage))}
+        disabled={currentPage === Math.ceil(total / perPage)}
+        aria-label="Skip to last page"
+      />
+      <Text fontWeight="semibold">
+        Page {currentPage} of {Math.ceil(total / perPage)}
+      </Text>
+      {setPerPage && (
+        <Select
+          w="30"
+          value={perPage}
+          onChange={(e) => {
+            setPerPage(Number(e.target.value))
+          }}
+        >
+          {[5, 10, 20].map((perPage) => (
+            <option key={perPage} value={perPage}>
+              Show {perPage}
+            </option>
+          ))}
+        </Select>
+      )}
     </Stack>
   )
 }
+
 PaginationButtons.propTypes = {
-  next: bool.isRequired,
-  previous: bool.isRequired,
+  perPage: number.isRequired,
+  total: number.isRequired,
+  paginate: func.isRequired,
+  currentPage: number.isRequired,
+  setPerPage: func,
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -7,11 +7,15 @@ import { Heading, Stack, useToast, Box, Divider } from '@chakra-ui/core'
 import { ORGANIZATIONS } from './graphql/queries'
 import { useUserState } from './UserState'
 import { Organization } from './Organization'
+import { PaginationButtons } from './PaginationButtons'
 
 export default function Organisations() {
   const { currentUser } = useUserState()
+  const [orgs, setOrgs] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [orgsPerPage, setOrgsPerPage] = useState(10)
   const toast = useToast()
-  // XXX: This component needs pagination
+
   // This query is currently requesting the first 10 orgs
   const { loading, _error, data } = useQuery(ORGANIZATIONS, {
     context: {
@@ -31,16 +35,31 @@ export default function Organisations() {
     },
   })
 
-  let organizations = []
-  if (data && data.organizations.edges) {
-    organizations = data.organizations.edges.map((e) => e.node)
-  }
+  useEffect(() => {
+    const fetchOrgs = async () => {
+      let organizations = []
+      if (data && data.organizations.edges) {
+        organizations = data.organizations.edges.map((e) => e.node)
+        setOrgs(organizations)
+      }
+    }
+    fetchOrgs()
+  }, [data])
+
   if (loading)
     return (
       <p>
         <Trans>Loading...</Trans>
       </p>
     )
+
+  // Get current orgs
+  const indexOfLastOrg = currentPage * orgsPerPage
+  const indexOfFirstOrg = indexOfLastOrg - orgsPerPage
+  const currentOrgs = orgs.slice(indexOfFirstOrg, indexOfLastOrg)
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   return (
     <Layout>
@@ -51,7 +70,7 @@ export default function Organisations() {
         <Stack direction="row" spacing={4}>
           <Stack spacing={4} flexWrap="wrap">
             <ListOf
-              elements={organizations}
+              elements={currentOrgs}
               ifEmpty={() => <Trans>No Organizations</Trans>}
             >
               {({ name, slug, domainCount }, index) => (
@@ -68,7 +87,15 @@ export default function Organisations() {
             </ListOf>
           </Stack>
         </Stack>
+        <PaginationButtons
+          perPage={orgsPerPage}
+          total={orgs.length}
+          paginate={paginate}
+          currentPage={currentPage}
+          setPerPage={setOrgsPerPage}
+        />
       </Stack>
+      <Divider />
     </Layout>
   )
 }
