@@ -5,7 +5,7 @@ import { Text, Stack, Button, Box, useToast } from '@chakra-ui/core'
 import PasswordConfirmation from './PasswordConfirmation'
 import { object, string, ref } from 'yup'
 import { Formik } from 'formik'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_PASSWORD } from './graphql/mutations'
 
@@ -13,6 +13,7 @@ export default function ResetPasswordPage() {
   const { i18n } = useLingui()
   const history = useHistory()
   const toast = useToast()
+  const { resetToken } = useParams()
 
   const validationSchema = object().shape({
     password: string()
@@ -60,11 +61,12 @@ export default function ResetPasswordPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{
-          resetToken: 'get-reset-token-from-url',
+          resetToken: resetToken,
           password: '',
           confirmPassword: '',
         }}
         onSubmit={async (values) => {
+          console.log(values)
           updatePassword({
             variables: {
               input: {
