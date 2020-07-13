@@ -662,3 +662,23 @@ msgstr "Certificate Use"
 #: src/SummaryTable.js:174
 msgid "of"
 msgstr "of"
+
+#: src/ForgotPasswordPage.js:92
+msgid "Submit"
+msgstr "Submit"
+
+#: src/ForgotPasswordPage.js:76
+msgid "Enter your user account's verified email address"
+msgstr "Enter your user account's verified email address"
+
+#: src/ForgotPasswordPage.js:79
+msgid "and we will send you a password reset link."
+msgstr "and we will send you a password reset link."
+
+#: src/ResetPasswordPage.js:90
+msgid "Enter and confirm your new password."
+msgstr "Enter and confirm your new password."
+
+#: src/ResetPasswordPage.js:103
+msgid "Change Password"
+msgstr "Change Password"
