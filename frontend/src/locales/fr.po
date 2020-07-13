@@ -197,6 +197,7 @@ msgstr "Configuration du courriel"
 
 #: src/CreateUserPage.js:23
 #: src/SignInPage.js:23
+#: src/ForgotPasswordPage.js:18
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
@@ -264,6 +265,7 @@ msgstr "Services d'accès à Internet: {domainCount}"
 
 #: src/CreateUserPage.js:24
 #: src/SignInPage.js:24
+#: src/ForgotPasswordPage.js:19
 msgid "Invalid email"
 msgstr "Courriel non valide"
 
@@ -359,18 +361,25 @@ msgstr "Mot de passe"
 
 #: src/CreateUserPage.js:26
 #: src/SignInPage.js:21
+#: src/ResetPasswordPage:20
 msgid "Password cannot be empty"
 msgstr "Le mot de passe ne peut pas être vide"
 
+
+
+
 #: src/CreateUserPage.js:29
+#: src/ResetPasswordPage:23
 msgid "Password confirmation cannot be empty"
 msgstr "La confirmation du mot de passe ne peut pas être vide"
 
 #: src/CreateUserPage.js:27
+#: src/ResetPasswordPage:21
 msgid "Password must be at least 12 characters long"
 msgstr "Le mot de passe doit comporter au moins 12 caractères"
 
 #: src/CreateUserPage.js:30
+#: src/ResetPasswordPage:24
 msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
 

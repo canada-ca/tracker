@@ -197,6 +197,7 @@ msgstr "Email Configuration"
 
 #: src/CreateUserPage.js:23
 #: src/SignInPage.js:23
+#: src/ForgotPasswordPage.js:18
 msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
 
@@ -264,6 +265,7 @@ msgstr "Internet facing services: {domainCount}"
 
 #: src/CreateUserPage.js:24
 #: src/SignInPage.js:24
+#: src/ForgotPasswordPage.js:19
 msgid "Invalid email"
 msgstr "Invalid email"
 
@@ -359,18 +361,22 @@ msgstr "Password"
 
 #: src/CreateUserPage.js:26
 #: src/SignInPage.js:21
+#: src/ResetPasswordPage:20
 msgid "Password cannot be empty"
 msgstr "Password cannot be empty"
 
 #: src/CreateUserPage.js:29
+#: src/ResetPasswordPage:23
 msgid "Password confirmation cannot be empty"
 msgstr "Password confirmation cannot be empty"
 
 #: src/CreateUserPage.js:27
+#: src/ResetPasswordPage:21
 msgid "Password must be at least 12 characters long"
 msgstr "Password must be at least 12 characters long"
 
 #: src/CreateUserPage.js:30
+#: src/ResetPasswordPage:24
 msgid "Passwords must match"
 msgstr "Passwords must match"
 

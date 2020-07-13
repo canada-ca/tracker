@@ -61,16 +61,14 @@ export default function ResetPasswordPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{
-          resetToken: resetToken,
           password: '',
           confirmPassword: '',
         }}
         onSubmit={async (values) => {
-          console.log(values)
           updatePassword({
             variables: {
               input: {
-                resetToken: values.resetToken,
+                resetToken: resetToken,
                 password: values.password,
                 confirmPassword: values.confirmPassword,
               },
