@@ -1,7 +1,7 @@
 import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/react-hooks'
-import { FIND_DOMAIN_BY_SLUG } from './graphql/queries'
+import { GET_GUIDANCE_TAGS } from './graphql/queries'
 import { Stack } from '@chakra-ui/core'
 import { useParams } from 'react-router-dom'
 import ScanCard from './ScanCard'
@@ -11,7 +11,7 @@ export function DmarcGuidancePage() {
 
   const { domainSlug } = useParams()
 
-  const { loading, error, data } = useQuery(FIND_DOMAIN_BY_SLUG, {
+  const { loading, error, data } = useQuery(GET_GUIDANCE_TAGS, {
     context: {
       headers: {
         authorization: currentUser.jwt,

@@ -41,7 +41,7 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
-export const FIND_DOMAIN_BY_SLUG = gql`
+export const GET_GUIDANCE_TAGS = gql`
   query FindDomainBySlug($urlSlug: Slug!) {
     findDomainBySlug(urlSlug: $urlSlug) {
       url
