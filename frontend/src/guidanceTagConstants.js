@@ -146,7 +146,7 @@ export const guidanceTags = {
     dmarc8: {
       tag_name: t`PCT-xx`,
       guidance: t`Policy applies to percentage of mailflow`,
-      ref_links_guide: t`TBD`,
+      ref_links_guide: null,
       ref_links_technical: dmarcTechnical.tech63,
       ref_links_technical_subheading: t`PCT`,
       summary: t`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.`,
@@ -246,9 +246,8 @@ export const guidanceTags = {
       tag_name: t`PCT-0`,
       guidance: t`Policy applies to no part of mailflow - irregular config`,
       ref_links_guide: refLinksGuide.annb31,
-      ref_links_technical:
-        'pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be t`none` but mail agents may process messages based on Quarantine)',
-      summary: t`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac.`,
+      ref_links_technical: null,
+      summary: t`pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be t\`none\` but mail agents may process messages based on Quarantine)`,
     },
     dmarc22: {
       tag_name: t`CNAME-DMARC`,
