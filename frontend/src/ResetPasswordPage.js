@@ -35,8 +35,7 @@ export default function ResetPasswordPage() {
         isClosable: true,
       })
     },
-    onCompleted({ updatePassword }) {
-      console.log(updatePassword)
+    onCompleted() {
       history.push('/sign-in')
       toast({
         title: 'Password Updated',

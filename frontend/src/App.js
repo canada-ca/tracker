@@ -93,7 +93,10 @@ export default function App() {
 
               <Route path="/forgot-password" component={ForgotPasswordPage} />
 
-              <Route path="/reset-password/:resetToken" component={ResetPasswordPage} />
+              <Route
+                path="/reset-password/:resetToken"
+                component={ResetPasswordPage}
+              />
 
               <RouteIf
                 condition={isLoggedIn()}
@@ -125,6 +128,7 @@ export default function App() {
               >
                 <UserList />
               </RouteIf>
+
               <RouteIf
                 condition={isLoggedIn()}
                 alternate="/sign-in"
