@@ -20,6 +20,8 @@ import LanguageSelect from './LanguageSelect'
 import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
 import { UPDATE_PASSWORD } from './graphql/mutations'
+import EmailField from './EmailField'
+import DisplayNameField from './DisplayNameField'
 
 export default function UserPage() {
   const location = useLocation()
@@ -86,39 +88,18 @@ export default function UserPage() {
           actions.setSubmitting(false)
         }}
       >
-        {({ handleSubmit, handleChange, values }) => (
+        {({ handleSubmit, _handleChange, _values }) => (
           <form onSubmit={handleSubmit}>
             <Stack p={25} spacing={4}>
               <Text fontSize="2xl" fontWeight="bold" textAlign="center">
                 User Profile
               </Text>
 
-              <Stack mt="20px">
-                <Text fontSize="xl">Display Name:</Text>
-                <Input
-                  id="displayName"
-                  name="displayName"
-                  type="text"
-                  onChange={handleChange}
-                  value={values.displayName}
-                />
-              </Stack>
+              <DisplayNameField name="displayName" />
 
-              <Stack>
-                <Text fontSize="xl">Email:</Text>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  onChange={handleChange}
-                  value={values.email}
-                />
-              </Stack>
+              <EmailField name="email" />
 
-              <Stack>
-                <Text fontSize="xl">Preferred Language:</Text>
                 <LanguageSelect name="lang" />
-              </Stack>
 
               <Button type="submit" variantColor="teal" w={'50%'} mt={5}>
                 Save Changes
