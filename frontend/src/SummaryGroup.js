@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Stack, SimpleGrid, Box } from '@chakra-ui/core'
+import { SimpleGrid } from '@chakra-ui/core'
 import SummaryCard from './SummaryCard'
 import { string } from 'prop-types'
 import theme from './theme/canada'
@@ -33,47 +33,49 @@ export function SummaryGroup() {
   }
 
   return (
-    <Box>
-      <Stack textAlign="center" align="center">
-        <SimpleGrid columns={[1, 1, 1, 1, 2]} spacing="30px">
-          <SummaryCard
-            title={i18n._(t`Web Configuration`)}
-            description={i18n._(t`Web encryption settings summary`)}
-            categoryDisplay={{
-              "full-fail": {
-                name: i18n._(t`Non-compliant TLS`),
-                color: colors.weak,
-              },
-              "full-pass": {
-                name: i18n._(t`Policy compliant TLS`),
-                color: colors.strong,
-              },
-            }}
-            data={data.webSummary}
-          />
-          <SummaryCard
-            title={i18n._(t`Email Configuration`)}
-            description={i18n._(t`Email security settings summary`)}
-            categoryDisplay={{
-              "full-pass": {
-                name: i18n._(t`Dmarc pass`),
-                color: colors.strong,
-              },
-              "partial-pass": {
-                name: i18n._(t`Dmarc partial`),
-                color: colors.moderate,
-              },
-              "full-fail": {
-                name: i18n._(t`Dmarc fail`),
-                color: colors.weak,
-              },
-            }}
-            data={data.emailSummary}
-          />
-        </SimpleGrid>
-        )
-      </Stack>
-    </Box>
+    <SimpleGrid
+      columns={[1, 1, 1, 2]}
+      spacing="30px"
+      justifyItems="center"
+      maxWidth="60em"
+      mx="auto"
+      p="2em"
+    >
+      <SummaryCard
+        title={i18n._(t`Web Configuration`)}
+        description={i18n._(t`Web encryption settings summary`)}
+        categoryDisplay={{
+          'full-fail': {
+            name: i18n._(t`Non-compliant TLS`),
+            color: colors.weak,
+          },
+          'full-pass': {
+            name: i18n._(t`Policy compliant TLS`),
+            color: colors.strong,
+          },
+        }}
+        data={data.webSummary}
+      />
+      <SummaryCard
+        title={i18n._(t`Email Configuration`)}
+        description={i18n._(t`Email security settings summary`)}
+        categoryDisplay={{
+          'full-pass': {
+            name: i18n._(t`Dmarc pass`),
+            color: colors.strong,
+          },
+          'partial-pass': {
+            name: i18n._(t`Dmarc partial`),
+            color: colors.moderate,
+          },
+          'full-fail': {
+            name: i18n._(t`Dmarc fail`),
+            color: colors.weak,
+          },
+        }}
+        data={data.emailSummary}
+      />
+    </SimpleGrid>
   )
 }
 
