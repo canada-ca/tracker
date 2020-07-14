@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Stack, Text, useToast, Box, Heading } from '@chakra-ui/core'
+import { Button, Stack, useToast, Box, Heading } from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
 import { object, string, ref } from 'yup'
 import { Link as RouteLink, useHistory } from 'react-router-dom'

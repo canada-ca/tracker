@@ -2,7 +2,6 @@ import React from 'react'
 import { useField } from 'formik'
 import { string } from 'prop-types'
 import {
-  Stack,
   Select,
   FormControl,
   FormErrorMessage,
