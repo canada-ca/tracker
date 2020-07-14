@@ -47,6 +47,9 @@ export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
       url
       slug
       lastRan
+      organization {
+        name
+      }
       web {
         edges {
           cursor
