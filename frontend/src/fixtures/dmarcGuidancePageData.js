@@ -1,6 +1,9 @@
 export const rawDmarcGuidancePageData = {
   findDomainBySlug: {
     url: 'cse-cst.gc.ca',
+    organization: {
+      name: 'Communications Security Establishment',
+    },
     slug: '<Slug>',
     lastRan: '2020-07-12T17:42:15Z',
     web: {
