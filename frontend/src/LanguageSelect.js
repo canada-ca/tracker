@@ -18,14 +18,16 @@ function LanguageSelect({ name, ...props }) {
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
-      <FormLabel htmlFor="lang" fontWeight="bold">Select Your Preferred Language:</FormLabel>
-        <Select {...field} {...props} id="lang">
-          <option hidden value="">
-            {i18n._(t`Select Preferred Language`)}
-          </option>
-          <option value="ENGLISH">English</option>
-          <option value="FRENCH">Français</option>
-        </Select>
+      <FormLabel htmlFor="lang" fontWeight="bold">
+        Select Your Preferred Language:
+      </FormLabel>
+      <Select {...field} {...props} id="lang">
+        <option hidden value="">
+          {i18n._(t`Select Preferred Language`)}
+        </option>
+        <option value="ENGLISH">English</option>
+        <option value="FRENCH">Français</option>
+      </Select>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )

@@ -12,7 +12,8 @@ import {
   Spinner,
   Button,
   Box,
-  Stack, FormLabel,
+  Stack,
+  FormLabel,
 } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 import { Field } from 'formik'
@@ -64,7 +65,9 @@ function PasswordConfirmation({ ...props }) {
             <FormControl
               isInvalid={form.errors.password && form.touched.password}
             >
-              <FormLabel htmlFor="password" fontWeight="bold">Password:</FormLabel>
+              <FormLabel htmlFor="password" fontWeight="bold">
+                Password:
+              </FormLabel>
               <InputGroup>
                 <InputLeftElement>
                   {icon === 'spinner' ? (
@@ -114,7 +117,9 @@ function PasswordConfirmation({ ...props }) {
                 form.errors.confirmPassword && form.touched.confirmPassword
               }
             >
-              <FormLabel htmlFor="confirmPassword" fontWeight="bold">Confirm Password:</FormLabel>
+              <FormLabel htmlFor="confirmPassword" fontWeight="bold">
+                Confirm Password:
+              </FormLabel>
               <InputGroup>
                 <InputLeftElement>
                   {confirmIcon === 'spinner' ? (

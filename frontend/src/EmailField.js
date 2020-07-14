@@ -8,7 +8,8 @@ import {
   InputGroup,
   InputLeftElement,
   Icon,
-  FormErrorMessage, FormLabel,
+  FormErrorMessage,
+  FormLabel,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
@@ -19,7 +20,9 @@ function EmailField({ name, ...props }) {
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
-      <FormLabel htmlFor="email" fontWeight="bold">Email address:</FormLabel>
+      <FormLabel htmlFor="email" fontWeight="bold">
+        Email address:
+      </FormLabel>
       <InputGroup>
         <InputLeftElement>
           <Icon name="email" color="gray.300" />

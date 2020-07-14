@@ -14,7 +14,7 @@ export function SummaryGroup() {
   const { i18n } = useLingui()
 
   const { loading, error, data } = useQuery(WEB_AND_EMAIL_SUMMARIES, {
-    onError: error => {
+    onError: (error) => {
       const [_, message] = error.message.split(': ')
       console.log(message)
     },
@@ -40,11 +40,11 @@ export function SummaryGroup() {
             title={i18n._(t`Web Configuration`)}
             description={i18n._(t`Web encryption settings summary`)}
             categoryDisplay={{
-              "full-fail": {
+              'full-fail': {
                 name: i18n._(t`Non-compliant TLS`),
                 color: colors.weak,
               },
-              "full-pass": {
+              'full-pass': {
                 name: i18n._(t`Policy compliant TLS`),
                 color: colors.strong,
               },
@@ -55,15 +55,15 @@ export function SummaryGroup() {
             title={i18n._(t`Email Configuration`)}
             description={i18n._(t`Email security settings summary`)}
             categoryDisplay={{
-              "full-pass": {
+              'full-pass': {
                 name: i18n._(t`Dmarc pass`),
                 color: colors.strong,
               },
-              "partial-pass": {
+              'partial-pass': {
                 name: i18n._(t`Dmarc partial`),
                 color: colors.moderate,
               },
-              "full-fail": {
+              'full-fail': {
                 name: i18n._(t`Dmarc fail`),
                 color: colors.weak,
               },

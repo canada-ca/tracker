@@ -10,7 +10,8 @@ import {
   InputLeftElement,
   Icon,
   FormErrorMessage,
-  Button, FormLabel,
+  Button,
+  FormLabel,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox.js'
@@ -23,7 +24,9 @@ function PasswordField({ name, ...props }) {
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
-      <FormLabel htmlFor="password" fontWeight="bold">Password:</FormLabel>
+      <FormLabel htmlFor="password" fontWeight="bold">
+        Password:
+      </FormLabel>
       <InputGroup size="md">
         <InputLeftElement>
           <Icon name="lock" color="gray.300" />
