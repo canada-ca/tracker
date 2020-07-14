@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Stack, Text, useToast, Box } from '@chakra-ui/core'
+import { Button, Stack, Text, useToast, Box, Heading } from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
 import { object, string, ref } from 'yup'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
@@ -102,11 +102,11 @@ export default function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Text fontSize="2xl" mb="4">
+            <Heading as="h1" fontSize="2xl" mb="6">
               <Trans>
                 Create an account by entering an email and password.
               </Trans>
-            </Text>
+            </Heading>
 
             <EmailField name="email" mb="4" />
 

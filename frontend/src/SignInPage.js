@@ -3,7 +3,15 @@ import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import PasswordField from './PasswordField'
 import { object, string } from 'yup'
-import { Text, Stack, Button, Link, useToast, Box } from '@chakra-ui/core'
+import {
+  Text,
+  Stack,
+  Button,
+  Link,
+  useToast,
+  Box,
+  Heading,
+} from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
 import { Formik } from 'formik'
@@ -81,9 +89,9 @@ export default function SignInPage() {
             aria-label="form"
             name="form"
           >
-            <Text fontSize="2xl" mb="4">
+            <Heading as="h1" fontSize="2xl" mb="12">
               <Trans>Sign in with your username and password.</Trans>
-            </Text>
+            </Heading>
 
             <EmailField name="email" mb="4" />
 

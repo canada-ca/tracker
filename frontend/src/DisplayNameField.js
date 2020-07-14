@@ -8,7 +8,7 @@ import {
   InputGroup,
   InputLeftElement,
   Icon,
-  FormErrorMessage,
+  FormErrorMessage, FormLabel,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
@@ -19,6 +19,7 @@ function DisplayNameField({ name, ...props }) {
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
+      <FormLabel htmlFor="displayName" fontWeight="bold">Display Name:</FormLabel>
       <InputGroup>
         <InputLeftElement>
           <Icon name="person" color="gray.300" size="1.5rem"/>

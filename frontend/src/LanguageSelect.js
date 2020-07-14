@@ -1,7 +1,13 @@
 import React from 'react'
 import { useField } from 'formik'
 import { string } from 'prop-types'
-import { Stack, Select, FormControl, FormErrorMessage } from '@chakra-ui/core'
+import {
+  Stack,
+  Select,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+} from '@chakra-ui/core'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'
@@ -12,7 +18,7 @@ function LanguageSelect({ name, ...props }) {
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
-      <Stack>
+      <FormLabel htmlFor="lang" fontWeight="bold">Select Your Preferred Language:</FormLabel>
         <Select {...field} {...props} id="lang">
           <option hidden value="">
             {i18n._(t`Select Preferred Language`)}
@@ -20,8 +26,6 @@ function LanguageSelect({ name, ...props }) {
           <option value="ENGLISH">English</option>
           <option value="FRENCH">Français</option>
         </Select>
-      </Stack>
-
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
