@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Button,
-  Stack,
-  Text,
-  useToast,
-  Box,
-  Link,
-} from '@chakra-ui/core'
+import { Button, Stack, Text, useToast, Box } from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
 import { object, string, ref } from 'yup'
 import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
@@ -25,7 +18,7 @@ export default function CreateUserPage() {
   const history = useHistory()
   const toast = useToast()
   const { i18n } = useLingui()
-  const {userOrgToken} = useParams()
+  const { userOrgToken } = useParams()
 
   const validationSchema = object().shape({
     email: string()
@@ -85,7 +78,15 @@ export default function CreateUserPage() {
     )
   if (error) return <p>{String(error)}</p>
 
-  const addUserToOrgText = userOrgToken !== undefined ? <Text fontSize="md">Your account will automatically be linked to the organization that invited you.</Text> : ""
+  const addUserToOrgText =
+    userOrgToken !== undefined ? (
+      <Text fontSize="md">
+        Your account will automatically be linked to the organization that
+        invited you.
+      </Text>
+    ) : (
+      ''
+    )
 
   return (
     <Box mx="auto">
@@ -106,7 +107,8 @@ export default function CreateUserPage() {
               password: values.password,
               confirmPassword: values.confirmPassword,
               preferredLang: values.lang,
-              signUpToken: userOrgToken !== undefined ? userOrgToken : undefined,
+              signUpToken:
+                userOrgToken !== undefined ? userOrgToken : undefined,
             },
           })
         }}
@@ -114,42 +116,42 @@ export default function CreateUserPage() {
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
             <Stack spacing="4" align="center">
-            <Text fontSize="2xl">
-              <Trans>
-                Create an account by entering an email and password.
-              </Trans>
-            </Text>
+              <Text fontSize="2xl">
+                <Trans>
+                  Create an account by entering an email and password.
+                </Trans>
+              </Text>
 
-            {addUserToOrgText}
+              {addUserToOrgText}
 
-            <EmailField name="email" width="100%"/>
+              <EmailField name="email" width="100%" />
 
-            <DisplayNameField name="displayName" width="100%"/>
+              <DisplayNameField name="displayName" width="100%" />
 
-            <PasswordConfirmation mb="4" width="100%"/>
+              <PasswordConfirmation mb="4" width="100%" />
 
-            <LanguageSelect name="lang" width="100%"/>
+              <LanguageSelect name="lang" width="100%" />
 
-            <Stack spacing={4} isInline mr="auto">
-              <Button
-                variantColor="teal"
-                isLoading={isSubmitting}
-                type="submit"
-                id="submitBtn"
-              >
-                <Trans>Create Account</Trans>
-              </Button>
+              <Stack spacing={4} isInline mr="auto">
+                <Button
+                  variantColor="teal"
+                  isLoading={isSubmitting}
+                  type="submit"
+                  id="submitBtn"
+                >
+                  <Trans>Create Account</Trans>
+                </Button>
 
-              <Button
-                as={RouteLink}
-                to="/sign-in"
-                variantColor="teal"
-                variant="outline"
-              >
-                <Trans>Back</Trans>
-              </Button>
-            </Stack>
+                <Button
+                  as={RouteLink}
+                  to="/sign-in"
+                  variantColor="teal"
+                  variant="outline"
+                >
+                  <Trans>Back</Trans>
+                </Button>
               </Stack>
+            </Stack>
           </form>
         )}
       </Formik>

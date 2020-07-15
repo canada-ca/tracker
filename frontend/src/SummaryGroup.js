@@ -14,7 +14,7 @@ export function SummaryGroup() {
   const { i18n } = useLingui()
 
   const { loading, error, data } = useQuery(WEB_AND_EMAIL_SUMMARIES, {
-    onError: error => {
+    onError: (error) => {
       const [_, message] = error.message.split(': ')
       console.log(message)
     },

@@ -28,7 +28,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
         </Text>
       </Box>
 
-      <Box width={"20em"}>
+      <Box width={'20em'}>
         <PieChart
           data={data.categories.map(({ name, count }) => ({
             title: categoryDisplay[name].name,
