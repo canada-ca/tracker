@@ -9,11 +9,13 @@ export const SIGN_UP = gql`
     $preferredLang: LanguageEnums!
   ) {
     signUp(
-      displayName: $displayName
-      userName: $userName
-      password: $password
-      confirmPassword: $confirmPassword
-      preferredLang: $preferredLang
+      input: {
+        displayName: $displayName
+        userName: $userName
+        password: $password
+        confirmPassword: $confirmPassword
+        preferredLang: $preferredLang
+      }
     ) {
       authResult {
         authToken

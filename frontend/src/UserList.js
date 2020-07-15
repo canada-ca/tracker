@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLingui } from '@lingui/react'
 import {
   Stack,
@@ -20,10 +20,20 @@ import { string, object } from 'prop-types'
 
 export default function UserList({ ...props }) {
   const { name, userListData, orgName } = props
-  const [userList, setUserList] = React.useState(userListData.userList.edges)
-  const [userSearch, setUserSearch] = React.useState('')
+  const [userList, setUserList] = useState(userListData.userList.edges)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [usersPerPage] = useState(4)
+  const [userSearch, setUserSearch] = useState('')
   const toast = useToast()
   const { i18n } = useLingui()
+
+  // Get current users
+  const indexOfLastUser = currentPage * usersPerPage
+  const indexOfFirstUser = indexOfLastUser - usersPerPage
+  const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser)
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   const addUser = (name, id) => {
     if (name !== '') {
@@ -44,6 +54,7 @@ export default function UserList({ ...props }) {
         status: 'info',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     } else {
       toast({
@@ -52,6 +63,7 @@ export default function UserList({ ...props }) {
         status: 'error',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     }
   }
@@ -61,20 +73,24 @@ export default function UserList({ ...props }) {
 
     if (temp) {
       setUserList(temp)
+      if (currentUsers.length <= 1)
+        setCurrentPage(Math.ceil(userList.length / usersPerPage) - 1)
       toast({
         title: 'User removed',
         description: `${user.displayName} was removed from ${orgName}`,
         status: 'info',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     } else {
       toast({
-        title: 'User removal failed',
+        title: 'An error occurred.',
         description: `${user.displayName} could not be removed from ${orgName}`,
         status: 'error',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     }
   }
@@ -116,7 +132,7 @@ export default function UserList({ ...props }) {
           <Trans>No users in this organization</Trans>
         </Text>
       ) : (
-        userList.map(({ node }) => {
+        currentUsers.map(({ node }) => {
           return (
             <Stack isInline key={node.id} align="center">
               {name === 'admin' && (
@@ -150,8 +166,10 @@ export default function UserList({ ...props }) {
       )}
       <Divider />
       <PaginationButtons
-        next={userListData.userList.pageInfo.hasNextPage}
-        previous={userListData.userList.pageInfo.hasPreviousPage}
+        perPage={usersPerPage}
+        total={userList.length}
+        paginate={paginate}
+        currentPage={currentPage}
       />
     </Stack>
   )

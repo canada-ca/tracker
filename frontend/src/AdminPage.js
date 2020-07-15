@@ -34,7 +34,10 @@ export default function AdminPage() {
     return <p>{String(error)}</p>
   }
 
-  const orgs = data.user[0].affiliations.edges
+  let orgs = []
+  if (data && data.user && data.user[0].affiliations.edges) {
+    orgs = data.user[0].affiliations.edges
+  }
 
   const options = [
     <option hidden key="default">

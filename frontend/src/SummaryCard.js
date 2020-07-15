@@ -1,93 +1,64 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
+import { PieChart } from 'react-minimal-pie-chart'
 import { Text, Stack, Box } from '@chakra-ui/core'
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 import { objectOf, number, string, shape, arrayOf } from 'prop-types'
 
 function SummaryCard({ title, categoryDisplay, description, data }) {
-  // TODO: refactor this so it doesn't need refs
-  // This block will allow the donut to be as large as possible
-  const ref = useRef(null)
-  const [parentWidth, setParentWidth] = React.useState(0)
-  useEffect(() => {
-    if (ref.current) {
-      setParentWidth(ref.current.offsetWidth)
-    }
-  }, [ref, setParentWidth])
-
   const compareStrengths = (a, b) =>
     a.count < b.count ? 1 : b.count < a.count ? -1 : 0
 
   return (
-    <Box
-      bg="white"
-      rounded="lg"
-      overflow="hidden"
-      ref={ref}
-      boxShadow={'medium'}
-    >
-      <Stack spacing={0}>
-        <Box bg="gray.550" px="2em">
-          <Text
-            fontSize="xl"
-            fontWeight="semibold"
-            textAlign="center"
-            color="white"
-          >
-            {title}
-          </Text>
-          <Text
-            fontSize="md"
-            textAlign="center"
-            color="white"
-            wordBreak="break-word"
-          >
-            {description}
-          </Text>
-        </Box>
+    <Box bg="white" rounded="lg" overflow="hidden" boxShadow={'medium'}>
+      <Box bg="gray.550" px="2em">
+        <Text
+          fontSize="xl"
+          fontWeight="semibold"
+          textAlign="center"
+          color="white"
+        >
+          {title}
+        </Text>
+        <Text
+          fontSize="md"
+          textAlign="center"
+          color="white"
+          wordBreak="break-word"
+        >
+          {description}
+        </Text>
+      </Box>
 
-        <ResponsiveContainer width="100%" height={parentWidth}>
-          <PieChart>
-            <Pie
-              data={data.categories.map((cat) => ({
-                ...cat,
-                ...{ name: categoryDisplay[cat.name].name },
-              }))}
-              cx="50%"
-              cy="50%"
-              innerRadius="50%"
-              outerRadius="90%"
-              dataKey="count"
-            >
-              {data.categories.map(({ name, count }) => (
-                <Cell
-                  key={`${name}:DoughnutCell:${count}`}
-                  fill={categoryDisplay[name].color}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-        <Stack align="center" spacing={0}>
-          {data.categories
-            .sort(compareStrengths)
-            .map(({ name, count, percentage }) => {
-              return (
-                <Text
-                  key={`${name}:Badge:${count}:${percentage}`}
-                  color="white"
-                  px="0.5em"
-                  backgroundColor={categoryDisplay[name].color}
-                  fontWeight="bold"
-                  fontSize="sm"
-                  width="100%"
-                  textAlign="center"
-                >
-                  {`${categoryDisplay[name].name}: ${count} - ${percentage}% `}
-                </Text>
-              )
-            })}
-        </Stack>
+      <Box width={"20em"}>
+        <PieChart
+          data={data.categories.map(({ name, count }) => ({
+            title: categoryDisplay[name].name,
+            color: categoryDisplay[name].color,
+            value: count,
+          }))}
+          radius={43}
+          lineWidth={42}
+          paddingAngle={1}
+        />
+      </Box>
+      <Stack align="center" spacing={0}>
+        {data.categories
+          .sort(compareStrengths)
+          .map(({ name, count, percentage }) => {
+            return (
+              <Text
+                key={`${name}:Badge:${count}:${percentage}`}
+                color="white"
+                px="0.5em"
+                backgroundColor={categoryDisplay[name].color}
+                fontWeight="bold"
+                fontSize="sm"
+                width="100%"
+                textAlign="center"
+              >
+                {`${categoryDisplay[name].name}: ${count} - ${percentage}% `}
+              </Text>
+            )
+          })}
       </Stack>
     </Box>
   )

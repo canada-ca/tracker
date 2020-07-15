@@ -19,9 +19,9 @@ resources:
 - http-01-challenge-destination-rule.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-4cba25f
+  newTag: master-2fda98a
 - name: gcr.io/track-compliance/frontend
-  newTag: master-4cba25f
+  newTag: master-620e57e
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
