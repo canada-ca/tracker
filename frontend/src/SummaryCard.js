@@ -28,15 +28,18 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
         </Text>
       </Box>
 
-      <PieChart
-        data={data.categories.map(({ name, count }) => ({
-          title: categoryDisplay[name].name,
-          color: categoryDisplay[name].color,
-          value: count,
-        }))}
-        radius={43}
-        lineWidth={42}
-      />
+      <Box width={"20em"}>
+        <PieChart
+          data={data.categories.map(({ name, count }) => ({
+            title: categoryDisplay[name].name,
+            color: categoryDisplay[name].color,
+            value: count,
+          }))}
+          radius={43}
+          lineWidth={42}
+          paddingAngle={1}
+        />
+      </Box>
       <Stack align="center" spacing={0}>
         {data.categories
           .sort(compareStrengths)
