@@ -23,7 +23,7 @@ export default function Organisations() {
         authorization: currentUser.jwt,
       },
     },
-    onError: (error) => {
+    onError: error => {
       const [_, message] = error.message.split(': ')
       toast({
         title: 'Error',
@@ -35,16 +35,19 @@ export default function Organisations() {
     },
   })
 
-  useEffect(() => {
-    const fetchOrgs = async () => {
-      let organizations = []
-      if (data && data.organizations.edges) {
-        organizations = data.organizations.edges.map((e) => e.node)
-        setOrgs(organizations)
+  useEffect(
+    () => {
+      const fetchOrgs = async () => {
+        let organizations = []
+        if (data && data.organizations.edges) {
+          organizations = data.organizations.edges.map(e => e.node)
+          setOrgs(organizations)
+        }
       }
-    }
-    fetchOrgs()
-  }, [data])
+      fetchOrgs()
+    },
+    [data],
+  )
 
   if (loading)
     return (
@@ -59,7 +62,7 @@ export default function Organisations() {
   const currentOrgs = orgs.slice(indexOfFirstOrg, indexOfLastOrg)
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   return (
     <Layout>
@@ -74,9 +77,8 @@ export default function Organisations() {
               ifEmpty={() => <Trans>No Organizations</Trans>}
             >
               {({ name, slug, domainCount }, index) => (
-                <Box>
+                <Box key={`${slug}:${index}`}>
                   <Organization
-                    key={'org' + index}
                     slug={slug}
                     name={name}
                     domainCount={domainCount}
