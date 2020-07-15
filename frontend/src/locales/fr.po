@@ -1001,19 +1001,19 @@ msgstr "Clé publique en usage depuis plus d'un an"
 
 #: src/guidanceTagConstants.js:71
 msgid "RFC 4.6.4.  DNS Lookup Limits"
-msgstr ""
+msgstr "RFC 4.6.4.  DNS Lookup Limits (en anglais seulement)"
 
 #: src/guidanceTagConstants.js:75
 msgid "RFC 6.1.  redirect: Redirected Query"
-msgstr ""
+msgstr "RFC 6.1.  redirect: Redirected Query (en anglais seulement)"
 
 #: src/guidanceTagConstants.js:60
 msgid "RFC 6.3.  General Record Format"
-msgstr ""
+msgstr "RFC 6.3.  General Record Format (en anglais seulement)"
 
 #: src/guidanceTagConstants.js:64
 msgid "RFC 7.1.  Verifying External Destinations"
-msgstr ""
+msgstr "RFC 7.1.  Verifying External Destinations (en anglais seulement)"
 
 #: src/guidanceTagConstants.js:181
 msgid "RUA"
