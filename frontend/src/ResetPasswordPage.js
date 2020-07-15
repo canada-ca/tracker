@@ -28,8 +28,8 @@ export default function ResetPasswordPage() {
     onError() {
       console.log(error)
       toast({
-        title: 'An error occured',
-        description: 'Unable to update password',
+        title: i18n._(t`An error occured`),
+        description: i18n._(t`Unable to update password`),
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -38,8 +38,8 @@ export default function ResetPasswordPage() {
     onCompleted() {
       history.push('/sign-in')
       toast({
-        title: 'Password Updated',
-        description: 'You may now sign in with your new password',
+        title: i18n._(t`Password Updated`),
+        description: i18n._(t`You may now sign in with your new password`),
         status: 'success',
         duration: 9000,
         isClosable: true,

@@ -35,8 +35,10 @@ export default function ForgotPasswordPage() {
         history.push('/')
         // Display a welcome message
         toast({
-          title: 'Email Sent',
-          description: `An email was sent with a link to reset your password`,
+          title: i18n._(t`Email Sent`),
+          description: i18n._(
+            t`An email was sent with a link to reset your password`,
+          ),
           status: 'success',
           duration: 9000,
           isClosable: true,

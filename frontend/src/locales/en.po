@@ -64,6 +64,8 @@ msgstr "Admin Portal"
 
 #: src/CreateUserPage.js:40
 #: src/SignInPage.js:30
+#: src/ResetPasswordPage.js:31
+#: src/ForgotPasswordPage.js:27
 msgid "An error occurred."
 msgstr "An error occurred."
 
@@ -681,6 +683,18 @@ msgstr "Enter your user account's verified email address"
 msgid "and we will send you a password reset link."
 msgstr "and we will send you a password reset link."
 
+#: src/ForgotPasswordPage.js:38
+msgid "Email Sent"
+msgstr "Email Sent"
+
+#: src/ForgotPasswordPage.js:40
+msgid "An email was sent with a link to reset your password"
+msgstr "An email was sent with a link to reset your password"
+
+#: src/ForgotPasswordPage.js:28
+msgid "Unable to send password reset link to email."
+msgstr "Unable to send password reset link to email."
+
 #: src/ResetPasswordPage.js:90
 msgid "Enter and confirm your new password."
 msgstr "Enter and confirm your new password."
@@ -688,3 +702,15 @@ msgstr "Enter and confirm your new password."
 #: src/ResetPasswordPage.js:103
 msgid "Change Password"
 msgstr "Change Password"
+
+#: src/ResetPasswordPage.js:
+msgid "Unable to update password"
+msgstr "Unable to update password"
+
+#: src/ResetPasswordPage.js:
+msgid "Password Updated"
+msgstr "Password Updated"
+
+#: src/ResetPasswordPage.js:
+msgid "You may now sign in with your new password"
+msgstr "You may now sign in with your new password"
