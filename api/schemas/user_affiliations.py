@@ -3,12 +3,8 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphene_sqlalchemy.types import ORMField
 
-from functions.update_user_role import update_user_role
 from enums.roles import RoleEnums
-from scalars.slug import Slug
-from scalars.email_address import EmailAddress
 from models import User_affiliations as UserAff
-from functions.auth_wrappers import require_token
 
 
 class UserAffClass(SQLAlchemyObjectType):
@@ -42,18 +38,3 @@ class UserAffClass(SQLAlchemyObjectType):
 class UserAffConnection(relay.Connection):
     class Meta:
         node = UserAffClass
-
-
-class UpdateUserRole(graphene.Mutation):
-    class Arguments:
-        user_name = EmailAddress(required=True)
-        org_slug = Slug(required=True)
-        role = RoleEnums(required=True)
-
-    # user = graphene.Field(lambda: UserObject)
-    status = graphene.String()
-
-    @require_token
-    def mutate(self, info, **kwargs):
-        user = update_user_role(**kwargs)
-        return UpdateUserRole(status="Update Successful")

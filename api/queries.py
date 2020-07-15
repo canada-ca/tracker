@@ -91,7 +91,7 @@ from schemas.send_password_reset_email import SendPasswordResetLink
 from schemas.update_user_password.update_user_password import UpdateUserPassword
 
 # Update User Role Mutation
-from schemas.user_affiliations import UpdateUserRole
+from schemas.update_user_role import UpdateUserRole
 
 # Validate Two Factor
 from schemas.validate_two_factor.validate_two_factor import ValidateTwoFactor
