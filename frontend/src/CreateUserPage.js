@@ -6,7 +6,6 @@ import {
   useToast,
   Box,
   Link,
-  Heading,
 } from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
 import { object, string, ref } from 'yup'
@@ -86,14 +85,10 @@ export default function CreateUserPage() {
     )
   if (error) return <p>{String(error)}</p>
 
-  const addUserToOrgText = userOrgToken !== undefined ? <Text fontSize="md" mb="4">Your account will automatically be linked to the organization that invited you.</Text> : ""
+  const addUserToOrgText = userOrgToken !== undefined ? <Text fontSize="md">Your account will automatically be linked to the organization that invited you.</Text> : ""
 
   return (
     <Box mx="auto">
-      {/* TODO: Remove this when done testing */}
-      <Link as={RouteLink} to="/create-user/test-user.token-example">
-        Click here for test
-      </Link>
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -111,6 +106,7 @@ export default function CreateUserPage() {
               password: values.password,
               confirmPassword: values.confirmPassword,
               preferredLang: values.lang,
+              signUpToken: userOrgToken !== undefined ? userOrgToken : undefined,
             },
           })
         }}
