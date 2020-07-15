@@ -87,11 +87,9 @@ export function GuidanceTagDetails({ guidanceTag, categoryName }) {
         <Stack isInline>
           {smallDevice && warningIcon}
           <Text fontWeight="bold">
-            <Trans>Tag, Tag Name:</Trans>
+            <Trans>Result:</Trans>
           </Text>
           <Text>
-            <Trans id={guidanceTag} />
-            {', '}
             <Trans id={guidanceTags[categoryName][guidanceTag].tag_name} />
           </Text>
         </Stack>

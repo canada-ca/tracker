@@ -456,7 +456,7 @@ msgstr "Follow implementation guide"
 msgid "For in-depth CCCS implementation guidance:"
 msgstr "For in-depth CCCS implementation guidance:"
 
-#: src/GuidanceTagDetails.js:48
+#: src/GuidanceTagDetails.js:47
 msgid "For technical implementation guidance:"
 msgstr "For technical implementation guidance:"
 
@@ -497,7 +497,7 @@ msgstr "Government of Canada domains subject to TBS guidelines"
 #~ msgid "Guidance"
 #~ msgstr "Guidance"
 
-#: src/GuidanceTagDetails.js:91
+#: src/GuidanceTagDetails.js:98
 msgid "Guidance:"
 msgstr "Guidance:"
 
@@ -971,7 +971,7 @@ msgstr "Prefix Org"
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/GuidanceTagList.js:31
+#: src/GuidanceTagList.js:33
 msgid "Properly configured!"
 msgstr "Properly configured!"
 
@@ -1050,6 +1050,10 @@ msgstr "RUF-none"
 #: src/App.js:70
 msgid "Report"
 msgstr "Report"
+
+#: src/GuidanceTagDetails.js:90
+msgid "Result:"
+msgstr "Result:"
 
 #: src/ScanCard.js:22
 msgid "Results for scans of email technologies (DMARC, SPF, DKIM)."
@@ -1211,7 +1215,7 @@ msgstr "Sorry, the page you were trying to view does not exist."
 msgid "Source IP Address"
 msgstr "Source IP Address"
 
-#: src/GuidanceTagDetails.js:97
+#: src/GuidanceTagDetails.js:106
 msgid "Summary:"
 msgstr "Summary:"
 
@@ -1236,8 +1240,8 @@ msgid "TXT-DMARC-missing"
 msgstr "TXT-DMARC-missing"
 
 #: src/GuidanceTagDetails.js:84
-msgid "Tag, Tag Name:"
-msgstr "Tag, Tag Name:"
+#~ msgid "Tag, Tag Name:"
+#~ msgstr "Tag, Tag Name:"
 
 #: src/App.js:180
 msgid "Terms & conditions"
@@ -1485,8 +1489,12 @@ msgid "of"
 msgstr "of"
 
 #: src/guidanceTagConstants.js:250
-msgid "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be t\\`none\\` but mail agents may process messages based on Quarantine)"
-msgstr "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be t\\`none\\` but mail agents may process messages based on Quarantine)"
+#~ msgid "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be 'none' but mail agents may process messages based on Quarantine)"
+#~ msgstr "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be 'none' but mail agents may process messages based on Quarantine)"
+
+#: src/guidanceTagConstants.js:250
+msgid "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be none but mail agents may process messages based on Quarantine)"
+msgstr "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be none but mail agents may process messages based on Quarantine)"
 
 #: src/OrganizationDetails.js:62
 #~ msgid "{0}"
@@ -1495,3 +1503,7 @@ msgstr "pct=0 will use the next lower level of enforcement and may result in irr
 #: src/OrganizationDetails.js:115
 msgid "{domainName}"
 msgstr "{domainName}"
+
+#: src/DmarcGuidancePage.js:40
+msgid "{orgName}"
+msgstr "{orgName}"
