@@ -39,6 +39,6 @@ describe('<GuidanceTagDetails />', () => {
         </ThemeProvider>
       </UserStateProvider>,
     )
-    await waitFor(() => getAllByText(/dkim10/i))
+    await waitFor(() => getAllByText(/P-update-recommended/i))
   })
 })
