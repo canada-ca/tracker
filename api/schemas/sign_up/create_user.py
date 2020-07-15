@@ -1,3 +1,4 @@
+import jwt
 import os
 
 from graphql import GraphQLError
@@ -7,7 +8,7 @@ from notifications_python_client.notifications import NotificationsAPIClient
 from app import logger
 from functions.input_validators import *
 from functions.error_messages import *
-from models import Users as User
+from models import Organizations, Users as User, User_affiliations
 from db import db_session
 from json_web_token import tokenize
 from functions.verification_email import send_verification_email
@@ -25,6 +26,7 @@ def create_user(**kwargs):
     confirm_password = cleanse_input(kwargs.get("confirm_password"))
     user_name = cleanse_input(kwargs.get("user_name"))
     preferred_lang = cleanse_input(kwargs.get("preferred_lang"))
+    sign_up_token = cleanse_input(kwargs.get("sign_up_token"))
 
     if not is_strong_password(password):
         logger.warning(
@@ -49,6 +51,69 @@ def create_user(**kwargs):
         )
         db_session.add(user)
 
+        if sign_up_token != "":
+            # Decode token, and handle token errors
+            try:
+                payload = jwt.decode(
+                    sign_up_token, os.getenv("SUPER_SECRET_SALT"), algorithms=["HS256"]
+                )
+            except jwt.ExpiredSignatureError:
+                logger.warning(
+                    f"User attempted to sign up with a token, but token was expired."
+                )
+                raise GraphQLError(
+                    "Error, token has expired please request another invite to org email."
+                )
+            except jwt.InvalidTokenError:
+                logger.warning(
+                    f"User attempted to sign up with a token, but the token was invalid."
+                )
+                raise GraphQLError(
+                    "Error, token has expired please request another invite to org email."
+                )
+
+            # Get Values from token
+            user_name = payload.get("parameters", {}).get("user_name")
+            org_id = payload.get("parameters", {}).get("org_id")
+            requested_level = payload.get("parameters", {}).get("requested_level")
+
+            # Create User Affiliation
+            if (
+                user_name is not None
+                and org_id is not None
+                and requested_level is not None
+            ):
+                org = (
+                    db_session.query(Organizations)
+                    .filter(Organizations.id == org_id)
+                    .first()
+                )
+                user_affiliation = User_affiliations(
+                    permission=requested_level,
+                    organization_id=org.id,
+                    user_organization=org,
+                    user_id=user.id,
+                    user=user,
+                )
+                db_session.add(user_affiliation)
+                logger.info(
+                    f"Successfully created affiliation for {user.user_name} to {org.id}."
+                )
+            else:
+                logging_str = ""
+                if user_name is None:
+                    logging_str += " user_name"
+                if org_id is None:
+                    logging_str += " org_id"
+                if requested_level is None:
+                    logging_str += " requested_level"
+                logger.warning(
+                    f"User: {user.user_name} attempted to sign up with an invite token but{logging_str} field(s) were missing."
+                )
+                raise GraphQLError(
+                    "Error, please request a new invite email from the organization admin."
+                )
+
         try:
             # Add User to db
             db_session.commit()
@@ -71,7 +136,6 @@ def create_user(**kwargs):
                 )
 
             # Get user id
-
             auth_token = tokenize(parameters={"user_id": user.id})
 
             logger.info(f"Successfully created new user: {user.id}")
