@@ -1,8 +1,16 @@
 import React from 'react'
-import { Button, Stack, Text, useToast, Box } from '@chakra-ui/core'
+import {
+  Button,
+  Stack,
+  Text,
+  useToast,
+  Box,
+  Link,
+  Heading,
+} from '@chakra-ui/core'
 import { useMutation } from '@apollo/react-hooks'
 import { object, string, ref } from 'yup'
-import { Link as RouteLink, useHistory } from 'react-router-dom'
+import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
 import { Formik } from 'formik'
 import { SIGN_UP } from './graphql/mutations'
 import { useUserState } from './UserState'
@@ -18,6 +26,7 @@ export default function CreateUserPage() {
   const history = useHistory()
   const toast = useToast()
   const { i18n } = useLingui()
+  const {userOrgToken} = useParams()
 
   const validationSchema = object().shape({
     email: string()
@@ -77,8 +86,14 @@ export default function CreateUserPage() {
     )
   if (error) return <p>{String(error)}</p>
 
+  const addUserToOrgText = userOrgToken !== undefined ? <Text fontSize="md" mb="4">Your account will automatically be linked to the organization that invited you.</Text> : ""
+
   return (
     <Box mx="auto">
+      {/* TODO: Remove this when done testing */}
+      <Link as={RouteLink} to="/create-user/test-user.token-example">
+        Click here for test
+      </Link>
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -102,21 +117,24 @@ export default function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Text fontSize="2xl" mb="4">
+            <Stack spacing="4" align="center">
+            <Text fontSize="2xl">
               <Trans>
                 Create an account by entering an email and password.
               </Trans>
             </Text>
 
-            <EmailField name="email" mb="4" />
+            {addUserToOrgText}
 
-            <DisplayNameField name="displayName" mb="4" />
+            <EmailField name="email" width="100%"/>
 
-            <PasswordConfirmation mb="4" spacing="4" />
+            <DisplayNameField name="displayName" width="100%"/>
 
-            <LanguageSelect name="lang" mb="4" />
+            <PasswordConfirmation mb="4" width="100%"/>
 
-            <Stack spacing={4} isInline>
+            <LanguageSelect name="lang" width="100%"/>
+
+            <Stack spacing={4} isInline mr="auto">
               <Button
                 variantColor="teal"
                 isLoading={isSubmitting}
@@ -135,6 +153,7 @@ export default function CreateUserPage() {
                 <Trans>Back</Trans>
               </Button>
             </Stack>
+              </Stack>
           </form>
         )}
       </Formik>

@@ -83,9 +83,18 @@ export default function App() {
                 <LandingPage />
               </Route>
 
-              <Route path="/create-user">
-                <CreateUserPage />
-              </Route>
+              <Route
+                path="/create-user"
+                render={({ match: { url } }) => (
+                  <>
+                    <Route path={`${url}`} component={CreateUserPage} exact />
+                    <Route
+                      path={`${url}/:userOrgToken`}
+                      component={CreateUserPage}
+                    />
+                  </>
+                )}
+              />
 
               <Route path="/sign-in" component={SignInPage} />
 

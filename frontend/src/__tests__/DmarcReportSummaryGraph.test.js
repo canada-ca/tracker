@@ -11,7 +11,10 @@ describe('<DmarcReportTimeGraph />', () => {
     const { getByText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={setupI18n()}>
-          <DmarcTimeGraph data={formattedSummaryListData} responsiveWidth={500}/>
+          <DmarcTimeGraph
+            data={formattedSummaryListData}
+            responsiveWidth={500}
+          />
         </I18nProvider>
       </ThemeProvider>,
     )

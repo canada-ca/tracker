@@ -21,7 +21,7 @@ function DisplayNameField({ name, ...props }) {
     <FormControl isInvalid={meta.error && meta.touched}>
       <InputGroup>
         <InputLeftElement>
-          <Icon name="person" color="gray.300" size="1.5rem"/>
+          <Icon name="person" color="gray.300" size="1.5rem" />
         </InputLeftElement>
         <Input
           {...field}
