@@ -13,6 +13,7 @@ import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
+import { DmarcGuidancePage } from './DmarcGuidancePage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -123,9 +124,16 @@ export default function App() {
                 condition={isLoggedIn()}
                 alternate="/sign-in"
                 path="/domains"
-              >
-                <DomainsPage />
-              </RouteIf>
+                render={({ match: { url } }) => (
+                  <>
+                    <Route path={`${url}`} component={DomainsPage} exact />
+                    <Route
+                      path={`${url}/:domainSlug`}
+                      component={DmarcGuidancePage}
+                    />
+                  </>
+                )}
+              />
 
               <RouteIf
                 condition={isLoggedIn()}

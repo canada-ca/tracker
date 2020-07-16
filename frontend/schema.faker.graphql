@@ -262,7 +262,6 @@ type DKIM {
   Various dkim selectors used on this domain.
   """
   selectors: [DkimSelectors]
-
 }
 
 """
@@ -273,7 +272,8 @@ type DkimSelectors {
   """
   Selector domain that has been scanned.
   """
-  selector: String @examples(values: ["selector1._domainkey", "selector2._domainkey"])
+  selector: String
+    @examples(values: ["selector1._domainkey", "selector2._domainkey"])
   """
   DKIM record retrieved during the scan of the given domain
   """
@@ -291,6 +291,7 @@ type DkimSelectors {
   Key tags found during scan
   """
   dkimGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: [
         "dkim1"
@@ -363,6 +364,7 @@ type DMARC {
   Key tags found during DMARC Scan
   """
   dmarcGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: [
         "dmarc1"
@@ -432,6 +434,27 @@ type DmarcReportSummary {
 }
 
 """
+This object is used to define the various arguments used in the dmarc report
+summary query
+"""
+input DmarcReportSummaryInput {
+  """
+  The slugified version of the domain you wish to retrieve data for.
+  """
+  domainSlug: Slug!
+
+  """
+  The period in which the returned data is relevant to.
+  """
+  period: PeriodEnums!
+
+  """
+  The year in which the returned data is relevant to.
+  """
+  year: Year!
+}
+
+"""
 A query object used to grab the data to create dmarc report bar graph
 """
 type DmarcReportSummaryList {
@@ -449,6 +472,17 @@ type DmarcReportSummaryList {
   Category totals for building dmarc report page bar graph.
   """
   categoryTotals: CategoryTotals
+}
+
+"""
+This object is used to define the various arguments used in the dmarc report
+summary list query
+"""
+input DmarcReportSummaryListInput {
+  """
+  The slugified version of the domain you wish to retrieve data for.
+  """
+  domainSlug: Slug!
 }
 
 type Domain implements Node {
@@ -673,6 +707,7 @@ type HTTPS {
   preloaded: String
 
   httpsGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: [
         "https1"
@@ -1755,6 +1790,7 @@ type SPF {
   Key tags found during SPF scan
   """
   spfGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: [
         "spf1"
@@ -1768,8 +1804,6 @@ type SPF {
         "spf9"
         "spf10"
         "spf11"
-        "spf12"
-        "spf13"
       ]
     )
 }
@@ -1817,6 +1851,7 @@ type SSL {
   Key tags found during scan
   """
   sslGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: ["ssl1", "ssl2", "ssl3", "ssl4", "ssl5", "ssl6", "ssl7", "ssl8"]
     )

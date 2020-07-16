@@ -41,6 +41,55 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
+export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
+  query FindDomainBySlug($urlSlug: Slug!) {
+    findDomainBySlug(urlSlug: $urlSlug) {
+      url
+      slug
+      lastRan
+      organization {
+        name
+      }
+      web {
+        edges {
+          cursor
+          node {
+            id
+            timestamp
+            domain
+            https {
+              httpsGuidanceTags
+            }
+            ssl {
+              sslGuidanceTags
+            }
+          }
+        }
+      }
+      email {
+        edges {
+          node {
+            timestamp
+            domain
+            dmarc {
+              dmarcGuidanceTags
+            }
+            spf {
+              spfGuidanceTags
+            }
+            dkim {
+              selectors {
+                selector
+                dkimGuidanceTags
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const ORGANIZATIONS = gql`
   query Organisations {
     organizations: findMyOrganizations(first: 10) {

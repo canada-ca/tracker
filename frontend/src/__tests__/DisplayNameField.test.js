@@ -24,7 +24,12 @@ describe('<DisplayNameField />', () => {
                 displayName: '',
               }}
             >
-              {() => <DisplayNameField data-testid="displayNameField" name="displayName" />}
+              {() => (
+                <DisplayNameField
+                  data-testid="displayNameField"
+                  name="displayName"
+                />
+              )}
             </Formik>
           </ThemeProvider>
         </I18nProvider>,

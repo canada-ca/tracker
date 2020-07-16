@@ -219,42 +219,42 @@ export const rawDmarcReportDetailTablesData = {
 export const singleDmarcReportDetailTableData =
   rawDmarcReportDetailTablesData.detailTables.fullPass
 
-  const [
-    sourceIpAddress,
-    envelopeFrom,
-    dkimDomains,
-    dkimSelectors,
-    totalMessages,
-    countryCode,
-    prefixOrg,
-    dnsHost,
-    spfDomains,
-  ] = [
-    { Header: 'sourceIpAddress', accessor: 'sourceIpAddress' },
-    { Header: 'envelopeFrom', accessor: 'envelopeFrom' },
-    { Header: 'dkimDomains', accessor: 'dkimDomains' },
-    { Header: 'dkimSelectors', accessor: 'dkimSelectors' },
-    { Header: 'totalMessages', accessor: 'totalMessages' },
-    { Header: 'countryCode', accessor: 'countryCode' },
-    { Header: 'prefixOrg', accessor: 'prefixOrg' },
-    { Header: 'dnsHost', accessor: 'dnsHost' },
-    { Header: 'spfDomains', accessor: 'spfDomains' },
-  ]
+const [
+  sourceIpAddress,
+  envelopeFrom,
+  dkimDomains,
+  dkimSelectors,
+  totalMessages,
+  countryCode,
+  prefixOrg,
+  dnsHost,
+  spfDomains,
+] = [
+  { Header: 'sourceIpAddress', accessor: 'sourceIpAddress' },
+  { Header: 'envelopeFrom', accessor: 'envelopeFrom' },
+  { Header: 'dkimDomains', accessor: 'dkimDomains' },
+  { Header: 'dkimSelectors', accessor: 'dkimSelectors' },
+  { Header: 'totalMessages', accessor: 'totalMessages' },
+  { Header: 'countryCode', accessor: 'countryCode' },
+  { Header: 'prefixOrg', accessor: 'prefixOrg' },
+  { Header: 'dnsHost', accessor: 'dnsHost' },
+  { Header: 'spfDomains', accessor: 'spfDomains' },
+]
 
- export const singleDmarcReportDetailTableColumns = [
-    {
-      Header: 'Fully Aligned by IP Address',
-      hidden: true,
-      columns: [
-        sourceIpAddress,
-        envelopeFrom,
-        countryCode,
-        prefixOrg,
-        dnsHost,
-        spfDomains,
-        dkimDomains,
-        dkimSelectors,
-        totalMessages,
-      ],
-    },
-  ]
+export const singleDmarcReportDetailTableColumns = [
+  {
+    Header: 'Fully Aligned by IP Address',
+    hidden: true,
+    columns: [
+      sourceIpAddress,
+      envelopeFrom,
+      countryCode,
+      prefixOrg,
+      dnsHost,
+      spfDomains,
+      dkimDomains,
+      dkimSelectors,
+      totalMessages,
+    ],
+  },
+]
