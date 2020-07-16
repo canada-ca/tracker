@@ -55,18 +55,18 @@ class Domain(SQLAlchemyObjectType):
         return self.selectors
 
     def resolve_email(self: Domains, info, **kwargs):
+        query = MailScan.get_query(info)
         query = (
-            MailScan.get_query(info)
-            .filter(Mail_scans.domain_id == self.id)
+            query.filter(Mail_scans.domain_id == self.id)
             .order_by(Mail_scans.id.desc())
             .all()
         )
         return query
 
     def resolve_web(self: Domains, info, **kwargs):
+        query = WebScan.get_query(info)
         query = (
-            WebScan.get_query(info)
-            .filter(Web_scans.domain_id == self.id)
+            query.filter(Web_scans.domain_id == self.id)
             .order_by(Web_scans.id.desc())
             .all()
         )

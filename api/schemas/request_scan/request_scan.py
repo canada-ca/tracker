@@ -84,7 +84,10 @@ class RequestScan(graphene.Mutation):
             )
 
             # Return status information to user
-            if "Scan successfully dispatched to designated scanners" in status:
+            if (
+                f"Dispatching manual {scan_type} scan request to designated scanners"
+                in status
+            ):
                 logger.info(
                     f"User: {user_id} successfully dispatched a scan for {slug}."
                 )
