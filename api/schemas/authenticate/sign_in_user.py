@@ -17,7 +17,7 @@ def sign_in_user(user_name, password):
     :param password: The password of the user you hope to sign in.
     :return temp_dict: A dictionary containing both the user object and the auth token
     """
-    user_name = cleanse_input(user_name)
+    user_name = cleanse_input(user_name).lower()
     password = cleanse_input(password)
     user = Users.find_by_user_name(user_name)
 
