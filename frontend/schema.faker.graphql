@@ -770,10 +770,15 @@ type Mutation {
     otpCode: String!
     userName: EmailAddress!
   ): ValidateTwoFactor
+
+  """
+  Updates the users permission to an organization.
+  """
   updateUserRole(
-    orgSlug: Slug!
-    role: RoleEnums!
-    userName: EmailAddress!
+    """
+    UpdateUserRoleInput object containing all the input fields for this mutation.
+    """
+    input: UpdateUserRoleInput!
   ): UpdateUserRole
 
   """
@@ -1949,8 +1954,29 @@ input UpdateUserPasswordInput {
   confirmPassword: String!
 }
 
+"""
+This mutation allows super admins, and admins of the given organization to
+update the permission level of a given user that already belongs to the
+given organization.
+"""
 type UpdateUserRole {
+  """The status of updating the user role."""
   status: String
+}
+
+"""
+This input object contains the various fields that are related to the
+updateUserRole mutation
+"""
+input UpdateUserRoleInput {
+  """The username of the user you wish to update their role to."""
+  userName: EmailAddress!
+
+  """The organization that the admin, and the user both belong to."""
+  orgSlug: Slug!
+
+  """The role that the admin wants to give to the selected user."""
+  role: RoleEnums!
 }
 
 """
