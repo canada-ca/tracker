@@ -9,7 +9,8 @@ from schemas.update_user_role.update_role import update_user_role
 
 class UpdateUserRoleInput(graphene.InputObjectType):
     """
-
+    This input object contains the various fields that are related to the
+    updateUserRole mutation
     """
 
     user_name = EmailAddress(
