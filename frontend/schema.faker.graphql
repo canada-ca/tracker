@@ -920,6 +920,16 @@ type Mutation {
     """
     input: InviteUserToOrgInput!
   ): InviteUserToOrg
+
+  """
+  Allows users to update their profile information.
+  """
+  updateUserProfile(
+    """
+    Various input fields, used in the updateUserProfile mutation.
+    """
+    input: UpdateUserProfileInput!
+  ): UpdateUserProfile
 }
 
 """
@@ -1952,6 +1962,48 @@ input UpdateUserPasswordInput {
   A confirmation of the password field to ensure the user has entered the new password correctly.
   """
   confirmPassword: String!
+}
+
+"""
+A mutation that allows the user to update their user profile to change various
+details of their current profile.
+"""
+type UpdateUserProfile {
+  """
+  The status if the user profile update was successful.
+  """
+  status: String
+}
+
+"""
+This input object contains various non-required fields for use when updating
+user profile information
+"""
+input UpdateUserProfileInput {
+  """
+  The new display name the user wishes to change to.
+  """
+  displayName: String
+
+  """
+  The new user name the user wishes to change to.
+  """
+  userName: EmailAddress
+
+  """
+  The new preferred language the user wishes to change to.
+  """
+  preferredLang: LanguageEnums
+
+  """
+  The new password the user wishes to change to.
+  """
+  password: String
+
+  """
+  A password confirmation of their new password.
+  """
+  confirmPassword: String
 }
 
 """
