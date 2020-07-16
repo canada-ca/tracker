@@ -2,9 +2,8 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from functions.get_domain import get_domain
-from functions.get_timestamp import get_timestamp
-from models import Mail_scans, Dmarc_scans, Spf_scans, Dkim_scans
+from db import db_session
+from models import Mail_scans, Dmarc_scans, Spf_scans, Dkim_scans, Domains
 from scalars.url import URL
 from schemas.shared_structures.domain.mail_scan.dkim import DKIM
 from schemas.shared_structures.domain.mail_scan.dmarc import DMARC
@@ -44,10 +43,16 @@ class MailScan(SQLAlchemyObjectType):
     )
 
     def resolve_domain(self: Mail_scans, info, **kwargs):
-        return get_domain(self, info)
+        domain = (
+            db_session.query(Domains)
+            .filter(Domains.id == self.domain_id)
+            .first()
+            .domain
+        )
+        return domain
 
     def resolve_timestamp(self: Mail_scans, info, **kwargs):
-        return get_timestamp(self, info)
+        return self.scan_date
 
     def resolve_dmarc(self: Mail_scans, info, **kwargs):
         query = DMARC.get_query(info)

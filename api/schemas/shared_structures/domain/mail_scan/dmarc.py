@@ -2,10 +2,8 @@ import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from db import db_session
-from models import Dmarc_scans, Domains
+from models import Dmarc_scans, Domains, Mail_scans
 from scalars.url import URL
-from functions.get_domain import get_domain
-from functions.get_timestamp import get_timestamp
 
 
 class DMARC(SQLAlchemyObjectType):
@@ -46,10 +44,28 @@ class DMARC(SQLAlchemyObjectType):
     )
 
     def resolve_domain(self: Dmarc_scans, info, **kwargs):
-        return get_domain(self, info)
+        mail_scan_domain_id = (
+            db_session.query(Mail_scans)
+            .filter(Mail_scans.id == self.id)
+            .first()
+            .domain_id
+        )
+        domain = (
+            db_session.query(Domains)
+            .filter(Domains.id == mail_scan_domain_id)
+            .first()
+            .domain
+        )
+        return domain
 
     def resolve_timestamp(self: Dmarc_scans, info, **kwargs):
-        return get_timestamp(self, info)
+        scan_date = (
+            db_session.query(Mail_scans)
+            .filter(Mail_scans.id == self.id)
+            .first()
+            .scan_date
+        )
+        return scan_date
 
     def resolve_dmarc_phase(self: Dmarc_scans, info, **kwargs):
         dmarc_phase = self.dmarc_phase
