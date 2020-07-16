@@ -1,9 +1,8 @@
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from functions.get_domain import get_domain
-from functions.get_timestamp import get_timestamp
-from models import Dkim_scans
+from db import db_session
+from models import Dkim_scans, Domains, Mail_scans
 from scalars.url import URL
 from schemas.shared_structures.domain.mail_scan.dkim.selectors import DkimSelectors
 
@@ -29,10 +28,28 @@ class DKIM(SQLAlchemyObjectType):
     )
 
     def resolve_domain(self: Dkim_scans, info, **kwargs):
-        return get_domain(self, info)
+        mail_scan_domain_id = (
+            db_session.query(Mail_scans)
+            .filter(Mail_scans.id == self.id)
+            .first()
+            .domain_id
+        )
+        domain = (
+            db_session.query(Domains)
+            .filter(Domains.id == mail_scan_domain_id)
+            .first()
+            .domain
+        )
+        return domain
 
     def resolve_timestamp(self: Dkim_scans, info, **kwargs):
-        return get_timestamp(self, info)
+        scan_date = (
+            db_session.query(Mail_scans)
+            .filter(Mail_scans.id == self.id)
+            .first()
+            .scan_date
+        )
+        return scan_date
 
     def resolve_selectors(self: Dkim_scans, info, **kwargs):
         rtr_list = []
