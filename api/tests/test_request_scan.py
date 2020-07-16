@@ -16,14 +16,14 @@ def save():
     cleanup()
 
 
-def test_request_scan_mutation(save, mocker, caplog):
+def test_request_web_scan_mutation(save, mocker, caplog):
     """
-    Test to see if user_write or higher can request scan
+    Test to see if user_write or higher can request a web scan
     """
     mocker.patch(
         "schemas.request_scan.request_scan.fire_scan",
         autospec=True,
-        return_value="Scan successfully dispatched to designated scanners",
+        return_value="Dispatching manual web scan request to designated scanners",
     )
 
     org_one = Organizations(
@@ -53,6 +53,71 @@ def test_request_scan_mutation(save, mocker, caplog):
             requestScan (
                 input: {
                     scanType: WEB,
+                    urlSlug: "test-domain-gc-ca"
+                }
+            ) {
+                requestStatus
+            }
+        }
+        """,
+        as_user=writer,
+    )
+
+    if "errors" in result:
+        fail("Expected to request a scan, instead: {}".format(json(result)))
+
+    expected_result = {
+        "data": {
+            "requestScan": {
+                "requestStatus": "Scan successfully dispatched for test-domain-gc-ca"
+            }
+        }
+    }
+
+    assert result == expected_result
+    assert (
+        f"User: {writer.id} successfully dispatched a scan for test-domain-gc-ca."
+        in caplog.text
+    )
+
+
+def test_request_mail_scan_mutation(save, mocker, caplog):
+    """
+    Test to see if user_write or higher can request a mail scan
+    """
+    mocker.patch(
+        "schemas.request_scan.request_scan.fire_scan",
+        autospec=True,
+        return_value="Dispatching manual mail scan request to designated scanners",
+    )
+
+    org_one = Organizations(
+        acronym="ORG1",
+        name="Organization 1",
+        slug="organization-1",
+        domains=[Domains(domain="test.domain.gc.ca", slug="test-domain-gc-ca")],
+    )
+    save(org_one)
+
+    writer = Users(
+        display_name="testuserwrite",
+        user_name="testuserwrite@testemail.ca",
+        password="testpassword123",
+        preferred_lang="English",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_write", user_organization=org_one),
+        ],
+    )
+    save(writer)
+
+    caplog.set_level(logging.INFO)
+    result = run(
+        mutation="""
+        mutation {
+            requestScan (
+                input: {
+                    scanType: MAIL,
                     urlSlug: "test-domain-gc-ca"
                 }
             ) {
