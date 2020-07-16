@@ -1,0 +1,1 @@
+from schemas.update_user_profile.update_user_profile import UpdateUserProfile
