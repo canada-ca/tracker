@@ -8,7 +8,13 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
     a.count < b.count ? 1 : b.count < a.count ? -1 : 0
 
   return (
-    <Box bg="white" rounded="lg" overflow="hidden" boxShadow={'medium'}>
+    <Box
+      bg="white"
+      rounded="lg"
+      overflow="hidden"
+      boxShadow={'medium'}
+      width="min-content"
+    >
       <Box bg="gray.550" px="2em">
         <Text
           fontSize="xl"
@@ -28,7 +34,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
         </Text>
       </Box>
 
-      <Box width={"20em"}>
+      <Box width={'20em'}>
         <PieChart
           data={data.categories.map(({ name, count }) => ({
             title: categoryDisplay[name].name,
