@@ -67,4 +67,24 @@ export const UPDATE_PASSWORD = gql`
   }
 `
 
+export const UPDATE_USER_PROFILE = gql`
+  mutation UpdateUserProfile(
+    $displayName: String
+    $userName: EmailAddress
+    $password: String
+    $confirmPassword: String
+    $preferredLang: LanguageEnums
+  ) {
+    updateUserProfile(
+      input: {
+        displayName: $displayName
+        userName: $userName
+        password: $password
+        confirmPassword: $confirmPassword
+        preferredLang: $preferredLang
+      }
+    )
+  }
+`
+
 export default ''
