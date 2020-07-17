@@ -46,7 +46,7 @@ export default function AdminPanel({ ...props }) {
       },
     },
     variables: {
-      slug: slugify(currentUser.userName),
+      slug: slugify(orgName),
     },
   })
 
@@ -68,7 +68,12 @@ export default function AdminPanel({ ...props }) {
     <Stack spacing={10}>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
         <AdminDomains domainsData={domainsData} orgName={orgName} />
-        <UserList name="admin" userListData={userListData} orgName={orgName} />
+        <UserList
+          name="admin"
+          userListData={userListData}
+          orgName={orgName}
+          orgSlug={slugify(orgName)}
+        />
       </SimpleGrid>
     </Stack>
   )

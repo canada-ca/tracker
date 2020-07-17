@@ -12,14 +12,18 @@ import {
   Text,
   IconButton,
   useToast,
+  Select,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
 import { string, object } from 'prop-types'
+import { useMutation } from '@apollo/react-hooks'
+import { UPDATE_USER_ROLES } from './graphql/mutations'
+import { Formik } from 'formik'
 
 export default function UserList({ ...props }) {
-  const { name, userListData, orgName } = props
+  const { name, userListData, orgName, orgSlug } = props
   const [userList, setUserList] = useState(userListData.userList.edges)
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
@@ -32,6 +36,36 @@ export default function UserList({ ...props }) {
   const indexOfFirstUser = indexOfLastUser - usersPerPage
   const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser)
 
+  const [updateUserRoles, { loading, error }] = useMutation(UPDATE_USER_ROLES, {
+    onError(error) {
+      console.log(error)
+      toast({
+        title: i18n._(t`An error occurred.`),
+        description: i18n._(t`Unable to change user role, please try again.`),
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+    onCompleted() {
+      toast({
+        title: i18n._(t`Role updated`),
+        description: i18n._(t`Role of USER updated to ROLE`),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+  })
+
+  if (loading)
+    return (
+      <p>
+        <Trans>Loading...</Trans>
+      </p>
+    )
+  if (error) return <p>{String(error)}</p>
+
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
@@ -41,7 +75,7 @@ export default function UserList({ ...props }) {
         node: {
           id: id,
           userName: `${name}${id}@gmail.com`,
-          admin: false,
+          role: 'USER_READ',
           tfa: false,
           displayName: name,
         },
@@ -70,7 +104,6 @@ export default function UserList({ ...props }) {
 
   const removeUser = (user) => {
     const temp = userList.filter((c) => c.node.id !== user.id)
-
     if (temp) {
       setUserList(temp)
       if (currentUsers.length <= 1)
@@ -115,7 +148,6 @@ export default function UserList({ ...props }) {
           />
         </InputGroup>
         <Button
-          width={'70%'}
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
@@ -141,25 +173,62 @@ export default function UserList({ ...props }) {
                     icon="minus"
                     size="sm"
                     variantColor="red"
-                    isDisabled={node.admin}
                     onClick={() => removeUser(node)}
-                  />
-                  <IconButton
-                    icon="edit"
-                    size="sm"
-                    variantColor="blue"
-                    onClick={() => window.alert('edit user')}
-                    isDisabled={node.admin}
                   />
                 </Stack>
               )}
 
-              <UserCard
-                userName={node.userName}
-                tfa={node.tfa}
-                admin={node.admin}
-                displayName={node.displayName}
-              />
+              <Formik
+                onSubmit={async () => {
+                  // console.log(orgSlug)
+                  // console.log(node.role)
+                  // console.log(node.userName)
+                  updateUserRoles({
+                    variables: {
+                      input: {
+                        orgSlug: orgSlug,
+                        role: node.role,
+                        userName: node.userName,
+                      },
+                    },
+                  })
+                }}
+              >
+                {({ handleSubmit, isSubmitting }) => (
+                  <form onSubmit={handleSubmit}>
+                    <Stack spacing={2} isInline align="center">
+                      <UserCard
+                        userName={node.userName}
+                        tfa={node.tfa}
+                        role={node.role}
+                        displayName={node.displayName}
+                      />
+                      <Select
+                        w="30"
+                        name="role"
+                        defaultValue={node.role}
+                        onChange={(e) => {
+                          node.role = e.target.value
+                        }}
+                      >
+                        <option value="USER_READ">USER_READ</option>
+                        <option value="USER_WRITE">USER_WRITE</option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+                      </Select>
+                      <Button
+                        variantColor="blue"
+                        isLoading={isSubmitting}
+                        type="submit"
+                        // id="submitBtn"
+                        isDisabled
+                      >
+                        Apply
+                      </Button>
+                    </Stack>
+                  </form>
+                )}
+              </Formik>
             </Stack>
           )
         })

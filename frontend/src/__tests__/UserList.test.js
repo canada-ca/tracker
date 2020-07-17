@@ -21,7 +21,7 @@ describe('<UserList />', () => {
             node: {
               id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
               userName: 'testuser@testemail.gc.ca',
-              admin: true,
+              role: 'USER_READ',
               tfa: false,
               displayName: 'Test User Esq.',
             },
@@ -69,7 +69,7 @@ describe('<UserList />', () => {
             node: {
               id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
               userName: 'testuser@testemail.gc.ca',
-              admin: true,
+              role: 'USER_READ',
               tfa: false,
               displayName: 'Test User Esq.',
             },
