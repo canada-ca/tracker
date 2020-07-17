@@ -177,58 +177,61 @@ export default function UserList({ ...props }) {
                   />
                 </Stack>
               )}
-
-              <Formik
-                onSubmit={async () => {
-                  // console.log(orgSlug)
-                  // console.log(node.role)
-                  // console.log(node.userName)
-                  updateUserRoles({
-                    variables: {
-                      input: {
-                        orgSlug: orgSlug,
-                        role: node.role,
-                        userName: node.userName,
+              {name === 'admin' ? (
+                <Formik
+                  onSubmit={async () => {
+                    updateUserRoles({
+                      variables: {
+                        input: {
+                          orgSlug: orgSlug,
+                          role: node.role,
+                          userName: node.userName,
+                        },
                       },
-                    },
-                  })
-                }}
-              >
-                {({ handleSubmit, isSubmitting }) => (
-                  <form onSubmit={handleSubmit}>
-                    <Stack spacing={2} isInline align="center">
-                      <UserCard
-                        userName={node.userName}
-                        tfa={node.tfa}
-                        role={node.role}
-                        displayName={node.displayName}
-                      />
-                      <Select
-                        w="30"
-                        name="role"
-                        defaultValue={node.role}
-                        onChange={(e) => {
-                          node.role = e.target.value
-                        }}
-                      >
-                        <option value="USER_READ">USER_READ</option>
-                        <option value="USER_WRITE">USER_WRITE</option>
-                        <option value="ADMIN">ADMIN</option>
-                        <option value="SUPER_ADMIN">SUPER_ADMIN</option>
-                      </Select>
-                      <Button
-                        variantColor="blue"
-                        isLoading={isSubmitting}
-                        type="submit"
-                        // id="submitBtn"
-                        isDisabled
-                      >
-                        Apply
-                      </Button>
-                    </Stack>
-                  </form>
-                )}
-              </Formik>
+                    })
+                  }}
+                >
+                  {({ handleSubmit, isSubmitting }) => (
+                    <form onSubmit={handleSubmit}>
+                      <Stack spacing={2} isInline align="center">
+                        <UserCard
+                          userName={node.userName}
+                          displayName={node.displayName}
+                        />
+                        <Select
+                          w="30"
+                          name="role"
+                          defaultValue={node.role}
+                          onChange={(e) => {
+                            node.role = e.target.value
+                          }}
+                        >
+                          <option value="USER_READ">USER_READ</option>
+                          <option value="USER_WRITE">USER_WRITE</option>
+                          <option value="ADMIN">ADMIN</option>
+                          <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+                        </Select>
+                        <Button
+                          variantColor="blue"
+                          isLoading={isSubmitting}
+                          type="submit"
+                          // id="submitBtn"
+                          // isDisabled
+                        >
+                          Apply
+                        </Button>
+                      </Stack>
+                    </form>
+                  )}
+                </Formik>
+              ) : (
+                <UserCard
+                  userName={node.userName}
+                  tfa={node.tfa}
+                  role={node.role}
+                  displayName={node.displayName}
+                />
+              )}
             </Stack>
           )
         })
