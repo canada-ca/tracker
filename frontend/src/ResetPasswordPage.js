@@ -88,6 +88,8 @@ export default function ResetPasswordPage() {
               </Text>
             </Stack>
 
+            <br />
+
             <PasswordConfirmation mb="4" spacing="4" />
 
             <Stack spacing={4} isInline>
