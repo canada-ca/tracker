@@ -30,6 +30,19 @@ export function UserCard({ userName, displayName, tfa, role }) {
           {userName}
         </Text>
       </Box>
+      {role && (
+        <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="35%">
+          <Stack isInline align="center">
+            <Text fontWeight="bold">Role: </Text>
+            <Text fontSize="lg" minW="10%">
+              {role}
+            </Text>
+            <Badge variantColor={tfa ? 'green' : 'red'} minW="15%">
+              <Trans>TwoFactor</Trans>
+            </Badge>
+          </Stack>
+        </Box>
+      )}
     </PseudoBox>
   )
 }
@@ -37,6 +50,6 @@ export function UserCard({ userName, displayName, tfa, role }) {
 UserCard.propTypes = {
   displayName: string.isRequired,
   userName: string.isRequired,
-  // role: string.isRequired,
-  // tfa: bool.isRequired,
+  role: string,
+  tfa: bool,
 }
