@@ -2194,7 +2194,7 @@ type UserListItem implements Node {
   """
   Indicates if this user is an admin of the organization specified in the UserList query
   """
-  admin: Boolean @examples(values: [true, false])
+  role: RoleEnums @examples(values: ["ADMIN", "SUPER_ADMIN", "USER_WRITE", "USER_READ"])
 }
 
 type UserListItemConnection {
