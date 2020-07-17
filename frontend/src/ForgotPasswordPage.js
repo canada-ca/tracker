@@ -74,35 +74,37 @@ export default function ForgotPasswordPage() {
             name="form"
           >
             <Stack align="center">
-              <Text fontSize="xl" mb="4" textAlign={['center']}>
-                <Trans>Enter your user account's verified email address</Trans>
-                <br />
-                <Trans>and we will send you a password reset link.</Trans>
-              </Text>
+              <Text fontSize="2xl" mb="4" textAlign={['center']}>
+                <Trans>
+                  Enter your user account's verified email address and we will
+                  send you a password reset link.
+                </Trans>
+              </Text>{' '}
+              <br />
             </Stack>
 
-            <br />
+            <Stack>
+              <EmailField name="email" mb="4" width="75%" />
 
-            <EmailField name="email" mb="4" />
+              <Stack spacing={4} isInline>
+                <Button
+                  variantColor="teal"
+                  type="submit"
+                  id="submitBtn"
+                  isLoading={isSubmitting}
+                >
+                  <Trans>Submit</Trans>
+                </Button>
 
-            <Stack spacing={4} isInline>
-              <Button
-                variantColor="teal"
-                type="submit"
-                id="submitBtn"
-                isLoading={isSubmitting}
-              >
-                <Trans>Submit</Trans>
-              </Button>
-
-              <Button
-                as={RouteLink}
-                to="/sign-in"
-                variantColor="teal"
-                variant="outline"
-              >
-                <Trans>Back</Trans>
-              </Button>
+                <Button
+                  as={RouteLink}
+                  to="/sign-in"
+                  variantColor="teal"
+                  variant="outline"
+                >
+                  <Trans>Back</Trans>
+                </Button>
+              </Stack>
             </Stack>
           </form>
         )}

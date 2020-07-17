@@ -1501,12 +1501,8 @@ msgid "Submit"
 msgstr "Submit"
 
 #: src/ForgotPasswordPage.js:76
-msgid "Enter your user account's verified email address"
-msgstr "Enter your user account's verified email address"
-
-#: src/ForgotPasswordPage.js:79
-msgid "and we will send you a password reset link."
-msgstr "and we will send you a password reset link."
+msgid "Enter your user account's verified email address and we will send you a password reset link."
+msgstr "Enter your user account's verified email address and we will send you a password reset link."
 
 #: src/ForgotPasswordPage.js:38
 msgid "Email Sent"

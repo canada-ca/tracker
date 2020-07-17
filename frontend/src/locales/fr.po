@@ -1493,12 +1493,8 @@ msgid "Submit"
 msgstr "Soumettre"
 
 #: src/ForgotPasswordPage.js:76
-msgid "Enter your user account's verified email address"
-msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur"
-
-#: src/ForgotPasswordPage.js:79
-msgid "and we will send you a password reset link."
-msgstr "et nous vous enverrons un lien pour réinitialiser votre mot de passe."
+msgid "Enter your user account's verified email address and we will send you a password reset link."
+msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe."
 
 #: src/ForgotPasswordPage.js:38
 msgid "Email Sent"
