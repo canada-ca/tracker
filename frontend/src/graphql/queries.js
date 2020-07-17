@@ -139,7 +139,7 @@ export const QUERY_USERLIST = gql`
         node {
           id
           userName
-          admin
+          role
           tfa
           displayName
         }
