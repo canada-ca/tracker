@@ -128,6 +128,18 @@ export default function UserList({ ...props }) {
     }
   }
 
+  const handleClick = (role, userName) => {
+    updateUserRoles({
+      variables: {
+        input: {
+          orgSlug: orgSlug,
+          role: role,
+          userName: userName,
+        },
+      },
+    })
+  }
+
   return (
     <Stack mb={6} w="100%">
       <Text fontSize="2xl" fontWeight="bold">
@@ -165,6 +177,7 @@ export default function UserList({ ...props }) {
         </Text>
       ) : (
         currentUsers.map(({ node }) => {
+          let userRole = node.role
           return (
             <Stack isInline key={node.id} align="center">
               {name === 'admin' && (
@@ -178,52 +191,33 @@ export default function UserList({ ...props }) {
                 </Stack>
               )}
               {name === 'admin' ? (
-                <Formik
-                  onSubmit={async () => {
-                    updateUserRoles({
-                      variables: {
-                        input: {
-                          orgSlug: orgSlug,
-                          role: node.role,
-                          userName: node.userName,
-                        },
-                      },
-                    })
-                  }}
-                >
-                  {({ handleSubmit, isSubmitting }) => (
-                    <form onSubmit={handleSubmit}>
-                      <Stack spacing={2} isInline align="center">
-                        <UserCard
-                          userName={node.userName}
-                          displayName={node.displayName}
-                        />
-                        <Select
-                          w="30"
-                          name="role"
-                          defaultValue={node.role}
-                          onChange={(e) => {
-                            node.role = e.target.value
-                          }}
-                        >
-                          <option value="USER_READ">USER_READ</option>
-                          <option value="USER_WRITE">USER_WRITE</option>
-                          <option value="ADMIN">ADMIN</option>
-                          <option value="SUPER_ADMIN">SUPER_ADMIN</option>
-                        </Select>
-                        <Button
-                          variantColor="blue"
-                          isLoading={isSubmitting}
-                          type="submit"
-                          // id="submitBtn"
-                          // isDisabled
-                        >
-                          Apply
-                        </Button>
-                      </Stack>
-                    </form>
-                  )}
-                </Formik>
+                <Stack spacing={2} isInline align="center">
+                  <UserCard
+                    userName={node.userName}
+                    displayName={node.displayName}
+                  />
+                  <Select
+                    w="30"
+                    name="role"
+                    defaultValue={userRole}
+                    onChange={(e) => {
+                      userRole = e.target.value
+                    }}
+                  >
+                    <option value="USER_READ">USER_READ</option>
+                    <option value="USER_WRITE">USER_WRITE</option>
+                    <option value="ADMIN">ADMIN</option>
+                    <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+                  </Select>
+                  <Button
+                    variantColor="blue"
+                    type="submit"
+                    onClick={() => handleClick(userRole, node.userName)}
+                    // isDisabled={userRole === node.role}
+                  >
+                    Apply
+                  </Button>
+                </Stack>
               ) : (
                 <UserCard
                   userName={node.userName}
