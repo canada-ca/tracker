@@ -117,7 +117,7 @@ class UpdateUserProfile(graphene.Mutation):
                 raise GraphQLError(
                     "Error, passwords do not match. Unable to update profile."
                 )
-        else:
+        elif current_password != "":
             logger.warning(
                 f"User: {user_id} attempted to update their password, but submitted an incorrect current password."
             )
