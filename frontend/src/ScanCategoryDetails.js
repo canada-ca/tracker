@@ -9,16 +9,14 @@ function ScanCategoryDetails({ categoryName, categoryData }) {
 
   const tagDetails =
     categoryName === 'dkim'
-      ? categoryData.selectors.map((selectorData) => {
-          return (
-            <GuidanceTagList
-              guidanceTags={selectorData[guidanceTagPropertyName]}
-              selector={selectorData.selector}
-              categoryName={categoryName}
-              key={categoryName}
-            />
-          )
-        })
+      ? categoryData.selectors.map((selectorData, idx) => (
+          <GuidanceTagList
+            guidanceTags={selectorData[guidanceTagPropertyName]}
+            selector={selectorData.selector}
+            categoryName={categoryName}
+            key={categoryName + idx}
+          />
+        ))
       : [
           <GuidanceTagList
             guidanceTags={categoryData[guidanceTagPropertyName]}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Stack, useToast, Box, Heading } from '@chakra-ui/core'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { object, string, ref } from 'yup'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { Formik } from 'formik'

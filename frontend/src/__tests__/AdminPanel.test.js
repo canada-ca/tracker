@@ -4,13 +4,13 @@ import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import { DOMAINS, QUERY_USERLIST } from '../graphql/queries'
 import AdminPanel from '../AdminPanel'
 
 describe('<AdminPanel />', () => {
-  it('renders correctly', async () => {
-    const domains = [
+  it('renders both a domain list and user list', async () => {
+    const mocks = [
       {
         request: {
           query: DOMAINS,
@@ -49,9 +49,6 @@ describe('<AdminPanel />', () => {
           },
         },
       },
-    ]
-
-    const users = [
       {
         request: {
           query: QUERY_USERLIST,
@@ -91,17 +88,16 @@ describe('<AdminPanel />', () => {
       >
         <I18nProvider i18n={setupI18n()}>
           <ThemeProvider theme={theme}>
-            <MockedProvider mocks={domains} addTypename={false}>
-              <MockedProvider mocks={users} addTypename={false}>
-                <AdminPanel orgName="orgName" />
-              </MockedProvider>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <AdminPanel orgName="test" />
             </MockedProvider>
           </ThemeProvider>
         </I18nProvider>
       </UserStateProvider>,
     )
-    waitFor(() => {
-      expect(getByText('orgName')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(getByText('Domain List')).toBeInTheDocument()
+      expect(getByText('User List')).toBeInTheDocument()
     })
   })
 })

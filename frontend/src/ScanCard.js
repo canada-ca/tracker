@@ -12,15 +12,13 @@ function ScanCard({ scanType, scanData }) {
   const cardTitle =
     scanType === 'web'
       ? i18n._(t`Web Scan Results`)
-      : scanType === 'email'
-      ? i18n._(t`Email Scan Results`)
-      : ''
+      : scanType === 'email' ? i18n._(t`Email Scan Results`) : ''
   const cardDescription =
     scanType === 'web'
       ? i18n._(t`Results for scans of web technologies (SSL, HTTPS).`)
       : scanType === 'email'
-      ? i18n._(t`Results for scans of email technologies (DMARC, SPF, DKIM).`)
-      : ''
+        ? i18n._(t`Results for scans of email technologies (DMARC, SPF, DKIM).`)
+        : ''
 
   const scanCategories = ['https', 'ssl', 'dmarc', 'spf', 'dkim']
 

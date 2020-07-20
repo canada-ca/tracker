@@ -4,15 +4,15 @@ import UserList from './UserList'
 import { string } from 'prop-types'
 import { slugify } from './slugify'
 import { QUERY_USERLIST, DOMAINS } from './graphql/queries'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { AdminDomains } from './AdminDomains'
 
-export default function AdminPanel({ ...props }) {
-  const { orgName } = props
+export default function AdminPanel({ orgName }) {
   const { currentUser } = useUserState()
   const toast = useToast()
 
+  // TODO: combine these queries into a single request
   const {
     loading: domainsLoading,
     error: domainsError,
@@ -23,7 +23,7 @@ export default function AdminPanel({ ...props }) {
         authorization: currentUser.jwt,
       },
     },
-    onError: (error) => {
+    onError: error => {
       const [_, message] = error.message.split(': ')
       toast({
         title: 'Error',
