@@ -85,7 +85,7 @@ describe('<CreateUserPage />', () => {
             // This should work exactly like the email field above, but it
             // doesn't! The message is displayed but we can only get partial
             // match for some reason.
-            expect(queryByText(/Password/)).toBeInTheDocument(),
+            expect(queryByText(/Password cannot be empty/)).toBeInTheDocument(),
           )
         })
       })

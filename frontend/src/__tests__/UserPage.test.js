@@ -62,6 +62,6 @@ describe('<UserPage />', () => {
 
     const updateUserNameInput = await waitFor(() => getByDisplayValue(userName))
 
-    expect(updateUserNameInput.type).toEqual('email')
+    expect(updateUserNameInput.value).toEqual(userName)
   })
 })

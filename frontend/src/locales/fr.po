@@ -132,7 +132,7 @@ msgid "Admin Portal"
 msgstr "Portail Admin"
 
 #: src/CreateUserPage.js:42
-#: src/SignInPage.js:30
+#: src/SignInPage.js:38
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
@@ -212,7 +212,15 @@ msgstr "Chaîne de certificats signée au moyen de SHA-256/SHA-384/AEAD"
 #~ msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 #~ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/PasswordConfirmation.js:137
+#: src/PasswordConfirmation.js:121
+#~ msgid "Confirm Password"
+#~ msgstr "Confirmer le mot de passe"
+
+#: src/PasswordConfirmation.js:121
+msgid "Confirm Password:"
+msgstr "Confirmez le mot de passe :"
+
+#: src/PasswordConfirmation.js:144
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
@@ -225,7 +233,7 @@ msgid "Country Code"
 msgstr "Code pays"
 
 #: src/CreateUserPage.js:126
-#: src/SignInPage.js:113
+#: src/SignInPage.js:121
 msgid "Create Account"
 msgstr "Créer un compte"
 
@@ -335,9 +343,13 @@ msgstr "Hôte DNS"
 msgid "Description of DMARC report"
 msgstr "Description du rapport de la DMARC"
 
-#: src/DisplayNameField.js:30
+#: src/DisplayNameField.js:34
 msgid "Display Name"
 msgstr "Nom d'affichage"
+
+#: src/DisplayNameField.js:24
+msgid "Display Name:"
+msgstr "Nom d'affichage :"
 
 #: src/CreateUserPage.js:26
 msgid "Display name cannot be empty"
@@ -396,9 +408,18 @@ msgstr "Domaine:"
 msgid "Domains"
 msgstr "Domaines"
 
-#: src/EmailField.js:30
+#: src/EmailField.js:34
 msgid "Email"
 msgstr "Courriel"
+
+#: src/SummaryGroup.js:60
+#: src/EmailField.js:24
+#~ msgid "Email Address"
+#~ msgstr "Adresse électronique"
+
+#: src/EmailField.js:24
+msgid "Email Address:"
+msgstr "Adresse électronique :"
 
 #: src/SummaryGroup.js:60
 msgid "Email Configuration"
@@ -409,7 +430,7 @@ msgid "Email Scan Results"
 msgstr "Résultats de l'analyse des courriels"
 
 #: src/CreateUserPage.js:24
-#: src/SignInPage.js:23
+#: src/SignInPage.js:31
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
@@ -460,7 +481,7 @@ msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS :"
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique :"
 
-#: src/SignInPage.js:94
+#: src/SignInPage.js:102
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -614,7 +635,7 @@ msgid "Internet facing services: {domainCount}"
 msgstr "Services d'accès à Internet: {domainCount}"
 
 #: src/CreateUserPage.js:25
-#: src/SignInPage.js:24
+#: src/SignInPage.js:32
 msgid "Invalid email"
 msgstr "Courriel non valide"
 
@@ -643,7 +664,7 @@ msgstr "Dernier scan:"
 #: src/OrganizationDetails.js:53
 #: src/Organizations.js:55
 #: src/QRcodePage.js:21
-#: src/SignInPage.js:61
+#: src/SignInPage.js:69
 #: src/SummaryGroup.js:26
 msgid "Loading..."
 msgstr "Chargement..."
@@ -891,13 +912,13 @@ msgstr "Passage partiel"
 msgid "Pass"
 msgstr "Passez"
 
-#: src/PasswordConfirmation.js:88
-#: src/PasswordField.js:36
+#: src/PasswordConfirmation.js:92
+#: src/PasswordField.js:40
 msgid "Password"
 msgstr "Mot de passe"
 
 #: src/CreateUserPage.js:28
-#: src/SignInPage.js:21
+#: src/SignInPage.js:29
 msgid "Password cannot be empty"
 msgstr "Le mot de passe ne peut pas être vide"
 
@@ -908,6 +929,11 @@ msgstr "La confirmation du mot de passe ne peut pas être vide"
 #: src/CreateUserPage.js:29
 msgid "Password must be at least 12 characters long"
 msgstr "Le mot de passe doit comporter au moins 12 caractères"
+
+#: src/PasswordConfirmation.js:69
+#: src/PasswordField.js:28
+msgid "Password:"
+msgstr "Mot de passe :"
 
 #: src/CreateUserPage.js:32
 msgid "Passwords must match"
@@ -939,7 +965,7 @@ msgstr "La politique s'applique au pourcentage du flux de courrier"
 
 #: src/SummaryGroup.js:53
 msgid "Policy compliant TLS"
-msgstr "TLS conforme aux politiques"
+msgstr ""
 
 #: src/DmarcReportGuidance.js:117
 #: src/DmarcReportGuidance.js:209
@@ -1161,9 +1187,18 @@ msgstr "Rechercher un domaine"
 msgid "Search for a user"
 msgstr "Rechercher un utilisateur"
 
-#: src/LanguageSelect.js:18
+#: src/LanguageSelect.js:25
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
+
+#: src/AdminPage.js:44
+#: src/LanguageSelect.js:21
+#~ msgid "Select Your Preferred Language"
+#~ msgstr "Sélectionnez votre langue préférée"
+
+#: src/LanguageSelect.js:21
+msgid "Select Your Preferred Language:"
+msgstr "Sélectionnez votre langue préférée :"
 
 #: src/AdminPage.js:44
 msgid "Select an organization"
@@ -1183,15 +1218,15 @@ msgstr "Voir {pageSize}"
 
 #: src/App.js:65
 #: src/QRcodePage.js:58
-#: src/SignInPage.js:104
+#: src/SignInPage.js:112
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: src/SignInPage.js:49
+#: src/SignInPage.js:57
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/SignInPage.js:85
+#: src/SignInPage.js:93
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
@@ -1219,7 +1254,6 @@ msgstr ""
 msgid "TBD"
 msgstr ""
 
-#: src/SummaryGroup.js:52
 #~ msgid "TLS"
 #~ msgstr "TLS"
 
@@ -1320,7 +1354,7 @@ msgstr "Deux facteurs"
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
-#: src/SignInPage.js:32
+#: src/SignInPage.js:40
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
@@ -1384,7 +1418,7 @@ msgstr "Bienvenue à l'administration"
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Veuillez choisir votre langue préférée"
 
-#: src/SignInPage.js:50
+#: src/SignInPage.js:58
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
