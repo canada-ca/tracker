@@ -16,16 +16,18 @@ import {
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox.js'
 
-function PasswordField({ name, ...props }) {
+function PasswordField({ name, label, ...props }) {
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
   const { i18n } = useLingui()
   const handleClick = () => setShow(!show)
 
+  const labelText = label === undefined ? <Trans>Password:</Trans> : label
+
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
-      <FormLabel htmlFor="password" fontWeight="bold">
-        <Trans>Password:</Trans>
+      <FormLabel htmlFor={name} fontWeight="bold">
+        {labelText}
       </FormLabel>
       <InputGroup size="md">
         <InputLeftElement>
@@ -33,12 +35,12 @@ function PasswordField({ name, ...props }) {
         </InputLeftElement>
 
         <Input
-          {...field}
-          {...props}
           pr="4.5rem"
           type={show ? 'text' : 'password'}
           placeholder={i18n._(t`Password`)}
-          id="password"
+          id={name}
+          {...field}
+          {...props}
         />
         <InputRightElement width="4.5rem">
           <Button id="showButton" h="1.75rem" size="sm" onClick={handleClick}>
@@ -53,6 +55,7 @@ function PasswordField({ name, ...props }) {
 
 PasswordField.propTypes = {
   name: string.isRequired,
+  label: string,
 }
 
 export default WithPseudoBox(PasswordField)

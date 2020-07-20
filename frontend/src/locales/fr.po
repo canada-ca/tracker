@@ -192,6 +192,19 @@ msgstr "Utilisation des Certificats"
 msgid "Certificate chain signed using SHA-256/SHA-384/AEAD"
 msgstr "Chaîne de certificats signée au moyen de SHA-256/SHA-384/AEAD"
 
+#: src/UserPage.js:175
+#: src/UserPage.js:218
+msgid "Change Password"
+msgstr "Changer le mot de passe"
+
+#: src/UserPage.js:210
+msgid "Change your password below by entering and confirming a new password."
+msgstr "Modifiez votre mot de passe ci-dessous en entrant et en confirmant un nouveau mot de passe."
+
+#: src/UserPage.js:258
+msgid "Close"
+msgstr "Fermer"
+
 #: src/SummaryGroup.js:48
 #~ msgid "Compliant TLS"
 #~ msgstr "TLS conformant"
@@ -211,6 +224,14 @@ msgstr "Chaîne de certificats signée au moyen de SHA-256/SHA-384/AEAD"
 #: src/DmarcReportGuidance.js:398
 #~ msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 #~ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
+
+#: src/UserPage.js:251
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: src/UserPage.js:225
+msgid "Confirm Current Password"
+msgstr "Confirmer le mot de passe actuel"
 
 #: src/PasswordConfirmation.js:121
 #~ msgid "Confirm Password"
@@ -240,6 +261,14 @@ msgstr "Créer un compte"
 #: src/CreateUserPage.js:106
 msgid "Create an account by entering an email and password."
 msgstr "Créez un compte en entrant un courriel et un mot de passe."
+
+#: src/UserPage.js:237
+msgid "Current Password:"
+msgstr "Mot de passe actuel :"
+
+#: src/UserPage.js:238
+msgid "Current password"
+msgstr "Mot de passe actuel"
 
 #: src/guidanceTagConstants.js:365
 msgid "DKIM CNAMEs do not exist, but MX points to *.onmicrosoft.com and SPF record includes O365."
@@ -931,7 +960,7 @@ msgid "Password must be at least 12 characters long"
 msgstr "Le mot de passe doit comporter au moins 12 caractères"
 
 #: src/PasswordConfirmation.js:69
-#: src/PasswordField.js:28
+#: src/PasswordField.js:25
 msgid "Password:"
 msgstr "Mot de passe :"
 
@@ -942,6 +971,10 @@ msgstr "Les mots de passe doivent correspondre"
 #: src/CreateUserPage.js:35
 msgid "Please choose your preferred language"
 msgstr "Veuillez choisir votre langue préférée"
+
+#: src/UserPage.js:231
+msgid "Please enter your current password for verification."
+msgstr "Veuillez entrer votre mot de passe actuel pour vérification."
 
 #: src/DmarcReportGuidance.js:519
 #~ msgid "Please see the SPF and DKIM causes sections."

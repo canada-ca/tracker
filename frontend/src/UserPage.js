@@ -1,6 +1,6 @@
 import React from 'react'
 import { Formik } from 'formik'
-import { useHistory, useLocation } from 'react-router-dom'
+import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
 import { string } from 'prop-types'
 import {
   Stack,
@@ -11,31 +11,45 @@ import {
   Checkbox,
   CheckboxGroup,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  SlideIn,
 } from '@chakra-ui/core'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import PasswordConfirmation from './PasswordConfirmation'
 import LanguageSelect from './LanguageSelect'
-
 import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
-import { UPDATE_PASSWORD } from './graphql/mutations'
 import EmailField from './EmailField'
 import DisplayNameField from './DisplayNameField'
+import { UPDATE_USER_PROFILE } from './graphql/mutations'
+import { Trans, t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import PasswordField from './PasswordField'
 
 export default function UserPage() {
   const location = useLocation()
   const toast = useToast()
   const history = useHistory()
   const { currentUser, logout } = useUserState()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { i18n } = useLingui()
+  const changePasswordBtnRef = React.useRef()
 
   const [
-    updatePassword,
+    updateUserProfile,
     {
-      loading: updatePasswordLoading,
-      error: updatePasswordError,
-      data: updatePasswordData,
+      loading: updateUserProfileLoading,
+      error: updateUserProfileError,
+      data: updateUserProfileData,
     },
-  ] = useMutation(UPDATE_PASSWORD, {
+  ] = useMutation(UPDATE_USER_PROFILE, {
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -66,14 +80,6 @@ export default function UserPage() {
     return <p>{String(queryUserError)}</p>
   }
 
-  if (updatePasswordLoading) {
-    return <p>Loading...</p>
-  }
-
-  if (updatePasswordError) {
-    return <p>{String(updatePasswordError)}</p>
-  }
-
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Formik
@@ -100,7 +106,12 @@ export default function UserPage() {
 
               <LanguageSelect name="lang" />
 
-              <Button type="submit" variantColor="teal" w={'50%'} mt={5}>
+              <Button
+                type="submit"
+                variantColor="teal"
+                width="fit-content"
+                px={8}
+              >
                 Save Changes
               </Button>
             </Stack>
@@ -166,61 +177,117 @@ export default function UserPage() {
           Sign Out
         </Button>
       </Stack>
-      <Stack p={25} spacing={4}>
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-          Change Password
-        </Text>
 
-        {location.state ? (
-          <Text>You can only change the password for your own account.</Text>
-        ) : (
-          <Formik
-            initialValues={{ password: '', confirmPassword: '' }}
-            onSubmit={async (values) => {
-              // Submit GraphQL mutation
-              await updatePassword({
-                variables: {
-                  userName: currentUser.userName,
-                  password: values.password,
-                  confirmPassword: values.confirmPassword,
-                },
-              })
-
-              if (!updatePasswordError) {
-                console.log(updatePasswordData)
-                toast({
-                  title: 'Password Updated.',
-                  description: 'You have successfully changed your password.',
-                  status: 'success',
-                  duration: 9000,
-                  isClosable: true,
-                })
-              }
-            }}
-          >
-            {({ handleSubmit, isSubmitting }) => (
-              <form id="form" onSubmit={handleSubmit}>
-                <Text>
-                  Change your password below by entering and confirming a new
-                  password.
+      {location.state ? (
+        <Text>You can only change the password for your own account.</Text>
+      ) : (
+        <Formik
+          initialValues={{
+            password: '',
+            confirmPassword: '',
+            currentPassword: '',
+          }}
+          onSubmit={async values => {
+            // Submit GraphQL mutation
+            // await updatePassword({
+            //   variables: {
+            //     userName: currentUser.userName,
+            //     password: values.password,
+            //     confirmPassword: values.confirmPassword,
+            //   },
+            // })
+            //
+            // if (!updatePasswordError) {
+            //   console.log(updatePasswordData)
+            //   toast({
+            //     title: 'Password Updated.',
+            //     description: 'You have successfully changed your password.',
+            //     status: 'success',
+            //     duration: 9000,
+            //     isClosable: true,
+          }}
+        >
+          {({ handleSubmit, isSubmitting, values }) => (
+            <form id="form" onSubmit={handleSubmit}>
+              <Stack spacing={4} p={25}>
+                <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+                  <Trans>Change Password</Trans>
                 </Text>
+
+                <Text>
+                  <Trans>
+                    Change your password below by entering and confirming a new
+                    password.
+                  </Trans>
+                </Text>
+
                 <PasswordConfirmation />
 
-                <Stack mt={6} spacing={4} isInline>
-                  <Button
-                    variantColor="teal"
-                    isLoading={isSubmitting}
-                    type="submit"
-                    id="submitBtn"
-                  >
-                    Change Password
-                  </Button>
-                </Stack>
-              </form>
-            )}
-          </Formik>
-        )}
-      </Stack>
+                <Button
+                  onClick={onOpen}
+                  variantColor="teal"
+                  width="fit-content"
+                  px={8}
+                  ref={changePasswordBtnRef}
+                >
+                  <Trans>Change Password</Trans>
+                </Button>
+
+                <SlideIn in={isOpen}>
+                  {styles => (
+                    <Modal finalFocusRef={changePasswordBtnRef} isOpen={true} onClose={onClose}>
+                      <ModalOverlay opacity={styles.opacity}/>
+                      <ModalContent pb={4} {...styles}>
+                        <ModalHeader>
+                          <Trans>Confirm Current Password</Trans>
+                        </ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                          <Stack spacing={8}>
+                            <Text>
+                              <Trans>
+                                Please enter your current password for
+                                verification.
+                              </Trans>
+                            </Text>
+                            <PasswordField
+                              name="currentPassword"
+                              label={i18n._(t`Current Password:`)}
+                              placeholder={i18n._(t`Current password`)}
+                            />
+                          </Stack>
+                        </ModalBody>
+
+                        <ModalFooter>
+                          <Button
+                            variantColor="teal"
+                            isLoading={isSubmitting}
+                            type="submit"
+                            id="submitBtn"
+                            mr={4}
+                          >
+                            <Trans>Confirm</Trans>
+                          </Button>
+                          <Button
+                            variantColor="teal"
+                            variant="outline"
+                            onClick={() => {
+                              values.currentPassword = ''
+                              onClose()
+                            }}
+                          >
+                            <Trans>Close</Trans>
+                          </Button>
+                        </ModalFooter>
+                      </ModalContent>
+                    </Modal>
+                  )}
+                </SlideIn>
+              </Stack>
+            </form>
+          )}
+        </Formik>
+      )}
     </SimpleGrid>
   )
 }
