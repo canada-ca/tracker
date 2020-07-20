@@ -1,3 +1,4 @@
+import bcrypt
 import graphene
 
 from graphql import GraphQLError
@@ -26,6 +27,10 @@ class UpdateUserProfileInput(graphene.InputObjectType):
     preferred_lang = LanguageEnums(
         required=False,
         description="The new preferred language the user wishes to change to.",
+    )
+    current_password = graphene.String(
+        required=False,
+        description="The users current password to verify it is the current user.",
     )
     password = graphene.String(
         required=False, description="The new password the user wishes to change to."
@@ -66,6 +71,9 @@ class UpdateUserProfile(graphene.Mutation):
         preferred_lang = cleanse_input(
             kwargs.get("input", {}).get("preferred_lang", "")
         )
+        current_password = cleanse_input(
+            kwargs.get("input", {}).get("current_password", "")
+        )
         password = cleanse_input(kwargs.get("input", {}).get("password", ""))
         confirm_password = cleanse_input(
             kwargs.get("input", {}).get("confirm_password", "")
@@ -88,16 +96,32 @@ class UpdateUserProfile(graphene.Mutation):
             user.preferred_lang = preferred_lang
             logging_str += " preferred_lang,"
 
-        if password != "" and confirm_password != "" and password == confirm_password:
-            user.password = password
-            logging_str += " password,"
-        if password != "" and confirm_password != "" and password != confirm_password:
+        if bcrypt.checkpw(
+            current_password.encode("utf8"), user.password.encode("utf8")
+        ):
+            if (
+                password != ""
+                and confirm_password != ""
+                and password == confirm_password
+            ):
+                user.password = password
+                logging_str += " password,"
+            if (
+                password != ""
+                and confirm_password != ""
+                and password != confirm_password
+            ):
+                logger.warning(
+                    f"User: {user_id} attempted to update their password, however they do not match."
+                )
+                raise GraphQLError(
+                    "Error, passwords do not match. Unable to update profile."
+                )
+        else:
             logger.warning(
-                f"User: {user_id} attempted to update their password, however they do not match."
+                f"User: {user_id} attempted to update their password, but submitted an incorrect current password."
             )
-            raise GraphQLError(
-                "Error, passwords do not match. Unable to update profile."
-            )
+            raise GraphQLError("Error, incorrect password please try again.")
 
         try:
             # db_session.add(user)

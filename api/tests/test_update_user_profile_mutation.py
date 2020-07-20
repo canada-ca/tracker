@@ -44,6 +44,7 @@ def test_user_can_update_all_profile_fields(db, caplog):
                     userName: "newemail@email.ca"
                     displayName: "New Test Account",
                     preferredLang: FRENCH,
+                    currentPassword: "testpassword123",
                     password: "newpassword123"
                     confirmPassword: "newpassword123"
                 }
@@ -115,6 +116,56 @@ def test_user_can_update_all_profile_fields(db, caplog):
     assert f"User: {user.id} successfully authenticated their account." in caplog.text
 
 
+def test_password_wont_update_if_current_password_is_incorrect(db, caplog):
+    """
+    Test to make sure that an error occurs if a user submits the incorrect current password
+    """
+    save, session = db
+
+    org_one = Organizations(name="org-one")
+    save(org_one)
+
+    user = Users(
+        display_name="testuser",
+        user_name="testuser@testemail.ca",
+        password="testpassword123",
+        preferred_lang="english",
+        tfa_validated=False,
+        user_affiliation=[
+            User_affiliations(permission="user_read", user_organization=org_one),
+        ],
+    )
+    save(user)
+
+    caplog.set_level(logging.INFO)
+    result = run(
+        mutation="""
+        mutation {
+            updateUserProfile (
+                input: {
+                    currentPassword: "oldpassword123"
+                    password: "newpassword123"
+                    confirmPassword: "321drowssapwen"
+                }
+            ) {
+                status
+            }
+        }
+        """,
+        as_user=user,
+    )
+
+    if "errors" not in result:
+        fail(f"Expected password matching error to occur, instead: {json(result)}")
+
+    [error] = result["errors"]
+    assert error["message"] == "Error, incorrect password please try again."
+    assert (
+        f"User: {user.id} attempted to update their password, but submitted an incorrect current password."
+        in caplog.text
+    )
+
+
 def test_password_wont_update_if_fields_dont_match(db, caplog):
     """
     Test to make sure that if password fields don't match then update doesn't occur
@@ -142,6 +193,7 @@ def test_password_wont_update_if_fields_dont_match(db, caplog):
         mutation {
             updateUserProfile (
                 input: {
+                    currentPassword: "testpassword123"
                     password: "newpassword123"
                     confirmPassword: "321drowssapwen"
                 }
