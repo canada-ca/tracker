@@ -14,12 +14,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/DmarcReportPage.js:254
-#: src/LandingPage.js:32
+#: src/LandingPage.js:24
 #: src/OrganizationDetails.js:133
 msgid "*All data represented is mocked for demonstration purposes"
 msgstr "*Toutes les données représentées sont simulées à des fins de démonstration"
 
-#: src/AdminPage.js:84
+#: src/AdminPage.js:87
 msgid "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
 msgstr "*Les barres de recherche ne recherchent pas activement les bases de données actuellement. Elles sont utilisées pour démontrer la fonction du bouton 'Ajouter'"
 
@@ -103,7 +103,7 @@ msgstr "La liste de chiffrement acceptée contient le chiffrement de flux RC4, t
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/AdminDomains.js:112
+#: src/AdminDomains.js:128
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
@@ -132,7 +132,7 @@ msgid "Admin Portal"
 msgstr "Portail Admin"
 
 #: src/CreateUserPage.js:42
-#: src/SignInPage.js:30
+#: src/SignInPage.js:38
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
@@ -176,7 +176,7 @@ msgstr "Le CCCS ajouté à la liste des expéditeurs de la police scientifique"
 msgid "CNAME-DMARC"
 msgstr "CNAME-DMARC"
 
-#: src/LandingPage.js:17
+#: src/LandingPage.js:14
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre des services en ligne sécurisés. Un nouvel avis de politique vise à assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en matière de sécurité Web. Voyez comment les sites gouvernementaux deviennent plus sécuritaires."
 
@@ -212,7 +212,15 @@ msgstr "Chaîne de certificats signée au moyen de SHA-256/SHA-384/AEAD"
 #~ msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 #~ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/PasswordConfirmation.js:137
+#: src/PasswordConfirmation.js:121
+#~ msgid "Confirm Password"
+#~ msgstr "Confirmer le mot de passe"
+
+#: src/PasswordConfirmation.js:121
+msgid "Confirm Password:"
+msgstr "Confirmez le mot de passe :"
+
+#: src/PasswordConfirmation.js:144
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
@@ -225,7 +233,7 @@ msgid "Country Code"
 msgstr "Code pays"
 
 #: src/CreateUserPage.js:126
-#: src/SignInPage.js:113
+#: src/SignInPage.js:121
 msgid "Create Account"
 msgstr "Créer un compte"
 
@@ -335,23 +343,27 @@ msgstr "Hôte DNS"
 msgid "Description of DMARC report"
 msgstr "Description du rapport de la DMARC"
 
-#: src/DisplayNameField.js:30
+#: src/DisplayNameField.js:34
 msgid "Display Name"
 msgstr "Nom d'affichage"
+
+#: src/DisplayNameField.js:24
+msgid "Display Name:"
+msgstr "Nom d'affichage :"
 
 #: src/CreateUserPage.js:26
 msgid "Display name cannot be empty"
 msgstr "Le nom d'affichage ne peut pas être vide"
 
-#: src/SummaryGroup.js:67
+#: src/SummaryGroup.js:72
 msgid "Dmarc fail"
 msgstr "Dmarc échoue"
 
-#: src/SummaryGroup.js:63
+#: src/SummaryGroup.js:68
 msgid "Dmarc partial"
 msgstr "Dmarc partiel"
 
-#: src/SummaryGroup.js:59
+#: src/SummaryGroup.js:64
 msgid "Dmarc pass"
 msgstr "Passe Dmarc"
 
@@ -359,7 +371,7 @@ msgstr "Passe Dmarc"
 msgid "Domain"
 msgstr "Domaine"
 
-#: src/AdminDomains.js:88
+#: src/AdminDomains.js:104
 msgid "Domain List"
 msgstr "Liste des domaines"
 
@@ -392,15 +404,23 @@ msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/App.js:53
-#: src/DomainsPage.js:48
+#: src/DomainsPage.js:66
 msgid "Domains"
 msgstr "Domaines"
 
-#: src/EmailField.js:30
+#: src/EmailField.js:34
 msgid "Email"
 msgstr "Courriel"
 
-#: src/SummaryGroup.js:55
+#: src/EmailField.js:24
+#~ msgid "Email Address"
+#~ msgstr "Adresse électronique"
+
+#: src/EmailField.js:24
+msgid "Email Address:"
+msgstr "Adresse électronique :"
+
+#: src/SummaryGroup.js:60
 msgid "Email Configuration"
 msgstr "Configuration du courriel"
 
@@ -409,11 +429,11 @@ msgid "Email Scan Results"
 msgstr "Résultats de l'analyse des courriels"
 
 #: src/CreateUserPage.js:24
-#: src/SignInPage.js:23
+#: src/SignInPage.js:31
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
-#: src/SummaryGroup.js:56
+#: src/SummaryGroup.js:61
 msgid "Email security settings summary"
 msgstr "Résumé des paramètres de sécurité du courriel"
 
@@ -460,7 +480,7 @@ msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS :"
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique :"
 
-#: src/SignInPage.js:94
+#: src/SignInPage.js:102
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -614,7 +634,7 @@ msgid "Internet facing services: {domainCount}"
 msgstr "Services d'accès à Internet: {domainCount}"
 
 #: src/CreateUserPage.js:25
-#: src/SignInPage.js:24
+#: src/SignInPage.js:32
 msgid "Invalid email"
 msgstr "Courriel non valide"
 
@@ -626,7 +646,7 @@ msgstr "Pourcentage non valable"
 msgid "Invalid public key"
 msgstr "Clé publique invalide"
 
-#: src/UserList.js:109
+#: src/UserList.js:125
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
@@ -639,11 +659,11 @@ msgid "Last scanned:"
 msgstr "Dernier scan:"
 
 #: src/CreateUserPage.js:75
-#: src/DomainsPage.js:40
+#: src/DomainsPage.js:50
 #: src/OrganizationDetails.js:53
-#: src/Organizations.js:41
+#: src/Organizations.js:55
 #: src/QRcodePage.js:21
-#: src/SignInPage.js:61
+#: src/SignInPage.js:69
 #: src/SummaryGroup.js:26
 msgid "Loading..."
 msgstr "Chargement..."
@@ -731,11 +751,11 @@ msgstr "Absent du guide - besoin v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 
-#: src/AdminDomains.js:124
+#: src/AdminDomains.js:140
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/Organizations.js:55
+#: src/Organizations.js:77
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
@@ -759,11 +779,11 @@ msgstr "Aucun domaine n'a encore été scanné."
 msgid "No domains yet."
 msgstr "Aucun domaine pour l'instant."
 
-#: src/UserList.js:116
+#: src/UserList.js:132
 msgid "No users in this organization"
 msgstr "Aucun utilisateur dans cette organisation"
 
-#: src/SummaryGroup.js:44
+#: src/SummaryGroup.js:49
 msgid "Non-compliant TLS"
 msgstr "TLS non conforme"
 
@@ -775,12 +795,12 @@ msgstr "Pas encore scanné."
 msgid "One or more ciphers in use are not compliant with guidelines"
 msgstr "Un ou plusieurs chiffres utilisés ne sont pas conformes aux lignes directrices"
 
-#: src/AdminPage.js:67
+#: src/AdminPage.js:70
 msgid "Organization:"
 msgstr "Organisation:"
 
 #: src/App.js:57
-#: src/Organizations.js:49
+#: src/Organizations.js:71
 msgid "Organizations"
 msgstr "Organisations"
 
@@ -891,13 +911,13 @@ msgstr "Passage partiel"
 msgid "Pass"
 msgstr "Passez"
 
-#: src/PasswordConfirmation.js:88
-#: src/PasswordField.js:36
+#: src/PasswordConfirmation.js:92
+#: src/PasswordField.js:40
 msgid "Password"
 msgstr "Mot de passe"
 
 #: src/CreateUserPage.js:28
-#: src/SignInPage.js:21
+#: src/SignInPage.js:29
 msgid "Password cannot be empty"
 msgstr "Le mot de passe ne peut pas être vide"
 
@@ -908,6 +928,11 @@ msgstr "La confirmation du mot de passe ne peut pas être vide"
 #: src/CreateUserPage.js:29
 msgid "Password must be at least 12 characters long"
 msgstr "Le mot de passe doit comporter au moins 12 caractères"
+
+#: src/PasswordConfirmation.js:69
+#: src/PasswordField.js:28
+msgid "Password:"
+msgstr "Mot de passe :"
 
 #: src/CreateUserPage.js:32
 msgid "Passwords must match"
@@ -937,9 +962,9 @@ msgstr "La politique ne s'applique à aucune partie du flux de courrier - config
 msgid "Policy applies to percentage of mailflow"
 msgstr "La politique s'applique au pourcentage du flux de courrier"
 
-#: src/SummaryGroup.js:48
+#: src/SummaryGroup.js:53
 msgid "Policy compliant TLS"
-msgstr "TLS conforme aux politiques"
+msgstr ""
 
 #: src/DmarcReportGuidance.js:117
 #: src/DmarcReportGuidance.js:209
@@ -1153,23 +1178,31 @@ msgstr ""
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
-#: src/AdminDomains.js:97
+#: src/AdminDomains.js:113
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
-#: src/UserList.js:94
+#: src/UserList.js:110
 msgid "Search for a user"
 msgstr "Rechercher un utilisateur"
 
-#: src/LanguageSelect.js:18
+#: src/LanguageSelect.js:25
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
-#: src/AdminPage.js:41
+#: src/LanguageSelect.js:21
+#~ msgid "Select Your Preferred Language"
+#~ msgstr "Sélectionnez votre langue préférée"
+
+#: src/LanguageSelect.js:21
+msgid "Select Your Preferred Language:"
+msgstr "Sélectionnez votre langue préférée :"
+
+#: src/AdminPage.js:44
 msgid "Select an organization"
 msgstr "Sélectionnez une organisation"
 
-#: src/AdminPage.js:91
+#: src/AdminPage.js:94
 msgid "Select an organization to view admin options"
 msgstr "Sélectionnez une organisation pour voir les options d'administration"
 
@@ -1183,15 +1216,15 @@ msgstr "Voir {pageSize}"
 
 #: src/App.js:65
 #: src/QRcodePage.js:58
-#: src/SignInPage.js:104
+#: src/SignInPage.js:112
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: src/SignInPage.js:49
+#: src/SignInPage.js:57
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/SignInPage.js:85
+#: src/SignInPage.js:93
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
@@ -1219,7 +1252,6 @@ msgstr ""
 msgid "TBD"
 msgstr ""
 
-#: src/SummaryGroup.js:52
 #~ msgid "TLS"
 #~ msgstr "TLS"
 
@@ -1308,7 +1340,7 @@ msgstr "Ce service est développé de façon ouverte"
 msgid "Total Messages"
 msgstr "Total des messages"
 
-#: src/LandingPage.js:12
+#: src/LandingPage.js:11
 msgid "Track Web Security Compliance"
 msgstr "Suivre la conformité de la sécurité du Web"
 
@@ -1320,7 +1352,7 @@ msgstr "Deux facteurs"
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
-#: src/SignInPage.js:32
+#: src/SignInPage.js:40
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
@@ -1328,7 +1360,7 @@ msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 msgid "Use DKIM to validate outbound email sent from your custom domain"
 msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé"
 
-#: src/UserList.js:85
+#: src/UserList.js:101
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
@@ -1364,7 +1396,7 @@ msgstr "Vulnérable à la maladie du cœur"
 msgid "Vulnerable to OpenSSL CCS Injection"
 msgstr "Vulnérable à l'injection de CCS OpenSSL"
 
-#: src/SummaryGroup.js:40
+#: src/SummaryGroup.js:45
 msgid "Web Configuration"
 msgstr "Configuration Web"
 
@@ -1372,11 +1404,11 @@ msgstr "Configuration Web"
 msgid "Web Scan Results"
 msgstr "Résultats de l'analyse du Web"
 
-#: src/SummaryGroup.js:41
+#: src/SummaryGroup.js:46
 msgid "Web encryption settings summary"
 msgstr "Résumé des paramètres de cryptage du Web"
 
-#: src/AdminPage.js:63
+#: src/AdminPage.js:66
 msgid "Welcome, Admin"
 msgstr "Bienvenue à l'administration"
 
@@ -1384,11 +1416,11 @@ msgstr "Bienvenue à l'administration"
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Veuillez choisir votre langue préférée"
 
-#: src/SignInPage.js:50
+#: src/SignInPage.js:58
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
-#: src/AdminPage.js:100
+#: src/AdminPage.js:103
 msgid "You do not have admin permissions in any organization"
 msgstr "Vous n'avez pas d'autorisations administratives dans une organisation"
 
