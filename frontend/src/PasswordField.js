@@ -25,7 +25,7 @@ function PasswordField({ name, ...props }) {
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="password" fontWeight="bold">
-        <Trans>Password</Trans>:
+        <Trans>Password:</Trans>
       </FormLabel>
       <InputGroup size="md">
         <InputLeftElement>

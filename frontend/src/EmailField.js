@@ -21,7 +21,7 @@ function EmailField({ name, ...props }) {
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="email" fontWeight="bold">
-        <Trans>Email Address</Trans>:
+        <Trans>Email Address:</Trans>
       </FormLabel>
       <InputGroup>
         <InputLeftElement>

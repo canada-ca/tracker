@@ -66,7 +66,7 @@ function PasswordConfirmation({ ...props }) {
               isInvalid={form.errors.password && form.touched.password}
             >
               <FormLabel htmlFor="password" fontWeight="bold">
-                <Trans>Password</Trans>:
+                <Trans>Password:</Trans>
               </FormLabel>
               <InputGroup>
                 <InputLeftElement>
@@ -118,7 +118,7 @@ function PasswordConfirmation({ ...props }) {
               }
             >
               <FormLabel htmlFor="confirmPassword" fontWeight="bold">
-                <Trans>Confirm Password</Trans>:
+                <Trans>Confirm Password:</Trans>
               </FormLabel>
               <InputGroup>
                 <InputLeftElement>

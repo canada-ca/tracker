@@ -213,8 +213,12 @@ msgstr "Chaîne de certificats signée au moyen de SHA-256/SHA-384/AEAD"
 #~ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
 #: src/PasswordConfirmation.js:121
-msgid "Confirm Password"
-msgstr "Confirmer le mot de passe"
+#~ msgid "Confirm Password"
+#~ msgstr "Confirmer le mot de passe"
+
+#: src/PasswordConfirmation.js:121
+msgid "Confirm Password:"
+msgstr "Confirmez le mot de passe :"
 
 #: src/PasswordConfirmation.js:144
 msgid "Confirm password"
@@ -339,10 +343,13 @@ msgstr "Hôte DNS"
 msgid "Description of DMARC report"
 msgstr "Description du rapport de la DMARC"
 
-#: src/DisplayNameField.js:24
 #: src/DisplayNameField.js:34
 msgid "Display Name"
 msgstr "Nom d'affichage"
+
+#: src/DisplayNameField.js:24
+msgid "Display Name:"
+msgstr "Nom d'affichage :"
 
 #: src/CreateUserPage.js:26
 msgid "Display name cannot be empty"
@@ -406,8 +413,12 @@ msgid "Email"
 msgstr "Courriel"
 
 #: src/EmailField.js:24
-msgid "Email Address"
-msgstr "Adresse électronique"
+#~ msgid "Email Address"
+#~ msgstr "Adresse électronique"
+
+#: src/EmailField.js:24
+msgid "Email Address:"
+msgstr "Adresse électronique :"
 
 #: src/SummaryGroup.js:60
 msgid "Email Configuration"
@@ -900,9 +911,7 @@ msgstr "Passage partiel"
 msgid "Pass"
 msgstr "Passez"
 
-#: src/PasswordConfirmation.js:69
 #: src/PasswordConfirmation.js:92
-#: src/PasswordField.js:28
 #: src/PasswordField.js:40
 msgid "Password"
 msgstr "Mot de passe"
@@ -919,6 +928,11 @@ msgstr "La confirmation du mot de passe ne peut pas être vide"
 #: src/CreateUserPage.js:29
 msgid "Password must be at least 12 characters long"
 msgstr "Le mot de passe doit comporter au moins 12 caractères"
+
+#: src/PasswordConfirmation.js:69
+#: src/PasswordField.js:28
+msgid "Password:"
+msgstr "Mot de passe :"
 
 #: src/CreateUserPage.js:32
 msgid "Passwords must match"
@@ -1177,8 +1191,12 @@ msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
 #: src/LanguageSelect.js:21
-msgid "Select Your Preferred Language"
-msgstr "Sélectionnez votre langue préférée"
+#~ msgid "Select Your Preferred Language"
+#~ msgstr "Sélectionnez votre langue préférée"
+
+#: src/LanguageSelect.js:21
+msgid "Select Your Preferred Language:"
+msgstr "Sélectionnez votre langue préférée :"
 
 #: src/AdminPage.js:44
 msgid "Select an organization"

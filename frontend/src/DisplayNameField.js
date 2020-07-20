@@ -21,7 +21,7 @@ function DisplayNameField({ name, ...props }) {
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="displayName" fontWeight="bold">
-        <Trans>Display Name</Trans>:
+        <Trans>Display Name:</Trans>
       </FormLabel>
       <InputGroup>
         <InputLeftElement>

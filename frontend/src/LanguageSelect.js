@@ -18,7 +18,7 @@ function LanguageSelect({ name, ...props }) {
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="lang" fontWeight="bold">
-        <Trans>Select Your Preferred Language</Trans>:
+        <Trans>Select Your Preferred Language:</Trans>
       </FormLabel>
       <Select {...field} {...props} id="lang">
         <option hidden value="">
