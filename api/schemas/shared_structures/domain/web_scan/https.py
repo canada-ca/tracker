@@ -1,10 +1,9 @@
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from models import Https_scans
+from db import db_session
+from models import Https_scans, Web_scans, Domains
 from scalars.url import URL
-from functions.get_domain import get_domain
-from functions.get_timestamp import get_timestamp
 
 
 class HTTPS(SQLAlchemyObjectType):
@@ -41,11 +40,29 @@ class HTTPS(SQLAlchemyObjectType):
         lambda: graphene.String, description="Key tags found during scan"
     )
 
-    def resole_domain(self: Https_scans, info, **kwargs):
-        return get_domain(self, info)
+    def resolve_domain(self: Https_scans, info, **kwargs):
+        web_scan_domain_id = (
+            db_session.query(Web_scans)
+            .filter(Web_scans.id == self.id)
+            .first()
+            .domain_id
+        )
+        domain = (
+            db_session.query(Domains)
+            .filter(Domains.id == web_scan_domain_id)
+            .first()
+            .domain
+        )
+        return domain
 
     def resolve_timestamp(self: Https_scans, info, **kwargs):
-        return get_timestamp(self, info)
+        scan_date = (
+            db_session.query(Web_scans)
+            .filter(Web_scans.id == self.id)
+            .first()
+            .scan_date
+        )
+        return scan_date
 
     def resolve_implementation(self: Https_scans, info, **kwargs):
         implementation = self.https_scan.get("https", {}).get("implementation", None)

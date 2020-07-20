@@ -44,9 +44,6 @@ export default () => `
       />
       <link rel="manifest" href="/manifest.json" />
       <title>Tracker</title>
-      <style>
-        @import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i&display=swap');
-      </style>
     </head>
     <body>
       <div id="root"></div>

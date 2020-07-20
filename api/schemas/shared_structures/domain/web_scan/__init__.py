@@ -2,10 +2,9 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from models import Web_scans, Ssl_scans, Https_scans
+from db import db_session
+from models import Web_scans, Ssl_scans, Https_scans, Domains
 from scalars.url import URL
-from functions.get_domain import get_domain
-from functions.get_timestamp import get_timestamp
 from schemas.shared_structures.domain.web_scan.https import HTTPS
 from schemas.shared_structures.domain.web_scan.ssl import SSL
 
@@ -26,10 +25,16 @@ class WebScan(SQLAlchemyObjectType):
     ssl = graphene.Field(lambda: SSL)
 
     def resolve_domain(self: Web_scans, info, **kwargs):
-        return get_domain(self, info)
+        domain = (
+            db_session.query(Domains)
+            .filter(Domains.id == self.domain_id)
+            .first()
+            .domain
+        )
+        return domain
 
     def resolve_timestamp(self: Web_scans, info, **kwargs):
-        return get_timestamp(self, info)
+        return self.scan_date
 
     def resolve_https(self: Web_scans, info, **kwargs):
         query = HTTPS.get_query(info)

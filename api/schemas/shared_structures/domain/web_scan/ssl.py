@@ -1,10 +1,9 @@
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
-from models import Ssl_scans
+from db import db_session
+from models import Ssl_scans, Domains, Web_scans
 from scalars.url import URL
-from functions.get_domain import get_domain
-from functions.get_timestamp import get_timestamp
 
 
 class SSL(SQLAlchemyObjectType):
@@ -24,10 +23,28 @@ class SSL(SQLAlchemyObjectType):
     )
 
     def resolve_domain(self, info, **kwargs):
-        return get_domain(self, info, **kwargs)
+        web_scan_domain_id = (
+            db_session.query(Web_scans)
+            .filter(Web_scans.id == self.id)
+            .first()
+            .domain_id
+        )
+        domain = (
+            db_session.query(Domains)
+            .filter(Domains.id == web_scan_domain_id)
+            .first()
+            .domain
+        )
+        return domain
 
     def resolve_timestamp(self, info, **kwargs):
-        return get_timestamp(self, info)
+        scan_date = (
+            db_session.query(Web_scans)
+            .filter(Web_scans.id == self.id)
+            .first()
+            .scan_date
+        )
+        return scan_date
 
     def resolve_ssl_guidance_tags(self: Ssl_scans, info, **kwargs):
         tags = []
