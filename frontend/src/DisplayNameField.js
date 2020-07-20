@@ -1,7 +1,7 @@
 import React from 'react'
 import { string } from 'prop-types'
 import { useLingui } from '@lingui/react'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
   Input,
@@ -21,7 +21,7 @@ function DisplayNameField({ name, ...props }) {
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="displayName" fontWeight="bold">
-        Display Name:
+        <Trans>Display Name</Trans>:
       </FormLabel>
       <InputGroup>
         <InputLeftElement>

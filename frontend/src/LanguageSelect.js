@@ -8,7 +8,7 @@ import {
   FormLabel,
 } from '@chakra-ui/core'
 import { useLingui } from '@lingui/react'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'
 
 function LanguageSelect({ name, ...props }) {
@@ -18,7 +18,7 @@ function LanguageSelect({ name, ...props }) {
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="lang" fontWeight="bold">
-        Select Your Preferred Language:
+        <Trans>Select Your Preferred Language</Trans>:
       </FormLabel>
       <Select {...field} {...props} id="lang">
         <option hidden value="">

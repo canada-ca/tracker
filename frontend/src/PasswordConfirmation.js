@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLingui } from '@lingui/react'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
   FormErrorMessage,
@@ -66,7 +66,7 @@ function PasswordConfirmation({ ...props }) {
               isInvalid={form.errors.password && form.touched.password}
             >
               <FormLabel htmlFor="password" fontWeight="bold">
-                Password:
+                <Trans>Password</Trans>:
               </FormLabel>
               <InputGroup>
                 <InputLeftElement>
@@ -118,7 +118,7 @@ function PasswordConfirmation({ ...props }) {
               }
             >
               <FormLabel htmlFor="confirmPassword" fontWeight="bold">
-                Confirm Password:
+                <Trans>Confirm Password</Trans>:
               </FormLabel>
               <InputGroup>
                 <InputLeftElement>

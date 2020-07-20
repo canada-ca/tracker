@@ -100,6 +100,10 @@ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour les adres
 msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
+#: src/PasswordConfirmation.js:121
+msgid "Confirm Password"
+msgstr "Confirmer le mot de passe"
+
 #: src/PasswordConfirmation.js:144
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
@@ -167,6 +171,7 @@ msgstr "Hôte DNS"
 msgid "Description of DMARC report"
 msgstr "Description du rapport de la DMARC"
 
+#: src/DisplayNameField.js:24
 #: src/DisplayNameField.js:34
 msgid "Display Name"
 msgstr "Nom d'affichage"
@@ -207,6 +212,10 @@ msgstr "Domaines"
 #: src/EmailField.js:34
 msgid "Email"
 msgstr "Courriel"
+
+#: src/EmailField.js:24
+msgid "Email Address"
+msgstr "Adresse électronique"
 
 #: src/SummaryGroup.js:60
 msgid "Email Configuration"
@@ -383,7 +392,9 @@ msgstr "Passage partiel"
 msgid "Pass"
 msgstr "Passez"
 
+#: src/PasswordConfirmation.js:69
 #: src/PasswordConfirmation.js:92
+#: src/PasswordField.js:28
 #: src/PasswordField.js:40
 msgid "Password"
 msgstr "Mot de passe"
@@ -505,6 +516,10 @@ msgstr "Rechercher un utilisateur"
 
 #: src/LanguageSelect.js:25
 msgid "Select Preferred Language"
+msgstr "Sélectionnez votre langue préférée"
+
+#: src/LanguageSelect.js:21
+msgid "Select Your Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
 
 #: src/AdminPage.js:44
