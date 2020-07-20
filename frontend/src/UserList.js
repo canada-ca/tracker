@@ -20,7 +20,6 @@ import { UserCard } from './UserCard'
 import { string, object } from 'prop-types'
 import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_USER_ROLES } from './graphql/mutations'
-import { Formik } from 'formik'
 
 export default function UserList({ ...props }) {
   const { name, userListData, orgName, orgSlug } = props
@@ -178,55 +177,50 @@ export default function UserList({ ...props }) {
       ) : (
         currentUsers.map(({ node }) => {
           let userRole = node.role
-          return (
-            <Stack isInline key={node.id} align="center">
-              {name === 'admin' && (
-                <Stack isInline>
-                  <IconButton
-                    icon="minus"
-                    size="sm"
-                    variantColor="red"
-                    onClick={() => removeUser(node)}
-                  />
-                </Stack>
-              )}
-              {name === 'admin' ? (
-                <Stack spacing={2} isInline align="center">
-                  <UserCard
-                    userName={node.userName}
-                    displayName={node.displayName}
-                  />
-                  <Select
-                    w="30"
-                    name="role"
-                    defaultValue={userRole}
-                    onChange={(e) => {
-                      userRole = e.target.value
-                    }}
-                  >
-                    <option value="USER_READ">USER_READ</option>
-                    <option value="USER_WRITE">USER_WRITE</option>
-                    <option value="ADMIN">ADMIN</option>
-                    <option value="SUPER_ADMIN">SUPER_ADMIN</option>
-                  </Select>
-                  <Button
-                    variantColor="blue"
-                    type="submit"
-                    onClick={() => handleClick(userRole, node.userName)}
-                    // isDisabled={userRole === node.role}
-                  >
-                    Apply
-                  </Button>
-                </Stack>
-              ) : (
+          if (name === 'admin') {
+            return (
+              <Stack spacing={2} isInline align="center">
+                <IconButton
+                  icon="minus"
+                  size="sm"
+                  variantColor="red"
+                  onClick={() => removeUser(node)}
+                />
                 <UserCard
                   userName={node.userName}
-                  tfa={node.tfa}
-                  role={node.role}
                   displayName={node.displayName}
                 />
-              )}
-            </Stack>
+                <Select
+                  w="30"
+                  name="role"
+                  defaultValue={userRole}
+                  onChange={(e) => {
+                    userRole = e.target.value
+                  }}
+                >
+                  <option value="USER_READ">USER_READ</option>
+                  <option value="USER_WRITE">USER_WRITE</option>
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+                </Select>
+                <Button
+                  variantColor="blue"
+                  type="submit"
+                  onClick={() => handleClick(userRole, node.userName)}
+                  isDisabled={userRole === node.role}
+                >
+                  Apply
+                </Button>
+              </Stack>
+            )
+          }
+          return (
+            <UserCard
+              userName={node.userName}
+              tfa={node.tfa}
+              role={node.role}
+              displayName={node.displayName}
+            />
           )
         })
       )}
@@ -268,4 +262,5 @@ UserList.propTypes = {
   userListData: object,
   orgName: string,
   name: string,
+  orgSlug: string,
 }

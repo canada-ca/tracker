@@ -1,8 +1,8 @@
 import React from 'react'
-import { Badge, Box, Text, PseudoBox, Select, Stack } from '@chakra-ui/core'
+import { Badge, Box, Text, PseudoBox, Stack } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 import { useHistory } from 'react-router-dom'
-import { bool, string, func } from 'prop-types'
+import { bool, string } from 'prop-types'
 
 export function UserCard({ userName, displayName, tfa, role }) {
   const history = useHistory()

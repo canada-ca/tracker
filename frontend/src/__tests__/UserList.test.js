@@ -31,25 +31,25 @@ describe('<UserList />', () => {
     },
   }
 
-  const mocks = [
-    {
-      request: {
-        query: UPDATE_USER_ROLES,
-        variables: {
-          input: {
-            orgSlug: 'mocked-org-slug',
-            role: 'USER_WRITE',
-            userName: 'testuser@testemail.gc.ca',
-          },
-        },
-      },
-      result: {
-        data: {
-          status: 'string',
-        },
-      },
-    },
-  ]
+  // const mocks = [
+  //   {
+  //     request: {
+  //       query: UPDATE_USER_ROLES,
+  //       variables: {
+  //         input: {
+  //           orgSlug: 'mocked-org-slug',
+  //           role: 'USER_WRITE',
+  //           userName: 'testuser@testemail.gc.ca',
+  //         },
+  //       },
+  //     },
+  //     result: {
+  //       data: {
+  //         status: 'string',
+  //       },
+  //     },
+  //   },
+  // ]
 
   it('successfully renders with mocked data', async () => {
     // Set the inital history item to user-list
