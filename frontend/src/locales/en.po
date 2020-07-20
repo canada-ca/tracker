@@ -421,7 +421,6 @@ msgid "Email Address:"
 msgstr "Email Address:"
 
 #: src/SummaryGroup.js:60
-#: src/SummaryGroup.js:60
 msgid "Email Configuration"
 msgstr "Email Configuration"
 
