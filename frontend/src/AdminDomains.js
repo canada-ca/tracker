@@ -19,12 +19,10 @@ import { Domain } from './Domain'
 import { string, object } from 'prop-types'
 import { ListOf } from './ListOf'
 
-export function AdminDomains({ ...props }) {
-  const { domainsData, orgName } = props
-
+export function AdminDomains({ domainsData, orgName }) {
   let domains = []
   if (domainsData && domainsData.domains.edges) {
-    domains = domainsData.domains.edges.map((e) => e.node)
+    domains = domainsData.domains.edges.map(e => e.node)
   }
 
   const [domainList, setDomainList] = useState(domains)
@@ -40,9 +38,9 @@ export function AdminDomains({ ...props }) {
   const currentDomains = domainList.slice(indexOfFirstDomain, indexOfLastDomain)
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = pageNumber => setCurrentPage(pageNumber)
 
-  const addDomain = (url) => {
+  const addDomain = url => {
     if (url !== '') {
       const newDomain = {
         slug: 'new-org-slug',
@@ -71,8 +69,8 @@ export function AdminDomains({ ...props }) {
     }
   }
 
-  const removeDomain = (url) => {
-    const temp = domainList.filter((d) => d.url !== url)
+  const removeDomain = url => {
+    const temp = domainList.filter(d => d.url !== url)
 
     if (temp) {
       setDomainList(temp)
@@ -112,7 +110,7 @@ export function AdminDomains({ ...props }) {
             type="text"
             placeholder={i18n._(t`Search for a domain`)}
             value={domainSearch}
-            onChange={(e) => {
+            onChange={e => {
               setDomainSearch(e.target.value)
             }}
           />

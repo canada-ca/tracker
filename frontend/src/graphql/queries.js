@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 
 export const WEB_AND_EMAIL_SUMMARIES = gql`
   query LandingPageSummaries {

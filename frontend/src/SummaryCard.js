@@ -4,9 +4,6 @@ import { Text, Stack, Box } from '@chakra-ui/core'
 import { objectOf, number, string, shape, arrayOf } from 'prop-types'
 
 function SummaryCard({ title, categoryDisplay, description, data }) {
-  const compareStrengths = (a, b) =>
-    a.count < b.count ? 1 : b.count < a.count ? -1 : 0
-
   return (
     <Box
       bg="white"
@@ -48,7 +45,6 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
       </Box>
       <Stack align="center" spacing={0}>
         {data.categories
-          .sort(compareStrengths)
           .map(({ name, count, percentage }) => {
             return (
               <Text
@@ -64,7 +60,9 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
                 {`${categoryDisplay[name].name}: ${count} - ${percentage}% `}
               </Text>
             )
-          })}
+          })
+          .sort((a, b) => a.count - b.count) // mutate the array last
+        }
       </Stack>
     </Box>
   )

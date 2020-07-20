@@ -1,6 +1,6 @@
 import React from 'react'
 import { useUserState } from './UserState'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
 import { Button, Heading, Icon, Stack } from '@chakra-ui/core'
 import { useParams, useHistory } from 'react-router-dom'
@@ -21,6 +21,8 @@ export function DmarcGuidancePage() {
     variables: {
       urlSlug: domainSlug,
     },
+    onComplete: stuff => console.log(`completed! recieved: ${stuff}`),
+    onError: e => console.log(`error! recieved: ${e}`),
   })
 
   if (loading) return <p>Loading</p>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import {
@@ -30,7 +30,7 @@ export default function OrganizationDetails() {
         authorization: currentUser.jwt,
       },
     },
-    onError: (error) => {
+    onError: error => {
       const [_, message] = error.message.split(': ')
       toast({
         title: 'Error',
