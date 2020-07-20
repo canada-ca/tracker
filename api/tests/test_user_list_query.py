@@ -68,7 +68,7 @@ def test_super_admin_can_see_any_user_list(save, caplog):
                   userName
                   displayName
                   tfa
-                  admin
+                  role
                 }
               }
             }
@@ -89,7 +89,7 @@ def test_super_admin_can_see_any_user_list(save, caplog):
                             "userName": "testuserread@testemail.ca",
                             "displayName": "testuserread",
                             "tfa": False,
-                            "admin": False,
+                            "role": "USER_READ",
                         }
                     }
                 ]
@@ -135,7 +135,7 @@ def test_super_admin_cant_see_user_list_for_org_doesnt_exist(save, caplog):
                         userName
                         displayName
                         tfa
-                        admin
+                        role
                     }
                 }
             }
@@ -170,7 +170,7 @@ def test_admin_can_see_user_list_in_same_org(save, caplog):
         tfa_validated=False,
     )
     admin_user.user_affiliation.append(
-        User_affiliations(permission="super_admin", user_organization=org_one,)
+        User_affiliations(permission="admin", user_organization=org_one,)
     )
     save(admin_user)
 
@@ -196,7 +196,7 @@ def test_admin_can_see_user_list_in_same_org(save, caplog):
                 userName
                 displayName
                 tfa
-                admin
+                role
               }
             }
           }
@@ -217,7 +217,7 @@ def test_admin_can_see_user_list_in_same_org(save, caplog):
                             "userName": "testadmin@testemail.ca",
                             "displayName": "testadmin",
                             "tfa": False,
-                            "admin": True,
+                            "role": "ADMIN",
                         }
                     },
                     {
@@ -225,7 +225,7 @@ def test_admin_can_see_user_list_in_same_org(save, caplog):
                             "userName": "testuserread@testemail.ca",
                             "displayName": "testuserread",
                             "tfa": False,
-                            "admin": False,
+                            "role": "USER_READ",
                         }
                     },
                 ]
@@ -282,7 +282,7 @@ def test_admin_cant_see_user_list_in_different_org(save, caplog):
                         userName
                         displayName
                         tfa
-                        admin
+                        role
                     }
                 }
             }
@@ -331,7 +331,7 @@ def test_admin_cant_see_user_list_for_org_doesnt_exist(save, caplog):
                         userName
                         displayName
                         tfa
-                        admin
+                        role
                     }
                 }
             }
@@ -394,7 +394,7 @@ def test_user_write_cant_see_user_list(save, caplog):
                         userName
                         displayName
                         tfa
-                        admin
+                        role
                     }
                 }
             }
@@ -460,7 +460,7 @@ def test_user_read_cant_see_user_list(save, caplog):
                         userName
                         displayName
                         tfa
-                        admin
+                        role
                     }
                 }
             }

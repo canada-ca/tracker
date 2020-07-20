@@ -73,7 +73,7 @@ This object contains the list of different categories for pre-computed
 summary data with the computed total for how many domains in total are
 being compared.
 """
-type CatagorizedSummary {
+type CategorizedSummary {
   """
   List of SummaryCategory objects with data for different computed categories.
   """
@@ -262,7 +262,6 @@ type DKIM {
   Various dkim selectors used on this domain.
   """
   selectors: [DkimSelectors]
-
 }
 
 """
@@ -273,7 +272,8 @@ type DkimSelectors {
   """
   Selector domain that has been scanned.
   """
-  selector: String @examples(values: ["selector1._domainkey", "selector2._domainkey"])
+  selector: String
+    @examples(values: ["selector1._domainkey", "selector2._domainkey"])
   """
   DKIM record retrieved during the scan of the given domain
   """
@@ -291,6 +291,7 @@ type DkimSelectors {
   Key tags found during scan
   """
   dkimGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: [
         "dkim1"
@@ -363,6 +364,7 @@ type DMARC {
   Key tags found during DMARC Scan
   """
   dmarcGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: [
         "dmarc1"
@@ -432,6 +434,27 @@ type DmarcReportSummary {
 }
 
 """
+This object is used to define the various arguments used in the dmarc report
+summary query
+"""
+input DmarcReportSummaryInput {
+  """
+  The slugified version of the domain you wish to retrieve data for.
+  """
+  domainSlug: Slug!
+
+  """
+  The period in which the returned data is relevant to.
+  """
+  period: PeriodEnums!
+
+  """
+  The year in which the returned data is relevant to.
+  """
+  year: Year!
+}
+
+"""
 A query object used to grab the data to create dmarc report bar graph
 """
 type DmarcReportSummaryList {
@@ -449,6 +472,17 @@ type DmarcReportSummaryList {
   Category totals for building dmarc report page bar graph.
   """
   categoryTotals: CategoryTotals
+}
+
+"""
+This object is used to define the various arguments used in the dmarc report
+summary list query
+"""
+input DmarcReportSummaryListInput {
+  """
+  The slugified version of the domain you wish to retrieve data for.
+  """
+  domainSlug: Slug!
 }
 
 type Domain implements Node {
@@ -673,6 +707,7 @@ type HTTPS {
   preloaded: String
 
   httpsGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: [
         "https1"
@@ -726,6 +761,43 @@ enum LanguageEnums {
 }
 
 """
+This mutation allows admins and higher to invite users to any of their
+organizations, if the invited user does not have an account, they will be
+able to sign-up and be assigned to that organization in one mutation.
+"""
+type InviteUserToOrg {
+  """
+  Status of inviting user to organization.
+  """
+  status: String
+}
+
+"""
+An input object containing all input fields for the InviteUserToOrg mutation
+"""
+input InviteUserToOrgInput {
+  """
+  User's email that you would like to invite to your org.
+  """
+  userName: EmailAddress!
+
+  """
+  The role which you would like this user to have.
+  """
+  requestedRole: RoleEnums!
+
+  """
+  The organization you wish to invite the user to.
+  """
+  orgSlug: Slug!
+
+  """
+  Select the language you would like the email to be sent in.
+  """
+  preferredLanguage: LanguageEnums!
+}
+
+"""
 The central gathering point for all of the GraphQL mutations.
 """
 type Mutation {
@@ -733,10 +805,15 @@ type Mutation {
     otpCode: String!
     userName: EmailAddress!
   ): ValidateTwoFactor
+
+  """
+  Updates the users permission to an organization.
+  """
   updateUserRole(
-    orgSlug: Slug!
-    role: RoleEnums!
-    userName: EmailAddress!
+    """
+    UpdateUserRoleInput object containing all the input fields for this mutation.
+    """
+    input: UpdateUserRoleInput!
   ): UpdateUserRole
 
   """
@@ -820,33 +897,13 @@ type Mutation {
   ): Authenticate
 
   """
-  Allows users to sign up to our service
+  Allows users to sign up to our service.
   """
   signUp(
     """
-    A confirmation that the user submitted the correct password
+    Input object containing all fields for signUp mutation.
     """
-    confirmPassword: String!
-
-    """
-    The name that will be displayed to other users.
-    """
-    displayName: String!
-
-    """
-    The password the user will authenticate with
-    """
-    password: String!
-
-    """
-    Used to set users preferred language
-    """
-    preferredLang: LanguageEnums!
-
-    """
-    Email address that the user will use to authenticate with
-    """
-    userName: EmailAddress!
+    input: SignUpInput!
   ): SignUp
 
   """
@@ -888,6 +945,26 @@ type Mutation {
     """
     userName: EmailAddress!
   ): SendPasswordResetLink
+
+  """
+  Allows org admins to invite other users to their organizations.
+  """
+  inviteUserToOrg(
+    """
+    Input object containing fields for inviteUserToOrg mutation.
+    """
+    input: InviteUserToOrgInput!
+  ): InviteUserToOrg
+
+  """
+  Allows users to update their profile information.
+  """
+  updateUserProfile(
+    """
+    Various input fields, used in the updateUserProfile mutation.
+    """
+    input: UpdateUserProfileInput!
+  ): UpdateUserProfile
 }
 
 """
@@ -1425,22 +1502,22 @@ type Query {
   """
   Email summary computed values, used to build summary cards.
   """
-  emailSummary: CatagorizedSummary
+  emailSummary: CategorizedSummary
 
   """
   Demo email summary computed values, used to build summary cards.
   """
-  demoEmailSummary: CatagorizedSummary
+  demoEmailSummary: CategorizedSummary
 
   """
   Web summary computed values, used to build summary cards.
   """
-  webSummary: CatagorizedSummary
+  webSummary: CategorizedSummary
 
   """
   Demo web summary computed values, used to build summary cards.
   """
-  demoWebSummary: CatagorizedSummary
+  demoWebSummary: CategorizedSummary
 
   """
   An api endpoint used to generate a OTP url used for two factor authentication.
@@ -1595,6 +1672,43 @@ type SignUp {
   """
   authResult: AuthResult
 }
+
+"""
+An input object containing all input fields required for the signUp
+mutation.
+"""
+input SignUpInput {
+  """
+  The name that will be displayed to other users.
+  """
+  displayName: String!
+
+  """
+  Email address that the user will use to authenticate with.
+  """
+  userName: EmailAddress!
+
+  """
+  The password the user will authenticate with.
+  """
+  password: String!
+
+  """
+  A confirmation that the user submitted the correct password.
+  """
+  confirmPassword: String!
+
+  """
+  Used to set users preferred language
+  """
+  preferredLang: LanguageEnums!
+
+  """
+  A token sent by email, that will assign a user to an organization with a pre-determined role.
+  """
+  signUpToken: String
+}
+
 """
 A field whos values contain numbers, letters, dashes, and underscores
 """
@@ -1676,6 +1790,7 @@ type SPF {
   Key tags found during SPF scan
   """
   spfGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: [
         "spf1"
@@ -1689,8 +1804,6 @@ type SPF {
         "spf9"
         "spf10"
         "spf11"
-        "spf12"
-        "spf13"
       ]
     )
 }
@@ -1738,6 +1851,7 @@ type SSL {
   Key tags found during scan
   """
   sslGuidanceTags: [String]
+    @listLength(min: 0, max: 4)
     @examples(
       values: ["ssl1", "ssl2", "ssl3", "ssl4", "ssl5", "ssl6", "ssl7", "ssl8"]
     )
@@ -1885,8 +1999,71 @@ input UpdateUserPasswordInput {
   confirmPassword: String!
 }
 
-type UpdateUserRole {
+"""
+A mutation that allows the user to update their user profile to change various
+details of their current profile.
+"""
+type UpdateUserProfile {
+  """
+  The status if the user profile update was successful.
+  """
   status: String
+}
+
+"""
+This input object contains various non-required fields for use when updating
+user profile information
+"""
+input UpdateUserProfileInput {
+  """
+  The new display name the user wishes to change to.
+  """
+  displayName: String
+
+  """
+  The new user name the user wishes to change to.
+  """
+  userName: EmailAddress
+
+  """
+  The new preferred language the user wishes to change to.
+  """
+  preferredLang: LanguageEnums
+
+  """
+  The new password the user wishes to change to.
+  """
+  password: String
+
+  """
+  A password confirmation of their new password.
+  """
+  confirmPassword: String
+}
+
+"""
+This mutation allows super admins, and admins of the given organization to
+update the permission level of a given user that already belongs to the
+given organization.
+"""
+type UpdateUserRole {
+  """The status of updating the user role."""
+  status: String
+}
+
+"""
+This input object contains the various fields that are related to the
+updateUserRole mutation
+"""
+input UpdateUserRoleInput {
+  """The username of the user you wish to update their role to."""
+  userName: EmailAddress!
+
+  """The organization that the admin, and the user both belong to."""
+  orgSlug: Slug!
+
+  """The role that the admin wants to give to the selected user."""
+  role: RoleEnums!
 }
 
 """
@@ -2017,7 +2194,7 @@ type UserListItem implements Node {
   """
   Indicates if this user is an admin of the organization specified in the UserList query
   """
-  admin: Boolean @examples(values: [true, false])
+  role: RoleEnums @examples(values: ["ADMIN", "SUPER_ADMIN", "USER_WRITE", "USER_READ"])
 }
 
 type UserListItemConnection {

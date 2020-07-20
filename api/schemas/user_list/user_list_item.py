@@ -4,6 +4,7 @@ from graphene_sqlalchemy import SQLAlchemyObjectType
 from sqlalchemy.orm import load_only
 
 from db import db_session
+from enums.roles import RoleEnums
 from models.Users import Users
 from models.User_affiliations import User_affiliations
 from scalars.email_address import EmailAddress
@@ -27,7 +28,7 @@ class UserListItem(SQLAlchemyObjectType):
     tfa = graphene.Boolean(
         description="Indicates wether or not this user has enabled tfa"
     )
-    admin = graphene.Boolean(
+    role = RoleEnums(
         description="Indicates if this user is an admin of the organization "
         "specified in the UserList query"
     )
@@ -59,11 +60,8 @@ class UserListItem(SQLAlchemyObjectType):
         )
         return user_orm.tfa_validated
 
-    def resolve_admin(self: User_affiliations, info, **kwargs):
-        if self.permission == "super_admin" or self.permission == "admin":
-            return True
-        else:
-            return False
+    def resolve_role(self: User_affiliations, info, **kwargs):
+        return RoleEnums.get(self.permission)
 
 
 class UserListItemConnection(relay.Connection):

@@ -8,8 +8,8 @@ from db import db_session
 from functions.auth_functions import is_user_read
 from functions.auth_wrappers import require_token
 from models import Summaries, Organizations
-from schemas.shared_structures.catagorized_summary import (
-    CatagorizedSummary,
+from schemas.shared_structures.categorized_summary import (
+    CategorizedSummary,
     SummaryCategory,
 )
 
@@ -76,7 +76,7 @@ def resolve_email_summary(self, info, **kwargs):
             total += summary.count
 
         # Create CategorizedSummary Object to return
-        rtr_data = CatagorizedSummary(categories=summary_catagories, total=total,)
+        rtr_data = CategorizedSummary(categories=summary_catagories, total=total,)
 
         logger.info(
             f"User: {user_id} successfully retrieved email summary information."
@@ -115,7 +115,7 @@ def resolve_demo_email_summary(self, info, **kwargs):
         )
         total += summary.get("count")
 
-    rtr_data = CatagorizedSummary(categories=summary_catagories, total=total,)
+    rtr_data = CategorizedSummary(categories=summary_catagories, total=total,)
 
     return rtr_data
 

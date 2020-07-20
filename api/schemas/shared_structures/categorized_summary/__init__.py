@@ -1,11 +1,11 @@
 import graphene
 
-from schemas.shared_structures.catagorized_summary.summary_category import (
+from schemas.shared_structures.categorized_summary.summary_category import (
     SummaryCategory,
 )
 
 
-class CatagorizedSummary(graphene.ObjectType):
+class CategorizedSummary(graphene.ObjectType):
     """
     This object contains the list of different categories for pre-computed
     summary data with the computed total for how many domains in total are

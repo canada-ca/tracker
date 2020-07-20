@@ -9,43 +9,66 @@ describe('<PaginationButtons />', () => {
   it('the component renders', async () => {
     const { container } = render(
       <ThemeProvider theme={theme}>
-        <PaginationButtons next={true} previous={true} />
+        <PaginationButtons
+          perPage={2}
+          total={8}
+          paginate={() => {}}
+          currentPage={1}
+        />
       </ThemeProvider>,
     )
     expect(container).toBeDefined()
   })
 
-  it('buttons are disabled when props are set to false', async () => {
+  it('left arrow buttons are disabled when on first page', async () => {
     const { container, getByLabelText } = render(
       <ThemeProvider>
-        <PaginationButtons next={false} previous={false} />
+        <PaginationButtons
+          perPage={2}
+          total={8}
+          paginate={() => {}}
+          currentPage={1}
+        />
       </ThemeProvider>,
     )
     expect(container).toBeTruthy()
-
-    const nextButton = getByLabelText('Next page')
-    expect(nextButton).toHaveAttribute('aria-disabled')
-    expect(nextButton).toHaveAttribute('disabled')
 
     const previousButton = getByLabelText('Previous page')
-    expect(previousButton).toHaveAttribute('aria-disabled')
     expect(previousButton).toHaveAttribute('disabled')
-  })
 
-  it('buttons are not disabled when props are set to true', async () => {
-    const { container, getByLabelText } = render(
-      <ThemeProvider>
-        <PaginationButtons next={true} previous={true} />
-      </ThemeProvider>,
-    )
-    expect(container).toBeTruthy()
+    const skipToFirstButton = getByLabelText('Skip to first page')
+    expect(skipToFirstButton).toHaveAttribute('disabled')
 
     const nextButton = getByLabelText('Next page')
-    expect(nextButton).not.toHaveAttribute('aria-disabled')
     expect(nextButton).not.toHaveAttribute('disabled')
 
+    const skipToLastButton = getByLabelText('Skip to last page')
+    expect(skipToLastButton).not.toHaveAttribute('disabled')
+  })
+
+  it('right arrow buttons are disabled when on last page', async () => {
+    const { container, getByLabelText } = render(
+      <ThemeProvider>
+        <PaginationButtons
+          perPage={2}
+          total={8}
+          paginate={() => {}}
+          currentPage={4}
+        />
+      </ThemeProvider>,
+    )
+    expect(container).toBeTruthy()
+
     const previousButton = getByLabelText('Previous page')
-    expect(previousButton).not.toHaveAttribute('aria-disabled')
     expect(previousButton).not.toHaveAttribute('disabled')
+
+    const skipToFirstButton = getByLabelText('Skip to first page')
+    expect(skipToFirstButton).not.toHaveAttribute('disabled')
+
+    const nextButton = getByLabelText('Next page')
+    expect(nextButton).toHaveAttribute('disabled')
+
+    const skipToLastButton = getByLabelText('Skip to last page')
+    expect(skipToLastButton).toHaveAttribute('disabled')
   })
 })

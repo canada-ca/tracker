@@ -1,6 +1,7 @@
 import os
 from db import db_session
 from models import User_affiliations, Users, Organizations
+from functions.slugify import slugify_value
 
 SA_USER_NAME = os.getenv("SA_USER_NAME")
 SA_PASSWORD = os.getenv("SA_PASSWORD")
@@ -29,7 +30,9 @@ def create_sa():
 
     if org_orm is None:
         new_org = Organizations(
-            acronym="SA", org_tags={"description": "Super Admin Organization"}
+            acronym="SUPER-ADMIN",
+            slug="super-admin",
+            org_tags={"description": "Super Admin Organization"},
         )
         db_session.add(new_org)
         db_session.commit()

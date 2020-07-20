@@ -61,7 +61,7 @@ describe('<Organisations />', () => {
     await waitFor(() => expect(getByText(/Fisheries/i)).toBeInTheDocument())
   })
 
-  it('displays a list of organizations', async () => {
+  it('navigates to an organization detail page when a link is clicked', async () => {
     const history = createMemoryHistory({
       initialEntries: ['/organizations'],
       initialIndex: 0,
