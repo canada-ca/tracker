@@ -13,6 +13,7 @@ import {
   IconButton,
   useToast,
   Select,
+  Badge,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
@@ -179,38 +180,44 @@ export default function UserList({ ...props }) {
           let userRole = node.role
           if (name === 'admin') {
             return (
-              <Stack spacing={2} isInline align="center">
+              <Stack key={node.id} spacing={2} isInline align="center">
                 <IconButton
                   icon="minus"
                   size="sm"
                   variantColor="red"
                   onClick={() => removeUser(node)}
+                  isDisabled={userRole === 'SUPER_ADMIN'}
                 />
                 <UserCard
                   userName={node.userName}
                   displayName={node.displayName}
                 />
-                <Select
-                  w="30"
-                  name="role"
-                  defaultValue={userRole}
-                  onChange={(e) => {
-                    userRole = e.target.value
-                  }}
-                >
-                  <option value="USER_READ">USER_READ</option>
-                  <option value="USER_WRITE">USER_WRITE</option>
-                  <option value="ADMIN">ADMIN</option>
-                  <option value="SUPER_ADMIN">SUPER_ADMIN</option>
-                </Select>
-                <Button
-                  variantColor="blue"
-                  type="submit"
-                  onClick={() => handleClick(userRole, node.userName)}
-                  isDisabled={userRole === node.role}
-                >
-                  Apply
-                </Button>
+                {userRole === 'SUPER_ADMIN' ? (
+                  <Badge variantColor="blue" variant="outline">
+                    {userRole}
+                  </Badge>
+                ) : (
+                  <Stack spacing={2}>
+                    <Select
+                      w="30"
+                      name="role"
+                      defaultValue={userRole}
+                      onChange={(e) => (userRole = e.target.value)}
+                    >
+                      <option value="USER_READ">USER_READ</option>
+                      <option value="USER_WRITE">USER_WRITE</option>
+                      <option value="ADMIN">ADMIN</option>
+                    </Select>
+                    <Button
+                      variantColor="blue"
+                      type="submit"
+                      onClick={() => handleClick(userRole, node.userName)}
+                      isDisabled={userRole === 'SUPER_ADMIN'}
+                    >
+                      Apply
+                    </Button>
+                  </Stack>
+                )}
               </Stack>
             )
           }
