@@ -33,7 +33,9 @@ export function UserCard({ userName, displayName, tfa, role }) {
       {role && (
         <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="35%">
           <Stack isInline align="center">
-            <Text fontWeight="bold">Role: </Text>
+            <Text fontWeight="bold">
+              <Trans>Role: </Trans>
+            </Text>
             <Text fontSize="lg" minW="10%">
               {role}
             </Text>

@@ -1,35 +1,57 @@
 import React from 'react'
 import UserList from '../UserList'
+import { UPDATE_USER_ROLES } from '../graphql/mutations'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { createMemoryHistory } from 'history'
+import { MockedProvider } from '@apollo/react-testing'
 import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 
 describe('<UserList />', () => {
-  it('successfully renders with mocked data', async () => {
-    const mocks = {
-      userList: {
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-        },
-        edges: [
-          {
-            node: {
-              id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
-              userName: 'testuser@testemail.gc.ca',
-              role: 'USER_READ',
-              tfa: false,
-              displayName: 'Test User Esq.',
-            },
-          },
-        ],
+  const data = {
+    userList: {
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
       },
-    }
+      edges: [
+        {
+          node: {
+            id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
+            userName: 'testuser@testemail.gc.ca',
+            role: 'USER_READ',
+            tfa: false,
+            displayName: 'Test User Esq.',
+          },
+        },
+      ],
+    },
+  }
 
+  const mocks = [
+    {
+      request: {
+        query: UPDATE_USER_ROLES,
+        variables: {
+          input: {
+            orgSlug: 'mocked-org-slug',
+            role: 'USER_WRITE',
+            userName: 'testuser@testemail.gc.ca',
+          },
+        },
+      },
+      result: {
+        data: {
+          status: 'string',
+        },
+      },
+    },
+  ]
+
+  it('successfully renders with mocked data', async () => {
     // Set the inital history item to user-list
     const { getAllByText } = render(
       <UserStateProvider
@@ -42,7 +64,9 @@ describe('<UserList />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']}>
-              <UserList userListData={mocks} />
+              <MockedProvider>
+                <UserList userListData={data} />
+              </MockedProvider>
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>
@@ -58,26 +82,6 @@ describe('<UserList />', () => {
   })
 
   it('redirects to userPage when a list element is clicked', async () => {
-    const mocks = {
-      userList: {
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-        },
-        edges: [
-          {
-            node: {
-              id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
-              userName: 'testuser@testemail.gc.ca',
-              role: 'USER_READ',
-              tfa: false,
-              displayName: 'Test User Esq.',
-            },
-          },
-        ],
-      },
-    }
-
     // create a history object and inject it so we can inspect it afterwards
     // for the side effects of our form submission (a redirect to /!).
     const history = createMemoryHistory({
@@ -97,7 +101,9 @@ describe('<UserList />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <Router history={history}>
-              <UserList userListData={mocks} />
+              <MockedProvider>
+                <UserList userListData={data} />
+              </MockedProvider>
             </Router>
           </I18nProvider>
         </ThemeProvider>

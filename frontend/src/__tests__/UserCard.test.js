@@ -8,7 +8,7 @@ import { UserCard } from '../UserCard'
 import { setupI18n } from '@lingui/core'
 
 describe('<UserCard />', () => {
-  it('badges are green when TwoFactor and Admin values are true', async () => {
+  it('badge is green when TwoFactor value is true', async () => {
     const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
@@ -18,7 +18,7 @@ describe('<UserCard />', () => {
                 userName="testuser@testemail.gc.ca"
                 displayName="Test User"
                 tfa={true}
-                admin={true}
+                role="USER_READ"
               />
             </I18nProvider>
           </ThemeProvider>
@@ -27,16 +27,11 @@ describe('<UserCard />', () => {
     )
 
     const tfaBadge = getByText(/TwoFactor/i)
-    const adminBadge = getByText(/Admin/i)
-
     expect(tfaBadge).toBeDefined()
-    expect(adminBadge).toBeDefined()
-
     expect(tfaBadge).toHaveStyle('background-color: rgb(198, 246, 213)')
-    expect(adminBadge).toHaveStyle('background-color: rgb(198, 246, 213)')
   })
 
-  it('badges are red when TwoFactor and Admin values are false', async () => {
+  it('badge is red when TwoFactor value is false', async () => {
     const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
@@ -46,7 +41,7 @@ describe('<UserCard />', () => {
                 userName="testuser@testemail.gc.ca"
                 displayName="Test User"
                 tfa={false}
-                admin={false}
+                role="USER_WRITE"
               />
             </I18nProvider>
           </ThemeProvider>
@@ -55,12 +50,7 @@ describe('<UserCard />', () => {
     )
 
     const tfaBadge = getByText(/TwoFactor/i)
-    const adminBadge = getByText(/Admin/i)
-
     expect(tfaBadge).toBeDefined()
-    expect(adminBadge).toBeDefined()
-
     expect(tfaBadge).toHaveStyle('background-color: rgb(254, 215, 215)')
-    expect(adminBadge).toHaveStyle('background-color: rgb(254, 215, 215)')
   })
 })
