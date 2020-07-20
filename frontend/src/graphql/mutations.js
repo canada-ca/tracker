@@ -74,6 +74,7 @@ export const UPDATE_USER_PROFILE = gql`
     $password: String
     $confirmPassword: String
     $preferredLang: LanguageEnums
+    $currentPassword: String
   ) {
     updateUserProfile(
       input: {
@@ -82,6 +83,7 @@ export const UPDATE_USER_PROFILE = gql`
         password: $password
         confirmPassword: $confirmPassword
         preferredLang: $preferredLang
+        currentPassword: $currentPassword
       }
     )
   }

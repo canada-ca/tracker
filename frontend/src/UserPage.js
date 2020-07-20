@@ -1,6 +1,6 @@
 import React from 'react'
 import { Formik } from 'formik'
-import { Link as RouteLink, useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { string } from 'prop-types'
 import {
   Stack,
@@ -20,6 +20,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   SlideIn,
+  Heading,
 } from '@chakra-ui/core'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import PasswordConfirmation from './PasswordConfirmation'
@@ -42,20 +43,51 @@ export default function UserPage() {
   const { i18n } = useLingui()
   const changePasswordBtnRef = React.useRef()
 
-  const [
-    updateUserProfile,
+  const [updatePassword, { error: updatePasswordError }] = useMutation(
+    UPDATE_USER_PROFILE,
     {
-      loading: updateUserProfileLoading,
-      error: updateUserProfileError,
-      data: updateUserProfileData,
-    },
-  ] = useMutation(UPDATE_USER_PROFILE, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
+      context: {
+        headers: {
+          authorization: currentUser.jwt,
+        },
+      },
+      onError() {
+        console.log(updatePasswordError)
+        toast({
+          title: i18n._(t`An error occurred.`),
+          description: i18n._(
+            t`Unable to update your password, please try again.`,
+          ),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
       },
     },
-  })
+  )
+
+  const [updateUserProfile, { error: updateUserProfileError }] = useMutation(
+    UPDATE_USER_PROFILE,
+    {
+      context: {
+        headers: {
+          authorization: currentUser.jwt,
+        },
+      },
+      onError() {
+        console.log(updateUserProfileError)
+        toast({
+          title: i18n._(t`An error occurred.`),
+          description: i18n._(
+            t`Unable to update your profile, please try again.`,
+          ),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      },
+    },
+  )
 
   const {
     loading: queryUserLoading,
@@ -96,9 +128,9 @@ export default function UserPage() {
         {({ handleSubmit, _handleChange, _values }) => (
           <form onSubmit={handleSubmit}>
             <Stack p={25} spacing={4}>
-              <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+              <Heading as="h1" size="lg" textAlign="center">
                 User Profile
-              </Text>
+              </Heading>
 
               <DisplayNameField name="displayName" />
 
@@ -120,9 +152,9 @@ export default function UserPage() {
       </Formik>
 
       <Stack Stack p={25} spacing={4}>
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+        <Heading as="h1" size="lg" textAlign="center">
           Account Details
-        </Text>
+        </Heading>
         <CheckboxGroup
           mt="20px"
           variantColor="teal"
@@ -188,31 +220,23 @@ export default function UserPage() {
             currentPassword: '',
           }}
           onSubmit={async values => {
-            // Submit GraphQL mutation
-            // await updatePassword({
-            //   variables: {
-            //     userName: currentUser.userName,
-            //     password: values.password,
-            //     confirmPassword: values.confirmPassword,
-            //   },
-            // })
-            //
-            // if (!updatePasswordError) {
-            //   console.log(updatePasswordData)
-            //   toast({
-            //     title: 'Password Updated.',
-            //     description: 'You have successfully changed your password.',
-            //     status: 'success',
-            //     duration: 9000,
-            //     isClosable: true,
+            // Submit update password mutation
+            await updatePassword({
+              variables: {
+                userName: currentUser.userName,
+                password: values.password,
+                confirmPassword: values.confirmPassword,
+                currentPassword: values.currentPassword,
+              },
+            })
           }}
         >
           {({ handleSubmit, isSubmitting, values }) => (
             <form id="form" onSubmit={handleSubmit}>
               <Stack spacing={4} p={25}>
-                <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+                <Heading as="h1" size="lg" textAlign="center">
                   <Trans>Change Password</Trans>
-                </Text>
+                </Heading>
 
                 <Text>
                   <Trans>
@@ -235,8 +259,12 @@ export default function UserPage() {
 
                 <SlideIn in={isOpen}>
                   {styles => (
-                    <Modal finalFocusRef={changePasswordBtnRef} isOpen={true} onClose={onClose}>
-                      <ModalOverlay opacity={styles.opacity}/>
+                    <Modal
+                      finalFocusRef={changePasswordBtnRef}
+                      isOpen={true}
+                      onClose={onClose}
+                    >
+                      <ModalOverlay opacity={styles.opacity} />
                       <ModalContent pb={4} {...styles}>
                         <ModalHeader>
                           <Trans>Confirm Current Password</Trans>
