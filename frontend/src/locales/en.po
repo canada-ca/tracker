@@ -14,9 +14,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/DmarcReportPage.js:254
-#: src/LandingPage.js:32
-#: src/OrganizationDetails.js:133
-#: src/DmarcReportPage.js:254
 #: src/LandingPage.js:24
 #: src/OrganizationDetails.js:133
 msgid "*All data represented is mocked for demonstration purposes"
@@ -98,7 +95,6 @@ msgstr "ALL-softfail"
 msgid "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01"
 msgstr "Accepted cipher list contains 3DES symmetric-key block cipher, as prohibited by BOD 18-01"
 
-#: src/CreateUserPage.js:61
 #: src/guidanceTagConstants.js:442
 msgid "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
 msgstr "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
@@ -132,18 +128,14 @@ msgid "Admin"
 msgstr "Admin"
 
 #: src/App.js:75
-#: src/App.js:74
 msgid "Admin Portal"
 msgstr "Admin Portal"
 
-#: src/CreateUserPage.js:42
-#: src/SignInPage.js:30
 #: src/CreateUserPage.js:42
 #: src/SignInPage.js:38
 msgid "An error occurred."
 msgstr "An error occurred."
 
-#: src/CreateUserPage.js:135
 #: src/guidanceTagConstants.js:420
 msgid "As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled."
 msgstr "As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled."
@@ -172,7 +164,6 @@ msgstr "B.3.1 DMARC Records"
 msgid "Back"
 msgstr "Back"
 
-#: src/LandingPage.js:14
 #: src/guidanceTagConstants.js:164
 msgid "CCCS added to Aggregate sender list"
 msgstr "CCCS added to Aggregate sender list"
@@ -185,13 +176,9 @@ msgstr "CCCS added to Forensic sender list"
 msgid "CNAME-DMARC"
 msgstr "CNAME-DMARC"
 
-#: src/LandingPage.js:17
+#: src/LandingPage.js:14
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
-
-#: src/OrganizationDetails.js:84
-msgid "Certificate Use"
-msgstr "Certificate Use"
 
 #: src/guidanceTagConstants.js:493
 msgid "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
@@ -242,12 +229,9 @@ msgid "Contact 3rd party"
 msgstr "Contact 3rd party"
 
 #: src/DmarcReportPage.js:128
-#: src/DmarcReportPage.js:128
 msgid "Country Code"
 msgstr "Country Code"
 
-#: src/CreateUserPage.js:126
-#: src/SignInPage.js:113
 #: src/CreateUserPage.js:126
 #: src/SignInPage.js:121
 msgid "Create Account"
@@ -280,8 +264,6 @@ msgstr "DKIM Domains"
 msgid "DKIM Failures by IP Address"
 msgstr "DKIM Failures by IP Address"
 
-#: src/DmarcReportPage.js:203
-#: src/DmarcReportPage.js:318
 #: src/guidanceTagConstants.js:423
 msgid "DKIM Flag t"
 msgstr "DKIM Flag t"
@@ -295,8 +277,6 @@ msgstr "DKIM Misalignment by IP Address"
 msgid "DKIM Selectors"
 msgstr "DKIM Selectors"
 
-#: src/DmarcReportPage.js:220
-#: src/DmarcReportPage.js:325
 #: src/guidanceTagConstants.js:414
 msgid "DKIM TXT record invalid"
 msgstr "DKIM TXT record invalid"
@@ -347,7 +327,6 @@ msgstr "DMARC Failures by IP Address"
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
-#: src/DmarcReportPage.js:130
 #: src/guidanceTagConstants.js:94
 msgid "DMARC-GC"
 msgstr "DMARC-GC"
@@ -378,25 +357,14 @@ msgid "Display name cannot be empty"
 msgstr "Display name cannot be empty"
 
 #: src/SummaryGroup.js:72
-#: src/DisplayNameField.js:30
-msgid "Display Name"
-msgstr "Display Name"
-
-#: src/CreateUserPage.js:26
-msgid "Display name cannot be empty"
-msgstr "Display name cannot be empty"
-
-#: src/SummaryGroup.js:67
 msgid "Dmarc fail"
 msgstr "Dmarc fail"
 
 #: src/SummaryGroup.js:68
-#: src/SummaryGroup.js:63
 msgid "Dmarc partial"
 msgstr "Dmarc partial"
 
 #: src/SummaryGroup.js:64
-#: src/SummaryGroup.js:59
 msgid "Dmarc pass"
 msgstr "Dmarc pass"
 
@@ -405,11 +373,6 @@ msgid "Domain"
 msgstr "Domain"
 
 #: src/AdminDomains.js:104
-#: src/OrganizationDetails.js:60
-msgid "Domain"
-msgstr "Domain"
-
-#: src/AdminDomains.js:88
 msgid "Domain List"
 msgstr "Domain List"
 
@@ -441,10 +404,8 @@ msgstr "Domain uses potentially-outsourced DMARC service"
 msgid "Domain:"
 msgstr "Domain:"
 
-#: src/App.js:52
-#: src/DomainsPage.js:66
 #: src/App.js:53
-#: src/DomainsPage.js:48
+#: src/DomainsPage.js:66
 msgid "Domains"
 msgstr "Domains"
 
@@ -457,9 +418,12 @@ msgid "Email Address"
 msgstr "Email Address"
 
 #: src/SummaryGroup.js:60
-#: src/SummaryGroup.js:55
 msgid "Email Configuration"
 msgstr "Email Configuration"
+
+#: src/ScanCard.js:16
+msgid "Email Scan Results"
+msgstr "Email Scan Results"
 
 #: src/EmailField.js:24
 #~ msgid "Email address"
@@ -471,16 +435,9 @@ msgstr "Email Configuration"
 
 #: src/CreateUserPage.js:24
 #: src/SignInPage.js:31
-#: src/ScanCard.js:16
-msgid "Email Scan Results"
-msgstr "Email Scan Results"
-
-#: src/CreateUserPage.js:24
-#: src/SignInPage.js:23
 msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
 
-#: src/SummaryGroup.js:56
 #: src/SummaryGroup.js:61
 msgid "Email security settings summary"
 msgstr "Email security settings summary"
@@ -528,7 +485,6 @@ msgstr "For in-depth CCCS implementation guidance:"
 msgid "For technical implementation guidance:"
 msgstr "For technical implementation guidance:"
 
-#: src/SignInPage.js:94
 #: src/SignInPage.js:102
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
@@ -654,10 +610,6 @@ msgstr "HTTPS-not-enforced"
 msgid "HTTPS-weakly-enforced"
 msgstr "HTTPS-weakly-enforced"
 
-#: src/OrganizationDetails.js:72
-msgid "HSTS Preloaded"
-msgstr "HSTS Preloaded"
-
 #: src/DmarcReportGuidance.js:554
 #~ msgid "Hide Guidance"
 #~ msgstr "Hide Guidance"
@@ -683,18 +635,14 @@ msgid "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
 msgstr "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
 
 #: src/Organization.js:19
-#: src/Organization.js:19
 msgid "Internet facing services: {domainCount}"
 msgstr "Internet facing services: {domainCount}"
 
 #: src/CreateUserPage.js:25
 #: src/SignInPage.js:32
-#: src/CreateUserPage.js:25
-#: src/SignInPage.js:24
 msgid "Invalid email"
 msgstr "Invalid email"
 
-#: src/UserList.js:125
 #: src/guidanceTagConstants.js:156
 msgid "Invalid percent"
 msgstr "Invalid percent"
@@ -703,7 +651,7 @@ msgstr "Invalid percent"
 msgid "Invalid public key"
 msgstr "Invalid public key"
 
-#: src/UserList.js:109
+#: src/UserList.js:125
 msgid "Invite User"
 msgstr "Invite User"
 
@@ -719,14 +667,8 @@ msgstr "Last scanned:"
 #: src/DomainsPage.js:50
 #: src/OrganizationDetails.js:53
 #: src/Organizations.js:55
-#: src/CreateUserPage.js:75
-#: src/DomainsPage.js:40
-#: src/OrganizationDetails.js:53
-#: src/Organizations.js:41
 #: src/QRcodePage.js:21
 #: src/SignInPage.js:69
-#: src/SummaryGroup.js:26
-#: src/SignInPage.js:61
 #: src/SummaryGroup.js:26
 msgid "Loading..."
 msgstr "Loading..."
@@ -850,34 +792,22 @@ msgstr "No users in this organization"
 msgid "Non-compliant TLS"
 msgstr "Non-compliant TLS"
 
-#: src/Domain.js:46
-#: src/SummaryGroup.js:44
-msgid "Non-compliant TLS"
-msgstr "Non-compliant TLS"
-
 #: src/Domain.js:51
 msgid "Not scanned yet."
 msgstr "Not scanned yet."
 
-#: src/AdminPage.js:70
 #: src/guidanceTagConstants.js:460
 msgid "One or more ciphers in use are not compliant with guidelines"
 msgstr "One or more ciphers in use are not compliant with guidelines"
 
-#: src/AdminPage.js:67
+#: src/AdminPage.js:70
 msgid "Organization:"
 msgstr "Organization:"
 
-#: src/App.js:56
-#: src/Organizations.js:71
 #: src/App.js:57
-#: src/Organizations.js:49
+#: src/Organizations.js:71
 msgid "Organizations"
 msgstr "Organizations"
-
-#: src/SummaryTable.js:172
-msgid "Page"
-msgstr "Page"
 
 #: src/guidanceTagConstants.js:182
 msgid "Owner has not configured Aggregate reporting."
@@ -995,8 +925,6 @@ msgstr "Password"
 
 #: src/CreateUserPage.js:28
 #: src/SignInPage.js:29
-#: src/CreateUserPage.js:28
-#: src/SignInPage.js:21
 msgid "Password cannot be empty"
 msgstr "Password cannot be empty"
 
@@ -1013,7 +941,6 @@ msgstr "Password must be at least 12 characters long"
 #~ msgid "Password:"
 #~ msgstr "Password:"
 
-#: src/CreateUserPage.js:32
 #: src/CreateUserPage.js:32
 msgid "Passwords must match"
 msgstr "Passwords must match"
@@ -1041,10 +968,6 @@ msgstr "Policy applies to no part of mailflow - irregular config"
 #: src/guidanceTagConstants.js:148
 msgid "Policy applies to percentage of mailflow"
 msgstr "Policy applies to percentage of mailflow"
-
-#: src/SummaryGroup.js:48
-msgid "Policy compliant TLS"
-msgstr "Policy compliant TLS"
 
 #: src/SummaryGroup.js:53
 msgid "Policy compliant TLS"
@@ -1076,14 +999,9 @@ msgstr "Pre-Alpha"
 msgid "Prefix Org"
 msgstr "Prefix Org"
 
-#: src/App.js:162
 #: src/App.js:170
 msgid "Privacy"
 msgstr "Privacy"
-
-#: src/OrganizationDetails.js:80
-msgid "Protocols & Ciphers"
-msgstr "Protocols & Ciphers"
 
 #: src/GuidanceTagList.js:33
 msgid "Properly configured!"
@@ -1161,7 +1079,6 @@ msgstr "RUF-none"
 #~ msgid "Remove redundant SPF records."
 #~ msgstr "Remove redundant SPF records."
 
-#: src/App.js:69
 #: src/App.js:70
 msgid "Report"
 msgstr "Report"
@@ -1350,9 +1267,6 @@ msgstr "T-enabled"
 msgid "TBD"
 msgstr "TBD"
 
-#: src/SummaryGroup.js:52
-#~ msgid "TLS"
-#~ msgstr "TLS"
 #~ msgid "TLS"
 #~ msgstr "TLS"
 
@@ -1360,7 +1274,6 @@ msgstr "TBD"
 msgid "TXT-DMARC-enabled"
 msgstr "TXT-DMARC-enabled"
 
-#: src/App.js:172
 #: src/guidanceTagConstants.js:200
 msgid "TXT-DMARC-missing"
 msgstr "TXT-DMARC-missing"
@@ -1458,12 +1371,11 @@ msgstr "Unable to create your account, please try again."
 msgid "Unable to sign in to your account, please try again."
 msgstr "Unable to sign in to your account, please try again."
 
-#: src/UserList.js:101
 #: src/guidanceTagConstants.js:82
 msgid "Use DKIM to validate outbound email sent from your custom domain"
 msgstr "Use DKIM to validate outbound email sent from your custom domain"
 
-#: src/UserList.js:85
+#: src/UserList.js:101
 msgid "User List"
 msgstr "User List"
 
@@ -1471,7 +1383,6 @@ msgstr "User List"
 msgid "User Profile"
 msgstr "User Profile"
 
-#: src/SummaryGroup.js:45
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
 msgstr "Uses redirect tag with All"
@@ -1500,16 +1411,15 @@ msgstr "Vulnerable to Heartbleed bug"
 msgid "Vulnerable to OpenSSL CCS Injection"
 msgstr "Vulnerable to OpenSSL CCS Injection"
 
-#: src/SummaryGroup.js:40
+#: src/SummaryGroup.js:45
 msgid "Web Configuration"
 msgstr "Web Configuration"
 
-#: src/SummaryGroup.js:46
 #: src/ScanCard.js:14
 msgid "Web Scan Results"
 msgstr "Web Scan Results"
 
-#: src/SummaryGroup.js:41
+#: src/SummaryGroup.js:46
 msgid "Web encryption settings summary"
 msgstr "Web encryption settings summary"
 
@@ -1537,7 +1447,6 @@ msgstr "Your 2FA app will then have a valid code that you can use when you sign 
 msgid "back to organizations"
 msgstr "back to organizations"
 
-#: src/SummaryTable.js:172
 #: src/guidanceTagConstants.js:6
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
 msgstr "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
@@ -1617,14 +1526,6 @@ msgstr "https://tools.ietf.org/html/rfc7489#section-7.1"
 #: src/SummaryTable.js:172
 msgid "of"
 msgstr "of"
-
-#: src/OrganizationDetails.js:62
-#~ msgid "{0}"
-#~ msgstr "{0}"
-
-#: src/OrganizationDetails.js:115
-msgid "{domainName}"
-msgstr "{domainName}"
 
 #: src/guidanceTagConstants.js:250
 #~ msgid "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be 'none' but mail agents may process messages based on Quarantine)"
