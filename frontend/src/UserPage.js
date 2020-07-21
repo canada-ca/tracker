@@ -21,6 +21,7 @@ import {
   useDisclosure,
   SlideIn,
   Heading,
+  Box,
 } from '@chakra-ui/core'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import PasswordConfirmation from './PasswordConfirmation'
@@ -33,6 +34,7 @@ import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import PasswordField from './PasswordField'
+import ConfirmPasswordModal from './ConfirmPasswordModal'
 
 export default function UserPage() {
   const location = useLocation()
@@ -112,6 +114,14 @@ export default function UserPage() {
   if (queryUserError) {
     return <p>{String(queryUserError)}</p>
   }
+
+  const changePasswordBody = (
+    <Stack>
+      <Text>
+        <Trans>Please enter your current password for verification.</Trans>
+      </Text>
+    </Stack>
+  )
 
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
@@ -258,61 +268,15 @@ export default function UserPage() {
                   <Trans>Change Password</Trans>
                 </Button>
 
-                <SlideIn in={isOpen}>
-                  {styles => (
-                    <Modal
-                      initialFocusRef={currentPasswordRef}
-                      finalFocusRef={changePasswordBtnRef}
-                      isOpen={true}
-                      onClose={onClose}
-                    >
-                      <ModalOverlay opacity={styles.opacity} />
-                      <ModalContent pb={4} {...styles}>
-                        <ModalHeader>
-                          <Trans>Confirm Current Password</Trans>
-                        </ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                          <Stack spacing={8}>
-                            <Text>
-                              <Trans>
-                                Please enter your current password for
-                                verification.
-                              </Trans>
-                            </Text>
-                            <PasswordField
-                              name="currentPassword"
-                              label="Current Password:"
-                              ref={currentPasswordRef}
-                            />
-                          </Stack>
-                        </ModalBody>
-
-                        <ModalFooter>
-                          <Button
-                            variantColor="teal"
-                            isLoading={isSubmitting}
-                            type="submit"
-                            id="submitBtn"
-                            mr={4}
-                          >
-                            <Trans>Confirm</Trans>
-                          </Button>
-                          <Button
-                            variantColor="teal"
-                            variant="outline"
-                            onClick={() => {
-                              values.currentPassword = ''
-                              onClose()
-                            }}
-                          >
-                            <Trans>Close</Trans>
-                          </Button>
-                        </ModalFooter>
-                      </ModalContent>
-                    </Modal>
-                  )}
-                </SlideIn>
+                <ConfirmPasswordModal
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  initialFocusRef={currentPasswordRef}
+                  finalFocusRef={changePasswordBtnRef}
+                  isSubmitting={isSubmitting}
+                  values={values}
+                  body={changePasswordBody}
+                />
               </Stack>
             </form>
           )}
