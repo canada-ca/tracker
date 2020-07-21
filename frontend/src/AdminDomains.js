@@ -76,7 +76,7 @@ export function AdminDomains({ ...props }) {
 
     if (temp) {
       setDomainList(temp)
-      if (currentDomains.length <= 1)
+      if (currentDomains.length <= 1 && domainList.length > 1)
         setCurrentPage(Math.ceil(domainList.length / domainsPerPage) - 1)
       toast({
         title: 'Domain removed',
@@ -99,7 +99,7 @@ export function AdminDomains({ ...props }) {
   }
 
   return (
-    <Stack mb={6} w="100%">
+    <Stack mb={6} w="80%">
       <Text fontSize="2xl" fontWeight="bold">
         <Trans>Domain List</Trans>
       </Text>
@@ -166,12 +166,14 @@ export function AdminDomains({ ...props }) {
       </Stack>
 
       <Divider />
-      <PaginationButtons
-        perPage={domainsPerPage}
-        total={domainList.length}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
+      {domainList.length > 0 && (
+        <PaginationButtons
+          perPage={domainsPerPage}
+          total={domainList.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
+      )}
     </Stack>
   )
 }

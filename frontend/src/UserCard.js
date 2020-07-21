@@ -21,23 +21,23 @@ export function UserCard({ userName, displayName, tfa, role }) {
       p="30px"
     >
       <Box flexShrink="0" minW="15%">
-        <Text mt={1} fontSize="lg" fontWeight="semibold">
+        <Text mt={1} fontSize="md" fontWeight="semibold">
           {displayName}
         </Text>
       </Box>
       <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="35%">
-        <Text fontSize="lg" minW="10%">
+        <Text fontSize="md" minW="10%">
           {userName}
         </Text>
       </Box>
       {role && (
         <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="35%">
           <Stack isInline align="center">
-            <Badge variantColor="blue" variant="subtle">
+            <Badge variantColor="blue" variant="outline">
               {role}
             </Badge>
             <Badge variantColor={tfa ? 'green' : 'red'} minW="15%">
-              <Trans>TwoFactor</Trans>
+              <Trans>2FA</Trans>
             </Badge>
           </Stack>
         </Box>

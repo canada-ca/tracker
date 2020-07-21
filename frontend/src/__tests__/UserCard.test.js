@@ -26,7 +26,7 @@ describe('<UserCard />', () => {
       </MockedProvider>,
     )
 
-    const tfaBadge = getByText(/TwoFactor/i)
+    const tfaBadge = getByText(/2FA/i)
     expect(tfaBadge).toBeDefined()
     expect(tfaBadge).toHaveStyle('background-color: rgb(198, 246, 213)')
   })
@@ -49,7 +49,7 @@ describe('<UserCard />', () => {
       </MockedProvider>,
     )
 
-    const tfaBadge = getByText(/TwoFactor/i)
+    const tfaBadge = getByText(/2FA/i)
     expect(tfaBadge).toBeDefined()
     expect(tfaBadge).toHaveStyle('background-color: rgb(254, 215, 215)')
   })

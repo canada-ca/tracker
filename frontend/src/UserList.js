@@ -47,10 +47,11 @@ export default function UserList({ ...props }) {
         isClosable: true,
       })
     },
-    onCompleted() {
+    onCompleted(updateUserRoles) {
+      console.log(updateUserRoles)
       toast({
         title: i18n._(t`Role updated`),
-        description: i18n._(t`Role of USER updated to ROLE`),
+        description: i18n._(t`The user's role has been successfully updated`),
         status: 'success',
         duration: 9000,
         isClosable: true,
@@ -106,7 +107,7 @@ export default function UserList({ ...props }) {
     const temp = userList.filter((c) => c.node.id !== user.id)
     if (temp) {
       setUserList(temp)
-      if (currentUsers.length <= 1)
+      if (currentUsers.length <= 1 && userList.length > 1)
         setCurrentPage(Math.ceil(userList.length / usersPerPage) - 1)
       toast({
         title: 'User removed',
@@ -141,7 +142,7 @@ export default function UserList({ ...props }) {
   }
 
   return (
-    <Stack mb={6} w="100%">
+    <Stack mb={6} w="80%">
       <Text fontSize="2xl" fontWeight="bold">
         <Trans>User List</Trans>
       </Text>
@@ -197,18 +198,19 @@ export default function UserList({ ...props }) {
                     {userRole}
                   </Badge>
                 ) : (
-                  <Stack spacing={2}>
+                  <Stack maxW="40%">
                     <Select
-                      w="30"
+                      size="sm"
                       name="role"
                       defaultValue={userRole}
                       onChange={(e) => (userRole = e.target.value)}
                     >
-                      <option value="USER_READ">USER_READ</option>
-                      <option value="USER_WRITE">USER_WRITE</option>
+                      <option value="USER_READ">READ</option>
+                      <option value="USER_WRITE">WRITE</option>
                       <option value="ADMIN">ADMIN</option>
                     </Select>
                     <Button
+                      size="sm"
                       variantColor="blue"
                       type="submit"
                       onClick={() => handleClick(userRole, node.userName)}
@@ -223,6 +225,7 @@ export default function UserList({ ...props }) {
           }
           return (
             <UserCard
+              key={node.id}
               userName={node.userName}
               tfa={node.tfa}
               role={node.role}
@@ -232,12 +235,14 @@ export default function UserList({ ...props }) {
         })
       )}
       <Divider />
-      <PaginationButtons
-        perPage={usersPerPage}
-        total={userList.length}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
+      {userList.length > 0 && (
+        <PaginationButtons
+          perPage={usersPerPage}
+          total={userList.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
+      )}
     </Stack>
   )
 }
