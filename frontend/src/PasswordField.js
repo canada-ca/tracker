@@ -1,5 +1,5 @@
 import React from 'react'
-import { string } from 'prop-types'
+import { func, oneOfType, shape, string, elementType } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -16,7 +16,12 @@ import {
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox.js'
 
-function PasswordField({ name, label, ...props }) {
+const PasswordField = WithPseudoBox(function PasswordField({
+  name,
+  label,
+  forwardedRef,
+  ...props
+}) {
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
   const { i18n } = useLingui()
@@ -39,6 +44,7 @@ function PasswordField({ name, label, ...props }) {
           type={show ? 'text' : 'password'}
           placeholder={i18n._(t`Password`)}
           id={name}
+          ref={forwardedRef}
           {...field}
           {...props}
         />
@@ -51,11 +57,14 @@ function PasswordField({ name, label, ...props }) {
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
-}
+})
 
 PasswordField.propTypes = {
   name: string.isRequired,
   label: string,
+  forwardedRef: oneOfType([func, shape({ current: elementType })]),
 }
 
-export default WithPseudoBox(PasswordField)
+export default React.forwardRef((props, ref) => {
+  return <PasswordField {...props} forwardedRef={ref} />
+})

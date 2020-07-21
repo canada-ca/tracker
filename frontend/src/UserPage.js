@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Formik } from 'formik'
 import { useHistory, useLocation } from 'react-router-dom'
 import { string } from 'prop-types'
@@ -42,6 +42,7 @@ export default function UserPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { i18n } = useLingui()
   const changePasswordBtnRef = React.useRef()
+  const currentPasswordRef = React.useRef()
 
   const [updatePassword, { error: updatePasswordError }] = useMutation(
     UPDATE_USER_PROFILE,
@@ -260,6 +261,7 @@ export default function UserPage() {
                 <SlideIn in={isOpen}>
                   {styles => (
                     <Modal
+                      initialFocusRef={currentPasswordRef}
                       finalFocusRef={changePasswordBtnRef}
                       isOpen={true}
                       onClose={onClose}
@@ -280,8 +282,8 @@ export default function UserPage() {
                             </Text>
                             <PasswordField
                               name="currentPassword"
-                              label={i18n._(t`Current Password:`)}
-                              placeholder={i18n._(t`Current password`)}
+                              label="Current Password:"
+                              ref={currentPasswordRef}
                             />
                           </Stack>
                         </ModalBody>
