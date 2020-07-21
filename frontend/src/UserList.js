@@ -16,10 +16,9 @@ import {
 import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
-import { string, object } from 'prop-types'
+import { string, shape, boolean } from 'prop-types'
 
-export default function UserList({ ...props }) {
-  const { name, userListData, orgName } = props
+export default function UserList({ name, userListData, orgName }) {
   const [userList, setUserList] = useState(userListData.userList.edges)
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
@@ -33,7 +32,7 @@ export default function UserList({ ...props }) {
   const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser)
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   const addUser = (name, id) => {
     if (name !== '') {
@@ -68,8 +67,8 @@ export default function UserList({ ...props }) {
     }
   }
 
-  const removeUser = (user) => {
-    const temp = userList.filter((c) => c.node.id !== user.id)
+  const removeUser = user => {
+    const temp = userList.filter(c => c.node.id !== user.id)
 
     if (temp) {
       setUserList(temp)
@@ -109,7 +108,7 @@ export default function UserList({ ...props }) {
             type="text"
             placeholder={i18n._(t`Search for a user`)}
             value={userSearch}
-            onChange={(e) => {
+            onChange={e => {
               setUserSearch(e.target.value)
             }}
           />
@@ -199,7 +198,13 @@ export default function UserList({ ...props }) {
 </Box> */
 
 UserList.propTypes = {
-  userListData: object,
+  userListData: shape({
+    id: string,
+    userName: string,
+    admin: boolean,
+    tfa: boolean,
+    displayName: string,
+  }),
   orgName: string,
   name: string,
 }

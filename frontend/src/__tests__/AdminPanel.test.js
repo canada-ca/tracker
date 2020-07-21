@@ -58,17 +58,17 @@ describe('<AdminPanel />', () => {
           data: {
             userList: {
               pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false,
+                hasNextPage: true,
+                hasPreviousPage: true,
               },
               edges: [
                 {
                   node: {
-                    id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
-                    userName: 'testuser@testemail.gc.ca',
-                    admin: true,
-                    tfa: false,
-                    displayName: 'Test User Esq.',
+                    id: 'NDE2MDU4MjA2Mg==',
+                    userName: 'Golda.Mohr@yahoo.com',
+                    role: 'SUPER_ADMIN',
+                    tfa: true,
+                    displayName: 'Waylon',
                   },
                 },
               ],
