@@ -99,7 +99,7 @@ export default function CreateUserPage() {
           confirmPassword: '',
           lang: '',
         }}
-        onSubmit={async (values) => {
+        onSubmit={async values => {
           signUp({
             variables: {
               userName: values.email,
@@ -107,8 +107,7 @@ export default function CreateUserPage() {
               password: values.password,
               confirmPassword: values.confirmPassword,
               preferredLang: values.lang,
-              signUpToken:
-                userOrgToken !== undefined ? userOrgToken : undefined,
+              signUpToken: userOrgToken,
             },
           })
         }}
