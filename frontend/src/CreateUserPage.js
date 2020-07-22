@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Stack, useToast, Box, Heading } from '@chakra-ui/core'
+import { Button, Stack, useToast, Box, Heading, Text } from '@chakra-ui/core'
 import { useMutation } from '@apollo/client'
 import { object, string, ref } from 'yup'
 import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
@@ -114,11 +114,12 @@ export default function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Heading as="h1" fontSize="2xl" mb="6">
-              <Trans>
-                Create an account by entering an email and password.
-              </Trans>
-            </Heading>
+            <Stack spacing="6" align="center">
+              <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
+                <Trans>
+                  Create an account by entering an email and password.
+                </Trans>
+              </Heading>
 
               {addUserToOrgText}
 
@@ -126,7 +127,7 @@ export default function CreateUserPage() {
 
               <DisplayNameField name="displayName" width="100%" />
 
-              <PasswordConfirmation mb="4" width="100%" />
+              <PasswordConfirmation mb="4" width="100%" spacing="6" />
 
               <LanguageSelect name="lang" width="100%" />
 
