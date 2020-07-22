@@ -31,26 +31,6 @@ describe('<UserList />', () => {
     },
   }
 
-  // const mocks = [
-  //   {
-  //     request: {
-  //       query: UPDATE_USER_ROLES,
-  //       variables: {
-  //         input: {
-  //           orgSlug: 'mocked-org-slug',
-  //           role: 'USER_WRITE',
-  //           userName: 'testuser@testemail.gc.ca',
-  //         },
-  //       },
-  //     },
-  //     result: {
-  //       data: {
-  //         status: 'string',
-  //       },
-  //     },
-  //   },
-  // ]
-
   it('successfully renders with mocked data', async () => {
     // Set the inital history item to user-list
     const { getAllByText } = render(
@@ -123,6 +103,72 @@ describe('<UserList />', () => {
     await waitFor(() => {
       // Path should be '/user', so expect that value
       expect(history.location.pathname).toEqual('/user')
+    })
+  })
+
+  describe('Admin profile userlist', () => {
+    it("user role is updated when the 'Apply' button is clicked", async () => {
+      const history = createMemoryHistory({
+        initialEntries: ['/user-list'],
+        initialIndex: 0,
+      })
+
+      const mocks = [
+        {
+          request: {
+            query: UPDATE_USER_ROLES,
+            variables: {
+              input: {
+                orgSlug: 'test-org-slug',
+                role: 'USER_READ',
+                userName: 'testuser@testemail.gc.ca',
+              },
+            },
+          },
+          result: {
+            data: {
+              status: 'string',
+            },
+          },
+        },
+      ]
+
+      const { getAllByText, getByText } = render(
+        <UserStateProvider
+          initialState={{
+            userName: 'testadmin@testemail.gc.ca',
+            jwt: 'string',
+            tfa: false,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={setupI18n()}>
+              <Router history={history}>
+                <MockedProvider mocks={mocks} addTypename={false}>
+                  <UserList
+                    userListData={data}
+                    name="admin"
+                    orgSlug="test-org-slug"
+                  />
+                </MockedProvider>
+              </Router>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
+      )
+
+      await waitFor(() => {
+        const userRole = getByText(/READ/i)
+        expect(userRole).toBeDefined()
+        // expect(userRole.type).toEqual('select-one')
+      })
+
+      const updateButtons = await waitFor(() => getAllByText(/Apply/i))
+      expect(updateButtons).toHaveLength(1)
+
+      const leftClick = { button: 0 }
+      fireEvent.click(updateButtons[0], leftClick)
+      // default `button` property for click events is set to `0` which is a left click.
     })
   })
 })

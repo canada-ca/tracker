@@ -72,7 +72,7 @@ export default function App() {
 
           {isLoggedIn() && (
             <Link to="/admin">
-              <Trans>Admin Portal</Trans>
+              <Trans>Admin Profile</Trans>
             </Link>
           )}
         </Navigation>
