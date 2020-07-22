@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { Formik } from 'formik'
 import { useHistory, useLocation } from 'react-router-dom'
 import { string } from 'prop-types'
@@ -11,17 +11,8 @@ import {
   Checkbox,
   CheckboxGroup,
   useToast,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
-  SlideIn,
   Heading,
-  Box,
 } from '@chakra-ui/core'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import PasswordConfirmation from './PasswordConfirmation'
@@ -33,7 +24,6 @@ import DisplayNameField from './DisplayNameField'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import PasswordField from './PasswordField'
 import ConfirmPasswordModal from './ConfirmPasswordModal'
 
 export default function UserPage() {
@@ -115,32 +105,24 @@ export default function UserPage() {
     return <p>{String(queryUserError)}</p>
   }
 
-  const changePasswordBody = (
-    <Stack>
-      <Text>
-        <Trans>Please enter your current password for verification.</Trans>
-      </Text>
-    </Stack>
-  )
-
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Formik
         initialValues={{
+          displayName: queryUserData.userPage.displayName,
           email: currentUser.userName,
           lang: queryUserData.userPage.lang,
-          displayName: queryUserData.userPage.displayName,
         }}
         onSubmit={(values, actions) => {
           window.alert('coming soon!!\n' + JSON.stringify(values, null, 2))
           actions.setSubmitting(false)
         }}
       >
-        {({ handleSubmit, _handleChange, _values }) => (
+        {({ handleSubmit, isSubmitting }) => (
           <form onSubmit={handleSubmit}>
             <Stack p={25} spacing={4}>
               <Heading as="h1" size="lg" textAlign="center">
-                User Profile
+                <Trans>User Profile</Trans>
               </Heading>
 
               <DisplayNameField name="displayName" />
@@ -154,8 +136,9 @@ export default function UserPage() {
                 variantColor="teal"
                 width="fit-content"
                 px={8}
+                isLoading={isSubmitting}
               >
-                Save Changes
+                <Trans>Save Changes</Trans>
               </Button>
             </Stack>
           </form>
@@ -164,7 +147,7 @@ export default function UserPage() {
 
       <Stack Stack p={25} spacing={4}>
         <Heading as="h1" size="lg" textAlign="center">
-          Account Details
+          <Trans>Account Details</Trans>
         </Heading>
         <CheckboxGroup
           mt="20px"
@@ -187,7 +170,7 @@ export default function UserPage() {
             }}
             isDisabled={!!location.state}
           >
-            Enable 2FA
+            <Trans>Enable 2FA</Trans>
           </Button>
           <Button
             leftIcon="edit"
@@ -196,7 +179,7 @@ export default function UserPage() {
               window.alert('coming soon')
             }}
           >
-            Manage API keys
+            <Trans>Manage API keys</Trans>
           </Button>
         </Stack>
 
@@ -217,71 +200,66 @@ export default function UserPage() {
           }}
           isDisabled={!!location.state}
         >
-          Sign Out
+          <Trans>Sign Out</Trans>
         </Button>
       </Stack>
 
-      {location.state ? (
-        <Text>You can only change the password for your own account.</Text>
-      ) : (
-        <Formik
-          initialValues={{
-            password: '',
-            confirmPassword: '',
-            currentPassword: '',
-          }}
-          onSubmit={async values => {
-            // Submit update password mutation
-            await updatePassword({
-              variables: {
-                userName: currentUser.userName,
-                password: values.password,
-                confirmPassword: values.confirmPassword,
-                currentPassword: values.currentPassword,
-              },
-            })
-          }}
-        >
-          {({ handleSubmit, isSubmitting, values }) => (
-            <form id="form" onSubmit={handleSubmit}>
-              <Stack spacing={4} p={25}>
-                <Heading as="h1" size="lg" textAlign="center">
-                  <Trans>Change Password</Trans>
-                </Heading>
+      <Formik
+        initialValues={{
+          password: '',
+          confirmPassword: '',
+          currentPassword: '',
+        }}
+        onSubmit={async values => {
+          // Submit update password mutation
+          await updatePassword({
+            variables: {
+              userName: currentUser.userName,
+              password: values.password,
+              confirmPassword: values.confirmPassword,
+              currentPassword: values.currentPassword,
+            },
+          })
+        }}
+      >
+        {({ handleSubmit, isSubmitting, values }) => (
+          <form id="form" onSubmit={handleSubmit}>
+            <Stack spacing={4} p={25}>
+              <Heading as="h1" size="lg" textAlign="center">
+                <Trans>Change Password</Trans>
+              </Heading>
 
-                <Text>
-                  <Trans>
-                    Change your password below by entering and confirming a new
-                    password.
-                  </Trans>
-                </Text>
+              <Text>
+                <Trans>
+                  Change your password below by entering and confirming a new
+                  password.
+                </Trans>
+              </Text>
 
-                <PasswordConfirmation />
+              <PasswordConfirmation />
 
-                <Button
-                  onClick={onOpen}
-                  variantColor="teal"
-                  width="fit-content"
-                  px={8}
-                  ref={changePasswordBtnRef}
-                >
-                  <Trans>Change Password</Trans>
-                </Button>
+              <Button
+                onClick={onOpen}
+                variantColor="teal"
+                width="fit-content"
+                px={8}
+                ref={changePasswordBtnRef}
+              >
+                <Trans>Change Password</Trans>
+              </Button>
 
-                <ConfirmPasswordModal
-                  isOpen={isOpen}
-                  onClose={onClose}
-                  initialFocusRef={currentPasswordRef}
-                  finalFocusRef={changePasswordBtnRef}
-                  isSubmitting={isSubmitting}
-                  values={values}
-                  body={changePasswordBody}
-                />
-              </Stack>
-            </form>
-          )}
-        </Formik>
-      )}
+              <ConfirmPasswordModal
+                isOpen={isOpen}
+                onClose={onClose}
+                initialFocusRef={currentPasswordRef}
+                finalFocusRef={changePasswordBtnRef}
+                isSubmitting={isSubmitting}
+                values={values}
+              />
+            </Stack>
+          </form>
+        )}
+      </Formik>
     </SimpleGrid>
   )
 }

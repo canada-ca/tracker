@@ -32,7 +32,6 @@ function ConfirmPasswordModal({
   finalFocusRef,
   isSubmitting,
   values,
-  body,
   ..._props
 }) {
   return (
@@ -52,7 +51,11 @@ function ConfirmPasswordModal({
             <ModalCloseButton />
             <ModalBody>
               <Stack spacing={8}>
-                {body}
+                <Text>
+                  <Trans>
+                    Please enter your current password for verification.
+                  </Trans>
+                </Text>
                 <PasswordField
                   name="currentPassword"
                   label="Current Password:"
@@ -97,7 +100,6 @@ ConfirmPasswordModal.propTypes = {
   finalFocusRef: oneOfType([func, shape({ current: object })]),
   isSubmitting: bool,
   values: shape({ currentPassword: string }).isRequired,
-  body: element,
 }
 
 export default WithPseudoBox(ConfirmPasswordModal)
