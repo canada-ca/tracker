@@ -14,6 +14,7 @@ import {
   useToast,
   Select,
   Badge,
+  Box,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
@@ -181,45 +182,53 @@ export default function UserList({ ...props }) {
           let userRole = node.role
           if (name === 'admin') {
             return (
-              <Stack key={node.id} spacing={2} isInline align="center">
-                <IconButton
-                  icon="minus"
-                  size="sm"
-                  variantColor="red"
-                  onClick={() => removeUser(node)}
-                  isDisabled={userRole === 'SUPER_ADMIN'}
-                />
-                <UserCard
-                  userName={node.userName}
-                  displayName={node.displayName}
-                />
+              <Box>
                 {userRole === 'SUPER_ADMIN' ? (
-                  <Badge variantColor="blue" variant="outline">
-                    SUPER ADMIN
-                  </Badge>
-                ) : (
-                  <Stack maxW="40%">
-                    <Select
-                      size="sm"
-                      name="role"
-                      defaultValue={userRole}
-                      onChange={(e) => (userRole = e.target.value)}
-                    >
-                      <option value="USER_READ">{i18n._(t`READ`)}</option>
-                      <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>
-                      <option value="ADMIN">{i18n._(t`ADMIN`)}</option>
-                    </Select>
-                    <Button
-                      size="sm"
-                      variantColor="blue"
-                      type="submit"
-                      onClick={() => handleClick(userRole, node.userName)}
-                    >
-                      <Trans>Apply</Trans>
-                    </Button>
+                  <Stack key={node.id} isInline align="center">
+                    <UserCard
+                      userName={node.userName}
+                      displayName={node.displayName}
+                      role={userRole}
+                    />
                   </Stack>
+                ) : (
+                  <Box>
+                    <Stack isInline align="center">
+                      <IconButton
+                        icon="minus"
+                        size="sm"
+                        variantColor="red"
+                        onClick={() => removeUser(node)}
+                      />
+                      <UserCard
+                        userName={node.userName}
+                        displayName={node.displayName}
+                      />
+                    </Stack>
+                    <Stack isInline justifyContent="flex-end">
+                      <Select
+                        w="30%"
+                        size="sm"
+                        name="role"
+                        defaultValue={userRole}
+                        onChange={(e) => (userRole = e.target.value)}
+                      >
+                        <option value="USER_READ">{i18n._(t`READ`)}</option>
+                        <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>
+                        <option value="ADMIN">{i18n._(t`ADMIN`)}</option>
+                      </Select>
+                      <Button
+                        size="sm"
+                        variantColor="blue"
+                        type="submit"
+                        onClick={() => handleClick(userRole, node.userName)}
+                      >
+                        <Trans>Apply</Trans>
+                      </Button>
+                    </Stack>
+                  </Box>
                 )}
-              </Stack>
+              </Box>
             )
           }
           return (
