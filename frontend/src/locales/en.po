@@ -133,6 +133,7 @@ msgstr "Admin Portal"
 
 #: src/CreateUserPage.js:42
 #: src/SignInPage.js:30
+#: src/UserList.js:44
 msgid "An error occurred."
 msgstr "An error occurred."
 
@@ -1523,3 +1524,15 @@ msgstr "ADMIN"
 #: src/UserList.js:225
 msgid "Apply"
 msgstr "Apply"
+
+#: src/UserList.js:
+msgid "Unable to change user role, please try again."
+msgstr "Unable to change user role, please try again."
+
+#: src/UserList.js:
+msgid "Role updated"
+msgstr "Role updated"
+
+#: src/UserList.js:
+msgid "The user's role has been successfully updated"
+msgstr "The user's role has been successfully updated"

@@ -133,6 +133,7 @@ msgstr "Portail Admin"
 
 #: src/CreateUserPage.js:42
 #: src/SignInPage.js:30
+#: src/UserList.js:44
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
@@ -1514,3 +1515,15 @@ msgstr "ADMIN"
 #: src/UserList.js:225
 msgid "Apply"
 msgstr "Appliquer"
+
+#: src/UserList.js:
+msgid "Unable to change user role, please try again."
+msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
+
+#: src/UserList.js:
+msgid "Role updated"
+msgstr "Rôle mis à jour"
+
+#: src/UserList.js:
+msgid "The user's role has been successfully updated"
+msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"

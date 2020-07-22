@@ -207,7 +207,7 @@ export default function UserList({ ...props }) {
                     </Stack>
                     <Stack isInline justifyContent="flex-end">
                       <Select
-                        w="30%"
+                        w="35%"
                         size="sm"
                         name="role"
                         defaultValue={userRole}
