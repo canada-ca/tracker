@@ -19,7 +19,7 @@ import { UserCard } from './UserCard'
 import { string, shape, boolean } from 'prop-types'
 
 export default function UserList({ name, userListData, orgName }) {
-  const [userList, setUserList] = useState(userListData.userList.edges)
+  const [userList, setUserList] = useState(userListData.edges)
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
   const [userSearch, setUserSearch] = useState('')

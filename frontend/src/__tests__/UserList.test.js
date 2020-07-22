@@ -11,23 +11,21 @@ import { setupI18n } from '@lingui/core'
 describe('<UserList />', () => {
   it('successfully renders with mocked data', async () => {
     const mocks = {
-      userList: {
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-        },
-        edges: [
-          {
-            node: {
-              id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
-              userName: 'testuser@testemail.gc.ca',
-              admin: true,
-              tfa: false,
-              displayName: 'Test User Esq.',
-            },
-          },
-        ],
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
       },
+      edges: [
+        {
+          node: {
+            id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
+            userName: 'testuser@testemail.gc.ca',
+            admin: true,
+            tfa: false,
+            displayName: 'Test User Esq.',
+          },
+        },
+      ],
     }
 
     // Set the inital history item to user-list
@@ -59,23 +57,21 @@ describe('<UserList />', () => {
 
   it('redirects to userPage when a list element is clicked', async () => {
     const mocks = {
-      userList: {
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-        },
-        edges: [
-          {
-            node: {
-              id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
-              userName: 'testuser@testemail.gc.ca',
-              admin: true,
-              tfa: false,
-              displayName: 'Test User Esq.',
-            },
-          },
-        ],
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
       },
+      edges: [
+        {
+          node: {
+            id: 'VXNlckxpc3RJdGVtOigzLCAyKQ==',
+            userName: 'testuser@testemail.gc.ca',
+            admin: true,
+            tfa: false,
+            displayName: 'Test User Esq.',
+          },
+        },
+      ],
     }
 
     // create a history object and inject it so we can inspect it afterwards
