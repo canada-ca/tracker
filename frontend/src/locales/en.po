@@ -1507,3 +1507,19 @@ msgstr "{domainName}"
 #: src/DmarcGuidancePage.js:40
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/UserList.js:209
+msgid "READ"
+msgstr "READ"
+
+#: src/UserList.js:212
+msgid "WRITE"
+msgstr "WRITE"
+
+#: src/UserList.js:215
+msgid "ADMIN"
+msgstr "ADMIN"
+
+#: src/UserList.js:225
+msgid "Apply"
+msgstr "Apply"

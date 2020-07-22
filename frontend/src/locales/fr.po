@@ -1499,3 +1499,18 @@ msgstr ""
 #: src/DmarcGuidancePage.js:40
 msgid "{orgName}"
 msgstr ""
+
+msgid "READ"
+msgstr "LIRE"
+
+#: src/UserList.js:212
+msgid "WRITE"
+msgstr "ÉCRIRE"
+
+#: src/UserList.js:215
+msgid "ADMIN"
+msgstr "ADMIN"
+
+#: src/UserList.js:225
+msgid "Apply"
+msgstr "Appliquer"

@@ -195,7 +195,7 @@ export default function UserList({ ...props }) {
                 />
                 {userRole === 'SUPER_ADMIN' ? (
                   <Badge variantColor="blue" variant="outline">
-                    {userRole}
+                    SUPER ADMIN
                   </Badge>
                 ) : (
                   <Stack maxW="40%">
@@ -205,18 +205,17 @@ export default function UserList({ ...props }) {
                       defaultValue={userRole}
                       onChange={(e) => (userRole = e.target.value)}
                     >
-                      <option value="USER_READ">READ</option>
-                      <option value="USER_WRITE">WRITE</option>
-                      <option value="ADMIN">ADMIN</option>
+                      <option value="USER_READ">{i18n._(t`READ`)}</option>
+                      <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>
+                      <option value="ADMIN">{i18n._(t`ADMIN`)}</option>
                     </Select>
                     <Button
                       size="sm"
                       variantColor="blue"
                       type="submit"
                       onClick={() => handleClick(userRole, node.userName)}
-                      isDisabled={userRole === 'SUPER_ADMIN'}
                     >
-                      Apply
+                      <Trans>Apply</Trans>
                     </Button>
                   </Stack>
                 )}

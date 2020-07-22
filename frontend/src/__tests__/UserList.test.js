@@ -53,7 +53,6 @@ describe('<UserList />', () => {
       </UserStateProvider>,
     )
 
-    //
     // Get all of the mocked user cards, and expect there to be only one entry.
     await waitFor(() => {
       const userCards = getAllByText('testuser@testemail.gc.ca')
@@ -160,7 +159,6 @@ describe('<UserList />', () => {
       await waitFor(() => {
         const userRole = getByText(/READ/i)
         expect(userRole).toBeDefined()
-        // expect(userRole.type).toEqual('select-one')
       })
 
       const updateButtons = await waitFor(() => getAllByText(/Apply/i))
