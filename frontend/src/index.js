@@ -1,7 +1,7 @@
 import React from 'react'
 import { ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
-import { ApolloProvider } from '@apollo/react-hooks'
+import { ApolloProvider } from '@apollo/client'
 import { i18n } from '@lingui/core'
 import ReactDOM from 'react-dom'
 import App from './App'

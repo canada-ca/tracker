@@ -1,5 +1,5 @@
 import React from 'react'
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import { render, waitFor } from '@testing-library/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
@@ -56,7 +56,7 @@ const mocks = [
 
 describe('<SummaryGroup />', () => {
   describe('given the data for web and email summaries', () => {
-    it('displays two summay cards', async () => {
+    it('displays two summary cards', async () => {
       const { getAllByText } = render(
         <I18nProvider i18n={setupI18n()}>
           <ThemeProvider theme={theme}>

@@ -13,7 +13,7 @@ import {
   Heading,
 } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import { useUserState } from './UserState'
 import { AUTHENTICATE } from './graphql/mutations'

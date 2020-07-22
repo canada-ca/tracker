@@ -242,6 +242,15 @@ msgid "Confirm Password:"
 msgstr "Confirm Password:"
 
 #: src/PasswordConfirmation.js:144
+#: src/PasswordConfirmation.js:121
+#~ msgid "Confirm Password"
+#~ msgstr "Confirm Password"
+
+#: src/PasswordConfirmation.js:121
+msgid "Confirm Password:"
+msgstr "Confirm Password:"
+
+#: src/PasswordConfirmation.js:144
 msgid "Confirm password"
 msgstr "Confirm password"
 
@@ -971,6 +980,11 @@ msgstr "Password must be at least 12 characters long"
 msgid "Password:"
 msgstr "Password:"
 
+#: src/PasswordConfirmation.js:69
+#: src/PasswordField.js:28
+msgid "Password:"
+msgstr "Password:"
+
 #: src/CreateUserPage.js:32
 msgid "Passwords must match"
 msgstr "Passwords must match"
@@ -1238,6 +1252,15 @@ msgstr "Search for a user"
 #: src/LanguageSelect.js:25
 msgid "Select Preferred Language"
 msgstr "Select Preferred Language"
+
+#: src/AdminPage.js:44
+#: src/LanguageSelect.js:21
+#~ msgid "Select Your Preferred Language"
+#~ msgstr "Select Your Preferred Language"
+
+#: src/LanguageSelect.js:21
+msgid "Select Your Preferred Language:"
+msgstr "Select Your Preferred Language:"
 
 #: src/AdminPage.js:44
 #: src/LanguageSelect.js:21

@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 
 export const WEB_AND_EMAIL_SUMMARIES = gql`
   query LandingPageSummaries {
@@ -98,6 +98,39 @@ export const ORGANIZATIONS = gql`
           name
           domainCount
           slug
+        }
+      }
+    }
+  }
+`
+
+export const ADMIN_PANEL = gql`
+  query Domains($number: Int, $cursor: String, $slug: Slug!) {
+    domains: findMyDomains(first: $number, after: $cursor) {
+      edges {
+        node {
+          url
+          slug
+          lastRan
+        }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+    userList(orgSlug: $slug) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        node {
+          id
+          userName
+          role
+          tfa
+          displayName
         }
       }
     }

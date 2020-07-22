@@ -2031,6 +2031,11 @@ input UpdateUserProfileInput {
   preferredLang: LanguageEnums
 
   """
+  The users current password to verify it is the current user.
+  """
+  currentPassword: String
+
+  """
   The new password the user wishes to change to.
   """
   password: String

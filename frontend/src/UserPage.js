@@ -14,7 +14,7 @@ import {
   useDisclosure,
   Heading,
 } from '@chakra-ui/core'
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/client'
 import PasswordConfirmation from './PasswordConfirmation'
 import LanguageSelect from './LanguageSelect'
 import { useUserState } from './UserState'

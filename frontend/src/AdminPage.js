@@ -6,7 +6,7 @@ import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
 import { array } from 'prop-types'
 import { USER_AFFILIATIONS } from './graphql/queries'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 
 export default function AdminPage() {
@@ -20,7 +20,7 @@ export default function AdminPage() {
         authorization: currentUser.jwt,
       },
     },
-    onError: (error) => {
+    onError: error => {
       const [_, message] = error.message.split(': ')
       console.log(message)
     },
@@ -73,7 +73,7 @@ export default function AdminPage() {
               w="25%"
               size="lg"
               variant="filled"
-              onChange={(e) => {
+              onChange={e => {
                 setOrgName(e.target.value)
               }}
             >

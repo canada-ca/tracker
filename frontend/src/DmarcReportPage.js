@@ -1,6 +1,6 @@
 import React from 'react'
 import { useUserState } from './UserState'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import {
   DEMO_DMARC_REPORT_DETAIL_TABLES,
   DEMO_DMARC_REPORT_SUMMARY_LIST,

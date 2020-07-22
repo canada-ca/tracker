@@ -242,6 +242,15 @@ msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe :"
 
 #: src/PasswordConfirmation.js:144
+#: src/PasswordConfirmation.js:121
+#~ msgid "Confirm Password"
+#~ msgstr "Confirmer le mot de passe"
+
+#: src/PasswordConfirmation.js:121
+msgid "Confirm Password:"
+msgstr "Confirmez le mot de passe :"
+
+#: src/PasswordConfirmation.js:144
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
@@ -440,6 +449,15 @@ msgstr "Domaines"
 #: src/EmailField.js:34
 msgid "Email"
 msgstr "Courriel"
+
+#: src/SummaryGroup.js:60
+#: src/EmailField.js:24
+#~ msgid "Email Address"
+#~ msgstr "Adresse électronique"
+
+#: src/EmailField.js:24
+msgid "Email Address:"
+msgstr "Adresse électronique :"
 
 #: src/SummaryGroup.js:60
 #: src/EmailField.js:24
@@ -964,6 +982,11 @@ msgstr "Le mot de passe doit comporter au moins 12 caractères"
 msgid "Password:"
 msgstr "Mot de passe :"
 
+#: src/PasswordConfirmation.js:69
+#: src/PasswordField.js:28
+msgid "Password:"
+msgstr "Mot de passe :"
+
 #: src/CreateUserPage.js:32
 msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
@@ -1223,6 +1246,15 @@ msgstr "Rechercher un utilisateur"
 #: src/LanguageSelect.js:25
 msgid "Select Preferred Language"
 msgstr "Sélectionnez votre langue préférée"
+
+#: src/AdminPage.js:44
+#: src/LanguageSelect.js:21
+#~ msgid "Select Your Preferred Language"
+#~ msgstr "Sélectionnez votre langue préférée"
+
+#: src/LanguageSelect.js:21
+msgid "Select Your Preferred Language:"
+msgstr "Sélectionnez votre langue préférée :"
 
 #: src/AdminPage.js:44
 #: src/LanguageSelect.js:21
