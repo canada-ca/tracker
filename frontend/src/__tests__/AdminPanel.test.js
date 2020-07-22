@@ -5,7 +5,7 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { MockedProvider } from '@apollo/client/testing'
-import { DOMAINS, QUERY_USERLIST } from '../graphql/queries'
+import { ADMIN_PANEL } from '../graphql/queries'
 import AdminPanel from '../AdminPanel'
 
 describe('<AdminPanel />', () => {
@@ -13,7 +13,8 @@ describe('<AdminPanel />', () => {
     const mocks = [
       {
         request: {
-          query: DOMAINS,
+          query: ADMIN_PANEL,
+          variables: { slug: 'testorgslug' },
         },
         result: {
           data: {
@@ -21,54 +22,30 @@ describe('<AdminPanel />', () => {
               edges: [
                 {
                   node: {
-                    url: 'tbs-sct.gc.ca',
-                    slug: 'tbs-sct-gc-ca',
-                    lastRan: null,
-                  },
-                },
-                {
-                  node: {
-                    url: 'canada.ca',
-                    slug: 'canada-ca',
-                    lastRan: null,
-                  },
-                },
-                {
-                  node: {
-                    url: 'rcmp-grc.gc.ca',
-                    slug: 'rcmp-grc-gc-ca',
+                    url: 'tbs-sct.ca',
+                    slug: 'tbs-sct-ca',
                     lastRan: null,
                   },
                 },
               ],
               pageInfo: {
-                endCursor: 'YXJyYXljb25uZWN0aW9uOjI=',
+                endCursor: 'YXJyYXljb25uZWN0aW9uOjQ=',
                 hasNextPage: false,
               },
             },
-          },
-        },
-      },
-      {
-        request: {
-          query: QUERY_USERLIST,
-          variables: { slug: 'testuser-testemail-gc-ca' },
-        },
-        result: {
-          data: {
             userList: {
               pageInfo: {
-                hasNextPage: true,
-                hasPreviousPage: true,
+                hasNextPage: false,
+                hasPreviousPage: false,
               },
               edges: [
                 {
                   node: {
-                    id: 'NDE2MDU4MjA2Mg==',
-                    userName: 'Golda.Mohr@yahoo.com',
-                    role: 'SUPER_ADMIN',
-                    tfa: true,
-                    displayName: 'Waylon',
+                    id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
+                    userName: 'testuser@testemail.gc.ca',
+                    role: 'ADMIN',
+                    tfa: false,
+                    displayName: 'testuser',
                   },
                 },
               ],
@@ -89,7 +66,7 @@ describe('<AdminPanel />', () => {
         <I18nProvider i18n={setupI18n()}>
           <ThemeProvider theme={theme}>
             <MockedProvider mocks={mocks} addTypename={false}>
-              <AdminPanel orgName="test" />
+              <AdminPanel orgName="testorgslug" />
             </MockedProvider>
           </ThemeProvider>
         </I18nProvider>

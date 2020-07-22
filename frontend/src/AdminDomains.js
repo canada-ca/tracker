@@ -21,8 +21,8 @@ import { ListOf } from './ListOf'
 
 export function AdminDomains({ domainsData, orgName }) {
   let domains = []
-  if (domainsData && domainsData.domains.edges) {
-    domains = domainsData.domains.edges.map(e => e.node)
+  if (domainsData && domainsData.edges) {
+    domains = domainsData.edges.map(e => e.node)
   }
 
   const [domainList, setDomainList] = useState(domains)
