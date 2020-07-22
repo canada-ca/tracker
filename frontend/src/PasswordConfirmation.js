@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLingui } from '@lingui/react'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
   FormErrorMessage,
@@ -13,6 +13,7 @@ import {
   Button,
   Box,
   Stack,
+  FormLabel,
 } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 import { Field } from 'formik'
@@ -64,6 +65,9 @@ function PasswordConfirmation({ ...props }) {
             <FormControl
               isInvalid={form.errors.password && form.touched.password}
             >
+              <FormLabel htmlFor="password" fontWeight="bold">
+                <Trans>Password:</Trans>
+              </FormLabel>
               <InputGroup>
                 <InputLeftElement>
                   {icon === 'spinner' ? (
@@ -113,6 +117,9 @@ function PasswordConfirmation({ ...props }) {
                 form.errors.confirmPassword && form.touched.confirmPassword
               }
             >
+              <FormLabel htmlFor="confirmPassword" fontWeight="bold">
+                <Trans>Confirm Password:</Trans>
+              </FormLabel>
               <InputGroup>
                 <InputLeftElement>
                   {confirmIcon === 'spinner' ? (

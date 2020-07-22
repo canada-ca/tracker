@@ -12,7 +12,7 @@ import {
   Button,
 } from '@chakra-ui/core'
 import { Formik, Field } from 'formik'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { VALIDATE_TWO_FACTOR } from './graphql/mutations'
 
 export function TwoFactorPage() {

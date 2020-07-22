@@ -1,22 +1,28 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { SimpleGrid } from '@chakra-ui/core'
+import { useToast, SimpleGrid } from '@chakra-ui/core'
 import SummaryCard from './SummaryCard'
 import { string } from 'prop-types'
 import theme from './theme/canada'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import { WEB_AND_EMAIL_SUMMARIES } from './graphql/queries'
 
 const { colors } = theme
 
 export function SummaryGroup() {
   const { i18n } = useLingui()
+  const toast = useToast()
 
   const { loading, error, data } = useQuery(WEB_AND_EMAIL_SUMMARIES, {
-    onError: (error) => {
-      const [_, message] = error.message.split(': ')
-      console.log(message)
+    onError: ({ message }) => {
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'failure',
+        duration: 9000,
+        isClosable: true,
+      })
     },
   })
 

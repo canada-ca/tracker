@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button, Stack, Text, useToast, Box } from '@chakra-ui/core'
-import { useMutation } from '@apollo/react-hooks'
+import { Button, Stack, useToast, Box, Heading } from '@chakra-ui/core'
+import { useMutation } from '@apollo/client'
 import { object, string, ref } from 'yup'
 import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
 import { Formik } from 'formik'
@@ -114,12 +114,11 @@ export default function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Stack spacing="4" align="center">
-              <Text fontSize="2xl">
-                <Trans>
-                  Create an account by entering an email and password.
-                </Trans>
-              </Text>
+            <Heading as="h1" fontSize="2xl" mb="6">
+              <Trans>
+                Create an account by entering an email and password.
+              </Trans>
+            </Heading>
 
               {addUserToOrgText}
 

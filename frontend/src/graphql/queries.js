@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 
 export const WEB_AND_EMAIL_SUMMARIES = gql`
   query LandingPageSummaries {
@@ -41,6 +41,55 @@ export const ORGANIZATION_BY_SLUG = gql`
   }
 `
 
+export const GET_GUIDANCE_TAGS_OF_DOMAIN = gql`
+  query FindDomainBySlug($urlSlug: Slug!) {
+    findDomainBySlug(urlSlug: $urlSlug) {
+      url
+      slug
+      lastRan
+      organization {
+        name
+      }
+      web {
+        edges {
+          cursor
+          node {
+            id
+            timestamp
+            domain
+            https {
+              httpsGuidanceTags
+            }
+            ssl {
+              sslGuidanceTags
+            }
+          }
+        }
+      }
+      email {
+        edges {
+          node {
+            timestamp
+            domain
+            dmarc {
+              dmarcGuidanceTags
+            }
+            spf {
+              spfGuidanceTags
+            }
+            dkim {
+              selectors {
+                selector
+                dkimGuidanceTags
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const ORGANIZATIONS = gql`
   query Organisations {
     organizations: findMyOrganizations(first: 10) {
@@ -49,6 +98,39 @@ export const ORGANIZATIONS = gql`
           name
           domainCount
           slug
+        }
+      }
+    }
+  }
+`
+
+export const ADMIN_PANEL = gql`
+  query Domains($number: Int, $cursor: String, $slug: Slug!) {
+    domains: findMyDomains(first: $number, after: $cursor) {
+      edges {
+        node {
+          url
+          slug
+          lastRan
+        }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+    userList(orgSlug: $slug) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        node {
+          id
+          userName
+          role
+          tfa
+          displayName
         }
       }
     }
@@ -90,7 +172,7 @@ export const QUERY_USERLIST = gql`
         node {
           id
           userName
-          admin
+          role
           tfa
           displayName
         }

@@ -90,6 +90,9 @@ from schemas.send_password_reset_email import SendPasswordResetLink
 # Update Users Password
 from schemas.update_user_password.update_user_password import UpdateUserPassword
 
+# Update User Profile
+from schemas.update_user_profile import UpdateUserProfile
+
 # Update User Role Mutation
 from schemas.update_user_role import UpdateUserRole
 
@@ -240,6 +243,9 @@ class Mutation(graphene.ObjectType):
     )
     invite_user_to_org = InviteUserToOrg.Field(
         description="Allows org admins to invite other users to their organizations."
+    )
+    update_user_profile = UpdateUserProfile.Field(
+        description="Allows users to update their profile information."
     )
 
 

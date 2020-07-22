@@ -24,7 +24,7 @@ def create_user(**kwargs):
     display_name = cleanse_input(kwargs.get("display_name"))
     password = cleanse_input(kwargs.get("password"))
     confirm_password = cleanse_input(kwargs.get("confirm_password"))
-    user_name = cleanse_input(kwargs.get("user_name"))
+    user_name = cleanse_input(kwargs.get("user_name")).lower()
     preferred_lang = cleanse_input(kwargs.get("preferred_lang"))
     sign_up_token = cleanse_input(kwargs.get("sign_up_token"))
 

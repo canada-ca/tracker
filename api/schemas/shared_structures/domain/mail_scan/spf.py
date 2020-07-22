@@ -4,10 +4,8 @@ import re
 from graphene_sqlalchemy import SQLAlchemyObjectType
 
 from db import db_session
-from models import Spf_scans, Dkim_scans, Dmarc_scans
+from models import Spf_scans, Dkim_scans, Dmarc_scans, Domains, Mail_scans
 from scalars.url import URL
-from functions.get_domain import get_domain
-from functions.get_timestamp import get_timestamp
 
 
 class SPF(SQLAlchemyObjectType):
@@ -41,10 +39,28 @@ class SPF(SQLAlchemyObjectType):
     )
 
     def resolve_domain(self: Spf_scans, info, **kwargs):
-        return get_domain(self, info)
+        mail_scan_domain_id = (
+            db_session.query(Mail_scans)
+            .filter(Mail_scans.id == self.id)
+            .first()
+            .domain_id
+        )
+        domain = (
+            db_session.query(Domains)
+            .filter(Domains.id == mail_scan_domain_id)
+            .first()
+            .domain
+        )
+        return domain
 
     def resolve_timestamp(self: Spf_scans, info, **kwargs):
-        return get_timestamp(self, info, **kwargs)
+        scan_date = (
+            db_session.query(Mail_scans)
+            .filter(Mail_scans.id == self.id)
+            .first()
+            .scan_date
+        )
+        return scan_date
 
     def resolve_lookups(self: Spf_scans, info, **kwargs):
         lookups = self.spf_scan.get("spf", {}).get("dns_lookups", None)

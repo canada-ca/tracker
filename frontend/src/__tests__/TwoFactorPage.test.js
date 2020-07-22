@@ -5,14 +5,62 @@ import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
+import { WEB_AND_EMAIL_SUMMARIES } from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
+
+const mocks = [
+  {
+    request: {
+      query: WEB_AND_EMAIL_SUMMARIES,
+    },
+    result: {
+      data: {
+        webSummary: {
+          categories: [
+            {
+              name: 'full-pass',
+              count: 1214,
+              percentage: 13.5,
+            },
+            {
+              name: 'full-fail',
+              count: 7798,
+              percentage: 86.5,
+            },
+          ],
+          total: 9012,
+        },
+        emailSummary: {
+          categories: [
+            {
+              name: 'full-pass',
+              count: 5872,
+              percentage: 25.5,
+            },
+            {
+              name: 'full-fail',
+              count: 9949,
+              percentage: 43.2,
+            },
+            {
+              name: 'partial-pass',
+              count: 7216,
+              percentage: 31.3,
+            },
+          ],
+          total: 23037,
+        },
+      },
+    },
+  },
+]
 
 describe('<TwoFactorPage />', () => {
   it('an empty input for code field displays an error message', async () => {
     const { container, queryByText } = render(
-      <MockedProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
@@ -36,7 +84,7 @@ describe('<TwoFactorPage />', () => {
 
   it('5 digit code displays an error message', async () => {
     const { container, queryByText } = render(
-      <MockedProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
@@ -66,7 +114,7 @@ describe('<TwoFactorPage />', () => {
 
   it('non digit code displays an error message', async () => {
     const { container, queryByText } = render(
-      <MockedProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>
@@ -106,7 +154,7 @@ describe('<TwoFactorPage />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider>
+              <MockedProvider mocks={mocks} addTypename={false}>
                 <App />
               </MockedProvider>
             </MemoryRouter>
@@ -133,7 +181,7 @@ describe('<TwoFactorPage />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider>
+              <MockedProvider mocks={mocks} addTypename={false}>
                 <App />
               </MockedProvider>
             </MemoryRouter>
@@ -150,7 +198,7 @@ describe('<TwoFactorPage />', () => {
 
   it('6 digit code does not display an error message', async () => {
     const { container, queryByText } = render(
-      <MockedProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
             <I18nProvider i18n={setupI18n()}>

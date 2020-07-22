@@ -2,7 +2,7 @@ import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor } from '@testing-library/react'
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import DmarcReportPage from '../DmarcReportPage'
 import {
   DEMO_DMARC_REPORT_DETAIL_TABLES,
