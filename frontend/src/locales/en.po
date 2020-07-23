@@ -133,8 +133,6 @@ msgstr "Admin Portal"
 
 #: src/CreateUserPage.js:42
 #: src/SignInPage.js:30
-#: src/ResetPasswordPage.js:31
-#: src/ForgotPasswordPage.js:27
 msgid "An error occurred."
 msgstr "An error occurred."
 

@@ -25,10 +25,9 @@ export default function ResetPasswordPage() {
   })
 
   const [updatePassword, { loading, error }] = useMutation(UPDATE_PASSWORD, {
-    onError() {
-      console.log(error)
+    onError(error) {
       toast({
-        title: i18n._(t`An error occured`),
+        title: error.message,
         description: i18n._(t`Unable to update password`),
         status: 'error',
         duration: 9000,

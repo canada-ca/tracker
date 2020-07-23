@@ -133,8 +133,6 @@ msgstr "Portail Admin"
 
 #: src/CreateUserPage.js:42
 #: src/SignInPage.js:30
-#: src/ResetPasswordPage.js:31
-#: src/ForgotPasswordPage.js:27
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
