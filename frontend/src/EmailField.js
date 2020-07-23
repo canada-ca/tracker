@@ -1,7 +1,7 @@
 import React from 'react'
 import { string } from 'prop-types'
 import { useLingui } from '@lingui/react'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
   Input,
@@ -9,6 +9,7 @@ import {
   InputLeftElement,
   Icon,
   FormErrorMessage,
+  FormLabel,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
@@ -19,6 +20,9 @@ function EmailField({ name, ...props }) {
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
+      <FormLabel htmlFor="email" fontWeight="bold">
+        <Trans>Email Address:</Trans>
+      </FormLabel>
       <InputGroup>
         <InputLeftElement>
           <Icon name="email" color="gray.300" />

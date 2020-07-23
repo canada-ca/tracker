@@ -4,7 +4,7 @@ import { render } from '@testing-library/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import { USER_AFFILIATIONS } from '../graphql/queries'
 import AdminPage from '../AdminPage'
 

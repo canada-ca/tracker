@@ -2,7 +2,7 @@ import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import CreateUserPage from '../CreateUserPage'
 import { SIGN_UP } from '../graphql/mutations'
 import { I18nProvider } from '@lingui/react'
@@ -85,7 +85,7 @@ describe('<CreateUserPage />', () => {
             // This should work exactly like the email field above, but it
             // doesn't! The message is displayed but we can only get partial
             // match for some reason.
-            expect(queryByText(/Password/)).toBeInTheDocument(),
+            expect(queryByText(/Password cannot be empty/)).toBeInTheDocument(),
           )
         })
       })

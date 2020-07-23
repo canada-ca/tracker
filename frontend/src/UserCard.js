@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro'
 import { useHistory } from 'react-router-dom'
 import { bool, string } from 'prop-types'
 
-export function UserCard({ userName, displayName, tfa, admin }) {
+export function UserCard({ userName, displayName, tfa, admin = false }) {
   const history = useHistory()
   return (
     <PseudoBox
@@ -46,6 +46,6 @@ export function UserCard({ userName, displayName, tfa, admin }) {
 UserCard.propTypes = {
   displayName: string.isRequired,
   userName: string.isRequired,
-  admin: bool.isRequired,
+  admin: bool,
   tfa: bool.isRequired,
 }

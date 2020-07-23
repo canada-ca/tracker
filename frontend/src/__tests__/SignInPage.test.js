@@ -6,7 +6,7 @@ import { Router, MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
 import { render, waitFor, fireEvent, getByText } from '@testing-library/react'
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 

@@ -1,9 +1,14 @@
 import React from 'react'
 import { useField } from 'formik'
 import { string } from 'prop-types'
-import { Stack, Select, FormControl, FormErrorMessage } from '@chakra-ui/core'
+import {
+  Select,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+} from '@chakra-ui/core'
 import { useLingui } from '@lingui/react'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'
 
 function LanguageSelect({ name, ...props }) {
@@ -12,16 +17,16 @@ function LanguageSelect({ name, ...props }) {
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
-      <Stack>
-        <Select {...field} {...props} id="lang">
-          <option hidden value="">
-            {i18n._(t`Select Preferred Language`)}
-          </option>
-          <option value="ENGLISH">English</option>
-          <option value="FRENCH">Français</option>
-        </Select>
-      </Stack>
-
+      <FormLabel htmlFor="lang" fontWeight="bold">
+        <Trans>Select Your Preferred Language:</Trans>
+      </FormLabel>
+      <Select {...field} {...props} id="lang">
+        <option hidden value="">
+          {i18n._(t`Select Preferred Language`)}
+        </option>
+        <option value="ENGLISH">English</option>
+        <option value="FRENCH">Français</option>
+      </Select>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )

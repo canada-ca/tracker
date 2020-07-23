@@ -10,19 +10,17 @@ import { AdminDomains } from '../AdminDomains'
 describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
     const mocks = {
-      domains: {
-        edges: [
-          {
-            node: {
-              url: 'canada.ca',
-              slug: 'org-slug-test',
-              lastRan: null,
-            },
+      edges: [
+        {
+          node: {
+            url: 'canada.ca',
+            slug: 'org-slug-test',
+            lastRan: null,
           },
-        ],
-        pageInfo: {
-          hasNextPage: false,
         },
+      ],
+      pageInfo: {
+        hasNextPage: false,
       },
     }
 
