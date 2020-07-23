@@ -1,0 +1,46 @@
+{
+  "name": "tracker-api",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node index.js",
+    "dev-start": "nodemon index.js",
+    "test": "jest",
+    "lint": "eslint src"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^2.16.0",
+    "arango-tools": "0.0.7",
+    "arangojs": "^6.14.1",
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "dataloader": "^2.0.0",
+    "dotenv-safe": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql": "^15.3.0",
+    "graphql-relay": "^0.6.0",
+    "graphql-subscriptions": "^1.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "subscriptions-transport-ws": "^0.9.17",
+    "url-slug": "^2.3.1",
+    "validator": "^13.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.5.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^23.18.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^26.1.0",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "verbose": true
+  }
+}
