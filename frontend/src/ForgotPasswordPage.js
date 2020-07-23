@@ -22,9 +22,9 @@ export default function ForgotPasswordPage() {
   const [sendPasswordResetLink, { loading, error }] = useMutation(
     SEND_PASSWORD_RESET_LINK,
     {
-      onError() {
+      onError(error) {
         toast({
-          title: i18n._(t`An error occurred.`),
+          title: error.message,
           description: i18n._(t`Unable to send password reset link to email.`),
           status: 'error',
           duration: 9000,

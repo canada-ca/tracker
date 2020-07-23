@@ -1,6 +1,6 @@
 import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
@@ -33,11 +33,18 @@ describe('<CreateUserPage />', () => {
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={setupI18n()}>
-                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <MockedProvider mocks={mocks}>
-                      <ResetPasswordPage />
-                    </MockedProvider>
-                  </MemoryRouter>
+                  <MockedProvider mocks={mocks}>
+                    <MemoryRouter
+                      initialEntries={[
+                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                      ]}
+                      initialIndex={0}
+                    >
+                      <Route path="/reset-password/:resetToken">
+                        <ResetPasswordPage />
+                      </Route>
+                    </MemoryRouter>
+                  </MockedProvider>
                 </I18nProvider>
               </ThemeProvider>
             </UserStateProvider>,
@@ -63,11 +70,18 @@ describe('<CreateUserPage />', () => {
             >
               <ThemeProvider theme={theme}>
                 <I18nProvider i18n={setupI18n()}>
-                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
-                    <MockedProvider mocks={mocks}>
-                      <ResetPasswordPage />
-                    </MockedProvider>
-                  </MemoryRouter>
+                  <MockedProvider mocks={mocks}>
+                    <MemoryRouter
+                      initialEntries={[
+                        '/reset-password/fwsdGDFSGSDVA.gedafbedafded.bgdbsedbeagbe',
+                      ]}
+                      initialIndex={0}
+                    >
+                      <Route path="/reset-password/:resetToken">
+                        <ResetPasswordPage />
+                      </Route>
+                    </MemoryRouter>
+                  </MockedProvider>
                 </I18nProvider>
               </ThemeProvider>
             </UserStateProvider>,
