@@ -16,7 +16,7 @@ const updateUserProfile = new mutationWithClientMutationId({
       type: EmailAddress,
       description: 'The updated user name the user wishes to change to.',
     },
-    preferred_lang: {
+    preferredLang: {
       type: LanguageEnums,
       description:
         'The updated preferred language the user wishes to change to.',
