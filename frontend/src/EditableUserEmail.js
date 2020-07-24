@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { string } from 'prop-types'
 import {
   Icon,
@@ -33,6 +33,7 @@ function EditableUserEmail({ detailValue }) {
   const { currentUser } = useUserState()
   const toast = useToast()
   const { i18n } = useLingui()
+  const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
@@ -83,7 +84,11 @@ function EditableUserEmail({ detailValue }) {
 
       <SlideIn in={isOpen}>
         {styles => (
-          <Modal isOpen={true} onClose={onClose}>
+          <Modal
+            isOpen={true}
+            onClose={onClose}
+            initialFocusRef={initialFocusRef}
+          >
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent pb={4} {...styles}>
               <Formik
@@ -118,7 +123,11 @@ function EditableUserEmail({ detailValue }) {
 
                         <Text>{detailValue}</Text>
 
-                        <EmailField name="email" label="New Email Address:" />
+                        <EmailField
+                          name="email"
+                          label="New Email Address:"
+                          ref={initialFocusRef}
+                        />
                       </Stack>
                     </ModalBody>
 

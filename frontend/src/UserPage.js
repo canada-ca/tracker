@@ -5,28 +5,18 @@ import {
   Stack,
   SimpleGrid,
   Button,
-  Text,
   Divider,
   Checkbox,
   CheckboxGroup,
   useToast,
-  useDisclosure,
   Heading,
 } from '@chakra-ui/core'
-import { useMutation, useQuery } from '@apollo/client'
-import PasswordConfirmation from './PasswordConfirmation'
+import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
-import EmailField from './EmailField'
-import DisplayNameField from './DisplayNameField'
-import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import PasswordField from './PasswordField'
-import EditableUserDetail from './EditableUserDetail'
 import EditableUserLanguage from './EditableUserLanguage'
-import { object } from 'yup'
-import { fieldRequirements } from './fieldRequirements'
 import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
 import EditableUserPassword from './EditableUserPassword'
@@ -37,8 +27,6 @@ export default function UserPage() {
   const history = useHistory()
   const { currentUser, logout } = useUserState()
   const { i18n } = useLingui()
-  const changePasswordBtnRef = React.useRef()
-  const currentPasswordRef = React.useRef()
 
   const {
     loading: queryUserLoading,
