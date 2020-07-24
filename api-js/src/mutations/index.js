@@ -9,6 +9,7 @@ const {
 const { requestScan } = require('./scans')
 const {
   authenticate,
+  generateOtpUrl,
   resetPassword,
   sendEmailVerification,
   sendPasswordResetLink,
@@ -35,6 +36,7 @@ const mutation = new GraphQLObjectType({
     requestScan,
     // User Mutations
     authenticate,
+    generateOtpUrl,
     resetPassword,
     sendEmailVerification,
     sendPasswordResetLink,
