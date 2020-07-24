@@ -47,7 +47,7 @@ function EditableUserEmail({ detailValue }) {
         toast({
           title: i18n._(t`An error occurred.`),
           description: i18n._(
-            t`Unable to update your profile, please try again.`,
+            t`Unable to update your email, please try again.`,
           ),
           status: 'error',
           duration: 9000,
@@ -55,9 +55,8 @@ function EditableUserEmail({ detailValue }) {
         })
       },
       onCompleted() {
-        // Display a welcome message
         toast({
-          title: 'Changed User Profile',
+          title: 'Changed User Email',
           description: 'You have successfully updated your email.',
           status: 'success',
           duration: 9000,

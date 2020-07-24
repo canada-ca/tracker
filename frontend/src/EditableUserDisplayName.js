@@ -47,7 +47,7 @@ function EditableUserDisplayName({ detailValue }) {
         toast({
           title: i18n._(t`An error occurred.`),
           description: i18n._(
-            t`Unable to update your profile, please try again.`,
+            t`Unable to update your display name, please try again.`,
           ),
           status: 'error',
           duration: 9000,
@@ -55,9 +55,8 @@ function EditableUserDisplayName({ detailValue }) {
         })
       },
       onCompleted() {
-        // Display a welcome message
         toast({
-          title: 'Changed User Profile',
+          title: 'Changed User Display Name',
           description: 'You have successfully updated your display name.',
           status: 'success',
           duration: 9000,
