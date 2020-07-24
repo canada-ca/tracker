@@ -5,7 +5,7 @@ import { render, waitFor, fireEvent } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import { SEND_PASSWORD_RESET_LINK } from '../graphql/mutations'
 import ForgotPasswordPage from '../ForgotPasswordPage'
 

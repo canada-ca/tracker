@@ -6,7 +6,7 @@ import PasswordConfirmation from './PasswordConfirmation'
 import { object, string, ref } from 'yup'
 import { Formik } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { UPDATE_PASSWORD } from './graphql/mutations'
 
 export default function ResetPasswordPage() {
@@ -62,7 +62,7 @@ export default function ResetPasswordPage() {
           password: '',
           confirmPassword: '',
         }}
-        onSubmit={async (values) => {
+        onSubmit={async values => {
           updatePassword({
             variables: {
               input: {
