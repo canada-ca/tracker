@@ -64,19 +64,7 @@ export default function UserPage() {
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Stack p={25} spacing={4}>
         <EditableUserDetail
-          title="Edit Display Name"
-          detailName="Display Name:"
-          detailHeading="Current Display Name:"
           detailValue={queryUserData.userPage.displayName}
-          iconName="person"
-          iconSize="1.5rem"
-          body={
-            <DisplayNameField name="displayName" label="New Display Name:" />
-          }
-          toastDescriptionCompleted="You have successfully updated your display name."
-          validationSchema={object().shape({
-            displayName: fieldRequirements.displayName,
-          })}
         />
 
         <Divider />
