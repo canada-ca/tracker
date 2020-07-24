@@ -18,6 +18,8 @@ const {
   verifyAccount,
 } = require('./user')
 
+const { inviteUserToOrg, updateUserRole } = require('./user-affiliations')
+
 const mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
@@ -40,6 +42,9 @@ const mutation = new GraphQLObjectType({
     updateUserPassword,
     updateUserProfile,
     verifyAccount,
+    // User Affiliations Mutations
+    inviteUserToOrg,
+    updateUserRole,
   }),
 })
 
