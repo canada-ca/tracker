@@ -7,6 +7,7 @@ export const SIGN_UP = gql`
     $password: String!
     $confirmPassword: String!
     $preferredLang: LanguageEnums!
+    $signUpToken: String
   ) {
     signUp(
       input: {
@@ -15,6 +16,7 @@ export const SIGN_UP = gql`
         password: $password
         confirmPassword: $confirmPassword
         preferredLang: $preferredLang
+        signUpToken: $signUpToken
       }
     ) {
       authResult {

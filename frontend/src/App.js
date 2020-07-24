@@ -86,7 +86,7 @@ export default function App() {
                 <LandingPage />
               </Route>
 
-              <Route path="/create-user">
+              <Route path="/create-user/:userOrgToken?">
                 <CreateUserPage />
               </Route>
 
