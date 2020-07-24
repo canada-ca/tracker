@@ -429,7 +429,8 @@ msgid "Email Scan Results"
 msgstr "Résultats de l'analyse des courriels"
 
 #: src/CreateUserPage.js:24
-#: src/SignInPage.js:31
+#: src/SignInPage.js:23
+#: src/ForgotPasswordPage.js:18
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
@@ -634,7 +635,8 @@ msgid "Internet facing services: {domainCount}"
 msgstr "Services d'accès à Internet: {domainCount}"
 
 #: src/CreateUserPage.js:25
-#: src/SignInPage.js:32
+#: src/SignInPage.js:24
+#: src/ForgotPasswordPage.js:19
 msgid "Invalid email"
 msgstr "Courriel non valide"
 
@@ -917,7 +919,8 @@ msgid "Password"
 msgstr "Mot de passe"
 
 #: src/CreateUserPage.js:28
-#: src/SignInPage.js:29
+#: src/SignInPage.js:21
+#: src/ResetPasswordPage:20
 msgid "Password cannot be empty"
 msgstr "Le mot de passe ne peut pas être vide"
 
@@ -1511,6 +1514,58 @@ msgstr ""
 #: src/SummaryTable.js:172
 msgid "of"
 msgstr "de"
+
+#: src/ForgotPasswordPage.js:92
+msgid "Submit"
+msgstr "Soumettre"
+
+#: src/ForgotPasswordPage.js:76
+msgid "Enter your user account's verified email address and we will send you a password reset link."
+msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe."
+
+#: src/ForgotPasswordPage.js:38
+msgid "Email Sent"
+msgstr "Courriel envoyé"
+
+#: src/ForgotPasswordPage.js:40
+msgid "An email was sent with a link to reset your password"
+msgstr "Un courriel a été envoyé avec un lien pour réinitialiser votre mot de passe"
+
+#: src/ForgotPasswordPage.js:28
+msgid "Unable to send password reset link to email."
+msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel."
+
+#: src/ResetPasswordPage.js:90
+msgid "Enter and confirm your new password."
+msgstr "Entrez et confirmez votre nouveau mot de passe."
+
+#: src/ResetPasswordPage.js:103
+msgid "Change Password"
+msgstr "Changer le mot de passe"
+
+#: src/ResetPasswordPage.js:
+msgid "Unable to update password"
+msgstr "Impossible de mettre à jour le mot de passe"
+
+#: src/ResetPasswordPage.js:
+msgid "Password Updated"
+msgstr "Mot de passe mis à jour"
+
+#: src/ResetPasswordPage.js:
+msgid "You may now sign in with your new password"
+msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
+
+#: src/ResetPasswordPage:23
+msgid "Password confirmation cannot be empty"
+msgstr "La confirmation du mot de passe ne peut pas être vide"
+
+#: src/ResetPasswordPage:21
+msgid "Password must be at least 12 characters long"
+msgstr "Le mot de passe doit comporter au moins 12 caractères"
+
+#: src/ResetPasswordPage:24
+msgid "Passwords must match"
+msgstr "Les mots de passe doivent correspondre"
 
 #: src/guidanceTagConstants.js:250
 #~ msgid "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be 'none' but mail agents may process messages based on Quarantine)"
