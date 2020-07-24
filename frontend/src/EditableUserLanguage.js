@@ -54,8 +54,15 @@ function EditableUserLanguage({ currentLang }) {
 
       <Formik
         initialValues={{ lang: currentLang }}
-        onSubmit={(_values, { setSubmitting }) => {
-          setSubmitting(false)
+        onSubmit={async values => {
+          // Submit update detail mutation
+          await updateUserProfile({
+            variables: {
+              input: {
+                preferredLang: values.lang,
+              },
+            },
+          })
         }}
       >
         {({ handleSubmit, isSubmitting, getFieldProps }) => (

@@ -88,7 +88,7 @@ function EditableUserEmail({ detailValue }) {
             <ModalContent pb={4} {...styles}>
               <Formik
                 initialValues={{
-                  userName: '',
+                  email: '',
                 }}
                 validationSchema={object().shape({
                   email: fieldRequirements.email,
@@ -98,7 +98,7 @@ function EditableUserEmail({ detailValue }) {
                   await updateUserProfile({
                     variables: {
                       input: {
-                        userName: values.userName,
+                        userName: values.email,
                       },
                     },
                   })
