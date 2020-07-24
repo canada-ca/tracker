@@ -23,7 +23,7 @@ import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
 import { useLingui } from '@lingui/react'
-import { object } from 'yup'
+import { object, string } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import PasswordField from './PasswordField'
 import PasswordConfirmation from './PasswordConfirmation'
@@ -96,7 +96,9 @@ function EditableUserPassword() {
                 validationSchema={object().shape({
                   password: fieldRequirements.password,
                   confirmPassword: fieldRequirements.confirmPassword,
-                  currentPassword: fieldRequirements.password,
+                  currentPassword: string().required(
+                    t`Please enter your current password.`,
+                  ),
                 })}
                 onSubmit={async values => {
                   // Submit update detail mutation
@@ -113,7 +115,7 @@ function EditableUserPassword() {
               >
                 {({ handleSubmit, isSubmitting }) => (
                   <form id="form" onSubmit={handleSubmit}>
-                    <ModalHeader>{title}</ModalHeader>
+                    <ModalHeader>Change Password</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                       <Stack spacing={4} p={25}>
