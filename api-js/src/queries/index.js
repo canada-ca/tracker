@@ -14,6 +14,12 @@ const {
   findMyOrganizations,
   findOrganizationBySlug,
 } = require('./organizations')
+const {
+  emailSummary,
+  demoEmailSummary,
+  webSummary,
+  demoWebSummary,
+} = require('./summaries')
 
 const query = new GraphQLObjectType({
   name: 'Query',
@@ -31,6 +37,11 @@ const query = new GraphQLObjectType({
     // Organization Queries
     findMyOrganizations,
     findOrganizationBySlug,
+    // Summary Queries
+    emailSummary,
+    demoEmailSummary,
+    webSummary,
+    demoWebSummary,
   }),
 })
 
