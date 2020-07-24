@@ -5,12 +5,15 @@ const {
   dmarcReportSummary,
   dmarcReportSummaryList,
 } = require('./dmarc-report')
-
 const {
   findDomainBySlug,
   findDomainsByOrg,
   findMyDomains,
 } = require('./domains')
+const {
+  findMyOrganizations,
+  findOrganizationBySlug,
+} = require('./organizations')
 
 const query = new GraphQLObjectType({
   name: 'Query',
@@ -25,6 +28,9 @@ const query = new GraphQLObjectType({
     findDomainBySlug,
     findDomainsByOrg,
     findMyDomains,
+    // Organization Queries
+    findMyOrganizations,
+    findOrganizationBySlug,
   }),
 })
 
