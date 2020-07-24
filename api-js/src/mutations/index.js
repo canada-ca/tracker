@@ -6,6 +6,7 @@ const {
   removeOrganization,
   updateOrganization,
 } = require('./organizations')
+const { requestScan } = require('./scans')
 
 const mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -16,6 +17,7 @@ const mutation = new GraphQLObjectType({
     createOrganization,
     removeOrganization,
     updateOrganization,
+    requestScan,
   }),
 })
 
