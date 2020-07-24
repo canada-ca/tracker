@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import {
   Icon,
   Heading,
@@ -33,6 +33,7 @@ function EditableUserPassword() {
   const { currentUser } = useUserState()
   const toast = useToast()
   const { i18n } = useLingui()
+  const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
@@ -83,7 +84,11 @@ function EditableUserPassword() {
 
       <SlideIn in={isOpen}>
         {styles => (
-          <Modal isOpen={true} onClose={onClose}>
+          <Modal
+            isOpen={true}
+            onClose={onClose}
+            initialFocusRef={initialFocusRef}
+          >
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent pb={4} {...styles}>
               <Formik
@@ -123,6 +128,7 @@ function EditableUserPassword() {
                             name="currentPassword"
                             label="Current Password:"
                             width="100%"
+                            ref={initialFocusRef}
                           />
                           <Text textAlign="center">
                             <Trans>
