@@ -18,12 +18,13 @@ const dmarcReportDetailedTablesType = new GraphQLObjectType({
     },
     detailTables: {
       type: detailTableType,
-      description: 'The details used in creating tables for the dmarc report page.',
+      description:
+        'The details used in creating tables for the dmarc report page.',
       resolve: async () => {},
     },
   }),
 })
 
 module.exports = {
-  dmarcReportDetailedTablesType
+  dmarcReportDetailedTablesType,
 }

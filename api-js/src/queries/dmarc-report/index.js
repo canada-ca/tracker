@@ -3,7 +3,7 @@ const { dmarcReportSummary } = require('./dmarc-report-summary')
 const { dmarcReportSummaryList } = require('./dmarc-report-summary-list')
 
 module.exports = {
-    dmarcReportDetailTables,
-    dmarcReportSummary,
-    dmarcReportSummaryList,
+  dmarcReportDetailTables,
+  dmarcReportSummary,
+  dmarcReportSummaryList,
 }

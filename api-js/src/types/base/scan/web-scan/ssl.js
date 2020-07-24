@@ -10,14 +10,17 @@ const sslType = new GraphQLObjectType({
     domain: {
       type: Url,
       description: 'The domain the scan was ran on.',
+      resolve: async () => {},
     },
     timestamp: {
       type: DateTime,
       description: 'The time when the scan was initiated.',
+      resolve: async () => {},
     },
     sslGuidanceTags: {
       type: GraphQLList(GraphQLString),
       description: 'Key tags found during scan.',
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],

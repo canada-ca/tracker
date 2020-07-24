@@ -13,23 +13,28 @@ const emailScanType = new GraphQLObjectType({
     domain: {
       type: Url,
       description: 'The domain the scan was ran on.',
+      resolve: async () => {},
     },
     timestamp: {
       type: DateTime,
       description: 'The time the scan was initiated.',
+      resolve: async () => {},
     },
     dkim: {
       type: dkimType,
       description: 'DomainKeys Identified Mail (DKIM) Signatures scan results.',
+      resolve: async () => {},
     },
     dmarc: {
       type: dmarcType,
       description:
         'Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.',
+      resolve: async () => {},
     },
     spf: {
       type: spfType,
       description: 'Sender Policy Framework (SPF) scan results.',
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],

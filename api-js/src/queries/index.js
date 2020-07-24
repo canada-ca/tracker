@@ -19,5 +19,5 @@ const query = new GraphQLObjectType({
 })
 
 module.exports = {
-  query
+  query,
 }

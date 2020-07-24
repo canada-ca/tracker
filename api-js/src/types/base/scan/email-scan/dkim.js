@@ -10,22 +10,27 @@ const dkimType = new GraphQLObjectType({
     domain: {
       type: Url,
       description: 'The domain the scan was ran on.',
+      resolve: async () => {},
     },
     timestamp: {
       type: DateTime,
       description: 'The time when the scan was initiated.',
+      resolve: async () => {},
     },
     record: {
       type: GraphQLString,
       description: 'DKIM record retrieved during the scan of the domain.',
+      resolve: async () => {},
     },
     keyLength: {
       type: GraphQLString,
       description: 'Length of DKIM public key.',
+      resolve: async () => {},
     },
     dkimGuidanceTags: {
       type: GraphQLList(GraphQLString),
       description: 'Key tags found during scan.',
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],

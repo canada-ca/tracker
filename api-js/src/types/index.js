@@ -15,7 +15,10 @@ const { dmarcReportDetailedTablesType } = require('./dmarc-report')
 const { nodeField, nodeInterface } = require('./node')
 
 module.exports = {
-  // Types
+  // Node Types
+  nodeField,
+  nodeInterface,
+  // Base Types
   authResultType,
   categorizedSummaryType,
   domainType,
@@ -28,7 +31,4 @@ module.exports = {
   userAffiliationsConnection,
   // Dmarc Report Types
   dmarcReportDetailedTablesType,
-  // Node Types
-  nodeField,
-  nodeInterface,
 }

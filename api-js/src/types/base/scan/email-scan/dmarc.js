@@ -15,37 +15,45 @@ const dmarcType = new GraphQLObjectType({
     domain: {
       type: Url,
       description: 'The domain the scan was ran on.',
+      resolve: async () => {},
     },
     timestamp: {
       type: DateTime,
       description: 'The time when the scan was initiated.',
+      resolve: async () => {},
     },
     dmarcPhase: {
       type: GraphQLInt,
       description: 'DMARC phase found during scan.',
+      resolve: async () => {},
     },
     record: {
       type: GraphQLString,
       description: 'DMARC record retrieved during scan.',
+      resolve: async () => {},
     },
     pPolicy: {
       type: GraphQLString,
       description: `The requested policy you wish mailbox providers to apply
             when your email fails DMARC authentication and alignment checks. `,
+      resolve: async () => {},
     },
     spPolicy: {
       type: GraphQLString,
       description: `This tag is used to indicate a requested policy for all
             subdomains where mail is failing the DMARC authentication and alignment checks.`,
+      resolve: async () => {},
     },
     pct: {
       type: GraphQLInt,
       description:
         'The percentage of messages to which the DMARC policy is to be applied.',
+      resolve: async () => {},
     },
     dmarcGuidanceTags: {
       type: GraphQLList(GraphQLString),
       description: 'Key tags found during DMARC Scan.',
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],

@@ -12,18 +12,22 @@ const webScanType = new GraphQLObjectType({
     domain: {
       type: Url,
       description: 'The domain the scan was ran on.',
+      resolve: async () => {},
     },
     timestamp: {
       type: DateTime,
       description: 'The time the scan was initiated.',
+      resolve: async () => {},
     },
     https: {
       type: httpsType,
       description: 'Hyper Text Transfer Protocol Secure scan results.',
+      resolve: async () => {},
     },
     ssl: {
       type: sslType,
       description: 'Secure Socket Layer scan results.',
+      resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],

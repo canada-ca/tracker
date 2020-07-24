@@ -11,7 +11,14 @@ const {
   connectionArgs,
 } = require('graphql-relay')
 const { RoleEnums, LanguageEnums } = require('../../enums')
-const { Acronym, Slug, Url, DateTime, EmailAddress } = require('../../scalars')
+const {
+  Acronym,
+  Slug,
+  Url,
+  DateTime,
+  EmailAddress,
+  Selectors,
+} = require('../../scalars')
 const { nodeInterface } = require('../node')
 const { emailScanConnection, webScanConnection } = require('./scan')
 
@@ -35,7 +42,7 @@ const domainType = new GraphQLObjectType({
       resolve: async () => {},
     },
     selectors: {
-      type: GraphQLString,
+      type: Selectors,
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
       resolve: async () => {},
@@ -46,13 +53,13 @@ const domainType = new GraphQLObjectType({
       resolve: async () => {},
     },
     email: {
-      type: emailScanConnection,
+      type: emailScanConnection.connectionType,
       description: 'DKIM, DMARC, and SPF scan results.',
       args: connectionArgs,
       resolve: async () => {},
     },
     web: {
-      type: webScanConnection,
+      type: webScanConnection.connectionType,
       description: 'HTTPS, and SSL scan results.',
       args: connectionArgs,
       resolve: async () => {},
@@ -112,7 +119,7 @@ const organizationType = new GraphQLObjectType({
       resolve: async () => {},
     },
     domains: {
-      type: domainConnection,
+      type: domainConnection.connectionType,
       description: 'The domains which are associated with this organization.',
       args: connectionArgs,
       resolve: async () => {},
@@ -158,7 +165,7 @@ const userType = new GraphQLObjectType({
       resolve: async () => {},
     },
     affiliations: {
-      type: userAffiliationsConnection,
+      type: userAffiliationsConnection.connectionType,
       description: 'Users affiliations to various organizations.',
       args: connectionArgs,
       resolve: async () => {},
