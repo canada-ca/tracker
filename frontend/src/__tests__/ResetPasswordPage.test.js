@@ -4,7 +4,7 @@ import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { MockedProvider } from '@apollo/react-testing'
+import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import ResetPasswordPage from '../ResetPasswordPage'
 import { UPDATE_PASSWORD } from '../graphql/mutations'
@@ -22,7 +22,7 @@ const mocks = [
   },
 ]
 
-describe('<CreateUserPage />', () => {
+describe('<ResetPasswordPage />', () => {
   describe('given no input', () => {
     describe('when onBlur fires', () => {
       describe('password field', () => {
