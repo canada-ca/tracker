@@ -2,8 +2,11 @@ const { GraphQLObjectType } = require('graphql')
 const { nodeField } = require('../types')
 const {
   dmarcReportDetailTables,
+  demoDmarcReportDetailTables,
   dmarcReportSummary,
+  demoDmarcReportSummary,
   dmarcReportSummaryList,
+  demoDmarcReportSummaryList,
 } = require('./dmarc-report')
 const {
   findDomainBySlug,
@@ -28,8 +31,11 @@ const query = new GraphQLObjectType({
     node: nodeField,
     // Dmarc report queries
     dmarcReportDetailTables,
+    demoDmarcReportDetailTables,
     dmarcReportSummary,
+    demoDmarcReportSummary,
     dmarcReportSummaryList,
+    demoDmarcReportSummaryList,
     // Domain Queries
     findDomainBySlug,
     findDomainsByOrg,

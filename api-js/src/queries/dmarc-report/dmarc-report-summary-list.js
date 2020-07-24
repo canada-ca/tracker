@@ -25,6 +25,29 @@ const dmarcReportSummaryList = {
   resolve: async () => {},
 }
 
+const demoDmarcReportSummaryList = {
+  type: GraphQLList(categorizedSummaryType),
+  description:
+    'Demo query object used to grab the data to create dmarc report churro charts.',
+  args: {
+    domainSlug: {
+      type: GraphQLNonNull(Slug),
+      description:
+        'The slugified version of the domain you wish to retrieve data for.',
+    },
+    period: {
+      type: GraphQLNonNull(PeriodEnums),
+      description: 'The period in which the user wants to retreive data from.',
+    },
+    year: {
+      type: GraphQLNonNull(Year),
+      description: 'The year in which the user wants to retreive data from.',
+    },
+  },
+  resolve: async () => {},
+}
+
 module.exports = {
   dmarcReportSummaryList,
+  demoDmarcReportSummaryList,
 }
