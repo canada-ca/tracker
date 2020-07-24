@@ -6,7 +6,7 @@ import EmailField from './EmailField'
 import { object, string } from 'yup'
 import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { SEND_PASSWORD_RESET_LINK } from './graphql/mutations'
 
 export default function ForgotPasswordPage() {
@@ -60,7 +60,7 @@ export default function ForgotPasswordPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '' }}
-        onSubmit={async (values) => {
+        onSubmit={async values => {
           sendPasswordResetLink({
             variables: { userName: values.email },
           })
