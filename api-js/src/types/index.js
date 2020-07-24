@@ -11,8 +11,10 @@ const {
 
 const { authResultType } = require('./auth-result')
 const { categorizedSummaryType } = require('./categorized_summary')
+const { nodeField, nodeInterface } = require('./node')
 
 module.exports = {
+  // Types
   authResultType,
   categorizedSummaryType,
   domainType,
@@ -23,4 +25,7 @@ module.exports = {
   userConnection,
   userAffiliationsType,
   userAffiliationsConnection,
+  // Node Types
+  nodeField,
+  nodeInterface,
 }
