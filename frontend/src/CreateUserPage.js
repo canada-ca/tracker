@@ -12,6 +12,7 @@ import LanguageSelect from './LanguageSelect'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import DisplayNameField from './DisplayNameField'
+import { fieldRequirements } from './fieldRequirements'
 
 export default function CreateUserPage() {
   const { login } = useUserState()
@@ -20,20 +21,14 @@ export default function CreateUserPage() {
   const { i18n } = useLingui()
 
   const validationSchema = object().shape({
-    email: string()
-      .required(i18n._(t`Email cannot be empty`))
-      .email(i18n._(t`Invalid email`)),
-    displayName: string().required(i18n._(t`Display name cannot be empty`)),
-    password: string()
-      .required(i18n._(t`Password cannot be empty`))
-      .min(12, i18n._(t`Password must be at least 12 characters long`)),
-    confirmPassword: string()
-      .required(i18n._(t`Password confirmation cannot be empty`))
-      .oneOf([ref('password')], i18n._(t`Passwords must match`)),
-    lang: string()
-      .oneOf(['ENGLISH', 'FRENCH'])
-      .required(i18n._(t`Please choose your preferred language`)),
+    email: fieldRequirements.email,
+    displayName: fieldRequirements.displayName,
+    password: fieldRequirements.password,
+    confirmPassword: fieldRequirements.confirmPassword,
+    lang: fieldRequirements.lang,
   })
+
+  console.log(validationSchema)
 
   const [signUp, { loading, error }] = useMutation(SIGN_UP, {
     onError() {
@@ -88,7 +83,7 @@ export default function CreateUserPage() {
           confirmPassword: '',
           lang: '',
         }}
-        onSubmit={async (values) => {
+        onSubmit={async values => {
           signUp({
             variables: {
               userName: values.email,

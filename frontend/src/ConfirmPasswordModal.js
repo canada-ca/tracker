@@ -12,6 +12,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core'
+import { useFormikContext } from 'formik'
 import { Trans } from '@lingui/macro'
 import PasswordField from './PasswordField'
 import WithPseudoBox from './withPseudoBox'
@@ -34,6 +35,8 @@ function ConfirmPasswordModal({
   values,
   ..._props
 }) {
+  const { values2, submitForm } = useFormikContext()
+
   return (
     <SlideIn in={isOpen}>
       {styles => (

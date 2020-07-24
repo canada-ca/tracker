@@ -19,7 +19,11 @@ import WithPseudoBox from './withPseudoBox'
 import { Field } from 'formik'
 import { string } from 'prop-types'
 
-function PasswordConfirmation({ ...props }) {
+function PasswordConfirmation({
+  passwordLabel,
+  confirmPasswordLabel,
+  ...props
+}) {
   const { i18n } = useLingui()
 
   const [icon, setIcon] = React.useState('lock')
@@ -57,6 +61,15 @@ function PasswordConfirmation({ ...props }) {
     }
   }
 
+  const passwordLabelText =
+    passwordLabel === undefined ? <Trans>Password:</Trans> : passwordLabel
+  const confirmPasswordLabelText =
+    confirmPasswordLabel === undefined ? (
+      <Trans>Confirm Password:</Trans>
+    ) : (
+      confirmPasswordLabel
+    )
+
   return (
     <Stack {...props}>
       <Box>
@@ -66,7 +79,7 @@ function PasswordConfirmation({ ...props }) {
               isInvalid={form.errors.password && form.touched.password}
             >
               <FormLabel htmlFor="password" fontWeight="bold">
-                <Trans>Password:</Trans>
+                {passwordLabelText}
               </FormLabel>
               <InputGroup>
                 <InputLeftElement>
@@ -118,7 +131,7 @@ function PasswordConfirmation({ ...props }) {
               }
             >
               <FormLabel htmlFor="confirmPassword" fontWeight="bold">
-                <Trans>Confirm Password:</Trans>
+                {confirmPasswordLabel}
               </FormLabel>
               <InputGroup>
                 <InputLeftElement>

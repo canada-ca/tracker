@@ -13,6 +13,12 @@ import {
   useToast,
   useDisclosure,
   Heading,
+  ModalFooter,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Icon,
+  InputRightElement,
 } from '@chakra-ui/core'
 import { useMutation, useQuery } from '@apollo/client'
 import PasswordConfirmation from './PasswordConfirmation'
@@ -25,6 +31,12 @@ import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import ConfirmPasswordModal from './ConfirmPasswordModal'
+import PasswordField from './PasswordField'
+import EditableUserDetail from './EditableUserDetail'
+import EditableUserLanguage from './EditableUserLanguage'
+import EditDisplayNameModal from './EditDisplayNameModal'
+import { object } from 'yup'
+import { fieldRequirements } from './fieldRequirements'
 
 export default function UserPage() {
   const location = useLocation()
@@ -59,29 +71,6 @@ export default function UserPage() {
     },
   )
 
-  const [updateUserProfile, { error: updateUserProfileError }] = useMutation(
-    UPDATE_USER_PROFILE,
-    {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
-      },
-      onError() {
-        console.log(updateUserProfileError)
-        toast({
-          title: i18n._(t`An error occurred.`),
-          description: i18n._(
-            t`Unable to update your profile, please try again.`,
-          ),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      },
-    },
-  )
-
   const {
     loading: queryUserLoading,
     error: queryUserError,
@@ -107,43 +96,169 @@ export default function UserPage() {
 
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
-      <Formik
-        initialValues={{
-          displayName: queryUserData.userPage.displayName,
-          email: currentUser.userName,
-          lang: queryUserData.userPage.lang,
-        }}
-        onSubmit={(values, actions) => {
-          window.alert('coming soon!!\n' + JSON.stringify(values, null, 2))
-          actions.setSubmitting(false)
-        }}
-      >
-        {({ handleSubmit, isSubmitting }) => (
-          <form onSubmit={handleSubmit}>
-            <Stack p={25} spacing={4}>
-              <Heading as="h1" size="lg" textAlign="center">
-                <Trans>User Profile</Trans>
-              </Heading>
+      <Stack p={25} spacing={4}>
+        <EditableUserDetail
+          title="Edit Display Name"
+          detailName="Display Name:"
+          detailHeading="Current Display Name:"
+          detailValue={queryUserData.userPage.displayName}
+          iconName="person"
+          iconSize="1.5rem"
+          body={
+            <DisplayNameField name="displayName" label="New Display Name:" />
+          }
+          toastDescriptionCompleted="You have successfully updated your display name."
+          validationSchema={object().shape({
+            displayName: fieldRequirements.displayName,
+          })}
+        />
 
-              <DisplayNameField name="displayName" />
+        <Divider />
 
-              <EmailField name="email" />
+        <EditableUserDetail
+          title="Edit Email"
+          detailName="Email:"
+          detailHeading="Current Email:"
+          detailValue={currentUser.userName}
+          iconName="email"
+          body={<EmailField name="email" label="New Email Address:" />}
+          toastDescriptionCompleted="You have successfully updated your email."
+          validationSchema={object().shape({ email: fieldRequirements.email })}
+        />
 
-              <LanguageSelect name="lang" />
+        <Divider />
 
-              <Button
-                type="submit"
-                variantColor="teal"
-                width="fit-content"
-                px={8}
-                isLoading={isSubmitting}
-              >
-                <Trans>Save Changes</Trans>
-              </Button>
+        <EditableUserDetail
+          title="Change Password"
+          detailName="Password:"
+          detailValue="************"
+          iconName="lock"
+          body={
+            <Stack spacing={4} align="center">
+              <PasswordField
+                name="currentPassword"
+                label="Current Password:"
+                width="100%"
+              />
+              <Text textAlign="center">
+                Enter and confirm your new password below:
+              </Text>
+              <PasswordConfirmation
+                width="100%"
+                passwordLabel="New Password:"
+                confirmPasswordLabel="Confirm New Password:"
+              />
             </Stack>
-          </form>
-        )}
-      </Formik>
+          }
+          toastDescriptionCompleted="You have successfully updated your password."
+          validationSchema={object().shape({
+            currentPassword: fieldRequirements.password,
+            password: fieldRequirements.password,
+            confirmPassword: fieldRequirements.confirmPassword,
+          })}
+        />
+
+        <Divider />
+
+        <EditableUserLanguage currentLang={queryUserData.userPage.lang} />
+
+        {/*<EditableUserDetail detailName="Email:" iconName="email" detailValue="Test email"/>*/}
+
+        {/*<EditableUserDetail detailName="Password:" iconName="lock" detailValue="********"/>*/}
+
+        {/* <EditableUserLanguage detailName="Language:" />*/}
+      </Stack>
+      {/*<Formik*/}
+      {/*  initialValues={{*/}
+      {/*    displayName: queryUserData.userPage.displayName,*/}
+      {/*    email: currentUser.userName,*/}
+      {/*    lang: queryUserData.userPage.lang,*/}
+      {/*  }}*/}
+      {/*  onSubmit={(values, actions) => {*/}
+      {/*    window.alert('coming soon!!\n' + JSON.stringify(values, null, 2))*/}
+      {/*    actions.setSubmitting(false)*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  {({ handleSubmit, isSubmitting }) => (*/}
+      {/*    <form onSubmit={handleSubmit}>*/}
+      {/*      <Stack p={25} spacing={4}>*/}
+      {/*        <Heading as="h1" size="lg" textAlign="center">*/}
+      {/*          <Trans>User Profile</Trans>*/}
+      {/*        </Heading>*/}
+
+      {/*        <DisplayNameField*/}
+      {/*          name="displayName"*/}
+      {/*          value={queryUserData.userPage.displayName}*/}
+      {/*          isReadOnly={true}*/}
+      {/*          rightInputElement={*/}
+      {/*            <InputRightElement width="fit-content">*/}
+      {/*              <Button*/}
+      {/*                id="editButton"*/}
+      {/*                h="1.75rem"*/}
+      {/*                size="sm"*/}
+      {/*                px="2rem"*/}
+      {/*                mr="1rem"*/}
+      {/*              >*/}
+      {/*                Edit*/}
+      {/*              </Button>*/}
+      {/*            </InputRightElement>*/}
+      {/*          }*/}
+      {/*        />*/}
+
+      {/*        <EmailField*/}
+      {/*          name="email"*/}
+      {/*          value={currentUser.userName}*/}
+      {/*          isReadOnly={true}*/}
+      {/*          rightInputElement={*/}
+      {/*            <InputRightElement width="fit-content">*/}
+      {/*              <Button*/}
+      {/*                id="editButton"*/}
+      {/*                h="1.75rem"*/}
+      {/*                size="sm"*/}
+      {/*                px="2rem"*/}
+      {/*                mr="1rem"*/}
+      {/*              >*/}
+      {/*                Edit*/}
+      {/*              </Button>*/}
+      {/*            </InputRightElement>*/}
+      {/*          }*/}
+      {/*        />*/}
+
+      {/*        <PasswordField*/}
+      {/*          name="password"*/}
+      {/*          isReadOnly={true}*/}
+      {/*          type="password"*/}
+      {/*          value="examplepass"*/}
+      {/*          rightInputElement={*/}
+      {/*            <InputRightElement width="fit-content">*/}
+      {/*              <Button*/}
+      {/*                id="editButton"*/}
+      {/*                h="1.75rem"*/}
+      {/*                size="sm"*/}
+      {/*                px="2rem"*/}
+      {/*                mr="1rem"*/}
+      {/*              >*/}
+      {/*                Edit*/}
+      {/*              </Button>*/}
+      {/*            </InputRightElement>*/}
+      {/*          }*/}
+      {/*        />*/}
+
+      {/*<LanguageSelect name="lang" />*/}
+
+      {/*<Button*/}
+      {/*  type="submit"*/}
+      {/*  variantColor="teal"*/}
+      {/*  width="fit-content"*/}
+      {/*  px={8}*/}
+      {/*  isLoading={isSubmitting}*/}
+      {/*>*/}
+      {/*  <Trans>Save Changes</Trans>*/}
+      {/*</Button>*/}
+      {/*</Stack>*/}
+      {/*    </form>*/}
+      {/*  )}*/}
+      {/*</Formik>*/}
 
       <Stack Stack p={25} spacing={4}>
         <Heading as="h1" size="lg" textAlign="center">
@@ -214,7 +329,6 @@ export default function UserPage() {
           // Submit update password mutation
           await updatePassword({
             variables: {
-              userName: currentUser.userName,
               password: values.password,
               confirmPassword: values.confirmPassword,
               currentPassword: values.currentPassword,
@@ -246,6 +360,15 @@ export default function UserPage() {
                 ref={changePasswordBtnRef}
               >
                 <Trans>Change Password</Trans>
+              </Button>
+              <Button
+                variantColor="teal"
+                isLoading={isSubmitting}
+                type="submit"
+                id="submitBtn"
+                mr={4}
+              >
+                <Trans>Confirm</Trans>
               </Button>
 
               <ConfirmPasswordModal

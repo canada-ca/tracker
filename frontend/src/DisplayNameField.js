@@ -1,5 +1,5 @@
 import React from 'react'
-import { string } from 'prop-types'
+import { element, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -14,14 +14,16 @@ import {
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 
-function DisplayNameField({ name, ...props }) {
+function DisplayNameField({ name, rightInputElement, label, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
+
+  const formLabel = label === undefined ? <Trans>Display Name:</Trans> : label
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="displayName" fontWeight="bold">
-        <Trans>Display Name:</Trans>
+        {formLabel}
       </FormLabel>
       <InputGroup>
         <InputLeftElement>
@@ -33,6 +35,7 @@ function DisplayNameField({ name, ...props }) {
           id="displayName"
           placeholder={i18n._(t`Display Name`)}
         />
+        {rightInputElement}
       </InputGroup>
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -42,6 +45,7 @@ function DisplayNameField({ name, ...props }) {
 
 DisplayNameField.propTypes = {
   name: string.isRequired,
+  rightInputElement: element,
 }
 
 export default WithPseudoBox(DisplayNameField)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { string } from 'prop-types'
+import { element, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -14,14 +14,16 @@ import {
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 
-function EmailField({ name, ...props }) {
+function EmailField({ name, rightInputElement, label, ...props }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
+
+  const labelText = label === undefined ? <Trans>Password:</Trans> : label
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="email" fontWeight="bold">
-        <Trans>Email Address:</Trans>
+        {labelText}
       </FormLabel>
       <InputGroup>
         <InputLeftElement>
@@ -33,6 +35,7 @@ function EmailField({ name, ...props }) {
           id="email"
           placeholder={i18n._(t`Email`)}
         />
+        {rightInputElement}
       </InputGroup>
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -42,6 +45,7 @@ function EmailField({ name, ...props }) {
 
 EmailField.propTypes = {
   name: string.isRequired,
+  rightInputElement: element,
 }
 
 export default WithPseudoBox(EmailField)
