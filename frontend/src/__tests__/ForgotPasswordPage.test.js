@@ -22,7 +22,7 @@ const mocks = [
   },
 ]
 
-describe('<CreateUserPage />', () => {
+describe('<ForgotPasswordPage />', () => {
   describe('given no input', () => {
     describe('when onBlur fires', () => {
       describe('email field', () => {
