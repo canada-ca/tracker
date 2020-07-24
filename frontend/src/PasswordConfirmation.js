@@ -131,7 +131,7 @@ function PasswordConfirmation({
               }
             >
               <FormLabel htmlFor="confirmPassword" fontWeight="bold">
-                {confirmPasswordLabel}
+                {confirmPasswordLabelText}
               </FormLabel>
               <InputGroup>
                 <InputLeftElement>

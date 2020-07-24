@@ -31,7 +31,7 @@ const EmailField = WithPseudoBox(function EmailField({
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
 
-  const labelText = label === undefined ? <Trans>Password:</Trans> : label
+  const labelText = label === undefined ? <Trans>Email:</Trans> : label
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
