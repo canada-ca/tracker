@@ -27,6 +27,8 @@ import EditableUserDetail from './EditableUserDetail'
 import EditableUserLanguage from './EditableUserLanguage'
 import { object } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
+import EditableUserDisplayName from './EditableUserDisplayName'
+import EditableUserEmail from './EditableUserEmail'
 
 export default function UserPage() {
   const location = useLocation()
@@ -63,22 +65,13 @@ export default function UserPage() {
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
       <Stack p={25} spacing={4}>
-        <EditableUserDetail
+        <EditableUserDisplayName
           detailValue={queryUserData.userPage.displayName}
         />
 
         <Divider />
 
-        <EditableUserDetail
-          title="Edit Email"
-          detailName="Email:"
-          detailHeading="Current Email:"
-          detailValue={currentUser.userName}
-          iconName="email"
-          body={<EmailField name="email" label="New Email Address:" />}
-          toastDescriptionCompleted="You have successfully updated your email."
-          validationSchema={object().shape({ email: fieldRequirements.email })}
-        />
+        <EditableUserEmail detailValue={currentUser.userName} />
 
         <Divider />
 
