@@ -1,5 +1,12 @@
 import React from 'react'
-import { element, string } from 'prop-types'
+import {
+  element,
+  elementType,
+  func,
+  oneOfType,
+  shape,
+  string,
+} from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -14,7 +21,13 @@ import {
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 
-function DisplayNameField({ name, rightInputElement, label, ...props }) {
+const DisplayNameField = WithPseudoBox(function DisplayNameField({
+  name,
+  rightInputElement,
+  label,
+  forwardedRef,
+  ...props
+}) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
 
@@ -32,6 +45,7 @@ function DisplayNameField({ name, rightInputElement, label, ...props }) {
         <Input
           {...field}
           {...props}
+          ref={forwardedRef}
           id="displayName"
           placeholder={i18n._(t`Display Name`)}
         />
@@ -41,11 +55,14 @@ function DisplayNameField({ name, rightInputElement, label, ...props }) {
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
-}
+})
 
 DisplayNameField.propTypes = {
   name: string.isRequired,
   rightInputElement: element,
+  forwardedRef: oneOfType([func, shape({ current: elementType })]),
 }
 
-export default WithPseudoBox(DisplayNameField)
+export default React.forwardRef((props, ref) => {
+  return <DisplayNameField {...props} forwardedRef={ref} />
+})
