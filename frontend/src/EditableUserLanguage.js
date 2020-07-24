@@ -1,66 +1,33 @@
 import React from 'react'
-import { element, string } from 'prop-types'
-import {
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Icon,
-  Heading,
-  InputRightElement,
-  Button,
-  Stack,
-  Select,
-} from '@chakra-ui/core'
+import { string } from 'prop-types'
+import { Heading, Button, Stack, Select } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Formik, Field } from 'formik'
 
-function EditableUserLanguage({
-  detailName,
-  iconName,
-  iconSize,
-  rightInputElement,
-  currentLang,
-  ...props
-}) {
-  const iconElement =
-    iconName !== undefined ? (
-      <InputLeftElement>
-        <Icon name={iconName} size={iconSize} color="gray.300" />
-      </InputLeftElement>
-    ) : (
-      ''
-    )
+function EditableUserLanguage({ currentLang }) {
   return (
     <Stack spacing="4">
       <Heading as="h3" size="md">
-        Language:
+        <Trans>Language:</Trans>
       </Heading>
-
-      {console.log(currentLang)}
 
       <Formik
         initialValues={{ lang: currentLang }}
         onSubmit={(_values, { setSubmitting }) => {
-          console.log('submitting')
           setSubmitting(false)
         }}
       >
         {({ handleSubmit, isSubmitting, getFieldProps }) => (
           <form id="langForm" onSubmit={handleSubmit}>
-            <Stack isInline width="100%" align="space-between">
-              <Field
-                {...props}
-                id="lang"
-                component={Select}
-                {...getFieldProps('lang')}
-              >
+            <Stack isInline align="center">
+              <Field id="lang" component={Select} {...getFieldProps('lang')}>
                 <option value="ENGLISH">English</option>
                 <option value="FRENCH">Français</option>
               </Field>
 
               <Button type="submitBtn" isLoading={isSubmitting} px="2rem">
-                Save Language
+                <Trans>Save Language</Trans>
               </Button>
             </Stack>
           </form>
@@ -71,10 +38,7 @@ function EditableUserLanguage({
 }
 
 EditableUserLanguage.propTypes = {
-  detailName: string,
-  iconName: string,
-  iconSize: string,
-  rightInputElement: element,
+  currentLang: string,
 }
 
 export default WithPseudoBox(EditableUserLanguage)
