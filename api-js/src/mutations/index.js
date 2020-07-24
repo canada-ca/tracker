@@ -1,4 +1,4 @@
-const {} = require('graphql')
+const { GraphQLObjectType } = require('graphql')
 
 const { createDomain, removeDomain, updateDomain } = require('./domain')
 const {
