@@ -1,17 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Stack, Text, Select, Divider } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Layout } from './Layout'
 import AdminPanel from './AdminPanel'
-import { array } from 'prop-types'
 import { USER_AFFILIATIONS } from './graphql/queries'
 import { useQuery } from '@apollo/react-hooks'
 import { useUserState } from './UserState'
 
 export default function AdminPage() {
   const { currentUser } = useUserState()
-  const [orgName, setOrgName] = React.useState('')
+  const [orgName, setOrgName] = useState()
   const { i18n } = useLingui()
 
   const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
@@ -34,10 +33,21 @@ export default function AdminPage() {
     return <p>{String(error)}</p>
   }
 
-  let orgs = []
+  const adminAffiliations = {}
   if (data && data.user && data.user[0].affiliations.edges) {
-    orgs = data.user[0].affiliations.edges
+    for (let i = 0; i < data.user[0].affiliations.edges.length; i++) {
+      if (
+        data.user[0].affiliations.edges[i].node.permission === 'ADMIN' ||
+        data.user[0].affiliations.edges[i].node.permission === 'SUPER_ADMIN'
+      ) {
+        adminAffiliations[
+          data.user[0].affiliations.edges[i].node.organization.acronym
+        ] = data.user[0].affiliations.edges[i].node.permission
+      }
+    }
   }
+
+  const adminOrgs = Object.keys(adminAffiliations)
 
   const options = [
     <option hidden key="default">
@@ -45,17 +55,12 @@ export default function AdminPage() {
     </option>,
   ]
 
-  for (let i = 0; i < orgs.length; i++) {
-    if (
-      orgs[i].node.permission === 'ADMIN' ||
-      orgs[i].node.permission === 'SUPER_ADMIN'
-    ) {
-      options.push(
-        <option key={'option' + i} value={orgs[i].node.organization.acronym}>
-          {orgs[i].node.organization.acronym}
-        </option>,
-      )
-    }
+  for (let i = 0; i < adminOrgs.length; i++) {
+    options.push(
+      <option key={'option' + i} value={adminOrgs[i]}>
+        {adminOrgs[i]}
+      </option>,
+    )
   }
 
   if (options.length > 1) {
@@ -80,9 +85,12 @@ export default function AdminPage() {
               {options}
             </Select>
           </Stack>
-          {options.length > 1 && orgName !== '' ? (
+          {options.length > 1 && orgName ? (
             <Stack>
-              <AdminPanel orgName={orgName} />
+              <AdminPanel
+                orgName={orgName}
+                permission={adminAffiliations[orgName]}
+              />
               <Divider />
               <Trans>
                 *search bars do not actively search databases currently. They
@@ -104,8 +112,4 @@ export default function AdminPage() {
       </Text>
     )
   }
-}
-
-AdminPage.propTypes = {
-  orgs: array,
 }

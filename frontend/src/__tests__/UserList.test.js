@@ -146,7 +146,7 @@ describe('<UserList />', () => {
                 <MockedProvider mocks={mocks} addTypename={false}>
                   <UserList
                     userListData={data}
-                    name="admin"
+                    permission="SUPER_ADMIN"
                     orgSlug="test-org-slug"
                   />
                 </MockedProvider>

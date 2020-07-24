@@ -13,7 +13,6 @@ import {
   IconButton,
   useToast,
   Select,
-  Badge,
   Box,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
@@ -24,7 +23,7 @@ import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_USER_ROLES } from './graphql/mutations'
 
 export default function UserList({ ...props }) {
-  const { name, userListData, orgName, orgSlug } = props
+  const { permission, userListData, orgName, orgSlug } = props
   const [userList, setUserList] = useState(userListData.userList.edges)
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
@@ -39,9 +38,8 @@ export default function UserList({ ...props }) {
 
   const [updateUserRoles, { loading, error }] = useMutation(UPDATE_USER_ROLES, {
     onError(error) {
-      console.log(error)
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: error.message,
         description: i18n._(t`Unable to change user role, please try again.`),
         status: 'error',
         duration: 9000,
@@ -180,15 +178,17 @@ export default function UserList({ ...props }) {
       ) : (
         currentUsers.map(({ node }) => {
           let userRole = node.role
-          if (name === 'admin') {
+          if (permission) {
             return (
               <Box>
-                {userRole === 'SUPER_ADMIN' ? (
+                {userRole === 'SUPER_ADMIN' ||
+                (permission === 'ADMIN' && userRole === 'ADMIN') ? (
                   <Stack key={node.id} isInline align="center">
                     <UserCard
                       userName={node.userName}
                       displayName={node.displayName}
                       role={userRole}
+                      tfa={null}
                     />
                   </Stack>
                 ) : (
@@ -205,7 +205,8 @@ export default function UserList({ ...props }) {
                         displayName={node.displayName}
                       />
                     </Stack>
-                    <Stack isInline justifyContent="flex-end">
+                    <Stack isInline justifyContent="flex-end" align="center">
+                      <Text fontWeight="bold">Role:</Text>
                       <Select
                         w="35%"
                         size="sm"
@@ -281,6 +282,6 @@ export default function UserList({ ...props }) {
 UserList.propTypes = {
   userListData: object,
   orgName: string,
-  name: string,
+  permission: string,
   orgSlug: string,
 }

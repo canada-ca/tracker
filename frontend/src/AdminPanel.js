@@ -9,7 +9,7 @@ import { useUserState } from './UserState'
 import { AdminDomains } from './AdminDomains'
 
 export default function AdminPanel({ ...props }) {
-  const { orgName } = props
+  const { orgName, permission } = props
   const { currentUser } = useUserState()
   const toast = useToast()
 
@@ -69,7 +69,7 @@ export default function AdminPanel({ ...props }) {
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
         <AdminDomains domainsData={domainsData} orgName={orgName} />
         <UserList
-          name="admin"
+          permission={permission}
           userListData={userListData}
           orgName={orgName}
           orgSlug={slugify(orgName)}
@@ -81,4 +81,5 @@ export default function AdminPanel({ ...props }) {
 
 AdminPanel.propTypes = {
   orgName: string,
+  permission: string,
 }

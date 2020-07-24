@@ -36,7 +36,7 @@ export function UserCard({ userName, displayName, tfa, role }) {
             <Badge variantColor="blue" variant="outline">
               {role}
             </Badge>
-            {tfa && (
+            {tfa !== null && (
               <Badge variantColor={tfa ? 'green' : 'red'}>
                 <Trans>2FA</Trans>
               </Badge>
