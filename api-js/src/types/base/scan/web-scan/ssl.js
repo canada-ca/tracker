@@ -1,7 +1,7 @@
 const { GraphQLObjectType, GraphQLList, GraphQLString } = require('graphql')
 const { globalIdField } = require('graphql-relay')
-const { nodeInterface } = require('../../node')
-const { DateTime, Url } = require('../../../scalars')
+const { DateTime, Url } = require('../../../../scalars')
+const { nodeInterface } = require('../../../node')
 
 const sslType = new GraphQLObjectType({
   name: 'SSL',
@@ -16,7 +16,7 @@ const sslType = new GraphQLObjectType({
       description: 'The time when the scan was initiated.',
     },
     sslGuidanceTags: {
-      type: new GraphQLList(GraphQLString),
+      type: GraphQLList(GraphQLString),
       description: 'Key tags found during scan.',
     },
   }),

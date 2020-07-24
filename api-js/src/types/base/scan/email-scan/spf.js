@@ -5,8 +5,8 @@ const {
   GraphQLList,
 } = require('graphql')
 const { globalIdField } = require('graphql-relay')
-const { nodeInterface } = require('../../node')
-const { Url, DateTime } = require('../../../scalars')
+const { Url, DateTime } = require('../../../../scalars')
+const { nodeInterface } = require('../../../node')
 
 const spfType = new GraphQLObjectType({
   name: 'SPF',
@@ -34,7 +34,7 @@ const spfType = new GraphQLObjectType({
         'Instruction of what a recipient should do if there is not a match to your SPF record.',
     },
     spfGuidanceTags: {
-      type: new GraphQLList(GraphQLString),
+      type: GraphQLList(GraphQLString),
       description: 'Key tags found during scan.',
     },
   }),

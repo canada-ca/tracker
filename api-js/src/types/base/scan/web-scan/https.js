@@ -1,7 +1,7 @@
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql')
 const { globalIdField } = require('graphql-relay')
-const { nodeInterface } = require('../../../node')
 const { Url, DateTime } = require('../../../../scalars')
+const { nodeInterface } = require('../../../node')
 
 const httpsType = new GraphQLObjectType({
   name: 'HTTPS',
@@ -40,7 +40,7 @@ const httpsType = new GraphQLObjectType({
         'Denotes whether the domain has been submitted and included within HSTS preload list.',
     },
     httpsGuidanceTags: {
-      type: new GraphQLList(GraphQLString),
+      type: GraphQLList(GraphQLString),
       description: 'Key tags found during scan.',
     },
   }),

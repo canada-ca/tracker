@@ -11,7 +11,7 @@ const {
 
 const { authResultType } = require('./auth-result')
 const { categorizedSummaryType } = require('./categorized-summary')
-const { detailTableType } = require('./detail-tables')
+const { dmarcReportDetailedTablesType } = require('./dmarc-report')
 const { nodeField, nodeInterface } = require('./node')
 
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
   userAffiliationsType,
   userAffiliationsConnection,
   // Dmarc Report Types
-  detailTableType,
+  dmarcReportDetailedTablesType,
   // Node Types
   nodeField,
   nodeInterface,

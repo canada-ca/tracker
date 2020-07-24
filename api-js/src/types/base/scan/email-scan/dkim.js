@@ -1,7 +1,7 @@
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql')
 const { globalIdField } = require('graphql-relay')
-const { nodeInterface } = require('../../node')
-const { DateTime, Url } = require('../../../scalars')
+const { DateTime, Url } = require('../../../../scalars')
+const { nodeInterface } = require('../../../node')
 
 const dkimType = new GraphQLObjectType({
   name: 'DKIM',
@@ -24,7 +24,7 @@ const dkimType = new GraphQLObjectType({
       description: 'Length of DKIM public key.',
     },
     dkimGuidanceTags: {
-      type: new GraphQLList(GraphQLString),
+      type: GraphQLList(GraphQLString),
       description: 'Key tags found during scan.',
     },
   }),

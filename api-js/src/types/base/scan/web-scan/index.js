@@ -1,7 +1,7 @@
 const { GraphQLObjectType } = require('graphql')
 const { globalIdField, connectionDefinitions } = require('graphql-relay')
-const { Url, DateTime } = require('../../../scalars')
-const { nodeInterface } = require('../../node')
+const { Url, DateTime } = require('../../../../scalars')
+const { nodeInterface } = require('../../../node')
 const { httpsType } = require('./https')
 const { sslType } = require('./ssl')
 

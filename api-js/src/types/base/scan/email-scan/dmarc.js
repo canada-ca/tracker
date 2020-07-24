@@ -5,8 +5,8 @@ const {
   GraphQLList,
 } = require('graphql')
 const { globalIdField } = require('graphql-relay')
-const { nodeInterface } = require('../../node')
-const { Url, DateTime } = require('../../../scalars')
+const { Url, DateTime } = require('../../../../scalars')
+const { nodeInterface } = require('../../../node')
 
 const dmarcType = new GraphQLObjectType({
   name: 'DMARC',
@@ -44,7 +44,7 @@ const dmarcType = new GraphQLObjectType({
         'The percentage of messages to which the DMARC policy is to be applied.',
     },
     dmarcGuidanceTags: {
-      type: new GraphQLList(GraphQLString),
+      type: GraphQLList(GraphQLString),
       description: 'Key tags found during DMARC Scan.',
     },
   }),
