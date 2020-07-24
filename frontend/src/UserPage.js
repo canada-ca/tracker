@@ -29,6 +29,7 @@ import { object } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
+import EditableUserPassword from './EditableUserPassword'
 
 export default function UserPage() {
   const location = useLocation()
@@ -75,35 +76,7 @@ export default function UserPage() {
 
         <Divider />
 
-        <EditableUserDetail
-          title="Change Password"
-          detailName="Password:"
-          detailValue="************"
-          iconName="lock"
-          body={
-            <Stack spacing={4} align="center">
-              <PasswordField
-                name="currentPassword"
-                label="Current Password:"
-                width="100%"
-              />
-              <Text textAlign="center">
-                Enter and confirm your new password below:
-              </Text>
-              <PasswordConfirmation
-                width="100%"
-                passwordLabel="New Password:"
-                confirmPasswordLabel="Confirm New Password:"
-              />
-            </Stack>
-          }
-          toastDescriptionCompleted="You have successfully updated your password."
-          validationSchema={object().shape({
-            currentPassword: fieldRequirements.password,
-            password: fieldRequirements.password,
-            confirmPassword: fieldRequirements.confirmPassword,
-          })}
-        />
+        <EditableUserPassword />
 
         <Divider />
 

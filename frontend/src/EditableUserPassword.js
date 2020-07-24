@@ -1,5 +1,4 @@
 import React from 'react'
-import { string } from 'prop-types'
 import {
   Icon,
   Heading,
@@ -20,15 +19,16 @@ import {
 import WithPseudoBox from './withPseudoBox'
 import { Formik } from 'formik'
 import { t, Trans } from '@lingui/macro'
-import DisplayNameField from './DisplayNameField'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
 import { useLingui } from '@lingui/react'
-import { fieldRequirements } from './fieldRequirements'
 import { object } from 'yup'
+import { fieldRequirements } from './fieldRequirements'
+import PasswordField from './PasswordField'
+import PasswordConfirmation from './PasswordConfirmation'
 
-function EditableUserDisplayName({ detailValue }) {
+function EditableUserPassword() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { currentUser } = useUserState()
   const toast = useToast()
@@ -58,7 +58,7 @@ function EditableUserDisplayName({ detailValue }) {
         // Display a welcome message
         toast({
           title: 'Changed User Profile',
-          description: 'You have successfully updated your display name.',
+          description: 'You have successfully updated your password.',
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -71,12 +71,12 @@ function EditableUserDisplayName({ detailValue }) {
   return (
     <Stack>
       <Heading as="h3" size="md">
-        <Trans>Display Name:</Trans>
+        <Trans>Password:</Trans>
       </Heading>
 
       <Stack isInline align="center">
-        <Icon name="person" size="1.5rem" color="gray.300" />
-        <Text>{detailValue}</Text>
+        <Icon name="lock" color="gray.300" />
+        <Text>************</Text>
         <Button ml="auto" onClick={onOpen} size="sm">
           <Trans>Edit</Trans>
         </Button>
@@ -89,17 +89,23 @@ function EditableUserDisplayName({ detailValue }) {
             <ModalContent pb={4} {...styles}>
               <Formik
                 initialValues={{
-                  displayName: '',
+                  password: '',
+                  confirmPassword: '',
+                  currentPassword: '',
                 }}
                 validationSchema={object().shape({
-                  displayName: fieldRequirements.displayName,
+                  password: fieldRequirements.password,
+                  confirmPassword: fieldRequirements.confirmPassword,
+                  currentPassword: fieldRequirements.password,
                 })}
                 onSubmit={async values => {
                   // Submit update detail mutation
                   await updateUserProfile({
                     variables: {
                       input: {
-                        displayName: values.displayName,
+                        password: values.password,
+                        confirmPassword: values.confirmPassword,
+                        currentPassword: values.currentPassword,
                       },
                     },
                   })
@@ -107,22 +113,27 @@ function EditableUserDisplayName({ detailValue }) {
               >
                 {({ handleSubmit, isSubmitting }) => (
                   <form id="form" onSubmit={handleSubmit}>
-                    <ModalHeader>
-                      <Trans>Edit Display Name</Trans>
-                    </ModalHeader>
+                    <ModalHeader>{title}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                       <Stack spacing={4} p={25}>
-                        <Heading as="h3" size="sm">
-                          <Trans>Current Display Name:</Trans>
-                        </Heading>
-
-                        <Text>{detailValue}</Text>
-
-                        <DisplayNameField
-                          name="displayName"
-                          label="New Display Name:"
-                        />
+                        <Stack spacing={4} align="center">
+                          <PasswordField
+                            name="currentPassword"
+                            label="Current Password:"
+                            width="100%"
+                          />
+                          <Text textAlign="center">
+                            <Trans>
+                              Enter and confirm your new password below:
+                            </Trans>
+                          </Text>
+                          <PasswordConfirmation
+                            width="100%"
+                            passwordLabel="New Password:"
+                            confirmPasswordLabel="Confirm New Password:"
+                          />
+                        </Stack>
                       </Stack>
                     </ModalBody>
 
@@ -154,8 +165,4 @@ function EditableUserDisplayName({ detailValue }) {
   )
 }
 
-EditableUserDisplayName.propTypes = {
-  detailValue: string,
-}
-
-export default WithPseudoBox(EditableUserDisplayName)
+export default WithPseudoBox(EditableUserPassword)
