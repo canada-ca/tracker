@@ -31,7 +31,7 @@ const updateDomain = new mutationWithClientMutationId({
     domain: {
       type: domainType,
       description: 'The updated domain.',
-      resolve: async (payload) => {},
+      resolve: async () => {},
     },
   }),
   mutateAndGetPayload: async () => {},

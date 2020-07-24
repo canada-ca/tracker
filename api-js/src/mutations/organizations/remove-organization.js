@@ -15,6 +15,7 @@ const removeOrganization = new mutationWithClientMutationId({
       type: GraphQLNonNull(GraphQLString),
       description:
         'Status string to inform the user if the organization was successfully removed.',
+      resolve: async () => {},
     },
   }),
   mutateAndGetPayload: async () => {},

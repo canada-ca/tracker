@@ -25,9 +25,7 @@ const createDomain = new mutationWithClientMutationId({
     domain: {
       type: domainType,
       description: 'The newly created domain.',
-      resolve: async (payload) => {
-        return payload.domain
-      },
+      resolve: async () => {},
     },
   }),
   mutateAndGetPayload: async () => {},

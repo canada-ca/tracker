@@ -15,7 +15,7 @@ const removeDomain = new mutationWithClientMutationId({
       type: GraphQLNonNull(GraphQLString),
       description:
         'Status string to inform the user if the domain was successfully removed.',
-      resolve: async (payload) => {},
+      resolve: async () => {},
     },
   }),
   mutateAndGetPayload: async () => {},

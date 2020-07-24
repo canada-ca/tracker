@@ -79,7 +79,7 @@ const createOrganization = new mutationWithClientMutationId({
     organization: {
       type: organizationType,
       description: 'The newly created organization.',
-      resolve: async (payload) => {},
+      resolve: async () => {},
     },
   }),
   mutateAndGetPayload: async () => {},

@@ -1,5 +1,5 @@
 const { GraphQLString, GraphQLNonNull, GraphQLID } = require('graphql')
-const { mutationWithClientMutationId, globalIdField } = require('graphql-relay')
+const { mutationWithClientMutationId } = require('graphql-relay')
 const { Acronym } = require('../../scalars')
 const { organizationType } = require('../../types')
 
@@ -83,7 +83,7 @@ const updateOrganization = new mutationWithClientMutationId({
     organization: {
       type: organizationType,
       description: 'The newly created organization.',
-      resolve: async (payload) => {},
+      resolve: async () => {},
     },
   }),
   mutateAndGetPayload: async () => {},
