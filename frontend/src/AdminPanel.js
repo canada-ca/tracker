@@ -8,7 +8,7 @@ import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { AdminDomains } from './AdminDomains'
 
-export default function AdminPanel({ orgName }) {
+export default function AdminPanel({ orgName, permission }) {
   const { currentUser } = useUserState()
   const toast = useToast()
 
@@ -43,7 +43,12 @@ export default function AdminPanel({ orgName }) {
     <Stack spacing={10}>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
         <AdminDomains domainsData={data.domains} orgName={orgName} />
-        <UserList name="admin" userListData={data.userList} orgName={orgName} />
+        <UserList
+          permission={permission}
+          userListData={data.userList}
+          orgName={orgName}
+          orgSlug={slugify(orgName)}
+        />
       </SimpleGrid>
     </Stack>
   )
@@ -51,4 +56,5 @@ export default function AdminPanel({ orgName }) {
 
 AdminPanel.propTypes = {
   orgName: string,
+  permission: string,
 }

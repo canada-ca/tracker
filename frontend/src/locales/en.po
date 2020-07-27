@@ -128,11 +128,12 @@ msgid "Admin"
 msgstr "Admin"
 
 #: src/App.js:75
-msgid "Admin Portal"
-msgstr "Admin Portal"
+msgid "Admin Profile"
+msgstr "Admin Profile"
 
 #: src/CreateUserPage.js:42
 #: src/SignInPage.js:38
+#: src/UserList.js:44
 msgid "An error occurred."
 msgstr "An error occurred."
 
@@ -1603,3 +1604,35 @@ msgstr "{domainName}"
 #: src/DmarcGuidancePage.js:40
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/UserList.js:209
+msgid "READ"
+msgstr "READ"
+
+#: src/UserList.js:212
+msgid "WRITE"
+msgstr "WRITE"
+
+#: src/UserList.js:215
+msgid "ADMIN"
+msgstr "ADMIN"
+
+#: src/UserList.js:225
+msgid "Apply"
+msgstr "Apply"
+
+#: src/UserList.js:43
+msgid "Unable to change user role, please try again."
+msgstr "Unable to change user role, please try again."
+
+#: src/UserList.js:52
+msgid "Role updated"
+msgstr "Role updated"
+
+#: src/UserList.js:53
+msgid "The user's role has been successfully updated"
+msgstr "The user's role has been successfully updated"
+
+#: src/UserList.js:210
+msgid "Role:"
+msgstr "Role:"

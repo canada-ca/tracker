@@ -1,10 +1,10 @@
 import React from 'react'
-import { Badge, Box, Text, PseudoBox } from '@chakra-ui/core'
+import { Badge, Box, Text, PseudoBox, Stack } from '@chakra-ui/core'
 import { Trans } from '@lingui/macro'
 import { useHistory } from 'react-router-dom'
 import { bool, string } from 'prop-types'
 
-export function UserCard({ userName, displayName, tfa, admin = false }) {
+export function UserCard({ userName, displayName, tfa, role }) {
   const history = useHistory()
   return (
     <PseudoBox
@@ -21,24 +21,29 @@ export function UserCard({ userName, displayName, tfa, admin = false }) {
       p="30px"
     >
       <Box flexShrink="0" minW="15%">
-        <Text mt={1} fontSize="lg" fontWeight="semibold">
+        <Text mt={1} fontSize="md" fontWeight="semibold">
           {displayName}
         </Text>
       </Box>
-      <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="35%">
-        <Text fontSize="lg" minW="10%">
+      <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+        <Text fontSize="md" minW="10%">
           {userName}
         </Text>
       </Box>
-      <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} minW="15%">
-        <Badge variantColor={tfa ? 'green' : 'red'} minW="15%">
-          <Trans>TwoFactor</Trans>
-        </Badge>
-        <Badge variantColor={admin ? 'green' : 'red'} ml="10px" mr={{ md: 4 }}>
-          <Trans>Admin</Trans>
-        </Badge>
-      </Box>
-      <Box flexShrink="0" ml={{ md: 4 }} mr={{ md: 4 }} mt={2} minW="15%"></Box>
+      {role && (
+        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
+          <Stack isInline align="center">
+            <Badge variantColor="blue" variant="outline">
+              {role}
+            </Badge>
+            {tfa !== null && (
+              <Badge variantColor={tfa ? 'green' : 'red'}>
+                <Trans>2FA</Trans>
+              </Badge>
+            )}
+          </Stack>
+        </Box>
+      )}
     </PseudoBox>
   )
 }
@@ -46,6 +51,6 @@ export function UserCard({ userName, displayName, tfa, admin = false }) {
 UserCard.propTypes = {
   displayName: string.isRequired,
   userName: string.isRequired,
-  admin: bool,
-  tfa: bool.isRequired,
+  role: string,
+  tfa: bool,
 }

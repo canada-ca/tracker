@@ -69,4 +69,12 @@ export const SEND_PASSWORD_RESET_LINK = gql`
   }
 `
 
+export const UPDATE_USER_ROLES = gql`
+  mutation UpdateUserRoles($input: UpdateUserRoleInput!) {
+    updateUserRole(input: $input) {
+      status
+    }
+  }
+`
+
 export default ''

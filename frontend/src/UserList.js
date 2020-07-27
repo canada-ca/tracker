@@ -12,13 +12,22 @@ import {
   Text,
   IconButton,
   useToast,
+  Select,
+  Box,
 } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { PaginationButtons } from './PaginationButtons'
 import { UserCard } from './UserCard'
 import { string, shape, boolean } from 'prop-types'
+import { useMutation } from '@apollo/client'
+import { UPDATE_USER_ROLES } from './graphql/mutations'
 
-export default function UserList({ name, userListData, orgName }) {
+export default function UserList({
+  permission,
+  userListData,
+  orgName,
+  orgSlug,
+}) {
   const [userList, setUserList] = useState(userListData.edges)
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
@@ -31,6 +40,36 @@ export default function UserList({ name, userListData, orgName }) {
   const indexOfFirstUser = indexOfLastUser - usersPerPage
   const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser)
 
+  const [updateUserRoles, { loading, error }] = useMutation(UPDATE_USER_ROLES, {
+    onError(error) {
+      toast({
+        title: error.message,
+        description: i18n._(t`Unable to change user role, please try again.`),
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+    onCompleted(updateUserRoles) {
+      console.log(updateUserRoles)
+      toast({
+        title: i18n._(t`Role updated`),
+        description: i18n._(t`The user's role has been successfully updated`),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    },
+  })
+
+  if (loading)
+    return (
+      <p>
+        <Trans>Loading...</Trans>
+      </p>
+    )
+  if (error) return <p>{String(error)}</p>
+
   // Change page
   const paginate = pageNumber => setCurrentPage(pageNumber)
 
@@ -40,7 +79,7 @@ export default function UserList({ name, userListData, orgName }) {
         node: {
           id: id,
           userName: `${name}${id}@gmail.com`,
-          admin: false,
+          role: 'USER_READ',
           tfa: false,
           displayName: name,
         },
@@ -69,10 +108,9 @@ export default function UserList({ name, userListData, orgName }) {
 
   const removeUser = user => {
     const temp = userList.filter(c => c.node.id !== user.id)
-
     if (temp) {
       setUserList(temp)
-      if (currentUsers.length <= 1)
+      if (currentUsers.length <= 1 && userList.length > 1)
         setCurrentPage(Math.ceil(userList.length / usersPerPage) - 1)
       toast({
         title: 'User removed',
@@ -92,6 +130,18 @@ export default function UserList({ name, userListData, orgName }) {
         position: 'bottom-left',
       })
     }
+  }
+
+  const handleClick = (role, userName) => {
+    updateUserRoles({
+      variables: {
+        input: {
+          orgSlug: orgSlug,
+          role: role,
+          userName: userName,
+        },
+      },
+    })
   }
 
   return (
@@ -114,7 +164,6 @@ export default function UserList({ name, userListData, orgName }) {
           />
         </InputGroup>
         <Button
-          width={'70%'}
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
@@ -132,44 +181,82 @@ export default function UserList({ name, userListData, orgName }) {
         </Text>
       ) : (
         currentUsers.map(({ node }) => {
+          let userRole = node.role
+          if (permission) {
+            return (
+              <Box>
+                {userRole === 'SUPER_ADMIN' ||
+                (permission === 'ADMIN' && userRole === 'ADMIN') ? (
+                  <Stack key={node.id} isInline align="center">
+                    <UserCard
+                      userName={node.userName}
+                      displayName={node.displayName}
+                      role={userRole}
+                      tfa={null}
+                    />
+                  </Stack>
+                ) : (
+                  <Box>
+                    <Stack isInline align="center">
+                      <IconButton
+                        icon="minus"
+                        size="sm"
+                        variantColor="red"
+                        onClick={() => removeUser(node)}
+                      />
+                      <UserCard
+                        userName={node.userName}
+                        displayName={node.displayName}
+                      />
+                    </Stack>
+                    <Stack isInline justifyContent="flex-end" align="center">
+                      <Text fontWeight="bold">
+                        <Trans>Role:</Trans>
+                      </Text>
+                      <Select
+                        w="35%"
+                        size="sm"
+                        name="role"
+                        defaultValue={userRole}
+                        onChange={e => (userRole = e.target.value)}
+                      >
+                        <option value="USER_READ">{i18n._(t`READ`)}</option>
+                        <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>
+                        <option value="ADMIN">{i18n._(t`ADMIN`)}</option>
+                      </Select>
+                      <Button
+                        size="sm"
+                        variantColor="blue"
+                        onClick={() => handleClick(userRole, node.userName)}
+                      >
+                        <Trans>Apply</Trans>
+                      </Button>
+                    </Stack>
+                  </Box>
+                )}
+              </Box>
+            )
+          }
           return (
-            <Stack isInline key={node.id} align="center">
-              {name === 'admin' && (
-                <Stack isInline>
-                  <IconButton
-                    icon="minus"
-                    size="sm"
-                    variantColor="red"
-                    isDisabled={node.admin}
-                    onClick={() => removeUser(node)}
-                  />
-                  <IconButton
-                    icon="edit"
-                    size="sm"
-                    variantColor="blue"
-                    onClick={() => window.alert('edit user')}
-                    isDisabled={node.admin}
-                  />
-                </Stack>
-              )}
-
-              <UserCard
-                userName={node.userName}
-                tfa={node.tfa}
-                admin={node.admin}
-                displayName={node.displayName}
-              />
-            </Stack>
+            <UserCard
+              key={node.id}
+              userName={node.userName}
+              tfa={node.tfa}
+              role={node.role}
+              displayName={node.displayName}
+            />
           )
         })
       )}
       <Divider />
-      <PaginationButtons
-        perPage={usersPerPage}
-        total={userList.length}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
+      {userList.length > 0 && (
+        <PaginationButtons
+          perPage={usersPerPage}
+          total={userList.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
+      )}
     </Stack>
   )
 }
@@ -201,10 +288,11 @@ UserList.propTypes = {
   userListData: shape({
     id: string,
     userName: string,
-    admin: boolean,
+    role: string,
     tfa: boolean,
     displayName: string,
   }),
   orgName: string,
-  name: string,
+  orgSlug: string,
+  permission: string,
 }
