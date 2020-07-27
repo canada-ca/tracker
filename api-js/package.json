@@ -5,7 +5,9 @@
     "start": "node index.js",
     "dev-start": "nodemon index.js",
     "test": "jest",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "extract": "lingui extract",
+    "compile": "lingui compile"
   },
   "author": "",
   "license": "ISC",
