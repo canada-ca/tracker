@@ -106,7 +106,7 @@ describe('<UserList />', () => {
   })
 
   describe('Admin profile userlist', () => {
-    it("user role is updated when the 'Apply' button is clicked", async () => {
+    it('updateUserRole elements render', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/user-list'],
         initialIndex: 0,
@@ -119,20 +119,22 @@ describe('<UserList />', () => {
             variables: {
               input: {
                 orgSlug: 'test-org-slug',
-                role: 'USER_READ',
+                role: 'USER_WRITE',
                 userName: 'testuser@testemail.gc.ca',
               },
             },
           },
           result: {
             data: {
-              status: 'string',
+              updateUserRole: {
+                status: 'string',
+              },
             },
           },
         },
       ]
 
-      const { getAllByText, getByText } = render(
+      const { getAllByText, getByDisplayValue, getByText } = render(
         <UserStateProvider
           initialState={{
             userName: 'testadmin@testemail.gc.ca',
@@ -156,17 +158,32 @@ describe('<UserList />', () => {
         </UserStateProvider>,
       )
 
+      const userRole = getByDisplayValue(/READ/i)
       await waitFor(() => {
-        const userRole = getByText(/READ/i)
-        expect(userRole).toBeDefined()
+        expect(userRole.type).toEqual('select-one')
       })
 
-      const updateButtons = await waitFor(() => getAllByText(/Apply/i))
-      expect(updateButtons).toHaveLength(1)
+      // change input on select to WRITE
+      fireEvent.change(userRole, { target: { value: 'USER_WRITE' } })
+
+      await waitFor(() => {
+        const newRole = getByDisplayValue(/WRITE/i)
+        expect(newRole.type).toEqual('select-one')
+      })
+
+      // Apply changes button
+      const updateButton = await waitFor(() => getAllByText(/Apply/i))
+      expect(updateButton).toHaveLength(1)
 
       const leftClick = { button: 0 }
-      fireEvent.click(updateButtons[0], leftClick)
+      fireEvent.click(updateButton[0], leftClick)
       // default `button` property for click events is set to `0` which is a left click.
+
+      // await changes
+      await waitFor(() => {
+        const newRole = getByText(/Role updated/i)
+        expect(newRole).toBeInTheDocument()
+      })
     })
   })
 })

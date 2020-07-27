@@ -221,7 +221,6 @@ export default function UserList({ ...props }) {
                       <Button
                         size="sm"
                         variantColor="blue"
-                        type="submit"
                         onClick={() => handleClick(userRole, node.userName)}
                       >
                         <Trans>Apply</Trans>
