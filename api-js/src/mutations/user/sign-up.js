@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { LanguageEnums } = require('../../enums')

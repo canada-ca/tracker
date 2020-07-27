@@ -14,22 +14,22 @@ const dmarcType = new GraphQLObjectType({
     id: globalIdField('dmarc'),
     domain: {
       type: Url,
-      description: 'The domain the scan was ran on.',
+      description: `The domain the scan was ran on.`,
       resolve: async () => {},
     },
     timestamp: {
       type: DateTime,
-      description: 'The time when the scan was initiated.',
+      description: `The time when the scan was initiated.`,
       resolve: async () => {},
     },
     dmarcPhase: {
       type: GraphQLInt,
-      description: 'DMARC phase found during scan.',
+      description: `DMARC phase found during scan.`,
       resolve: async () => {},
     },
     record: {
       type: GraphQLString,
-      description: 'DMARC record retrieved during scan.',
+      description: `DMARC record retrieved during scan.`,
       resolve: async () => {},
     },
     pPolicy: {
@@ -46,13 +46,12 @@ const dmarcType = new GraphQLObjectType({
     },
     pct: {
       type: GraphQLInt,
-      description:
-        'The percentage of messages to which the DMARC policy is to be applied.',
+      description: `The percentage of messages to which the DMARC policy is to be applied.`,
       resolve: async () => {},
     },
     dmarcGuidanceTags: {
       type: GraphQLList(GraphQLString),
-      description: 'Key tags found during DMARC Scan.',
+      description: `Key tags found during DMARC Scan.`,
       resolve: async () => {},
     },
   }),

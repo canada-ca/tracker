@@ -9,22 +9,22 @@ const sslType = new GraphQLObjectType({
     id: globalIdField('ssl'),
     domain: {
       type: Url,
-      description: 'The domain the scan was ran on.',
+      description: `The domain the scan was ran on.`,
       resolve: async () => {},
     },
     timestamp: {
       type: DateTime,
-      description: 'The time when the scan was initiated.',
+      description: `The time when the scan was initiated.`,
       resolve: async () => {},
     },
     sslGuidanceTags: {
       type: GraphQLList(GraphQLString),
-      description: 'Key tags found during scan.',
+      description: `Key tags found during scan.`,
       resolve: async () => {},
     },
   }),
   interfaces: [nodeInterface],
-  description: 'Secure Socket Layer scan results.',
+  description: `Secure Socket Layer scan results.`,
 })
 
 module.exports = {

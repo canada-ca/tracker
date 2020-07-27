@@ -1,4 +1,5 @@
 const { GraphQLObjectType } = require('graphql')
+const { i18n: internationalization } = require('lingui-i18n')
 
 const { createDomain, removeDomain, updateDomain } = require('./domain')
 const {
@@ -21,35 +22,38 @@ const {
 
 const { inviteUserToOrg, updateUserRole } = require('./user-affiliations')
 
-const mutation = new GraphQLObjectType({
-  name: 'Mutation',
-  fields: () => ({
-    // Domain Mutations
-    createDomain,
-    removeDomain,
-    updateDomain,
-    // Organization Mutations
-    createOrganization,
-    removeOrganization,
-    updateOrganization,
-    // Scan Mutations
-    requestScan,
-    // User Mutations
-    authenticate,
-    generateOtpUrl,
-    resetPassword,
-    sendEmailVerification,
-    sendPasswordResetLink,
-    signUp,
-    updateUserPassword,
-    updateUserProfile,
-    verifyAccount,
-    // User Affiliations Mutations
-    inviteUserToOrg,
-    updateUserRole,
-  }),
-})
+// const createMutationSchema = i18n => {
+const createMutationSchema = () => {
+    return new GraphQLObjectType({
+    name: 'Mutation',
+    fields: () => ({
+      // Domain Mutations
+      createDomain,
+      removeDomain,
+      updateDomain,
+      // Organization Mutations
+      createOrganization,
+      removeOrganization,
+      updateOrganization,
+      // Scan Mutations
+      requestScan,
+      // User Mutations
+      authenticate,
+      generateOtpUrl,
+      resetPassword,
+      sendEmailVerification,
+      sendPasswordResetLink,
+      signUp,
+      updateUserPassword,
+      updateUserProfile,
+      verifyAccount,
+      // User Affiliations Mutations
+      inviteUserToOrg,
+      updateUserRole,
+    }),
+  })
+}
 
 module.exports = {
-  mutation,
+  createMutationSchema,
 }
