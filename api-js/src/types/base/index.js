@@ -142,27 +142,37 @@ const userType = new GraphQLObjectType({
     userName: {
       type: EmailAddress,
       description: 'Users email address.',
-      resolve: async () => {},
+      resolve: async ({ userName }) => {
+        return userName
+      },
     },
     displayName: {
       type: GraphQLString,
       description: 'Name displayed to other users.',
-      resolve: async () => {},
+      resolve: async ({ displayName }) => {
+        return displayName
+      },
     },
     preferredLanguage: {
       type: LanguageEnums,
       description: 'Users preferred language.',
-      resolve: async () => {},
+      resolve: async ({ preferredLang }) => {
+        return preferredLang
+      },
     },
-    tfa: {
+    tfaValidated: {
       type: GraphQLBoolean,
       description: 'Has the user completed two factor authentication.',
-      resolve: async () => {},
+      resolve: async ({ tfaValidated }) => {
+        return tfaValidated
+      },
     },
-    email_validated: {
+    emailValidated: {
       type: GraphQLBoolean,
       description: 'Has the user email verified their account.',
-      resolve: async () => {},
+      resolve: async ({ emailValidated }) => {
+        return emailValidated
+      },
     },
     affiliations: {
       type: userAffiliationsConnection.connectionType,

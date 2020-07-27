@@ -8,12 +8,16 @@ const authResultType = new GraphQLObjectType({
     authToken: {
       type: GraphQLString,
       description: `JWT used for accessing controlled content.`,
-      resolve: async () => {},
+      resolve: async ({ token }) => {
+        return token
+      },
     },
     user: {
       type: userType,
       description: `User that has just been created or signed in.`,
-      resolve: async () => {},
+      resolve: async ({ user }) => {
+        return user
+      },
     },
   }),
 })
