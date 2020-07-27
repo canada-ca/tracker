@@ -28,6 +28,19 @@
         "ignoreDestructuring": true,
         "properties": "never"
       }
+    ],
+    "new-cap": [
+      "error",
+      {
+        "newIsCapExceptions": [
+          "mutationWithClientMutationId"
+        ],
+        "capIsNewExceptions": [
+          "Server",
+          "GraphQLNonNull",
+          "GraphQLList"
+        ]
+      }
     ]
   }
 }

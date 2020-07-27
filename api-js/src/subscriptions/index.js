@@ -1,4 +1,4 @@
-const {} = require('graphql')
+const { GraphQLObjectType } = require('graphql')
 
 const subscriptions = new GraphQLObjectType({
   name: 'Subscription',

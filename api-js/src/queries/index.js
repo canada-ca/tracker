@@ -1,6 +1,6 @@
 const { GraphQLObjectType } = require('graphql')
-const { i18n: internationalization } = require('lingui-i18n')
 const { nodeField } = require('../types')
+// const { i18n: internationalization } = require('lingui-i18n')
 const {
   dmarcReportDetailTables,
   demoDmarcReportDetailTables,
