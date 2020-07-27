@@ -1,0 +1,58 @@
+steps:
+
+  - name: node:alpine
+    id: install
+    dir: api-js
+    entrypoint: npm
+    args: ['ci', '--no-optional']
+
+  - name: node:alpine
+    id: lint
+    dir: api-js
+    entrypoint: npm
+    args: ['run', lint]
+
+  - name: node:alpine
+    id: test
+    dir: api-js
+    entrypoint: npm
+    args: ['test']
+
+  - name: node:alpine
+    id: lingui-extract
+    dir: api-js
+    entrypoint: npm
+    args: ['run', 'extract']
+
+  - name: node:alpine
+    id: lingui-compile
+    dir: api-js
+    entrypoint: npm
+    args: ['run', 'compile']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-if-master
+    entrypoint: 'bash'
+    dir: api-js
+    args:
+    - '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker build -t gcr.io/$PROJECT_ID/api-js:$BRANCH_NAME-$SHORT_SHA .
+      else
+        exit 0
+      fi
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: push-if-master
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      if [[ "$BRANCH_NAME" == "master" ]]
+      then
+        docker push gcr.io/$PROJECT_ID/api-js:$BRANCH_NAME-$SHORT_SHA
+      else
+        exit 0
+      fi
