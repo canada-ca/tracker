@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Stack, Text, Select, Divider } from '@chakra-ui/core'
+import { Stack, Text, Select, Divider, useToast } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Layout } from './Layout'
@@ -12,6 +12,7 @@ export default function AdminPage() {
   const { currentUser } = useUserState()
   const [orgName, setOrgName] = useState()
   const { i18n } = useLingui()
+  const toast = useToast()
 
   const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
     context: {
@@ -21,6 +22,13 @@ export default function AdminPage() {
     },
     onError: (error) => {
       const [_, message] = error.message.split(': ')
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'failure',
+        duration: 9000,
+        isClosable: true,
+      })
       console.log(message)
     },
   })
