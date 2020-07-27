@@ -47,7 +47,7 @@ const signUp = new mutationWithClientMutationId({
       },
     },
   }),
-  mutateAndGetPayload: async (args, { query, functions: { cleanseInput } }) => {
+  mutateAndGetPayload: async (args, { query, functions: { cleanseInput }}) => {
     // Cleanse Inputs
     let displayName = cleanseInput(args.displayName)
     let userName = cleanseInput(args.userName).toLowerCase()
@@ -86,15 +86,7 @@ const signUp = new mutationWithClientMutationId({
       throw new Error('Unable to sign up. Please try again.')
     }
 
-    let checkUsers
-    try {
-      checkUsers = await checkCursor.all()
-    } catch (err) {
-      console.error(`Cursor error when gathering signUp check users: ${err}`)
-      throw new Error('Unable to sign up. Please try again.')
-    }
-
-    if (checkUsers.length > 0) {
+    if (checkCursor.count > 0) {
       console.warn(
         `User: ${userName} tried to sign up, however there is already an account in use with that username.`,
       )
@@ -112,6 +104,8 @@ const signUp = new mutationWithClientMutationId({
       preferredLang: preferredLang,
       tfaValidated: false,
       emailValidated: false,
+      failedLoginAttempts: 0,
+      failedLoginAttemptTime: 0
     }
 
     let insertedCursor = (insertedUser = null)
