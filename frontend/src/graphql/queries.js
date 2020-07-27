@@ -1,5 +1,51 @@
 import { gql } from '@apollo/client'
 
+export const PAGINATED_ORGANIZATIONS = gql`
+  query PaginatedOrganizations($after: String, $first: Int) {
+    organizations: findMyOrganizations(after: $after, first: $first) {
+      edges {
+        cursor
+        node {
+          id
+          acronym
+          name
+          slug
+          domainCount
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_ORGANIZATIONS = gql`
+  query PaginatedOrganizations($before: String, $last: Int) {
+    organizations: findMyOrganizations(before: $before, last: $last) {
+      edges {
+        cursor
+        node {
+          id
+          acronym
+          name
+          slug
+          domainCount
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+`
+
 export const WEB_AND_EMAIL_SUMMARIES = gql`
   query LandingPageSummaries {
     webSummary: demoWebSummary {

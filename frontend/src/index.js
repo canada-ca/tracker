@@ -1,17 +1,15 @@
 import React from 'react'
 import { ThemeProvider } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
-import { ApolloProvider } from '@apollo/client'
 import { i18n } from '@lingui/core'
 import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router } from 'react-router-dom'
 import canada from './theme/canada'
-import { Client } from './client'
 import { UserStateProvider } from './UserState'
-
-const client = new Client()
+import { client } from './client'
+import { ApolloProvider } from '@apollo/client'
 
 ReactDOM.render(
   <UserStateProvider initialState={{ userName: null, jwt: null, tfa: null }}>
