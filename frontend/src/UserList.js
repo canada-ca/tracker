@@ -206,7 +206,9 @@ export default function UserList({ ...props }) {
                       />
                     </Stack>
                     <Stack isInline justifyContent="flex-end" align="center">
-                      <Text fontWeight="bold">Role:</Text>
+                      <Text fontWeight="bold">
+                        <Trans>Role:</Trans>
+                      </Text>
                       <Select
                         w="35%"
                         size="sm"

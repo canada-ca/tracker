@@ -1525,14 +1525,18 @@ msgstr "ADMIN"
 msgid "Apply"
 msgstr "Apply"
 
-#: src/UserList.js:
+#: src/UserList.js:43
 msgid "Unable to change user role, please try again."
 msgstr "Unable to change user role, please try again."
 
-#: src/UserList.js:
+#: src/UserList.js:52
 msgid "Role updated"
 msgstr "Role updated"
 
-#: src/UserList.js:
+#: src/UserList.js:53
 msgid "The user's role has been successfully updated"
 msgstr "The user's role has been successfully updated"
+
+#: src/UserList.js:210
+msgid "Role:"
+msgstr "Role:"
