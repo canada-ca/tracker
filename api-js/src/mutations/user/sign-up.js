@@ -60,7 +60,7 @@ const signUp = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} tried to sign up but did not meet requirements.`,
       )
-      throw new Error('Error, password is too short.')
+      throw new Error('Password is too short.')
     }
 
     // Check that password and password confirmation match
@@ -68,7 +68,7 @@ const signUp = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} tried to sign up but passwords do not match.`,
       )
-      throw new Error('Error, passwords do not match.')
+      throw new Error('Passwords do not match.')
     }
 
     // Check to see if user already exists
@@ -83,7 +83,7 @@ const signUp = new mutationWithClientMutationId({
       console.error(
         `Database error when check for existing users during signUp: ${err}`,
       )
-      throw new Error('Error, unable to sign up. Please try again.')
+      throw new Error('Unable to sign up. Please try again.')
     }
 
     let checkUsers
@@ -91,14 +91,14 @@ const signUp = new mutationWithClientMutationId({
       checkUsers = await checkCursor.all()
     } catch (err) {
       console.error(`Cursor error when gathering signUp check users: ${err}`)
-      throw new Error('Error, unable to sign up. Please try again.')
+      throw new Error('Unable to sign up. Please try again.')
     }
 
     if (checkUsers.length > 0) {
       console.warn(
         `User: ${userName} tried to sign up, however there is already an account in use with that username.`,
       )
-      throw new Error('Error, username already in use.')
+      throw new Error('Username already in use.')
     }
 
     // Hash Users Password
@@ -119,19 +119,19 @@ const signUp = new mutationWithClientMutationId({
       insertedCursor = await query`
         INSERT ${user} INTO users RETURN NEW
       `
-      console.log(`User: ${userName} successfully created a new account.`)
+      console.info(`User: ${userName} successfully created a new account.`)
     } catch (err) {
       console.error(
         `Database error occurred when ${userName} tried to sign up: ${err}`,
       )
-      throw new Error('Error, unable to sign up. Please try again.')
+      throw new Error('Unable to sign up. Please try again.')
     }
 
     try {
       insertedUser = await insertedCursor.all()
     } catch (err) {
       console.error(`Cursor error occurred when trying to get new user: ${err}`)
-      throw new Error('Error, unable to sign up. Please try again.')
+      throw new Error('Unable to sign up. Please try again.')
     }
 
     // Remove password from user object

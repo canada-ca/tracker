@@ -1,12 +1,12 @@
 const cors = require('cors')
 const express = require('express')
 const jwt = require('jsonwebtoken')
-const validator = require('validator')
 const requestLanguage = require('express-request-language')
 const { GraphQLSchema } = require('graphql')
 const { createServer } = require('http')
 // const { i18n: internationalization, unpackCatalog } = require('lingui-i18n')
 const { ApolloServer } = require('apollo-server-express')
+const { cleanseInput } = require('./validators')
 
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
@@ -15,16 +15,6 @@ const { createMutationSchema } = require('./mutations')
 //   fr: unpackCatalog(require('./locale/fr/messages.js')),
 //   en: unpackCatalog(require('./locale/en/messages.js')),
 // })
-
-const cleanseInput = (input) => {
-  if (typeof input == 'undefined') {
-    return ''
-  }
-  input = validator.trim(input)
-  input = validator.stripLow(input)
-  input = validator.escape(input)
-  return input
-}
 
 const Server = (context = {}) => {
   const app = express()
