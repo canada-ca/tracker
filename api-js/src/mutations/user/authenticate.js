@@ -23,8 +23,8 @@ const authenticate = new mutationWithClientMutationId({
     authResult: {
       type: authResultType,
       description: 'The authenticated users information, and JWT.',
-      resolve: async ({ authResult }) => {
-        return authResult
+      resolve: async (payload) => {
+        return payload.authResult
       },
     },
   }),
@@ -51,21 +51,52 @@ const authenticate = new mutationWithClientMutationId({
       throw new Error('Unable to authenticate, please try again.')
     }
 
-    // Get users from cursor
-    let users
-    try {
-      users = await userCursor.all()
-    } catch (err) {
-      console.error(`Cursor error occurred when user was authenticated.`)
-      throw new Error('Unable to authenticate, please try again.')
-    }
-
     // Get user from cursor
-    const user = users.next()
+    const user = await userCursor.next()
 
-    if (bcrypt.compareSync(password, user.password)) {
-      if (user.failedLoginAttempts > 5 && (user.failedLoginAttemptTime + 1800) <= Math.floor(new Date().getTime() / 1000)) {
+    // Check against failed attempt info
+    if (user.failedLoginAttempts >= 10) {
+      console.warn(`User: ${user._key} tried to authenticate, but has too many login attempts.`)
+      throw new Error('Too many failed login attempts, please reset your password, and try again.')
+    } else {
+      // Reset Failed Login attempts after cooldown
+      let resetCursor
+      try{
+        resetCursor = await query`
+          FOR u IN users
+            UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
+        `
+      } catch (err) {
+        console.error(`Database error ocurred when resetting failed attempts for user: ${user._key} during authentication.`)
+        throw new Error('Unable to authenticate, please try again.')
+      }
+      // Check to see if passwords match
+      if (bcrypt.compareSync(password, user.password)) {
+        const token = jwt.sign({ userId: user._key }, 'secretKeyGoesHere')
+  
+        console.info(`User: ${user._key} successfully authenticated their account.`)
         
+        user.id = user._key
+  
+        return {
+          authResult: {
+            token,
+            user
+          }
+        }
+      } else {
+        let failedAttemptCursor
+        try {
+          failedAttemptCursor = await query`
+            FOR u IN users
+              UPDATE ${user._key} WITH { failedLoginAttempts: ${user.failedLoginAttempts + 1} } IN users
+          `
+        } catch (err) {
+          console.error(`Database error ocurred when incrementing user: ${user._key} failed login attempts: ${err}`)
+          throw new Error('Unable to authenticate, please try again.')
+        }
+        console.warn(`User attempted to authenticate: ${user._key} with invalid credentials.`)
+        throw new Error('Unable to authenticate, please try again.')
       }
     }
   },

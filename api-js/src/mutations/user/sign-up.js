@@ -105,7 +105,6 @@ const signUp = new mutationWithClientMutationId({
       tfaValidated: false,
       emailValidated: false,
       failedLoginAttempts: 0,
-      failedLoginAttemptTime: 0
     }
 
     let insertedCursor = (insertedUser = null)

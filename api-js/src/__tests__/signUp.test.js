@@ -156,14 +156,14 @@ describe('user sign up', () => {
                         FILTER user.userName == "test.account@istio.actually.exists"
                         RETURN user
                 `
-        const users = await cursor.all()
+        const user = await cursor.next()
 
         expectedResult = {
           data: {
             signUp: {
               authResult: {
                 user: {
-                  id: `${toGlobalId('users', users[0]._key)}`,
+                  id: `${toGlobalId('users', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
                   preferredLanguage: 'FRENCH',
@@ -276,11 +276,11 @@ describe('user sign up', () => {
     describe('when the user name already in use', () => {
       beforeEach(async () => {
         await collections.users.save({
-          displayName: 'Test Account',
           userName: 'test.account@istio.actually.exists',
-          password: 'password123',
-          confirmPassword: 'password123',
-          preferredLang: 'french',
+          displayName: 'Test Account',
+          preferredLanguage: 'FRENCH',
+          tfaValidated: false,
+          emailValidated: false,
         })
       })
 
