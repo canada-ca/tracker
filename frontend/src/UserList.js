@@ -28,7 +28,12 @@ export default function UserList({
   orgName,
   orgSlug,
 }) {
-  const [userList, setUserList] = useState(userListData.edges)
+  let users = []
+  if (userListData && userListData.edges) {
+    users = userListData.edges
+  }
+
+  const [userList, setUserList] = useState(users)
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
   const [userSearch, setUserSearch] = useState('')
