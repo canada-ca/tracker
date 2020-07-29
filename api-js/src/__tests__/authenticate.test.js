@@ -135,100 +135,252 @@ describe('authenticate user account', () => {
               `User: ${user._key} successfully authenticated their account.`
           ])
       })
+    describe('after an unseccessful login, user enters correct details', () => {
+      it('resets the failed login attempt counter', async () => {
+        const userCursor = await query
+        `
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const user = await userCursor.next()
+
+        await query
+        `
+          FOR user IN users
+            UPDATE ${user._key} WITH { failedLoginAttempts: 5 } IN users
+        `
+
+        const response = await graphql(
+          schema,
+          `
+          mutation {
+              authenticate (
+                  input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "password123"
+                  }
+              ) {
+                authResult {
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLanguage
+                      tfaValidated
+                      emailValidated
+                    }
+                  }
+              }
+          }
+          `,
+          null,
+          {
+            query,
+            functions: {
+              cleanseInput,
+            },
+          },
+        )
+
+        const updateCursor = await query
+        `
+            FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const checkUser = await updateCursor.next()
+        
+        expect(checkUser.failedLoginAttempts).toEqual(0)
+      })
+    })
   })
 
   describe('given unsecessful authenticatation', () => {
-      describe('when login credentials are invalid', () => {
-        
-        it('returns an authentication error', async () => {
-            const response = await graphql(
-                schema,
-                `
-                mutation {
-                    authenticate (
-                        input: {
-                            userName: "test.account@istio.actually.exists"
-                            password: "123"
-                        }
-                    ) {
-                        authResult {
-                            user {
-                            id
-                            userName
-                            displayName
-                            preferredLanguage
-                            tfaValidated
-                            emailValidated
-                            }
-                        }
-                    }
-                }
-                `,
-                null,
-                {
-                    query,
-                    functions: {
-                    cleanseInput,
-                    },
-                },
-            )
-    
-            const cursor = await query
-            `
-                FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            const user = await cursor.next()
+    describe('when login credentials are invalid', () => {
+      it('returns an authentication error', async () => {
+          const response = await graphql(
+              schema,
+              `
+              mutation {
+                  authenticate (
+                      input: {
+                          userName: "test.account@istio.actually.exists"
+                          password: "123"
+                      }
+                  ) {
+                      authResult {
+                          user {
+                          id
+                          userName
+                          displayName
+                          preferredLanguage
+                          tfaValidated
+                          emailValidated
+                          }
+                      }
+                  }
+              }
+              `,
+              null,
+              {
+                  query,
+                  functions: {
+                  cleanseInput,
+                  },
+              },
+          )
+  
+          const cursor = await query
+          `
+              FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
 
-            expect(response).toMatchObject({errors: [{message: 'Unable to authenticate, please try again.'}]})
-            expect(consoleOutput).toEqual([
-                `User attempted to authenticate: ${user._key} with invalid credentials.`
-            ])
-          })
-        it('increases the failed attempt counter', async () => {
-            const response = await graphql(
-                schema,
-                `
-                mutation {
-                    authenticate (
-                        input: {
-                            userName: "test.account@istio.actually.exists"
-                            password: "123"
-                        }
-                    ) {
-                        authResult {
-                            user {
-                            id
-                            userName
-                            displayName
-                            preferredLanguage
-                            tfaValidated
-                            emailValidated
-                            }
-                        }
-                    }
-                }
-                `,
-                null,
-                {
-                    query,
-                    functions: {
-                    cleanseInput,
-                    },
-                },
-            )
-    
-            const cursor = await query
-            `
-                FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-            const user = await cursor.next()
-            
-            expect(user.failedLoginAttempts).toEqual(1)
+          expect(response).toMatchObject({errors: [{message: 'Unable to authenticate, please try again.'}]})
+          expect(consoleOutput).toEqual([
+              `User attempted to authenticate: ${user._key} with invalid credentials.`
+          ])
         })
+      it('increases the failed attempt counter', async () => {
+          const response = await graphql(
+              schema,
+              `
+              mutation {
+                  authenticate (
+                      input: {
+                          userName: "test.account@istio.actually.exists"
+                          password: "123"
+                      }
+                  ) {
+                      authResult {
+                          user {
+                          id
+                          userName
+                          displayName
+                          preferredLanguage
+                          tfaValidated
+                          emailValidated
+                          }
+                      }
+                  }
+              }
+              `,
+              null,
+              {
+                  query,
+                  functions: {
+                  cleanseInput,
+                  },
+              },
+          )
+  
+          const cursor = await query
+          `
+              FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const user = await cursor.next()
+          
+          expect(user.failedLoginAttempts).toEqual(1)
       })
+    })
+    describe('user has reached maximum amount of login attempts', () => {
+      it('returns a too many login attempts error message', async () => {
+        const userCursor = await query
+        `
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const user = await userCursor.next()
+
+        await query
+        `
+          FOR user IN users
+            UPDATE ${user._key} WITH { failedLoginAttempts: 10 } IN users
+        `
+
+        const response = await graphql(
+          schema,
+          `
+          mutation {
+              authenticate (
+                  input: {
+                      userName: "test.account@istio.actually.exists"
+                      password: "password123"
+                  }
+              ) {
+                authResult {
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLanguage
+                      tfaValidated
+                      emailValidated
+                    }
+                  }
+              }
+          }
+          `,
+          null,
+          {
+            query,
+            functions: {
+              cleanseInput,
+            },
+          },
+        )
+        
+        expect(response).toMatchObject({errors: [{message: 'Too many failed login attempts, please reset your password, and try again.'}]})
+        expect(consoleOutput).toEqual([
+            `User: ${user._key} tried to authenticate, but has too many login attempts.`
+        ])
+      })
+    })
+    describe('user attempts to login into an account that doesn\'t exist', () => {
+      it('returns a generic error message', async () => {
+        const response = await graphql(
+          schema,
+          `
+          mutation {
+              authenticate (
+                  input: {
+                      userName: "test.account@istio.does.not.actually.exists"
+                      password: "password123"
+                  }
+              ) {
+                authResult {
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLanguage
+                      tfaValidated
+                      emailValidated
+                    }
+                  }
+              }
+          }
+          `,
+          null,
+          {
+            query,
+            functions: {
+              cleanseInput,
+            },
+          },
+        )
+        
+        expect(response).toMatchObject({errors: [{message: 'Unable to authenticate, please try again.'}]})
+        expect(consoleOutput).toEqual([
+            `User: test.account@istio.does.not.actually.exists attempted to authenticate, no account is associated with this email.`
+        ])
+      })
+    })
   })
 })
