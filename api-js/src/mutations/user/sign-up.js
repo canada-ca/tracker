@@ -47,7 +47,7 @@ const signUp = new mutationWithClientMutationId({
       },
     },
   }),
-  mutateAndGetPayload: async (args, { query, functions: { cleanseInput }}) => {
+  mutateAndGetPayload: async (args, { query, functions: { cleanseInput } }) => {
     // Cleanse Inputs
     let displayName = cleanseInput(args.displayName)
     let userName = cleanseInput(args.userName).toLowerCase()
