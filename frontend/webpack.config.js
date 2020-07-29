@@ -41,7 +41,7 @@ module.exports = ({ mode }) => {
       host: '0.0.0.0',
       publicPath: '/',
       hot: true,
-      historyApiFallback: true,
+      historyApiFallback: { disableDotRule: true },
     },
     module: {
       rules: [

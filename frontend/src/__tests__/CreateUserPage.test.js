@@ -1,6 +1,6 @@
 import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter, Route } from 'react-router-dom'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import CreateUserPage from '../CreateUserPage'
@@ -25,6 +25,39 @@ const mocks = [
 ]
 
 describe('<CreateUserPage />', () => {
+  describe('given optional invited token', () => {
+    it('displays a notification', async () => {
+      const { queryByText } = render(
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfa: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={setupI18n()}>
+              <MemoryRouter
+                initialEntries={['/create-user/invited-token-test']}
+                initialIndex={0}
+              >
+                <Route path="/create-user/:userOrgToken?">
+                  <MockedProvider mocks={mocks}>
+                    <CreateUserPage />
+                  </MockedProvider>
+                </Route>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
+      )
+
+      await waitFor(() =>
+        expect(
+          queryByText(
+            /Your account will automatically be linked to the organization that invited you./,
+          ),
+        ).toBeInTheDocument(),
+      )
+    })
+  })
+
   describe('given no input', () => {
     describe('when onBlur fires', () => {
       describe('email field', () => {
@@ -183,6 +216,36 @@ describe('<CreateUserPage />', () => {
             expect(
               queryByText(/Select Preferred Language/),
             ).toBeInTheDocument(),
+          )
+        })
+      })
+      describe('confirm password field', () => {
+        it('displays an error message', async () => {
+          const { container, queryByText } = render(
+            <UserStateProvider
+              initialState={{ userName: null, jwt: null, tfa: null }}
+            >
+              <ThemeProvider theme={theme}>
+                <I18nProvider i18n={setupI18n()}>
+                  <MemoryRouter initialEntries={['/']} initialIndex={0}>
+                    <MockedProvider mocks={mocks}>
+                      <CreateUserPage />
+                    </MockedProvider>
+                  </MemoryRouter>
+                </I18nProvider>
+              </ThemeProvider>
+            </UserStateProvider>,
+          )
+
+          const confirmPassword = container.querySelector('#confirmPassword')
+
+          await waitFor(() => fireEvent.blur(confirmPassword))
+
+          await waitFor(() =>
+            // This should work exactly like the email field above, but it
+            // doesn't! The message is displayed but we can only get partial
+            // match for some reason.
+            expect(queryByText(/Password confirmation/)).toBeInTheDocument(),
           )
         })
       })

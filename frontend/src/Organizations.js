@@ -1,53 +1,49 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { number } from 'prop-types'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
-import { Heading, Stack, useToast, Box, Divider } from '@chakra-ui/core'
-import { ORGANIZATIONS } from './graphql/queries'
+import { Button, Heading, Stack, useToast, Box, Divider } from '@chakra-ui/core'
+import {
+  PAGINATED_ORGANIZATIONS,
+  REVERSE_PAGINATED_ORGANIZATIONS,
+} from './graphql/queries'
 import { useUserState } from './UserState'
 import { Organization } from './Organization'
-import { PaginationButtons } from './PaginationButtons'
 
-export default function Organisations() {
+export default function Organisations({ orgsPerPage = 10 }) {
   const { currentUser } = useUserState()
-  const [orgs, setOrgs] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [orgsPerPage, setOrgsPerPage] = useState(10)
   const toast = useToast()
 
-  // This query is currently requesting the first 10 orgs
-  const { loading, _error, data } = useQuery(ORGANIZATIONS, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
+  const { loading, error, data, fetchMore } = useQuery(
+    PAGINATED_ORGANIZATIONS,
+    {
+      variables: { after: '', first: orgsPerPage },
+      context: {
+        headers: {
+          authorization: currentUser.jwt,
+        },
+      },
+      onError: error => {
+        const [_, message] = error.message.split(': ')
+        toast({
+          title: 'Error',
+          description: message,
+          status: 'failure',
+          duration: 9000,
+          isClosable: true,
+        })
       },
     },
-    onError: error => {
-      const [_, message] = error.message.split(': ')
-      toast({
-        title: 'Error',
-        description: message,
-        status: 'failure',
-        duration: 9000,
-        isClosable: true,
-      })
-    },
-  })
-
-  useEffect(
-    () => {
-      const fetchOrgs = async () => {
-        let organizations = []
-        if (data && data.organizations.edges) {
-          organizations = data.organizations.edges.map(e => e.node)
-          setOrgs(organizations)
-        }
-      }
-      fetchOrgs()
-    },
-    [data],
   )
+
+  if (error)
+    return (
+      <p>
+        <Trans>error {error.message}</Trans>
+      </p>
+    )
 
   if (loading)
     return (
@@ -55,14 +51,6 @@ export default function Organisations() {
         <Trans>Loading...</Trans>
       </p>
     )
-
-  // Get current orgs
-  const indexOfLastOrg = currentPage * orgsPerPage
-  const indexOfFirstOrg = indexOfLastOrg - orgsPerPage
-  const currentOrgs = orgs.slice(indexOfFirstOrg, indexOfLastOrg)
-
-  // Change page
-  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   return (
     <Layout>
@@ -73,7 +61,7 @@ export default function Organisations() {
         <Stack direction="row" spacing={4}>
           <Stack spacing={4} flexWrap="wrap">
             <ListOf
-              elements={currentOrgs}
+              elements={data.organizations.edges.map(e => e.node)}
               ifEmpty={() => <Trans>No Organizations</Trans>}
             >
               {({ name, slug, domainCount }, index) => (
@@ -89,15 +77,40 @@ export default function Organisations() {
             </ListOf>
           </Stack>
         </Stack>
-        <PaginationButtons
-          perPage={orgsPerPage}
-          total={orgs.length}
-          paginate={paginate}
-          currentPage={currentPage}
-          setPerPage={setOrgsPerPage}
-        />
+        <Stack isInline align="center">
+          <Button
+            onClick={() =>
+              fetchMore({
+                query: REVERSE_PAGINATED_ORGANIZATIONS,
+                variables: {
+                  before: data.organizations.pageInfo.startCursor,
+                  last: orgsPerPage,
+                },
+              })
+            }
+            aria-label="Previous page"
+          >
+            <Trans>Previous</Trans>
+          </Button>
+
+          <Button
+            onClick={() =>
+              fetchMore({
+                variables: {
+                  after: data.organizations.pageInfo.endCursor,
+                  first: orgsPerPage,
+                },
+              })
+            }
+            disable={data.organizations.pageInfo.hasNextPage}
+            aria-label="Next page"
+          >
+            <Trans>Next</Trans>
+          </Button>
+        </Stack>
       </Stack>
-      <Divider />
     </Layout>
   )
 }
+
+Organisations.propTypes = { orgsPerPage: number }

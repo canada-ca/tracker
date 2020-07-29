@@ -7,6 +7,7 @@ export const SIGN_UP = gql`
     $password: String!
     $confirmPassword: String!
     $preferredLang: LanguageEnums!
+    $signUpToken: String
   ) {
     signUp(
       input: {
@@ -15,6 +16,7 @@ export const SIGN_UP = gql`
         password: $password
         confirmPassword: $confirmPassword
         preferredLang: $preferredLang
+        signUpToken: $signUpToken
       }
     ) {
       authResult {
@@ -52,16 +54,16 @@ export const VALIDATE_TWO_FACTOR = gql`
 `
 
 export const UPDATE_PASSWORD = gql`
-  mutation UpdatePassword(
-    $resetToken: String!
-    $password: String!
-    $confirmPassword: String!
-  ) {
-    updatePassword(
-      resetToken: $resetToken
-      password: $password
-      confirmPassword: $confirmPassword
-    ) {
+  mutation UpdatePassword($input: UpdateUserPasswordInput!) {
+    updatePassword(input: $input) {
+      status
+    }
+  }
+`
+
+export const SEND_PASSWORD_RESET_LINK = gql`
+  mutation SendPasswordResetLink($userName: EmailAddress!) {
+    sendPasswordResetLink(userName: $userName) {
       status
     }
   }

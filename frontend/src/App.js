@@ -26,6 +26,8 @@ const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 const Organizations = lazy(() => import('./Organizations'))
 const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
+const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -84,11 +86,18 @@ export default function App() {
                 <LandingPage />
               </Route>
 
-              <Route path="/create-user">
+              <Route path="/create-user/:userOrgToken?">
                 <CreateUserPage />
               </Route>
 
               <Route path="/sign-in" component={SignInPage} />
+
+              <Route path="/forgot-password" component={ForgotPasswordPage} />
+
+              <Route
+                path="/reset-password/:resetToken"
+                component={ResetPasswordPage}
+              />
 
               <RouteIf
                 condition={isLoggedIn()}
@@ -120,6 +129,7 @@ export default function App() {
               >
                 <UserList />
               </RouteIf>
+
               <RouteIf
                 condition={isLoggedIn()}
                 alternate="/sign-in"
