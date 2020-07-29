@@ -57,8 +57,8 @@ function EditableUserPassword() {
       },
       onCompleted() {
         toast({
-          title: 'Changed User Password',
-          description: 'You have successfully updated your password.',
+          title: t`Changed User Password`,
+          description: t`You have successfully updated your password.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -123,14 +123,16 @@ function EditableUserPassword() {
               >
                 {({ handleSubmit, isSubmitting }) => (
                   <form id="form" onSubmit={handleSubmit}>
-                    <ModalHeader>Change Password</ModalHeader>
+                    <ModalHeader>
+                      <Trans>Change Password</Trans>
+                    </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                       <Stack spacing={4} p={25}>
                         <Stack spacing={4} align="center">
                           <PasswordField
                             name="currentPassword"
-                            label="Current Password:"
+                            label={t`Current Password:`}
                             width="100%"
                             ref={initialFocusRef}
                           />
@@ -141,8 +143,8 @@ function EditableUserPassword() {
                           </Text>
                           <PasswordConfirmation
                             width="100%"
-                            passwordLabel="New Password:"
-                            confirmPasswordLabel="Confirm New Password:"
+                            passwordLabel={t`New Password:`}
+                            confirmPasswordLabel={t`Confirm New Password:`}
                           />
                         </Stack>
                       </Stack>

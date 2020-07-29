@@ -129,7 +129,7 @@ function EditableUserDisplayName({ detailValue }) {
 
                         <DisplayNameField
                           name="displayName"
-                          label="New Display Name:"
+                          label={t`New Display Name:`}
                           ref={initialFocusRef}
                         />
                       </Stack>

@@ -36,8 +36,8 @@ function EditableUserLanguage({ currentLang }) {
       },
       onCompleted() {
         toast({
-          title: 'Changed User Language',
-          description: 'You have successfully updated your password.',
+          title: t`Changed User Language`,
+          description: t`You have successfully updated your password.`,
           status: 'success',
           duration: 9000,
           isClosable: true,

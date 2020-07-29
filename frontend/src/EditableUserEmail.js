@@ -57,8 +57,8 @@ function EditableUserEmail({ detailValue }) {
       },
       onCompleted() {
         toast({
-          title: 'Changed User Email',
-          description: 'You have successfully updated your email.',
+          title: t`Changed User Email`,
+          description: t`You have successfully updated your email.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -129,7 +129,7 @@ function EditableUserEmail({ detailValue }) {
 
                         <EmailField
                           name="email"
-                          label="New Email Address:"
+                          label={t`New Email Address:`}
                           ref={initialFocusRef}
                         />
                       </Stack>
