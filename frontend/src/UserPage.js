@@ -14,8 +14,7 @@ import {
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
-import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import EditableUserLanguage from './EditableUserLanguage'
 import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
@@ -26,7 +25,6 @@ export default function UserPage() {
   const toast = useToast()
   const history = useHistory()
   const { currentUser, logout } = useUserState()
-  const { i18n } = useLingui()
 
   const {
     loading: queryUserLoading,
