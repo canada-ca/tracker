@@ -117,40 +117,6 @@ describe('<Organisations />', () => {
           },
           {
             request: {
-              query: PAGINATED_ORGANIZATIONS,
-              variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
-            },
-            result: {
-              data: {
-                organizations: {
-                  edges: [
-                    {
-                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                      node: {
-                        id: 'T3JnYW5pemF0aW9uczoxCg==',
-                        acronym: 'ORG2',
-                        name: 'organization two',
-                        slug: 'organization-two',
-                        domainCount: 5,
-                        __typename: 'Organizations',
-                      },
-                      __typename: 'OrganizationsEdge',
-                    },
-                  ],
-                  pageInfo: {
-                    hasNextPage: false,
-                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                    hasPreviousPage: true,
-                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                    __typename: 'PageInfo',
-                  },
-                  __typename: 'OrganizationsConnection',
-                },
-              },
-            },
-          },
-          {
-            request: {
               query: REVERSE_PAGINATED_ORGANIZATIONS,
               variables: { before: 'YXJyYXljb25uZWN0aW9uOjA=', last: 1 },
             },
