@@ -99,11 +99,11 @@ msgstr "Accepted cipher list contains 3DES symmetric-key block cipher, as prohib
 msgid "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
 msgstr "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
 
-#: src/UserPage.js:150
+#: src/UserPage.js:74
 msgid "Account Details"
 msgstr "Account Details"
 
-#: src/CreateUserPage.js:61
+#: src/CreateUserPage.js:54
 msgid "Account created."
 msgstr "Account created."
 
@@ -135,10 +135,12 @@ msgstr "Admin"
 msgid "Admin Portal"
 msgstr "Admin Portal"
 
-#: src/CreateUserPage.js:42
+#: src/CreateUserPage.js:35
+#: src/EditableUserDisplayName.js:49
+#: src/EditableUserEmail.js:49
+#: src/EditableUserLanguage.js:28
+#: src/EditableUserPassword.js:49
 #: src/SignInPage.js:38
-#: src/UserPage.js:50
-#: src/UserPage.js:73
 msgid "An error occurred."
 msgstr "An error occurred."
 
@@ -166,7 +168,7 @@ msgstr "B.2.2 Cryptographic Considerations"
 msgid "B.3.1 DMARC Records"
 msgstr "B.3.1 DMARC Records"
 
-#: src/CreateUserPage.js:135
+#: src/CreateUserPage.js:128
 msgid "Back"
 msgstr "Back"
 
@@ -198,16 +200,29 @@ msgstr "Certificate Use"
 msgid "Certificate chain signed using SHA-256/SHA-384/AEAD"
 msgstr "Certificate chain signed using SHA-256/SHA-384/AEAD"
 
-#: src/UserPage.js:229
-#: src/UserPage.js:248
+#: src/EditableUserPassword.js:127
 msgid "Change Password"
 msgstr "Change Password"
 
 #: src/UserPage.js:233
-msgid "Change your password below by entering and confirming a new password."
-msgstr "Change your password below by entering and confirming a new password."
+#~ msgid "Change your password below by entering and confirming a new password."
+#~ msgstr "Change your password below by entering and confirming a new password."
 
-#: src/ConfirmPasswordModal.js:86
+#: src/EditableUserEmail.js:60
+msgid "Changed User Email"
+msgstr "Changed User Email"
+
+#: src/EditableUserLanguage.js:39
+msgid "Changed User Language"
+msgstr "Changed User Language"
+
+#: src/EditableUserPassword.js:60
+msgid "Changed User Password"
+msgstr "Changed User Password"
+
+#: src/EditableUserDisplayName.js:152
+#: src/EditableUserEmail.js:152
+#: src/EditableUserPassword.js:167
 msgid "Close"
 msgstr "Close"
 
@@ -231,24 +246,30 @@ msgstr "Close"
 #~ msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 #~ msgstr "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 
-#: src/ConfirmPasswordModal.js:75
+#: src/EditableUserDisplayName.js:145
+#: src/EditableUserEmail.js:145
+#: src/EditableUserPassword.js:160
 msgid "Confirm"
 msgstr "Confirm"
 
 #: src/ConfirmPasswordModal.js:49
-msgid "Confirm Current Password"
-msgstr "Confirm Current Password"
+#~ msgid "Confirm Current Password"
+#~ msgstr "Confirm Current Password"
+
+#: src/EditableUserPassword.js:147
+msgid "Confirm New Password:"
+msgstr "Confirm New Password:"
 
 #: src/PasswordConfirmation.js:144
 #: src/PasswordConfirmation.js:121
 #~ msgid "Confirm Password"
 #~ msgstr "Confirm Password"
 
-#: src/PasswordConfirmation.js:121
+#: src/PasswordConfirmation.js:72
 msgid "Confirm Password:"
 msgstr "Confirm Password:"
 
-#: src/PasswordConfirmation.js:144
+#: src/PasswordConfirmation.js:151
 msgid "Confirm password"
 msgstr "Confirm password"
 
@@ -260,18 +281,26 @@ msgstr "Contact 3rd party"
 msgid "Country Code"
 msgstr "Country Code"
 
-#: src/CreateUserPage.js:126
+#: src/CreateUserPage.js:119
 #: src/SignInPage.js:121
 msgid "Create Account"
 msgstr "Create Account"
 
-#: src/CreateUserPage.js:106
+#: src/CreateUserPage.js:99
 msgid "Create an account by entering an email and password."
 msgstr "Create an account by entering an email and password."
 
-#: src/UserPage.js:237
-#~ msgid "Current Password:"
-#~ msgstr "Current Password:"
+#: src/EditableUserDisplayName.js:125
+msgid "Current Display Name:"
+msgstr "Current Display Name:"
+
+#: src/EditableUserEmail.js:125
+msgid "Current Email:"
+msgstr "Current Email:"
+
+#: src/EditableUserPassword.js:135
+msgid "Current Password:"
+msgstr "Current Password:"
 
 #: src/UserPage.js:238
 #~ msgid "Current password"
@@ -379,15 +408,16 @@ msgstr "DNS Host"
 msgid "Description of DMARC report"
 msgstr "Description of DMARC report"
 
-#: src/DisplayNameField.js:34
+#: src/DisplayNameField.js:50
 msgid "Display Name"
 msgstr "Display Name"
 
-#: src/DisplayNameField.js:24
+#: src/DisplayNameField.js:34
+#: src/EditableUserDisplayName.js:74
 msgid "Display Name:"
 msgstr "Display Name:"
 
-#: src/CreateUserPage.js:26
+#: src/fieldRequirements.js:8
 msgid "Display name cannot be empty"
 msgstr "Display name cannot be empty"
 
@@ -444,7 +474,21 @@ msgstr "Domain:"
 msgid "Domains"
 msgstr "Domains"
 
-#: src/EmailField.js:34
+#: src/EditableUserDisplayName.js:81
+#: src/EditableUserEmail.js:81
+#: src/EditableUserPassword.js:81
+msgid "Edit"
+msgstr "Edit"
+
+#: src/EditableUserDisplayName.js:119
+msgid "Edit Display Name"
+msgstr "Edit Display Name"
+
+#: src/EditableUserEmail.js:119
+msgid "Edit Email"
+msgstr "Edit Email"
+
+#: src/EmailField.js:50
 msgid "Email"
 msgstr "Email"
 
@@ -453,8 +497,8 @@ msgstr "Email"
 #~ msgstr "Email Address"
 
 #: src/EmailField.js:24
-msgid "Email Address:"
-msgstr "Email Address:"
+#~ msgid "Email Address:"
+#~ msgstr "Email Address:"
 
 #: src/SummaryGroup.js:66
 msgid "Email Configuration"
@@ -472,8 +516,8 @@ msgstr "Email Scan Results"
 #~ msgid "Email address:"
 #~ msgstr "Email address:"
 
-#: src/CreateUserPage.js:24
 #: src/SignInPage.js:31
+#: src/fieldRequirements.js:6
 msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
 
@@ -481,7 +525,12 @@ msgstr "Email cannot be empty"
 msgid "Email security settings summary"
 msgstr "Email security settings summary"
 
-#: src/UserPage.js:173
+#: src/EditableUserEmail.js:74
+#: src/EmailField.js:34
+msgid "Email:"
+msgstr "Email:"
+
+#: src/UserPage.js:97
 msgid "Enable 2FA"
 msgstr "Enable 2FA"
 
@@ -492,6 +541,10 @@ msgstr "Enable 2FA"
 #: src/DmarcReportGuidance.js:143
 #~ msgid "Ensure the SPF record is present and valid."
 #~ msgstr "Ensure the SPF record is present and valid."
+
+#: src/EditableUserPassword.js:140
+msgid "Enter and confirm your new password below:"
+msgstr "Enter and confirm your new password below:"
 
 #: src/DmarcReportPage.js:124
 msgid "Envelope From"
@@ -681,8 +734,8 @@ msgstr "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesen
 msgid "Internet facing services: {domainCount}"
 msgstr "Internet facing services: {domainCount}"
 
-#: src/CreateUserPage.js:25
 #: src/SignInPage.js:32
+#: src/fieldRequirements.js:7
 msgid "Invalid email"
 msgstr "Invalid email"
 
@@ -702,11 +755,15 @@ msgstr "Invite User"
 msgid "LAST30DAYS"
 msgstr "LAST30DAYS"
 
+#: src/EditableUserLanguage.js:52
+msgid "Language:"
+msgstr "Language:"
+
 #: src/Domain.js:40
 msgid "Last scanned:"
 msgstr "Last scanned:"
 
-#: src/CreateUserPage.js:75
+#: src/CreateUserPage.js:68
 #: src/DomainsPage.js:53
 #: src/OrganizationDetails.js:53
 #: src/Organizations.js:55
@@ -782,7 +839,7 @@ msgstr "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ant
 msgid "Maintain deployment"
 msgstr "Maintain deployment"
 
-#: src/UserPage.js:182
+#: src/UserPage.js:106
 msgid "Manage API keys"
 msgstr "Manage API keys"
 
@@ -802,6 +859,18 @@ msgstr "Missing from guide- need v1.1"
 #: src/guidanceTagConstants.js:334
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "More than 10 lookups - Follow implementation guide"
+
+#: src/EditableUserDisplayName.js:132
+msgid "New Display Name:"
+msgstr "New Display Name:"
+
+#: src/EditableUserEmail.js:132
+msgid "New Email Address:"
+msgstr "New Email Address:"
+
+#: src/EditableUserPassword.js:146
+msgid "New Password:"
+msgstr "New Password:"
 
 #: src/AdminDomains.js:138
 msgid "No Domains"
@@ -963,40 +1032,45 @@ msgstr "Partial Pass"
 msgid "Pass"
 msgstr "Pass"
 
-#: src/PasswordConfirmation.js:92
+#: src/PasswordConfirmation.js:105
 #: src/PasswordField.js:45
 msgid "Password"
 msgstr "Password"
 
-#: src/CreateUserPage.js:28
 #: src/SignInPage.js:29
+#: src/fieldRequirements.js:10
 msgid "Password cannot be empty"
 msgstr "Password cannot be empty"
 
-#: src/CreateUserPage.js:31
+#: src/fieldRequirements.js:13
 msgid "Password confirmation cannot be empty"
 msgstr "Password confirmation cannot be empty"
 
-#: src/CreateUserPage.js:29
+#: src/fieldRequirements.js:11
 msgid "Password must be at least 12 characters long"
 msgstr "Password must be at least 12 characters long"
 
+#: src/EditableUserPassword.js:74
 #: src/PasswordConfirmation.js:69
 #: src/PasswordField.js:30
 msgid "Password:"
 msgstr "Password:"
 
-#: src/CreateUserPage.js:32
+#: src/fieldRequirements.js:14
 msgid "Passwords must match"
 msgstr "Passwords must match"
 
-#: src/CreateUserPage.js:35
+#: src/fieldRequirements.js:17
 msgid "Please choose your preferred language"
 msgstr "Please choose your preferred language"
 
 #: src/ConfirmPasswordModal.js:55
-msgid "Please enter your current password for verification."
-msgstr "Please enter your current password for verification."
+#~ msgid "Please enter your current password for verification."
+#~ msgstr "Please enter your current password for verification."
+
+#: src/EditableUserPassword.js:108
+msgid "Please enter your current password."
+msgstr "Please enter your current password."
 
 #: src/DmarcReportGuidance.js:519
 #~ msgid "Please see the SPF and DKIM causes sections."
@@ -1239,8 +1313,12 @@ msgid "SSL-rc4"
 msgstr "SSL-rc4"
 
 #: src/UserPage.js:141
-msgid "Save Changes"
-msgstr "Save Changes"
+#~ msgid "Save Changes"
+#~ msgstr "Save Changes"
+
+#: src/EditableUserLanguage.js:78
+msgid "Save Language"
+msgstr "Save Language"
 
 #: src/QRcodePage.js:30
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
@@ -1293,7 +1371,7 @@ msgstr "Sign In"
 msgid "Sign In."
 msgstr "Sign In."
 
-#: src/UserPage.js:203
+#: src/UserPage.js:127
 msgid "Sign Out"
 msgstr "Sign Out"
 
@@ -1421,7 +1499,7 @@ msgstr "Track Web Security Compliance"
 msgid "TwoFactor"
 msgstr "TwoFactor"
 
-#: src/CreateUserPage.js:44
+#: src/CreateUserPage.js:37
 msgid "Unable to create your account, please try again."
 msgstr "Unable to create your account, please try again."
 
@@ -1429,13 +1507,25 @@ msgstr "Unable to create your account, please try again."
 msgid "Unable to sign in to your account, please try again."
 msgstr "Unable to sign in to your account, please try again."
 
-#: src/UserPage.js:52
+#: src/EditableUserDisplayName.js:51
+msgid "Unable to update your display name, please try again."
+msgstr "Unable to update your display name, please try again."
+
+#: src/EditableUserEmail.js:51
+msgid "Unable to update your email, please try again."
+msgstr "Unable to update your email, please try again."
+
+#: src/EditableUserLanguage.js:30
+msgid "Unable to update your language, please try again."
+msgstr "Unable to update your language, please try again."
+
+#: src/EditableUserPassword.js:51
 msgid "Unable to update your password, please try again."
 msgstr "Unable to update your password, please try again."
 
 #: src/UserPage.js:75
-msgid "Unable to update your profile, please try again."
-msgstr "Unable to update your profile, please try again."
+#~ msgid "Unable to update your profile, please try again."
+#~ msgstr "Unable to update your profile, please try again."
 
 #: src/guidanceTagConstants.js:82
 msgid "Use DKIM to validate outbound email sent from your custom domain"
@@ -1446,7 +1536,6 @@ msgid "User List"
 msgstr "User List"
 
 #: src/App.js:61
-#: src/UserPage.js:125
 msgid "User Profile"
 msgstr "User Profile"
 
@@ -1494,7 +1583,7 @@ msgstr "Web encryption settings summary"
 msgid "Welcome, Admin"
 msgstr "Welcome, Admin"
 
-#: src/CreateUserPage.js:63
+#: src/CreateUserPage.js:56
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Welcome, you are successfully signed in to your new account!"
 
@@ -1509,6 +1598,15 @@ msgstr "You do not have admin permissions in any organization"
 #: src/TwoFactorNotificationBar.js:16
 msgid "You have not enabled Two Factor Authentication. To maximize your account's security, <0>please enable 2FA</0>."
 msgstr "You have not enabled Two Factor Authentication. To maximize your account's security, <0>please enable 2FA</0>."
+
+#: src/EditableUserEmail.js:61
+msgid "You have successfully updated your email."
+msgstr "You have successfully updated your email."
+
+#: src/EditableUserLanguage.js:40
+#: src/EditableUserPassword.js:61
+msgid "You have successfully updated your password."
+msgstr "You have successfully updated your password."
 
 #: src/QRcodePage.js:45
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
