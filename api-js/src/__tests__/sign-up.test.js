@@ -4,6 +4,7 @@ dotenv.config()
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
+const request = require('supertest')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
@@ -78,6 +79,7 @@ describe('user sign up', () => {
           `,
           null,
           {
+            request,
             query,
             tokenize,
             functions: {

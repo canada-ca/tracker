@@ -42,7 +42,7 @@ const sendPasswordResetLink = new mutationWithClientMutationId({
       const token = tokenize({parameters: { user_id: user._key, current_password: user.password }})
       const resetUrl = `${request.protocol}://${request.get('host')}/reset-password/${token}`
 
-      const emailSent = sendPasswordResetEmail({ templateId, user, resetUrl})
+      await sendPasswordResetEmail({ templateId, user, resetUrl})
 
       console.info(`User: ${user._key} successfully sent a password reset email.`)
     } else {
