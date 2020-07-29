@@ -53,6 +53,7 @@ function EditableUserLanguage({ currentLang }) {
       </Heading>
 
       <Formik
+        validateOnBlur={false}
         initialValues={{ lang: currentLang }}
         onSubmit={async values => {
           // Submit update detail mutation
@@ -73,7 +74,7 @@ function EditableUserLanguage({ currentLang }) {
                 <option value="FRENCH">Français</option>
               </Field>
 
-              <Button type="submitBtn" isLoading={isSubmitting} px="2rem">
+              <Button type="submitBtn" isLoading={isSubmitting} px="2rem" variantColor="teal">
                 <Trans>Save Language</Trans>
               </Button>
             </Stack>

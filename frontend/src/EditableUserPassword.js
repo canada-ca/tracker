@@ -77,7 +77,7 @@ function EditableUserPassword() {
       <Stack isInline align="center">
         <Icon name="lock" color="gray.300" />
         <Text>************</Text>
-        <Button ml="auto" onClick={onOpen} size="sm">
+        <Button ml="auto" onClick={onOpen} size="sm" variantColor="teal">
           <Trans>Edit</Trans>
         </Button>
       </Stack>
@@ -92,10 +92,14 @@ function EditableUserPassword() {
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent pb={4} {...styles}>
               <Formik
+                validateOnBlur={false}
                 initialValues={{
                   password: '',
                   confirmPassword: '',
                   currentPassword: '',
+                }}
+                initialTouched={{
+                  currentPassword: true,
                 }}
                 validationSchema={object().shape({
                   password: fieldRequirements.password,

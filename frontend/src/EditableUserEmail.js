@@ -77,7 +77,7 @@ function EditableUserEmail({ detailValue }) {
       <Stack isInline align="center">
         <Icon name="email" color="gray.300" />
         <Text>{detailValue}</Text>
-        <Button ml="auto" onClick={onOpen} size="sm">
+        <Button ml="auto" onClick={onOpen} size="sm" variantColor="teal">
           <Trans>Edit</Trans>
         </Button>
       </Stack>
@@ -92,8 +92,12 @@ function EditableUserEmail({ detailValue }) {
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent pb={4} {...styles}>
               <Formik
+                validateOnBlur={false}
                 initialValues={{
                   email: '',
+                }}
+                initialTouched={{
+                  email: true,
                 }}
                 validationSchema={object().shape({
                   email: fieldRequirements.email,

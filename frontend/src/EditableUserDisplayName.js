@@ -77,7 +77,7 @@ function EditableUserDisplayName({ detailValue }) {
       <Stack isInline align="center">
         <Icon name="person" size="1.5rem" color="gray.300" />
         <Text>{detailValue}</Text>
-        <Button ml="auto" onClick={onOpen} size="sm">
+        <Button ml="auto" onClick={onOpen} size="sm" variantColor="teal">
           <Trans>Edit</Trans>
         </Button>
       </Stack>
@@ -92,8 +92,12 @@ function EditableUserDisplayName({ detailValue }) {
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent pb={4} {...styles}>
               <Formik
+                validateOnBlur={false}
                 initialValues={{
                   displayName: '',
+                }}
+                initialTouched={{
+                  displayName: true,
                 }}
                 validationSchema={object().shape({
                   displayName: fieldRequirements.displayName,

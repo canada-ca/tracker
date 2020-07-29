@@ -20,7 +20,6 @@ const PasswordField = WithPseudoBox(function PasswordField({
   name,
   label,
   forwardedRef,
-  rightInputElement,
   ...props
 }) {
   const [field, meta] = useField(name)
@@ -29,16 +28,6 @@ const PasswordField = WithPseudoBox(function PasswordField({
   const handleClick = () => setShow(!show)
 
   const labelText = label === undefined ? <Trans>Password:</Trans> : label
-  const rightElement =
-    rightInputElement === undefined ? (
-      <InputRightElement width="4.5rem">
-        <Button id="showButton" h="1.75rem" size="sm" onClick={handleClick}>
-          <Icon name={show ? 'view-off' : 'view'} />
-        </Button>
-      </InputRightElement>
-    ) : (
-      rightInputElement
-    )
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
@@ -59,7 +48,11 @@ const PasswordField = WithPseudoBox(function PasswordField({
           {...field}
           {...props}
         />
-        {rightElement}
+        <InputRightElement width="4.5rem">
+          <Button id="showButton" h="1.75rem" size="sm" onClick={handleClick}>
+            <Icon name={show ? 'view-off' : 'view'} />
+          </Button>
+        </InputRightElement>
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
@@ -70,7 +63,6 @@ PasswordField.propTypes = {
   name: string.isRequired,
   label: string,
   forwardedRef: oneOfType([func, shape({ current: elementType })]),
-  rightElement: elementType,
 }
 
 export default React.forwardRef((props, ref) => {

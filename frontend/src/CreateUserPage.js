@@ -28,8 +28,6 @@ export default function CreateUserPage() {
     lang: fieldRequirements.lang,
   })
 
-  console.log(validationSchema)
-
   const [signUp, { loading, error }] = useMutation(SIGN_UP, {
     onError() {
       console.log(error)
