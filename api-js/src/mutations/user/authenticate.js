@@ -47,7 +47,7 @@ const authenticate = new mutationWithClientMutationId({
     }
 
     if (userCursor.count === 0) {
-      console.error(`User: ${userName} attempted to authenticate, no account is associated with this email.`)
+      console.warn(`User: ${userName} attempted to authenticate, no account is associated with this email.`)
       throw new Error('Unable to authenticate, please try again.')
     }
 
