@@ -1,7 +1,7 @@
 import React from 'react'
 import { waitFor, render } from '@testing-library/react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
-import EditableUserPassword from '../EditableUserPassword'
+import EditableUserEmail from '../EditableUserEmail'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
@@ -9,7 +9,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/dom'
 
-describe('<EditableUserPassword />', () => {
+describe('<EditableUserEmail />', () => {
   it('renders', async () => {
     const { getByText } = render(
       <UserStateProvider
@@ -23,7 +23,7 @@ describe('<EditableUserPassword />', () => {
           <MemoryRouter initialEntries={['/']}>
             <I18nProvider i18n={setupI18n()}>
               <ThemeProvider theme={theme}>
-                <EditableUserPassword />
+                <EditableUserEmail />
               </ThemeProvider>
             </I18nProvider>
           </MemoryRouter>
@@ -46,7 +46,7 @@ describe('<EditableUserPassword />', () => {
             <MemoryRouter initialEntries={['/']}>
               <I18nProvider i18n={setupI18n()}>
                 <ThemeProvider theme={theme}>
-                  <EditableUserPassword />
+                  <EditableUserEmail />
                 </ThemeProvider>
               </I18nProvider>
             </MemoryRouter>
@@ -57,14 +57,14 @@ describe('<EditableUserPassword />', () => {
       fireEvent.click(editButton)
 
       await waitFor(() => {
-        expect(getByText(/Current Password/i)).toBeInTheDocument()
+        expect(getByText(/New Email Address:/i)).toBeInTheDocument()
       })
     })
   })
   describe('with the modal open', () => {
-    describe('all the fields empty', () => {
+    describe('and New Email Field is empty', () => {
       describe('and the form is submitted', () => {
-        it('displays field errors', async () => {
+        it('displays field error', async () => {
           const { getByText } = render(
             <UserStateProvider
               initialState={{
@@ -77,7 +77,7 @@ describe('<EditableUserPassword />', () => {
                 <MemoryRouter initialEntries={['/']}>
                   <I18nProvider i18n={setupI18n()}>
                     <ThemeProvider theme={theme}>
-                      <EditableUserPassword />
+                      <EditableUserEmail />
                     </ThemeProvider>
                   </I18nProvider>
                 </MemoryRouter>
@@ -96,7 +96,7 @@ describe('<EditableUserPassword />', () => {
 
           await waitFor(() => {
             expect(
-              getByText(/Please enter your current password/i),
+              getByText(/Email cannot be empty/i),
             ).toBeInTheDocument()
           })
         })
