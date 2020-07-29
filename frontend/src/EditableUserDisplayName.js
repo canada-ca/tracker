@@ -57,8 +57,8 @@ function EditableUserDisplayName({ detailValue }) {
       },
       onCompleted() {
         toast({
-          title: 'Changed User Display Name',
-          description: 'You have successfully updated your display name.',
+          title: t`Changed User Display Name`,
+          description: t`You have successfully updated your display name.`,
           status: 'success',
           duration: 9000,
           isClosable: true,

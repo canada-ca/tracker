@@ -214,6 +214,10 @@ msgstr "Change Password"
 #~ msgid "Change your password below by entering and confirming a new password."
 #~ msgstr "Change your password below by entering and confirming a new password."
 
+#: src/EditableUserDisplayName.js:60
+msgid "Changed User Display Name"
+msgstr "Changed User Display Name"
+
 #: src/EditableUserEmail.js:60
 msgid "Changed User Email"
 msgstr "Changed User Email"
@@ -1648,6 +1652,10 @@ msgstr "You do not have admin permissions in any organization"
 #: src/TwoFactorNotificationBar.js:16
 msgid "You have not enabled Two Factor Authentication. To maximize your account's security, <0>please enable 2FA</0>."
 msgstr "You have not enabled Two Factor Authentication. To maximize your account's security, <0>please enable 2FA</0>."
+
+#: src/EditableUserDisplayName.js:61
+msgid "You have successfully updated your display name."
+msgstr "You have successfully updated your display name."
 
 #: src/EditableUserEmail.js:61
 msgid "You have successfully updated your email."
