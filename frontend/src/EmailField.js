@@ -63,6 +63,9 @@ EmailField.propTypes = {
   forwardedRef: oneOfType([func, shape({ current: elementType })]),
 }
 
-export default React.forwardRef((props, ref) => {
+const withForwardedRef = React.forwardRef((props, ref) => {
   return <EmailField {...props} forwardedRef={ref} />
 })
+withForwardedRef.displayName = 'EmailField'
+
+export default withForwardedRef

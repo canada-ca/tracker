@@ -63,6 +63,9 @@ DisplayNameField.propTypes = {
   forwardedRef: oneOfType([func, shape({ current: elementType })]),
 }
 
-export default React.forwardRef((props, ref) => {
+const withForwardedRef = React.forwardRef((props, ref) => {
   return <DisplayNameField {...props} forwardedRef={ref} />
 })
+withForwardedRef.displayName = 'DisplayNameField'
+
+export default withForwardedRef
