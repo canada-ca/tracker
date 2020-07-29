@@ -28,7 +28,10 @@ const authenticate = new mutationWithClientMutationId({
       },
     },
   }),
-  mutateAndGetPayload: async (args, { query, functions: { cleanseInput } }) => {
+  mutateAndGetPayload: async (
+    args,
+    { query, tokenize, functions: { cleanseInput } },
+  ) => {
     // Cleanse Inputs
     let userName = cleanseInput(args.userName).toLowerCase()
     let password = cleanseInput(args.password)
@@ -82,7 +85,7 @@ const authenticate = new mutationWithClientMutationId({
       }
       // Check to see if passwords match
       if (bcrypt.compareSync(password, user.password)) {
-        const token = jwt.sign({ userId: user._key }, 'secretKeyGoesHere')
+        const token = tokenize({ parameters: { userId: user._key } })
 
         console.info(
           `User: ${user._key} successfully authenticated their account.`,

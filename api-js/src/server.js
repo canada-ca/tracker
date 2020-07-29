@@ -6,7 +6,6 @@ const { GraphQLSchema } = require('graphql')
 const { createServer } = require('http')
 // const { i18n: internationalization, unpackCatalog } = require('lingui-i18n')
 const { ApolloServer } = require('apollo-server-express')
-const { cleanseInput } = require('./validators')
 
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
@@ -46,11 +45,11 @@ const Server = (context = {}) => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     }),
-    context: ({ request, response }) => {
+    context: ({ req: request, res: response }) => {
       // Get userid from token
+      let userId
       if (typeof request !== 'undefined') {
         const token = request.headers.authorization || ''
-        let userId
         if (token !== '') {
           userId = jwt.verify(token, 'secretKeyGoesHere').userId
         }
@@ -62,9 +61,6 @@ const Server = (context = {}) => {
         request,
         response,
         userId,
-        functions: {
-          cleanseInput,
-        },
         ...context,
       }
     },

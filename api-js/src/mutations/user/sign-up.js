@@ -47,7 +47,10 @@ const signUp = new mutationWithClientMutationId({
       },
     },
   }),
-  mutateAndGetPayload: async (args, { query, functions: { cleanseInput } }) => {
+  mutateAndGetPayload: async (
+    args,
+    { query, tokenize, functions: { cleanseInput } },
+  ) => {
     // Cleanse Inputs
     let displayName = cleanseInput(args.displayName)
     let userName = cleanseInput(args.userName).toLowerCase()
@@ -121,28 +124,22 @@ const signUp = new mutationWithClientMutationId({
     }
 
     try {
-      insertedUser = await insertedCursor.all()
+      insertedUser = await insertedCursor.next()
     } catch (err) {
       console.error(`Cursor error occurred when trying to get new user: ${err}`)
       throw new Error('Unable to sign up. Please try again.')
     }
 
-    // Remove password from user object
-    delete insertedUser[0].password
-
     // Assign global id
-    insertedUser[0].id = insertedUser[0]._key
+    insertedUser.id = insertedUser._key
 
     // Generate JWT
-    const token = jwt.sign(
-      { userId: insertedUser[0]._key },
-      'secretKeyGoesHere',
-    )
+    const token = tokenize({ parameters: { userId: insertedUser._key } })
 
     return {
       authResult: {
         token,
-        user: insertedUser[0],
+        user: insertedUser,
       },
     }
   },

@@ -7,7 +7,9 @@ const { toGlobalId } = require('graphql-relay')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
+
 const { cleanseInput } = require('../validators')
+const { tokenize } = require('../auth')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -59,6 +61,7 @@ describe('authenticate user account', () => {
       null,
       {
         query,
+        tokenize,
         functions: {
           cleanseInput,
         },
@@ -99,6 +102,7 @@ describe('authenticate user account', () => {
         null,
         {
           query,
+          tokenize,
           functions: {
             cleanseInput,
           },
@@ -174,6 +178,7 @@ describe('authenticate user account', () => {
           null,
           {
             query,
+            tokenize,
             functions: {
               cleanseInput,
             },
@@ -221,6 +226,7 @@ describe('authenticate user account', () => {
           null,
           {
             query,
+            tokenize,
             functions: {
               cleanseInput,
             },
@@ -268,6 +274,7 @@ describe('authenticate user account', () => {
           null,
           {
             query,
+            tokenize,
             functions: {
               cleanseInput,
             },
@@ -324,6 +331,7 @@ describe('authenticate user account', () => {
           null,
           {
             query,
+            tokenize,
             functions: {
               cleanseInput,
             },
@@ -371,6 +379,7 @@ describe('authenticate user account', () => {
           null,
           {
             query,
+            tokenize,
             functions: {
               cleanseInput,
             },
