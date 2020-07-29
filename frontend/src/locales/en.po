@@ -103,7 +103,7 @@ msgstr "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18
 msgid "Account Details"
 msgstr "Account Details"
 
-#: src/CreateUserPage.js:54
+#: src/CreateUserPage.js:55
 msgid "Account created."
 msgstr "Account created."
 
@@ -131,11 +131,15 @@ msgstr "Add Domain"
 msgid "Admin"
 msgstr "Admin"
 
-#: src/App.js:75
+#: src/App.js:77
 msgid "Admin Portal"
 msgstr "Admin Portal"
 
-#: src/CreateUserPage.js:35
+#: src/ForgotPasswordPage.js:40
+msgid "An email was sent with a link to reset your password"
+msgstr "An email was sent with a link to reset your password"
+
+#: src/CreateUserPage.js:36
 #: src/EditableUserDisplayName.js:49
 #: src/EditableUserEmail.js:49
 #: src/EditableUserLanguage.js:28
@@ -168,7 +172,8 @@ msgstr "B.2.2 Cryptographic Considerations"
 msgid "B.3.1 DMARC Records"
 msgstr "B.3.1 DMARC Records"
 
-#: src/CreateUserPage.js:128
+#: src/CreateUserPage.js:143
+#: src/ForgotPasswordPage.js:105
 msgid "Back"
 msgstr "Back"
 
@@ -201,6 +206,7 @@ msgid "Certificate chain signed using SHA-256/SHA-384/AEAD"
 msgstr "Certificate chain signed using SHA-256/SHA-384/AEAD"
 
 #: src/EditableUserPassword.js:127
+#: src/ResetPasswordPage.js:101
 msgid "Change Password"
 msgstr "Change Password"
 
@@ -281,12 +287,12 @@ msgstr "Contact 3rd party"
 msgid "Country Code"
 msgstr "Country Code"
 
-#: src/CreateUserPage.js:119
+#: src/CreateUserPage.js:134
 #: src/SignInPage.js:121
 msgid "Create Account"
 msgstr "Create Account"
 
-#: src/CreateUserPage.js:99
+#: src/CreateUserPage.js:112
 msgid "Create an account by entering an email and password."
 msgstr "Create an account by entering an email and password."
 
@@ -469,7 +475,7 @@ msgstr "Domain uses potentially-outsourced DMARC service"
 msgid "Domain:"
 msgstr "Domain:"
 
-#: src/App.js:53
+#: src/App.js:55
 #: src/DomainsPage.js:69
 msgid "Domains"
 msgstr "Domains"
@@ -508,6 +514,10 @@ msgstr "Email Configuration"
 msgid "Email Scan Results"
 msgstr "Email Scan Results"
 
+#: src/ForgotPasswordPage.js:38
+msgid "Email Sent"
+msgstr "Email Sent"
+
 #: src/EmailField.js:24
 #~ msgid "Email address"
 #~ msgstr "Email address"
@@ -516,9 +526,9 @@ msgstr "Email Scan Results"
 #~ msgid "Email address:"
 #~ msgstr "Email address:"
 
-#: src/CreateUserPage.js:24
-#: src/SignInPage.js:23
 #: src/ForgotPasswordPage.js:18
+#: src/SignInPage.js:31
+#: src/fieldRequirements.js:6
 msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
 
@@ -546,6 +556,14 @@ msgstr "Enable 2FA"
 #: src/EditableUserPassword.js:140
 msgid "Enter and confirm your new password below:"
 msgstr "Enter and confirm your new password below:"
+
+#: src/ResetPasswordPage.js:86
+msgid "Enter and confirm your new password."
+msgstr "Enter and confirm your new password."
+
+#: src/ForgotPasswordPage.js:78
+msgid "Enter your user account's verified email address and we will send you a password reset link."
+msgstr "Enter your user account's verified email addres and we will send you a password reset link."
 
 #: src/DmarcReportPage.js:124
 msgid "Envelope From"
@@ -711,7 +729,7 @@ msgstr "HTTPS-weakly-enforced"
 #~ msgid "Hide Guidance"
 #~ msgstr "Hide Guidance"
 
-#: src/App.js:50
+#: src/App.js:52
 #: src/QRcodePage.js:67
 msgid "Home"
 msgstr "Home"
@@ -735,11 +753,9 @@ msgstr "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesen
 msgid "Internet facing services: {domainCount}"
 msgstr "Internet facing services: {domainCount}"
 
+#: src/ForgotPasswordPage.js:19
 #: src/SignInPage.js:32
 #: src/fieldRequirements.js:7
-#: src/CreateUserPage.js:25
-#: src/SignInPage.js:24
-#: src/ForgotPasswordPage.js:19
 msgid "Invalid email"
 msgstr "Invalid email"
 
@@ -767,13 +783,15 @@ msgstr "Language:"
 msgid "Last scanned:"
 msgstr "Last scanned:"
 
-#: src/CreateUserPage.js:68
+#: src/CreateUserPage.js:69
 #: src/DomainsPage.js:53
+#: src/ForgotPasswordPage.js:53
 #: src/OrganizationDetails.js:53
-#: src/Organizations.js:55
+#: src/Organizations.js:51
 #: src/QRcodePage.js:21
+#: src/ResetPasswordPage.js:52
 #: src/SignInPage.js:69
-#: src/SummaryGroup.js:32
+#: src/SummaryGroup.js:36
 msgid "Loading..."
 msgstr "Loading..."
 
@@ -876,11 +894,15 @@ msgstr "New Email Address:"
 msgid "New Password:"
 msgstr "New Password:"
 
+#: src/Organizations.js:108
+msgid "Next"
+msgstr "Next"
+
 #: src/AdminDomains.js:138
 msgid "No Domains"
 msgstr "No Domains"
 
-#: src/Organizations.js:77
+#: src/Organizations.js:65
 msgid "No Organizations"
 msgstr "No Organizations"
 
@@ -924,8 +946,8 @@ msgstr "One or more ciphers in use are not compliant with guidelines"
 msgid "Organization:"
 msgstr "Organization:"
 
-#: src/App.js:57
-#: src/Organizations.js:71
+#: src/App.js:59
+#: src/Organizations.js:59
 msgid "Organizations"
 msgstr "Organizations"
 
@@ -1041,18 +1063,22 @@ msgstr "Pass"
 msgid "Password"
 msgstr "Password"
 
+#: src/ResetPasswordPage.js:40
+msgid "Password Updated"
+msgstr "Password Updated"
+
+#: src/ResetPasswordPage.js:20
 #: src/SignInPage.js:29
 #: src/fieldRequirements.js:10
-#: src/CreateUserPage.js:28
-#: src/SignInPage.js:21
-#: src/ResetPasswordPage:20
 msgid "Password cannot be empty"
 msgstr "Password cannot be empty"
 
+#: src/ResetPasswordPage.js:23
 #: src/fieldRequirements.js:13
 msgid "Password confirmation cannot be empty"
 msgstr "Password confirmation cannot be empty"
 
+#: src/ResetPasswordPage.js:21
 #: src/fieldRequirements.js:11
 msgid "Password must be at least 12 characters long"
 msgstr "Password must be at least 12 characters long"
@@ -1063,6 +1089,7 @@ msgstr "Password must be at least 12 characters long"
 msgid "Password:"
 msgstr "Password:"
 
+#: src/ResetPasswordPage.js:24
 #: src/fieldRequirements.js:14
 msgid "Passwords must match"
 msgstr "Passwords must match"
@@ -1121,7 +1148,7 @@ msgstr "Policy compliant TLS"
 #~ msgid "Possible Resolutions"
 #~ msgstr "Possible Resolutions"
 
-#: src/App.js:43
+#: src/App.js:45
 msgid "Pre-Alpha"
 msgstr "Pre-Alpha"
 
@@ -1129,7 +1156,11 @@ msgstr "Pre-Alpha"
 msgid "Prefix Org"
 msgstr "Prefix Org"
 
-#: src/App.js:170
+#: src/Organizations.js:93
+msgid "Previous"
+msgstr "Previous"
+
+#: src/App.js:180
 msgid "Privacy"
 msgstr "Privacy"
 
@@ -1209,7 +1240,7 @@ msgstr "RUF-none"
 #~ msgid "Remove redundant SPF records."
 #~ msgstr "Remove redundant SPF records."
 
-#: src/App.js:70
+#: src/App.js:72
 msgid "Report"
 msgstr "Report"
 
@@ -1368,7 +1399,7 @@ msgstr "Select an organization to view admin options"
 msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
-#: src/App.js:65
+#: src/App.js:67
 #: src/QRcodePage.js:58
 #: src/SignInPage.js:112
 msgid "Sign In"
@@ -1386,7 +1417,7 @@ msgstr "Sign Out"
 msgid "Sign in with your username and password."
 msgstr "Sign in with your username and password."
 
-#: src/App.js:41
+#: src/App.js:43
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
@@ -1397,6 +1428,10 @@ msgstr "Sorry, the page you were trying to view does not exist."
 #: src/DmarcReportPage.js:123
 msgid "Source IP Address"
 msgstr "Source IP Address"
+
+#: src/ForgotPasswordPage.js:96
+msgid "Submit"
+msgstr "Submit"
 
 #: src/GuidanceTagDetails.js:106
 msgid "Summary:"
@@ -1425,7 +1460,7 @@ msgstr "TXT-DMARC-missing"
 #~ msgid "Tag, Tag Name:"
 #~ msgstr "Tag, Tag Name:"
 
-#: src/App.js:180
+#: src/App.js:190
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -1490,7 +1525,7 @@ msgstr "Textual Representation"
 #~ msgid "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
 #~ msgstr "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
 
-#: src/App.js:44
+#: src/App.js:46
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
@@ -1506,13 +1541,21 @@ msgstr "Track Web Security Compliance"
 msgid "TwoFactor"
 msgstr "TwoFactor"
 
-#: src/CreateUserPage.js:37
+#: src/CreateUserPage.js:38
 msgid "Unable to create your account, please try again."
 msgstr "Unable to create your account, please try again."
+
+#: src/ForgotPasswordPage.js:28
+msgid "Unable to send password reset link to email."
+msgstr "Unable to send password reset link to email."
 
 #: src/SignInPage.js:40
 msgid "Unable to sign in to your account, please try again."
 msgstr "Unable to sign in to your account, please try again."
+
+#: src/ResetPasswordPage.js:31
+msgid "Unable to update password"
+msgstr "Unable to update password"
 
 #: src/EditableUserDisplayName.js:51
 msgid "Unable to update your display name, please try again."
@@ -1542,7 +1585,7 @@ msgstr "Use DKIM to validate outbound email sent from your custom domain"
 msgid "User List"
 msgstr "User List"
 
-#: src/App.js:61
+#: src/App.js:63
 msgid "User Profile"
 msgstr "User Profile"
 
@@ -1590,7 +1633,7 @@ msgstr "Web encryption settings summary"
 msgid "Welcome, Admin"
 msgstr "Welcome, Admin"
 
-#: src/CreateUserPage.js:56
+#: src/CreateUserPage.js:57
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Welcome, you are successfully signed in to your new account!"
 
@@ -1615,6 +1658,10 @@ msgstr "You have successfully updated your email."
 msgid "You have successfully updated your password."
 msgstr "You have successfully updated your password."
 
+#: src/ResetPasswordPage.js:41
+msgid "You may now sign in with your new password"
+msgstr "You may now sign in with your new password"
+
 #: src/QRcodePage.js:45
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
 msgstr "Your 2FA app will then have a valid code that you can use when you sign in."
@@ -1622,6 +1669,10 @@ msgstr "Your 2FA app will then have a valid code that you can use when you sign 
 #: src/OrganizationDetails.js:108
 msgid "back to organizations"
 msgstr "back to organizations"
+
+#: src/Organizations.js:44
+msgid "error {0}"
+msgstr "error {0}"
 
 #: src/guidanceTagConstants.js:6
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
@@ -1702,59 +1753,6 @@ msgstr "https://tools.ietf.org/html/rfc7489#section-7.1"
 #: src/SummaryTable.js:172
 msgid "of"
 msgstr "of"
-
-
-#: src/ForgotPasswordPage.js:92
-msgid "Submit"
-msgstr "Submit"
-
-#: src/ForgotPasswordPage.js:76
-msgid "Enter your user account's verified email address and we will send you a password reset link."
-msgstr "Enter your user account's verified email addres and we will send you a password reset link."
-
-#: src/ForgotPasswordPage.js:38
-msgid "Email Sent"
-msgstr "Email Sent"
-
-#: src/ForgotPasswordPage.js:40
-msgid "An email was sent with a link to reset your password"
-msgstr "An email was sent with a link to reset your password"
-
-#: src/ForgotPasswordPage.js:28
-msgid "Unable to send password reset link to email."
-msgstr "Unable to send password reset link to email."
-
-#: src/ResetPasswordPage.js:90
-msgid "Enter and confirm your new password."
-msgstr "Enter and confirm your new password."
-
-#: src/ResetPasswordPage.js:103
-msgid "Change Password"
-msgstr "Change Password"
-
-#: src/ResetPasswordPage.js:
-msgid "Unable to update password"
-msgstr "Unable to update password"
-
-#: src/ResetPasswordPage.js:
-msgid "Password Updated"
-msgstr "Password Updated"
-
-#: src/ResetPasswordPage.js:
-msgid "You may now sign in with your new password"
-msgstr "You may now sign in with your new password"
-
-#: src/ResetPasswordPage:23
-msgid "Password confirmation cannot be empty"
-msgstr "Password confirmation cannot be empty"
-
-#: src/ResetPasswordPage:21
-msgid "Password must be at least 12 characters long"
-msgstr "Password must be at least 12 characters long"
-
-#: src/ResetPasswordPage:24
-msgid "Passwords must match"
-msgstr "Passwords must match"
 
 #: src/guidanceTagConstants.js:250
 #~ msgid "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be 'none' but mail agents may process messages based on Quarantine)"

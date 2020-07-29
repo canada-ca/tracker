@@ -103,7 +103,7 @@ msgstr "La liste de chiffrement acceptée contient le chiffrement de flux RC4, t
 msgid "Account Details"
 msgstr "Détails du compte"
 
-#: src/CreateUserPage.js:54
+#: src/CreateUserPage.js:55
 msgid "Account created."
 msgstr "Compte créé"
 
@@ -131,11 +131,15 @@ msgstr "Ajouter un domaine"
 msgid "Admin"
 msgstr "Admin"
 
-#: src/App.js:75
+#: src/App.js:77
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/CreateUserPage.js:35
+#: src/ForgotPasswordPage.js:40
+msgid "An email was sent with a link to reset your password"
+msgstr "Un courriel a été envoyé avec un lien pour réinitialiser votre mot de passe"
+
+#: src/CreateUserPage.js:36
 #: src/EditableUserDisplayName.js:49
 #: src/EditableUserEmail.js:49
 #: src/EditableUserLanguage.js:28
@@ -168,7 +172,8 @@ msgstr "B.2.2 Considérations cryptographiques"
 msgid "B.3.1 DMARC Records"
 msgstr "B.3.1 Enregistrements DMARC"
 
-#: src/CreateUserPage.js:128
+#: src/CreateUserPage.js:143
+#: src/ForgotPasswordPage.js:105
 msgid "Back"
 msgstr "Retour"
 
@@ -201,6 +206,7 @@ msgid "Certificate chain signed using SHA-256/SHA-384/AEAD"
 msgstr "Chaîne de certificats signée au moyen de SHA-256/SHA-384/AEAD"
 
 #: src/EditableUserPassword.js:127
+#: src/ResetPasswordPage.js:101
 msgid "Change Password"
 msgstr "Changer le mot de passe"
 
@@ -281,12 +287,12 @@ msgstr "Contacter une tierce partie"
 msgid "Country Code"
 msgstr "Code pays"
 
-#: src/CreateUserPage.js:119
+#: src/CreateUserPage.js:134
 #: src/SignInPage.js:121
 msgid "Create Account"
 msgstr "Créer un compte"
 
-#: src/CreateUserPage.js:99
+#: src/CreateUserPage.js:112
 msgid "Create an account by entering an email and password."
 msgstr "Créez un compte en entrant un courriel et un mot de passe."
 
@@ -469,7 +475,7 @@ msgstr "Le domaine utilise un service DMARC potentiellement externalisé"
 msgid "Domain:"
 msgstr "Domaine:"
 
-#: src/App.js:53
+#: src/App.js:55
 #: src/DomainsPage.js:69
 msgid "Domains"
 msgstr "Domaines"
@@ -509,11 +515,13 @@ msgstr "Configuration du courriel"
 msgid "Email Scan Results"
 msgstr "Résultats de l'analyse des courriels"
 
+#: src/ForgotPasswordPage.js:38
+msgid "Email Sent"
+msgstr "Courriel envoyé"
+
+#: src/ForgotPasswordPage.js:18
 #: src/SignInPage.js:31
 #: src/fieldRequirements.js:6
-#: src/CreateUserPage.js:24
-#: src/SignInPage.js:23
-#: src/ForgotPasswordPage.js:18
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
@@ -541,6 +549,14 @@ msgstr "Activer la 2FA"
 #: src/EditableUserPassword.js:140
 msgid "Enter and confirm your new password below:"
 msgstr "Entrez et confirmez votre nouveau mot de passe ci-dessous :"
+
+#: src/ResetPasswordPage.js:86
+msgid "Enter and confirm your new password."
+msgstr "Entrez et confirmez votre nouveau mot de passe."
+
+#: src/ForgotPasswordPage.js:78
+msgid "Enter your user account's verified email address and we will send you a password reset link."
+msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe."
 
 #: src/DmarcReportPage.js:124
 msgid "Envelope From"
@@ -706,7 +722,7 @@ msgstr ""
 #~ msgid "Hide Guidance"
 #~ msgstr "Masquer les conseils"
 
-#: src/App.js:50
+#: src/App.js:52
 #: src/QRcodePage.js:67
 msgid "Home"
 msgstr "Accueil"
@@ -730,11 +746,9 @@ msgstr ""
 msgid "Internet facing services: {domainCount}"
 msgstr "Services d'accès à Internet: {domainCount}"
 
+#: src/ForgotPasswordPage.js:19
 #: src/SignInPage.js:32
 #: src/fieldRequirements.js:7
-#: src/CreateUserPage.js:25
-#: src/SignInPage.js:24
-#: src/ForgotPasswordPage.js:19
 msgid "Invalid email"
 msgstr "Courriel non valide"
 
@@ -762,13 +776,15 @@ msgstr "La langue :"
 msgid "Last scanned:"
 msgstr "Dernier scan:"
 
-#: src/CreateUserPage.js:68
+#: src/CreateUserPage.js:69
 #: src/DomainsPage.js:53
+#: src/ForgotPasswordPage.js:53
 #: src/OrganizationDetails.js:53
-#: src/Organizations.js:55
+#: src/Organizations.js:51
 #: src/QRcodePage.js:21
+#: src/ResetPasswordPage.js:52
 #: src/SignInPage.js:69
-#: src/SummaryGroup.js:32
+#: src/SummaryGroup.js:36
 msgid "Loading..."
 msgstr "Chargement..."
 
@@ -871,11 +887,15 @@ msgstr "Nouvelle adresse électronique :"
 msgid "New Password:"
 msgstr "Nouveau mot de passe :"
 
+#: src/Organizations.js:108
+msgid "Next"
+msgstr "Suivant"
+
 #: src/AdminDomains.js:138
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/Organizations.js:77
+#: src/Organizations.js:65
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
@@ -919,8 +939,8 @@ msgstr "Un ou plusieurs chiffres utilisés ne sont pas conformes aux lignes dire
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/App.js:57
-#: src/Organizations.js:71
+#: src/App.js:59
+#: src/Organizations.js:59
 msgid "Organizations"
 msgstr "Organisations"
 
@@ -1036,18 +1056,22 @@ msgstr "Passez"
 msgid "Password"
 msgstr "Mot de passe"
 
+#: src/ResetPasswordPage.js:40
+msgid "Password Updated"
+msgstr "Mot de passe mis à jour"
+
+#: src/ResetPasswordPage.js:20
 #: src/SignInPage.js:29
 #: src/fieldRequirements.js:10
-#: src/CreateUserPage.js:28
-#: src/SignInPage.js:21
-#: src/ResetPasswordPage:20
 msgid "Password cannot be empty"
 msgstr "Le mot de passe ne peut pas être vide"
 
+#: src/ResetPasswordPage.js:23
 #: src/fieldRequirements.js:13
 msgid "Password confirmation cannot be empty"
 msgstr "La confirmation du mot de passe ne peut pas être vide"
 
+#: src/ResetPasswordPage.js:21
 #: src/fieldRequirements.js:11
 msgid "Password must be at least 12 characters long"
 msgstr "Le mot de passe doit comporter au moins 12 caractères"
@@ -1058,6 +1082,7 @@ msgstr "Le mot de passe doit comporter au moins 12 caractères"
 msgid "Password:"
 msgstr "Mot de passe :"
 
+#: src/ResetPasswordPage.js:24
 #: src/fieldRequirements.js:14
 msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
@@ -1116,7 +1141,7 @@ msgstr ""
 #~ msgid "Possible Resolutions"
 #~ msgstr "Résolutions possibles"
 
-#: src/App.js:43
+#: src/App.js:45
 msgid "Pre-Alpha"
 msgstr "préalpha"
 
@@ -1124,7 +1149,11 @@ msgstr "préalpha"
 msgid "Prefix Org"
 msgstr "Préfixe Org"
 
-#: src/App.js:170
+#: src/Organizations.js:93
+msgid "Previous"
+msgstr "Précédent"
+
+#: src/App.js:180
 msgid "Privacy"
 msgstr "Confidentialité"
 
@@ -1204,7 +1233,7 @@ msgstr ""
 #~ msgid "Remove redundant SPF records."
 #~ msgstr "Supprimer les enregistrements SPF redondants."
 
-#: src/App.js:70
+#: src/App.js:72
 msgid "Report"
 msgstr "Rapport"
 
@@ -1351,7 +1380,7 @@ msgstr "Sélectionnez une organisation pour voir les options d'administration"
 msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
-#: src/App.js:65
+#: src/App.js:67
 #: src/QRcodePage.js:58
 #: src/SignInPage.js:112
 msgid "Sign In"
@@ -1369,7 +1398,7 @@ msgstr "Déconnexion"
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/App.js:41
+#: src/App.js:43
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -1380,6 +1409,10 @@ msgstr "Désolé, la page que vous essayiez de consulter n'existe pas."
 #: src/DmarcReportPage.js:123
 msgid "Source IP Address"
 msgstr "Adresse IP source"
+
+#: src/ForgotPasswordPage.js:96
+msgid "Submit"
+msgstr "Soumettre"
 
 #: src/GuidanceTagDetails.js:106
 msgid "Summary:"
@@ -1408,7 +1441,7 @@ msgstr ""
 #~ msgid "Tag, Tag Name:"
 #~ msgstr "Le jour, le nom du jour :"
 
-#: src/App.js:180
+#: src/App.js:190
 msgid "Terms & conditions"
 msgstr "Avis"
 
@@ -1473,7 +1506,7 @@ msgstr "Représentation textuelle"
 #~ msgid "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
 #~ msgstr "Ces notes d'orientation ont été conçues pour vous aider à résoudre les problèmes liés à l'échec de vos scanners DMARC. Veuillez lire chaque note et déterminer ce qui a provoqué l'échec d'un scan DMARC sur votre domaine."
 
-#: src/App.js:44
+#: src/App.js:46
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
@@ -1489,13 +1522,21 @@ msgstr "Suivre la conformité de la sécurité du Web"
 msgid "TwoFactor"
 msgstr "Deux facteurs"
 
-#: src/CreateUserPage.js:37
+#: src/CreateUserPage.js:38
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
+
+#: src/ForgotPasswordPage.js:28
+msgid "Unable to send password reset link to email."
+msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel."
 
 #: src/SignInPage.js:40
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
+
+#: src/ResetPasswordPage.js:31
+msgid "Unable to update password"
+msgstr "Impossible de mettre à jour le mot de passe"
 
 #: src/EditableUserDisplayName.js:51
 msgid "Unable to update your display name, please try again."
@@ -1521,7 +1562,7 @@ msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé dep
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
-#: src/App.js:61
+#: src/App.js:63
 msgid "User Profile"
 msgstr "Profil de l'utilisateur"
 
@@ -1569,7 +1610,7 @@ msgstr "Résumé des paramètres de cryptage du Web"
 msgid "Welcome, Admin"
 msgstr "Bienvenue à l'administration"
 
-#: src/CreateUserPage.js:56
+#: src/CreateUserPage.js:57
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Veuillez choisir votre langue préférée"
 
@@ -1594,6 +1635,10 @@ msgstr "Vous avez mis à jour votre courriel avec succès."
 msgid "You have successfully updated your password."
 msgstr "Vous avez mis à jour votre mot de passe avec succès."
 
+#: src/ResetPasswordPage.js:41
+msgid "You may now sign in with your new password"
+msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
+
 #: src/QRcodePage.js:45
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
 msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez."
@@ -1601,6 +1646,10 @@ msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez 
 #: src/OrganizationDetails.js:108
 msgid "back to organizations"
 msgstr "retour aux organisations"
+
+#: src/Organizations.js:44
+msgid "error {0}"
+msgstr "erreur {0}"
 
 #: src/guidanceTagConstants.js:6
 msgid "https://cyber.gc.ca/en/guidance/implementation-guidance-email-domain-protection#a322"
@@ -1681,58 +1730,6 @@ msgstr ""
 #: src/SummaryTable.js:172
 msgid "of"
 msgstr "de"
-
-#: src/ForgotPasswordPage.js:92
-msgid "Submit"
-msgstr "Soumettre"
-
-#: src/ForgotPasswordPage.js:76
-msgid "Enter your user account's verified email address and we will send you a password reset link."
-msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe."
-
-#: src/ForgotPasswordPage.js:38
-msgid "Email Sent"
-msgstr "Courriel envoyé"
-
-#: src/ForgotPasswordPage.js:40
-msgid "An email was sent with a link to reset your password"
-msgstr "Un courriel a été envoyé avec un lien pour réinitialiser votre mot de passe"
-
-#: src/ForgotPasswordPage.js:28
-msgid "Unable to send password reset link to email."
-msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel."
-
-#: src/ResetPasswordPage.js:90
-msgid "Enter and confirm your new password."
-msgstr "Entrez et confirmez votre nouveau mot de passe."
-
-#: src/ResetPasswordPage.js:103
-msgid "Change Password"
-msgstr "Changer le mot de passe"
-
-#: src/ResetPasswordPage.js:
-msgid "Unable to update password"
-msgstr "Impossible de mettre à jour le mot de passe"
-
-#: src/ResetPasswordPage.js:
-msgid "Password Updated"
-msgstr "Mot de passe mis à jour"
-
-#: src/ResetPasswordPage.js:
-msgid "You may now sign in with your new password"
-msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
-
-#: src/ResetPasswordPage:23
-msgid "Password confirmation cannot be empty"
-msgstr "La confirmation du mot de passe ne peut pas être vide"
-
-#: src/ResetPasswordPage:21
-msgid "Password must be at least 12 characters long"
-msgstr "Le mot de passe doit comporter au moins 12 caractères"
-
-#: src/ResetPasswordPage:24
-msgid "Passwords must match"
-msgstr "Les mots de passe doivent correspondre"
 
 #: src/guidanceTagConstants.js:250
 #~ msgid "pct=0 will use the next lower level of enforcement and may result in irregular mail flow if parsed incorrectly (p=quarantine; pct=0 should be 'none' but mail agents may process messages based on Quarantine)"
