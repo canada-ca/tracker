@@ -30,7 +30,7 @@ const authenticate = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (args, { query, functions: { cleanseInput } }) => {
     // Cleanse Inputs
-    let userName = cleanseInput(args.userName)
+    let userName = cleanseInput(args.userName).toLowerCase()
     let password = cleanseInput(args.password)
 
     // Gather sign in user
