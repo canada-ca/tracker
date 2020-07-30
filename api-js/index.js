@@ -13,7 +13,7 @@ const { makeMigrations } = require('./migrations')
 
 const { tokenize, verifyToken } = require('./src/auth')
 const { cleanseInput } = require('./src/validators')
-const { userLoaderByUserName } = require('./src/loaders')
+const { userLoaderByUserName, userLoaderByIds } = require('./src/loaders')
 const { sendPasswordResetEmail } = require('./src/notify')
 
 ;(async () => {
@@ -30,7 +30,8 @@ const { sendPasswordResetEmail } = require('./src/notify')
       cleanseInput,
     },
     loaders: {
-      userLoaderByUserName: userLoaderByUserName(),
+      userLoaderByUserName: userLoaderByUserName(query),
+      userLoaderByIds: userLoaderByIds(query)
     },
     notify: {
       sendPasswordResetEmail,
