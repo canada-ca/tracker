@@ -16,7 +16,7 @@ import { createCache } from '../client'
 
 describe('<Organisations />', () => {
   describe('given a list of organizations', () => {
-    xit('displays a list of organizations', async () => {
+    it('displays a list of organizations', async () => {
       const mocks = [
         {
           request: {
@@ -91,7 +91,7 @@ describe('<Organisations />', () => {
       )
     })
 
-    xit('navigates to an organization detail page when a link is clicked', async () => {
+    it('navigates to an organization detail page when a link is clicked', async () => {
       const mocks = [
         {
           request: {
