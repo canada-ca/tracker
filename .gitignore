@@ -6,6 +6,7 @@ api/schema.json
 api/api.current.graphql
 
 **/node_modules
+**/coverage
 
 *.log
 
