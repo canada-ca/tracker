@@ -1,4 +1,4 @@
-import { ref, string } from 'yup'
+import { ref } from 'yup'
 import { t } from '@lingui/macro'
 
 export const fieldRequirements = {
