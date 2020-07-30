@@ -2,7 +2,7 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { graphql, GraphQLSchema } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
@@ -17,11 +17,11 @@ describe('authenticate user account', () => {
   const originalInfo = console.info
   afterEach(() => (console.info = originalInfo))
 
-  let query, drop, truncate, migrate, collections, schema
+  let query, drop, truncate, migrate, schema
 
   beforeAll(async () => {
     ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
+    ;({ query, drop, truncate } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
     schema = new GraphQLSchema({
@@ -116,7 +116,7 @@ describe('authenticate user account', () => {
           `
       const user = await cursor.next()
 
-      expectedResult = {
+      const expectedResult = {
         data: {
           authenticate: {
             authResult: {
@@ -152,7 +152,7 @@ describe('authenticate user account', () => {
             UPDATE ${user._key} WITH { failedLoginAttempts: 5 } IN users
         `
 
-        const response = await graphql(
+        await graphql(
           schema,
           `
             mutation {
@@ -248,7 +248,7 @@ describe('authenticate user account', () => {
         ])
       })
       it('increases the failed attempt counter', async () => {
-        const response = await graphql(
+        await graphql(
           schema,
           `
             mutation {

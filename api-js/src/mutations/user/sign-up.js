@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { LanguageEnums } = require('../../enums')
@@ -52,11 +51,11 @@ const signUp = new mutationWithClientMutationId({
     { query, tokenize, functions: { cleanseInput } },
   ) => {
     // Cleanse Inputs
-    let displayName = cleanseInput(args.displayName)
-    let userName = cleanseInput(args.userName).toLowerCase()
-    let password = cleanseInput(args.password)
-    let confirmPassword = cleanseInput(args.confirmPassword)
-    let preferredLang = cleanseInput(args.preferredLang)
+    const displayName = cleanseInput(args.displayName)
+    const userName = cleanseInput(args.userName).toLowerCase()
+    const password = cleanseInput(args.password)
+    const confirmPassword = cleanseInput(args.confirmPassword)
+    const preferredLang = cleanseInput(args.preferredLang)
 
     // Check to make sure password meets length requirement
     if (password.length < 8) {
@@ -110,7 +109,7 @@ const signUp = new mutationWithClientMutationId({
       failedLoginAttempts: 0,
     }
 
-    let insertedCursor = (insertedUser = null)
+    let insertedCursor, insertedUser
     try {
       insertedCursor = await query`
         INSERT ${user} INTO users RETURN NEW

@@ -95,7 +95,7 @@ describe('user sign up', () => {
                 `
         const users = await cursor.all()
 
-        expectedResult = {
+        const expectedResult = {
           data: {
             signUp: {
               authResult: {
@@ -164,7 +164,7 @@ describe('user sign up', () => {
                 `
         const user = await cursor.next()
 
-        expectedResult = {
+        const expectedResult = {
           data: {
             signUp: {
               authResult: {

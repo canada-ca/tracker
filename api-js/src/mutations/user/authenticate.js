@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { EmailAddress } = require('../../scalars')
@@ -33,8 +32,8 @@ const authenticate = new mutationWithClientMutationId({
     { query, tokenize, functions: { cleanseInput } },
   ) => {
     // Cleanse Inputs
-    let userName = cleanseInput(args.userName).toLowerCase()
-    let password = cleanseInput(args.password)
+    const userName = cleanseInput(args.userName).toLowerCase()
+    const password = cleanseInput(args.password)
 
     // Gather sign in user
     let userCursor
@@ -70,10 +69,9 @@ const authenticate = new mutationWithClientMutationId({
         'Too many failed login attempts, please reset your password, and try again.',
       )
     } else {
-      // Reset Failed Login attempts after cooldown
-      let resetCursor
+      // Reset Failed Login attempts
       try {
-        resetCursor = await query`
+        await query`
           FOR u IN users
             UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
         `
@@ -100,9 +98,9 @@ const authenticate = new mutationWithClientMutationId({
           },
         }
       } else {
-        let failedAttemptCursor
         try {
-          failedAttemptCursor = await query`
+          // Increase users failed login attempts
+          await query`
             FOR u IN users
               UPDATE ${user._key} WITH { failedLoginAttempts: ${
             user.failedLoginAttempts + 1
