@@ -153,7 +153,7 @@ const userType = new GraphQLObjectType({
         return displayName
       },
     },
-    preferredLanguage: {
+    preferredLang: {
       type: LanguageEnums,
       description: 'Users preferred language.',
       resolve: async ({ preferredLang }) => {

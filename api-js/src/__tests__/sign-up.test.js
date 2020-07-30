@@ -69,7 +69,7 @@ describe('user sign up', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }
@@ -103,7 +103,7 @@ describe('user sign up', () => {
                   id: `${toGlobalId('users', users[0]._key)}`,
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
-                  preferredLanguage: 'ENGLISH',
+                  preferredLang: 'ENGLISH',
                   tfaValidated: false,
                   emailValidated: false,
                 },
@@ -139,7 +139,7 @@ describe('user sign up', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }
@@ -172,7 +172,7 @@ describe('user sign up', () => {
                   id: `${toGlobalId('users', user._key)}`,
                   userName: 'test.account@istio.actually.exists',
                   displayName: 'Test Account',
-                  preferredLanguage: 'FRENCH',
+                  preferredLang: 'FRENCH',
                   tfaValidated: false,
                   emailValidated: false,
                 },
@@ -209,7 +209,7 @@ describe('user sign up', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }
@@ -255,7 +255,7 @@ describe('user sign up', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }
@@ -286,7 +286,7 @@ describe('user sign up', () => {
         await collections.users.save({
           userName: 'test.account@istio.actually.exists',
           displayName: 'Test Account',
-          preferredLanguage: 'FRENCH',
+          preferredLang: 'french',
           tfaValidated: false,
           emailValidated: false,
         })
@@ -311,7 +311,7 @@ describe('user sign up', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }

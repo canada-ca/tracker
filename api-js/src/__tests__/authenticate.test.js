@@ -91,7 +91,7 @@ describe('authenticate user account', () => {
                   id
                   userName
                   displayName
-                  preferredLanguage
+                  preferredLang
                   tfaValidated
                   emailValidated
                 }
@@ -124,7 +124,7 @@ describe('authenticate user account', () => {
                 id: `${toGlobalId('users', user._key)}`,
                 userName: 'test.account@istio.actually.exists',
                 displayName: 'Test Account',
-                preferredLanguage: 'FRENCH',
+                preferredLang: 'FRENCH',
                 tfaValidated: false,
                 emailValidated: false,
               },
@@ -167,7 +167,7 @@ describe('authenticate user account', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }
@@ -215,7 +215,7 @@ describe('authenticate user account', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }
@@ -263,7 +263,7 @@ describe('authenticate user account', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }
@@ -320,7 +320,7 @@ describe('authenticate user account', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }
@@ -368,7 +368,7 @@ describe('authenticate user account', () => {
                     id
                     userName
                     displayName
-                    preferredLanguage
+                    preferredLang
                     tfaValidated
                     emailValidated
                   }
