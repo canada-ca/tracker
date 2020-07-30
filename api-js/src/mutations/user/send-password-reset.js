@@ -27,7 +27,6 @@ const sendPasswordResetLink = new mutationWithClientMutationId({
     args,
     {
       request,
-      query,
       auth: { tokenize },
       functions: { cleanseInput },
       loaders: { userLoaderByUserName },
@@ -37,10 +36,7 @@ const sendPasswordResetLink = new mutationWithClientMutationId({
     // Cleanse Input
     const userName = cleanseInput(args.userName).toLowerCase()
 
-    const user = await userLoaderByUserName.load({
-      userNames: [userName],
-      query,
-    })
+    const user = await userLoaderByUserName.load(userName)
 
     if (typeof user !== 'undefined') {
       let templateId

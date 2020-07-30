@@ -87,7 +87,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(),
+              userLoaderByUserName: userLoaderByUserName(query),
             },
             notify: {
               sendPasswordResetEmail: mockNotify,
@@ -162,7 +162,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(),
+              userLoaderByUserName: userLoaderByUserName(query),
             },
             notify: {
               sendPasswordResetEmail: mockNotify,
@@ -232,7 +232,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(),
+              userLoaderByUserName: userLoaderByUserName(query),
             },
             notify: {
               sendPasswordResetEmail: mockNotify,
