@@ -4,7 +4,8 @@
   "scripts": {
     "start": "node index.js",
     "dev-start": "nodemon index.js",
-    "test": "jest --coverage",
+    "test": "jest",
+    "test-coverage": "jest --coverage",
     "lint": "eslint src",
     "extract": "lingui extract",
     "compile": "lingui compile"
