@@ -38,7 +38,8 @@
         "capIsNewExceptions": [
           "Server",
           "GraphQLNonNull",
-          "GraphQLList"
+          "GraphQLList",
+          "ArangoTools"
         ]
       }
     ]
