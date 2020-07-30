@@ -81,7 +81,9 @@ describe('user sign up', () => {
           {
             request,
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -150,7 +152,9 @@ describe('user sign up', () => {
           null,
           {
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -220,7 +224,9 @@ describe('user sign up', () => {
           null,
           {
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -266,7 +272,9 @@ describe('user sign up', () => {
           null,
           {
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -322,7 +330,9 @@ describe('user sign up', () => {
           null,
           {
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },

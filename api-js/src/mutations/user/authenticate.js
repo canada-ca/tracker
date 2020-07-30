@@ -29,7 +29,7 @@ const authenticate = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { query, tokenize, functions: { cleanseInput } },
+    { query, auth: { tokenize }, functions: { cleanseInput } },
   ) => {
     // Cleanse Inputs
     const userName = cleanseInput(args.userName).toLowerCase()

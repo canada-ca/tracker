@@ -61,7 +61,9 @@ describe('authenticate user account', () => {
       null,
       {
         query,
-        tokenize,
+        auth: {
+          tokenize,
+        },
         functions: {
           cleanseInput,
         },
@@ -102,7 +104,9 @@ describe('authenticate user account', () => {
         null,
         {
           query,
-          tokenize,
+          auth: {
+            tokenize,
+          },
           functions: {
             cleanseInput,
           },
@@ -178,7 +182,9 @@ describe('authenticate user account', () => {
           null,
           {
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -226,7 +232,9 @@ describe('authenticate user account', () => {
           null,
           {
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -274,7 +282,9 @@ describe('authenticate user account', () => {
           null,
           {
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -331,7 +341,9 @@ describe('authenticate user account', () => {
           null,
           {
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -379,7 +391,9 @@ describe('authenticate user account', () => {
           null,
           {
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },

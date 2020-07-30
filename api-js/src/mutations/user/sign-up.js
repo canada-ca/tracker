@@ -48,7 +48,7 @@ const signUp = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { query, tokenize, functions: { cleanseInput } },
+    { query, auth: { tokenize }, functions: { cleanseInput } },
   ) => {
     // Cleanse Inputs
     const displayName = cleanseInput(args.displayName)
