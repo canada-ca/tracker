@@ -35,7 +35,7 @@ function EditableUserDisplayName({ detailValue }) {
   const { i18n } = useLingui()
   const initialFocusRef = useRef()
 
-  const [updateUserProfile, { error: updateUserProfileError }] = useMutation(
+  const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
     {
       context: {
@@ -43,13 +43,10 @@ function EditableUserDisplayName({ detailValue }) {
           authorization: currentUser.jwt,
         },
       },
-      onError() {
-        console.log(updateUserProfileError)
+      onError: ({ message }) => {
         toast({
-          title: i18n._(t`An error occurred.`),
-          description: i18n._(
-            t`Unable to update your display name, please try again.`,
-          ),
+          title: i18n._(t`An error occurred while updating your display name.`),
+          description: message,
           status: 'error',
           duration: 9000,
           isClosable: true,

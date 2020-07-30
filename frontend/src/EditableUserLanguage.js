@@ -16,7 +16,7 @@ function EditableUserLanguage({ currentLang }) {
   const toast = useToast()
   const { i18n } = useLingui()
 
-  const [updateUserProfile, { error: updateUserProfileError }] = useMutation(
+  const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
     {
       context: {
@@ -24,13 +24,10 @@ function EditableUserLanguage({ currentLang }) {
           authorization: currentUser.jwt,
         },
       },
-      onError() {
-        console.log(updateUserProfileError)
+      onError: ({ message }) => {
         toast({
-          title: i18n._(t`An error occurred.`),
-          description: i18n._(
-            t`Unable to update your language, please try again.`,
-          ),
+          title: i18n._(t`An error occurred while updating your language.`),
+          description: message,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -48,7 +45,7 @@ function EditableUserLanguage({ currentLang }) {
     },
   )
 
-    const validationSchema = object().shape({
+  const validationSchema = object().shape({
     lang: yupString()
       .required(i18n._(fieldRequirements.lang.required.message))
       .oneOf(fieldRequirements.lang.oneOf.types),
@@ -83,7 +80,12 @@ function EditableUserLanguage({ currentLang }) {
                 <option value="FRENCH">Français</option>
               </Field>
 
-              <Button type="submitBtn" isLoading={isSubmitting} px="2rem" variantColor="teal">
+              <Button
+                type="submitBtn"
+                isLoading={isSubmitting}
+                px="2rem"
+                variantColor="teal"
+              >
                 <Trans>Save Language</Trans>
               </Button>
             </Stack>
