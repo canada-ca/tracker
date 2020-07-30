@@ -1,7 +1,7 @@
 const DataLoader = require('dataloader')
 
 const batchUsersByUserName = async ([{ userNames, query }]) => {
-  let cursor, users
+  let cursor
 
   try {
     cursor = await query`
@@ -16,19 +16,17 @@ const batchUsersByUserName = async ([{ userNames, query }]) => {
     throw new Error('Unable to find user, please try again.')
   }
 
-  try {
-    users = await cursor.all()
-  } catch (err) {
-    console.error(
-      `Database error occurred when gathering users from cursor in batchUsersByUserName: ${err}`,
-    )
-    throw new Error('Unable to find user, please try again.')
-  }
-
+  let user
   const userMap = {}
-  users.forEach((u) => {
-    userMap[u.userName] = u
-  })
+  while(cursor.hasNext()) {
+    try {
+      user = await cursor.next()
+    } catch (err) {
+      console.error(`Cursor error occurred during batchUsersByUserName: ${err}`)
+      throw new Error('Unable to find user, please try again.')
+    }
+    userMap[user.userName] = user
+  }
 
   return userNames.map((userName) => userMap[userName])
 }
