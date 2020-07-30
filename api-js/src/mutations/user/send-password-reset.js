@@ -28,7 +28,7 @@ const sendPasswordResetLink = new mutationWithClientMutationId({
     {
       request,
       query,
-      tokenize,
+      auth: { tokenize },
       functions: { cleanseInput },
       loaders: { userLoaderByUserName },
       notify: { sendPasswordResetEmail },

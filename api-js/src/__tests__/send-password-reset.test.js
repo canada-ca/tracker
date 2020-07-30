@@ -80,7 +80,9 @@ describe('user send password reset email', () => {
           {
             request,
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -153,7 +155,9 @@ describe('user send password reset email', () => {
           {
             request,
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
@@ -221,7 +225,9 @@ describe('user send password reset email', () => {
           {
             request,
             query,
-            tokenize,
+            auth: {
+              tokenize,
+            },
             functions: {
               cleanseInput,
             },
