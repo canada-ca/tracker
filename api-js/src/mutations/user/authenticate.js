@@ -29,36 +29,20 @@ const authenticate = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { query, auth: { tokenize }, functions: { cleanseInput } },
+    { query, auth: { tokenize }, loaders: { userLoaderByUserName }, functions: { cleanseInput } },
   ) => {
     // Cleanse Inputs
     const userName = cleanseInput(args.userName).toLowerCase()
     const password = cleanseInput(args.password)
 
     // Gather sign in user
-    let userCursor
-    try {
-      userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == ${userName}
-          RETURN user
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred when ${userName} attempted to authenticate: ${err}`,
-      )
-      throw new Error('Unable to authenticate, please try again.')
-    }
-
-    if (userCursor.count === 0) {
+    const user = await userLoaderByUserName.load(userName)
+    if (typeof user === 'undefined') {
       console.warn(
         `User: ${userName} attempted to authenticate, no account is associated with this email.`,
       )
       throw new Error('Unable to authenticate, please try again.')
     }
-
-    // Get user from cursor
-    const user = await userCursor.next()
 
     // Check against failed attempt info
     if (user.failedLoginAttempts >= 10) {

@@ -10,6 +10,7 @@ const { createMutationSchema } = require('../mutations')
 
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
+const { userLoaderByUserName } = require('../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -20,10 +21,12 @@ describe('authenticate user account', () => {
   let query, drop, truncate, migrate, schema
 
   beforeAll(async () => {
+    // Generate DB Items
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
+    // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
@@ -67,6 +70,9 @@ describe('authenticate user account', () => {
         functions: {
           cleanseInput,
         },
+        loaders: {
+          userLoaderByUserName: userLoaderByUserName(query),
+        },
       },
     )
     consoleOutput = []
@@ -109,6 +115,9 @@ describe('authenticate user account', () => {
           },
           functions: {
             cleanseInput,
+          },
+          loaders: {
+            userLoaderByUserName: userLoaderByUserName(query),
           },
         },
       )
@@ -188,6 +197,9 @@ describe('authenticate user account', () => {
             functions: {
               cleanseInput,
             },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
+            },
           },
         )
 
@@ -238,6 +250,9 @@ describe('authenticate user account', () => {
             functions: {
               cleanseInput,
             },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
+            },
           },
         )
 
@@ -287,6 +302,9 @@ describe('authenticate user account', () => {
             },
             functions: {
               cleanseInput,
+            },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
             },
           },
         )
@@ -347,6 +365,9 @@ describe('authenticate user account', () => {
             functions: {
               cleanseInput,
             },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
+            },
           },
         )
 
@@ -396,6 +417,9 @@ describe('authenticate user account', () => {
             },
             functions: {
               cleanseInput,
+            },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
             },
           },
         )
