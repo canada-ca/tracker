@@ -11,6 +11,7 @@ const { createMutationSchema } = require('../mutations')
 
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
+const { userLoaderByUserName } = require('../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -87,6 +88,9 @@ describe('user sign up', () => {
             functions: {
               cleanseInput,
             },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query)
+            }
           },
         )
 
@@ -158,6 +162,9 @@ describe('user sign up', () => {
             functions: {
               cleanseInput,
             },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query)
+            }
           },
         )
 
@@ -230,6 +237,9 @@ describe('user sign up', () => {
             functions: {
               cleanseInput,
             },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query)
+            }
           },
         )
 
@@ -278,6 +288,9 @@ describe('user sign up', () => {
             functions: {
               cleanseInput,
             },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query)
+            }
           },
         )
 
@@ -336,6 +349,9 @@ describe('user sign up', () => {
             functions: {
               cleanseInput,
             },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query)
+            }
           },
         )
 

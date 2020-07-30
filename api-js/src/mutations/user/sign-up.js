@@ -48,7 +48,7 @@ const signUp = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { query, auth: { tokenize }, functions: { cleanseInput } },
+    { query, auth: { tokenize }, loaders: { userLoaderByUserName }, functions: { cleanseInput } },
   ) => {
     // Cleanse Inputs
     const displayName = cleanseInput(args.displayName)
@@ -74,21 +74,9 @@ const signUp = new mutationWithClientMutationId({
     }
 
     // Check to see if user already exists
-    let checkCursor
-    try {
-      checkCursor = await query`
-        FOR user IN users
-          FILTER user.userName == ${userName}
-          RETURN user
-      `
-    } catch (err) {
-      console.error(
-        `Database error when check for existing users during signUp: ${err}`,
-      )
-      throw new Error('Unable to sign up. Please try again.')
-    }
+    const checkUser = await userLoaderByUserName.load(userName)
 
-    if (checkCursor.count > 0) {
+    if (typeof checkUser !== 'undefined') {
       console.warn(
         `User: ${userName} tried to sign up, however there is already an account in use with that username.`,
       )
