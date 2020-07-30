@@ -23,7 +23,6 @@ import WithPseudoBox from './withPseudoBox'
 
 const EmailField = WithPseudoBox(function EmailField({
   name,
-  rightInputElement,
   label,
   forwardedRef,
   ...props
@@ -49,7 +48,6 @@ const EmailField = WithPseudoBox(function EmailField({
           ref={forwardedRef}
           placeholder={i18n._(t`Email`)}
         />
-        {rightInputElement}
       </InputGroup>
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -59,7 +57,6 @@ const EmailField = WithPseudoBox(function EmailField({
 
 EmailField.propTypes = {
   name: string.isRequired,
-  rightInputElement: element,
   forwardedRef: oneOfType([func, shape({ current: elementType })]),
 }
 
