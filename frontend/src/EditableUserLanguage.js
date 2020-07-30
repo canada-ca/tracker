@@ -8,6 +8,8 @@ import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useUserState } from './UserState'
 import { useLingui } from '@lingui/react'
+import { object, string as yupString } from 'yup'
+import { fieldRequirements } from './fieldRequirements'
 
 function EditableUserLanguage({ currentLang }) {
   const { currentUser } = useUserState()
@@ -46,6 +48,12 @@ function EditableUserLanguage({ currentLang }) {
     },
   )
 
+    const validationSchema = object().shape({
+    lang: yupString()
+      .required(i18n._(fieldRequirements.lang.required.message))
+      .oneOf(fieldRequirements.lang.oneOf.types),
+  })
+
   return (
     <Stack spacing="4">
       <Heading as="h3" size="md">
@@ -55,6 +63,7 @@ function EditableUserLanguage({ currentLang }) {
       <Formik
         validateOnBlur={false}
         initialValues={{ lang: currentLang }}
+        validationSchema={validationSchema}
         onSubmit={async values => {
           // Submit update detail mutation
           await updateUserProfile({

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Stack, useToast, Box, Heading, Text } from '@chakra-ui/core'
 import { useMutation } from '@apollo/client'
-import { object } from 'yup'
+import { object, string } from 'yup'
 import { Link as RouteLink, useHistory, useParams } from 'react-router-dom'
 import { Formik } from 'formik'
 import { SIGN_UP } from './graphql/mutations'
@@ -22,11 +22,27 @@ export default function CreateUserPage() {
   const { userOrgToken } = useParams()
 
   const validationSchema = object().shape({
-    email: fieldRequirements.email,
-    displayName: fieldRequirements.displayName,
-    password: fieldRequirements.password,
-    confirmPassword: fieldRequirements.confirmPassword,
-    lang: fieldRequirements.lang,
+    email: string()
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
+    displayName: string().required(
+      i18n._(fieldRequirements.displayName.required.message),
+    ),
+    password: string()
+      .required(i18n._(fieldRequirements.password.required.message))
+      .min(
+        fieldRequirements.password.min.minLength,
+        i18n._(fieldRequirements.password.min.message),
+      ),
+    confirmPassword: string()
+      .required(i18n._(fieldRequirements.confirmPassword.required.message))
+      .oneOf(
+        fieldRequirements.confirmPassword.oneOf.types,
+        i18n._(fieldRequirements.confirmPassword.oneOf.message),
+      ),
+    lang: string()
+      .required(i18n._(fieldRequirements.lang.required.message))
+      .oneOf(fieldRequirements.lang.oneOf.types),
   })
 
   const [signUp, { loading, error }] = useMutation(SIGN_UP, {

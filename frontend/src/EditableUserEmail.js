@@ -24,7 +24,7 @@ import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
 import { useLingui } from '@lingui/react'
-import { object } from 'yup'
+import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
 
@@ -68,6 +68,12 @@ function EditableUserEmail({ detailValue }) {
     },
   )
 
+  const validationSchema = object().shape({
+    email: yupString()
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
+  })
+
   return (
     <Stack>
       <Heading as="h3" size="md">
@@ -99,9 +105,7 @@ function EditableUserEmail({ detailValue }) {
                 initialTouched={{
                   email: true,
                 }}
-                validationSchema={object().shape({
-                  email: fieldRequirements.email,
-                })}
+                validationSchema={validationSchema}
                 onSubmit={async values => {
                   // Submit update detail mutation
                   await updateUserProfile({

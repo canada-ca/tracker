@@ -26,7 +26,7 @@ import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
 import { useLingui } from '@lingui/react'
 import { fieldRequirements } from './fieldRequirements'
-import { object } from 'yup'
+import { object, string as yupString } from 'yup'
 
 function EditableUserDisplayName({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -68,6 +68,12 @@ function EditableUserDisplayName({ detailValue }) {
     },
   )
 
+  const validationSchema = object().shape({
+    displayName: yupString().required(
+      i18n._(fieldRequirements.displayName.required.message),
+    ),
+  })
+
   return (
     <Stack>
       <Heading as="h3" size="md">
@@ -99,9 +105,7 @@ function EditableUserDisplayName({ detailValue }) {
                 initialTouched={{
                   displayName: true,
                 }}
-                validationSchema={object().shape({
-                  displayName: fieldRequirements.displayName,
-                })}
+                validationSchema={validationSchema}
                 onSubmit={async values => {
                   // Submit update detail mutation
                   await updateUserProfile({

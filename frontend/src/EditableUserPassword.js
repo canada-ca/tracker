@@ -23,7 +23,7 @@ import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
 import { useLingui } from '@lingui/react'
-import { object, string } from 'yup'
+import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import PasswordField from './PasswordField'
 import PasswordConfirmation from './PasswordConfirmation'
@@ -68,6 +68,24 @@ function EditableUserPassword() {
     },
   )
 
+  const validationSchema = object().shape({
+    password: yupString()
+      .required(i18n._(fieldRequirements.password.required.message))
+      .min(
+        fieldRequirements.password.min.minLength,
+        i18n._(fieldRequirements.password.min.message),
+      ),
+    confirmPassword: yupString()
+      .required(i18n._(fieldRequirements.confirmPassword.required.message))
+      .oneOf(
+        fieldRequirements.confirmPassword.oneOf.types,
+        i18n._(fieldRequirements.confirmPassword.oneOf.message),
+      ),
+    currentPassword: yupString().required(
+      i18n._(t`Please enter your current password.`),
+    ),
+  })
+
   return (
     <Stack>
       <Heading as="h3" size="md">
@@ -101,13 +119,7 @@ function EditableUserPassword() {
                 initialTouched={{
                   currentPassword: true,
                 }}
-                validationSchema={object().shape({
-                  password: fieldRequirements.password,
-                  confirmPassword: fieldRequirements.confirmPassword,
-                  currentPassword: string().required(
-                    t`Please enter your current password.`,
-                  ),
-                })}
+                validationSchema={validationSchema}
                 onSubmit={async values => {
                   // Submit update detail mutation
                   await updateUserProfile({
