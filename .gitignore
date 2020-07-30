@@ -36,6 +36,7 @@ scanner/logs
 
 # IDE Files
 .idea/
+.vscode/
 
 # jupyter File
 api/.ipynb
