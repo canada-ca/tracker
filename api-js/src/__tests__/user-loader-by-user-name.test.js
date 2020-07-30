@@ -41,10 +41,7 @@ describe('given a userLoaderByUserName dataloader', () => {
   describe('provided a single username', () => {
     it('returns a single user', async () => {
       const userName = 'random@email.ca'
-
       const loader = userLoaderByUserName(query)
-
-      const users = await loader.load(userName)
 
       // Get Query User
       const cursor = await query`
@@ -52,9 +49,15 @@ describe('given a userLoaderByUserName dataloader', () => {
           FILTER user.userName == ${userName}
           RETURN user
       `
-      const expectedUsers = await cursor.next()
+      const expectedUser = await cursor.next()
 
-      expect(users).toEqual(expectedUsers)
+      /* 
+        doing the following causes errors because database connection closes before promise is resolved
+        expect(loader.load(userName)).resolves.toEqual(expectedUser)
+        so as a work around until more testing can be done is the way it has to be done
+      */
+     const user = await loader.load(userName)
+     expect(user).toEqual(expectedUser)
     })
   })
 
@@ -65,10 +68,7 @@ describe('given a userLoaderByUserName dataloader', () => {
         'random@email.ca',
         'test.account@istio.actually.exists',
       ]
-
       const loader = userLoaderByUserName(query)
-
-      const users = await loader.loadMany(userNames)
 
       for (const i in userNames) {
         // Get Query User
@@ -80,7 +80,27 @@ describe('given a userLoaderByUserName dataloader', () => {
         expectedUsers.push(await cursor.next())
       }
 
+      /* 
+        doing the following causes errors because database connection closes before promise is resolved
+        expect(loader.loadMany(userNames)).resolves.toEqual(expectedUsers)
+        so as a work around until more testing can be done is the way it has to be done
+      */
+      const users = await loader.loadMany(userNames)
       expect(users).toEqual(expectedUsers)
     })
   })
+  // describe('database issue is raise', () => {
+  //   it('throws an error', async () => {
+  //     const userName = 'random@email.ca'
+  //     const loader = userLoaderByUserName(query)
+
+  //     expect.assertions(1)
+  //     try {
+  //       await loader.load(userName)
+  //     } catch (err) {
+  //       expect(err).toMatch('err')
+  //     }
+
+  //   })
+  // })
 })
