@@ -26,16 +26,16 @@ export function SummaryGroup() {
     },
   })
 
+  if (error) {
+    return <p>{String(error)}</p>
+  }
+
   if (loading) {
     return (
       <p>
         <Trans>Loading...</Trans>
       </p>
     )
-  }
-
-  if (error) {
-    return <p>{String(error)}</p>
   }
 
   return (

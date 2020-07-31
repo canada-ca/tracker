@@ -69,9 +69,35 @@ export const SEND_PASSWORD_RESET_LINK = gql`
   }
 `
 
+
 export const UPDATE_USER_ROLES = gql`
   mutation UpdateUserRoles($input: UpdateUserRoleInput!) {
     updateUserRole(input: $input) {
+      status
+    }
+  }
+`
+
+export const UPDATE_USER_PROFILE = gql`
+  mutation UpdateUserProfile(
+    $displayName: String
+    $userName: EmailAddress
+    $password: String
+    $confirmPassword: String
+    $preferredLang: LanguageEnums
+    $currentPassword: String
+  ) {
+    updateUserProfile(
+      input: {
+        displayName: $displayName
+        userName: $userName
+        password: $password
+        confirmPassword: $confirmPassword
+        preferredLang: $preferredLang
+        currentPassword: $currentPassword
+      }
+    )
+    {
       status
     }
   }

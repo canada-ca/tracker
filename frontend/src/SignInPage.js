@@ -18,6 +18,7 @@ import { Formik } from 'formik'
 import { useUserState } from './UserState'
 import { AUTHENTICATE } from './graphql/mutations'
 import EmailField from './EmailField'
+import { fieldRequirements } from './fieldRequirements'
 
 export default function SignInPage() {
   const { login } = useUserState()
@@ -26,10 +27,12 @@ export default function SignInPage() {
   const { i18n } = useLingui()
 
   const validationSchema = object().shape({
-    password: string().required(i18n._(t`Password cannot be empty`)),
+    password: string().required(
+      i18n._(fieldRequirements.password.required.message),
+    ),
     email: string()
-      .required(i18n._(t`Email cannot be empty`))
-      .email(i18n._(t`Invalid email`)),
+      .required(i18n._(fieldRequirements.email.required.message))
+      .email(i18n._(fieldRequirements.email.email.message)),
   })
 
   const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
@@ -76,7 +79,7 @@ export default function SignInPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}
-        onSubmit={async (values) => {
+        onSubmit={async values => {
           authenticate({
             variables: { userName: values.email, password: values.password },
           })
