@@ -1,5 +1,11 @@
 import React from 'react'
-import { string } from 'prop-types'
+import {
+  elementType,
+  func,
+  oneOfType,
+  shape,
+  string,
+} from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -14,14 +20,21 @@ import {
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 
-function EmailField({ name, ...props }) {
+const EmailField = WithPseudoBox(function EmailField({
+  name,
+  label,
+  forwardedRef,
+  ...props
+}) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
+
+  const labelText = label === undefined ? <Trans>Email:</Trans> : label
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
       <FormLabel htmlFor="email" fontWeight="bold">
-        <Trans>Email Address:</Trans>
+        {labelText}
       </FormLabel>
       <InputGroup>
         <InputLeftElement>
@@ -31,6 +44,7 @@ function EmailField({ name, ...props }) {
           {...field}
           {...props}
           id="email"
+          ref={forwardedRef}
           placeholder={i18n._(t`Email`)}
         />
       </InputGroup>
@@ -38,10 +52,16 @@ function EmailField({ name, ...props }) {
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   )
-}
+})
 
 EmailField.propTypes = {
   name: string.isRequired,
+  forwardedRef: oneOfType([func, shape({ current: elementType })]),
 }
 
-export default WithPseudoBox(EmailField)
+const withForwardedRef = React.forwardRef((props, ref) => {
+  return <EmailField {...props} forwardedRef={ref} />
+})
+withForwardedRef.displayName = 'EmailField'
+
+export default withForwardedRef

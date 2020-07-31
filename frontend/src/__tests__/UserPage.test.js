@@ -46,7 +46,7 @@ describe('<UserPage />', () => {
   ]
 
   it('renders without error', async () => {
-    const { getByDisplayValue } = render(
+    const { queryByText } = render(
       <UserStateProvider initialState={{ userName, jwt: 'string', tfa: false }}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <MemoryRouter initialEntries={['/']}>
@@ -59,9 +59,6 @@ describe('<UserPage />', () => {
         </MockedProvider>
       </UserStateProvider>,
     )
-
-    const updateUserNameInput = await waitFor(() => getByDisplayValue(userName))
-
-    expect(updateUserNameInput.value).toEqual(userName)
+    await waitFor(() => expect(queryByText(userName)).toBeInTheDocument())
   })
 })

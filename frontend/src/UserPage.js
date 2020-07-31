@@ -1,47 +1,30 @@
 import React from 'react'
-import { Formik } from 'formik'
 import { useHistory, useLocation } from 'react-router-dom'
 import { string } from 'prop-types'
 import {
   Stack,
   SimpleGrid,
   Button,
-  Text,
   Divider,
   Checkbox,
   CheckboxGroup,
   useToast,
+  Heading,
 } from '@chakra-ui/core'
-import { useMutation, useQuery } from '@apollo/client'
-import PasswordConfirmation from './PasswordConfirmation'
-import LanguageSelect from './LanguageSelect'
-
+import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { QUERY_USER } from './graphql/queries'
-import { UPDATE_PASSWORD } from './graphql/mutations'
-import EmailField from './EmailField'
-import DisplayNameField from './DisplayNameField'
+import { Trans } from '@lingui/macro'
+import EditableUserLanguage from './EditableUserLanguage'
+import EditableUserDisplayName from './EditableUserDisplayName'
+import EditableUserEmail from './EditableUserEmail'
+import EditableUserPassword from './EditableUserPassword'
 
 export default function UserPage() {
   const location = useLocation()
   const toast = useToast()
   const history = useHistory()
   const { currentUser, logout } = useUserState()
-
-  const [
-    updatePassword,
-    {
-      loading: updatePasswordLoading,
-      error: updatePasswordError,
-      data: updatePasswordData,
-    },
-  ] = useMutation(UPDATE_PASSWORD, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-  })
 
   const {
     loading: queryUserLoading,
@@ -66,52 +49,30 @@ export default function UserPage() {
     return <p>{String(queryUserError)}</p>
   }
 
-  if (updatePasswordLoading) {
-    return <p>Loading...</p>
-  }
-
-  if (updatePasswordError) {
-    return <p>{String(updatePasswordError)}</p>
-  }
-
   return (
     <SimpleGrid columns={{ md: 1, lg: 2 }} spacing="60px" width="100%">
-      <Formik
-        initialValues={{
-          email: currentUser.userName,
-          lang: queryUserData.userPage.lang,
-          displayName: queryUserData.userPage.displayName,
-        }}
-        onSubmit={(values, actions) => {
-          window.alert('coming soon!!\n' + JSON.stringify(values, null, 2))
-          actions.setSubmitting(false)
-        }}
-      >
-        {({ handleSubmit, _handleChange, _values }) => (
-          <form onSubmit={handleSubmit}>
-            <Stack p={25} spacing={4}>
-              <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-                User Profile
-              </Text>
+      <Stack p={25} spacing={4}>
+        <EditableUserDisplayName
+          detailValue={queryUserData.userPage.displayName}
+        />
 
-              <DisplayNameField name="displayName" />
+        <Divider />
 
-              <EmailField name="email" />
+        <EditableUserEmail detailValue={currentUser.userName} />
 
-              <LanguageSelect name="lang" />
+        <Divider />
 
-              <Button type="submit" variantColor="teal" w={'50%'} mt={5}>
-                Save Changes
-              </Button>
-            </Stack>
-          </form>
-        )}
-      </Formik>
+        <EditableUserPassword />
+
+        <Divider />
+
+        <EditableUserLanguage currentLang={queryUserData.userPage.lang} />
+      </Stack>
 
       <Stack Stack p={25} spacing={4}>
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-          Account Details
-        </Text>
+        <Heading as="h1" size="lg" textAlign="center">
+          <Trans>Account Details</Trans>
+        </Heading>
         <CheckboxGroup
           mt="20px"
           variantColor="teal"
@@ -133,7 +94,7 @@ export default function UserPage() {
             }}
             isDisabled={!!location.state}
           >
-            Enable 2FA
+            <Trans>Enable 2FA</Trans>
           </Button>
           <Button
             leftIcon="edit"
@@ -142,7 +103,7 @@ export default function UserPage() {
               window.alert('coming soon')
             }}
           >
-            Manage API keys
+            <Trans>Manage API keys</Trans>
           </Button>
         </Stack>
 
@@ -163,63 +124,8 @@ export default function UserPage() {
           }}
           isDisabled={!!location.state}
         >
-          Sign Out
+          <Trans>Sign Out</Trans>
         </Button>
-      </Stack>
-      <Stack p={25} spacing={4}>
-        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
-          Change Password
-        </Text>
-
-        {location.state ? (
-          <Text>You can only change the password for your own account.</Text>
-        ) : (
-          <Formik
-            initialValues={{ password: '', confirmPassword: '' }}
-            onSubmit={async (values) => {
-              // Submit GraphQL mutation
-              await updatePassword({
-                variables: {
-                  userName: currentUser.userName,
-                  password: values.password,
-                  confirmPassword: values.confirmPassword,
-                },
-              })
-
-              if (!updatePasswordError) {
-                console.log(updatePasswordData)
-                toast({
-                  title: 'Password Updated.',
-                  description: 'You have successfully changed your password.',
-                  status: 'success',
-                  duration: 9000,
-                  isClosable: true,
-                })
-              }
-            }}
-          >
-            {({ handleSubmit, isSubmitting }) => (
-              <form id="form" onSubmit={handleSubmit}>
-                <Text>
-                  Change your password below by entering and confirming a new
-                  password.
-                </Text>
-                <PasswordConfirmation />
-
-                <Stack mt={6} spacing={4} isInline>
-                  <Button
-                    variantColor="teal"
-                    isLoading={isSubmitting}
-                    type="submit"
-                    id="submitBtn"
-                  >
-                    Change Password
-                  </Button>
-                </Stack>
-              </form>
-            )}
-          </Formik>
-        )}
       </Stack>
     </SimpleGrid>
   )

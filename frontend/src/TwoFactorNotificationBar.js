@@ -1,6 +1,7 @@
 import React from 'react'
 import { Flex, Text, Box, Link } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
+import { Trans } from '@lingui/macro'
 
 export function TwoFactorNotificationBar() {
   return (
@@ -12,12 +13,18 @@ export function TwoFactorNotificationBar() {
         width="100%"
       >
         <Text>
-          You have not enabled Two Factor Authentication. To maximize your
-          account&lsquo;s security,{' '}
-          <Link textDecoration="underline" as={RouteLink} to="/two-factor-code">
-            please enable 2FA
-          </Link>
-          .
+          <Trans>
+            You have not enabled Two Factor Authentication. To maximize your
+            account's security,{' '}
+            <Link
+              textDecoration="underline"
+              as={RouteLink}
+              to="/two-factor-code"
+            >
+              please enable 2FA
+            </Link>
+            .
+          </Trans>
         </Text>
       </Flex>
     </Box>

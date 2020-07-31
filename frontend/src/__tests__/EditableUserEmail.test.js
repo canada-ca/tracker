@@ -1,0 +1,106 @@
+import React from 'react'
+import { waitFor, render } from '@testing-library/react'
+import { ThemeProvider, theme } from '@chakra-ui/core'
+import EditableUserEmail from '../EditableUserEmail'
+import { I18nProvider } from '@lingui/react'
+import { setupI18n } from '@lingui/core'
+import { UserStateProvider } from '../UserState'
+import { MemoryRouter } from 'react-router-dom'
+import { MockedProvider } from '@apollo/client/testing'
+import { fireEvent } from '@testing-library/dom'
+
+describe('<EditableUserEmail />', () => {
+  it('renders', async () => {
+    const { getByText } = render(
+      <UserStateProvider
+        initialState={{
+          userName: 'testUserName@email.com',
+          jwt: 'string',
+          tfa: false,
+        }}
+      >
+        <MockedProvider addTypename={false}>
+          <MemoryRouter initialEntries={['/']}>
+            <I18nProvider i18n={setupI18n()}>
+              <ThemeProvider theme={theme}>
+                <EditableUserEmail />
+              </ThemeProvider>
+            </I18nProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </UserStateProvider>,
+    )
+    await waitFor(() => expect(getByText(/Edit/i)).toBeInTheDocument())
+  })
+  describe("when the 'edit' button is clicked", () => {
+    it('opens the modal', async () => {
+      const { getByText } = render(
+        <UserStateProvider
+          initialState={{
+            userName: 'testUserName@email.com',
+            jwt: 'string',
+            tfa: false,
+          }}
+        >
+          <MockedProvider addTypename={false}>
+            <MemoryRouter initialEntries={['/']}>
+              <I18nProvider i18n={setupI18n()}>
+                <ThemeProvider theme={theme}>
+                  <EditableUserEmail />
+                </ThemeProvider>
+              </I18nProvider>
+            </MemoryRouter>
+          </MockedProvider>
+        </UserStateProvider>,
+      )
+      const editButton = getByText(/Edit/i)
+      fireEvent.click(editButton)
+
+      await waitFor(() => {
+        expect(getByText(/New Email Address:/i)).toBeInTheDocument()
+      })
+    })
+  })
+  describe('with the modal open', () => {
+    describe('and New Email Field is empty', () => {
+      describe('and the form is submitted', () => {
+        it('displays field error', async () => {
+          const { getByText } = render(
+            <UserStateProvider
+              initialState={{
+                userName: 'testUserName@email.com',
+                jwt: 'string',
+                tfa: false,
+              }}
+            >
+              <MockedProvider addTypename={false}>
+                <MemoryRouter initialEntries={['/']}>
+                  <I18nProvider i18n={setupI18n()}>
+                    <ThemeProvider theme={theme}>
+                      <EditableUserEmail />
+                    </ThemeProvider>
+                  </I18nProvider>
+                </MemoryRouter>
+              </MockedProvider>
+            </UserStateProvider>,
+          )
+          const editButton = getByText(/Edit/i)
+          fireEvent.click(editButton)
+
+          await waitFor(() => {
+            getByText('Confirm')
+          })
+
+          const confirmButton = getByText('Confirm')
+          fireEvent.click(confirmButton)
+
+          await waitFor(() => {
+            expect(
+              getByText(/Email cannot be empty/i),
+            ).toBeInTheDocument()
+          })
+        })
+      })
+    })
+  })
+})
