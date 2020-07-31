@@ -41,15 +41,19 @@ export default function AdminPage() {
   }
 
   const adminAffiliations = {}
-  if (data && data.user && data.user[0].affiliations.edges) {
-    for (let i = 0; i < data.user[0].affiliations.edges.length; i++) {
-      if (
-        data.user[0].affiliations.edges[i].node.permission === 'ADMIN' ||
-        data.user[0].affiliations.edges[i].node.permission === 'SUPER_ADMIN'
-      ) {
-        adminAffiliations[
-          data.user[0].affiliations.edges[i].node.organization.acronym
-        ] = data.user[0].affiliations.edges[i].node.permission
+  if (data?.user[0]?.affiliations?.edges) {
+    const {
+      affiliations: { edges },
+    } = data.user[0]
+    for (let i = 0; i < edges.length; i++) {
+      const {
+        node: {
+          permission,
+          organization: { acronym },
+        },
+      } = edges[i]
+      if (permission === 'ADMIN' || permission === 'SUPER_ADMIN') {
+        adminAffiliations[acronym] = permission
       }
     }
   }
