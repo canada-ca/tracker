@@ -22,10 +22,6 @@ describe('user sign up', () => {
   let query, drop, truncate, migrate, collections, schema
 
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
@@ -35,9 +31,15 @@ describe('user sign up', () => {
   let consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
+    console.error = mockedError
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate, collections } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
     await truncate()
   })
 
@@ -89,8 +91,8 @@ describe('user sign up', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query)
-            }
+              userLoaderByUserName: userLoaderByUserName(query),
+            },
           },
         )
 
@@ -163,8 +165,8 @@ describe('user sign up', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query)
-            }
+              userLoaderByUserName: userLoaderByUserName(query),
+            },
           },
         )
 
@@ -238,8 +240,8 @@ describe('user sign up', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query)
-            }
+              userLoaderByUserName: userLoaderByUserName(query),
+            },
           },
         )
 
@@ -289,8 +291,8 @@ describe('user sign up', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query)
-            }
+              userLoaderByUserName: userLoaderByUserName(query),
+            },
           },
         )
 
@@ -350,8 +352,8 @@ describe('user sign up', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query)
-            }
+              userLoaderByUserName: userLoaderByUserName(query),
+            },
           },
         )
 
@@ -361,6 +363,127 @@ describe('user sign up', () => {
         expect(consoleOutput).toEqual([
           'User: test.account@istio.actually.exists tried to sign up, however there is already an account in use with that username.',
         ])
+      })
+    })
+    describe('database error occurrs when inserting user info into DB', () => {
+      it('throws an error', async () => {
+        const loader = userLoaderByUserName(query)
+
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+
+        try {
+          await graphql(
+            schema,
+            `
+              mutation {
+                signUp(
+                  input: {
+                    displayName: "Test Account"
+                    userName: "test.account@istio.actually.exists"
+                    password: "password123"
+                    confirmPassword: "password123"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  authResult {
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLang
+                      tfaValidated
+                      emailValidated
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              query,
+              auth: {
+                tokenize,
+              },
+              functions: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: loader,
+              },
+            },
+          )
+        } catch (err) {
+          expect(err).toEqual(new Error('Unable to sign up. Please try again.'))
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error occurred when test.account@istio.actually.exists tried to sign up: Error: Database error occurred.`,
+        ])
+      })
+      describe('cursor error occurs when retreiving newly created user', () => {
+        it('throws an error', async () => {
+          const loader = userLoaderByUserName(query)
+
+          const cursor = {
+            next() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          query = jest.fn().mockReturnValue(cursor)
+
+          try {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  signUp(
+                    input: {
+                      displayName: "Test Account"
+                      userName: "test.account@istio.actually.exists"
+                      password: "password123"
+                      confirmPassword: "password123"
+                      preferredLang: FRENCH
+                    }
+                  ) {
+                    authResult {
+                      user {
+                        id
+                        userName
+                        displayName
+                        preferredLang
+                        tfaValidated
+                        emailValidated
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                query,
+                auth: {
+                  tokenize,
+                },
+                functions: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: loader,
+                },
+              },
+            )
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to sign up. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Cursor error occurred when trying to get new user test.account@istio.actually.exists: Error: Cursor error occurred.`,
+          ])
+        })
       })
     })
   })
