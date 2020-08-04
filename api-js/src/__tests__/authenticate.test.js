@@ -21,11 +21,6 @@ describe('authenticate user account', () => {
   let query, drop, truncate, migrate, schema
 
   beforeAll(async () => {
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
     // Create GQL Schema
     schema = new GraphQLSchema({
       query: createQuerySchema(),
@@ -36,9 +31,16 @@ describe('authenticate user account', () => {
   let consoleOutput = []
   const mockedInfo = (output) => consoleOutput.push(output)
   const mockedWarn = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
     console.info = mockedInfo
     console.warn = mockedWarn
+    console.error = mockedError
+    // Generate DB Items
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
     await truncate()
     await graphql(
       schema,
@@ -211,6 +213,70 @@ describe('authenticate user account', () => {
         const checkUser = await updateCursor.next()
 
         expect(checkUser.failedLoginAttempts).toEqual(0)
+      })
+    })
+    describe('Database error occurs after successful login when failed logins is being reset', () => {
+      it('throws an error', async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const user = await userCursor.next()
+
+        const loader = userLoaderByUserName(query)
+
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+
+        try {
+          await graphql(
+            schema,
+            `
+              mutation {
+                authenticate(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "password123"
+                  }
+                ) {
+                  authResult {
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLang
+                      tfaValidated
+                      emailValidated
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              query,
+              auth: {
+                tokenize,
+              },
+              functions: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: loader,
+              },
+            },
+          )
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to authenticate, please try again.'),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: Error: Database error occurred.`,
+        ])
       })
     })
   })
@@ -429,6 +495,70 @@ describe('authenticate user account', () => {
         })
         expect(consoleOutput).toEqual([
           `User: test.account@istio.does.not.actually.exists attempted to authenticate, no account is associated with this email.`,
+        ])
+      })
+    })
+    describe('Database error occurs when failed logins are being incremented ', () => {
+      it('throws an error', async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const user = await userCursor.next()
+
+        const loader = userLoaderByUserName(query)
+
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+
+        try {
+          await graphql(
+            schema,
+            `
+              mutation {
+                authenticate(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    password: "321password"
+                  }
+                ) {
+                  authResult {
+                    user {
+                      id
+                      userName
+                      displayName
+                      preferredLang
+                      tfaValidated
+                      emailValidated
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              query,
+              auth: {
+                tokenize,
+              },
+              functions: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: loader,
+              },
+            },
+          )
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to authenticate, please try again.'),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error ocurred when incrementing user: ${user._key} failed login attempts: Error: Database error occurred.`,
         ])
       })
     })
