@@ -1,7 +1,7 @@
 const validator = require('validator')
 
 const cleanseInput = (input) => {
-  if (typeof input === 'undefined') {
+  if (typeof input !== 'string' && typeof input !== 'number') {
     return ''
   }
   input = validator.trim(input)
