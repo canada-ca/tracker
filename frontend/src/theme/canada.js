@@ -9,7 +9,6 @@ const shadows = {
 }
 
 const colors = {
-  darkgray: '#444444',
   strong: '#5CB95B',
   moderate: '#ffbf47',
   weak: '#e53e3e',
@@ -73,6 +72,25 @@ const fontSizes = {
   '6xl': '4rem',
 }
 
+const sizes = {
+  icons: {
+    sm: '1rem',
+    md: '1.25rem',
+    lg: '1.5rem',
+  },
+  buttons: {
+    sm: '1rem',
+    md: '1.25rem',
+    lg: '1.5rem',
+  },
+  boxes: {
+    '2': '20rem',
+  },
+  width: {
+    '6': '60rem',
+  },
+}
+
 const borders = {
   '3px': '3px solid',
 }
@@ -86,7 +104,15 @@ const borderWidths = {
 }
 
 const space = {
+  '0': '0',
+  '1': '0.25rem',
+  '2': '0.5rem',
+  '3': '0.75rem',
+  '4': '1rem',
+  '5': '1.25rem',
+  '6': '1.5rem',
   '7': '1.75rem',
+  '8': '2rem',
 }
 
 const customIcons = {
@@ -132,6 +158,10 @@ const canada = {
   icons: {
     ...chakraTheme.icons,
     ...customIcons,
+  },
+  sizes: {
+    ...chakraTheme.sizes,
+    ...sizes,
   },
 }
 

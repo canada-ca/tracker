@@ -116,7 +116,7 @@ export function AdminDomains({ domainsData, orgName }) {
           />
         </InputGroup>
         <Button
-          width={'100%'}
+          width="100%"
           leftIcon="add"
           variantColor="blue"
           onClick={() => {

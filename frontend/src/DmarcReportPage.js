@@ -91,7 +91,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
 
   const formattedBarData = {
-    periods: barData.demoDmarcReportSummaryList.map((entry) => {
+    periods: barData.demoDmarcReportSummaryList.map(entry => {
       return { month: entry.month, year: entry.year, ...entry.categoryTotals }
     }),
   }

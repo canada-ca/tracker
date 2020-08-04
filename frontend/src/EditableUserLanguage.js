@@ -83,7 +83,7 @@ function EditableUserLanguage({ currentLang }) {
               <Button
                 type="submitBtn"
                 isLoading={isSubmitting}
-                px="2rem"
+                px="8"
                 variantColor="teal"
               >
                 <Trans>Save Language</Trans>

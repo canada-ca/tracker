@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Text, Stack, Button, Box, useToast } from '@chakra-ui/core'
+import { Stack, Button, Box, useToast, Heading } from '@chakra-ui/core'
 import EmailField from './EmailField'
 import { object, string } from 'yup'
 import { Formik } from 'formik'
@@ -74,12 +74,12 @@ export default function ForgotPasswordPage() {
             name="form"
           >
             <Stack align="center">
-              <Text fontSize="2xl" mb="4" textAlign={['center']}>
+              <Heading as="h1" fontSize="2xl" mb="12">
                 <Trans>
                   Enter your user account's verified email address and we will
                   send you a password reset link.
                 </Trans>
-              </Text>{' '}
+              </Heading>
               <br />
             </Stack>
 

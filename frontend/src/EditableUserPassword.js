@@ -91,7 +91,7 @@ function EditableUserPassword() {
 
       <Stack isInline align="center">
         <Icon name="lock" color="gray.300" />
-        <Text fontSize="0.7rem">∗∗∗∗∗∗∗∗∗∗∗</Text>
+        <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
         <Button ml="auto" onClick={onOpen} size="sm" variantColor="teal">
           <Trans>Edit</Trans>
         </Button>

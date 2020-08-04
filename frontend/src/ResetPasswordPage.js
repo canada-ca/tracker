@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Text, Stack, Button, Box, useToast } from '@chakra-ui/core'
+import { Heading, Stack, Button, Box, useToast } from '@chakra-ui/core'
 import PasswordConfirmation from './PasswordConfirmation'
 import { object, string, ref } from 'yup'
 import { Formik } from 'formik'
@@ -82,9 +82,9 @@ export default function ResetPasswordPage() {
             name="form"
           >
             <Stack align="center">
-              <Text fontSize="2xl" mb="4">
+              <Heading as="h1" fontSize="2xl" mb="12">
                 <Trans>Enter and confirm your new password.</Trans>
-              </Text>
+              </Heading>
             </Stack>
 
             <br />

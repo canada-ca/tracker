@@ -9,10 +9,10 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
       bg="white"
       rounded="lg"
       overflow="hidden"
-      boxShadow={'medium'}
+      boxShadow="medium"
       width="min-content"
     >
-      <Box bg="gray.550" px="2em">
+      <Box bg="gray.550" px="8">
         <Text
           fontSize="xl"
           fontWeight="semibold"
@@ -31,7 +31,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
         </Text>
       </Box>
 
-      <Box width={'20em'}>
+      <Box width="boxes.2">
         <PieChart
           data={data.categories.map(({ name, count }) => ({
             title: categoryDisplay[name].name,
@@ -50,7 +50,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
               <Text
                 key={`${name}:Badge:${count}:${percentage}`}
                 color="white"
-                px="0.5em"
+                px="2"
                 backgroundColor={categoryDisplay[name].color}
                 fontWeight="bold"
                 fontSize="sm"
