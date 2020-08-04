@@ -9,7 +9,10 @@ const { userLoaderByUserName } = require('../loaders')
 describe('given a userLoaderByUserName dataloader', () => {
   let query, drop, truncate, migrate, collections
 
+  let consoleOutput = []
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
+    console.error = mockedError
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
@@ -32,6 +35,7 @@ describe('given a userLoaderByUserName dataloader', () => {
       tfaValidated: false,
       emailValidated: false,
     })
+    consoleOutput = []
   })
 
   afterAll(async () => {
@@ -56,8 +60,8 @@ describe('given a userLoaderByUserName dataloader', () => {
         expect(loader.load(userName)).resolves.toEqual(expectedUser)
         so as a work around until more testing can be done is the way it has to be done
       */
-     const user = await loader.load(userName)
-     expect(user).toEqual(expectedUser)
+      const user = await loader.load(userName)
+      expect(user).toEqual(expectedUser)
     })
   })
 
@@ -89,18 +93,45 @@ describe('given a userLoaderByUserName dataloader', () => {
       expect(users).toEqual(expectedUsers)
     })
   })
-  // describe('database issue is raise', () => {
-  //   it('throws an error', async () => {
-  //     const userName = 'random@email.ca'
-  //     const loader = userLoaderByUserName(query)
+  describe('database issue is raise', () => {
+    it('throws an error', async () => {
+      const userName = 'random@email.ca'
 
-  //     expect.assertions(1)
-  //     try {
-  //       await loader.load(userName)
-  //     } catch (err) {
-  //       expect(err).toMatch('err')
-  //     }
+      query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+      const loader = userLoaderByUserName(query)
 
-  //   })
-  // })
+      try {
+        await loader.load(userName)
+      } catch (err) {
+        expect(err).toEqual(new Error('Unable to find user, please try again.'))
+      }
+
+      expect(consoleOutput).toEqual([
+        `Database error occurred when running batchUsersByUserName: Error: Database error occurred.`,
+      ])
+    })
+  })
+  describe('cursor issue is raised', () => {
+    it('throws an error', async () => {
+      const userName = 'random@email.ca'
+
+      const cursor = {
+        each() {
+          throw new Error('Cursor error occurred.')
+        },
+      }
+      query = jest.fn().mockReturnValue(cursor)
+      const loader = userLoaderByUserName(query)
+
+      try {
+        await loader.load(userName)
+      } catch (err) {
+        expect(err).toEqual(new Error('Unable to find user, please try again.'))
+      }
+
+      expect(consoleOutput).toEqual([
+        `Cursor error occurred during batchUsersByUserName: Error: Cursor error occurred.`,
+      ])
+    })
+  })
 })
