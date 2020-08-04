@@ -45,7 +45,9 @@ function EditableUserEmail({ detailValue }) {
       },
       onError: ({ message }) => {
         toast({
-          title: i18n._(t`An error occurred while updating your email address.`),
+          title: i18n._(
+            t`An error occurred while updating your email address.`,
+          ),
           description: message,
           status: 'error',
           duration: 9000,
@@ -93,7 +95,7 @@ function EditableUserEmail({ detailValue }) {
             initialFocusRef={initialFocusRef}
           >
             <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
+            <ModalContent pb="4" {...styles}>
               <Formik
                 validateOnBlur={false}
                 initialValues={{
@@ -121,7 +123,7 @@ function EditableUserEmail({ detailValue }) {
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                      <Stack spacing={4} p={25}>
+                      <Stack spacing="4" p="6">
                         <Heading as="h3" size="sm">
                           <Trans>Current Email:</Trans>
                         </Heading>
@@ -141,7 +143,7 @@ function EditableUserEmail({ detailValue }) {
                         variantColor="teal"
                         isLoading={isSubmitting}
                         type="submit"
-                        mr={4}
+                        mr="4"
                       >
                         <Trans>Confirm</Trans>
                       </Button>

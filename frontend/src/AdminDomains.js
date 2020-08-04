@@ -97,11 +97,11 @@ export function AdminDomains({ domainsData, orgName }) {
   }
 
   return (
-    <Stack mb={6} w="100%">
+    <Stack mb="6" w="100%">
       <Text fontSize="2xl" fontWeight="bold">
         <Trans>Domain List</Trans>
       </Text>
-      <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
+      <SimpleGrid mb="6" columns={{ md: 1, lg: 2 }} spacing="15px">
         <InputGroup>
           <InputLeftElement>
             <Icon name="search" color="gray.300" />
@@ -116,7 +116,7 @@ export function AdminDomains({ domainsData, orgName }) {
           />
         </InputGroup>
         <Button
-          width="100%"
+          width={['100%', '75%']}
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
@@ -163,7 +163,6 @@ export function AdminDomains({ domainsData, orgName }) {
         </Stack>
       </Stack>
 
-      <Divider />
       {domainList.length > 0 && (
         <PaginationButtons
           perPage={domainsPerPage}

@@ -105,10 +105,10 @@ function PasswordConfirmation({
               placeholder={i18n._(t`Password`)}
               type={passwordShow ? 'text' : 'password'}
             />
-            <InputRightElement width="4.5rem">
+            <InputRightElement width="width.5">
               <Button
                 id="passShowButton"
-                h="1.75rem"
+                h="buttons.lg"
                 size="sm"
                 onClick={handlePasswordShow}
               >
@@ -151,10 +151,10 @@ function PasswordConfirmation({
               placeholder={i18n._(t`Confirm password`)}
               type={confirmShow ? 'text' : 'password'}
             />
-            <InputRightElement width="4.5rem">
+            <InputRightElement width="width.5">
               <Button
                 id="confShowButton"
-                h="1.75rem"
+                h="buttons.lg"
                 size="sm"
                 onClick={handleConfirmShow}
               >

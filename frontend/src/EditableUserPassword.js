@@ -137,25 +137,23 @@ function EditableUserPassword() {
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                      <Stack spacing={4} p={25}>
-                        <Stack spacing={4} align="center">
-                          <PasswordField
-                            name="currentPassword"
-                            label={t`Current Password:`}
-                            width="100%"
-                            ref={initialFocusRef}
-                          />
-                          <Text textAlign="center">
-                            <Trans>
-                              Enter and confirm your new password below:
-                            </Trans>
-                          </Text>
-                          <PasswordConfirmation
-                            width="100%"
-                            passwordLabel={t`New Password:`}
-                            confirmPasswordLabel={t`Confirm New Password:`}
-                          />
-                        </Stack>
+                      <Stack spacing={4} p="6" align="center">
+                        <PasswordField
+                          name="currentPassword"
+                          label={t`Current Password:`}
+                          width="100%"
+                          ref={initialFocusRef}
+                        />
+                        <Text textAlign="center">
+                          <Trans>
+                            Enter and confirm your new password below:
+                          </Trans>
+                        </Text>
+                        <PasswordConfirmation
+                          width="100%"
+                          passwordLabel={t`New Password:`}
+                          confirmPasswordLabel={t`Confirm New Password:`}
+                        />
                       </Stack>
                     </ModalBody>
 
@@ -164,7 +162,7 @@ function EditableUserPassword() {
                         variantColor="teal"
                         isLoading={isSubmitting}
                         type="submit"
-                        mr={4}
+                        mr="4"
                       >
                         <Trans>Confirm</Trans>
                       </Button>

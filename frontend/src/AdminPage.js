@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Stack, Text, Select, Divider, useToast } from '@chakra-ui/core'
+import { Stack, Text, Select, useToast } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Layout } from './Layout'
@@ -102,7 +102,6 @@ export default function AdminPage() {
                 orgName={orgName}
                 permission={adminAffiliations[orgName]}
               />
-              <Divider />
               <Trans>
                 *search bars do not actively search databases currently. They
                 are used to demonstrate the 'add' button feature

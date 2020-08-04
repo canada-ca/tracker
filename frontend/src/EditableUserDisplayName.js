@@ -93,7 +93,7 @@ function EditableUserDisplayName({ detailValue }) {
             initialFocusRef={initialFocusRef}
           >
             <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
+            <ModalContent pb="4" {...styles}>
               <Formik
                 validateOnBlur={false}
                 initialValues={{
@@ -121,7 +121,7 @@ function EditableUserDisplayName({ detailValue }) {
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                      <Stack spacing={4} p={25}>
+                      <Stack spacing="4" p="6">
                         <Heading as="h3" size="sm">
                           <Trans>Current Display Name:</Trans>
                         </Heading>
@@ -141,7 +141,7 @@ function EditableUserDisplayName({ detailValue }) {
                         variantColor="teal"
                         isLoading={isSubmitting}
                         type="submit"
-                        mr={4}
+                        mr="4"
                       >
                         <Trans>Confirm</Trans>
                       </Button>

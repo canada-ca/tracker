@@ -48,8 +48,13 @@ const PasswordField = WithPseudoBox(function PasswordField({
           {...field}
           {...props}
         />
-        <InputRightElement width="4.5rem">
-          <Button id="showButton" h="1.75rem" size="sm" onClick={handleClick}>
+        <InputRightElement width="width.5">
+          <Button
+            id="showButton"
+            h="buttons.lg"
+            size="sm"
+            onClick={handleClick}
+          >
             <Icon name={show ? 'view-off' : 'view'} />
           </Button>
         </InputRightElement>

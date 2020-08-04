@@ -150,11 +150,11 @@ export default function UserList({
   }
 
   return (
-    <Stack mb={6} w="100%">
+    <Stack mb="6" w="100%">
       <Text fontSize="2xl" fontWeight="bold">
         <Trans>User List</Trans>
       </Text>
-      <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
+      <SimpleGrid mb="6" columns={{ md: 1, lg: 2 }} spacing="15px">
         <InputGroup>
           <InputLeftElement>
             <Icon name="search" color="gray.300" />
@@ -169,6 +169,7 @@ export default function UserList({
           />
         </InputGroup>
         <Button
+          width={['100%', '75%']}
           leftIcon="add"
           variantColor="blue"
           onClick={() => {
@@ -253,7 +254,7 @@ export default function UserList({
           )
         })
       )}
-      <Divider />
+
       {userList.length > 0 && (
         <PaginationButtons
           perPage={usersPerPage}

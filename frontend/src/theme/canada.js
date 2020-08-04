@@ -12,7 +12,6 @@ const colors = {
   strong: '#5CB95B',
   moderate: '#ffbf47',
   weak: '#e53e3e',
-  unknown: '#B0B0B0',
   green: {
     50: '#F2FFF0',
     100: '#C3EEBF',
@@ -87,7 +86,8 @@ const sizes = {
     '2': '20rem',
   },
   width: {
-    '6': '60rem',
+    '5': '5rem',
+    '60': '60rem',
   },
 }
 

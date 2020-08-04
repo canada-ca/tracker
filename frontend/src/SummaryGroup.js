@@ -43,7 +43,7 @@ export function SummaryGroup() {
       columns={[1, 1, 1, 2]}
       spacing="30px"
       justifyItems="center"
-      maxWidth="width.6"
+      maxWidth="width.60"
       mx="auto"
       p="8"
     >
