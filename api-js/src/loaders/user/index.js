@@ -1,7 +1,7 @@
 const { userLoaderByUserName } = require('./load-user-by-username')
-const { userLoaderByIds } = require('./load-users-by-ids')
+const { userLoaderById } = require('./load-users-by-id')
 
 module.exports = {
   userLoaderByUserName,
-  userLoaderByIds,
+  userLoaderById,
 }

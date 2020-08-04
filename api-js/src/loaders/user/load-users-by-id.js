@@ -1,6 +1,6 @@
 const DataLoader = require('dataloader')
 
-module.exports.userLoaderByIds = (query) =>
+module.exports.userLoaderById = (query) =>
   new DataLoader(async (ids) => {
     let cursor
 
