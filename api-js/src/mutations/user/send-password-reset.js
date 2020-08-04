@@ -48,7 +48,7 @@ const sendPasswordResetLink = new mutationWithClientMutationId({
       }
 
       const token = tokenize({
-        parameters: { user_id: user._key, current_password: user.password },
+        parameters: { userId: user._key, currentPassword: user.password },
       })
       const resetUrl = `${request.protocol}://${request.get(
         'host',
