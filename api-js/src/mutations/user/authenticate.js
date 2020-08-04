@@ -29,7 +29,12 @@ const authenticate = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { query, auth: { tokenize }, loaders: { userLoaderByUserName }, functions: { cleanseInput } },
+    {
+      query,
+      auth: { tokenize },
+      loaders: { userLoaderByUserName },
+      functions: { cleanseInput },
+    },
   ) => {
     // Cleanse Inputs
     const userName = cleanseInput(args.userName).toLowerCase()
@@ -37,6 +42,7 @@ const authenticate = new mutationWithClientMutationId({
 
     // Gather sign in user
     const user = await userLoaderByUserName.load(userName)
+
     if (typeof user === 'undefined') {
       console.warn(
         `User: ${userName} attempted to authenticate, no account is associated with this email.`,
@@ -53,26 +59,26 @@ const authenticate = new mutationWithClientMutationId({
         'Too many failed login attempts, please reset your password, and try again.',
       )
     } else {
-      // Reset Failed Login attempts
-      try {
-        await query`
-          FOR u IN users
-            UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
-        `
-      } catch (err) {
-        console.error(
-          `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication.`,
-        )
-        throw new Error('Unable to authenticate, please try again.')
-      }
       // Check to see if passwords match
       if (bcrypt.compareSync(password, user.password)) {
         const token = tokenize({ parameters: { userId: user._key } })
 
+        // Reset Failed Login attempts
+        try {
+          await query`
+                  FOR u IN users
+                    UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
+                `
+        } catch (err) {
+          console.error(
+            `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: ${err}`,
+          )
+          throw new Error('Unable to authenticate, please try again.')
+        }
+
         console.info(
           `User: ${user._key} successfully authenticated their account.`,
         )
-
         user.id = user._key
 
         return {
