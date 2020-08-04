@@ -14,7 +14,11 @@ const { makeMigrations } = require('./migrations')
 const { tokenize, verifyToken } = require('./src/auth')
 const { cleanseInput } = require('./src/validators')
 const { userLoaderByUserName, userLoaderById } = require('./src/loaders')
-const { sendPasswordResetEmail } = require('./src/notify')
+const {
+  sendOrgInviteCreateAccount,
+  sendOrgInviteEmail,
+  sendPasswordResetEmail,
+} = require('./src/notify')
 
 ;(async () => {
   const { migrate } = await ArangoTools({ rootPass, url })
@@ -34,6 +38,8 @@ const { sendPasswordResetEmail } = require('./src/notify')
       userLoaderByIds: userLoaderById(query),
     },
     notify: {
+      sendOrgInviteCreateAccount,
+      sendOrgInviteEmail,
       sendPasswordResetEmail,
     },
   }).listen(PORT, (err) => {
