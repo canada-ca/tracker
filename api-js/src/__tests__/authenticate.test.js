@@ -97,6 +97,7 @@ describe('authenticate user account', () => {
               }
             ) {
               authResult {
+                authToken
                 user {
                   id
                   userName
@@ -135,6 +136,7 @@ describe('authenticate user account', () => {
         data: {
           authenticate: {
             authResult: {
+              authToken: tokenize({ parameters: { userId: user}}),
               user: {
                 id: `${toGlobalId('users', user._key)}`,
                 userName: 'test.account@istio.actually.exists',
