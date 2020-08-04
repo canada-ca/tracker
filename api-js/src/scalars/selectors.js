@@ -3,13 +3,13 @@ const { Kind, GraphQLError, GraphQLScalarType } = require('graphql')
 const validate = (value) => {
   const SLUG_REGEX = /\w+\._domainkey/
 
-  if (typeof value !== typeof []) {
-    throw new TypeError(`Value is not list: ${value}`)
+  if (!Array.isArray(value)) {
+    throw new TypeError(`Value is not list: ${typeof value}`)
   }
 
   for (var i = 0; i < value.length; i++) {
-    if (typeof value[i] !== typeof String) {
-      throw new TypeError(`Value is not string: ${value[i]}`)
+    if (typeof value[i] !== typeof 'string') {
+      throw new TypeError(`Value is not a string: ${value[i]}`)
     }
     if (!SLUG_REGEX.test(value[i])) {
       throw new TypeError(`Value is not a vaild selector: ${value[i]}`)

@@ -4,11 +4,11 @@ const validate = (value) => {
   const ACRONYM_REGEX = /^[A-Z0-9_-]{1,50}$/
 
   if (typeof value !== 'string') {
-    throw new TypeError(`Value is not string: ${value}`)
+    throw new TypeError(`Value is not string: ${typeof value}`)
   }
 
   if (!ACRONYM_REGEX.test(value)) {
-    throw new TypeError(`Value is not a vaild email address: ${value}`)
+    throw new TypeError(`Value is not a vaild acronym: ${value}`)
   }
   return value
 }

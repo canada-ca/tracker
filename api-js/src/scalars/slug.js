@@ -4,7 +4,7 @@ const validate = (value) => {
   const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
   if (typeof value !== 'string') {
-    throw new TypeError(`Value is not sting: ${value}`)
+    throw new TypeError(`Value is not string: ${typeof value}`)
   }
 
   if (!SLUG_REGEX.test(value)) {

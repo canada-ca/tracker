@@ -4,7 +4,7 @@ const validate = (value) => {
   const YEAR_REGEX = /^\d{4}$/
 
   if (typeof value !== 'string') {
-    throw new TypeError(`Value is not string: ${value}`)
+    throw new TypeError(`Value is not string: ${typeof value}`)
   }
 
   if (!YEAR_REGEX.test(value)) {
