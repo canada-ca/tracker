@@ -14,25 +14,25 @@ export function PaginationButtons({
       <IconButton
         icon="arrow-left"
         onClick={() => paginate(1)}
-        disabled={currentPage === 1}
+        disabled={currentPage <= 1}
         aria-label="Skip to first page"
       />
       <IconButton
         icon="chevron-left"
         onClick={() => paginate(currentPage - 1)}
-        disabled={currentPage === 1}
+        disabled={currentPage <= 1}
         aria-label="Previous page"
       />
       <IconButton
         icon="chevron-right"
         onClick={() => paginate(currentPage + 1)}
-        disabled={currentPage === Math.ceil(total / perPage)}
+        disabled={currentPage >= Math.ceil(total / perPage)}
         aria-label="Next page"
       />
       <IconButton
         icon="arrow-right"
         onClick={() => paginate(Math.ceil(total / perPage))}
-        disabled={currentPage === Math.ceil(total / perPage)}
+        disabled={currentPage >= Math.ceil(total / perPage)}
         aria-label="Skip to last page"
       />
       <Text fontWeight="semibold">
@@ -42,11 +42,11 @@ export function PaginationButtons({
         <Select
           w="30"
           value={perPage}
-          onChange={(e) => {
+          onChange={e => {
             setPerPage(Number(e.target.value))
           }}
         >
-          {[5, 10, 20].map((perPage) => (
+          {[5, 10, 20].map(perPage => (
             <option key={perPage} value={perPage}>
               Show {perPage}
             </option>

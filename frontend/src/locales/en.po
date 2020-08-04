@@ -131,9 +131,9 @@ msgstr "Add Domain"
 msgid "Admin"
 msgstr "Admin"
 
-#: src/App.js:77
-msgid "Admin Portal"
-msgstr "Admin Portal"
+#: src/App.js:75
+msgid "Admin Profile"
+msgstr "Admin Profile"
 
 #: src/ForgotPasswordPage.js:40
 msgid "An email was sent with a link to reset your password"
@@ -145,6 +145,7 @@ msgstr "An email was sent with a link to reset your password"
 #: src/EditableUserLanguage.js:28
 #: src/EditableUserPassword.js:49
 #: src/SignInPage.js:38
+#: src/UserList.js:44
 msgid "An error occurred."
 msgstr "An error occurred."
 
@@ -1781,3 +1782,35 @@ msgstr "{domainName}"
 #: src/DmarcGuidancePage.js:42
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/UserList.js:209
+msgid "READ"
+msgstr "READ"
+
+#: src/UserList.js:212
+msgid "WRITE"
+msgstr "WRITE"
+
+#: src/UserList.js:215
+msgid "ADMIN"
+msgstr "ADMIN"
+
+#: src/UserList.js:225
+msgid "Apply"
+msgstr "Apply"
+
+#: src/UserList.js:43
+msgid "Unable to change user role, please try again."
+msgstr "Unable to change user role, please try again."
+
+#: src/UserList.js:52
+msgid "Role updated"
+msgstr "Role updated"
+
+#: src/UserList.js:53
+msgid "The user's role has been successfully updated"
+msgstr "The user's role has been successfully updated"
+
+#: src/UserList.js:210
+msgid "Role:"
+msgstr "Role:"
