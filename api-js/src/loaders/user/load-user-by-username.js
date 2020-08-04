@@ -17,18 +17,16 @@ module.exports.userLoaderByUserName = (query) =>
       throw new Error('Unable to find user, please try again.')
     }
 
-    let user
     const userMap = {}
-    while (cursor.hasNext()) {
-      try {
-        user = await cursor.next()
-      } catch (err) {
-        console.error(
-          `Cursor error occurred during batchUsersByUserName: ${err}`,
-        )
-        throw new Error('Unable to find user, please try again.')
-      }
-      userMap[user.userName] = user
+    try {
+      await cursor.each((user) => {
+        userMap[user.userName] = user
+      })
+    } catch (err) {
+      console.error(
+        `Cursor error occurred during batchUsersByUserName: ${err}`,
+      )
+      throw new Error('Unable to find user, please try again.')
     }
 
     return userNames.map((userName) => userMap[userName])
