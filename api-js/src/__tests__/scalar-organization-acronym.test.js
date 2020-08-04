@@ -14,16 +14,20 @@ describe('given a acronym scalar', () => {
       describe('given an invalid acroynm', () => {
         it('throws type error', () => {
           const testAcronym = 'not an acronym'
-          expect(() => Acronym.serialize(testAcronym)).toThrow(new TypeError(`Value is not a vaild acronym: ${testAcronym}`))
+          expect(() => Acronym.serialize(testAcronym)).toThrow(
+            new TypeError(`Value is not a vaild acronym: ${testAcronym}`),
+          )
         })
       })
     })
     describe('given invalid inputs', () => {
-      [123, {}, [], null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when serializing ${stringify(invalidInput)}`, () => {
-          expect(() => 
-            Acronym.serialize(invalidInput),
-          ).toThrow(new TypeError(`Value is not string: ${typeof invalidInput}`))
+      ;[123, {}, [], null, undefined, true].forEach((invalidInput) => {
+        it(`throws an error when serializing ${stringify(
+          invalidInput,
+        )}`, () => {
+          expect(() => Acronym.serialize(invalidInput)).toThrow(
+            new TypeError(`Value is not string: ${typeof invalidInput}`),
+          )
         })
       })
     })
@@ -36,15 +40,19 @@ describe('given a acronym scalar', () => {
       })
       describe('given an invalid acroynm', () => {
         const testAcronym = 'not an acronym'
-        expect(() => Acronym.parseValue(testAcronym)).toThrow(new TypeError(`Value is not a vaild acronym: ${testAcronym}`))
+        expect(() => Acronym.parseValue(testAcronym)).toThrow(
+          new TypeError(`Value is not a vaild acronym: ${testAcronym}`),
+        )
       })
     })
     describe('given invalid inputs', () => {
-      [123, {}, [], null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when serializing ${stringify(invalidInput)}`, () => {
-          expect(() => 
-            Acronym.parseValue(invalidInput),
-          ).toThrow(new TypeError(`Value is not string: ${typeof invalidInput}`))
+      ;[123, {}, [], null, undefined, true].forEach((invalidInput) => {
+        it(`throws an error when serializing ${stringify(
+          invalidInput,
+        )}`, () => {
+          expect(() => Acronym.parseValue(invalidInput)).toThrow(
+            new TypeError(`Value is not string: ${typeof invalidInput}`),
+          )
         })
       })
     })
@@ -65,7 +73,9 @@ describe('given a acronym scalar', () => {
           kind: Kind.STRING,
           value: testAcronym,
         }
-        expect(() => Acronym.parseLiteral(testLiteral, {})).toThrow(new TypeError(`Value is not a vaild acronym: ${testAcronym}`))
+        expect(() => Acronym.parseLiteral(testLiteral, {})).toThrow(
+          new TypeError(`Value is not a vaild acronym: ${testAcronym}`),
+        )
       })
     })
     describe('given invalid inputs', () => {
@@ -78,8 +88,14 @@ describe('given a acronym scalar', () => {
           kind: Kind.DOCUMENT,
         },
       ].forEach((literal) => {
-        it(`throws an error when parsing invalid literal ${stringify(literal)}`, () => {
-          expect(() => Acronym.parseLiteral(literal, {})).toThrow(new TypeError(`Can only validate strings as acronyms but got a: ${literal.kind}`))
+        it(`throws an error when parsing invalid literal ${stringify(
+          literal,
+        )}`, () => {
+          expect(() => Acronym.parseLiteral(literal, {})).toThrow(
+            new TypeError(
+              `Can only validate strings as acronyms but got a: ${literal.kind}`,
+            ),
+          )
         })
       })
     })

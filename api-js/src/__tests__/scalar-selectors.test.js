@@ -15,23 +15,29 @@ describe('given a selectors scalar', () => {
         describe('selector contains string', () => {
           it('throws an error', () => {
             const testSelector = ['This is an invalid selector']
-            expect(() => Selectors.serialize(testSelector)).toThrow(new TypeError(`Value is not a vaild selector: ${testSelector}`))
+            expect(() => Selectors.serialize(testSelector)).toThrow(
+              new TypeError(`Value is not a vaild selector: ${testSelector}`),
+            )
           })
         })
         describe('selector does not contain string', () => {
           it('throws an error', () => {
             const testSelector = [123]
-            expect(() => Selectors.serialize(testSelector)).toThrow(new TypeError(`Value is not a string: ${testSelector}`))
+            expect(() => Selectors.serialize(testSelector)).toThrow(
+              new TypeError(`Value is not a string: ${testSelector}`),
+            )
           })
         })
       })
     })
     describe('given invalid inputs', () => {
-      [123, {}, 'string', null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when serializing ${stringify(invalidInput)}`, () => {
-          expect(() => 
-            Selectors.serialize(invalidInput),
-          ).toThrow(new TypeError(`Value is not list: ${typeof invalidInput}`))
+      ;[123, {}, 'string', null, undefined, true].forEach((invalidInput) => {
+        it(`throws an error when serializing ${stringify(
+          invalidInput,
+        )}`, () => {
+          expect(() => Selectors.serialize(invalidInput)).toThrow(
+            new TypeError(`Value is not list: ${typeof invalidInput}`),
+          )
         })
       })
     })
@@ -48,23 +54,29 @@ describe('given a selectors scalar', () => {
         describe('selector contains string', () => {
           it('throws an error', () => {
             const testSelector = ['This is an invalid selector']
-            expect(() => Selectors.parseValue(testSelector)).toThrow(new TypeError(`Value is not a vaild selector: ${testSelector}`))
+            expect(() => Selectors.parseValue(testSelector)).toThrow(
+              new TypeError(`Value is not a vaild selector: ${testSelector}`),
+            )
           })
         })
         describe('selector does not contain string', () => {
           it('throws an error', () => {
             const testSelector = [123]
-            expect(() => Selectors.parseValue(testSelector)).toThrow(new TypeError(`Value is not a string: ${testSelector}`))
+            expect(() => Selectors.parseValue(testSelector)).toThrow(
+              new TypeError(`Value is not a string: ${testSelector}`),
+            )
           })
         })
       })
     })
     describe('given invalid inputs', () => {
-      [123, {}, 'string', null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when serializing ${stringify(invalidInput)}`, () => {
-          expect(() => 
-            Selectors.parseValue(invalidInput),
-          ).toThrow(new TypeError(`Value is not list: ${typeof invalidInput}`))
+      ;[123, {}, 'string', null, undefined, true].forEach((invalidInput) => {
+        it(`throws an error when serializing ${stringify(
+          invalidInput,
+        )}`, () => {
+          expect(() => Selectors.parseValue(invalidInput)).toThrow(
+            new TypeError(`Value is not list: ${typeof invalidInput}`),
+          )
         })
       })
     })
@@ -89,7 +101,9 @@ describe('given a selectors scalar', () => {
               kind: Kind.LIST,
               value: testSelector,
             }
-            expect(() => Selectors.parseLiteral(testLiteral, {})).toThrow(new TypeError(`Value is not a vaild selector: ${testSelector}`))
+            expect(() => Selectors.parseLiteral(testLiteral, {})).toThrow(
+              new TypeError(`Value is not a vaild selector: ${testSelector}`),
+            )
           })
         })
         describe('selector does not contain string', () => {
@@ -99,7 +113,9 @@ describe('given a selectors scalar', () => {
               kind: Kind.LIST,
               value: testSelector,
             }
-            expect(() => Selectors.parseLiteral(testLiteral, {})).toThrow(new TypeError(`Value is not a string: ${testSelector}`))
+            expect(() => Selectors.parseLiteral(testLiteral, {})).toThrow(
+              new TypeError(`Value is not a string: ${testSelector}`),
+            )
           })
         })
       })
@@ -114,8 +130,14 @@ describe('given a selectors scalar', () => {
           kind: Kind.DOCUMENT,
         },
       ].forEach((literal) => {
-        it(`throws an error when parsing invalid literal ${stringify(literal)}`, () => {
-          expect(() => Selectors.parseLiteral(literal, {})).toThrow(new TypeError(`Can only validate lists as selectors but got a: ${literal.kind}`))
+        it(`throws an error when parsing invalid literal ${stringify(
+          literal,
+        )}`, () => {
+          expect(() => Selectors.parseLiteral(literal, {})).toThrow(
+            new TypeError(
+              `Can only validate lists as selectors but got a: ${literal.kind}`,
+            ),
+          )
         })
       })
     })

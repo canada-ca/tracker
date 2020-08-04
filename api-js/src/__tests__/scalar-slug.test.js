@@ -15,17 +15,21 @@ describe('given a slug scalar', () => {
       describe('given an invalid slug', () => {
         it('throws an error', () => {
           const testSlug = 'This is an invalid slug'
-          expect(() => Slug.serialize(testSlug)).toThrow(new TypeError(`Value is not a vaild slug: ${testSlug}`))
+          expect(() => Slug.serialize(testSlug)).toThrow(
+            new TypeError(`Value is not a vaild slug: ${testSlug}`),
+          )
         })
       })
     })
 
     describe('given invalid inputs', () => {
-      [123, {}, [], null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when serializing ${stringify(invalidInput)}`, () => {
-          expect(() => 
-            Slug.serialize(invalidInput),
-          ).toThrow(new TypeError(`Value is not string: ${typeof invalidInput}`))
+      ;[123, {}, [], null, undefined, true].forEach((invalidInput) => {
+        it(`throws an error when serializing ${stringify(
+          invalidInput,
+        )}`, () => {
+          expect(() => Slug.serialize(invalidInput)).toThrow(
+            new TypeError(`Value is not string: ${typeof invalidInput}`),
+          )
         })
       })
     })
@@ -42,16 +46,20 @@ describe('given a slug scalar', () => {
       describe('given an invalid slug', () => {
         it('throws a type error', () => {
           const testSlug = 'invalid slug'
-          expect(() => Slug.parseValue(testSlug)).toThrow(new TypeError(`Value is not a vaild slug: ${testSlug}`))
+          expect(() => Slug.parseValue(testSlug)).toThrow(
+            new TypeError(`Value is not a vaild slug: ${testSlug}`),
+          )
         })
       })
     })
     describe('given invalid inputs', () => {
-      [123, {}, [], null, undefined, true].forEach((invalidInput) => {
-        it(`throws an error when value parsing ${stringify(invalidInput)}`, () => {
-          expect(() => 
-            Slug.parseValue(invalidInput),
-          ).toThrow(new TypeError(`Value is not string: ${typeof invalidInput}`))
+      ;[123, {}, [], null, undefined, true].forEach((invalidInput) => {
+        it(`throws an error when value parsing ${stringify(
+          invalidInput,
+        )}`, () => {
+          expect(() => Slug.parseValue(invalidInput)).toThrow(
+            new TypeError(`Value is not string: ${typeof invalidInput}`),
+          )
         })
       })
     })
@@ -73,7 +81,9 @@ describe('given a slug scalar', () => {
           kind: Kind.STRING,
           value: testSlug,
         }
-        expect(() => Slug.parseLiteral(testLiteral, {})).toThrow(new TypeError(`Value is not a vaild slug: ${testSlug}`))
+        expect(() => Slug.parseLiteral(testLiteral, {})).toThrow(
+          new TypeError(`Value is not a vaild slug: ${testSlug}`),
+        )
       })
     })
     describe('given invalid inputs', () => {
@@ -86,8 +96,14 @@ describe('given a slug scalar', () => {
           kind: Kind.DOCUMENT,
         },
       ].forEach((literal) => {
-        it(`throws an error when parsing invalid literal ${stringify(literal)}`, () => {
-          expect(() => Slug.parseLiteral(literal, {})).toThrow(new TypeError(`Can only validate strings as slug but got a: ${literal.kind}`))
+        it(`throws an error when parsing invalid literal ${stringify(
+          literal,
+        )}`, () => {
+          expect(() => Slug.parseLiteral(literal, {})).toThrow(
+            new TypeError(
+              `Can only validate strings as slug but got a: ${literal.kind}`,
+            ),
+          )
         })
       })
     })
