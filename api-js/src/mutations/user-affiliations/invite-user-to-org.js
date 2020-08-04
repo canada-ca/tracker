@@ -1,7 +1,8 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
+const { GraphQLEmailAddress } = require('graphql-scalars')
 const { LanguageEnums, RoleEnums } = require('../../enums')
-const { EmailAddress, Slug } = require('../../scalars')
+const { Slug } = require('../../scalars')
 
 const inviteUserToOrg = new mutationWithClientMutationId({
   name: 'InviteUserToOrg',
@@ -10,7 +11,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     able to sign-up and be assigned to that organization in one mutation.`,
   inputFields: () => ({
     userName: {
-      type: GraphQLNonNull(EmailAddress),
+      type: GraphQLNonNull(GraphQLEmailAddress),
       description: 'Users email that you would like to invite to your org.',
     },
     requestedRole: {

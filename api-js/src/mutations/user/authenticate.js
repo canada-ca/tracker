@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
-const { EmailAddress } = require('../../scalars')
+const { GraphQLEmailAddress } = require('graphql-scalars')
 const { authResultType } = require('../../types')
 
 const authenticate = new mutationWithClientMutationId({
@@ -10,7 +10,7 @@ const authenticate = new mutationWithClientMutationId({
     'This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.',
   inputFields: () => ({
     userName: {
-      type: GraphQLNonNull(EmailAddress),
+      type: GraphQLNonNull(GraphQLEmailAddress),
       description: 'The email the user signed up with.',
     },
     password: {

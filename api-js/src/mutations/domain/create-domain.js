@@ -1,6 +1,7 @@
 const { GraphQLNonNull } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
-const { Slug, Url, Selectors } = require('../../scalars')
+const { GraphQLURL } = require('graphql-scalars')
+const { Slug, Selectors } = require('../../scalars')
 const { domainType } = require('../../types')
 
 const createDomain = new mutationWithClientMutationId({
@@ -13,7 +14,7 @@ const createDomain = new mutationWithClientMutationId({
         'The slug of the organization you wish to assign this domain to.',
     },
     url: {
-      type: GraphQLNonNull(Url),
+      type: GraphQLNonNull(GraphQLURL),
       description: 'Url that you would like to be added to the database.',
     },
     selectors: {

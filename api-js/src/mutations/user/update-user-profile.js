@@ -1,7 +1,7 @@
 const { GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
+const { GraphQLEmailAddress } = require('graphql-scalars')
 const { LanguageEnums } = require('../../enums')
-const { EmailAddress } = require('../../scalars')
 
 const updateUserProfile = new mutationWithClientMutationId({
   name: 'UpdateUserProfile',
@@ -13,7 +13,7 @@ const updateUserProfile = new mutationWithClientMutationId({
       description: 'The updated display name the user wishes to change to.',
     },
     userName: {
-      type: EmailAddress,
+      type: GraphQLEmailAddress,
       description: 'The updated user name the user wishes to change to.',
     },
     preferredLang: {

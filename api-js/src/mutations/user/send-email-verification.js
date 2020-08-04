@@ -1,6 +1,6 @@
 const { GraphQLString, GraphQLNonNull } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
-const { EmailAddress } = require('../../scalars')
+const { GraphQLEmailAddress } = require('graphql-scalars')
 
 const sendEmailVerification = new mutationWithClientMutationId({
   name: 'SendEmailVerification',
@@ -8,7 +8,7 @@ const sendEmailVerification = new mutationWithClientMutationId({
     'This mutation is used for re-sending a verification email if it failed during user creation.',
   inputFields: () => ({
     userName: {
-      type: GraphQLNonNull(EmailAddress),
+      type: GraphQLNonNull(GraphQLEmailAddress),
       description:
         'The users email address used for sending the verification email.',
     },

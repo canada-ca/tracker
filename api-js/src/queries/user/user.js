@@ -1,11 +1,11 @@
-const { EmailAddress } = require('../../scalars')
+const { GraphQLEmailAddress } = require('graphql-scalars')
 const { userType } = require('../../types')
 
 const user = {
   type: userType,
   args: {
     userName: {
-      type: EmailAddress,
+      type: GraphQLEmailAddress,
       description: 'Email address of user you wish to gather data for.',
     },
   },

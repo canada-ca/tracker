@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { LanguageEnums } = require('../../enums')
-const { EmailAddress } = require('../../scalars')
+const { GraphQLEmailAddress } = require('graphql-scalars')
 const { authResultType } = require('../../types')
 
 const signUp = new mutationWithClientMutationId({
@@ -15,7 +15,7 @@ const signUp = new mutationWithClientMutationId({
       description: 'The name that will be displayed to other users.',
     },
     userName: {
-      type: GraphQLNonNull(EmailAddress),
+      type: GraphQLNonNull(GraphQLEmailAddress),
       description: 'Email address that the user will use to authenticate with.',
     },
     password: {

@@ -1,7 +1,8 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
+const { GraphQLEmailAddress } = require('graphql-scalars')
 const { RoleEnums } = require('../../enums')
-const { EmailAddress, Slug } = require('../../scalars')
+const { Slug } = require('../../scalars')
 
 const updateUserRole = new mutationWithClientMutationId({
   name: 'UpdateUserRole',
@@ -10,7 +11,7 @@ const updateUserRole = new mutationWithClientMutationId({
     given organization.`,
   inputFields: () => ({
     userName: {
-      type: GraphQLNonNull(EmailAddress),
+      type: GraphQLNonNull(GraphQLEmailAddress),
       description: 'The username of the user you wish to update their role to.',
     },
     orgSlug: {

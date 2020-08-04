@@ -1,6 +1,6 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
-const { EmailAddress } = require('../../scalars')
+const { GraphQLEmailAddress } = require('graphql-scalars')
 
 const sendPasswordResetLink = new mutationWithClientMutationId({
   name: 'SendPasswordResetLink',
@@ -8,7 +8,7 @@ const sendPasswordResetLink = new mutationWithClientMutationId({
     'This mutation allows a user to provide their username and request that a password reset email be sent to their account with a reset token in a url.',
   inputFields: () => ({
     userName: {
-      type: GraphQLNonNull(EmailAddress),
+      type: GraphQLNonNull(GraphQLEmailAddress),
       description:
         'User name for the account you would like to receive a password reset link for.',
     },

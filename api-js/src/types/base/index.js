@@ -10,13 +10,11 @@ const {
   connectionDefinitions,
   connectionArgs,
 } = require('graphql-relay')
+const { GraphQLDateTime, GraphQLEmailAddress, GraphQLURL } = require('graphql-scalars')
 const { RoleEnums, LanguageEnums } = require('../../enums')
 const {
   Acronym,
   Slug,
-  Url,
-  DateTime,
-  EmailAddress,
   Selectors,
 } = require('../../scalars')
 const { nodeInterface } = require('../node')
@@ -27,7 +25,7 @@ const domainType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('domains'),
     url: {
-      type: Url,
+      type: GraphQLURL,
       description: 'Domain that scans will be ran on.',
       resolve: async () => {},
     },
@@ -37,7 +35,7 @@ const domainType = new GraphQLObjectType({
       resolve: async () => {},
     },
     lastRan: {
-      type: DateTime,
+      type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
       resolve: async () => {},
     },
@@ -140,7 +138,7 @@ const userType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('users'),
     userName: {
-      type: EmailAddress,
+      type: GraphQLEmailAddress,
       description: 'Users email address.',
       resolve: async ({ userName }) => {
         return userName

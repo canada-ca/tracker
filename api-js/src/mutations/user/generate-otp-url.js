@@ -1,12 +1,12 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
-const { EmailAddress } = require('../../scalars')
+const { GraphQLEmailAddress } = require('graphql-scalars')
 
 const generateOtpUrl = new mutationWithClientMutationId({
   name: 'GenerateOtpUrl',
   inputFields: () => ({
     userName: {
-      type: GraphQLNonNull(EmailAddress),
+      type: GraphQLNonNull(GraphQLEmailAddress),
       description: 'The users username who is requesting an otp url.',
     },
   }),

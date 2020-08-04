@@ -1,6 +1,7 @@
 const { GraphQLID, GraphQLNonNull } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
-const { Slug, Url, Selectors } = require('../../scalars')
+const { GraphQLURL } = require('graphql-scalars')
+const { Slug, Selectors } = require('../../scalars')
 const { domainType } = require('../../types')
 
 const updateDomain = new mutationWithClientMutationId({
@@ -18,7 +19,7 @@ const updateDomain = new mutationWithClientMutationId({
         'The organiztaion slug that the domain is being reassigned to.',
     },
     url: {
-      type: Url,
+      type: GraphQLURL,
       description: 'The new url of the of the old domain.',
     },
     selectors: {
