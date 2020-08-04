@@ -48,7 +48,12 @@ const signUp = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { query, auth: { tokenize }, loaders: { userLoaderByUserName }, functions: { cleanseInput } },
+    {
+      query,
+      auth: { tokenize },
+      loaders: { userLoaderByUserName },
+      functions: { cleanseInput },
+    },
   ) => {
     // Cleanse Inputs
     const displayName = cleanseInput(args.displayName)
@@ -102,7 +107,6 @@ const signUp = new mutationWithClientMutationId({
       insertedCursor = await query`
         INSERT ${user} INTO users RETURN NEW
       `
-      console.info(`User: ${userName} successfully created a new account.`)
     } catch (err) {
       console.error(
         `Database error occurred when ${userName} tried to sign up: ${err}`,
@@ -113,7 +117,9 @@ const signUp = new mutationWithClientMutationId({
     try {
       insertedUser = await insertedCursor.next()
     } catch (err) {
-      console.error(`Cursor error occurred when trying to get new user: ${err}`)
+      console.error(
+        `Cursor error occurred when trying to get new user ${userName}: ${err}`,
+      )
       throw new Error('Unable to sign up. Please try again.')
     }
 
@@ -122,6 +128,8 @@ const signUp = new mutationWithClientMutationId({
 
     // Generate JWT
     const token = tokenize({ parameters: { userId: insertedUser._key } })
+
+    console.info(`User: ${userName} successfully created a new account.`)
 
     return {
       authResult: {
