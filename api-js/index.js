@@ -18,6 +18,7 @@ const {
   sendOrgInviteCreateAccount,
   sendOrgInviteEmail,
   sendPasswordResetEmail,
+  sendVerificationEmail,
 } = require('./src/notify')
 
 ;(async () => {
@@ -41,6 +42,7 @@ const {
       sendOrgInviteCreateAccount,
       sendOrgInviteEmail,
       sendPasswordResetEmail,
+      sendVerificationEmail,
     },
   }).listen(PORT, (err) => {
     if (err) throw err
