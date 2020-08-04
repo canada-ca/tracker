@@ -33,7 +33,7 @@ export function DmarcGuidancePage() {
   const emailScan = data.findDomainBySlug.email.edges[0].node
 
   return (
-    <Stack spacing="25px" mb="25px">
+    <Stack spacing="25px" mb="6">
       <Stack isInline align="center">
         <Button onClick={history.goBack}>
           <Icon color="gray.900" name="arrow-left" fontSize="2xl" />
