@@ -263,8 +263,8 @@ describe('user sign up', () => {
                 input: {
                   displayName: "Test Account"
                   userName: "test.account@istio.actually.exists"
-                  password: "password123"
-                  confirmPassword: "321drowssap"
+                  password: "testpassword123"
+                  confirmPassword: "321drowssaptset"
                   preferredLang: FRENCH
                 }
               ) {
@@ -324,8 +324,8 @@ describe('user sign up', () => {
                 input: {
                   displayName: "Test Account"
                   userName: "test.account@istio.actually.exists"
-                  password: "password123"
-                  confirmPassword: "password123"
+                  password: "testpassword123"
+                  confirmPassword: "testpassword123"
                   preferredLang: FRENCH
                 }
               ) {
@@ -382,8 +382,8 @@ describe('user sign up', () => {
                   input: {
                     displayName: "Test Account"
                     userName: "test.account@istio.actually.exists"
-                    password: "password123"
-                    confirmPassword: "password123"
+                    password: "testpassword123"
+                    confirmPassword: "testpassword123"
                     preferredLang: FRENCH
                   }
                 ) {
@@ -442,8 +442,8 @@ describe('user sign up', () => {
                     input: {
                       displayName: "Test Account"
                       userName: "test.account@istio.actually.exists"
-                      password: "password123"
-                      confirmPassword: "password123"
+                      password: "testpassword123"
+                      confirmPassword: "testpassword123"
                       preferredLang: FRENCH
                     }
                   ) {

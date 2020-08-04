@@ -63,7 +63,7 @@ const signUp = new mutationWithClientMutationId({
     const preferredLang = cleanseInput(args.preferredLang)
 
     // Check to make sure password meets length requirement
-    if (password.length < 8) {
+    if (password.length < 12) {
       console.warn(
         `User: ${userName} tried to sign up but did not meet requirements.`,
       )

@@ -50,8 +50,8 @@ describe('authenticate user account', () => {
             input: {
               displayName: "Test Account"
               userName: "test.account@istio.actually.exists"
-              password: "password123"
-              confirmPassword: "password123"
+              password: "testpassword123"
+              confirmPassword: "testpassword123"
               preferredLang: FRENCH
             }
           ) {
@@ -93,7 +93,7 @@ describe('authenticate user account', () => {
             authenticate(
               input: {
                 userName: "test.account@istio.actually.exists"
-                password: "password123"
+                password: "testpassword123"
               }
             ) {
               authResult {
@@ -136,7 +136,7 @@ describe('authenticate user account', () => {
         data: {
           authenticate: {
             authResult: {
-              authToken: tokenize({ parameters: { userId: user}}),
+              authToken: tokenize({ parameters: { userId: user._key}}),
               user: {
                 id: `${toGlobalId('users', user._key)}`,
                 userName: 'test.account@istio.actually.exists',
@@ -176,7 +176,7 @@ describe('authenticate user account', () => {
               authenticate(
                 input: {
                   userName: "test.account@istio.actually.exists"
-                  password: "password123"
+                  password: "testpassword123"
                 }
               ) {
                 authResult {
@@ -240,7 +240,7 @@ describe('authenticate user account', () => {
                 authenticate(
                   input: {
                     userName: "test.account@istio.actually.exists"
-                    password: "password123"
+                    password: "testpassword123"
                   }
                 ) {
                   authResult {
