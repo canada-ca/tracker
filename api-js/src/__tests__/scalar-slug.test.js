@@ -16,7 +16,7 @@ describe('given a slug scalar', () => {
         it('throws an error', () => {
           const testSlug = 'This is an invalid slug'
           expect(() => Slug.serialize(testSlug)).toThrow(
-            new TypeError(`Value is not a vaild slug: ${testSlug}`),
+            new TypeError(`Value is not a valid slug: ${testSlug}`),
           )
         })
       })
