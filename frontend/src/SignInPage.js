@@ -72,7 +72,7 @@ export default function SignInPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Box mx="auto">
+    <Box px="2em" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}
