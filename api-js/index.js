@@ -36,7 +36,7 @@ const {
     },
     loaders: {
       userLoaderByUserName: userLoaderByUserName(query),
-      userLoaderByIds: userLoaderById(query),
+      userLoaderById: userLoaderById(query),
     },
     notify: {
       sendOrgInviteCreateAccount,
