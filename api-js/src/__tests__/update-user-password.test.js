@@ -468,8 +468,8 @@ describe('authenticate user account', () => {
         const idLoader = userLoaderById(query)
 
         query = jest
-        .fn()
-        .mockRejectedValue(new Error('Database error occurred.'))
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
 
         const response = await graphql(
           schema,
@@ -505,9 +505,7 @@ describe('authenticate user account', () => {
         )
 
         const error = [
-          new GraphQLError(
-            'Unable to update password. Please try again.',
-          ),
+          new GraphQLError('Unable to update password. Please try again.'),
         ]
 
         expect(response.errors).toEqual(error)
