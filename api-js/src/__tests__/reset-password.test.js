@@ -1,7 +1,6 @@
 const dotenv = require('dotenv-safe')
 dotenv.config()
 
-const jwt = require('jsonwebtoken')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { makeMigrations } = require('../../migrations')
@@ -15,9 +14,6 @@ const { userLoaderByUserName, userLoaderById } = require('../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('reset users passsword', () => {
-  const originalInfo = console.info
-  afterEach(() => (console.info = originalInfo))
-
   let query, drop, truncate, migrate, schema
 
   beforeAll(async () => {
@@ -80,7 +76,7 @@ describe('reset users passsword', () => {
     consoleOutput = []
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await drop()
   })
 

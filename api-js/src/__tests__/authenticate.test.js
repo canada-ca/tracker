@@ -15,9 +15,6 @@ const { userLoaderByUserName } = require('../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('authenticate user account', () => {
-  const originalInfo = console.info
-  afterEach(() => (console.info = originalInfo))
-
   let query, drop, truncate, migrate, schema
 
   beforeAll(async () => {
@@ -80,7 +77,7 @@ describe('authenticate user account', () => {
     consoleOutput = []
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await drop()
   })
 

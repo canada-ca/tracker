@@ -16,9 +16,6 @@ const { userLoaderByUserName } = require('../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('user sign up', () => {
-  const originalInfo = console.info
-  afterEach(() => (console.info = originalInfo))
-
   let query, drop, truncate, migrate, collections, schema
 
   beforeAll(async () => {
@@ -47,7 +44,7 @@ describe('user sign up', () => {
     consoleOutput = []
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await drop()
   })
 

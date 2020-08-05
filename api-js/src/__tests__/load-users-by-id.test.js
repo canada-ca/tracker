@@ -38,7 +38,7 @@ describe('given a userLoaderById dataloader', () => {
     consoleOutput = []
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await drop()
   })
 
