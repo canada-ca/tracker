@@ -14,7 +14,6 @@ const { makeMigrations } = require('./migrations')
 const bcrypt = require('bcrypt')
 const { tokenize, verifyToken } = require('./src/auth')
 const { cleanseInput } = require('./src/validators')
-const { userLoaderByUserName, userLoaderById } = require('./src/loaders')
 const {
   sendOrgInviteCreateAccount,
   sendOrgInviteEmail,
@@ -35,10 +34,6 @@ const {
     },
     functions: {
       cleanseInput,
-    },
-    loaders: {
-      userLoaderByUserName: userLoaderByUserName(query),
-      userLoaderById: userLoaderById(query),
     },
     notify: {
       sendOrgInviteCreateAccount,

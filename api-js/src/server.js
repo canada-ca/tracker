@@ -9,6 +9,8 @@ const { ApolloServer } = require('apollo-server-express')
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
 
+const { userLoaderByUserName, userLoaderById } = require('./loaders')
+
 // internationalization.load({
 //   fr: unpackCatalog(require('./locale/fr/messages.js')),
 //   en: unpackCatalog(require('./locale/en/messages.js')),
@@ -45,7 +47,7 @@ const Server = (context = {}) => {
       mutation: createMutationSchema(),
     }),
     context: ({ req: request, res: response }) => {
-      const {auth: { verifyToken }} = context
+      const {auth: { verifyToken }, query} = context
       // Get user id from token
       let userId
       const token = request.headers.authorization || ''
@@ -57,6 +59,10 @@ const Server = (context = {}) => {
         request,
         response,
         userId,
+        loaders: {
+          userLoaderByUserName: userLoaderByUserName(query),
+          userLoaderById: userLoaderById(query),
+        },
         ...context,
       }
     },
