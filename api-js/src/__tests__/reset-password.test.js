@@ -3,10 +3,12 @@ dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { toGlobalId } = require('graphql-relay')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
 
+const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize, verifyToken } = require('../auth')
 const { userLoaderByUserName, userLoaderById } = require('../loaders')
@@ -63,6 +65,7 @@ describe('reset users passsword', () => {
       {
         query,
         auth: {
+          bcrypt,
           tokenize,
         },
         functions: {
@@ -112,6 +115,7 @@ describe('reset users passsword', () => {
         {
           query,
           auth: {
+            bcrypt,
             tokenize,
             verifyToken,
           },
@@ -136,6 +140,69 @@ describe('reset users passsword', () => {
       expect(response).toEqual(expectedResponse)
       expect(consoleOutput).toEqual([
         `User: ${user._key} successfully reset their password.`,
+      ])
+
+      consoleOutput = []
+
+      const testSignIn = await graphql(
+        schema,
+        `
+          mutation {
+            authenticate(
+              input: {
+                userName: "test.account@istio.actually.exists"
+                password: "newpassword123"
+              }
+            ) {
+              authResult {
+                user {
+                  id
+                  userName
+                  displayName
+                  preferredLang
+                  tfaValidated
+                  emailValidated
+                }
+              }
+            }
+          }
+        `,
+        null,
+        {
+          query,
+          auth: {
+            bcrypt,
+            tokenize,
+          },
+          functions: {
+            cleanseInput,
+          },
+          loaders: {
+            userLoaderByUserName: userLoaderByUserName(query),
+          },
+        },
+      )
+
+      const expectedtestSignIn = {
+        data: {
+          authenticate: {
+            authResult: {
+              user: {
+                id: `${toGlobalId('users', user._key)}`,
+                userName: 'test.account@istio.actually.exists',
+                displayName: 'Test Account',
+                preferredLang: 'FRENCH',
+                tfaValidated: false,
+                emailValidated: false,
+              },
+            },
+          },
+        },
+      }
+
+      expect(testSignIn).toEqual(expectedtestSignIn)
+      expect(consoleOutput).toEqual([
+        `User: ${user._key} successfully authenticated their account.`,
       ])
     })
   })
@@ -165,6 +232,7 @@ describe('reset users passsword', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
               verifyToken,
             },
@@ -220,6 +288,7 @@ describe('reset users passsword', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
               verifyToken,
             },
@@ -275,6 +344,7 @@ describe('reset users passsword', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
               verifyToken,
             },
@@ -330,6 +400,7 @@ describe('reset users passsword', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
               verifyToken,
             },
@@ -389,6 +460,7 @@ describe('reset users passsword', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
               verifyToken,
             },
@@ -449,6 +521,7 @@ describe('reset users passsword', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
               verifyToken,
             },

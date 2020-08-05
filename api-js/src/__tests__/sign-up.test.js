@@ -9,6 +9,7 @@ const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
 
+const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
 const { userLoaderByUserName } = require('../loaders')
@@ -82,6 +83,7 @@ describe('user sign up', () => {
             request,
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -156,6 +158,7 @@ describe('user sign up', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -231,6 +234,7 @@ describe('user sign up', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -282,6 +286,7 @@ describe('user sign up', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -343,6 +348,7 @@ describe('user sign up', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -401,6 +407,7 @@ describe('user sign up', () => {
             {
               query,
               auth: {
+                bcrypt,
                 tokenize,
               },
               functions: {
@@ -461,6 +468,7 @@ describe('user sign up', () => {
               {
                 query,
                 auth: {
+                  bcrypt,
                   tokenize,
                 },
                 functions: {

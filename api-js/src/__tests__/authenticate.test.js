@@ -8,6 +8,7 @@ const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
 
+const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
 const { userLoaderByUserName } = require('../loaders')
@@ -64,6 +65,7 @@ describe('authenticate user account', () => {
       {
         query,
         auth: {
+          bcrypt,
           tokenize,
         },
         functions: {
@@ -111,6 +113,7 @@ describe('authenticate user account', () => {
         {
           query,
           auth: {
+            bcrypt,
             tokenize,
           },
           functions: {
@@ -193,6 +196,7 @@ describe('authenticate user account', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -257,6 +261,7 @@ describe('authenticate user account', () => {
             {
               query,
               auth: {
+                bcrypt,
                 tokenize,
               },
               functions: {
@@ -310,6 +315,7 @@ describe('authenticate user account', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -363,6 +369,7 @@ describe('authenticate user account', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -425,6 +432,7 @@ describe('authenticate user account', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -478,6 +486,7 @@ describe('authenticate user account', () => {
           {
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -540,6 +549,7 @@ describe('authenticate user account', () => {
             {
               query,
               auth: {
+                bcrypt,
                 tokenize,
               },
               functions: {

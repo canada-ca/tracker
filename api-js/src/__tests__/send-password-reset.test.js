@@ -9,6 +9,7 @@ const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
 
+const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
 const { userLoaderByUserName } = require('../loaders')
@@ -81,6 +82,7 @@ describe('user send password reset email', () => {
             request,
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -156,6 +158,7 @@ describe('user send password reset email', () => {
             request,
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {
@@ -226,6 +229,7 @@ describe('user send password reset email', () => {
             request,
             query,
             auth: {
+              bcrypt,
               tokenize,
             },
             functions: {

@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt')
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { LanguageEnums } = require('../../enums')
@@ -50,7 +49,7 @@ const signUp = new mutationWithClientMutationId({
     args,
     {
       query,
-      auth: { tokenize },
+      auth: { tokenize, bcrypt },
       loaders: { userLoaderByUserName },
       functions: { cleanseInput },
     },

@@ -1,6 +1,5 @@
 const cors = require('cors')
 const express = require('express')
-const jwt = require('jsonwebtoken')
 const requestLanguage = require('express-request-language')
 const { GraphQLSchema } = require('graphql')
 const { createServer } = require('http')

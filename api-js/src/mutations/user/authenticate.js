@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt')
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
@@ -31,7 +30,7 @@ const authenticate = new mutationWithClientMutationId({
     args,
     {
       query,
-      auth: { tokenize },
+      auth: { tokenize, bcrypt },
       loaders: { userLoaderByUserName },
       functions: { cleanseInput },
     },

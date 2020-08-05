@@ -27,7 +27,57 @@ const updateUserPassword = new mutationWithClientMutationId({
       resolve: async () => {},
     },
   }),
-  mutateAndGetPayload: async () => {},
+  mutateAndGetPayload: async (args, { query, userId, auth: { bcrypt }, loaders: { userLoaderById }, function: { cleanseInput }}) => {
+    // Cleanse Input
+    const currentPassword = cleanseInput(args.currentPassword)
+    const updatedPassword = cleanseInput(args.updatedPassword)
+    const updatedPasswordConfirm = cleanseInput(args.updatedPasswordConfirm)
+
+    // Make sure user id is not undefined
+    if (typeof userId === 'undefined') {
+      console.warn(`User attempted to update password, but the user id is undefined.`)
+      throw new Error('Token error, please sign in again.')
+    }
+
+    // Get user from db
+    const user = await userLoaderById.load(userId)
+
+    if (typeof user === 'undefined') {
+      console.warn(`User: ${userId} attempted to update their password, but no account is associated with that id.`)
+      throw new Error('Unable to update password. Please try again.')
+    }
+
+    // Check to see if current passwords match
+    if (!bcrypt.compareSync(currentPassword, user.password)) {
+      console.warn(`User: ${user._key} attempted to update their password, however they did not enter the current password correctly.`)
+      throw new Error('Unable to update password, current password does not match. Please try again.')
+    }
+
+    // Check to see if new passwords match
+    if (updatedPassword !== updatedPasswordConfirm) {
+      console.warn(`User: ${user._key} attempted to update their password, however the new passwords do not match.`)
+      throw new Error('Unable to update password, new passwords do not match. Please try again.')
+    }
+
+    // Check to see if they meet GoC requirements
+    if (updatedPassword.length < 12) {
+      console.warn(`User: ${user._key} attempted to update their password, however the new password does not meet GoC requirements.`)
+      throw new Error('Unable to update password, new password is too short. Please try again.')
+    }
+
+    // Update password in DB
+    const hashedPassword = bcrypt.hashSync(updatedPassword, 10)
+
+    try {
+      query`
+        FOR user IN users
+          UPDATE ${user._key} WITH { password: ${hashedPassword} } IN users
+      `
+    } catch (err) {
+
+    }
+
+  },
 })
 
 module.exports = {
