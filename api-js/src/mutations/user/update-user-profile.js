@@ -26,10 +26,64 @@ const updateUserProfile = new mutationWithClientMutationId({
     status: {
       type: GraphQLString,
       description: 'The status if the user profile update was successful.',
-      resolve: async () => {},
+      resolve: async (payload) => {
+        return payload.status
+      },
     },
   }),
-  mutateAndGetPayload: async () => {},
+  mutateAndGetPayload: async (
+    args,
+    { query, userId, loaders: { userLoaderById }, functions: { cleanseInput } },
+  ) => {
+    // Cleanse Input
+    const displayName = cleanseInput(args.displayName)
+    const userName = cleanseInput(args.userName).toLowerCase()
+    const preferredLang = cleanseInput(args.preferredLang)
+
+    // Make sure userId is not undefined
+    if (typeof userId === 'undefined') {
+      console.warn(
+        `User attempted to update their profile, but the user id is undefined.`,
+      )
+      throw new Error('Authentication error, please sign in again.')
+    }
+
+    // Get user info from DB
+    const user = await userLoaderById.load(userId)
+
+    if (typeof user === 'undefined') {
+      console.warn(
+        `User: ${userId} attempted to update their profile, but no account is associated with that id.`,
+      )
+      throw new Error('Unable to update profile. Please try again.')
+    }
+
+    // Create object containing updated data
+    const updatedUser = {
+      displayName: displayName || user.displayName,
+      userName: userName || user.userName,
+      preferredLang: preferredLang || user.preferredLang,
+    }
+
+    try {
+      await query`
+        UPSERT { _key: ${user._key} }
+          INSERT ${updatedUser}
+          UPDATE ${updatedUser} 
+          IN users
+      `
+    } catch (err) {
+      console.error(
+        `Database error ocurred when user: ${user._key} attempted to update their profile: ${err}`,
+      )
+      throw new Error('Unable to update profile. Please try again.')
+    }
+
+    console.info(`User: ${user._key} successfully updated their profile.`)
+    return {
+      status: 'Profile successfully updated.',
+    }
+  },
 })
 
 module.exports = {
