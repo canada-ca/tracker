@@ -46,15 +46,12 @@ const Server = (context = {}) => {
       mutation: createMutationSchema(),
     }),
     context: ({ req: request, res: response }) => {
-      // Get userid from token
+      const {auth: { verifyToken }} = context
+      // Get user id from token
       let userId
-      if (typeof request !== 'undefined') {
-        const token = request.headers.authorization || ''
-        if (token !== '') {
-          userId = jwt.verify(token, 'secretKeyGoesHere').userId
-        }
-      } else {
-        userId = null
+      const token = request.headers.authorization || ''
+      if (token !== '') {
+        userId = verifyToken(token).userId
       }
 
       return {
