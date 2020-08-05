@@ -24,10 +24,12 @@ const updateUserPassword = new mutationWithClientMutationId({
     status: {
       type: GraphQLString,
       description: 'The status if the user profile update was successful.',
-      resolve: async () => {},
+      resolve: async (payload) => {
+        return payload.status
+      },
     },
   }),
-  mutateAndGetPayload: async (args, { query, userId, auth: { bcrypt }, loaders: { userLoaderById }, function: { cleanseInput }}) => {
+  mutateAndGetPayload: async (args, { query, userId, auth: { bcrypt }, loaders: { userLoaderById }, functions: { cleanseInput }}) => {
     // Cleanse Input
     const currentPassword = cleanseInput(args.currentPassword)
     const updatedPassword = cleanseInput(args.updatedPassword)
@@ -36,7 +38,7 @@ const updateUserPassword = new mutationWithClientMutationId({
     // Make sure user id is not undefined
     if (typeof userId === 'undefined') {
       console.warn(`User attempted to update password, but the user id is undefined.`)
-      throw new Error('Token error, please sign in again.')
+      throw new Error('Authentication error, please sign in again.')
     }
 
     // Get user from db
@@ -62,21 +64,26 @@ const updateUserPassword = new mutationWithClientMutationId({
     // Check to see if they meet GoC requirements
     if (updatedPassword.length < 12) {
       console.warn(`User: ${user._key} attempted to update their password, however the new password does not meet GoC requirements.`)
-      throw new Error('Unable to update password, new password is too short. Please try again.')
+      throw new Error('Unable to update password, passwords are required to be 12 characters or longer. Please try again.')
     }
 
     // Update password in DB
     const hashedPassword = bcrypt.hashSync(updatedPassword, 10)
 
     try {
-      query`
+      await query`
         FOR user IN users
           UPDATE ${user._key} WITH { password: ${hashedPassword} } IN users
       `
     } catch (err) {
-
+      console.error(`Database error ocurred when user: ${user._key} attempted to update their password: ${err}`)
+      throw new Error('Unable to update password. Please try again.')
     }
 
+    console.info(`User: ${user._key} successfully updated their password.`)
+    return {
+      status: 'Password was successfully updated.',
+    }
   },
 })
 
