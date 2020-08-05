@@ -42,14 +42,12 @@ const sendTFATextMsg = new mutationWithClientMutationId({
     const tfaCode = Math.floor(100000 + Math.random() * 900000)
 
     // Insert TFA code into DB
-    let cursor
     try {
-      cursor = await query`
+      await query`
         UPSERT { _key: ${user._key} }
           INSERT { tfaCode: ${tfaCode} }
           UPDATE { tfaCode: ${tfaCode} }
           IN users
-          RETURN NEW
       `
     } catch (err) {
       console.error(`Database error occurred when inserting ${user._key} TFA code: ${err}`)
@@ -57,7 +55,8 @@ const sendTFATextMsg = new mutationWithClientMutationId({
     }
 
     // Get newly updated user
-    user = await cursor.next()
+    await userLoaderById.clear(user._key)
+    user = await userLoaderById.load(user._key)
 
     let templateId
     if (user.preferredLang === 'french') {
