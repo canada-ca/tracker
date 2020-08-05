@@ -114,13 +114,13 @@ export default function App() {
                 )}
               />
 
-              <RouteIf
-                condition={isLoggedIn()}
-                alternate="/sign-in"
+              <Route
+                // condition={isLoggedIn()}
+                // alternate="/sign-in"
                 path="/admin"
               >
                 <AdminPage />
-              </RouteIf>
+              </Route>
 
               <RouteIf
                 condition={isLoggedIn()}

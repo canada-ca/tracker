@@ -92,7 +92,7 @@ export default function SignInPage() {
             aria-label="form"
             name="form"
           >
-            <Heading as="h1" fontSize="2xl" mb="12">
+            <Heading as="h1" fontSize="2xl" mb="6">
               <Trans>Sign in with your username and password.</Trans>
             </Heading>
 
@@ -100,15 +100,16 @@ export default function SignInPage() {
 
             <PasswordField name="password" mb="1" />
 
-            <Link as={RouteLink} to="/forgot-password" color="teal.500">
+            <Link as={RouteLink} to="/forgot-password" color="blue.700">
               <Text mb="4">
                 <Trans>Forgot your password?</Trans>
               </Text>
             </Link>
 
-            <Stack spacing={4} isInline>
+            <Stack spacing={4} isInline justifyContent="space-between">
               <Button
-                variantColor="teal"
+                color="gray.50"
+                bg="blue.700"
                 isLoading={isSubmitting}
                 type="submit"
               >
@@ -118,8 +119,8 @@ export default function SignInPage() {
               <Button
                 as={RouteLink}
                 to="/create-user"
-                variantColor="teal"
-                variant="outline"
+                color="gray.50"
+                bg="blue.700"
               >
                 <Trans>Create Account</Trans>
               </Button>

@@ -10,7 +10,7 @@ import {
   InputLeftElement,
   Icon,
   FormErrorMessage,
-  Button,
+  IconButton,
   FormLabel,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
@@ -48,15 +48,14 @@ const PasswordField = WithPseudoBox(function PasswordField({
           {...field}
           {...props}
         />
-        <InputRightElement width="width.5">
-          <Button
-            id="showButton"
+        <InputRightElement width="width.4">
+          <IconButton
+            id="showPassword"
+            aria-label={show ? 'hide password' : 'show password'}
             h="buttons.lg"
-            size="sm"
             onClick={handleClick}
-          >
-            <Icon name={show ? 'view-off' : 'view'} />
-          </Button>
+            icon={show ? 'view-off' : 'view'}
+          />
         </InputRightElement>
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>

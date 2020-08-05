@@ -80,7 +80,13 @@ function EditableUserDisplayName({ detailValue }) {
       <Stack isInline align="center">
         <Icon name="person" size="icons.lg" color="gray.300" />
         <Text>{detailValue}</Text>
-        <Button ml="auto" onClick={onOpen} size="sm" variantColor="teal">
+        <Button
+          ml="auto"
+          onClick={onOpen}
+          size="sm"
+          color="gray.50"
+          bg="blue.700"
+        >
           <Trans>Edit</Trans>
         </Button>
       </Stack>
@@ -138,7 +144,8 @@ function EditableUserDisplayName({ detailValue }) {
 
                     <ModalFooter>
                       <Button
-                        variantColor="teal"
+                        color="gray.50"
+                        bg="blue.700"
                         isLoading={isSubmitting}
                         type="submit"
                         mr="4"
@@ -146,7 +153,8 @@ function EditableUserDisplayName({ detailValue }) {
                         <Trans>Confirm</Trans>
                       </Button>
                       <Button
-                        variantColor="teal"
+                        color="gray.50"
+                        bg="blue.700"
                         variant="outline"
                         onClick={onClose}
                       >

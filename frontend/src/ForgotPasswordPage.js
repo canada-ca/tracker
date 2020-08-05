@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Box mx="auto">
+    <Box mx="auto" w={['100%', '60%']}>
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '' }}
@@ -73,38 +73,36 @@ export default function ForgotPasswordPage() {
             aria-label="form"
             name="form"
           >
-            <Stack align="center">
-              <Heading as="h1" fontSize="2xl" mb="12">
-                <Trans>
-                  Enter your user account's verified email address and we will
-                  send you a password reset link.
-                </Trans>
-              </Heading>
-              <br />
-            </Stack>
+            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
+              <Trans>
+                Enter your user account's verified email address and we will
+                send you a password reset link.
+              </Trans>
+            </Heading>
 
-            <Stack>
-              <EmailField name="email" mb="4" width="75%" />
+            <EmailField name="email" mb="4" />
 
-              <Stack spacing={4} isInline>
-                <Button
-                  variantColor="teal"
-                  type="submit"
-                  id="submitBtn"
-                  isLoading={isSubmitting}
-                >
-                  <Trans>Submit</Trans>
-                </Button>
+            <Stack spacing={4} isInline justifyContent="space-between">
+              <Button
+                color="gray.50"
+                bg="blue.700"
+                type="submit"
+                id="submitBtn"
+                isLoading={isSubmitting}
+              >
+                <Trans>Submit</Trans>
+              </Button>
 
-                <Button
-                  as={RouteLink}
-                  to="/sign-in"
-                  variantColor="teal"
-                  variant="outline"
-                >
-                  <Trans>Back</Trans>
-                </Button>
-              </Stack>
+              <Button
+                as={RouteLink}
+                to="/sign-in"
+                color="blue.700"
+                bg="transparent"
+                borderColor="blue.700"
+                borderWidth="1px"
+              >
+                <Trans>Back</Trans>
+              </Button>
             </Stack>
           </form>
         )}

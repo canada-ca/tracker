@@ -171,7 +171,8 @@ export default function UserList({
         <Button
           width={['100%', '75%']}
           leftIcon="add"
-          variantColor="blue"
+          color="gray.50"
+          bg="blue.700"
           onClick={() => {
             addUser(userSearch, Math.floor(Math.random() * 1000))
           }}
@@ -207,7 +208,8 @@ export default function UserList({
                       <IconButton
                         icon="minus"
                         size="sm"
-                        variantColor="red"
+                        color="gray.50"
+                        bg="red.600"
                         onClick={() => removeUser(node)}
                       />
                       <UserCard
@@ -232,7 +234,8 @@ export default function UserList({
                       </Select>
                       <Button
                         size="sm"
-                        variantColor="blue"
+                        color="gray.50"
+                        bg="blue.700"
                         onClick={() => handleClick(userRole, node.userName)}
                       >
                         <Trans>Apply</Trans>

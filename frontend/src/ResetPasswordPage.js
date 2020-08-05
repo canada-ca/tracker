@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Heading, Stack, Button, Box, useToast } from '@chakra-ui/core'
+import { Heading, Button, Box, useToast } from '@chakra-ui/core'
 import PasswordConfirmation from './PasswordConfirmation'
 import { object, string, ref } from 'yup'
 import { Formik } from 'formik'
@@ -81,26 +81,21 @@ export default function ResetPasswordPage() {
             aria-label="form"
             name="form"
           >
-            <Stack align="center">
-              <Heading as="h1" fontSize="2xl" mb="12">
-                <Trans>Enter and confirm your new password.</Trans>
-              </Heading>
-            </Stack>
-
-            <br />
+            <Heading as="h1" fontSize="2xl" mb="6">
+              <Trans>Enter and confirm your new password.</Trans>
+            </Heading>
 
             <PasswordConfirmation mb="4" spacing="4" />
 
-            <Stack spacing={4} isInline>
-              <Button
-                variantColor="teal"
-                type="submit"
-                isLoading={isSubmitting}
-                id="submitBtn"
-              >
-                <Trans>Change Password</Trans>
-              </Button>
-            </Stack>
+            <Button
+              color="gray.50"
+              bg="blue.700"
+              type="submit"
+              isLoading={isSubmitting}
+              id="submitBtn"
+            >
+              <Trans>Change Password</Trans>
+            </Button>
           </form>
         )}
       </Formik>

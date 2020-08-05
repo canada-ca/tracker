@@ -86,7 +86,7 @@ const sizes = {
     '2': '20rem',
   },
   width: {
-    '5': '5rem',
+    '4': '4rem',
     '60': '60rem',
   },
 }
@@ -114,6 +114,19 @@ const space = {
   '6': '1.5rem',
   '7': '1.75rem',
   '8': '2rem',
+}
+
+const buttons = {
+  primary: {
+    color: 'colors.gray.50',
+    bg: 'colors.blue.700',
+  },
+  secondary: {
+    color: 'blue.700',
+    bg: 'transparent',
+    borderColor: 'blue.700',
+    borderWidth: '1px',
+  },
 }
 
 const customIcons = {
@@ -163,6 +176,9 @@ const canada = {
   sizes: {
     ...chakraTheme.sizes,
     ...sizes,
+  },
+  buttons: {
+    ...buttons,
   },
 }
 

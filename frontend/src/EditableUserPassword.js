@@ -92,7 +92,13 @@ function EditableUserPassword() {
       <Stack isInline align="center">
         <Icon name="lock" color="gray.300" />
         <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
-        <Button ml="auto" onClick={onOpen} size="sm" variantColor="teal">
+        <Button
+          ml="auto"
+          onClick={onOpen}
+          size="sm"
+          color="gray.50"
+          bg="blue.700"
+        >
           <Trans>Edit</Trans>
         </Button>
       </Stack>
@@ -159,7 +165,8 @@ function EditableUserPassword() {
 
                     <ModalFooter>
                       <Button
-                        variantColor="teal"
+                        color="gray.50"
+                        bg="blue.700"
                         isLoading={isSubmitting}
                         type="submit"
                         mr="4"
@@ -167,7 +174,8 @@ function EditableUserPassword() {
                         <Trans>Confirm</Trans>
                       </Button>
                       <Button
-                        variantColor="teal"
+                        color="gray.50"
+                        bg="blue.700"
                         variant="outline"
                         onClick={onClose}
                       >

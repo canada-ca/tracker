@@ -568,7 +568,7 @@ msgstr "Enter and confirm your new password."
 
 #: src/ForgotPasswordPage.js:78
 msgid "Enter your user account's verified email address and we will send you a password reset link."
-msgstr "Enter your user account's verified email addres and we will send you a password reset link."
+msgstr "Enter your user account's verified email address and we will send you a password reset link."
 
 #: src/DmarcReportPage.js:124
 msgid "Envelope From"

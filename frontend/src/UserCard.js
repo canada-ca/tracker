@@ -33,7 +33,12 @@ export function UserCard({ userName, displayName, tfa, role }) {
       {role && (
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack isInline align="center">
-            <Badge variantColor="blue" variant="outline">
+            <Badge
+              color="blue.700"
+              bg="transparent"
+              borderColor="blue.600"
+              borderWidth="1px"
+            >
               {role}
             </Badge>
             {tfa !== null && (

@@ -75,7 +75,7 @@ export default function UserPage() {
         </Heading>
         <CheckboxGroup
           mt="20px"
-          variantColor="teal"
+          _checked={{ bg: 'cyan.800', color: 'white', borderColor: 'cyan.800' }}
           defaultValue={[
             queryUserData.userPage.userAffiliations[0].admin ? 'admin' : '',
             'active',
@@ -88,7 +88,8 @@ export default function UserPage() {
         <Stack isInline>
           <Button
             leftIcon="lock"
-            variantColor="blue"
+            color="gray.50"
+            bg="blue.700"
             onClick={() => {
               history.push('/two-factor-code')
             }}
@@ -98,7 +99,8 @@ export default function UserPage() {
           </Button>
           <Button
             leftIcon="edit"
-            variantColor="teal"
+            color="gray.50"
+            bg="blue.700"
             onClick={() => {
               window.alert('coming soon')
             }}
@@ -108,8 +110,9 @@ export default function UserPage() {
         </Stack>
 
         <Button
-          variantColor="teal"
-          w={'50%'}
+          color="gray.50"
+          bg="blue.700"
+          w="50%"
           onClick={() => {
             // This clears the JWT, essentially logging the user out in one go
             logout()

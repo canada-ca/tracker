@@ -118,7 +118,8 @@ export function AdminDomains({ domainsData, orgName }) {
         <Button
           width={['100%', '75%']}
           leftIcon="add"
-          variantColor="blue"
+          color="gray.50"
+          bg="blue.700"
           onClick={() => {
             addDomain(domainSearch)
           }}
@@ -143,7 +144,8 @@ export function AdminDomains({ domainsData, orgName }) {
                 <Stack key={'admindomain' + index} isInline align="center">
                   <IconButton
                     size="xs"
-                    variantColor="red"
+                    color="gray.50"
+                    bg="red.600"
                     icon="minus"
                     onClick={() => {
                       removeDomain(url)
@@ -152,7 +154,8 @@ export function AdminDomains({ domainsData, orgName }) {
                   <IconButton
                     size="xs"
                     icon="edit"
-                    variantColor="blue"
+                    color="gray.50"
+                    bg="blue.700"
                     onClick={() => window.alert('edit domain')}
                   />
                   <Domain url={url} lastRan={lastRan} />

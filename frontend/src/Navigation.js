@@ -25,7 +25,7 @@ export const Navigation = ({ children, ...props }) => {
         direction="row"
       >
         <Stack isInline alignItems="center" flexWrap="wrap" spacing={6}>
-          {React.Children.map(children, (child) => {
+          {React.Children.map(children, child => {
             if (child !== null) {
               return React.cloneElement(child, {
                 as: ReactRouterLink,
