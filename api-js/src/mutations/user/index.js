@@ -2,6 +2,7 @@ const { authenticate } = require('./authenticate')
 const { resetPassword } = require('./reset-password')
 const { sendEmailVerification } = require('./send-email-verification')
 const { sendPasswordResetLink } = require('./send-password-reset')
+const { sendTFATextMsg } = require('./send-tfa-code')
 const { signUp } = require('./sign-up')
 const { updateUserPassword } = require('./update-user-password')
 const { updateUserProfile } = require('./update-user-profile')
@@ -12,6 +13,7 @@ module.exports = {
   resetPassword,
   sendEmailVerification,
   sendPasswordResetLink,
+  sendTFATextMsg,
   signUp,
   updateUserPassword,
   updateUserProfile,

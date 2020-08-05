@@ -18,6 +18,7 @@ const {
   sendOrgInviteCreateAccount,
   sendOrgInviteEmail,
   sendPasswordResetEmail,
+  sendTfaTextMsg,
   sendVerificationEmail,
 } = require('./src/notify')
 
@@ -39,6 +40,7 @@ const {
       sendOrgInviteCreateAccount,
       sendOrgInviteEmail,
       sendPasswordResetEmail,
+      sendTfaTextMsg,
       sendVerificationEmail,
     },
   }).listen(PORT, (err) => {
