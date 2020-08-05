@@ -8,7 +8,7 @@ const validate = (value) => {
   }
 
   if (!ACRONYM_REGEX.test(value)) {
-    throw new TypeError(`Value is not a vaild acronym: ${value}`)
+    throw new TypeError(`Value is not a valid acronym: ${value}`)
   }
   return value
 }

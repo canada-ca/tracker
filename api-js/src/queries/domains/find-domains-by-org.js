@@ -10,7 +10,7 @@ const findDomainsByOrg = {
     orgSlug: {
       type: GraphQLNonNull(Slug),
       description:
-        'The slugified name of the organization you wish to retreieve data for.',
+        'The slugified name of the organization you wish to retrieve data for.',
     },
     ...connectionArgs,
   },

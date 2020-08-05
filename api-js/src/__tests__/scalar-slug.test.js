@@ -47,7 +47,7 @@ describe('given a slug scalar', () => {
         it('throws a type error', () => {
           const testSlug = 'invalid slug'
           expect(() => Slug.parseValue(testSlug)).toThrow(
-            new TypeError(`Value is not a vaild slug: ${testSlug}`),
+            new TypeError(`Value is not a valid slug: ${testSlug}`),
           )
         })
       })
@@ -82,7 +82,7 @@ describe('given a slug scalar', () => {
           value: testSlug,
         }
         expect(() => Slug.parseLiteral(testLiteral, {})).toThrow(
-          new TypeError(`Value is not a vaild slug: ${testSlug}`),
+          new TypeError(`Value is not a valid slug: ${testSlug}`),
         )
       })
     })

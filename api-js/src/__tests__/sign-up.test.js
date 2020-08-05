@@ -365,7 +365,7 @@ describe('user sign up', () => {
         ])
       })
     })
-    describe('database error occurrs when inserting user info into DB', () => {
+    describe('database error occurs when inserting user info into DB', () => {
       it('throws an error', async () => {
         const loader = userLoaderByUserName(query)
 
@@ -422,7 +422,7 @@ describe('user sign up', () => {
           `Database error occurred when test.account@istio.actually.exists tried to sign up: Error: Database error occurred.`,
         ])
       })
-      describe('cursor error occurs when retreiving newly created user', () => {
+      describe('cursor error occurs when retrieving newly created user', () => {
         it('throws an error', async () => {
           const loader = userLoaderByUserName(query)
 

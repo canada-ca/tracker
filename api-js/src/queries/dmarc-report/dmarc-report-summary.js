@@ -15,11 +15,11 @@ const dmarcReportSummary = {
     },
     period: {
       type: GraphQLNonNull(PeriodEnums),
-      description: 'The period in which the user wants to retreive data from.',
+      description: 'The period in which the user wants to retrieve data from.',
     },
     year: {
       type: GraphQLNonNull(Year),
-      description: 'The year in which the user wants to retreive data from.',
+      description: 'The year in which the user wants to retrieve data from.',
     },
   },
   resolve: async () => {},
@@ -37,11 +37,11 @@ const demoDmarcReportSummary = {
     },
     period: {
       type: GraphQLNonNull(PeriodEnums),
-      description: 'The period in which the user wants to retreive data from.',
+      description: 'The period in which the user wants to retrieve data from.',
     },
     year: {
       type: GraphQLNonNull(Year),
-      description: 'The year in which the user wants to retreive data from.',
+      description: 'The year in which the user wants to retrieve data from.',
     },
   },
   resolve: async () => {},

@@ -29,7 +29,7 @@ const spfType = new GraphQLObjectType({
     },
     record: {
       type: GraphQLString,
-      description: `SPF record retrieved durig the scan of the given domain.`,
+      description: `SPF record retrieved during the scan of the given domain.`,
       resolve: async () => {},
     },
     spfDefault: {

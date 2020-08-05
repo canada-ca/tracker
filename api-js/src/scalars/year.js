@@ -8,7 +8,7 @@ const validate = (value) => {
   }
 
   if (!YEAR_REGEX.test(value)) {
-    throw new TypeError(`Value is not a vaild year: ${value}`)
+    throw new TypeError(`Value is not a valid year: ${value}`)
   }
   return value
 }

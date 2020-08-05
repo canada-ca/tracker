@@ -7,7 +7,7 @@ const removeOrganization = new mutationWithClientMutationId({
   inputFields: () => ({
     id: {
       type: GraphQLNonNull(GraphQLID),
-      description: 'The gloabl id of the organization you wish you remove.',
+      description: 'The global id of the organization you wish you remove.',
     },
   }),
   outputFields: () => ({

@@ -16,7 +16,7 @@ const updateDomain = new mutationWithClientMutationId({
     orgSlug: {
       type: Slug,
       description:
-        'The organiztaion slug that the domain is being reassigned to.',
+        'The organization slug that the domain is being reassigned to.',
     },
     url: {
       type: GraphQLURL,

@@ -37,7 +37,7 @@ module.exports.PeriodEnums = new GraphQLEnumType({
     },
     SEPTEMBER: {
       value: 'september',
-      description: 'The month of Septemeber.',
+      description: 'The month of September.',
     },
     OCTOBER: {
       value: 'october',
@@ -49,7 +49,7 @@ module.exports.PeriodEnums = new GraphQLEnumType({
     },
     DECEMBER: {
       value: 'december',
-      description: 'The month of Decemeber.',
+      description: 'The month of December.',
     },
     LAST30DAYS: {
       value: 'last30days',

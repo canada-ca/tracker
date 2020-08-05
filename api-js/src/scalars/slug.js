@@ -8,7 +8,7 @@ const validate = (value) => {
   }
 
   if (!SLUG_REGEX.test(value)) {
-    throw new TypeError(`Value is not a vaild slug: ${value}`)
+    throw new TypeError(`Value is not a valid slug: ${value}`)
   }
   return value
 }

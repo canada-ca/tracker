@@ -84,7 +84,7 @@ describe('authenticate user account', () => {
     await drop()
   })
 
-  describe('given succesful authentication', () => {
+  describe('given successful authentication', () => {
     it('returns users information and JWT', async () => {
       const response = await graphql(
         schema,
@@ -136,7 +136,7 @@ describe('authenticate user account', () => {
         data: {
           authenticate: {
             authResult: {
-              authToken: tokenize({ parameters: { userId: user._key}}),
+              authToken: tokenize({ parameters: { userId: user._key } }),
               user: {
                 id: `${toGlobalId('users', user._key)}`,
                 userName: 'test.account@istio.actually.exists',
@@ -155,7 +155,7 @@ describe('authenticate user account', () => {
         `User: ${user._key} successfully authenticated their account.`,
       ])
     })
-    describe('after an unseccessful login, user enters correct details', () => {
+    describe('after an unsuccessful login, user enters correct details', () => {
       it('resets the failed login attempt counter', async () => {
         const userCursor = await query`
           FOR user IN users
@@ -283,7 +283,7 @@ describe('authenticate user account', () => {
     })
   })
 
-  describe('given unsecessful authenticatation', () => {
+  describe('given successful authentication', () => {
     describe('when login credentials are invalid', () => {
       it('returns an authentication error', async () => {
         const response = await graphql(

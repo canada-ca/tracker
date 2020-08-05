@@ -12,7 +12,7 @@ const validate = (value) => {
       throw new TypeError(`Value is not a string: ${value[i]}`)
     }
     if (!SLUG_REGEX.test(value[i])) {
-      throw new TypeError(`Value is not a vaild selector: ${value[i]}`)
+      throw new TypeError(`Value is not a valid selector: ${value[i]}`)
     }
   }
 

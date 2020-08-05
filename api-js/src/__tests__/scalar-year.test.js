@@ -15,7 +15,7 @@ describe('given a year scalar', () => {
         it('throws a typeError', () => {
           const testYear = 'Text'
           expect(() => Year.serialize(testYear)).toThrow(
-            new TypeError(`Value is not a vaild year: ${testYear}`),
+            new TypeError(`Value is not a valid year: ${testYear}`),
           )
         })
       })
@@ -44,7 +44,7 @@ describe('given a year scalar', () => {
       describe('given an invalid year', () => {
         const testYear = 'Text'
         expect(() => Year.parseValue(testYear)).toThrow(
-          new TypeError(`Value is not a vaild year: ${testYear}`),
+          new TypeError(`Value is not a valid year: ${testYear}`),
         )
       })
     })
@@ -78,7 +78,7 @@ describe('given a year scalar', () => {
           value: testYear,
         }
         expect(() => Year.parseLiteral(testLiteral, {})).toThrow(
-          new TypeError(`Value is not a vaild year: ${testYear}`),
+          new TypeError(`Value is not a valid year: ${testYear}`),
         )
       })
     })

@@ -11,11 +11,11 @@ describe('given a acronym scalar', () => {
           expect(Acronym.serialize(testAcronym)).toEqual(testAcronym)
         })
       })
-      describe('given an invalid acroynm', () => {
+      describe('given an invalid acronym', () => {
         it('throws type error', () => {
           const testAcronym = 'not an acronym'
           expect(() => Acronym.serialize(testAcronym)).toThrow(
-            new TypeError(`Value is not a vaild acronym: ${testAcronym}`),
+            new TypeError(`Value is not a valid acronym: ${testAcronym}`),
           )
         })
       })
@@ -38,10 +38,10 @@ describe('given a acronym scalar', () => {
         const testAcronym = 'CANADA'
         expect(Acronym.parseValue(testAcronym)).toEqual(testAcronym)
       })
-      describe('given an invalid acroynm', () => {
+      describe('given an invalid acronym', () => {
         const testAcronym = 'not an acronym'
         expect(() => Acronym.parseValue(testAcronym)).toThrow(
-          new TypeError(`Value is not a vaild acronym: ${testAcronym}`),
+          new TypeError(`Value is not a valid acronym: ${testAcronym}`),
         )
       })
     })
@@ -67,14 +67,14 @@ describe('given a acronym scalar', () => {
         }
         expect(Acronym.parseLiteral(testLiteral, {})).toEqual(testAcronym)
       })
-      describe('given an invalid acroynm', () => {
+      describe('given an invalid acronym', () => {
         const testAcronym = 'not an acronym'
         const testLiteral = {
           kind: Kind.STRING,
           value: testAcronym,
         }
         expect(() => Acronym.parseLiteral(testLiteral, {})).toThrow(
-          new TypeError(`Value is not a vaild acronym: ${testAcronym}`),
+          new TypeError(`Value is not a valid acronym: ${testAcronym}`),
         )
       })
     })

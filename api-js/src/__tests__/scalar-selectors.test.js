@@ -16,7 +16,7 @@ describe('given a selectors scalar', () => {
           it('throws an error', () => {
             const testSelector = ['This is an invalid selector']
             expect(() => Selectors.serialize(testSelector)).toThrow(
-              new TypeError(`Value is not a vaild selector: ${testSelector}`),
+              new TypeError(`Value is not a valid selector: ${testSelector}`),
             )
           })
         })
@@ -55,7 +55,7 @@ describe('given a selectors scalar', () => {
           it('throws an error', () => {
             const testSelector = ['This is an invalid selector']
             expect(() => Selectors.parseValue(testSelector)).toThrow(
-              new TypeError(`Value is not a vaild selector: ${testSelector}`),
+              new TypeError(`Value is not a valid selector: ${testSelector}`),
             )
           })
         })
@@ -102,7 +102,7 @@ describe('given a selectors scalar', () => {
               value: testSelector,
             }
             expect(() => Selectors.parseLiteral(testLiteral, {})).toThrow(
-              new TypeError(`Value is not a vaild selector: ${testSelector}`),
+              new TypeError(`Value is not a valid selector: ${testSelector}`),
             )
           })
         })
