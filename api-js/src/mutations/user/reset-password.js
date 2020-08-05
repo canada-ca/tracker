@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt')
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 
@@ -35,7 +34,7 @@ const resetPassword = new mutationWithClientMutationId({
     args,
     {
       query,
-      auth: { verifyToken },
+      auth: { verifyToken, bcrypt },
       loaders: { userLoaderById },
       functions: { cleanseInput },
     },
