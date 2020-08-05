@@ -10,7 +10,6 @@ const {
 const { requestScan } = require('./scans')
 const {
   authenticate,
-  generateOtpUrl,
   resetPassword,
   sendEmailVerification,
   sendPasswordResetLink,
@@ -39,7 +38,6 @@ const createMutationSchema = () => {
       requestScan,
       // User Mutations
       authenticate,
-      generateOtpUrl,
       resetPassword,
       sendEmailVerification,
       sendPasswordResetLink,
