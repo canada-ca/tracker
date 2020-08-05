@@ -42,7 +42,7 @@ describe('given a encoded token', () => {
 
       expect(() => {
         verifyToken(token)
-      }).toThrow(Error('Invalid token, please sign in again.'))
+      }).toThrow(Error('Invalid token, please request a new one.'))
       expect(consoleOutput).toEqual([
         `JWT was attempted to be verified but secret was incorrect.`,
       ])

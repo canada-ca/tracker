@@ -8,7 +8,7 @@ const verifyToken = (token) => {
     decoded = jwt.verify(token, String(JWT_KEY))
   } catch (err) {
     console.warn('JWT was attempted to be verified but secret was incorrect.')
-    throw new Error('Invalid token, please sign in again.')
+    throw new Error('Invalid token, please request a new one.')
   }
   return decoded.parameters
 }
