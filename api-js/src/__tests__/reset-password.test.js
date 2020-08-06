@@ -3,7 +3,6 @@ dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
-const { toGlobalId } = require('graphql-relay')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
@@ -14,6 +13,8 @@ const { tokenize, verifyToken } = require('../auth')
 const { userLoaderByUserName, userLoaderById } = require('../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
+
+const mockNotify = jest.fn()
 
 describe('reset users passsword', () => {
   let query, drop, truncate, migrate, schema
@@ -148,22 +149,13 @@ describe('reset users passsword', () => {
         schema,
         `
           mutation {
-            authenticate(
+            signIn(
               input: {
                 userName: "test.account@istio.actually.exists"
                 password: "newpassword123"
               }
             ) {
-              authResult {
-                user {
-                  id
-                  userName
-                  displayName
-                  preferredLang
-                  tfaValidated
-                  emailValidated
-                }
-              }
+              status
             }
           }
         `,
@@ -180,29 +172,23 @@ describe('reset users passsword', () => {
           loaders: {
             userLoaderByUserName: userLoaderByUserName(query),
           },
+          notify: {
+            sendAuthEmail: mockNotify,
+          },
         },
       )
 
       const expectedtestSignIn = {
         data: {
-          authenticate: {
-            authResult: {
-              user: {
-                id: `${toGlobalId('users', user._key)}`,
-                userName: 'test.account@istio.actually.exists',
-                displayName: 'Test Account',
-                preferredLang: 'FRENCH',
-                tfaValidated: false,
-                emailValidated: false,
-              },
-            },
+          signIn: {
+            status: 'We\'ve sent you an email with an authentication code to sign into Pulse.'
           },
         },
       }
 
       expect(testSignIn).toEqual(expectedtestSignIn)
       expect(consoleOutput).toEqual([
-        `User: ${user._key} successfully authenticated their account.`,
+        `User: ${user._key} successfully signed in, and sent auth msg.`,
       ])
     })
   })

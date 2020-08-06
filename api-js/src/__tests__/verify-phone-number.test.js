@@ -58,12 +58,12 @@ describe('user send password reset email', () => {
         tfaCode: 123456,
       })
 
-      const cursor = await query`
+      let cursor = await query`
         FOR user IN users
             FILTER user.userName == "test.account@istio.actually.exists"
             RETURN user
       `
-      const user = await cursor.next()
+      let user = await cursor.next()
 
       const response = await graphql(
         schema,
@@ -91,7 +91,16 @@ describe('user send password reset email', () => {
           },
         },
       }
+
+      cursor = await query`
+        FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+      `
+      user = await cursor.next()
+      
       expect(response).toEqual(expectedResult)
+      expect(user.phoneValidated).toEqual(true)
       expect(consoleOutput).toEqual([
         `User: ${user._key} successfully two factor authenticated their account.`,
       ])

@@ -52,7 +52,7 @@ const Server = (context = {}) => {
       let userId
       const token = request.headers.authorization || ''
       if (token !== '') {
-        userId = verifyToken(token).userId
+        userId = verifyToken({token}).userId
       }
 
       return {

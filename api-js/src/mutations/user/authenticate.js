@@ -1,20 +1,21 @@
-const { GraphQLNonNull, GraphQLString } = require('graphql')
+const { GraphQLNonNull, GraphQLString, GraphQLInt } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
-const { GraphQLEmailAddress } = require('graphql-scalars')
 const { authResultType } = require('../../types')
+
+const { SIGN_IN_KEY } = process.env
 
 const authenticate = new mutationWithClientMutationId({
   name: 'Authenticate',
   description:
     'This mutation allows users to give their credentials and retrieve a token that gives them access to restricted content.',
   inputFields: () => ({
-    userName: {
-      type: GraphQLNonNull(GraphQLEmailAddress),
-      description: 'The email the user signed up with.',
+    authenticationCode: {
+      type: GraphQLNonNull(GraphQLInt),
+      description: 'Security code found in text msg, or email inbox.',
     },
-    password: {
+    authenticateToken: {
       type: GraphQLNonNull(GraphQLString),
-      description: 'The password the user signed up with.',
+      description: 'The JWT that is retrieved from the sign in mutation.',
     },
   }),
   outputFields: () => ({
@@ -30,82 +31,64 @@ const authenticate = new mutationWithClientMutationId({
     args,
     {
       query,
-      auth: { tokenize, bcrypt },
-      loaders: { userLoaderByUserName },
+      auth: { tokenize, verifyToken },
+      loaders: { userLoaderById },
       functions: { cleanseInput },
     },
   ) => {
     // Cleanse Inputs
-    const userName = cleanseInput(args.userName).toLowerCase()
-    const password = cleanseInput(args.password)
+    const authenticationCode = args.authenticationCode
+    const authenticationToken = cleanseInput(args.authenticateToken)
+
+    // Gather token parameters
+    const tokenParameters = verifyToken({ token: authenticationToken, secret: String(SIGN_IN_KEY) })
+
+    if (tokenParameters.userId === 'undefined' || typeof tokenParameters.userId === 'undefined') {
+      console.warn(`Authentication token does not contain the userId`)
+      throw new Error('Unable to authenticate. Please try again.')
+    }
 
     // Gather sign in user
-    const user = await userLoaderByUserName.load(userName)
+    const user = await userLoaderById.load(tokenParameters.userId)
 
     if (typeof user === 'undefined') {
       console.warn(
-        `User: ${userName} attempted to authenticate, no account is associated with this email.`,
+        `User: ${tokenParameters.userId} attempted to authenticate, no account is associated with this id.`,
       )
-      throw new Error('Unable to authenticate, please try again.')
+      throw new Error('Unable to authenticate. Please try again.')
     }
 
-    // Check against failed attempt info
-    if (user.failedLoginAttempts >= 10) {
-      console.warn(
-        `User: ${user._key} tried to authenticate, but has too many login attempts.`,
-      )
-      throw new Error(
-        'Too many failed login attempts, please reset your password, and try again.',
-      )
-    } else {
-      // Check to see if passwords match
-      if (bcrypt.compareSync(password, user.password)) {
-        const token = tokenize({ parameters: { userId: user._key } })
+    // Check to see if security token matches the user submitted one
+    if (authenticationCode === user.tfaCode) {
+      const token = tokenize({ parameters: { userId: user._key } })
 
-        // Reset Failed Login attempts
-        try {
-          await query`
-                  FOR u IN users
-                    UPDATE ${user._key} WITH { failedLoginAttempts: 0 } IN users
-                `
-        } catch (err) {
-          console.error(
-            `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: ${err}`,
-          )
-          throw new Error('Unable to authenticate, please try again.')
-        }
-
-        console.info(
-          `User: ${user._key} successfully authenticated their account.`,
+      // Reset Failed Login attempts
+      try {
+        await query`
+                FOR u IN users
+                  UPDATE ${user._key} WITH { tfaCode: null } IN users
+              `
+      } catch (err) {
+        console.error(
+          `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: ${err}`,
         )
-        user.id = user._key
-
-        return {
-          authResult: {
-            token,
-            user,
-          },
-        }
-      } else {
-        try {
-          // Increase users failed login attempts
-          await query`
-            FOR u IN users
-              UPDATE ${user._key} WITH { failedLoginAttempts: ${
-            user.failedLoginAttempts + 1
-          } } IN users
-          `
-        } catch (err) {
-          console.error(
-            `Database error ocurred when incrementing user: ${user._key} failed login attempts: ${err}`,
-          )
-          throw new Error('Unable to authenticate, please try again.')
-        }
-        console.warn(
-          `User attempted to authenticate: ${user._key} with invalid credentials.`,
-        )
-        throw new Error('Unable to authenticate, please try again.')
+        throw new Error('Unable to authenticate. Please try again.')
       }
+
+      console.info(
+        `User: ${user._key} successfully authenticated their account.`,
+      )
+      user.id = user._key
+
+      return {
+        authResult: {
+          token,
+          user,
+        },
+      }
+    } else {
+      console.warn(`User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`)
+      throw new Error('Unable to authenticate. Please try again.')
     }
   },
 })

@@ -1,8 +1,10 @@
 const dotenv = require('dotenv-safe')
 dotenv.config()
 
+const { SIGN_IN_KEY } = process.env
+
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema } = require('graphql')
+const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
@@ -10,13 +12,13 @@ const { createMutationSchema } = require('../mutations')
 
 const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
-const { tokenize } = require('../auth')
-const { userLoaderByUserName } = require('../loaders')
+const { tokenize, verifyToken } = require('../auth')
+const { userLoaderById } = require('../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('authenticate user account', () => {
-  let query, drop, truncate, migrate, schema
+  let query, drop, truncate, migrate, schema, collections
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -36,46 +38,10 @@ describe('authenticate user account', () => {
     console.error = mockedError
     // Generate DB Items
     ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate } = await migrate(
+    ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
     await truncate()
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        functions: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
     consoleOutput = []
   })
 
@@ -84,15 +50,33 @@ describe('authenticate user account', () => {
   })
 
   describe('given successful authentication', () => {
+    beforeEach(async () => {
+      await collections.users.save({
+        userName: 'test.account@istio.actually.exists',
+        displayName: 'Test Account',
+        preferredLang: 'french',
+        tfaValidated: false,
+        emailValidated: false,
+        tfaCode: 123456,
+      })
+    })
     it('returns users information and JWT', async () => {
+      let cursor = await query`
+        FOR user IN users
+          FILTER user.userName == "test.account@istio.actually.exists"
+          RETURN user
+      `
+      let user = await cursor.next()
+
+      const token = tokenize({ parameters: { userId: user._key }, secret: String(SIGN_IN_KEY)})
       const response = await graphql(
         schema,
         `
           mutation {
             authenticate(
               input: {
-                userName: "test.account@istio.actually.exists"
-                password: "testpassword123"
+                authenticationCode: 123456
+                authenticateToken: "${token}"
               }
             ) {
               authResult {
@@ -115,22 +99,16 @@ describe('authenticate user account', () => {
           auth: {
             bcrypt,
             tokenize,
+            verifyToken,
           },
           functions: {
             cleanseInput,
           },
           loaders: {
-            userLoaderByUserName: userLoaderByUserName(query),
+            userLoaderById: userLoaderById(query),
           },
         },
       )
-
-      const cursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-          `
-      const user = await cursor.next()
 
       const expectedResult = {
         data: {
@@ -150,155 +128,37 @@ describe('authenticate user account', () => {
         },
       }
 
+      cursor = await query`
+        FOR user IN users
+          FILTER user.userName == "test.account@istio.actually.exists"
+          RETURN user
+      `
+      user = await cursor.next()
+
       expect(response).toEqual(expectedResult)
+      expect(user.tfaCode).toEqual(null)
       expect(consoleOutput).toEqual([
         `User: ${user._key} successfully authenticated their account.`,
       ])
     })
-    describe('after an unsuccessful login, user enters correct details', () => {
-      it('resets the failed login attempt counter', async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const user = await userCursor.next()
-
-        await query`
-          FOR user IN users
-            UPDATE ${user._key} WITH { failedLoginAttempts: 5 } IN users
-        `
-
-        await graphql(
-          schema,
-          `
-            mutation {
-              authenticate(
-                input: {
-                  userName: "test.account@istio.actually.exists"
-                  password: "testpassword123"
-                }
-              ) {
-                authResult {
-                  user {
-                    id
-                    userName
-                    displayName
-                    preferredLang
-                    tfaValidated
-                    emailValidated
-                  }
-                }
-              }
-            }
-          `,
-          null,
-          {
-            query,
-            auth: {
-              bcrypt,
-              tokenize,
-            },
-            functions: {
-              cleanseInput,
-            },
-            loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-          },
-        )
-
-        const updateCursor = await query`
-            FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const checkUser = await updateCursor.next()
-
-        expect(checkUser.failedLoginAttempts).toEqual(0)
-      })
-    })
-    describe('Database error occurs after successful login when failed logins is being reset', () => {
-      it('throws an error', async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const user = await userCursor.next()
-
-        const loader = userLoaderByUserName(query)
-
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
-
-        try {
-          await graphql(
-            schema,
-            `
-              mutation {
-                authenticate(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "testpassword123"
-                  }
-                ) {
-                  authResult {
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      tfaValidated
-                      emailValidated
-                    }
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              query,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              functions: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: loader,
-              },
-            },
-          )
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to authenticate, please try again.'),
-          )
-        }
-
-        expect(consoleOutput).toEqual([
-          `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: Error: Database error occurred.`,
-        ])
-      })
-    })
   })
 
-  describe('given successful authentication', () => {
-    describe('when login credentials are invalid', () => {
-      it('returns an authentication error', async () => {
+  describe('given unsuccessful authentication', () => {
+    describe('when userId in token is undefined', () => {
+      it('returns an error message', async () => {
+        const token = tokenize({ parameters: { userId: undefined }, secret: String(SIGN_IN_KEY)})
         const response = await graphql(
           schema,
           `
             mutation {
               authenticate(
                 input: {
-                  userName: "test.account@istio.actually.exists"
-                  password: "123"
+                  authenticationCode: 654321
+                  authenticateToken: "${token}"
                 }
               ) {
                 authResult {
+                  authToken
                   user {
                     id
                     userName
@@ -317,42 +177,42 @@ describe('authenticate user account', () => {
             auth: {
               bcrypt,
               tokenize,
+              verifyToken,
             },
             functions: {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              userLoaderById: userLoaderById(query),
             },
           },
         )
 
-        const cursor = await query`
-              FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        const user = await cursor.next()
+        const error = [
+          new GraphQLError('Unable to authenticate. Please try again.'),
+        ]
 
-        expect(response).toMatchObject({
-          errors: [{ message: 'Unable to authenticate, please try again.' }],
-        })
+        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `User attempted to authenticate: ${user._key} with invalid credentials.`,
+          `Authentication token does not contain the userId`,
         ])
       })
-      it('increases the failed attempt counter', async () => {
-        await graphql(
+    })
+    describe('when userId is not a field in the token parameters', () => {
+      it('returns an error message', async () => {
+        const token = tokenize({ parameters: {}, secret: String(SIGN_IN_KEY)})
+        const response = await graphql(
           schema,
           `
             mutation {
               authenticate(
                 input: {
-                  userName: "test.account@istio.actually.exists"
-                  password: "123"
+                  authenticationCode: 654321
+                  authenticateToken: "${token}"
                 }
               ) {
                 authResult {
+                  authToken
                   user {
                     id
                     userName
@@ -371,51 +231,113 @@ describe('authenticate user account', () => {
             auth: {
               bcrypt,
               tokenize,
+              verifyToken,
             },
             functions: {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              userLoaderById: userLoaderById(query),
             },
           },
         )
 
-        const cursor = await query`
-              FOR user IN users
-              FILTER user.userName == "test.account@istio.actually.exists"
-              RETURN user
-          `
-        const user = await cursor.next()
+        const error = [
+          new GraphQLError('Unable to authenticate. Please try again.'),
+        ]
 
-        expect(user.failedLoginAttempts).toEqual(1)
+        expect(response.errors).toEqual(error)
+        expect(consoleOutput).toEqual([
+          `Authentication token does not contain the userId`,
+        ])
       })
     })
-    describe('user has reached maximum amount of login attempts', () => {
-      it('returns a too many login attempts error message', async () => {
-        const userCursor = await query`
+    describe('when user cannot be found in database', () => {
+      it('returns an error message', async () => {
+        const token = tokenize({ parameters: { userId: 1}, secret: String(SIGN_IN_KEY)})
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              authenticate(
+                input: {
+                  authenticationCode: 654321
+                  authenticateToken: "${token}"
+                }
+              ) {
+                authResult {
+                  authToken
+                  user {
+                    id
+                    userName
+                    displayName
+                    preferredLang
+                    tfaValidated
+                    emailValidated
+                  }
+                }
+              }
+            }
+          `,
+          null,
+          {
+            query,
+            auth: {
+              bcrypt,
+              tokenize,
+              verifyToken,
+            },
+            functions: {
+              cleanseInput,
+            },
+            loaders: {
+              userLoaderById: userLoaderById(query),
+            },
+          },
+        )
+
+        const error = [
+          new GraphQLError('Unable to authenticate. Please try again.'),
+        ]
+
+        expect(response.errors).toEqual(error)
+        expect(consoleOutput).toEqual([
+          `User: 1 attempted to authenticate, no account is associated with this id.`,
+        ])
+      })
+    })
+    describe('when tfa codes do not match', () => {
+      beforeEach(async () => {
+        await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+          tfaValidated: false,
+          emailValidated: false,
+          tfaCode: 123456,
+        })
+      })
+      it('returns an error message', async () => {
+        const cursor = await query`
           FOR user IN users
             FILTER user.userName == "test.account@istio.actually.exists"
             RETURN user
         `
-        const user = await userCursor.next()
+        const user = await cursor.next()
 
-        await query`
-          FOR user IN users
-            UPDATE ${user._key} WITH { failedLoginAttempts: 10 } IN users
-        `
-
+        const token = tokenize({ parameters: { userId: user._key }, secret: String(SIGN_IN_KEY)})
         const response = await graphql(
           schema,
           `
             mutation {
               authenticate(
                 input: {
-                  userName: "test.account@istio.actually.exists"
-                  password: "password123"
+                  authenticationCode: 654321
+                  authenticateToken: "${token}"
                 }
               ) {
                 authResult {
+                  authToken
                   user {
                     id
                     userName
@@ -434,140 +356,100 @@ describe('authenticate user account', () => {
             auth: {
               bcrypt,
               tokenize,
+              verifyToken,
             },
             functions: {
               cleanseInput,
             },
             loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
+              userLoaderById: userLoaderById(query),
             },
           },
         )
 
-        expect(response).toMatchObject({
-          errors: [
-            {
-              message:
-                'Too many failed login attempts, please reset your password, and try again.',
-            },
-          ],
-        })
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} tried to authenticate, but has too many login attempts.`,
-        ])
-      })
-    })
-    describe("user attempts to login into an account that doesn't exist", () => {
-      it('returns a generic error message', async () => {
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              authenticate(
-                input: {
-                  userName: "test.account@istio.does.not.actually.exists"
-                  password: "password123"
-                }
-              ) {
-                authResult {
-                  user {
-                    id
-                    userName
-                    displayName
-                    preferredLang
-                    tfaValidated
-                    emailValidated
-                  }
-                }
-              }
-            }
-          `,
-          null,
-          {
-            query,
-            auth: {
-              bcrypt,
-              tokenize,
-            },
-            functions: {
-              cleanseInput,
-            },
-            loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-          },
-        )
+        const error = [
+          new GraphQLError('Unable to authenticate. Please try again.'),
+        ]
 
-        expect(response).toMatchObject({
-          errors: [{ message: 'Unable to authenticate, please try again.' }],
-        })
+        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `User: test.account@istio.does.not.actually.exists attempted to authenticate, no account is associated with this email.`,
+          `User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`,
         ])
       })
     })
-    describe('Database error occurs when failed logins are being incremented ', () => {
-      it('throws an error', async () => {
-        const userCursor = await query`
+    describe('database error occurs when setting tfaCode to null', () => {
+      beforeEach(async () => {
+        await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'french',
+          tfaValidated: false,
+          emailValidated: false,
+          tfaCode: 123456,
+        })
+      })
+      it('returns an error message', async () => {
+        const cursor = await query`
           FOR user IN users
             FILTER user.userName == "test.account@istio.actually.exists"
             RETURN user
         `
-        const user = await userCursor.next()
-
-        const loader = userLoaderByUserName(query)
+        const user = await cursor.next()
+        const loader = userLoaderById(query)
+        const token = tokenize({ parameters: { userId: user._key }, secret: String(SIGN_IN_KEY)})
 
         query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+        .fn()
+        .mockRejectedValue(new Error('Database error occurred.'))
 
-        try {
-          await graphql(
-            schema,
-            `
-              mutation {
-                authenticate(
-                  input: {
-                    userName: "test.account@istio.actually.exists"
-                    password: "321password"
-                  }
-                ) {
-                  authResult {
-                    user {
-                      id
-                      userName
-                      displayName
-                      preferredLang
-                      tfaValidated
-                      emailValidated
-                    }
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              authenticate(
+                input: {
+                  authenticationCode: 123456
+                  authenticateToken: "${token}"
+                }
+              ) {
+                authResult {
+                  authToken
+                  user {
+                    id
+                    userName
+                    displayName
+                    preferredLang
+                    tfaValidated
+                    emailValidated
                   }
                 }
               }
-            `,
-            null,
-            {
-              query,
-              auth: {
-                bcrypt,
-                tokenize,
-              },
-              functions: {
-                cleanseInput,
-              },
-              loaders: {
-                userLoaderByUserName: loader,
-              },
+            }
+          `,
+          null,
+          {
+            query,
+            auth: {
+              bcrypt,
+              tokenize,
+              verifyToken,
             },
-          )
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to authenticate, please try again.'),
-          )
-        }
+            functions: {
+              cleanseInput,
+            },
+            loaders: {
+              userLoaderById: loader,
+            },
+          },
+        )
 
+        const error = [
+          new GraphQLError('Unable to authenticate. Please try again.'),
+        ]
+
+        expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `Database error ocurred when incrementing user: ${user._key} failed login attempts: Error: Database error occurred.`,
+          `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: Error: Database error occurred.`,
         ])
       })
     })

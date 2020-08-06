@@ -15,6 +15,8 @@ const bcrypt = require('bcrypt')
 const { tokenize, verifyToken } = require('./src/auth')
 const { cleanseInput } = require('./src/validators')
 const {
+  sendAuthEmail,
+  sendAuthTextMsg,
   sendOrgInviteCreateAccount,
   sendOrgInviteEmail,
   sendPasswordResetEmail,
@@ -37,6 +39,8 @@ const {
       cleanseInput,
     },
     notify: {
+      sendAuthEmail,
+      sendAuthTextMsg,
       sendOrgInviteCreateAccount,
       sendOrgInviteEmail,
       sendPasswordResetEmail,

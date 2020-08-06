@@ -3,6 +3,7 @@ const { resetPassword } = require('./reset-password')
 const { sendEmailVerification } = require('./send-email-verification')
 const { sendPasswordResetLink } = require('./send-password-reset')
 const { sendPhoneCode } = require('./send-phone-code')
+const { signIn } = require('./sign-in')
 const { signUp } = require('./sign-up')
 const { updateUserPassword } = require('./update-user-password')
 const { updateUserProfile } = require('./update-user-profile')
@@ -15,6 +16,7 @@ module.exports = {
   sendEmailVerification,
   sendPasswordResetLink,
   sendPhoneCode,
+  signIn,
   signUp,
   updateUserPassword,
   updateUserProfile,

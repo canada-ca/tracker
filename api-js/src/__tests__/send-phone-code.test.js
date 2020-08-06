@@ -23,10 +23,6 @@ describe('user send password reset email', () => {
   let query, drop, truncate, migrate, collections, schema, request
 
   beforeAll(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
     schema = new GraphQLSchema({
       query: createQuerySchema(),
       mutation: createMutationSchema(),
@@ -45,6 +41,10 @@ describe('user send password reset email', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate, collections } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
     await truncate()
   })
 
@@ -354,6 +354,70 @@ describe('user send password reset email', () => {
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
           `Database error occurred when inserting ${user._key} TFA code: Error: Database error occurred.`,
+        ])
+      })
+    })
+    describe('database error occurs on phone number insert', () => {
+      beforeEach(async () => {
+        await collections.users.save({
+          userName: 'test.account@istio.actually.exists',
+          displayName: 'Test Account',
+          preferredLang: 'english',
+          tfaValidated: false,
+          emailValidated: false,
+        })
+      })
+      it('returns an error message', async () => {
+        const cursor = await query`
+          FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+        `
+        const user = await cursor.next()
+        const loaderById = userLoaderById(query)
+
+        query = jest
+          .fn()
+          .mockResolvedValueOnce(query)
+          .mockRejectedValue(new Error('Database error occurred.'))
+
+        const response = await graphql(
+          schema,
+          `
+            mutation {
+              sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
+                status
+              }
+            }
+          `,
+          null,
+          {
+            request,
+            userId: user._key,
+            query,
+            auth: {
+              bcrypt,
+              tokenize,
+            },
+            functions: {
+              cleanseInput,
+            },
+            loaders: {
+              userLoaderById: loaderById,
+            },
+            notify: {
+              sendTfaTextMsg: mockNotify,
+            },
+          },
+        )
+
+        const error = [
+          new GraphQLError('Unable to send TFA code, please try again.'),
+        ]
+
+        expect(response.errors).toEqual(error)
+        expect(consoleOutput).toEqual([
+          `Database error occurred when inserting ${user._key} phone number: Error: Database error occurred.`,
         ])
       })
     })

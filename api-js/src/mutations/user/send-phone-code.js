@@ -54,6 +54,18 @@ const sendPhoneCode = new mutationWithClientMutationId({
       throw new Error('Unable to send TFA code, please try again.')
     }
 
+    try {
+      await query`
+        UPSERT { _key: ${user._key} }
+          INSERT { phoneNumber: ${phoneNumber} }
+          UPDATE { phoneNumber: ${phoneNumber} }
+          IN users
+      `
+    } catch (err) {
+      console.error(`Database error occurred when inserting ${user._key} phone number: ${err}`)
+      throw new Error('Unable to send TFA code, please try again.')
+    }
+
     // Get newly updated user
     await userLoaderById.clear(user._key)
     user = await userLoaderById.load(user._key)

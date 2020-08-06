@@ -58,12 +58,12 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
       throw new Error('Unable to two factor authenticate. Please try again.')
     }
 
-    // Update tfaValidated to be true
+    // Update phoneValidated to be true
     try {
       await query`
         UPSERT { _key: ${user._key} }
-          INSERT { tfaValidated: true }
-          UPDATE { tfaValidated: true }
+          INSERT { phoneValidated: true }
+          UPDATE { phoneValidated: true }
           IN users
       `
     } catch (err) {
