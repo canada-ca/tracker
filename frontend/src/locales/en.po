@@ -1414,9 +1414,17 @@ msgstr "Sign In"
 msgid "Sign In."
 msgstr "Sign In."
 
-#: src/UserPage.js:127
+#: src/App.js:98
 msgid "Sign Out"
 msgstr "Sign Out"
+
+#: src/App.js:90
+msgid "Sign Out."
+msgstr "Sign Out."
+
+#: src/App.js:91
+msgid "You have successfully been signed out."
+msgstr "You have successfully been signed out."
 
 #: src/SignInPage.js:93
 msgid "Sign in with your username and password."

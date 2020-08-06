@@ -1395,9 +1395,17 @@ msgstr "Se connecter"
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/UserPage.js:127
+#: src/App.js:98
 msgid "Sign Out"
 msgstr "Déconnexion"
+
+#: src/App.js:90
+msgid "Sign Out."
+msgstr "Déconnexion."
+
+#: src/App.js:91
+msgid "You have successfully been signed out."
+msgstr "Vous avez été déconnecté avec succès."
 
 #: src/SignInPage.js:93
 msgid "Sign in with your username and password."

@@ -3,7 +3,7 @@ import { Route, Switch, useHistory } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
@@ -87,15 +87,15 @@ export default function App() {
                 logout()
                 history.push('/')
                 toast({
-                  title: 'Sign Out.',
-                  description: 'You have successfully been signed out.',
+                  title: i18n._(`Sign Out.`),
+                  description: i18n._(`You have successfully been signed out.`),
                   status: 'success',
                   duration: 9000,
                   isClosable: true,
                 })
               }}
             >
-              Sign Out
+              <Trans>Sign Out</Trans>
             </Link>
           ) : (
             <Link to="/sign-in">
