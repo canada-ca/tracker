@@ -16,7 +16,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const mockNotify = jest.fn()
 
-describe('reset users passsword', () => {
+describe('reset users password', () => {
   let query, drop, truncate, migrate, schema
 
   beforeAll(async () => {
@@ -178,15 +178,16 @@ describe('reset users passsword', () => {
         },
       )
 
-      const expectedtestSignIn = {
+      const expectedTestSignIn = {
         data: {
           signIn: {
-            status: 'We\'ve sent you an email with an authentication code to sign into Pulse.'
+            status:
+              "We've sent you an email with an authentication code to sign into Pulse.",
           },
         },
       }
 
-      expect(testSignIn).toEqual(expectedtestSignIn)
+      expect(testSignIn).toEqual(expectedTestSignIn)
       expect(consoleOutput).toEqual([
         `User: ${user._key} successfully signed in, and sent auth msg.`,
       ])
