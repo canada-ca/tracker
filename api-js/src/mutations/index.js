@@ -13,12 +13,12 @@ const {
   resetPassword,
   sendEmailVerification,
   sendPasswordResetLink,
-  sendTFATextMsg,
+  sendPhoneCode,
   signUp,
   updateUserPassword,
   updateUserProfile,
   verifyAccount,
-  verifyTwoFactorAuthentication,
+  verifyPhoneNumber,
 } = require('./user')
 
 const { inviteUserToOrg, updateUserRole } = require('./user-affiliations')
@@ -43,12 +43,12 @@ const createMutationSchema = () => {
       resetPassword,
       sendEmailVerification,
       sendPasswordResetLink,
-      sendTFATextMsg,
+      sendPhoneCode,
       signUp,
       updateUserPassword,
       updateUserProfile,
       verifyAccount,
-      verifyTwoFactorAuthentication,
+      verifyPhoneNumber,
       // User Affiliations Mutations
       inviteUserToOrg,
       updateUserRole,

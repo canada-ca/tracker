@@ -12,7 +12,17 @@ const makeMigrations = ({ databaseName, rootPass }) => [
   {
     type: 'documentcollection',
     databaseName,
-    name: 'organizations',
+    name: 'organizationsEN',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'organizationsFR',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'organizationsLookup',
   },
   {
     type: 'documentcollection',
@@ -27,7 +37,7 @@ const makeMigrations = ({ databaseName, rootPass }) => [
   {
     type: 'edgecollection',
     databaseName,
-    name: 'ownership',
+    name: 'claims',
   },
 ]
 

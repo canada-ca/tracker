@@ -1,8 +1,8 @@
 const { GraphQLNonNull, GraphQLInt, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 
-const verifyTwoFactorAuthentication = new mutationWithClientMutationId({
-  name: 'VerifyTwoFactorAuthentication',
+const verifyPhoneNumber = new mutationWithClientMutationId({
+  name: 'verifyPhoneNumber',
   description: 'This mutation allows the user to two factor authenticate.',
   inputFields: () => ({
     twoFactorCode: {
@@ -82,5 +82,5 @@ const verifyTwoFactorAuthentication = new mutationWithClientMutationId({
 })
 
 module.exports = {
-  verifyTwoFactorAuthentication,
+  verifyPhoneNumber,
 }

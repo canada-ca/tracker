@@ -2,8 +2,8 @@ const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLPhoneNumber } = require('graphql-scalars')
 
-const sendTFATextMsg = new mutationWithClientMutationId({
-  name: 'SendTFATextMsg',
+const sendPhoneCode = new mutationWithClientMutationId({
+  name: 'sendPhoneCode',
   description: 'This mutation is used for sending a text message with a random six digit code used to verify the user.',
   inputFields: () => ({
     phoneNumber: {
@@ -75,5 +75,5 @@ const sendTFATextMsg = new mutationWithClientMutationId({
 })
 
 module.exports = {
-  sendTFATextMsg,
+  sendPhoneCode,
 }

@@ -56,7 +56,7 @@ describe('user send password reset email', () => {
     await drop()
   })
 
-  describe('successfully sends tfa text message', () => {
+  describe('successfully send a phone code', () => {
     describe('users preferred language is french', () => {
       beforeEach(async () => {
         await truncate()
@@ -80,7 +80,7 @@ describe('user send password reset email', () => {
           schema,
           `
             mutation {
-              sendTFATextMsg(input: { phoneNumber: "+12345678901" }) {
+              sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
                 status
               }
             }
@@ -108,7 +108,7 @@ describe('user send password reset email', () => {
 
         const expectedResult = {
           data: {
-            sendTFATextMsg: {
+            sendPhoneCode: {
               status:
                 'Two factor code has been successfully sent, you will receive a text message shortly.',
             },
@@ -155,7 +155,7 @@ describe('user send password reset email', () => {
           schema,
           `
             mutation {
-              sendTFATextMsg(input: { phoneNumber: "+12345678901" }) {
+              sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
                 status
               }
             }
@@ -183,7 +183,7 @@ describe('user send password reset email', () => {
 
         const expectedResult = {
           data: {
-            sendTFATextMsg: {
+            sendPhoneCode: {
               status:
                 'Two factor code has been successfully sent, you will receive a text message shortly.',
             },
@@ -209,14 +209,14 @@ describe('user send password reset email', () => {
       })
     })
   })
-  describe('unsuccessful password reset email send', () => {
+  describe('unsuccessful phone code sending', () => {
     describe('no user associated with account', () => {
       it('returns status text', async () => {
         const response = await graphql(
           schema,
           `
             mutation {
-              sendTFATextMsg(input: { phoneNumber: "+12345678901" }) {
+              sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
                 status
               }
             }
@@ -258,7 +258,7 @@ describe('user send password reset email', () => {
           schema,
           `
             mutation {
-              sendTFATextMsg(input: { phoneNumber: "+12345678901" }) {
+              sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
                 status
               }
             }
@@ -321,7 +321,7 @@ describe('user send password reset email', () => {
           schema,
           `
             mutation {
-              sendTFATextMsg(input: { phoneNumber: "+12345678901" }) {
+              sendPhoneCode(input: { phoneNumber: "+12345678901" }) {
                 status
               }
             }

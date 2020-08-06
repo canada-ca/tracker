@@ -47,7 +47,7 @@ describe('user send password reset email', () => {
     await drop()
   })
 
-  describe('successfully two factor authentication', () => {
+  describe('successfully verify phone number', () => {
     it('returns a successful status message', async () => {
       await collections.users.save({
         userName: 'test.account@istio.actually.exists',
@@ -69,7 +69,7 @@ describe('user send password reset email', () => {
         schema,
         `
           mutation {
-            verifyTwoFactorAuthentication(input: { twoFactorCode: 123456 }) {
+            verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
               status
             }
           }
@@ -86,7 +86,7 @@ describe('user send password reset email', () => {
 
       const expectedResult = {
         data: {
-          verifyTwoFactorAuthentication: {
+          verifyPhoneNumber: {
             status: 'Successfully two factor authenticated.',
           },
         },
@@ -97,14 +97,14 @@ describe('user send password reset email', () => {
       ])
     })
   })
-  describe('unsuccessful two two factor authentication', () => {
+  describe('unsuccessful verifying of phone number', () => {
     describe('user id is undefined', () => {
       it('returns an error message', async () => {
         const response = await graphql(
           schema,
           `
             mutation {
-              verifyTwoFactorAuthentication(input: { twoFactorCode: 123456 }) {
+              verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                 status
               }
             }
@@ -135,7 +135,7 @@ describe('user send password reset email', () => {
           schema,
           `
             mutation {
-              verifyTwoFactorAuthentication(input: { twoFactorCode: 123456 }) {
+              verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                 status
               }
             }
@@ -182,7 +182,7 @@ describe('user send password reset email', () => {
           schema,
           `
             mutation {
-              verifyTwoFactorAuthentication(input: { twoFactorCode: 123 }) {
+              verifyPhoneNumber(input: { twoFactorCode: 123 }) {
                 status
               }
             }
@@ -229,7 +229,7 @@ describe('user send password reset email', () => {
           schema,
           `
             mutation {
-              verifyTwoFactorAuthentication(input: { twoFactorCode: 654321 }) {
+              verifyPhoneNumber(input: { twoFactorCode: 654321 }) {
                 status
               }
             }
@@ -282,7 +282,7 @@ describe('user send password reset email', () => {
           schema,
           `
             mutation {
-              verifyTwoFactorAuthentication(input: { twoFactorCode: 123456 }) {
+              verifyPhoneNumber(input: { twoFactorCode: 123456 }) {
                 status
               }
             }

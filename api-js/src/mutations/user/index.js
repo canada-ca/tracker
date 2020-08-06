@@ -2,22 +2,22 @@ const { authenticate } = require('./authenticate')
 const { resetPassword } = require('./reset-password')
 const { sendEmailVerification } = require('./send-email-verification')
 const { sendPasswordResetLink } = require('./send-password-reset')
-const { sendTFATextMsg } = require('./send-tfa-code')
+const { sendPhoneCode } = require('./send-phone-code')
 const { signUp } = require('./sign-up')
 const { updateUserPassword } = require('./update-user-password')
 const { updateUserProfile } = require('./update-user-profile')
 const { verifyAccount } = require('./verify-account')
-const { verifyTwoFactorAuthentication } = require('./verify-two-factor-authentication')
+const { verifyPhoneNumber } = require('./verify-phone-number')
 
 module.exports = {
   authenticate,
   resetPassword,
   sendEmailVerification,
   sendPasswordResetLink,
-  sendTFATextMsg,
+  sendPhoneCode,
   signUp,
   updateUserPassword,
   updateUserProfile,
   verifyAccount,
-  verifyTwoFactorAuthentication,
+  verifyPhoneNumber,
 }
