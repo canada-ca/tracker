@@ -207,6 +207,104 @@ describe('reset users passsword', () => {
     })
   })
   describe('user does not successfully reset their password', () => {
+    describe('userId cannot be found in token parameters', () => {
+      it('returns an error message', async () => {
+        const resetToken = tokenize({
+          parameters: {},
+        })
+
+        const response = await graphql(
+          schema,
+          `
+          mutation {
+            resetPassword (
+              input: {
+                password: "newpassword123"
+                confirmPassword: "newpassword123"
+                resetToken: "${resetToken}"
+              }
+            ) {
+              status
+            }
+          }
+            `,
+          null,
+          {
+            query,
+            auth: {
+              bcrypt,
+              tokenize,
+              verifyToken,
+            },
+            functions: {
+              cleanseInput,
+            },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
+              userLoaderById: userLoaderById(query),
+            },
+          },
+        )
+
+        const error = [
+          new GraphQLError('Unable to reset password. Please try again.'),
+        ]
+
+        expect(response.errors).toEqual(error)
+        expect(consoleOutput).toEqual([
+          `When resetting password user attempted to verify account, but userId is not located in the token parameters.`,
+        ])
+      })
+    })
+    describe('userId in token is undefined', () => {
+      it('returns an error message', async () => {
+        const resetToken = tokenize({
+          parameters: { userId: undefined },
+        })
+
+        const response = await graphql(
+          schema,
+          `
+          mutation {
+            resetPassword (
+              input: {
+                password: "newpassword123"
+                confirmPassword: "newpassword123"
+                resetToken: "${resetToken}"
+              }
+            ) {
+              status
+            }
+          }
+            `,
+          null,
+          {
+            query,
+            auth: {
+              bcrypt,
+              tokenize,
+              verifyToken,
+            },
+            functions: {
+              cleanseInput,
+            },
+            loaders: {
+              userLoaderByUserName: userLoaderByUserName(query),
+              userLoaderById: userLoaderById(query),
+            },
+          },
+        )
+
+        const error = [
+          new GraphQLError('Unable to reset password. Please try again.'),
+        ]
+
+        expect(response.errors).toEqual(error)
+        expect(consoleOutput).toEqual([
+          `When resetting password user attempted to verify account, but userId is not located in the token parameters.`,
+        ])
+      })
+    })
     describe('user cannot be found', () => {
       it('returns an error message', async () => {
         const resetToken = tokenize({
@@ -500,7 +598,9 @@ describe('reset users passsword', () => {
           parameters: { userId: user._key, currentPassword: user.password },
         })
 
-        query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
 
         const response = await graphql(
           schema,

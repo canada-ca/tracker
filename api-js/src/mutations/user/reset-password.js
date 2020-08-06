@@ -39,7 +39,7 @@ const resetPassword = new mutationWithClientMutationId({
       functions: { cleanseInput },
     },
   ) => {
-    // Cleanse input 
+    // Cleanse input
     const password = cleanseInput(args.password)
     const confirmPassword = cleanseInput(args.confirmPassword)
     const resetToken = cleanseInput(args.resetToken)
@@ -47,29 +47,48 @@ const resetPassword = new mutationWithClientMutationId({
     // Check if reset token is valid
     const tokenParameters = verifyToken(resetToken)
 
+    // Check to see if user id exists in token params !!!
+    if (
+      tokenParameters.userId === 'undefined' ||
+      typeof tokenParameters.userId === 'undefined'
+    ) {
+      console.warn(
+        `When resetting password user attempted to verify account, but userId is not located in the token parameters.`,
+      )
+      throw new Error('Unable to reset password. Please try again.')
+    }
+
     // Check if user exists
     const user = await userLoaderById.load(tokenParameters.userId)
 
     if (typeof user === 'undefined') {
-      console.warn(`A user attempted to reset the password for ${tokenParameters.userId}, however there is no associated account.`)
+      console.warn(
+        `A user attempted to reset the password for ${tokenParameters.userId}, however there is no associated account.`,
+      )
       throw new Error('Unable to reset password. Please try again.')
     }
 
     // Check if password in token matches token in db
     if (tokenParameters.currentPassword !== user.password) {
-      console.warn(`User: ${user._key} attempted to reset password, however the current password does not match the current hashed password in the db.`)
+      console.warn(
+        `User: ${user._key} attempted to reset password, however the current password does not match the current hashed password in the db.`,
+      )
       throw new Error('Unable to reset password. Please try again.')
     }
 
     // Check to see if newly submitted passwords match
     if (password !== confirmPassword) {
-      console.warn(`User: ${user._key} attempted to reset their password, however the submitted passwords do not match.`)
+      console.warn(
+        `User: ${user._key} attempted to reset their password, however the submitted passwords do not match.`,
+      )
       throw new Error('New passwords do not match. Please try again.')
     }
 
     // Check to see if password meets GoC requirements
     if (password.length < 12) {
-      console.warn(`User: ${user._key} attempted to reset their password, however the submitted password is not long enough.`)
+      console.warn(
+        `User: ${user._key} attempted to reset their password, however the submitted password is not long enough.`,
+      )
       throw new Error('Password is not strong enough. Please try again.')
     }
 
@@ -82,7 +101,9 @@ const resetPassword = new mutationWithClientMutationId({
           UPDATE ${user._key} WITH { password: ${hashedPassword} } IN users
       `
     } catch (err) {
-      console.error(`Database error ocurred when user: ${user._key} attempted to reset their password: ${err}`)
+      console.error(
+        `Database error ocurred when user: ${user._key} attempted to reset their password: ${err}`,
+      )
       throw new Error('Unable to reset password. Please try again.')
     }
 
