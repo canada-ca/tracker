@@ -175,6 +175,7 @@ msgstr "B.3.1 Enregistrements DMARC"
 
 #: src/CreateUserPage.js:143
 #: src/ForgotPasswordPage.js:105
+#: src/QRcodePage.js:60
 msgid "Back"
 msgstr "Retour"
 
@@ -728,7 +729,6 @@ msgstr ""
 #~ msgstr "Masquer les conseils"
 
 #: src/App.js:52
-#: src/QRcodePage.js:67
 msgid "Home"
 msgstr "Accueil"
 
@@ -1386,7 +1386,6 @@ msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
 #: src/App.js:67
-#: src/QRcodePage.js:58
 #: src/SignInPage.js:112
 msgid "Sign In"
 msgstr "Se connecter"

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Box, Stack, Text, Button } from '@chakra-ui/core'
-import { Link as RouteLink } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { GENERATE_OTP_URL } from './graphql/queries'
@@ -9,6 +9,7 @@ import QRCode from 'qrcode.react'
 
 export default function QRcodePage() {
   const { currentUser } = useUserState()
+  const history = useHistory()
 
   // This function generates the URL when the page loads
   const { loading, error, data } = useQuery(GENERATE_OTP_URL, {
@@ -50,24 +51,13 @@ export default function QRcodePage() {
 
         <Stack spacing={4} isInline>
           <Button
-            width={{ md: 40 }}
-            as={RouteLink}
-            to="/sign-in"
-            color="gray.50"
-            bg="blue.700"
-          >
-            <Trans>Sign In</Trans>
-          </Button>
-          <Button
-            width={{ md: 40 }}
-            as={RouteLink}
-            to="/"
             color="blue.700"
             bg="transparent"
             borderColor="blue.700"
             borderWidth="1px"
+            onClick={history.goBack}
           >
-            <Trans>Home</Trans>
+            <Trans>Back</Trans>
           </Button>
         </Stack>
       </Stack>

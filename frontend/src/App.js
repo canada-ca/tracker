@@ -87,8 +87,10 @@ export default function App() {
                 logout()
                 history.push('/')
                 toast({
-                  title: i18n._(`Sign Out.`),
-                  description: i18n._(`You have successfully been signed out.`),
+                  title: i18n._(t`Sign Out.`),
+                  description: i18n._(
+                    t`You have successfully been signed out.`,
+                  ),
                   status: 'success',
                   duration: 9000,
                   isClosable: true,
