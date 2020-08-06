@@ -254,7 +254,9 @@ describe('user send password reset email', () => {
         )
 
         const error = [
-          new GraphQLError('Unable to verify account. Please request a new email.'),
+          new GraphQLError(
+            'Unable to verify account. Please request a new email.',
+          ),
         ]
 
         expect(response.errors).toEqual(error)
@@ -282,7 +284,7 @@ describe('user send password reset email', () => {
         const user = await cursor.next()
 
         const token = tokenize({
-          parameters: { userId: undefined},
+          parameters: { userId: undefined },
         })
 
         const response = await graphql(
@@ -312,7 +314,9 @@ describe('user send password reset email', () => {
         )
 
         const error = [
-          new GraphQLError('Unable to verify account. Please request a new email.'),
+          new GraphQLError(
+            'Unable to verify account. Please request a new email.',
+          ),
         ]
 
         expect(response.errors).toEqual(error)
@@ -340,7 +344,7 @@ describe('user send password reset email', () => {
         const user = await cursor.next()
 
         const token = tokenize({
-          parameters: { userId: 1},
+          parameters: { userId: 1 },
         })
 
         const response = await graphql(
@@ -370,7 +374,9 @@ describe('user send password reset email', () => {
         )
 
         const error = [
-          new GraphQLError('Unable to verify account. Please request a new email.'),
+          new GraphQLError(
+            'Unable to verify account. Please request a new email.',
+          ),
         ]
 
         expect(response.errors).toEqual(error)
@@ -398,14 +404,14 @@ describe('user send password reset email', () => {
         const user = await cursor.next()
 
         const token = tokenize({
-          parameters: { userId: user._key},
+          parameters: { userId: user._key },
         })
 
         const loader = userLoaderById(query)
 
         query = jest
-        .fn()
-        .mockRejectedValue(new Error('Database error occurred.'))
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
 
         const response = await graphql(
           schema,
