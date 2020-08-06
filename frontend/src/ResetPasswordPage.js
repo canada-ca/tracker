@@ -89,7 +89,7 @@ export default function ResetPasswordPage() {
 
             <Button
               color="gray.50"
-              bg="blue.700"
+              bg="blue.900"
               type="submit"
               isLoading={isSubmitting}
               id="submitBtn"

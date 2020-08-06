@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
             <Stack spacing={4} isInline justifyContent="space-between">
               <Button
                 color="gray.50"
-                bg="blue.700"
+                bg="blue.900"
                 type="submit"
                 id="submitBtn"
                 isLoading={isSubmitting}
@@ -96,9 +96,9 @@ export default function ForgotPasswordPage() {
               <Button
                 as={RouteLink}
                 to="/sign-in"
-                color="blue.700"
+                color="blue.900"
                 bg="transparent"
-                borderColor="blue.700"
+                borderColor="blue.900"
                 borderWidth="1px"
               >
                 <Trans>Back</Trans>

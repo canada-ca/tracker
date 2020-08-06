@@ -172,7 +172,7 @@ export default function UserList({
           width={['100%', '75%']}
           leftIcon="add"
           color="gray.50"
-          bg="blue.700"
+          bg="blue.900"
           onClick={() => {
             addUser(userSearch, Math.floor(Math.random() * 1000))
           }}
@@ -235,7 +235,7 @@ export default function UserList({
                       <Button
                         size="sm"
                         color="gray.50"
-                        bg="blue.700"
+                        bg="blue.900"
                         onClick={() => handleClick(userRole, node.userName)}
                       >
                         <Trans>Apply</Trans>

@@ -87,7 +87,7 @@ function EditableUserEmail({ detailValue }) {
           onClick={onOpen}
           size="sm"
           color="gray.50"
-          bg="blue.700"
+          bg="blue.900"
         >
           <Trans>Edit</Trans>
         </Button>
@@ -147,7 +147,7 @@ function EditableUserEmail({ detailValue }) {
                     <ModalFooter>
                       <Button
                         color="gray.50"
-                        bg="blue.700"
+                        bg="blue.900"
                         isLoading={isSubmitting}
                         type="submit"
                         mr="4"
@@ -156,7 +156,7 @@ function EditableUserEmail({ detailValue }) {
                       </Button>
                       <Button
                         color="gray.50"
-                        bg="blue.700"
+                        bg="blue.900"
                         variant="outline"
                         onClick={onClose}
                       >

@@ -51,9 +51,9 @@ export default function QRcodePage() {
 
         <Stack spacing={4} isInline>
           <Button
-            color="blue.700"
+            color="blue.900"
             bg="transparent"
-            borderColor="blue.700"
+            borderColor="blue.900"
             borderWidth="1px"
             onClick={history.goBack}
           >

@@ -119,7 +119,7 @@ export function AdminDomains({ domainsData, orgName }) {
           width={['100%', '75%']}
           leftIcon="add"
           color="gray.50"
-          bg="blue.700"
+          bg="blue.900"
           onClick={() => {
             addDomain(domainSearch)
           }}
@@ -155,7 +155,7 @@ export function AdminDomains({ domainsData, orgName }) {
                     size="xs"
                     icon="edit"
                     color="gray.50"
-                    bg="blue.700"
+                    bg="blue.900"
                     onClick={() => window.alert('edit domain')}
                   />
                   <Domain url={url} lastRan={lastRan} />

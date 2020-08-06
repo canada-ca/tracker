@@ -140,16 +140,16 @@ export default function CreateUserPage() {
             <LanguageSelect name="lang" width="100%" mb="4" />
 
             <Stack spacing={4} isInline justifyContent="space-between">
-              <Button isLoading={isSubmitting} color="gray.50" bg="blue.700">
+              <Button isLoading={isSubmitting} color="gray.50" bg="blue.900">
                 <Trans>Create Account</Trans>
               </Button>
 
               <Button
                 as={RouteLink}
                 to="/sign-in"
-                color="blue.700"
+                color="blue.900"
                 bg="transparent"
-                borderColor="blue.700"
+                borderColor="blue.900"
                 borderWidth="1px"
               >
                 <Trans>Back</Trans>

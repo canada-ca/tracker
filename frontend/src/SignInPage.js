@@ -100,7 +100,7 @@ export default function SignInPage() {
 
             <PasswordField name="password" mb="1" />
 
-            <Link as={RouteLink} to="/forgot-password" color="blue.700">
+            <Link as={RouteLink} to="/forgot-password" color="blue.900">
               <Text mb="4">
                 <Trans>Forgot your password?</Trans>
               </Text>
@@ -109,7 +109,7 @@ export default function SignInPage() {
             <Stack spacing={4} isInline justifyContent="space-between">
               <Button
                 color="gray.50"
-                bg="blue.700"
+                bg="blue.900"
                 isLoading={isSubmitting}
                 type="submit"
               >
@@ -119,9 +119,9 @@ export default function SignInPage() {
               <Button
                 as={RouteLink}
                 to="/create-user"
-                color="blue.700"
+                color="blue.900"
                 bg="transparent"
-                borderColor="blue.700"
+                borderColor="blue.900"
                 borderWidth="1px"
               >
                 <Trans>Create Account</Trans>

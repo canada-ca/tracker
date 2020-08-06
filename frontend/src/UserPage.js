@@ -87,7 +87,7 @@ export default function UserPage() {
           <Button
             leftIcon="lock"
             color="gray.50"
-            bg="blue.700"
+            bg="blue.900"
             onClick={() => {
               history.push('/two-factor-code')
             }}
@@ -98,7 +98,7 @@ export default function UserPage() {
           <Button
             leftIcon="edit"
             color="gray.50"
-            bg="blue.700"
+            bg="blue.900"
             onClick={() => {
               window.alert('coming soon')
             }}

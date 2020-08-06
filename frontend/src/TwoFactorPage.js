@@ -83,7 +83,7 @@ export function TwoFactorPage() {
 
             <Button
               color="gray.50"
-              bg="blue.700"
+              bg="blue.900"
               isLoading={props.isSubmitting}
               type="submit"
             >

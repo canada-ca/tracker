@@ -85,7 +85,7 @@ function EditableUserLanguage({ currentLang }) {
                 isLoading={isSubmitting}
                 px="8"
                 color="gray.50"
-                bg="blue.700"
+                bg="blue.900"
               >
                 <Trans>Save Language</Trans>
               </Button>
