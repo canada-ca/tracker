@@ -9,18 +9,13 @@ const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
 
-const bcrypt = require('bcrypt')
-const { cleanseInput } = require('../validators')
-const { tokenize } = require('../auth')
 const { userLoaderById } = require('../loaders')
-
-const mockNotify = jest.fn()
 
 describe('user send password reset email', () => {
   const originalInfo = console.info
   afterEach(() => (console.info = originalInfo))
 
-  let query, drop, truncate, migrate, collections, schema, request
+  let query, drop, truncate, migrate, collections, schema
 
   beforeAll(async () => {
     ;({ migrate } = await ArangoTools({ rootPass, url }))
@@ -31,10 +26,6 @@ describe('user send password reset email', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    request = {
-      protocol: 'https',
-      get: (text) => text,
-    }
   })
 
   let consoleOutput = []
