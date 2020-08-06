@@ -205,65 +205,6 @@ describe('user send password reset email', () => {
         ])
       })
     })
-    describe('token is not valid', () => {
-      beforeEach(async () => {
-        await collections.users.save({
-          userName: 'test.account@istio.actually.exists',
-          displayName: 'Test Account',
-          preferredLang: 'english',
-          tfaValidated: false,
-          emailValidated: false,
-        })
-      })
-      it('returns an error message', async () => {
-        const cursor = await query`
-              FOR user IN users
-                  FILTER user.userName == "test.account@istio.actually.exists"
-                  RETURN user
-            `
-        const user = await cursor.next()
-
-        const token = tokenize({
-          parameters: { userId: user._key },
-          secret: 'notARealSecret',
-        })
-
-        const response = await graphql(
-          schema,
-          `
-              mutation {
-                verifyAccount(input: { verifyTokenString: "${token}" }) {
-                  status
-                }
-              }
-            `,
-          null,
-          {
-            request,
-            userId: user._key,
-            query,
-            auth: {
-              verifyToken,
-            },
-            functions: {
-              cleanseInput,
-            },
-            loaders: {
-              userLoaderById: userLoaderById(query),
-            },
-          },
-        )
-
-        const error = [
-          new GraphQLError('Invalid token, please request a new one.'),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `JWT was attempted to be verified but secret was incorrect.`,
-        ])
-      })
-    })
     describe('userId cannot be found in token parameters', () => {
       beforeEach(async () => {
         await collections.users.save({
@@ -318,7 +259,7 @@ describe('user send password reset email', () => {
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
+          `When validating account user: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
         ])
       })
     })
@@ -376,7 +317,7 @@ describe('user send password reset email', () => {
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
+          `When validating account user: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
         ])
       })
     })
