@@ -18,6 +18,7 @@ const {
   updateUserPassword,
   updateUserProfile,
   verifyAccount,
+  verifyTwoFactorAuthentication,
 } = require('./user')
 
 const { inviteUserToOrg, updateUserRole } = require('./user-affiliations')
@@ -47,6 +48,7 @@ const createMutationSchema = () => {
       updateUserPassword,
       updateUserProfile,
       verifyAccount,
+      verifyTwoFactorAuthentication,
       // User Affiliations Mutations
       inviteUserToOrg,
       updateUserRole,

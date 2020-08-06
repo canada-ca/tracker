@@ -7,6 +7,7 @@ const { signUp } = require('./sign-up')
 const { updateUserPassword } = require('./update-user-password')
 const { updateUserProfile } = require('./update-user-profile')
 const { verifyAccount } = require('./verify-account')
+const { verifyTwoFactorAuthentication } = require('./verify-two-factor-authentication')
 
 module.exports = {
   authenticate,
@@ -18,4 +19,5 @@ module.exports = {
   updateUserPassword,
   updateUserProfile,
   verifyAccount,
+  verifyTwoFactorAuthentication,
 }
