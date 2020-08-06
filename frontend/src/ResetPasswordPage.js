@@ -55,7 +55,7 @@ export default function ResetPasswordPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Box mx="auto">
+    <Box px="8" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
         initialValues={{

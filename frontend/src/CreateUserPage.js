@@ -98,7 +98,7 @@ export default function CreateUserPage() {
     )
 
   return (
-    <Box mx="auto">
+    <Box px="8" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
         initialValues={{

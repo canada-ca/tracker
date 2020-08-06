@@ -1366,8 +1366,8 @@ msgstr "Sélectionnez votre langue préférée"
 #~ msgstr "Sélectionnez votre langue préférée"
 
 #: src/LanguageSelect.js:21
-msgid "Select Your Preferred Language:"
-msgstr "Sélectionnez votre langue préférée :"
+msgid "Language:"
+msgstr "La langue:"
 
 #: src/AdminPage.js:44
 msgid "Select an organization"
