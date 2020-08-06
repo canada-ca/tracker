@@ -45,7 +45,7 @@ const resetPassword = new mutationWithClientMutationId({
     const resetToken = cleanseInput(args.resetToken)
 
     // Check if reset token is valid
-    const tokenParameters = verifyToken(resetToken)
+    const tokenParameters = verifyToken({ token: resetToken })
 
     // Check to see if user id exists in token params !!!
     if (

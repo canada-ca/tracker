@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const { JWT_KEY } = process.env
+const { AUTHENTICATED_KEY } = process.env
 
 const now = () => Math.floor(new Date().getTime() / 1000)
 const future = (expPeriod) =>
@@ -11,7 +11,7 @@ const tokenize = ({
   expPeriod = 1,
   iat = now(),
   exp = future(expPeriod),
-  secret = String(JWT_KEY),
+  secret = String(AUTHENTICATED_KEY),
 }) =>
   jwt.sign(
     {

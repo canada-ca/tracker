@@ -51,7 +51,7 @@ const verifyAccount = new mutationWithClientMutationId({
     }
 
     // Get info from token
-    const tokenParameters = verifyToken(verifyTokenString)
+    const tokenParameters = verifyToken({ token: verifyTokenString })
 
     // Check to see if userId exists in tokenParameters
     if (

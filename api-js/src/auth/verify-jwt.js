@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken')
 
-const { JWT_KEY } = process.env
+const { AUTHENTICATED_KEY } = process.env
 
-const verifyToken = (token) => {
+const verifyToken = ({ token, secret=String(AUTHENTICATED_KEY) }) => {
   let decoded
   try {
-    decoded = jwt.verify(token, String(JWT_KEY))
+    decoded = jwt.verify(token, secret)
   } catch (err) {
     console.warn('JWT was attempted to be verified but secret was incorrect.')
     throw new Error('Invalid token, please request a new one.')

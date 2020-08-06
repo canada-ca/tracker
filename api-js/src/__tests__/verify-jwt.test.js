@@ -1,7 +1,7 @@
 const dotenv = require('dotenv-safe')
 dotenv.config()
 
-const { JWT_KEY } = process.env
+const { AUTHENTICATED_KEY } = process.env
 
 const jwt = require('jsonwebtoken')
 const { verifyToken } = require('../auth')
@@ -23,11 +23,15 @@ describe('given a encoded token', () => {
       const parameters = {
         userId: 1,
       }
-      const token = jwt.sign({ parameters }, String(JWT_KEY), {
-        algorithm: 'HS256',
-      })
+      const token = jwt.sign(
+        { parameters }, 
+        String(AUTHENTICATED_KEY),
+        {
+          algorithm: 'HS256',
+        },
+      )
 
-      const decoded = verifyToken(token)
+      const decoded = verifyToken({ token })
       expect(decoded.userId).toEqual(1)
     })
   })
