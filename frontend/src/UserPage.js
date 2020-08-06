@@ -8,7 +8,6 @@ import {
   Divider,
   Checkbox,
   CheckboxGroup,
-  useToast,
   Heading,
 } from '@chakra-ui/core'
 import { useQuery } from '@apollo/client'
@@ -22,9 +21,8 @@ import EditableUserPassword from './EditableUserPassword'
 
 export default function UserPage() {
   const location = useLocation()
-  const toast = useToast()
   const history = useHistory()
-  const { currentUser, logout } = useUserState()
+  const { currentUser } = useUserState()
 
   const {
     loading: queryUserLoading,
@@ -70,7 +68,7 @@ export default function UserPage() {
       </Stack>
 
       <Stack Stack p={25} spacing={4}>
-        <Heading as="h1" size="lg" textAlign="center">
+        <Heading as="h1" size="lg" textAlign="left">
           <Trans>Account Details</Trans>
         </Heading>
         <CheckboxGroup
@@ -108,27 +106,6 @@ export default function UserPage() {
             <Trans>Manage API keys</Trans>
           </Button>
         </Stack>
-
-        <Button
-          color="gray.50"
-          bg="blue.700"
-          w="50%"
-          onClick={() => {
-            // This clears the JWT, essentially logging the user out in one go
-            logout()
-            history.push('/')
-            toast({
-              title: 'Sign Out.',
-              description: 'You have successfully been signed out.',
-              status: 'success',
-              duration: 9000,
-              isClosable: true,
-            })
-          }}
-          isDisabled={!!location.state}
-        >
-          <Trans>Sign Out</Trans>
-        </Button>
       </Stack>
     </SimpleGrid>
   )

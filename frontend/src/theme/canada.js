@@ -12,6 +12,7 @@ const colors = {
   strong: '#5CB95B',
   moderate: '#ffbf47',
   weak: '#e53e3e',
+  unknown: '#B0B0B0',
   green: {
     50: '#F2FFF0',
     100: '#C3EEBF',
@@ -118,14 +119,18 @@ const space = {
 
 const buttons = {
   primary: {
-    color: 'colors.gray.50',
-    bg: 'colors.blue.700',
+    color: chakraTheme.colors.gray[50],
+    backgroundColor: chakraTheme.colors.blue[700],
   },
   secondary: {
-    color: 'blue.700',
-    bg: 'transparent',
-    borderColor: 'blue.700',
+    color: chakraTheme.colors.blue[700],
+    backgroundColor: chakraTheme.colors.transparent,
+    borderColor: chakraTheme.colors.blue[700],
     borderWidth: '1px',
+  },
+  danger: {
+    color: chakraTheme.colors.gray[50],
+    backgroundColor: chakraTheme.colors.red[600],
   },
 }
 

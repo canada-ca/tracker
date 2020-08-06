@@ -53,7 +53,8 @@ export default function QRcodePage() {
             width={{ md: 40 }}
             as={RouteLink}
             to="/sign-in"
-            variantColor="teal"
+            color="gray.50"
+            bg="blue.700"
           >
             <Trans>Sign In</Trans>
           </Button>
@@ -61,8 +62,10 @@ export default function QRcodePage() {
             width={{ md: 40 }}
             as={RouteLink}
             to="/"
-            variantColor="teal"
-            variant="outline"
+            color="blue.700"
+            bg="transparent"
+            borderColor="blue.700"
+            borderWidth="1px"
           >
             <Trans>Home</Trans>
           </Button>

@@ -119,8 +119,10 @@ export default function SignInPage() {
               <Button
                 as={RouteLink}
                 to="/create-user"
-                color="gray.50"
-                bg="blue.700"
+                color="blue.700"
+                bg="transparent"
+                borderColor="blue.700"
+                borderWidth="1px"
               >
                 <Trans>Create Account</Trans>
               </Button>
