@@ -62,7 +62,7 @@ describe('given a orgLoaderById dataloader', () => {
           acronym: 'SCT',
           name: 'Secrétariat du Conseil Trésor du Canada',
           zone: 'FED',
-          sector: 'DND',
+          sector: 'TBS',
           country: 'Canada',
           province: 'Ontario',
           city: 'Ottawa',
