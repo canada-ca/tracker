@@ -13,13 +13,13 @@ describe('given a orgLoaderById dataloader', () => {
   const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     console.error = mockedError
-  })
-
-  beforeEach(async () => {
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
+  })
+
+  beforeEach(async () => {
     await truncate()
     await collections.organizations.save({
       orgDetails: {
@@ -72,7 +72,7 @@ describe('given a orgLoaderById dataloader', () => {
     consoleOutput = []
   })
 
-  afterEach(async () => {
+  afterAll(async () => {
     await drop()
   })
 
