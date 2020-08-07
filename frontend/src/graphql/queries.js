@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations($after: String, $first: Int) {
-    organizations: findMyOrganizations(after: $after, first: $first) {
+    pagination: findMyOrganizations(after: $after, first: $first) {
       edges {
         cursor
         node {
@@ -25,7 +25,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
 
 export const REVERSE_PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations($before: String, $last: Int) {
-    organizations: findMyOrganizations(before: $before, last: $last) {
+    pagination: findMyOrganizations(before: $before, last: $last) {
       edges {
         cursor
         node {
@@ -179,6 +179,58 @@ export const ADMIN_PANEL = gql`
           displayName
         }
       }
+    }
+  }
+`
+
+export const PAGINATED_DOMAINS = gql`
+  query Domains($first: Int, $after: String) {
+    pagination: findMyDomains(first: $first, after: $after) {
+      edges {
+        cursor
+        node {
+          id
+          url
+          slug
+          lastRan
+          __typename
+        }
+        __typename
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+        __typename
+      }
+      __typename
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_DOMAINS = gql`
+  query PaginatedDomains($last: Int, $before: String) {
+    pagination: findMyDomains(last: $last, before: $before) {
+      edges {
+        cursor
+        node {
+          id
+          url
+          slug
+          lastRan
+          __typename
+        }
+        __typename
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+        __typename
+      }
+      __typename
     }
   }
 `

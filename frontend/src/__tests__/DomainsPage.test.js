@@ -1,113 +1,696 @@
 import React from 'react'
+import { createMemoryHistory } from 'history'
 import { ThemeProvider, theme } from '@chakra-ui/core'
-import { render, waitFor } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import { UserStateProvider } from '../UserState'
-import DomainsPage from '../DomainsPage'
-import { DOMAINS } from '../graphql/queries'
+import { Router, Route, Switch, MemoryRouter } from 'react-router-dom'
+import { render, waitFor, fireEvent } from '@testing-library/react'
+import { MockedProvider } from '@apollo/client/testing'
+import {
+  PAGINATED_DOMAINS,
+  REVERSE_PAGINATED_DOMAINS,
+} from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
-import { MockedProvider } from '@apollo/client/testing'
-// TODO: remove this after DomainsPage is refactored away from it's reliance on
-// useEffect. This is a bandaid that is papering over test errors.
-import { mockLink } from '../mockLink'
+import { UserStateProvider } from '../UserState'
+import { createCache } from '../client'
+import DomainsPage from '../DomainsPage'
 
-describe('<DomainsPage>', () => {
-  it('notifies the user of errors', async () => {
-    const invalidTokenMessage = 'Invalid token, please login again'
-    const mocks = [
-      {
-        request: {
-          query: DOMAINS,
-          variables: {},
-        },
-        result: {
-          errors: [{ message: invalidTokenMessage }],
-        },
-      },
-    ]
-    const { getByText } = render(
-      <UserStateProvider
-        initialState={{ userName: 'me', jwt: 'longstring', tfa: null }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider addTypename={false} link={mockLink(mocks)}>
-                <DomainsPage />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
-    )
-
-    await waitFor(() => {
-      const errorMessage = getByText(invalidTokenMessage)
-      expect(errorMessage).toBeInTheDocument()
-    })
-  })
-
-  it('displays the domains', async () => {
-    const mocks = [
-      {
-        request: {
-          query: DOMAINS,
-          variables: {},
-        },
-        result: {
-          data: {
-            domains: {
-              edges: [
-                {
-                  node: {
-                    url: 'tbs-sct.gc.ca',
-                    slug: 'tbs-sct-gc-ca',
-                    lastRan: null,
+describe('<DomainsPage />', () => {
+  describe('given a list of domains', () => {
+    it('displays a list of domains', async () => {
+      const mocks = [
+        {
+          request: {
+            query: PAGINATED_DOMAINS,
+            variables: { first: 2 },
+          },
+          result: {
+            data: {
+              pagination: {
+                edges: [
+                  {
+                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    node: {
+                      id: 'T3JnYW5pemF0aW9uczoyCg==',
+                      url: 'tbs-sct.gc.ca',
+                      slug: 'tbs-sct-gc-ca',
+                      lastRan: 'somedate',
+                      __typename: 'Domains',
+                    },
+                    __typename: 'DomainsEdge',
                   },
-                },
-                {
-                  node: {
-                    url: 'canada.ca',
-                    slug: 'canada-ca',
-                    lastRan: null,
+                  {
+                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    node: {
+                      id: 'T3JnYW5pemF0aW9uczoxCg==',
+                      url: 'rcmp-grc.gc.ca',
+                      slug: 'rcmp-grc-gc-ca',
+                      lastRan: 'organization-two',
+                      __typename: 'Domains',
+                    },
+                    __typename: 'DomainsEdge',
                   },
+                ],
+                pageInfo: {
+                  hasNextPage: true,
+                  endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  hasPreviousPage: false,
+                  startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  __typename: 'PageInfo',
                 },
-                {
-                  node: {
-                    url: 'rcmp-grc.gc.ca',
-                    slug: 'rcmp-grc-gc-ca',
-                    lastRan: null,
-                  },
-                },
-              ],
-              pageInfo: {
-                endCursor: 'YXJyYXljb25uZWN0aW9uOjI=',
-                hasNextPage: false,
+                __typename: 'DomainsConnection',
               },
             },
           },
         },
-      },
-    ]
-    const { getByText } = render(
-      <UserStateProvider
-        initialState={{ userName: 'me', jwt: 'longstring', tfa: null }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider link={mockLink(mocks)} addTypename={false}>
-                <DomainsPage />
-              </MockedProvider>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
-    )
+        {
+          request: {
+            query: PAGINATED_DOMAINS,
+            variables: { first: 2 },
+          },
+          result: {
+            data: {
+              pagination: {
+                edges: [
+                  {
+                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    node: {
+                      id: 'T3JnYW5pemF0aW9uczoyCg==',
+                      url: 'tbs-sct.gc.ca',
+                      slug: 'tbs-sct-gc-ca',
+                      lastRan: 'somedate',
+                      __typename: 'Domains',
+                    },
+                    __typename: 'DomainsEdge',
+                  },
+                  {
+                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    node: {
+                      id: 'T3JnYW5pemF0aW9uczoxCg==',
+                      url: 'rcmp-grc.gc.ca',
+                      slug: 'rcmp-grc-gc-ca',
+                      lastRan: 'organization-two',
+                      __typename: 'Domains',
+                    },
+                    __typename: 'DomainsEdge',
+                  },
+                ],
+                pageInfo: {
+                  hasNextPage: true,
+                  endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  hasPreviousPage: false,
+                  startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  __typename: 'PageInfo',
+                },
+                __typename: 'DomainsConnection',
+              },
+            },
+          },
+        },
+      ]
 
-    await waitFor(() => {
-      expect(getByText(/tbs-sct.gc.ca/)).toBeInTheDocument()
+      const { queryByText } = render(
+        <UserStateProvider
+          initialState={{ userName: null, jwt: null, tfa: null }}
+        >
+          <ThemeProvider theme={theme}>
+            <I18nProvider i18n={setupI18n()}>
+              <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                <MockedProvider mocks={mocks} cache={createCache()}>
+                  <DomainsPage domainsPerPage={2} />
+                </MockedProvider>
+              </MemoryRouter>
+            </I18nProvider>
+          </ThemeProvider>
+        </UserStateProvider>,
+      )
+
+      await waitFor(() =>
+        expect(queryByText(/tbs-sct.gc.ca/i)).toBeInTheDocument(),
+      )
+    })
+  })
+
+  describe('pagination', () => {
+    describe(`when the "previous" button is clicked`, () => {
+      it('displays the previous pagination result', async () => {
+        const mocks = [
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoyCg==',
+                        url: 'tbs-sct.gc.ca',
+                        slug: 'tbs-sct-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: true,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: false,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoxCg==',
+                        url: 'rcmp-grc.gc.ca',
+                        slug: 'rcmp-grc-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: true,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoxCg==',
+                        url: 'rcmp-grc.gc.ca',
+                        slug: 'rcmp-grc-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: true,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoxCg==',
+                        url: 'rcmp-grc.gc.ca',
+                        slug: 'rcmp-grc-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: true,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoxCg==',
+                        url: 'rcmp-grc.gc.ca',
+                        slug: 'rcmp-grc-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: true,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoxCg==',
+                        url: 'rcmp-grc.gc.ca',
+                        slug: 'rcmp-grc-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: true,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoxCg==',
+                        url: 'rcmp-grc.gc.ca',
+                        slug: 'rcmp-grc-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: true,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: REVERSE_PAGINATED_DOMAINS,
+              variables: { before: 'YXJyYXljb25uZWN0aW9uOjA=', last: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoyCg==',
+                        url: 'tbs-sct.gc.ca',
+                        slug: 'tbs-sct-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: true,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: false,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: REVERSE_PAGINATED_DOMAINS,
+              variables: { before: 'YXJyYXljb25uZWN0aW9uOjA=', last: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoyCg==',
+                        url: 'tbs-sct.gc.ca',
+                        slug: 'tbs-sct-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: true,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: false,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+        ]
+
+        const cache = createCache()
+
+        const history = createMemoryHistory({
+          initialEntries: ['/domains'],
+          initialIndex: 0,
+        })
+
+        const { queryByText, getByRole } = render(
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfa: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={setupI18n()}>
+                <MockedProvider mocks={mocks} cache={cache}>
+                  <Router history={history}>
+                    <Switch>
+                      <Route
+                        path="/domains"
+                        render={() => <DomainsPage domainsPerPage={1} />}
+                      />
+                    </Switch>
+                  </Router>
+                </MockedProvider>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>,
+        )
+
+        await waitFor(() =>
+          expect(queryByText(/tbs-sct.gc.ca/)).toBeInTheDocument(),
+        )
+
+        const next = getByRole('button', { name: /next/i })
+
+        fireEvent.click(next)
+
+        await waitFor(() =>
+          expect(queryByText(/rcmp-grc.gc.ca/)).toBeInTheDocument(),
+        )
+
+        const previous = getByRole('button', { name: /previous/i })
+
+        fireEvent.click(previous)
+
+        await waitFor(() =>
+          expect(queryByText(/tbs-sct.gc.ca/)).toBeInTheDocument(),
+        )
+      })
+    })
+
+    describe(`when the "next" button is clicked`, () => {
+      it('displays the next pagination result', async () => {
+        const cache = createCache()
+        cache.writeQuery({
+          query: PAGINATED_DOMAINS,
+          variables: { first: 1 },
+          data: {
+            pagination: {
+              edges: [
+                {
+                  cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  node: {
+                    id: 'T3JnYW5pemF0aW9uczoyCg==',
+                    url: 'tbs-sct.gc.ca',
+                    slug: 'tbs-sct-gc-ca',
+                    lastRan: 'somedate',
+                    __typename: 'Domains',
+                  },
+                  __typename: 'DomainsEdge',
+                },
+              ],
+              pageInfo: {
+                hasNextPage: true,
+                endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                hasPreviousPage: false,
+                startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                __typename: 'PageInfo',
+              },
+              __typename: 'DomainsConnection',
+            },
+          },
+        })
+        // We need two of these?
+        const mocks = [
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoyCg==',
+                        url: 'tbs-sct.gc.ca',
+                        slug: 'tbs-sct-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: true,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: false,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoyCg==',
+                        url: 'tbs-sct.gc.ca',
+                        slug: 'tbs-sct-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: true,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: false,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoxCg==',
+                        url: 'rcmp-grc.gc.ca',
+                        slug: 'rcmp-grc-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: true,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_DOMAINS,
+              variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoxCg==',
+                        url: 'rcmp-grc.gc.ca',
+                        slug: 'rcmp-grc-gc-ca',
+                        lastRan: 'somedate',
+                        __typename: 'Domains',
+                      },
+                      __typename: 'DomainsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: false,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: true,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'DomainsConnection',
+                },
+              },
+            },
+          },
+        ]
+
+        const history = createMemoryHistory({
+          initialEntries: ['/domains'],
+          initialIndex: 0,
+        })
+
+        const { getByText } = render(
+          <UserStateProvider
+            initialState={{ userName: null, jwt: null, tfa: null }}
+          >
+            <ThemeProvider theme={theme}>
+              <I18nProvider i18n={setupI18n()}>
+                <MockedProvider mocks={mocks} cache={cache}>
+                  <Router history={history}>
+                    <Switch>
+                      <Route
+                        path="/domains"
+                        render={() => <DomainsPage domainsPerPage={1} />}
+                      />
+                    </Switch>
+                  </Router>
+                </MockedProvider>
+              </I18nProvider>
+            </ThemeProvider>
+          </UserStateProvider>,
+        )
+
+        await waitFor(() =>
+          expect(getByText(/tbs-sct.gc.ca/)).toBeInTheDocument(),
+        )
+
+        const next = await waitFor(() => getByText('Next'))
+
+        await waitFor(() => {
+          fireEvent.click(next)
+        })
+
+        await waitFor(() =>
+          expect(getByText(/rcmp-grc.gc.ca/)).toBeInTheDocument(),
+        )
+      })
     })
   })
 })
