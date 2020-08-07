@@ -139,8 +139,14 @@ export default function CreateUserPage() {
 
             <LanguageSelect name="lang" width="100%" mb="4" />
 
-            <Stack spacing={4} isInline justifyContent="space-between">
-              <Button isLoading={isSubmitting} color="gray.50" bg="blue.900">
+            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
+              <Button
+                isLoading={isSubmitting}
+                color="gray.50"
+                bg="blue.900"
+                type="submit"
+                id="submitBtn"
+              >
                 <Trans>Create Account</Trans>
               </Button>
 

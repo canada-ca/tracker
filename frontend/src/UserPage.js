@@ -73,7 +73,6 @@ export default function UserPage() {
         </Heading>
         <CheckboxGroup
           mt="20px"
-          _checked={{ bg: 'cyan.800', color: 'white', borderColor: 'cyan.800' }}
           defaultValue={[
             queryUserData.userPage.userAffiliations[0].admin ? 'admin' : '',
             'active',
