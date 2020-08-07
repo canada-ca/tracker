@@ -1,14 +1,14 @@
 const DataLoader = require('dataloader')
 
-module.exports.orgLoaderBySlug = (query) =>
+module.exports.orgLoaderBySlug = (query, language) =>
   new DataLoader(async (slugs) => {
     let cursor
 
     try {
       cursor = await query`
         FOR org IN organizations
-          FILTER ${slugs}[** FILTER (LOWER(CURRENT) == LOWER(org.slugEN) || LOWER(CURRENT) == LOWER(org.slugFR))]
-          RETURN org
+          FILTER ${slugs}[** FILTER (LOWER(CURRENT) == LOWER(TRANSLATE(${language}, org.orgDetails).slug))]
+          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
       console.error(
@@ -20,11 +20,7 @@ module.exports.orgLoaderBySlug = (query) =>
     const orgMap = {}
     try {
       await cursor.each((org) => {
-        if (slugs.includes(org.slugFR)) {
-          orgMap[org.slugFR] = org
-        } else {
-          orgMap[org.slugEN] = org
-        }
+        orgMap[org.slug] = org
       })
     } catch (err) {
       console.error(`Cursor error during orgLoaderBySlug: ${err}`)

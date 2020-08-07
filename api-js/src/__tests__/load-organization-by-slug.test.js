@@ -22,10 +22,9 @@ describe('given a orgLoaderById dataloader', () => {
     ))
     await truncate()
     await collections.organizations.save({
-      slugEN: 'communications-security-establishment',
-      slugFR: 'centre-de-la-securite-des-telecommunications',
-      orgInformation: {
-        EN: {
+      orgDetails: {
+        en: {
+          slug: 'communications-security-establishment',
           acronym: 'CSE',
           name: 'Communications Security Establishment',
           zone: 'FED',
@@ -34,7 +33,8 @@ describe('given a orgLoaderById dataloader', () => {
           province: 'Ontario',
           city: 'Ottawa',
         },
-        FR: {
+        fr: {
+          slug: 'centre-de-la-securite-des-telecommunications',
           acronym: 'CST',
           name: 'Centre de la Securite des Telecommunications',
           zone: 'FED',
@@ -45,11 +45,10 @@ describe('given a orgLoaderById dataloader', () => {
         },
       },
     })
-    await collections.users.save({
-      slugEN: 'treasury-board-secretariat',
-      slugFR: 'secretariat-conseil-tresor',
-      orgInformation: {
-        EN: {
+    await collections.organizations.save({
+      orgDetails: {
+        en: {
+          slug: 'treasury-board-secretariat',
           acronym: 'TBS',
           name: 'Treasury Board of Canada Secretariat',
           zone: 'FED',
@@ -58,7 +57,8 @@ describe('given a orgLoaderById dataloader', () => {
           province: 'Ontario',
           city: 'Ottawa',
         },
-        FR: {
+        fr: {
+          slug: 'secretariat-conseil-tresor',
           acronym: 'CST',
           name: 'Secrétariat du Conseil Trésor du Canada',
           zone: 'FED',
@@ -82,14 +82,14 @@ describe('given a orgLoaderById dataloader', () => {
         // Get Org From db
         const expectedCursor = await query`
           FOR org IN organizations
-            FILTER org.slugFR == "centre-de-la-securite-des-telecommunications"
-            RETURN org
+            FILTER org.orgDetails.en.slug == "communications-security-establishment"
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
   
-        const loader = orgLoaderBySlug(query)
-        const org = await loader.load(expectedOrg.slugEN)
-  
+        const loader = orgLoaderBySlug(query, 'en')
+        const org = await loader.load(expectedOrg.slug)
+
         expect(org).toEqual(expectedOrg)
       })
     })
@@ -98,55 +98,55 @@ describe('given a orgLoaderById dataloader', () => {
         // Get Org From db
         const expectedCursor = await query`
           FOR org IN organizations
-            FILTER org.slugEN == "communications-security-establishment"
-            RETURN org
+            FILTER org.orgDetails.fr.slug == "centre-de-la-securite-des-telecommunications"
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("fr", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
   
-        const loader = orgLoaderBySlug(query)
-        const org = await loader.load(expectedOrg.slugFR)
+        const loader = orgLoaderBySlug(query, 'fr')
+        const org = await loader.load(expectedOrg.slug)
   
         expect(org).toEqual(expectedOrg)
       })
     })
   })
   describe('provided a list of ids', () => {
-    describe('slug is in english', () => {
+    describe('slugs are in english', () => {
       it('returns a list of orgs', async () => {
         const orgSlugs = []
         const expectedOrgs = []
         const expectedCursor = await query`
           FOR org IN organizations
-            RETURN org
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
         `
   
         while (expectedCursor.hasNext()) {
           const tempOrg = await expectedCursor.next()
-          orgSlugs.push(tempOrg.slugEN)
+          orgSlugs.push(tempOrg.slug)
           expectedOrgs.push(tempOrg)
         }
   
-        const loader = orgLoaderBySlug(query)
+        const loader = orgLoaderBySlug(query, 'en')
         const orgs = await loader.loadMany(orgSlugs)
         expect(orgs).toEqual(expectedOrgs)
       })
     })
-    describe('slug is in french', () => {
+    describe('slugs are in french', () => {
       it('returns a list of orgs', async () => {
         const orgSlugs = []
         const expectedOrgs = []
         const expectedCursor = await query`
           FOR org IN organizations
-            RETURN org
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("fr", org.orgDetails))
         `
   
         while (expectedCursor.hasNext()) {
           const tempOrg = await expectedCursor.next()
-          orgSlugs.push(tempOrg.slugFR)
+          orgSlugs.push(tempOrg.slug)
           expectedOrgs.push(tempOrg)
         }
   
-        const loader = orgLoaderBySlug(query)
+        const loader = orgLoaderBySlug(query, 'fr')
         const orgs = await loader.loadMany(orgSlugs)
         expect(orgs).toEqual(expectedOrgs)
       })
@@ -155,7 +155,7 @@ describe('given a orgLoaderById dataloader', () => {
   describe('database error is raised', () => {
     it('returns an error', async () => {
       query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-      const loader = orgLoaderBySlug(query)
+      const loader = orgLoaderBySlug(query, 'en')
 
       try {
         await loader.load('slug')
@@ -176,7 +176,7 @@ describe('given a orgLoaderById dataloader', () => {
         },
       }
       query = jest.fn().mockReturnValue(cursor)
-      const loader = orgLoaderBySlug(query)
+      const loader = orgLoaderBySlug(query, 'fr')
 
       try {
         await loader.load('slug')
