@@ -59,7 +59,7 @@ describe('given a orgLoaderById dataloader', () => {
         },
         fr: {
           slug: 'secretariat-conseil-tresor',
-          acronym: 'CST',
+          acronym: 'SCT',
           name: 'Secrétariat du Conseil Trésor du Canada',
           zone: 'FED',
           sector: 'DND',
