@@ -12,7 +12,7 @@ const { Server } = require('./src/server')
 const { makeMigrations } = require('./migrations')
 
 const bcrypt = require('bcrypt')
-const { tokenize, verifyToken } = require('./src/auth')
+const { tokenize, userRequired, verifyToken } = require('./src/auth')
 const { cleanseInput, slugify } = require('./src/validators')
 const {
   sendAuthEmail,
@@ -33,6 +33,7 @@ const {
     auth: {
       bcrypt,
       tokenize,
+      userRequired,
       verifyToken,
     },
     validators: {
