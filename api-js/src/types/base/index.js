@@ -79,37 +79,58 @@ const organizationType = new GraphQLObjectType({
     acronym: {
       type: Acronym,
       description: 'The organizations acronym.',
-      resolve: async () => {},
+      resolve: async ({ acronym }) => {
+        return acronym
+      },
     },
     name: {
       type: GraphQLString,
       description: 'The full name of the organization.',
-      resolve: async () => {},
+      resolve: async ({ name }) => {
+        return name
+      },
     },
     slug: {
       type: Slug,
       description: 'Slugified name of the organization.',
-      resolve: async () => {},
+      resolve: async ({ slug }) => {
+        return slug
+      },
     },
     zone: {
       type: GraphQLString,
       description: 'The zone which the organization belongs to.',
-      resolve: async () => {},
+      resolve: async ({ zone }) => {
+        return zone
+      },
     },
     sector: {
       type: GraphQLString,
       description: 'The sector which the organization belongs to.',
-      resolve: async () => {},
+      resolve: async ({ sector }) => {
+        return sector
+      },
+    },
+    country: {
+      type: GraphQLString,
+      description: 'The country in which the organization resides.',
+      resolve: async ({ country }) => {
+        return country
+      },
     },
     province: {
       type: GraphQLString,
       description: 'The province in which the organization resides.',
-      resolve: async () => {},
+      resolve: async ({ province }) => {
+        return province
+      },
     },
     city: {
       type: GraphQLString,
       description: 'The city in which the organization resides.',
-      resolve: async () => {},
+      resolve: async ({ city }) => {
+        return city
+      },
     },
     domainCount: {
       type: GraphQLInt,

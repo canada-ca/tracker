@@ -79,10 +79,123 @@ const createOrganization = new mutationWithClientMutationId({
     organization: {
       type: organizationType,
       description: 'The newly created organization.',
-      resolve: async () => {},
+      resolve: async (payload) => {
+        return payload
+      },
     },
   }),
-  mutateAndGetPayload: async () => {},
+  mutateAndGetPayload: async (args, { request, query, userId, auth: { userRequired }, loaders: { orgLoaderBySlug, userLoaderById }, validators: { cleanseInput, slugify }}) => {
+    // Cleanse Input
+    const acronymEN = cleanseInput(args.acronymEN)
+    const acronymFR = cleanseInput(args.acronymFR)
+    const nameEN = cleanseInput(args.nameEN)
+    const nameFR = cleanseInput(args.nameFR)
+    const zoneEN = cleanseInput(args.zoneEN)
+    const zoneFR = cleanseInput(args.zoneFR)
+    const sectorEN = cleanseInput(args.sectorEN)
+    const sectorFR = cleanseInput(args.sectorFR)
+    const countryEN = cleanseInput(args.countryEN)
+    const countryFR = cleanseInput(args.countryFR)
+    const provinceEN = cleanseInput(args.provinceEN)
+    const provinceFR = cleanseInput(args.provinceFR)
+    const cityEN = cleanseInput(args.cityEN)
+    const cityFR = cleanseInput(args.cityFR)
+    
+    // Create EN and FR slugs
+    const slugEN = slugify(nameEN)
+    const slugFR = slugify(nameFR)
+
+    // Get user
+    const user = await userRequired(userId, userLoaderById)
+
+    // Check to see if org already exists
+    const [ orgEN, orgFR ] = await orgLoaderBySlug.loadMany([slugEN, slugFR])
+
+    if (typeof orgEN !== 'undefined' || typeof orgFR !== 'undefined') {
+      console.warn(`User: ${userId} attempted to create an organization that already exists: ${slugEN}`)
+      throw new Error('Unable to create organization. Please try again.')
+    }
+
+    // Create new organization
+    const organizationDetails = {
+      orgDetails: {
+        en: {
+          slug: slugEN,
+          acronym: acronymEN,
+          name: nameEN,
+          zone: zoneEN,
+          sector: sectorEN,
+          country: countryEN,
+          province: provinceEN,
+          city: cityEN,
+        },
+        fr: {
+          slug: slugFR,
+          acronym: acronymFR,
+          name: nameFR,
+          zone: zoneFR,
+          sector: sectorFR,
+          country: countryFR,
+          province: provinceFR,
+          city: cityFR,
+        },
+      },
+    }
+
+    // Insert organization into db
+    let cursor
+    try {
+      cursor = await query`
+        INSERT ${organizationDetails} INTO organizations RETURN NEW
+      `
+    } catch (err) {
+      console.error(`Database error occurred when user: ${userId} was creating new organization ${slugEN}: ${err}`)
+      throw new Error('Unable to create organization. Please try again.')
+    }
+
+    const organization = await cursor.next()
+
+    try {
+      await query`
+        INSERT {
+          _from: ${organization._id},
+          _to: ${user._id},
+          permission: "admin"
+        } INTO affiliations
+      `
+    } catch (err) {
+      console.error(`Database error occurred when inserting edge definition for user: ${userId} to ${slugEN}: ${err}`)
+      throw new Error('Error creating affiliation. Please contact a system administrator for assistance.')
+    }
+
+    console.info(`User: ${userId} successfully created a new organization: ${slugEN}`)
+
+    if (request.language === 'fr') {
+      return {
+        id: organization._key,
+        slug: organization.orgDetails.fr.slug,
+        acronym: organization.orgDetails.fr.acronym,
+        name: organization.orgDetails.fr.name,
+        zone: organization.orgDetails.fr.zone,
+        sector: organization.orgDetails.fr.sector,
+        country: organization.orgDetails.fr.country,
+        province: organization.orgDetails.fr.province,
+        city: organization.orgDetails.fr.city,
+      }
+    } else {
+      return {
+        id: organization._key,
+        slug: organization.orgDetails.en.slug,
+        acronym: organization.orgDetails.en.acronym,
+        name: organization.orgDetails.en.name,
+        zone: organization.orgDetails.en.zone,
+        sector: organization.orgDetails.en.sector,
+        country: organization.orgDetails.en.country,
+        province: organization.orgDetails.en.province,
+        city: organization.orgDetails.en.city,
+      }
+    }
+  },
 })
 
 module.exports = {
