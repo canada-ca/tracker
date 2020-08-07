@@ -33,7 +33,12 @@ const updateUserProfile = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { query, userId, loaders: { userLoaderById }, functions: { cleanseInput } },
+    {
+      query,
+      userId,
+      loaders: { userLoaderById },
+      validators: { cleanseInput },
+    },
   ) => {
     // Cleanse Input
     const displayName = cleanseInput(args.displayName)

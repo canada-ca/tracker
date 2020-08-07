@@ -28,7 +28,8 @@ const signIn = new mutationWithClientMutationId({
     },
     status: {
       type: GraphQLString,
-      description: 'Wether the authentication code was sent through text, or email.',
+      description:
+        'Wether the authentication code was sent through text, or email.',
       resolve: async (payload) => {
         return payload.status
       },
@@ -40,7 +41,7 @@ const signIn = new mutationWithClientMutationId({
       query,
       auth: { tokenize, bcrypt },
       loaders: { userLoaderByUserName },
-      functions: { cleanseInput },
+      validators: { cleanseInput },
       notify: { sendAuthEmail, sendAuthTextMsg },
     },
   ) => {
@@ -113,13 +114,17 @@ const signIn = new mutationWithClientMutationId({
         let status
         if (user.phoneValidated) {
           await sendAuthTextMsg({ user })
-          status = 'We\'ve sent you a text message with an authentication code to sign into Pulse.'
+          status =
+            "We've sent you a text message with an authentication code to sign into Pulse."
         } else {
-          status = 'We\'ve sent you an email with an authentication code to sign into Pulse.'
+          status =
+            "We've sent you an email with an authentication code to sign into Pulse."
           await sendAuthEmail({ user })
         }
 
-        console.info(`User: ${user._key} successfully signed in, and sent auth msg.`)
+        console.info(
+          `User: ${user._key} successfully signed in, and sent auth msg.`,
+        )
 
         return {
           status,

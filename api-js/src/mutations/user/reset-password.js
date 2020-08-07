@@ -36,7 +36,7 @@ const resetPassword = new mutationWithClientMutationId({
       query,
       auth: { verifyToken, bcrypt },
       loaders: { userLoaderById },
-      functions: { cleanseInput },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse input

@@ -27,7 +27,7 @@ const sendEmailVerification = new mutationWithClientMutationId({
     {
       request,
       auth: { tokenize },
-      functions: { cleanseInput },
+      validators: { cleanseInput },
       loaders: { userLoaderByUserName },
       notify: { sendVerificationEmail },
     },

@@ -69,7 +69,7 @@ describe('reset users password', () => {
           bcrypt,
           tokenize,
         },
-        functions: {
+        validators: {
           cleanseInput,
         },
         loaders: {
@@ -120,7 +120,7 @@ describe('reset users password', () => {
             tokenize,
             verifyToken,
           },
-          functions: {
+          validators: {
             cleanseInput,
           },
           loaders: {
@@ -166,7 +166,7 @@ describe('reset users password', () => {
             bcrypt,
             tokenize,
           },
-          functions: {
+          validators: {
             cleanseInput,
           },
           loaders: {
@@ -223,7 +223,7 @@ describe('reset users password', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -272,7 +272,7 @@ describe('reset users password', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -321,7 +321,7 @@ describe('reset users password', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -377,7 +377,7 @@ describe('reset users password', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -433,7 +433,7 @@ describe('reset users password', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -489,7 +489,7 @@ describe('reset users password', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -549,7 +549,7 @@ describe('reset users password', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -612,7 +612,7 @@ describe('reset users password', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {

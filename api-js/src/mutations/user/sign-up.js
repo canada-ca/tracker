@@ -51,7 +51,7 @@ const signUp = new mutationWithClientMutationId({
       query,
       auth: { tokenize, bcrypt },
       loaders: { userLoaderByUserName },
-      functions: { cleanseInput },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse Inputs

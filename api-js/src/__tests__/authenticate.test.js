@@ -101,7 +101,7 @@ describe('authenticate user account', () => {
             tokenize,
             verifyToken,
           },
-          functions: {
+          validators: {
             cleanseInput,
           },
           loaders: {
@@ -179,7 +179,7 @@ describe('authenticate user account', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -233,7 +233,7 @@ describe('authenticate user account', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -287,7 +287,7 @@ describe('authenticate user account', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -358,7 +358,7 @@ describe('authenticate user account', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -434,7 +434,7 @@ describe('authenticate user account', () => {
               tokenize,
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {

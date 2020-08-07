@@ -86,7 +86,7 @@ describe('user sign up', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -161,7 +161,7 @@ describe('user sign up', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -237,7 +237,7 @@ describe('user sign up', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -289,7 +289,7 @@ describe('user sign up', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -351,7 +351,7 @@ describe('user sign up', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -410,7 +410,7 @@ describe('user sign up', () => {
                 bcrypt,
                 tokenize,
               },
-              functions: {
+              validators: {
                 cleanseInput,
               },
               loaders: {
@@ -471,7 +471,7 @@ describe('user sign up', () => {
                   bcrypt,
                   tokenize,
                 },
-                functions: {
+                validators: {
                   cleanseInput,
                 },
                 loaders: {

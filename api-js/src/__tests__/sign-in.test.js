@@ -71,7 +71,7 @@ describe('authenticate user account', () => {
           bcrypt,
           tokenize,
         },
-        functions: {
+        validators: {
           cleanseInput,
         },
         loaders: {
@@ -123,7 +123,7 @@ describe('authenticate user account', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -200,7 +200,7 @@ describe('authenticate user account', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -283,7 +283,7 @@ describe('authenticate user account', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -346,7 +346,7 @@ describe('authenticate user account', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -403,7 +403,7 @@ describe('authenticate user account', () => {
             bcrypt,
             tokenize,
           },
-          functions: {
+          validators: {
             cleanseInput,
           },
           loaders: {
@@ -450,7 +450,7 @@ describe('authenticate user account', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -506,7 +506,7 @@ describe('authenticate user account', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -559,7 +559,7 @@ describe('authenticate user account', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -617,7 +617,7 @@ describe('authenticate user account', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -677,7 +677,7 @@ describe('authenticate user account', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {

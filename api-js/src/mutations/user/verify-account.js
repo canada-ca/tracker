@@ -27,7 +27,7 @@ const verifyAccount = new mutationWithClientMutationId({
       userId,
       auth: { verifyToken },
       loaders: { userLoaderById },
-      functions: { cleanseInput },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse Input

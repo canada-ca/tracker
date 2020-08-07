@@ -13,7 +13,7 @@ const { makeMigrations } = require('./migrations')
 
 const bcrypt = require('bcrypt')
 const { tokenize, verifyToken } = require('./src/auth')
-const { cleanseInput } = require('./src/validators')
+const { cleanseInput, slugify } = require('./src/validators')
 const {
   sendAuthEmail,
   sendAuthTextMsg,
@@ -35,8 +35,9 @@ const {
       tokenize,
       verifyToken,
     },
-    functions: {
+    validators: {
       cleanseInput,
+      slugify,
     },
     notify: {
       sendAuthEmail,

@@ -4,7 +4,8 @@ const { GraphQLPhoneNumber } = require('graphql-scalars')
 
 const sendPhoneCode = new mutationWithClientMutationId({
   name: 'sendPhoneCode',
-  description: 'This mutation is used for sending a text message with a random six digit code used to verify the user.',
+  description:
+    'This mutation is used for sending a text message with a random six digit code used to verify the user.',
   inputFields: () => ({
     phoneNumber: {
       type: GraphQLNonNull(GraphQLPhoneNumber),
@@ -14,19 +15,31 @@ const sendPhoneCode = new mutationWithClientMutationId({
   outputFields: () => ({
     status: {
       type: GraphQLString,
-      description: 'Informs the user if the text message was successfully sent.',
+      description:
+        'Informs the user if the text message was successfully sent.',
       resolve: async (payload) => {
         return payload.status
       },
     },
   }),
-  mutateAndGetPayload: async (args, { query, userId, loaders: { userLoaderById }, functions: { cleanseInput }, notify: { sendTfaTextMsg } } ) => {
+  mutateAndGetPayload: async (
+    args,
+    {
+      query,
+      userId,
+      loaders: { userLoaderById },
+      validators: { cleanseInput },
+      notify: { sendTfaTextMsg },
+    },
+  ) => {
     // Cleanse input
     const phoneNumber = cleanseInput(args.phoneNumber)
 
     // Check to see if user Id exists
     if (typeof userId === 'undefined') {
-      console.warn(`User attempted to send TFA text message, however the userId does not exist.`)
+      console.warn(
+        `User attempted to send TFA text message, however the userId does not exist.`,
+      )
       throw new Error('Authentication error, please sign in again.')
     }
 
@@ -34,7 +47,9 @@ const sendPhoneCode = new mutationWithClientMutationId({
     let user = await userLoaderById.load(userId)
 
     if (typeof user === 'undefined') {
-      console.warn(`User attempted to send TFA text message, however no account is associated with ${userId}.`)
+      console.warn(
+        `User attempted to send TFA text message, however no account is associated with ${userId}.`,
+      )
       throw new Error('Unable to send TFA code, please try again.')
     }
 
@@ -50,7 +65,9 @@ const sendPhoneCode = new mutationWithClientMutationId({
           IN users
       `
     } catch (err) {
-      console.error(`Database error occurred when inserting ${user._key} TFA code: ${err}`)
+      console.error(
+        `Database error occurred when inserting ${user._key} TFA code: ${err}`,
+      )
       throw new Error('Unable to send TFA code, please try again.')
     }
 
@@ -62,7 +79,9 @@ const sendPhoneCode = new mutationWithClientMutationId({
           IN users
       `
     } catch (err) {
-      console.error(`Database error occurred when inserting ${user._key} phone number: ${err}`)
+      console.error(
+        `Database error occurred when inserting ${user._key} phone number: ${err}`,
+      )
       throw new Error('Unable to send TFA code, please try again.')
     }
 
@@ -81,7 +100,8 @@ const sendPhoneCode = new mutationWithClientMutationId({
 
     console.info(`User: ${user._key} successfully sent tfa code.`)
     return {
-      status: 'Two factor code has been successfully sent, you will receive a text message shortly.',
+      status:
+        'Two factor code has been successfully sent, you will receive a text message shortly.',
     }
   },
 })

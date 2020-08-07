@@ -90,7 +90,7 @@ describe('user send password reset email', () => {
           auth: {
             verifyToken,
           },
-          functions: {
+          validators: {
             cleanseInput,
           },
           loaders: {
@@ -145,7 +145,7 @@ describe('user send password reset email', () => {
             auth: {
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -186,7 +186,7 @@ describe('user send password reset email', () => {
             auth: {
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -244,7 +244,7 @@ describe('user send password reset email', () => {
             auth: {
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -304,7 +304,7 @@ describe('user send password reset email', () => {
             auth: {
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -364,7 +364,7 @@ describe('user send password reset email', () => {
             auth: {
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -430,7 +430,7 @@ describe('user send password reset email', () => {
             auth: {
               verifyToken,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {

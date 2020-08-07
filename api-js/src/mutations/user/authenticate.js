@@ -33,7 +33,7 @@ const authenticate = new mutationWithClientMutationId({
       query,
       auth: { tokenize, verifyToken },
       loaders: { userLoaderById },
-      functions: { cleanseInput },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse Inputs

@@ -36,7 +36,7 @@ const updateUserPassword = new mutationWithClientMutationId({
       userId,
       auth: { bcrypt },
       loaders: { userLoaderById },
-      functions: { cleanseInput },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse Input

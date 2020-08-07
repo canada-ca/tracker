@@ -92,7 +92,7 @@ describe('user send password reset email', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -167,7 +167,7 @@ describe('user send password reset email', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -228,7 +228,7 @@ describe('user send password reset email', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -270,7 +270,7 @@ describe('user send password reset email', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -333,7 +333,7 @@ describe('user send password reset email', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
@@ -397,7 +397,7 @@ describe('user send password reset email', () => {
               bcrypt,
               tokenize,
             },
-            functions: {
+            validators: {
               cleanseInput,
             },
             loaders: {
