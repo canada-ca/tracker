@@ -48,13 +48,11 @@ describe('user send password reset email', () => {
     await truncate()
   })
 
-  afterEach(() => {
+  afterEach(async () => {
     consoleOutput = []
-  })
-
-  afterAll(async () => {
     await drop()
   })
+
 
   describe('successfully send a phone code', () => {
     describe('users preferred language is french', () => {
