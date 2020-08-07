@@ -42,6 +42,7 @@ const colors = {
     50: '#FFFDF0',
     100: '#FEF1BF',
     200: '#FADE89',
+    250: '#FEC04F',
     300: '#F6C95E',
     400: '#ECB64B',
     500: '#D6962E',

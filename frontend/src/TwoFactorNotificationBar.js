@@ -5,7 +5,7 @@ import { Trans } from '@lingui/macro'
 
 export function TwoFactorNotificationBar() {
   return (
-    <Box bg="red.600" color="gray.50" p={2}>
+    <Box bg="yellow.250" p="2">
       <Flex
         maxW={{ sm: 540, md: 768, lg: 960, xl: 1200 }}
         flex="1 0 auto"
