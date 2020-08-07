@@ -62,7 +62,7 @@ describe('given a userLoaderById dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `User attempted to access controlled content, but userId was undefined`,
+        `User attempted to access controlled content, but userId was undefined.`,
       ])
     })
   })

@@ -1,6 +1,6 @@
 const userRequired = async (userId, userLoaderById) => {
   if (typeof userId === 'undefined') {
-    console.warn(`User attempted to access controlled content, but userId was undefined`)
+    console.warn(`User attempted to access controlled content, but userId was undefined.`)
     throw new Error('Authentication error. Please sign in.')
   }
 
