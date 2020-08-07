@@ -9,6 +9,24 @@ const { ApolloServer } = require('apollo-server-express')
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
 
+const bcrypt = require('bcrypt')
+const {
+  checkPermission,
+  tokenize,
+  userRequired,
+  verifyToken,
+} = require('./auth')
+const { cleanseInput, slugify } = require('./validators')
+const {
+  sendAuthEmail,
+  sendAuthTextMsg,
+  sendOrgInviteCreateAccount,
+  sendOrgInviteEmail,
+  sendPasswordResetEmail,
+  sendTfaTextMsg,
+  sendVerificationEmail,
+} = require('./notify')
+
 const {
   orgLoaderById,
   orgLoaderBySlug,
@@ -52,10 +70,7 @@ const Server = (context = {}) => {
       mutation: createMutationSchema(),
     }),
     context: ({ req: request, res: response }) => {
-      const {
-        auth: { verifyToken },
-        query,
-      } = context
+      const { query } = context
       // Get user id from token
       let userId
       const token = request.headers.authorization || ''
@@ -64,16 +79,36 @@ const Server = (context = {}) => {
       }
 
       return {
+        query,
         request,
         response,
         userId,
+        auth: {
+          bcrypt,
+          checkPermission,
+          tokenize,
+          userRequired,
+          verifyToken,
+        },
+        validators: {
+          cleanseInput,
+          slugify,
+        },
+        notify: {
+          sendAuthEmail,
+          sendAuthTextMsg,
+          sendOrgInviteCreateAccount,
+          sendOrgInviteEmail,
+          sendPasswordResetEmail,
+          sendTfaTextMsg,
+          sendVerificationEmail,
+        },
         loaders: {
           orgLoaderById: orgLoaderById(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),
           userLoaderByUserName: userLoaderByUserName(query),
           userLoaderById: userLoaderById(query),
         },
-        ...context,
       }
     },
   })
