@@ -103,6 +103,14 @@ msgstr "La liste de chiffrement acceptée contient le chiffrement de flux RC4, t
 msgid "Account Details"
 msgstr "Détails du compte"
 
+#: src/UserPage.js:83
+msgid "Administrative Account"
+msgstr "Compte Administratif"
+
+#: src/UserPage.js:86
+msgid "Account Active"
+msgstr "Compte Actif"
+
 #: src/CreateUserPage.js:55
 msgid "Account created."
 msgstr "Compte créé"

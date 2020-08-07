@@ -103,6 +103,14 @@ msgstr "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18
 msgid "Account Details"
 msgstr "Account Details"
 
+#: src/UserPage.js:83
+msgid "Administrative Account"
+msgstr "Administrative Account"
+
+#: src/UserPage.js:86
+msgid "Account Active"
+msgstr "Account Active"
+
 #: src/CreateUserPage.js:55
 msgid "Account created."
 msgstr "Account created."

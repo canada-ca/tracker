@@ -79,8 +79,12 @@ export default function UserPage() {
             'active',
           ]}
         >
-          <Checkbox value="admin">Administrative Account</Checkbox>
-          <Checkbox value="active">Account Active</Checkbox>
+          <Checkbox value="admin">
+            <Trans>Administrative Account</Trans>
+          </Checkbox>
+          <Checkbox value="active">
+            <Trans>Account Active</Trans>
+          </Checkbox>
         </CheckboxGroup>
         <Divider />
         <Stack isInline>
