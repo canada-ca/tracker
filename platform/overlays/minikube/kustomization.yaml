@@ -2,11 +2,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ../../bases
+- postgres-deployment.yaml
+- postgres-service.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-4301b10
+  newTag: master-9d2e21e
 - name: gcr.io/track-compliance/frontend
-  newTag: master-8799003
+  newTag: master-2bea7ec
 secretGenerator:
 - envs:
   - postgres.env
