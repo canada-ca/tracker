@@ -6,15 +6,15 @@ module.exports.userLoaderByUserName = (query) =>
 
     try {
       cursor = await query`
-              FOR user IN users
-                  FILTER ${userNames}[** FILTER CURRENT == user.userName]
-                  RETURN user
-          `
+        FOR user IN users
+          FILTER ${userNames}[** FILTER CURRENT == user.userName]
+          RETURN user
+      `
     } catch (err) {
       console.error(
-        `Database error occurred when running batchUsersByUserName: ${err}`,
+        `Database error occurred when running userLoaderByUserName: ${err}`,
       )
-      throw new Error('Unable to find user, please try again.')
+      throw new Error('Unable to find user. Please try again.')
     }
 
     const userMap = {}
@@ -23,10 +23,8 @@ module.exports.userLoaderByUserName = (query) =>
         userMap[user.userName] = user
       })
     } catch (err) {
-      console.error(
-        `Cursor error occurred during batchUsersByUserName: ${err}`,
-      )
-      throw new Error('Unable to find user, please try again.')
+      console.error(`Cursor error occurred during userLoaderByUserName: ${err}`)
+      throw new Error('Unable to find user. Please try again.')
     }
 
     return userNames.map((userName) => userMap[userName])

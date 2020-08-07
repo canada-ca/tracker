@@ -93,11 +93,11 @@ describe('given a userLoaderById dataloader', () => {
       try {
         await loader.load(expectedUser._key)
       } catch (err) {
-        expect(err).toEqual(new Error('Unable to find user, please try again.'))
+        expect(err).toEqual(new Error('Unable to find user. Please try again.'))
       }
 
       expect(consoleOutput).toEqual([
-        `Database error occurred when running batchUsersByIds: Error: Database error occurred.`,
+        `Database error occurred when running userLoaderById: Error: Database error occurred.`,
       ])
     })
   })
@@ -121,11 +121,11 @@ describe('given a userLoaderById dataloader', () => {
       try {
         await loader.load(expectedUser._key)
       } catch (err) {
-        expect(err).toEqual(new Error('Unable to find user, please try again.'))
+        expect(err).toEqual(new Error('Unable to find user. Please try again.'))
       }
 
       expect(consoleOutput).toEqual([
-        `Cursor error occurred during batchUsersByIds: Error: Cursor error occurred.`,
+        `Cursor error occurred during userLoaderById: Error: Cursor error occurred.`,
       ])
     })
   })
