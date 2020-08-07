@@ -55,6 +55,7 @@ export default function QRcodePage() {
             bg="transparent"
             borderColor="blue.900"
             borderWidth="1px"
+            mb="4"
             onClick={history.goBack}
           >
             <Trans>Back</Trans>

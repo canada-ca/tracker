@@ -130,23 +130,6 @@ const space = {
   '8': '2rem',
 }
 
-const buttons = {
-  primary: {
-    color: chakraTheme.colors.gray[50],
-    backgroundColor: chakraTheme.colors.blue[700],
-  },
-  secondary: {
-    color: chakraTheme.colors.blue[700],
-    backgroundColor: chakraTheme.colors.transparent,
-    borderColor: chakraTheme.colors.blue[700],
-    borderWidth: '1px',
-  },
-  danger: {
-    color: chakraTheme.colors.gray[50],
-    backgroundColor: chakraTheme.colors.red[600],
-  },
-}
-
 const customIcons = {
   person: {
     path: (
@@ -194,9 +177,6 @@ const canada = {
   sizes: {
     ...chakraTheme.sizes,
     ...sizes,
-  },
-  buttons: {
-    ...buttons,
   },
 }
 
