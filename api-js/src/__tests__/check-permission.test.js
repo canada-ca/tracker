@@ -59,32 +59,133 @@ describe('given the check permission function', () => {
     await drop()
   })
 
-  describe('if the user is an admin for a given organization', () => {
-    let user, org
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      const orgCursor = await query`
-        FOR org IN organizations
-          FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-      `
-      user = await userCursor.next()
-      org = await orgCursor.next()
+  describe('given a successful permission check', () => {
+    describe('if the user is a super admin for a given organization', () => {
+      let user, org
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const orgCursor = await query`
+          FOR org IN organizations
+            FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+        `
+        user = await userCursor.next()
+        org = await orgCursor.next()
 
-      await query`
-        INSERT {
-          _from: ${org._id},
-          _to: ${user._id},
-          permission: "admin"
-        } INTO affiliations
-      `
+        await query`
+          INSERT {
+            _from: ${org._id},
+            _to: ${user._id},
+            permission: "super_admin"
+          } INTO affiliations
+        `
+      })
+      it('will return the users permission level', async () => {
+        const permission = await checkPermission(user._id, org._id, query)
+        expect(permission).toEqual('super_admin')
+      })
     })
-    it('will return the users permission level', async () => {
-      await checkPermission(user._id, org._id, query)
+    describe('if the user is an admin for a given organization', () => {
+      let user, org
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const orgCursor = await query`
+          FOR org IN organizations
+            FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+        `
+        user = await userCursor.next()
+        org = await orgCursor.next()
+
+        await query`
+          INSERT {
+            _from: ${org._id},
+            _to: ${user._id},
+            permission: "admin"
+          } INTO affiliations
+        `
+      })
+      it('will return the users permission level', async () => {
+        const permission = await checkPermission(user._id, org._id, query)
+        expect(permission).toEqual('admin')
+      })
+    })
+    describe('if the user is a user for a given organization', () => {
+      let user, org
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const orgCursor = await query`
+          FOR org IN organizations
+            FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+        `
+        user = await userCursor.next()
+        org = await orgCursor.next()
+
+        await query`
+          INSERT {
+            _from: ${org._id},
+            _to: ${user._id},
+            permission: "user"
+          } INTO affiliations
+        `
+      })
+      it('will return the users permission level', async () => {
+        const permission = await checkPermission(user._id, org._id, query)
+        expect(permission).toEqual('user')
+      })
+    })
+  })
+  describe('given an unsuccessful permission check', () => {
+    describe('user does not belong to that organization', () => {
+      let user, org
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        const orgCursor = await query`
+          FOR org IN organizations
+            FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+        `
+        user = await userCursor.next()
+        org = await orgCursor.next()
+      })
+      it('will return the users permission level', async () => {
+        const permission = await checkPermission(user._id, org._id, query)
+        expect(permission).toEqual(undefined)
+      })
+    })
+    describe('database error occurs', () => {
+      it('throws an error', async () => {
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+
+        try {
+          await checkPermission('users/1', 'organizations/1', query)
+        } catch (err) {
+          expect(err).toEqual(new Error('Authentication error. Please sign in again.'))
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error occurred when checking users/1's permission: Error: Database error occurred.`,
+        ])
+      })
     })
   })
 })

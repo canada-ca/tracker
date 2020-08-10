@@ -3,17 +3,17 @@ const checkPermission = async (userId, orgId, query) => {
 
   try {
     cursor = await query`
-      FOR affiliation IN affiliations
-        FILTER _from == ${orgId}
-        FILTER _to == ${userId}
-        RETURN affiliation.permission
+      FOR v, e IN 1 INBOUND ${userId} affiliations
+        FILTER e._from == ${orgId}
+        RETURN e.permission
     `
   } catch (err) {
-    console.log(err)
+    console.error(`Database error occurred when checking ${userId}'s permission: ${err}`)
+    throw new Error('Authentication error. Please sign in again.')
   }
 
-  console.log(cursor)
-  return true
+  const permission = await cursor.next()
+  return permission
 }
 
 module.exports = {
