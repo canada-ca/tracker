@@ -55,8 +55,7 @@ export default function UserList({
         isClosable: true,
       })
     },
-    onCompleted(updateUserRoles) {
-      console.log(updateUserRoles)
+    onCompleted() {
       toast({
         title: i18n._(t`Role updated`),
         description: i18n._(t`The user's role has been successfully updated`),
@@ -185,11 +184,11 @@ export default function UserList({
           <Trans>No users in this organization</Trans>
         </Text>
       ) : (
-        currentUsers.map(({ node }) => {
+        currentUsers.map(({ node }, index) => {
           let userRole = node.role
           if (permission) {
             return (
-              <Box>
+              <Box key={`${node.username}:${index}`}>
                 {userRole === 'SUPER_ADMIN' ||
                 (permission === 'ADMIN' && userRole === 'ADMIN') ? (
                   <Stack key={node.id} isInline align="center">
@@ -201,7 +200,7 @@ export default function UserList({
                     />
                   </Stack>
                 ) : (
-                  <Box>
+                  <Box key={`${node.username}:${index}`}>
                     <Stack isInline align="center">
                       <IconButton
                         icon="minus"
