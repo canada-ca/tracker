@@ -9,8 +9,12 @@ const sendTfaTextMsg = async ({ templateId, phoneNumber, user }) => {
     })
     return true
   } catch (err) {
-    console.error(`Error ocurred when sending two factor authentication message for ${user._key}: ${err}`)
-    throw new Error('Unable to send two factor authentication message. Please try again.')
+    console.error(
+      `Error ocurred when sending two factor authentication message for ${user._key}: ${err}`,
+    )
+    throw new Error(
+      'Unable to send two factor authentication message. Please try again.',
+    )
   }
 }
 

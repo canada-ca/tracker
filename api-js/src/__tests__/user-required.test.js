@@ -85,11 +85,11 @@ describe('given a userLoaderById dataloader', () => {
     it('throws an error', async () => {
       userLoaderById = () => {
         return {
-          load () {
+          load() {
             throw new Error('Database error occurred.')
           },
         }
-      } 
+      }
 
       try {
         await userRequired('1', userLoaderById(query))

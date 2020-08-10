@@ -84,7 +84,17 @@ const createOrganization = new mutationWithClientMutationId({
       },
     },
   }),
-  mutateAndGetPayload: async (args, { request, query, userId, auth: { userRequired }, loaders: { orgLoaderBySlug, userLoaderById }, validators: { cleanseInput, slugify }}) => {
+  mutateAndGetPayload: async (
+    args,
+    {
+      request,
+      query,
+      userId,
+      auth: { userRequired },
+      loaders: { orgLoaderBySlug, userLoaderById },
+      validators: { cleanseInput, slugify },
+    },
+  ) => {
     // Cleanse Input
     const acronymEN = cleanseInput(args.acronymEN)
     const acronymFR = cleanseInput(args.acronymFR)
@@ -100,7 +110,7 @@ const createOrganization = new mutationWithClientMutationId({
     const provinceFR = cleanseInput(args.provinceFR)
     const cityEN = cleanseInput(args.cityEN)
     const cityFR = cleanseInput(args.cityFR)
-    
+
     // Create EN and FR slugs
     const slugEN = slugify(nameEN)
     const slugFR = slugify(nameFR)
@@ -109,10 +119,12 @@ const createOrganization = new mutationWithClientMutationId({
     const user = await userRequired(userId, userLoaderById)
 
     // Check to see if org already exists
-    const [ orgEN, orgFR ] = await orgLoaderBySlug.loadMany([slugEN, slugFR])
+    const [orgEN, orgFR] = await orgLoaderBySlug.loadMany([slugEN, slugFR])
 
     if (typeof orgEN !== 'undefined' || typeof orgFR !== 'undefined') {
-      console.warn(`User: ${userId} attempted to create an organization that already exists: ${slugEN}`)
+      console.warn(
+        `User: ${userId} attempted to create an organization that already exists: ${slugEN}`,
+      )
       throw new Error('Unable to create organization. Please try again.')
     }
 
@@ -149,7 +161,9 @@ const createOrganization = new mutationWithClientMutationId({
         INSERT ${organizationDetails} INTO organizations RETURN NEW
       `
     } catch (err) {
-      console.error(`Database error occurred when user: ${userId} was creating new organization ${slugEN}: ${err}`)
+      console.error(
+        `Database error occurred when user: ${userId} was creating new organization ${slugEN}: ${err}`,
+      )
       throw new Error('Unable to create organization. Please try again.')
     }
 
@@ -164,11 +178,17 @@ const createOrganization = new mutationWithClientMutationId({
         } INTO affiliations
       `
     } catch (err) {
-      console.error(`Database error occurred when inserting edge definition for user: ${userId} to ${slugEN}: ${err}`)
-      throw new Error('Error creating affiliation. Please contact a system administrator for assistance.')
+      console.error(
+        `Database error occurred when inserting edge definition for user: ${userId} to ${slugEN}: ${err}`,
+      )
+      throw new Error(
+        'Error creating affiliation. Please contact a system administrator for assistance.',
+      )
     }
 
-    console.info(`User: ${userId} successfully created a new organization: ${slugEN}`)
+    console.info(
+      `User: ${userId} successfully created a new organization: ${slugEN}`,
+    )
 
     if (request.language === 'fr') {
       return {

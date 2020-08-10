@@ -98,7 +98,7 @@ describe('user send password reset email', () => {
             RETURN user
       `
       user = await cursor.next()
-      
+
       expect(response).toEqual(expectedResult)
       expect(user.phoneValidated).toEqual(true)
       expect(consoleOutput).toEqual([
@@ -160,7 +160,9 @@ describe('user send password reset email', () => {
         )
 
         const error = [
-          new GraphQLError('Unable to two factor authenticate. Please try again.'),
+          new GraphQLError(
+            'Unable to two factor authenticate. Please try again.',
+          ),
         ]
 
         expect(response.errors).toEqual(error)
@@ -179,14 +181,14 @@ describe('user send password reset email', () => {
           emailValidated: false,
           tfaCode: 123456,
         })
-  
+
         const cursor = await query`
           FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
         `
         const user = await cursor.next()
-  
+
         const response = await graphql(
           schema,
           `
@@ -205,9 +207,11 @@ describe('user send password reset email', () => {
             },
           },
         )
-  
+
         const error = [
-          new GraphQLError('Unable to two factor authenticate. Please try again.'),
+          new GraphQLError(
+            'Unable to two factor authenticate. Please try again.',
+          ),
         ]
 
         expect(response.errors).toEqual(error)
@@ -226,14 +230,14 @@ describe('user send password reset email', () => {
           emailValidated: false,
           tfaCode: 123456,
         })
-  
+
         const cursor = await query`
           FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
         `
         const user = await cursor.next()
-  
+
         const response = await graphql(
           schema,
           `
@@ -252,9 +256,11 @@ describe('user send password reset email', () => {
             },
           },
         )
-  
+
         const error = [
-          new GraphQLError('Unable to two factor authenticate. Please try again.'),
+          new GraphQLError(
+            'Unable to two factor authenticate. Please try again.',
+          ),
         ]
 
         expect(response.errors).toEqual(error)
@@ -273,19 +279,19 @@ describe('user send password reset email', () => {
           emailValidated: false,
           tfaCode: 123456,
         })
-  
+
         const cursor = await query`
           FOR user IN users
               FILTER user.userName == "test.account@istio.actually.exists"
               RETURN user
         `
         const user = await cursor.next()
-  
+
         const idLoader = userLoaderById(query)
 
         query = jest
-        .fn()
-        .mockRejectedValue(new Error('Database error occurred.'))
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
 
         const response = await graphql(
           schema,
@@ -305,9 +311,11 @@ describe('user send password reset email', () => {
             },
           },
         )
-  
+
         const error = [
-          new GraphQLError('Unable to two factor authenticate. Please try again.'),
+          new GraphQLError(
+            'Unable to two factor authenticate. Please try again.',
+          ),
         ]
 
         expect(response.errors).toEqual(error)

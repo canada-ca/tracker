@@ -41,9 +41,15 @@ const authenticate = new mutationWithClientMutationId({
     const authenticationToken = cleanseInput(args.authenticateToken)
 
     // Gather token parameters
-    const tokenParameters = verifyToken({ token: authenticationToken, secret: String(SIGN_IN_KEY) })
+    const tokenParameters = verifyToken({
+      token: authenticationToken,
+      secret: String(SIGN_IN_KEY),
+    })
 
-    if (tokenParameters.userId === 'undefined' || typeof tokenParameters.userId === 'undefined') {
+    if (
+      tokenParameters.userId === 'undefined' ||
+      typeof tokenParameters.userId === 'undefined'
+    ) {
       console.warn(`Authentication token does not contain the userId`)
       throw new Error('Unable to authenticate. Please try again.')
     }
@@ -87,7 +93,9 @@ const authenticate = new mutationWithClientMutationId({
         },
       }
     } else {
-      console.warn(`User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`)
+      console.warn(
+        `User: ${user._key} attempted to authenticate their account, however the tfaCodes did not match.`,
+      )
       throw new Error('Unable to authenticate. Please try again.')
     }
   },

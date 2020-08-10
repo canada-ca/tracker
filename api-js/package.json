@@ -7,6 +7,7 @@
     "test": "jest",
     "test-coverage": "jest --coverage",
     "lint": "eslint src",
+    "prettier": "prettier --write \"**/*.js\"",
     "extract": "lingui extract",
     "compile": "lingui compile"
   },

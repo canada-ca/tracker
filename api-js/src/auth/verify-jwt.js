@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const { AUTHENTICATED_KEY } = process.env
 
-const verifyToken = ({ token, secret=String(AUTHENTICATED_KEY) }) => {
+const verifyToken = ({ token, secret = String(AUTHENTICATED_KEY) }) => {
   let decoded
   try {
     decoded = jwt.verify(token, secret)

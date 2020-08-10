@@ -11,9 +11,7 @@ module.exports.orgLoaderBySlug = (query, language) =>
           RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
-      console.error(
-        `Database error when running orgLoaderBySlug: ${err}`,
-      )
+      console.error(`Database error when running orgLoaderBySlug: ${err}`)
       throw new Error('Unable to find organization. Please try again.')
     }
 
@@ -26,6 +24,6 @@ module.exports.orgLoaderBySlug = (query, language) =>
       console.error(`Cursor error during orgLoaderBySlug: ${err}`)
       throw new Error('Unable to find organization. Please try again.')
     }
-    
+
     return slugs.map((slug) => orgMap[slug])
   })

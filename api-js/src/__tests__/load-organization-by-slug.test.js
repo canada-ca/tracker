@@ -86,7 +86,7 @@ describe('given a orgLoaderById dataloader', () => {
             RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
-  
+
         const loader = orgLoaderBySlug(query, 'en')
         const org = await loader.load(expectedOrg.slug)
 
@@ -102,10 +102,10 @@ describe('given a orgLoaderById dataloader', () => {
             RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("fr", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
-  
+
         const loader = orgLoaderBySlug(query, 'fr')
         const org = await loader.load(expectedOrg.slug)
-  
+
         expect(org).toEqual(expectedOrg)
       })
     })
@@ -119,13 +119,13 @@ describe('given a orgLoaderById dataloader', () => {
           FOR org IN organizations
             RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
         `
-  
+
         while (expectedCursor.hasNext()) {
           const tempOrg = await expectedCursor.next()
           orgSlugs.push(tempOrg.slug)
           expectedOrgs.push(tempOrg)
         }
-  
+
         const loader = orgLoaderBySlug(query, 'en')
         const orgs = await loader.loadMany(orgSlugs)
         expect(orgs).toEqual(expectedOrgs)
@@ -139,13 +139,13 @@ describe('given a orgLoaderById dataloader', () => {
           FOR org IN organizations
             RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("fr", org.orgDetails))
         `
-  
+
         while (expectedCursor.hasNext()) {
           const tempOrg = await expectedCursor.next()
           orgSlugs.push(tempOrg.slug)
           expectedOrgs.push(tempOrg)
         }
-  
+
         const loader = orgLoaderBySlug(query, 'fr')
         const orgs = await loader.loadMany(orgSlugs)
         expect(orgs).toEqual(expectedOrgs)
@@ -160,7 +160,9 @@ describe('given a orgLoaderById dataloader', () => {
       try {
         await loader.load('slug')
       } catch (err) {
-        expect(err).toEqual(new Error('Unable to find organization. Please try again.'))
+        expect(err).toEqual(
+          new Error('Unable to find organization. Please try again.'),
+        )
       }
 
       expect(consoleOutput).toEqual([
@@ -181,7 +183,9 @@ describe('given a orgLoaderById dataloader', () => {
       try {
         await loader.load('slug')
       } catch (err) {
-        expect(err).toEqual(new Error('Unable to find organization. Please try again.'))
+        expect(err).toEqual(
+          new Error('Unable to find organization. Please try again.'),
+        )
       }
 
       expect(consoleOutput).toEqual([

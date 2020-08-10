@@ -177,7 +177,8 @@ describe('authenticate user account', () => {
       const expectedAuthResponse = {
         data: {
           signIn: {
-            status: 'We\'ve sent you an email with an authentication code to sign into Pulse.',
+            status:
+              "We've sent you an email with an authentication code to sign into Pulse.",
           },
         },
       }

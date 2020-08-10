@@ -4,7 +4,7 @@ const slugify = (input) => {
   if (typeof input !== 'string') {
     return undefined
   }
-  
+
   return urlSlug(input)
 }
 

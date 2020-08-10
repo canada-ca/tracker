@@ -487,7 +487,11 @@ describe('create an organization', () => {
 
         query = jest
           .fn()
-          .mockResolvedValueOnce({ next() { return 'test' }})
+          .mockResolvedValueOnce({
+            next() {
+              return 'test'
+            },
+          })
           .mockRejectedValue(new Error('Database error occurred.'))
 
         const response = await graphql(

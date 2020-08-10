@@ -10,13 +10,13 @@ const {
   connectionDefinitions,
   connectionArgs,
 } = require('graphql-relay')
-const { GraphQLDateTime, GraphQLEmailAddress, GraphQLURL } = require('graphql-scalars')
-const { RoleEnums, LanguageEnums } = require('../../enums')
 const {
-  Acronym,
-  Slug,
-  Selectors,
-} = require('../../scalars')
+  GraphQLDateTime,
+  GraphQLEmailAddress,
+  GraphQLURL,
+} = require('graphql-scalars')
+const { RoleEnums, LanguageEnums } = require('../../enums')
+const { Acronym, Slug, Selectors } = require('../../scalars')
 const { nodeInterface } = require('../node')
 const { emailScanConnection, webScanConnection } = require('./scan')
 

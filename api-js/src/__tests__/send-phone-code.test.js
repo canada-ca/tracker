@@ -53,7 +53,6 @@ describe('user send password reset email', () => {
     await drop()
   })
 
-
   describe('successfully send a phone code', () => {
     describe('users preferred language is french', () => {
       beforeEach(async () => {

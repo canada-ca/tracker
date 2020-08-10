@@ -688,11 +688,7 @@ describe('authenticate user account', () => {
             },
           },
         )
-        const error = [
-          new GraphQLError(
-            'Unable to sign in, please try again.',
-          ),
-        ]
+        const error = [new GraphQLError('Unable to sign in, please try again.')]
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([

@@ -68,7 +68,10 @@ describe('authenticate user account', () => {
       `
       let user = await cursor.next()
 
-      const token = tokenize({ parameters: { userId: user._key }, secret: String(SIGN_IN_KEY)})
+      const token = tokenize({
+        parameters: { userId: user._key },
+        secret: String(SIGN_IN_KEY),
+      })
       const response = await graphql(
         schema,
         `
@@ -146,7 +149,10 @@ describe('authenticate user account', () => {
   describe('given unsuccessful authentication', () => {
     describe('when userId in token is undefined', () => {
       it('returns an error message', async () => {
-        const token = tokenize({ parameters: { userId: undefined }, secret: String(SIGN_IN_KEY)})
+        const token = tokenize({
+          parameters: { userId: undefined },
+          secret: String(SIGN_IN_KEY),
+        })
         const response = await graphql(
           schema,
           `
@@ -200,7 +206,7 @@ describe('authenticate user account', () => {
     })
     describe('when userId is not a field in the token parameters', () => {
       it('returns an error message', async () => {
-        const token = tokenize({ parameters: {}, secret: String(SIGN_IN_KEY)})
+        const token = tokenize({ parameters: {}, secret: String(SIGN_IN_KEY) })
         const response = await graphql(
           schema,
           `
@@ -254,7 +260,10 @@ describe('authenticate user account', () => {
     })
     describe('when user cannot be found in database', () => {
       it('returns an error message', async () => {
-        const token = tokenize({ parameters: { userId: 1}, secret: String(SIGN_IN_KEY)})
+        const token = tokenize({
+          parameters: { userId: 1 },
+          secret: String(SIGN_IN_KEY),
+        })
         const response = await graphql(
           schema,
           `
@@ -325,7 +334,10 @@ describe('authenticate user account', () => {
         `
         const user = await cursor.next()
 
-        const token = tokenize({ parameters: { userId: user._key }, secret: String(SIGN_IN_KEY)})
+        const token = tokenize({
+          parameters: { userId: user._key },
+          secret: String(SIGN_IN_KEY),
+        })
         const response = await graphql(
           schema,
           `
@@ -396,11 +408,14 @@ describe('authenticate user account', () => {
         `
         const user = await cursor.next()
         const loader = userLoaderById(query)
-        const token = tokenize({ parameters: { userId: user._key }, secret: String(SIGN_IN_KEY)})
+        const token = tokenize({
+          parameters: { userId: user._key },
+          secret: String(SIGN_IN_KEY),
+        })
 
         query = jest
-        .fn()
-        .mockRejectedValue(new Error('Database error occurred.'))
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
 
         const response = await graphql(
           schema,

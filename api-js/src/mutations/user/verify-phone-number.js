@@ -73,7 +73,9 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
       throw new Error('Unable to two factor authenticate. Please try again.')
     }
 
-    console.info(`User: ${user._key} successfully two factor authenticated their account.`)
+    console.info(
+      `User: ${user._key} successfully two factor authenticated their account.`,
+    )
 
     return {
       status: 'Successfully two factor authenticated.',
