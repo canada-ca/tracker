@@ -1,21 +1,15 @@
 import React from 'react'
-import {
-  elementType,
-  func,
-  oneOfType,
-  shape,
-  string,
-} from 'prop-types'
+import { elementType, func, oneOfType, shape, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Icon,
   Input,
   InputGroup,
   InputLeftElement,
-  Icon,
-  FormErrorMessage,
-  FormLabel,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
@@ -35,7 +29,7 @@ const AuthenticateField = WithPseudoBox(function AuthenticateField({
       </FormLabel>
       <InputGroup>
         <InputLeftElement>
-          <Icon name="twoFactor" color="gray.300" size="1.25rem"/>
+          <Icon name="twoFactor" color="gray.300" size="1.25rem" />
         </InputLeftElement>
         <Input
           {...field}

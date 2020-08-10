@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
@@ -8,7 +8,7 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Flex, Link, CSSReset } from '@chakra-ui/core'
+import { CSSReset, Flex, Link } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
@@ -27,7 +27,9 @@ const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
 const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
-const TwoFactorAuthenticatePage = lazy(() => import('./TwoFactorAuthenticatePage'))
+const TwoFactorAuthenticatePage = lazy(() =>
+  import('./TwoFactorAuthenticatePage'),
+)
 const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
 
 export default function App() {

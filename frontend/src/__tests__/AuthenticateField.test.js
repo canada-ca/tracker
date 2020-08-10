@@ -1,7 +1,7 @@
 import React from 'react'
 import { object, string } from 'yup'
-import { waitFor, render, fireEvent } from '@testing-library/react'
-import { ThemeProvider, theme } from '@chakra-ui/core'
+import { fireEvent, render, waitFor } from '@testing-library/react'
+import { theme, ThemeProvider } from '@chakra-ui/core'
 import AuthenticateField from '../AuthenticateField'
 import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
@@ -24,7 +24,12 @@ describe('<AuthenticateField />', () => {
                 twoFactorCode: '',
               }}
             >
-              {() => <AuthenticateField data-testid="authenticatefield" name="twoFactorCode" />}
+              {() => (
+                <AuthenticateField
+                  data-testid="authenticatefield"
+                  name="twoFactorCode"
+                />
+              )}
             </Formik>
           </ThemeProvider>
         </I18nProvider>,

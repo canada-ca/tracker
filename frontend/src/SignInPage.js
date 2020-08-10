@@ -1,16 +1,16 @@
 import React from 'react'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import PasswordField from './PasswordField'
 import { object, string } from 'yup'
 import {
-  Text,
-  Stack,
-  Button,
-  Link,
-  useToast,
   Box,
+  Button,
   Heading,
+  Link,
+  Stack,
+  Text,
+  useToast,
 } from '@chakra-ui/core'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'

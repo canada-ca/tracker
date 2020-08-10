@@ -4,12 +4,12 @@ import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Icon,
   Input,
   InputGroup,
   InputLeftElement,
-  Icon,
-  FormErrorMessage,
-  FormLabel,
 } from '@chakra-ui/core'
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
