@@ -32,8 +32,8 @@ spec:
         - name: DB_PASS
           valueFrom:
             secretKeyRef:
-              name: trackdmarc.tracker-postgres-cluster.credentials
-              key: password
+              name: api
+              key: DB_PASS
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
@@ -107,8 +107,8 @@ spec:
         - name: DB_PASS
           valueFrom:
             secretKeyRef:
-              name: trackdmarc.tracker-postgres-cluster.credentials
-              key: password
+              name: api
+              key: DB_PASS
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
