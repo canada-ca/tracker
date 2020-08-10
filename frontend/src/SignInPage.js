@@ -15,13 +15,11 @@ import {
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
-import { useUserState } from './UserState'
-import { AUTHENTICATE } from './graphql/mutations'
+import { SIGN_IN } from './graphql/mutations'
 import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
 
 export default function SignInPage() {
-  const { login } = useUserState()
   const history = useHistory()
   const toast = useToast()
   const { i18n } = useLingui()
@@ -35,7 +33,7 @@ export default function SignInPage() {
       .email(i18n._(fieldRequirements.email.email.message)),
   })
 
-  const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
+  const [signIn, { loading, error }] = useMutation(SIGN_IN, {
     onError() {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -47,22 +45,9 @@ export default function SignInPage() {
         isClosable: true,
       })
     },
-    onCompleted({ authenticate }) {
-      login({
-        jwt: authenticate.authResult.authToken,
-        tfa: authenticate.authResult.user.tfa,
-        userName: authenticate.authResult.user.userName,
-      })
-      // redirect to the home page.
-      history.push('/')
-      // Display a welcome message
-      toast({
-        title: i18n._(t`Sign In.`),
-        description: i18n._(t`Welcome, you are successfully signed in!`),
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      })
+    onCompleted({ signIn }) {
+      // redirect to the authenticate page
+      history.push(`/authenticate/${signIn.authenticateToken}`)
     },
   })
 
@@ -80,7 +65,7 @@ export default function SignInPage() {
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}
         onSubmit={async values => {
-          authenticate({
+          signIn({
             variables: { userName: values.email, password: values.password },
           })
         }}
@@ -91,6 +76,7 @@ export default function SignInPage() {
             role="form"
             aria-label="form"
             name="form"
+            autoComplete="on"
           >
             <Heading as="h1" fontSize="2xl" mb="12">
               <Trans>Sign in with your username and password.</Trans>

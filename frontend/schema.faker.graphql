@@ -28,14 +28,14 @@ type Alignment {
 }
 
 """
-This mutation allows users to give their credentials and retrieve a token
-that gives them access to restricted content.
+This mutation allows users to verify their identity after supplying their login
+info through 2FA and retrieve a token allowing them to complete their login.
 """
 type Authenticate {
   """
   User info who just signed in, and their JWT
   """
-  authResult: AuthResult
+  authenticatePayload: AuthenticatePayload
 }
 
 """
@@ -43,18 +43,30 @@ Object containing input fields for Authenticate Mutation
 """
 input AuthenticateInput {
   """
-  User email that they signed up with.
+  2FA code from email or SMS
   """
-  userName: EmailAddress!
+  authenticationCode: Int!
 
   """
-  Users password
+  Used to link sign-in attempt with a user. This is returned from the SignIn
+  mutation
   """
-  password: String!
+  authenticateToken: String!
+
+  clientMutationId: String
+}
+
+type AuthenticatePayload {
+  """
+  JWT used for accessing, controlled content.
+  """
+  authResult: AuthResult
+
+  clientMutationId: String
 }
 
 """
-A type used to return information when users sign up or authenticate
+A type used to return information when users sign up
 """
 type AuthResult {
   """
@@ -658,7 +670,9 @@ Input object with the various fields required for the EmailVerifyAccount
 mutation
 """
 input EmailVerifyAccountInput {
-  """Token in sent via email, and located in url"""
+  """
+  Token in sent via email, and located in url
+  """
   tokenString: String!
 }
 
@@ -801,11 +815,6 @@ input InviteUserToOrgInput {
 The central gathering point for all of the GraphQL mutations.
 """
 type Mutation {
-  authenticateTwoFactor(
-    otpCode: String!
-    userName: EmailAddress!
-  ): ValidateTwoFactor
-
   """
   Updates the users permission to an organization.
   """
@@ -887,14 +896,25 @@ type Mutation {
   ): RequestScan
 
   """
-  Allows users to give their credentials and be authenticated
+  This mutation allows users to verify their identity after supplying their login
+  info through 2FA and retrieve a token allowing them to complete their login.
+  """
+  signIn(
+    """
+    SignInInput object containing input fields for signing in
+    """
+    input: SignInInput!
+  ): SignInPayload
+
+  """
+  Allows users to verify their identity with 2FA to complete login
   """
   authenticate(
     """
     AuthenticateInput object containing input fields
     """
     input: AuthenticateInput!
-  ): Authenticate
+  ): AuthenticatePayload
 
   """
   Allows users to sign up to our service.
@@ -1520,16 +1540,6 @@ type Query {
   demoWebSummary: CategorizedSummary
 
   """
-  An api endpoint used to generate a OTP url used for two factor authentication.
-  """
-  generateOtpUrl(email: EmailAddress!): String
-    @examples(
-      values: [
-        "otpauth://totp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App"
-      ]
-    )
-
-  """
   An api endpoint to view a current user's claims -- Requires an active JWT.
   """
   testUserClaims(orgSlug: Slug!, role: RoleEnums!): String
@@ -1661,6 +1671,53 @@ type SendPasswordResetLink {
   Status of a successful password reset email.
   """
   status: String
+}
+
+"""
+This mutation allows users to start the login process by supplying their
+email address and password, returning info to complete the login with 2FA
+"""
+type SignIn {
+  """
+  Object containing information of login attempt and 2FA token
+  """
+  signInPayload: SignInPayload
+}
+
+"""
+An input object containing the input fields required for starting the login
+process (2FA verification required afterwards)
+"""
+input SignInInput {
+  """
+  Email address for user's account
+  """
+  userName: EmailAddress!
+
+  """
+  Password for user's account
+  """
+  password: String!
+
+  clientMutationId: String
+}
+
+"""
+Object containing information for a user's sign in attempt
+"""
+type SignInPayload {
+  """
+  Token to be passed to AuthenticateInput to link a sign in attempt with a
+  generated 2FA code
+  """
+  authenticateToken: String
+
+  """
+  Return status of sign in attempt
+  """
+  status: String
+
+  clientMutationId: String
 }
 
 """
@@ -1865,7 +1922,7 @@ type SummaryCategory {
   """
   Category of computed summary which the other fields relate to.
   """
-  name: String @examples(values: ["full-pass" "full-fail" ])
+  name: String @examples(values: ["full-pass", "full-fail"])
 
   """
   Total count of domains that fall into this category.
@@ -2052,7 +2109,9 @@ update the permission level of a given user that already belongs to the
 given organization.
 """
 type UpdateUserRole {
-  """The status of updating the user role."""
+  """
+  The status of updating the user role.
+  """
   status: String
 }
 
@@ -2061,13 +2120,19 @@ This input object contains the various fields that are related to the
 updateUserRole mutation
 """
 input UpdateUserRoleInput {
-  """The username of the user you wish to update their role to."""
+  """
+  The username of the user you wish to update their role to.
+  """
   userName: EmailAddress!
 
-  """The organization that the admin, and the user both belong to."""
+  """
+  The organization that the admin, and the user both belong to.
+  """
   orgSlug: Slug!
 
-  """The role that the admin wants to give to the selected user."""
+  """
+  The role that the admin wants to give to the selected user.
+  """
   role: RoleEnums!
 }
 
@@ -2199,7 +2264,8 @@ type UserListItem implements Node {
   """
   Indicates if this user is an admin of the organization specified in the UserList query
   """
-  role: RoleEnums @examples(values: ["ADMIN", "SUPER_ADMIN", "USER_WRITE", "USER_READ"])
+  role: RoleEnums
+    @examples(values: ["ADMIN", "SUPER_ADMIN", "USER_WRITE", "USER_READ"])
 }
 
 type UserListItemConnection {
@@ -2281,10 +2347,6 @@ type UserPageAffiliations implements Node {
   Indicates which organization this users data is being displayed for
   """
   organization: Acronym @examples(values: ["GC", "ABC", "ASDF", "NSTIR", "BC"])
-}
-
-type ValidateTwoFactor {
-  user: User
 }
 
 """

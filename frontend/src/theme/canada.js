@@ -99,6 +99,39 @@ const customIcons = {
     ),
     viewBox: '0 0 64 64',
   },
+  twoFactor: {
+    path: (
+      <g
+        transform="translate(0 -178.76229)"
+        fill="currentColor"
+        stroke="currentColor"
+      >
+        <rect ry="7.408333" y="227" height="70" width="100" />
+        <path
+          d="M14.953384 221.72513a35.046616 38.165482 0 0 1 17.523309-33.05228 35.046616 38.165482 0 0 1 35.046616 0 35.046616 38.165482 0 0 1 17.523307 33.05228"
+          fill="none"
+          strokeWidth="9.649483"
+        />
+        <text
+          transform="scale(1.017 .98328)"
+          y="285.30807"
+          x="1.700096"
+          fontWeight="400"
+          fontSize="34.257137"
+          fontFamily="sans-serif"
+          letterSpacing="0"
+          wordSpacing="0"
+          fill="#fff"
+          strokeWidth=".273328"
+        >
+          <tspan y="285.30807" x="1.700096" fontSize="50.799999">
+            2FA
+          </tspan>
+        </text>
+      </g>
+    ),
+    viewBox: '0 0 100 118.23771',
+  },
 }
 
 // Final Theme output

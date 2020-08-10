@@ -1,5 +1,11 @@
 import React from 'react'
-import { elementType, func, oneOfType, shape, string } from 'prop-types'
+import {
+  elementType,
+  func,
+  oneOfType,
+  shape,
+  string,
+} from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -14,33 +20,31 @@ import {
 import { useField } from 'formik'
 import WithPseudoBox from './withPseudoBox'
 
-const EmailField = WithPseudoBox(function EmailField({
+const AuthenticateField = WithPseudoBox(function AuthenticateField({
   name,
-  label,
   forwardedRef,
   ...props
 }) {
   const [field, meta] = useField(name)
   const { i18n } = useLingui()
 
-  const labelText = label === undefined ? <Trans>Email:</Trans> : label
-
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
-      <FormLabel htmlFor="email" fontWeight="bold">
-        {labelText}
+      <FormLabel htmlFor="twoFactorCode" fontWeight="bold" mb="2">
+        <Trans>Please enter your two factor code below.</Trans>
       </FormLabel>
       <InputGroup>
         <InputLeftElement>
-          <Icon name="email" color="gray.300" />
+          <Icon name="twoFactor" color="gray.300" size="1.25rem"/>
         </InputLeftElement>
         <Input
           {...field}
           {...props}
-          id="email"
+          id="twoFactorCode"
           ref={forwardedRef}
-          placeholder={i18n._(t`Email`)}
-          type="email"
+          placeholder={i18n._(t`Enter two factor code`)}
+          autoFocus
+          inputMode="numeric"
         />
       </InputGroup>
 
@@ -49,14 +53,14 @@ const EmailField = WithPseudoBox(function EmailField({
   )
 })
 
-EmailField.propTypes = {
+AuthenticateField.propTypes = {
   name: string.isRequired,
   forwardedRef: oneOfType([func, shape({ current: elementType })]),
 }
 
 const withForwardedRef = React.forwardRef((props, ref) => {
-  return <EmailField {...props} forwardedRef={ref} />
+  return <AuthenticateField {...props} forwardedRef={ref} />
 })
-withForwardedRef.displayName = 'EmailField'
+withForwardedRef.displayName = 'AuthenticateField'
 
 export default withForwardedRef

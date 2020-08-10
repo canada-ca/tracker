@@ -1,7 +1,7 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
 import SignInPage from '../SignInPage'
-import { AUTHENTICATE } from '../graphql/mutations'
+import { SIGN_IN } from '../graphql/mutations'
 import { Router, MemoryRouter } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { I18nProvider } from '@lingui/react'
@@ -73,16 +73,17 @@ describe('<SignInPage />', () => {
   })
 
   describe('when sign-in succeeds', () => {
-    it('redirects to home page', async () => {
+    it('redirects to authenticate', async () => {
       const values = {
         email: 'testuser@testemail.ca',
         password: 'testuserpassword',
+        authenticateToken: 'authenticate-token-test',
       }
 
       const mocks = [
         {
           request: {
-            query: AUTHENTICATE,
+            query: SIGN_IN,
             variables: {
               userName: values.email,
               password: values.password,
@@ -90,14 +91,8 @@ describe('<SignInPage />', () => {
           },
           result: {
             data: {
-              authenticate: {
-                authResult: {
-                  user: {
-                    userName: 'Thalia.Rosenbaum@gmail.com',
-                    tfa: false,
-                  },
-                  authToken: 'test123stringJWT',
-                },
+              signIn: {
+                authenticateToken: values.authenticateToken,
               },
             },
           },
@@ -146,7 +141,9 @@ describe('<SignInPage />', () => {
       fireEvent.submit(form)
 
       await waitFor(() => {
-        expect(history.location.pathname).toEqual('/')
+        expect(history.location.pathname).toEqual(
+          `/authenticate/${values.authenticateToken}`,
+        )
       })
     })
   })

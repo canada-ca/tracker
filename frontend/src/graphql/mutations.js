@@ -29,25 +29,40 @@ export const SIGN_UP = gql`
   }
 `
 
+export const SIGN_IN = gql`
+  mutation signIn(
+    $userName: EmailAddress!
+    $password: String!
+  ) {
+    signIn(
+      input: {
+        userName: $userName
+        password: $password
+      }
+    ) {
+      authenticateToken
+      status
+    }
+  }
+`
+
 export const AUTHENTICATE = gql`
-  mutation authenticate($userName: EmailAddress!, $password: String!) {
-    authenticate(input: { userName: $userName, password: $password }) {
+  mutation authenticate(
+    $authenticationCode: Int!
+    $authenticateToken: String!
+  ) {
+    authenticate(
+      input: {
+        authenticationCode: $authenticationCode
+        authenticateToken: $authenticateToken
+      }
+    ) {
       authResult {
         authToken
         user {
           userName
           tfa
         }
-      }
-    }
-  }
-`
-
-export const VALIDATE_TWO_FACTOR = gql`
-  mutation ValidateTwoFactor($userName: EmailAddress!, $otpCode: String!) {
-    authenticateTwoFactor(userName: $userName, otpCode: $otpCode) {
-      user {
-        userName
       }
     }
   }
@@ -68,7 +83,6 @@ export const SEND_PASSWORD_RESET_LINK = gql`
     }
   }
 `
-
 
 export const UPDATE_USER_ROLES = gql`
   mutation UpdateUserRoles($input: UpdateUserRoleInput!) {
@@ -96,8 +110,7 @@ export const UPDATE_USER_PROFILE = gql`
         preferredLang: $preferredLang
         currentPassword: $currentPassword
       }
-    )
-    {
+    ) {
       status
     }
   }

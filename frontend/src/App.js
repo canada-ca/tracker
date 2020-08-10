@@ -13,7 +13,6 @@ import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
-import { DmarcGuidancePage } from './DmarcGuidancePage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -28,6 +27,8 @@ const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
 const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
+const TwoFactorAuthenticatePage = lazy(() => import('./TwoFactorAuthenticatePage'))
+const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -91,6 +92,11 @@ export default function App() {
               </Route>
 
               <Route path="/sign-in" component={SignInPage} />
+
+              <Route
+                path="/authenticate/:authenticateToken"
+                component={TwoFactorAuthenticatePage}
+              />
 
               <Route path="/forgot-password" component={ForgotPasswordPage} />
 
