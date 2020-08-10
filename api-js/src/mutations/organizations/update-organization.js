@@ -1,5 +1,5 @@
 const { GraphQLString, GraphQLNonNull, GraphQLID } = require('graphql')
-const { mutationWithClientMutationId } = require('graphql-relay')
+const { mutationWithClientMutationId, fromGlobalId } = require('graphql-relay')
 const { Acronym } = require('../../scalars')
 const { organizationType } = require('../../types')
 
@@ -83,10 +83,120 @@ const updateOrganization = new mutationWithClientMutationId({
     organization: {
       type: organizationType,
       description: 'The newly created organization.',
-      resolve: async () => {},
+      resolve: async (payload) => {
+        return payload.organization
+      },
     },
   }),
-  mutateAndGetPayload: async () => {},
+  mutateAndGetPayload: async (
+    args,
+    {
+      query,
+      userId,
+      auth: { userRequired },
+      loaders: { orgLoaderById, userLoaderById },
+      validators: { cleanseInput, slugify },
+    },
+  ) => {
+    // Cleanse Input
+    const { type: _orgType, id: orgKey } = fromGlobalId(args.id)
+    const acronymEN = cleanseInput(args.acronymEN)
+    const acronymFR = cleanseInput(args.acronymFR)
+    const nameEN = cleanseInput(args.nameEN)
+    const nameFR = cleanseInput(args.nameFR)
+    const zoneEN = cleanseInput(args.zoneEN)
+    const zoneFR = cleanseInput(args.zoneFR)
+    const sectorEN = cleanseInput(args.sectorEN)
+    const sectorFR = cleanseInput(args.sectorFR)
+    const countryEN = cleanseInput(args.countryEN)
+    const countryFR = cleanseInput(args.countryFR)
+    const provinceEN = cleanseInput(args.provinceEN)
+    const provinceFR = cleanseInput(args.provinceFR)
+    const cityEN = cleanseInput(args.cityEN)
+    const cityFR = cleanseInput(args.cityFR)
+
+    // Create Slug
+    const slugEN = slugify(nameEN)
+    const slugFR = slugify(nameFR)
+
+    // Get user
+    const user = await userRequired(userId, userLoaderById)
+
+    // Check to see if org exists
+    const currentOrg = await orgLoaderById.load(orgKey)
+
+    if (typeof currentOrg === 'undefined') {
+      console.warn(
+        `User: ${userId} attempted to update organization: ${orgKey}, however no organizations is associated with that id.`,
+      )
+      throw new Error('Unable to update organization. Please try again.')
+    }
+
+    // Get all org details
+    let orgCursor
+    try {
+      orgCursor = await query`
+        FOR org IN organizations
+          FILTER org._key == ${orgKey}
+          RETURN org
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred while retrieving org: ${orgKey} for update, err: ${err}`,
+      )
+      throw new Error('Unable to update organization. Please try again.')
+    }
+
+    const compareOrg = await orgCursor.next()
+
+    const updatedOrgDetails = {
+      orgDetails: {
+        en: {
+          slug: slugEN || compareOrg.orgDetails.en.slug,
+          acronym: acronymEN || compareOrg.orgDetails.en.acronym,
+          name: nameEN || compareOrg.orgDetails.en.name,
+          zone: zoneEN || compareOrg.orgDetails.en.zone,
+          sector: sectorEN || compareOrg.orgDetails.en.sector,
+          country: countryEN || compareOrg.orgDetails.en.country,
+          province: provinceEN || compareOrg.orgDetails.en.province,
+          city: cityEN || compareOrg.orgDetails.en.city,
+        },
+        fr: {
+          slug: slugFR || compareOrg.orgDetails.fr.slug,
+          acronym: acronymFR || compareOrg.orgDetails.fr.acronym,
+          name: nameFR || compareOrg.orgDetails.fr.name,
+          zone: zoneFR || compareOrg.orgDetails.fr.zone,
+          sector: sectorFR || compareOrg.orgDetails.fr.sector,
+          country: countryFR || compareOrg.orgDetails.fr.country,
+          province: provinceFR || compareOrg.orgDetails.fr.province,
+          city: cityFR || compareOrg.orgDetails.fr.city,
+        },
+      },
+    }
+
+    // Upsert new org details
+    try {
+      await query`
+        UPSERT { _key: ${orgKey} }
+          INSERT ${updatedOrgDetails}
+          UPDATE ${updatedOrgDetails}
+          IN organizations
+      `
+    } catch (err) {
+      console.error(
+        `Database error occurred while upserting org: ${orgKey}, err: ${err}`,
+      )
+      throw new Error('Unable to update organization. Please try again.')
+    }
+
+    await orgLoaderById.clear(orgKey)
+    const organization = await orgLoaderById.load(orgKey)
+
+    console.info(`User: ${userId}, successfully updated org ${orgKey}.`)
+    return {
+      organization,
+    }
+  },
 })
 
 module.exports = {
