@@ -3,14 +3,10 @@ const { GraphQLEnumType } = require('graphql')
 module.exports.RoleEnums = new GraphQLEnumType({
   name: 'RoleEnums',
   values: {
-    USER_READ: {
-      value: 'user_read',
-      description: 'A user who has been given access to view results.',
-    },
-    USER_WRITE: {
-      value: 'user_write',
+    USER: {
+      value: 'user',
       description:
-        'A user who has been given access to run scans, and manage domains.',
+        'A user who has been given access to view an organization.',
     },
     ADMIN: {
       value: 'admin',
