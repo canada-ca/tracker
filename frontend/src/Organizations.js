@@ -19,13 +19,13 @@ export default function Organisations({ orgsPerPage = 10 }) {
   const { loading, error, data, fetchMore } = useQuery(
     PAGINATED_ORGANIZATIONS,
     {
-      variables: { after: '', first: orgsPerPage },
+      variables: { first: orgsPerPage },
       context: {
         headers: {
           authorization: currentUser.jwt,
         },
       },
-      onError: error => {
+      onError: (error) => {
         const [_, message] = error.message.split(': ')
         toast({
           title: 'Error',
@@ -61,7 +61,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
         <Stack direction="row" spacing={4}>
           <Stack spacing={4} flexWrap="wrap">
             <ListOf
-              elements={data.organizations.edges.map(e => e.node)}
+              elements={data.organizations.edges.map((e) => e.node)}
               ifEmpty={() => <Trans>No Organizations</Trans>}
             >
               {({ name, slug, domainCount }, index) => (
@@ -83,7 +83,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
               fetchMore({
                 query: REVERSE_PAGINATED_ORGANIZATIONS,
                 variables: {
-                  before: data.organizations.pageInfo.startCursor,
+                  before: data.organizations.pageInfo.endCursor,
                   last: orgsPerPage,
                 },
               })
@@ -97,8 +97,8 @@ export default function Organisations({ orgsPerPage = 10 }) {
             onClick={() =>
               fetchMore({
                 variables: {
-                  after: data.organizations.pageInfo.endCursor,
                   first: orgsPerPage,
+                  after: data.organizations.pageInfo.endCursor,
                 },
               })
             }
