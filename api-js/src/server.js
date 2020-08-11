@@ -70,7 +70,7 @@ const Server = (context = {}) => {
       mutation: createMutationSchema(),
     }),
     context: ({ req: request, res: response }) => {
-      const { query } = context
+      const { query, collections } = context
       // Get user id from token
       let userId
       const token = request.headers.authorization || ''
@@ -80,6 +80,7 @@ const Server = (context = {}) => {
 
       return {
         query,
+        collections,
         request,
         response,
         userId,
