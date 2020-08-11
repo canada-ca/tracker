@@ -10,7 +10,7 @@ import random
 import databases
 import asyncio
 import datetime
-from arango import ArangoClient
+#from arango import ArangoClient
 from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import ARRAY
 from starlette.applications import Starlette
