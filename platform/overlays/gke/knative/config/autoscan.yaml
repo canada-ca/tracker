@@ -2,9 +2,10 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: autoscan
-  namespace: tracker
+  namespace: scanners
 spec:
-  schedule: "0 2 * * *"
+  schedule: "*/480 * * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:

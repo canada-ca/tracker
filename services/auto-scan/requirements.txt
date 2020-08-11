@@ -1,8 +1,7 @@
 asyncio
 pytest-asyncio
 requests>=2.18.4
-graphene
 SQLAlchemy
+psycopg2-binary
 databases[postgresql]
 pretend
-bcrypt
