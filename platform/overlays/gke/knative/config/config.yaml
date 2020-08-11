@@ -2,7 +2,9 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: tracker
+  name: scanners
+  labels:
+      istio-injection: enabled
 
 ---
 
@@ -10,7 +12,7 @@ apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
   name: https-scanner
-  namespace: tracker
+  namespace: scanners
   labels:
     app: scanners
 spec:
@@ -22,14 +24,38 @@ spec:
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
+        autoscaling.knative.dev/target: "4"
+        autoscaling.knative.dev/minScale: "10"
+        autoscaling.knative.dev/maxScale: "25"
     spec:
+      timeoutSeconds: 900
+      containerConcurrency: 8
       containers:
         - name: https-scanner
           image: gcr.io/track-compliance/scanners/https:master # The URL to the image of the app
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_HOST
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
 
 ---
 
@@ -37,7 +63,7 @@ apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
   name: result-processor
-  namespace: tracker
+  namespace: scanners
   labels:
     app: scanners
 spec:
@@ -49,11 +75,12 @@ spec:
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
+        #autoscaling.knative.dev/target: "1"
+        autoscaling.knative.dev/minScale: "4"
+        autoscaling.knative.dev/maxScale: "4"
     spec:
+      timeoutSeconds: 900
+      containerConcurrency: 1
       containers:
         - name: result-processor
           image: gcr.io/track-compliance/scanners/results:master # The URL to the image of the app
@@ -87,7 +114,7 @@ apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
   name: ssl-scanner
-  namespace: tracker
+  namespace: scanners
   labels:
     app: scanners
 spec:
@@ -99,14 +126,38 @@ spec:
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
+        autoscaling.knative.dev/target: "4"
+        autoscaling.knative.dev/minScale: "10"
+        autoscaling.knative.dev/maxScale: "20"
     spec:
+      timeoutSeconds: 900
+      containerConcurrency: 8
       containers:
         - name: ssl-scanner
           image: gcr.io/track-compliance/scanners/ssl:master # The URL to the image of the app
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_HOST
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
 
 ---
 
@@ -114,7 +165,7 @@ apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
   name: dns-scanner
-  namespace: tracker
+  namespace: scanners
   labels:
     app: scanners
 spec:
@@ -126,95 +177,38 @@ spec:
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
+        autoscaling.knative.dev/target: "4"
+        autoscaling.knative.dev/minScale: "10"
+        autoscaling.knative.dev/maxScale: "20"
     spec:
+      timeoutSeconds: 900
+      containerConcurrency: 8
       containers:
         - name: dns-scanner
           image: gcr.io/track-compliance/scanners/dns:master # The URL to the image of the app
-
----
-
-apiVersion: serving.knative.dev/v1 # Current version of Knative
-kind: Service
-metadata:
-  name: ssl-scanner-manual
-  namespace: tracker
-  labels:
-    app: scanners
-spec:
-  template:
-    metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
-        # Knative concurrency-based autoscaling (default).
-        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
-        autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
-    spec:
-      containers:
-        - name: ssl-scanner
-          image: gcr.io/track-compliance/scanners/ssl:master # The URL to the image of the app
-
----
-
-apiVersion: serving.knative.dev/v1 # Current version of Knative
-kind: Service
-metadata:
-  name: dns-scanner-manual
-  namespace: tracker
-  labels:
-    app: scanners
-spec:
-  template:
-    metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
-        # Knative concurrency-based autoscaling (default).
-        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
-        autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
-    spec:
-      containers:
-        - name: dns-scanner
-          image: gcr.io/track-compliance/scanners/dns:master # The URL to the image of the app
-
----
-
-apiVersion: serving.knative.dev/v1 # Current version of Knative
-kind: Service
-metadata:
-  name: https-scanner-manual
-  namespace: tracker
-  labels:
-    app: scanners
-spec:
-  template:
-    metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
-        # Knative concurrency-based autoscaling (default).
-        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
-        autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
-    spec:
-      containers:
-        - name: https-scanner
-          image: gcr.io/track-compliance/scanners/https:master # The URL to the image of the app
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_HOST
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
 
 ---
 
@@ -222,7 +216,7 @@ apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
   name: dispatcher
-  namespace: tracker
+  namespace: scanners
   labels:
     app: scanners
 spec:
@@ -234,16 +228,37 @@ spec:
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
-        # Target 10 requests in-flight per pod.
-        autoscaling.knative.dev/target: "10"
-        # Disable scaling to zero
+        #autoscaling.knative.dev/target: "8"
         autoscaling.knative.dev/minScale: "1"
-        # Limit scaling to 10 pods.
-        autoscaling.knative.dev/maxScale: "10"
+        autoscaling.knative.dev/maxScale: "1"
     spec:
+      timeoutSeconds: 900
       containers:
         - name: dispatcher
           image: gcr.io/track-compliance/scanners/dispatcher:master # The URL to the image of the app
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_HOST
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: scanners
+                  key: DB_NAME
 
 ---
 
@@ -257,7 +272,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: service-account
-  namespace: tracker
+  namespace: scanners
 
 ---
 
@@ -268,7 +283,7 @@ kind: Role
 metadata:
   creationTimestamp: null
   name: event-watcher
-  namespace: tracker
+  namespace: scanners
 rules:
   - apiGroups:
       - ""
@@ -288,7 +303,7 @@ kind: RoleBinding
 metadata:
   creationTimestamp: null
   name: k8s-ra-event-watcher
-  namespace: tracker
+  namespace: scanners
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -296,4 +311,6 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: service-account
-    namespace: tracker
+    namespace: scanners
+
+---
