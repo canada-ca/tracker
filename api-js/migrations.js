@@ -20,6 +20,31 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     name: 'domains',
   },
   {
+    type: 'documentcollection',
+    databaseName,
+    name: 'dkim',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'dmarc',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'spf',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'https',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'ssl',
+  },
+  {
     type: 'edgecollection',
     databaseName,
     name: 'affiliations',
@@ -28,6 +53,31 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     type: 'edgecollection',
     databaseName,
     name: 'claims',
+  },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'domainsDKIM',
+  },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'domainsDMARC',
+  },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'domainsSPF',
+  },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'domainsHTTPS',
+  },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'domainsSSL',
   },
 ]
 
