@@ -158,7 +158,8 @@ const createOrganization = new mutationWithClientMutationId({
     let cursor
     try {
       cursor = await query`
-        INSERT ${organizationDetails} INTO organizations RETURN NEW
+        INSERT ${organizationDetails} INTO organizations 
+        RETURN MERGE({ _id: NEW._id, _key: NEW._key, _rev: NEW._rev }, TRANSLATE(${request.language}, NEW.orgDetails))
       `
     } catch (err) {
       console.error(
@@ -190,30 +191,16 @@ const createOrganization = new mutationWithClientMutationId({
       `User: ${userId} successfully created a new organization: ${slugEN}`,
     )
 
-    if (request.language === 'fr') {
-      return {
-        id: organization._key,
-        slug: organization.orgDetails.fr.slug,
-        acronym: organization.orgDetails.fr.acronym,
-        name: organization.orgDetails.fr.name,
-        zone: organization.orgDetails.fr.zone,
-        sector: organization.orgDetails.fr.sector,
-        country: organization.orgDetails.fr.country,
-        province: organization.orgDetails.fr.province,
-        city: organization.orgDetails.fr.city,
-      }
-    } else {
-      return {
-        id: organization._key,
-        slug: organization.orgDetails.en.slug,
-        acronym: organization.orgDetails.en.acronym,
-        name: organization.orgDetails.en.name,
-        zone: organization.orgDetails.en.zone,
-        sector: organization.orgDetails.en.sector,
-        country: organization.orgDetails.en.country,
-        province: organization.orgDetails.en.province,
-        city: organization.orgDetails.en.city,
-      }
+    return {
+      id: organization._key,
+      slug: organization.slug,
+      acronym: organization.acronym,
+      name: organization.name,
+      zone: organization.zone,
+      sector: organization.sector,
+      country: organization.country,
+      province: organization.province,
+      city: organization.city,
     }
   },
 })
