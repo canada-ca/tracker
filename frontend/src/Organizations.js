@@ -83,8 +83,8 @@ export default function Organisations({ orgsPerPage = 10 }) {
               fetchMore({
                 query: REVERSE_PAGINATED_ORGANIZATIONS,
                 variables: {
-                  before: data.organizations.pageInfo.endCursor,
                   last: orgsPerPage,
+                  before: data.organizations.pageInfo.endCursor,
                 },
               })
             }

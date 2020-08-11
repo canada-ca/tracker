@@ -130,7 +130,7 @@ describe('<Organisations />', () => {
         {
           request: {
             query: PAGINATED_ORGANIZATIONS,
-            variables: { after: 'YXJyYXljb25uZWN0aW9uOjA=', first: 1 },
+            variables: { first: 1, after: 'YXJyYXljb25uZWN0aW9uOjA=' },
           },
           result: {
             data: {
@@ -243,7 +243,7 @@ describe('<Organisations />', () => {
           {
             request: {
               query: PAGINATED_ORGANIZATIONS,
-              variables: { after: 'Y3Vyc29yOnYyOpHOAAfgfQ==', first: 1 },
+              variables: { first: 1, after: 'Y3Vyc29yOnYyOpHOAAfgfQ==' },
             },
             result: {
               data: {
@@ -277,7 +277,7 @@ describe('<Organisations />', () => {
           {
             request: {
               query: REVERSE_PAGINATED_ORGANIZATIONS,
-              variables: { before: 'Y3Vyc29yOnYyOpHOAA_zRw==', last: 1 },
+              variables: { last: 1, before: 'Y3Vyc29yOnYyOpHOAA_zRw==' },
             },
             result: {
               data: {
