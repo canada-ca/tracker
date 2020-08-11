@@ -1,6 +1,6 @@
-const { notifyClient } = require('./notify-client')
+const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendAuthEmail = async ({ user }) => {
+const sendAuthEmail = async ({ user, notifyClient = defaultClient }) => {
   const templateId = 'a517d99f-ddb2-4494-87e1-d5ae6ca53090'
   try {
     await notifyClient.sendEmail(templateId, user.userName, {

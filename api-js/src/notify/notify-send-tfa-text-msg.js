@@ -1,6 +1,11 @@
-const { notifyClient } = require('./notify-client')
+const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendTfaTextMsg = async ({ templateId, phoneNumber, user }) => {
+const sendTfaTextMsg = async ({
+  templateId,
+  phoneNumber,
+  user,
+  notifyClient = defaultClient,
+}) => {
   try {
     await notifyClient.sendSms(templateId, phoneNumber, {
       personalisation: {

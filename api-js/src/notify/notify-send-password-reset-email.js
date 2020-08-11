@@ -1,6 +1,11 @@
-const { notifyClient } = require('./notify-client')
+const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendPasswordResetEmail = async ({ templateId, user, resetUrl }) => {
+const sendPasswordResetEmail = async ({
+  templateId,
+  user,
+  resetUrl,
+  notifyClient = defaultClient,
+}) => {
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {

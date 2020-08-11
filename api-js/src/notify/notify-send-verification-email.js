@@ -1,6 +1,11 @@
-const { notifyClient } = require('./notify-client')
+const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendVerificationEmail = async ({ templateId, user, verifyUrl }) => {
+const sendVerificationEmail = async ({
+  templateId,
+  user,
+  verifyUrl,
+  notifyClient = defaultClient,
+}) => {
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {
@@ -11,7 +16,7 @@ const sendVerificationEmail = async ({ templateId, user, verifyUrl }) => {
     return true
   } catch (err) {
     console.error(
-      `Error ocurred when sending password reset email for ${user._key}: ${err}`,
+      `Error ocurred when sending verification email for ${user._key}: ${err}`,
     )
     throw new Error('Unable to send verification email. Please try again.')
   }

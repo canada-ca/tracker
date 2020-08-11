@@ -1,10 +1,11 @@
-const { notifyClient } = require('./notify-client')
+const { notifyClient: defaultClient } = require('./notify-client')
 
 const sendOrgInviteCreateAccount = async ({
   templateId,
   user,
   orgName,
   createAccountLink,
+  notifyClient = defaultClient,
 }) => {
   try {
     await notifyClient.sendEmail(templateId, user.userName, {

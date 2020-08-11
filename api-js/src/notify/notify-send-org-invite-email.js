@@ -1,6 +1,11 @@
-const { notifyClient } = require('./notify-client')
+const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendOrgInviteEmail = async ({ templateId, user, orgName }) => {
+const sendOrgInviteEmail = async ({
+  templateId,
+  user,
+  orgName,
+  notifyClient = defaultClient,
+}) => {
   try {
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {
@@ -10,7 +15,7 @@ const sendOrgInviteEmail = async ({ templateId, user, orgName }) => {
     })
   } catch (err) {
     console.error(
-      `Error ocurred when sending password org invite email for ${user._key}: ${err}`,
+      `Error ocurred when sending org invite email for ${user._key}: ${err}`,
     )
     throw new Error('Unable to send org invite email. Please try again.')
   }
