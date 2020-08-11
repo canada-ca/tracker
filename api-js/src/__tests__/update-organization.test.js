@@ -2603,7 +2603,7 @@ describe('updating an organization', () => {
             .fn()
             .mockReturnValueOnce({
               next() {
-                return 'admin'
+                return 'super_admin'
               },
             })
             .mockRejectedValue(new Error('Database error occurred.'))
@@ -2661,7 +2661,7 @@ describe('updating an organization', () => {
             .fn()
             .mockReturnValueOnce({
               next() {
-                return 'admin'
+                return 'super_admin'
               },
             })
             .mockReturnValueOnce({

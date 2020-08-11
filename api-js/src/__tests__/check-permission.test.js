@@ -171,22 +171,48 @@ describe('given the check permission function', () => {
       })
     })
     describe('database error occurs', () => {
-      it('throws an error', async () => {
-        query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database error occurred.'))
+      describe('when checking if super admin', () => {
+        it('throws an error', async () => {
+          query = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred.'))
 
-        try {
-          await checkPermission('users/1', 'organizations/1', query)
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Authentication error. Please sign in again.'),
-          )
-        }
+          try {
+            await checkPermission('users/1', 'organizations/1', query)
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Authentication error. Please sign in again.'),
+            )
+          }
 
-        expect(consoleOutput).toEqual([
-          `Database error occurred when checking users/1's permission: Error: Database error occurred.`,
-        ])
+          expect(consoleOutput).toEqual([
+            `Database error when checking to see if user: users/1 has super admin permission: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('when checking for other roles', () => {
+        it('throws an error', async () => {
+          query = jest
+            .fn()
+            .mockReturnValueOnce({
+              next() {
+                return 'test'
+              },
+            })
+            .mockRejectedValue(new Error('Database error occurred.'))
+
+          try {
+            await checkPermission('users/1', 'organizations/1', query)
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Authentication error. Please sign in again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred when checking users/1's permission: Error: Database error occurred.`,
+          ])
+        })
       })
     })
   })
