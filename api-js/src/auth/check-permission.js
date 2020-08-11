@@ -9,7 +9,9 @@ const checkPermission = async (userId, orgId, query) => {
         RETURN e.permission
     `
   } catch (err) {
-    console.error(`Database error when checking to see if user: ${userId} has super admin permission: ${err}`)
+    console.error(
+      `Database error when checking to see if user: ${userId} has super admin permission: ${err}`,
+    )
     throw new Error('Authentication error. Please sign in again.')
   }
 

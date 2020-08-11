@@ -41,7 +41,9 @@ const removeOrganization = new mutationWithClientMutationId({
 
     // Check to see if org exists
     if (typeof organization === 'undefined') {
-      console.error(`User: ${userId} attempted to remove org: ${orgId}, but there is no org associated with that id.`)
+      console.error(
+        `User: ${userId} attempted to remove org: ${orgId}, but there is no org associated with that id.`,
+      )
       throw new Error('Unable to remove organization. Please try again.')
     }
 
@@ -50,12 +52,16 @@ const removeOrganization = new mutationWithClientMutationId({
 
     // Check to see if org is blue check, and the user is super admin
     if (organization.blueCheck && permission !== 'super_admin') {
-      console.warn(`User: ${userId} attempted to remove ${organization._key}, however the user is not a super admin.`)
+      console.warn(
+        `User: ${userId} attempted to remove ${organization._key}, however the user is not a super admin.`,
+      )
       throw new Error('Unable to remove organization. Please try again.')
     }
 
-    if(permission !== 'super_admin' && permission !== 'admin') {
-      console.warn(`User: ${userId} attempted to remove ${organization._key}, however the user does not have permission to this organization.`)
+    if (permission !== 'super_admin' && permission !== 'admin') {
+      console.warn(
+        `User: ${userId} attempted to remove ${organization._key}, however the user does not have permission to this organization.`,
+      )
       throw new Error('Unable to remove organization. Please try again.')
     }
 

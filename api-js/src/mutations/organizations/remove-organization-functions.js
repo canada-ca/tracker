@@ -61,27 +61,27 @@ const removeSSL = String(function (params) {
 const removeDomains = String(function (params) {
   const { query } = require('@arango')
   return query`
-  LET domainEdges = (FOR v, e IN 1..1 ANY ${params.organizationId} claims RETURN { edgeKey: e._key, domainId: e._to })
-  LET removeDomainEdges = (FOR domainEdge in domainEdges REMOVE domainEdge.domainId IN claims)
-  LET removeDomain = (FOR domainEdge in domainEdges LET key = PARSE_IDENTIFIER(domainEdge.domainId).key REMOVE key IN domains)
-  RETURN true
+    LET domainEdges = (FOR v, e IN 1..1 ANY ${params.organizationId} claims RETURN { edgeKey: e._key, domainId: e._to })
+    LET removeDomainEdges = (FOR domainEdge in domainEdges REMOVE domainEdge.domainId IN claims)
+    LET removeDomain = (FOR domainEdge in domainEdges LET key = PARSE_IDENTIFIER(domainEdge.domainId).key REMOVE key IN domains)
+    RETURN true
   `
 })
 
 const removeUserAffiliations = String(function (params) {
   const { query } = require('@arango')
   return query`
-  LET userEdges = (FOR v, e IN 1..1 ANY ${params.organizationId} affiliations RETURN { edgeKey: e._key, userId: e._to })
-  LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge._key IN affiliations)
-  RETURN true
+    LET userEdges = (FOR v, e IN 1..1 ANY ${params.organizationId} affiliations RETURN { edgeKey: e._key, userId: e._to })
+    LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge._key IN affiliations)
+    RETURN true
   `
 })
 
 const removeOrganization = String(function (params) {
   const { query } = require('@arango')
   return query`
-  LET organizationKey = SPLIT(${params.organizationId}, '/')[1]
-  REMOVE organizationKey IN organizations
+    LET organizationKey = SPLIT(${params.organizationId}, '/')[1]
+    REMOVE organizationKey IN organizations
   `
 })
 
