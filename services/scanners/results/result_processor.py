@@ -1,22 +1,29 @@
 import os
 import sys
+import time
 import json
 import logging
-import requests
+import traceback
 import emoji
+import sqlalchemy
+import random
+import databases
+import asyncio
+import datetime
+from arango import ArangoClient
+from sqlalchemy.sql import select
+from sqlalchemy.dialects.postgresql import ARRAY
+from starlette.applications import Starlette
+from starlette.routing import Route, Mount, WebSocketRoute
+from starlette.responses import PlainTextResponse, JSONResponse
+from asyncpg.exceptions import ConnectionDoesNotExistError, TooManyConnectionsError, UniqueViolationError, CannotConnectNowError
+from utils import formatted_dictionary
+
+#TEMPORARY
 import sqlalchemy
 from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import ARRAY
 import databases
-from starlette.applications import Starlette
-from starlette.routing import Route, Mount, WebSocketRoute
-from starlette.responses import PlainTextResponse, JSONResponse
-from utils import formatted_dictionary
-
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
-MIN_HSTS_AGE = 31536000  # one year
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
@@ -224,22 +231,25 @@ Guidance = sqlalchemy.Table(
     sqlalchemy.Column("ref_links", sqlalchemy.String),
 )
 
-Classification = sqlalchemy.Table(
-    "classification",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("UNCLASSIFIED", sqlalchemy.String),
-)
+#END TEMPORARY
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-def startup():
-    logging.info(emoji.emojize("ASGI server started :rocket:"))
+MIN_HSTS_AGE = 31536000  # one year
 
+#DB_USER = os.getenv("DB_USER")
+#DB_PASS = ""
+#DB_PORT = os.getenv("DB_PORT")
+#DB_NAME = os.getenv("DB_NAME")
+#DB_HOST = os.getenv("DB_HOST")
+
+#client = ArangoClient(hosts=DB_HOST)
 
 def process_https(results):
+    logging.info("Processing HTTPS scan results...")
     report = {}
 
-    if results is None or results is {}:
+    if results is None or results == {}:
         report = {"missing": True}
 
     else:
@@ -339,23 +349,25 @@ def process_https(results):
         report["expired_cert"] = expired
         report["self_signed_cert"] = self_signed
 
+    logging.info(f"Processed HTTPS scan results: {str(report)}")
     return report
 
 
 def process_ssl(results):
+    logging.info("Processing SSL scan results...")
     report = {}
 
     # Get cipher/protocol data via sslyze for a host.
 
-    if results is None or results is {}:
+    if results is None or results == {}:
         report = {"missing": True}
 
     else:
         ###
         # BOD 18-01 (cyber.dhs.gov) cares about SSLv2, SSLv3, RC4, and 3DES.
-        any_rc4 = results["rc4"]
+        any_rc4 = results.get("rc4", "False")
 
-        any_3des = results["3des"]
+        any_3des = results.get("3des", "False")
 
         ###
         # ITPIN cares about usage of TLS 1.0/1.1/1.2
@@ -373,12 +385,12 @@ def process_ssl(results):
             else:
                 report[version] = False
 
-        signature_algorithm = results["signature_algorithm"]
+        signature_algorithm = results.get("signature_algorithm", "unknown")
 
         heartbleed = results.get("is_vulnerable_to_heartbleed", False)
         ccs_injection = results.get("is_vulnerable_to_ccs_injection", False)
 
-        if results["signature_algorithm"] in ["SHA256", "SHA384", "AEAD"]:
+        if signature_algorithm in ["SHA256", "SHA384", "AEAD"]:
             good_cert = True
         else:
             good_cert = False
@@ -407,12 +419,14 @@ def process_ssl(results):
         report["heartbleed"] = heartbleed
         report["openssl_ccs_injection"] = ccs_injection
 
+    logging.info(f"Processed SSL scan results: {str(report)}")
     return report
 
 
 def process_dns(results):
+    logging.info("Processing DNS scan results...")
 
-    if results is not None and results is not {}:
+    if results is not None and results != {}:
         report = {
             "dmarc": results["dmarc"],
             "spf": results["spf"],
@@ -427,10 +441,12 @@ def process_dns(results):
             "dkim": {"missing": True},
         }
 
+    logging.info(f"Processed DNS scan results: {str(report)}")
     return report
 
 
 async def insert_https(report, scan_id, db):
+
     try:
         await db.connect()
         scan_query = select([Web_scans]).where(Web_scans.c.id == scan_id)
@@ -443,14 +459,51 @@ async def insert_https(report, scan_id, db):
         await db.execute(insert_query)
         await db.disconnect()
     except Exception as e:
-        logging.error(str(e))
-        await db.disconnect()
-        return f"Failed database insertion(s): {str(e)}"
+        try:
+            await db.disconnect()
+        except:
+            pass
+        logging.error(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
+        logging.error(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
 
-    return "HTTPS Scan inserted into database"
+    logging.info("HTTPS Scan inserted into database")
+
+    '''
+    try:
+        #collection_check = db.has_collection('https_scans')
+        #while collection_check.status() != 'done':
+        #    time.sleep(0.1)
+
+        #collection_exists = collection_check.result()
+
+        #if not collection_exists:
+        #    scans = db.create_collection('https_scans')
+        #    while scans.status() != 'done':
+        #        time.sleep(0.1)
+
+        scan_query = db.collection("https_scans").find({'scan_id': scan_id}, limit=1)
+        while scan_query.status() != 'done':
+            time.sleep(0.1)
+
+        scan = scan_query.result()
+
+        if scan.empty():
+            insertion = db.collection("https_scans").insert({'scan_id': scan_id, 'https': report})
+            while insertion.status() != 'done':
+                time.sleep(0.1)
+            logging.info(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Scan inserted into database")
+        else:
+            logging.info(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Scan already exists within database")
+
+    except Exception as e:
+        logging.error(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
+        logging.error(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
+        return
+    '''
 
 
 async def insert_ssl(report, scan_id, db):
+
     try:
         await db.connect()
         scan_query = select([Web_scans]).where(Web_scans.c.id == scan_id)
@@ -463,14 +516,50 @@ async def insert_ssl(report, scan_id, db):
         await db.execute(insert_query)
         await db.disconnect()
     except Exception as e:
-        logging.info(str(e))
-        await db.disconnect()
-        return f"Failed database insertion(s): {str(e)}"
+        try:
+            await db.disconnect()
+        except:
+            pass
+        logging.error(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
+        logging.error(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
 
-    return "SSL Scan inserted into database"
+    logging.info("SSL Scan inserted into database")
+
+    '''
+    try:
+        #collection_check = db.has_collection('ssl_scans')
+        #while collection_check.status() != 'done':
+        #    time.sleep(0.1)
+
+        #collection_exists = collection_check.result()
+
+        #if not collection_exists:
+        #    scans = db.create_collection('ssl_scans')
+        #    while scans.status() != 'done':
+        #        time.sleep(0.1)
+
+        scan_query = db.collection("ssl_scans").find({'scan_id': scan_id}, limit=1)
+        while scan_query.status() != 'done':
+            time.sleep(0.1)
+
+        scan = scan_query.result()
+
+        if scan.empty():
+            insertion = db.collection("ssl_scans").insert({'scan_id': scan_id, 'ssl': report})
+            while insertion.status() != 'done':
+                time.sleep(0.1)
+            logging.info(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Scan inserted into database")
+        else:
+            logging.info(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Scan already exists within database")
+
+    except Exception as e:
+        logging.error(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
+        logging.error(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
+    '''
 
 
 async def insert_dns(report, scan_id, db):
+
     try:
         await db.connect()
         scan_query = select([Mail_scans]).where(Mail_scans.c.id == scan_id)
@@ -523,55 +612,142 @@ async def insert_dns(report, scan_id, db):
         await db.execute(dkim_insert_query)
         await db.disconnect()
     except Exception as e:
-        logging.error(str(e))
-        await db.disconnect()
-        return f"Failed database insertion(s): {str(e)}"
-
-    return "DNS Scans inserted into database"
-
-
-def Server(functions={}, database_uri=DATABASE_URI):
-
-    database = databases.Database(database_uri)
-
-    async def process(request):
-        logging.info("Results received")
-        payload = await request.json()
         try:
-            logging.info("Processing results...")
-            payload_dict = formatted_dictionary(str(payload))
-            results = payload_dict["results"]
-            scan_type = payload_dict["scan_type"]
-            scan_id = payload_dict["scan_id"]
+            await db.disconnect()
+        except:
+            pass
+        logging.error(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
+        logging.error(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
 
-            report = functions["process"][scan_type](results)
-            logging.info(f"Processed results: {str(report)}")
+    logging.info("DNS Scans inserted into database")
 
-            insert_response = await functions["insert"][scan_type](
-                report, scan_id, database
-            )
-            logging.info("Database insertion(s) completed")
+    '''
+    try:
+        #collection_check = db.has_collection('dmarc_scans')
+        #while collection_check.status() != 'done':
+        #    time.sleep(0.1)
 
-            return PlainTextResponse(
-                f"Results processed successfully: {insert_response}"
-            )
+        #collection_exists = collection_check.result()
 
-        except Exception as e:
-            logging.error("Failed: %s" % str(e))
-            return PlainTextResponse(
-                "An error occurred while processing results: %s" % str(e)
-            )
+        #if not collection_exists:
+        #    dmarc_scans = db.create_collection('dmarc_scans')
+        #    dkim_scans = db.create_collection('dkim_scans')
+        #    mx_scans = db.create_collection('mx_scans')
+        #    spf_scans = db.create_collection('spf_scans')
+        #    for job in [dmarc_scans, dkim_scans, mx_scans, spf_scans]:
+        #        while job.status() != 'done':
+         #           time.sleep(0.1)
 
-    routes = [
-        Route("/process", process, methods=["POST"]),
-    ]
+        #logging.info(f"(DNS SCAN, ID={scan_id}, TIME={utcnow()}) - Retrieved corresponding scan from database: {str(scan)}")
 
-    return Starlette(debug=True, routes=routes, on_startup=[startup])
+        #if report["dkim"].get("missing", False) is not True:
+        #    # Check for previous dkim scans on this domain
+        #    previous_scans = db.collection("mail_scans").get_many({"domain_id": scan["domain_id"]})
+        #    while previous_scans.status() != 'done':
+        #        time.sleep(0.1)
+
+        #    historical_dkim = None
+            # If public key has been in use for a year or more, recommend update
+        #    for previous_scan in previous_scans:
+        #        if (scan.get("scan_date") - previous_scan["scan_date"]).days >= 365:
+        #            historical_dkim = dkim_scans.find({'scan_id': previous_scan['scan_id']}, limit=1)
+        #            while historical_dkim.status() != 'done':
+        #                time.sleep(0.1)
+
+        #    if historical_dkim is not None:
+        #        for selector in report["dkim"]:
+        #            for historical_selector in historical_dkim["dkim_scan"]["dkim"]:
+        #                if selector == historical_selector:
+        #                    if (
+         #                       report["dkim"]["selector"]["public_key_modulus"]
+         #                       == historical_selector["public_key_modulus"]
+         #                   ):
+         #                       report["dkim"]["selector"]["update-recommended"] = True
+
+        scan_query = db.collection("dmarc_scans").find({'scan_id': scan_id}, limit=1)
+        while scan_query.status() != 'done':
+            time.sleep(0.1)
+
+        scan = scan_query.result()
+
+        if scan.empty():
+            dmarc_insertion = db.collection("dmarc_scans").insert({'scan_id': scan_id, "dmarc": report["dmarc"]})
+            mx_insertion = db.collection("mx_scans").insert({'scan_id': scan_id, "mx": report["mx"]})
+            spf_insertion = db.collection("spf_scans").insert({'scan_id': scan_id, "spf": report["spf"]})
+            dkim_insertion = db.collection("dkim_scans").insert({'scan_id': scan_id, "dkim": report["dkim"]})
+            for job in [dmarc_insertion, dkim_insertion, mx_insertion, spf_insertion]:
+                while job.status() != 'done':
+                    time.sleep(0.1)
+            logging.info(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Scans inserted into database")
+        else:
+            logging.info(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Scans already exist within database")
+
+    except Exception as e:
+        logging.error(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
+        logging.error(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
+        return
+    '''
 
 
-app = Server(
-    functions={
+DEFAULT_FUNCTIONS = {
         "insert": {"https": insert_https, "ssl": insert_ssl, "dns": insert_dns,},
         "process": {"https": process_https, "ssl": process_ssl, "dns": process_dns,},
     }
-)
+
+
+def Server(database_uri=DATABASE_URI, functions=DEFAULT_FUNCTIONS):
+
+    #database = client.db(DB_NAME, username=DB_USER, password=DB_PASS)
+    #async_db = database.begin_async_execution(return_result=True)
+
+    #TEMPORARY
+    async_db = databases.Database(database_uri)
+
+    #END TEMPORARY
+
+    async def process(result_request):
+        logging.info(f"Results received.")
+        payload = await result_request.json()
+        try:
+            payload_dict = formatted_dictionary(str(payload))
+            try:
+                results = payload_dict["results"]
+                scan_type = payload_dict["scan_type"]
+                scan_id = payload_dict["scan_id"]
+                logging.info(f"Results received for {scan_type} scan with ID {scan_id} (TIME={datetime.datetime.utcnow()})")
+            except KeyError:
+                msg = f"Invalid result format received: {str(payload_dict)}"
+                logging.error(msg)
+                return PlainTextResponse(msg)
+
+            report = functions["process"][scan_type](results)
+
+            await functions["insert"][scan_type](report, scan_id, async_db)
+
+            return PlainTextResponse(
+                f"{scan_type} results processed and inserted successfully (ID={scan_id}, TIME={datetime.datetime.utcnow()})."
+            )
+
+        except Exception as e:
+            msg = f"An error occurred while attempting to process results: ({type(e).__name__}: {str(e)})"
+            logging.error(msg)
+            return PlainTextResponse(msg)
+
+
+    async def startup():
+        logging.info(emoji.emojize("ASGI server started :rocket:"))
+
+
+    async def shutdown():
+        logging.info(emoji.emojize("ASGI server shutting down..."))
+
+    routes = [
+        Route('/', process, methods=['POST']),
+    ]
+
+    starlette_app = Starlette(debug=True, routes=routes, on_startup=[startup], on_shutdown=[shutdown])
+
+    return starlette_app
+
+
+app = Server()
