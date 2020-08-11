@@ -27,28 +27,39 @@ const domainType = new GraphQLObjectType({
     url: {
       type: GraphQLURL,
       description: 'Domain that scans will be ran on.',
-      resolve: async () => {},
+      resolve: async ({ url }) => {
+        return url
+      },
     },
     slug: {
       type: Slug,
       description: 'Slugified Url',
-      resolve: async () => {},
+      resolve: async ({ slug }) => {
+        return slug
+      },
     },
     lastRan: {
       type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
-      resolve: async () => {},
+      resolve: async ({ lastRan }) => {
+        return lastRan
+      },
     },
     selectors: {
       type: Selectors,
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: async () => {},
+      resolve: async ({ selectors }) => {
+        return selectors
+      },
     },
     organization: {
       type: organizationType,
       description: 'The organization that this domain belongs to.',
-      resolve: async () => {},
+      resolve: async ({ id }, _, { loaders: { orgLoaderById }}) => {
+        const organization = await orgLoaderById.load(id)
+        return organization
+      },
     },
     email: {
       type: emailScanConnection.connectionType,
