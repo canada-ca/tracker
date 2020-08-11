@@ -99,7 +99,7 @@ const updateOrganization = new mutationWithClientMutationId({
     },
   ) => {
     // Cleanse Input
-    const { type: _orgType, id: orgId } = fromGlobalId(args.id)
+    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.id))
     const acronymEN = cleanseInput(args.acronymEN)
     const acronymFR = cleanseInput(args.acronymFR)
     const nameEN = cleanseInput(args.nameEN)
