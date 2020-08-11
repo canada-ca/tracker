@@ -5,8 +5,7 @@ module.exports.RoleEnums = new GraphQLEnumType({
   values: {
     USER: {
       value: 'user',
-      description:
-        'A user who has been given access to view an organization.',
+      description: 'A user who has been given access to view an organization.',
     },
     ADMIN: {
       value: 'admin',

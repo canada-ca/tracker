@@ -179,7 +179,9 @@ describe('given the check permission function', () => {
         try {
           await checkPermission('users/1', 'organizations/1', query)
         } catch (err) {
-          expect(err).toEqual(new Error('Authentication error. Please sign in again.'))
+          expect(err).toEqual(
+            new Error('Authentication error. Please sign in again.'),
+          )
         }
 
         expect(consoleOutput).toEqual([

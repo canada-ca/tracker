@@ -8,7 +8,9 @@ const checkPermission = async (userId, orgId, query) => {
         RETURN e.permission
     `
   } catch (err) {
-    console.error(`Database error occurred when checking ${userId}'s permission: ${err}`)
+    console.error(
+      `Database error occurred when checking ${userId}'s permission: ${err}`,
+    )
     throw new Error('Authentication error. Please sign in again.')
   }
 
