@@ -77,7 +77,7 @@ type CategorizedSummary {
   """
   List of SummaryCategory objects with data for different computed categories.
   """
-  categories: [SummaryCategory] @listLength(min: 2, max: 2)
+  categories: [SummaryCategory] @listLength(min: 2, max: 3)
 
   """
   Total domains that were checked under this summary.
@@ -485,6 +485,16 @@ input DmarcReportSummaryListInput {
   domainSlug: Slug!
 }
 
+"""
+A query object used to grab the data to create the dmarc pass/fail by domain table
+"""
+type DmarcSummaries {
+  """
+  Summary containing dmarc pass/fail categories and total number of messages
+  """
+  categorizedSummary: CategorizedSummary
+}
+
 type Domain implements Node {
   organization: Organizations
 
@@ -658,7 +668,9 @@ Input object with the various fields required for the EmailVerifyAccount
 mutation
 """
 input EmailVerifyAccountInput {
-  """Token in sent via email, and located in url"""
+  """
+  Token in sent via email, and located in url
+  """
   tokenString: String!
 }
 
@@ -1428,6 +1440,16 @@ type Query {
   ): DmarcReportSummary
 
   """
+  A query object used to grab data for the dmarc pass/fail by domain table
+  """
+  dmarcSummaries(
+    """
+    Slug of organization to get data from
+    """
+    orgSlug: Slug!
+  ): CategorizedSummary
+
+  """
   An graphql object that will be used to populate a userList component in the front end
   """
   userList(
@@ -1865,7 +1887,7 @@ type SummaryCategory {
   """
   Category of computed summary which the other fields relate to.
   """
-  name: String @examples(values: ["full-pass" "full-fail" ])
+  name: String @examples(values: ["full-pass", "full-fail", "partial-pass"])
 
   """
   Total count of domains that fall into this category.
@@ -2052,7 +2074,9 @@ update the permission level of a given user that already belongs to the
 given organization.
 """
 type UpdateUserRole {
-  """The status of updating the user role."""
+  """
+  The status of updating the user role.
+  """
   status: String
 }
 
@@ -2061,13 +2085,19 @@ This input object contains the various fields that are related to the
 updateUserRole mutation
 """
 input UpdateUserRoleInput {
-  """The username of the user you wish to update their role to."""
+  """
+  The username of the user you wish to update their role to.
+  """
   userName: EmailAddress!
 
-  """The organization that the admin, and the user both belong to."""
+  """
+  The organization that the admin, and the user both belong to.
+  """
   orgSlug: Slug!
 
-  """The role that the admin wants to give to the selected user."""
+  """
+  The role that the admin wants to give to the selected user.
+  """
   role: RoleEnums!
 }
 
@@ -2199,7 +2229,8 @@ type UserListItem implements Node {
   """
   Indicates if this user is an admin of the organization specified in the UserList query
   """
-  role: RoleEnums @examples(values: ["ADMIN", "SUPER_ADMIN", "USER_WRITE", "USER_READ"])
+  role: RoleEnums
+    @examples(values: ["ADMIN", "SUPER_ADMIN", "USER_WRITE", "USER_READ"])
 }
 
 type UserListItemConnection {

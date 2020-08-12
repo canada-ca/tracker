@@ -44,24 +44,25 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
         />
       </Box>
       <Stack align="center" spacing={0}>
-        {data.categories
-          .map(({ name, count, percentage }) => {
-            return (
-              <Text
-                key={`${name}:Badge:${count}:${percentage}`}
-                color="white"
-                px="0.5em"
-                backgroundColor={categoryDisplay[name].color}
-                fontWeight="bold"
-                fontSize="sm"
-                width="100%"
-                textAlign="center"
-              >
-                {`${categoryDisplay[name].name}: ${count} - ${percentage}% `}
-              </Text>
-            )
-          })
-          .sort((a, b) => a.count - b.count) // mutate the array last
+        {
+          data.categories
+            .map(({ name, count, percentage }) => {
+              return (
+                <Text
+                  key={`${name}:Badge:${count}:${percentage}`}
+                  color="white"
+                  px="0.5em"
+                  backgroundColor={categoryDisplay[name].color}
+                  fontWeight="bold"
+                  fontSize="sm"
+                  width="100%"
+                  textAlign="center"
+                >
+                  {`${categoryDisplay[name].name}: ${count} - ${percentage}% `}
+                </Text>
+              )
+            })
+            .sort((a, b) => a.count - b.count) // mutate the array last
         }
       </Stack>
     </Box>

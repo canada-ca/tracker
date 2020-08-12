@@ -524,6 +524,19 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
   }
 `
 
+export const DMARC_SUMMARIES = gql`
+  query DmarcSummaries($orgSlug: Slug!) {
+    dmarcSummaries(orgSlug: $orgSlug) {
+      total
+      categories {
+        name
+        count
+        percentage
+      }
+    }
+  }
+`
+
 export const USER_AFFILIATIONS = gql`
   query UserAffiliations {
     user {
