@@ -7,9 +7,13 @@ test_queues = {"https": stub(enqueue=lambda func, payload, cli, retry, job_timeo
                "dns": stub(enqueue=lambda func, payload, cli, retry, job_timeout, result_ttl: None)}
 
 @pytest.fixture
-def client():
+def app():
     client = Server("test", queues=test_queues)
 
+@pytest.fixture
+def client(app):
+    with app.test_client() as cli:
+        yield cli
 
 def test_enqueue_dns(client):
     test_payload = {

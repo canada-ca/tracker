@@ -6,10 +6,16 @@ test_queues = {"https": stub(enqueue=lambda func, payload, cli, retry, job_timeo
                "ssl": stub(enqueue=lambda func, payload, cli, retry, job_timeout, result_ttl: None),
                "dns": stub(enqueue=lambda func, payload, cli, retry, job_timeout, result_ttl: None)}
 
-client = Server("test", server_client=requests_stub, queues=test_queues)
+@pytest.fixture
+def app():
+    client = Server("test", queues=test_queues)
 
+@pytest.fixture
+def client(app):
+    with app.test_client() as cli:
+        yield cli
 
-def test_enqueue_dns():
+def test_enqueue_dns(client):
     test_payload = {
         "scan_id": 1,
         "domain": "cyber.gc.ca",
@@ -21,7 +27,7 @@ def test_enqueue_dns():
     assert res.text == "DNS result processing request enqueued."
 
 
-def test_enqueue_https():
+def test_enqueue_https(client):
     test_payload = {
         "scan_id": 1,
         "domain": "cyber.gc.ca",
@@ -32,7 +38,7 @@ def test_enqueue_https():
     assert res.text == "HTTPS result processing request enqueued."
 
 
-def test_enqueue_ssl():
+def test_enqueue_ssl(client):
     test_payload = {
         "scan_id": 1,
         "domain": "cyber.gc.ca",

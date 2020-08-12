@@ -33,6 +33,53 @@ def Server(process_name, queues=default_queues):
 
     flask_app = Flask(process_name)
     flask_app.config["queues"] = queues
+
+    @flask_app.route('/https', methods=['POST'])
+    def enqueue_https():
+        logging.info("HTTPS scan request received.")
+        try:
+            payload = request.get_json(force=True)
+            designated_queue = app.config["queues"].get("https", None)
+            designated_queue.enqueue(dispatch_https, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
+            msg = "HTTPS scan request enqueued."
+            logging.info(msg)
+        except Exception as e:
+            msg = f"An unexpected error occurred while attempting to enqueue HTTPS scan request: ({type(e).__name__}: {str(e)})"
+            logging.error(msg)
+            logging.error(f"Full traceback: {traceback.format_exc()}")
+        return msg
+
+    @flask_app.route('/ssl', methods=['POST'])
+    def enqueue_ssl():
+        logging.info("SSL scan request received.")
+        try:
+            payload = request.get_json(force=True)
+            designated_queue = app.config["queues"].get("ssl", None)
+            designated_queue.enqueue(dispatch_ssl, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
+            msg = "SSL scan request enqueued."
+            logging.info(msg)
+        except Exception as e:
+            msg = f"An unexpected error occurred while attempting to enqueue SSL scan request: ({type(e).__name__}: {str(e)})"
+            logging.error(msg)
+            logging.error(f"Full traceback: {traceback.format_exc()}")
+        return msg
+
+
+    @flask_app.route('/dns', methods=['POST'])
+    def enqueue_dns():
+        logging.info("DNS scan request received.")
+        try:
+            payload = request.get_json(force=True)
+            designated_queue = app.config["queues"].get("ssl", None)
+            designated_queue.enqueue(dispatch_dns, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
+            msg = "DNS scan request enqueued."
+            logging.info(msg)
+        except Exception as e:
+            msg = f"An unexpected error occurred while attempting to enqueue DNS scan request: ({type(e).__name__}: {str(e)})"
+            logging.error(msg)
+            logging.error(f"Full traceback: {traceback.format_exc()}")
+        return msg
+
     return flask_app
 
 app = Server(__name__)
@@ -70,49 +117,3 @@ def dispatch_dns(payload):
         logging.error(msg)
         logging.error(f"Full traceback: {traceback.format_exc()}")
         return msg
-
-@app.route('/https', methods=['POST'])
-def enqueue_https():
-    logging.info("HTTPS scan request received.")
-    try:
-        payload = request.get_json(force=True)
-        designated_queue = app.config["queues"].get("https", None)
-        designated_queue.enqueue(dispatch_https, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
-        msg = "HTTPS scan request enqueued."
-        logging.info(msg)
-    except Exception as e:
-        msg = f"An unexpected error occurred while attempting to enqueue HTTPS scan request: ({type(e).__name__}: {str(e)})"
-        logging.error(msg)
-        logging.error(f"Full traceback: {traceback.format_exc()}")
-    return msg
-
-@app.route('/ssl', methods=['POST'])
-def enqueue_ssl():
-    logging.info("SSL scan request received.")
-    try:
-        payload = request.get_json(force=True)
-        designated_queue = app.config["queues"].get("ssl", None)
-        designated_queue.enqueue(dispatch_ssl, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
-        msg = "SSL scan request enqueued."
-        logging.info(msg)
-    except Exception as e:
-        msg = f"An unexpected error occurred while attempting to enqueue SSL scan request: ({type(e).__name__}: {str(e)})"
-        logging.error(msg)
-        logging.error(f"Full traceback: {traceback.format_exc()}")
-    return msg
-
-
-@app.route('/dns', methods=['POST'])
-def enqueue_dns():
-    logging.info("DNS scan request received.")
-    try:
-        payload = request.get_json(force=True)
-        designated_queue = app.config["queues"].get("ssl", None)
-        designated_queue.enqueue(dispatch_dns, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
-        msg = "DNS scan request enqueued."
-        logging.info(msg)
-    except Exception as e:
-        msg = f"An unexpected error occurred while attempting to enqueue DNS scan request: ({type(e).__name__}: {str(e)})"
-        logging.error(msg)
-        logging.error(f"Full traceback: {traceback.format_exc()}")
-    return msg
