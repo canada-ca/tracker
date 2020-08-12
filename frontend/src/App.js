@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react'
-import { Route, Switch, useHistory } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
@@ -33,7 +33,6 @@ export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
   const toast = useToast()
-  const history = useHistory()
   const { currentUser, isLoggedIn, logout } = useUserState()
 
   return (
@@ -78,9 +77,9 @@ export default function App() {
           )}
           {isLoggedIn() ? (
             <Link
+              to="/"
               onClick={() => {
                 logout()
-                history.push('/')
                 toast({
                   title: i18n._(t`Sign Out.`),
                   description: i18n._(

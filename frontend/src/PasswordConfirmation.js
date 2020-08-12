@@ -151,7 +151,7 @@ function PasswordConfirmation({
             />
             <InputRightElement width="width.4">
               <IconButton
-                id="showPassword"
+                id="showPasswordConfirm"
                 aria-label={confirmShow ? 'hide password' : 'show password'}
                 h="buttons.lg"
                 onClick={handleConfirmShow}

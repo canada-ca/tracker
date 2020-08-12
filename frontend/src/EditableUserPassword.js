@@ -27,6 +27,7 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import PasswordField from './PasswordField'
 import PasswordConfirmation from './PasswordConfirmation'
+import { TrackerButton } from './TrackerButton'
 
 function EditableUserPassword() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -92,15 +93,16 @@ function EditableUserPassword() {
       <Stack isInline align="center">
         <Icon name="lock" color="gray.300" />
         <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
-        <Button
+        <TrackerButton
           ml="auto"
           onClick={onOpen}
-          size="sm"
-          color="gray.50"
-          bg="blue.900"
+          variant="primary"
+          fontSize="sm"
+          px="3"
+          py="2"
         >
           <Trans>Edit</Trans>
-        </Button>
+        </TrackerButton>
       </Stack>
 
       <SlideIn in={isOpen}>
@@ -164,19 +166,19 @@ function EditableUserPassword() {
                     </ModalBody>
 
                     <ModalFooter>
-                      <Button
-                        color="gray.50"
-                        bg="blue.900"
+                      <TrackerButton
                         isLoading={isSubmitting}
                         type="submit"
                         mr="4"
+                        variant="primary"
                       >
                         <Trans>Confirm</Trans>
-                      </Button>
+                      </TrackerButton>
                       <Button
-                        color="gray.50"
-                        bg="blue.900"
-                        variant="outline"
+                        color="blue.900"
+                        bg="transparent"
+                        borderColor="blue.900"
+                        borderWidth="1px"
                         onClick={onClose}
                       >
                         <Trans>Close</Trans>

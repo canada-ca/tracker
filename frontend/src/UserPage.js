@@ -4,11 +4,11 @@ import { string } from 'prop-types'
 import {
   Stack,
   SimpleGrid,
-  Button,
   Divider,
   Checkbox,
   CheckboxGroup,
   Heading,
+  Icon,
 } from '@chakra-ui/core'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
@@ -18,6 +18,7 @@ import EditableUserLanguage from './EditableUserLanguage'
 import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
 import EditableUserPassword from './EditableUserPassword'
+import { TrackerButton } from './TrackerButton'
 
 export default function UserPage() {
   const location = useLocation()
@@ -87,27 +88,30 @@ export default function UserPage() {
         </CheckboxGroup>
         <Divider />
         <Stack isInline>
-          <Button
-            leftIcon="lock"
-            color="gray.50"
-            bg="blue.900"
+          <TrackerButton
+            variant="primary"
             onClick={() => {
               history.push('/two-factor-code')
             }}
             isDisabled={!!location.state}
           >
-            <Trans>Enable 2FA</Trans>
-          </Button>
-          <Button
-            leftIcon="edit"
-            color="gray.50"
-            bg="blue.900"
+            <Stack isInline align="center">
+              <Icon name="lock" />
+              <Trans>Enable 2FA</Trans>
+            </Stack>
+          </TrackerButton>
+
+          <TrackerButton
+            variant="primary"
             onClick={() => {
               window.alert('coming soon')
             }}
           >
-            <Trans>Manage API keys</Trans>
-          </Button>
+            <Stack isInline align="center">
+              <Icon name="edit" />
+              <Trans>Manage API keys</Trans>
+            </Stack>
+          </TrackerButton>
         </Stack>
       </Stack>
     </SimpleGrid>

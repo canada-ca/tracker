@@ -4,13 +4,11 @@ import {
   Stack,
   SimpleGrid,
   Divider,
-  Button,
   Icon,
   InputGroup,
   InputLeftElement,
   Input,
   Text,
-  IconButton,
   useToast,
   Select,
   Box,
@@ -21,6 +19,7 @@ import { UserCard } from './UserCard'
 import { string, shape, boolean } from 'prop-types'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_ROLES } from './graphql/mutations'
+import { TrackerButton } from './TrackerButton'
 
 export default function UserList({
   permission,
@@ -168,17 +167,18 @@ export default function UserList({
             }}
           />
         </InputGroup>
-        <Button
+        <TrackerButton
           width={['100%', '75%']}
-          leftIcon="add"
-          color="gray.50"
-          bg="blue.900"
+          variant="primary"
           onClick={() => {
             addUser(userSearch, Math.floor(Math.random() * 1000))
           }}
         >
-          <Trans>Invite User</Trans>
-        </Button>
+          <Stack isInline align="center" justifyContent="center">
+            <Icon name="add" />
+            <Trans>Invite User</Trans>
+          </Stack>
+        </TrackerButton>
       </SimpleGrid>
       <Divider />
 
@@ -205,13 +205,14 @@ export default function UserList({
                 ) : (
                   <Box>
                     <Stack isInline align="center">
-                      <IconButton
-                        icon="minus"
-                        size="sm"
-                        color="gray.50"
-                        bg="red.600"
+                      <TrackerButton
+                        variant="danger"
                         onClick={() => removeUser(node)}
-                      />
+                        px="3"
+                        py="1"
+                      >
+                        <Icon name="minus" />
+                      </TrackerButton>
                       <UserCard
                         userName={node.userName}
                         displayName={node.displayName}
@@ -232,14 +233,15 @@ export default function UserList({
                         <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>
                         <option value="ADMIN">{i18n._(t`ADMIN`)}</option>
                       </Select>
-                      <Button
-                        size="sm"
-                        color="gray.50"
-                        bg="blue.900"
+                      <TrackerButton
                         onClick={() => handleClick(userRole, node.userName)}
+                        variant="primary"
+                        fontSize="sm"
+                        px="3"
+                        py="2"
                       >
                         <Trans>Apply</Trans>
-                      </Button>
+                      </TrackerButton>
                     </Stack>
                   </Box>
                 )}

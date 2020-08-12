@@ -1,13 +1,14 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Heading, Button, Box, useToast } from '@chakra-ui/core'
+import { Heading, Box, useToast } from '@chakra-ui/core'
 import PasswordConfirmation from './PasswordConfirmation'
 import { object, string, ref } from 'yup'
 import { Formik } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { UPDATE_PASSWORD } from './graphql/mutations'
+import { TrackerButton } from './TrackerButton'
 
 export default function ResetPasswordPage() {
   const { i18n } = useLingui()
@@ -87,15 +88,14 @@ export default function ResetPasswordPage() {
 
             <PasswordConfirmation mb="4" spacing="4" />
 
-            <Button
-              color="gray.50"
-              bg="blue.900"
+            <TrackerButton
               type="submit"
               isLoading={isSubmitting}
               id="submitBtn"
+              variant="primary"
             >
               <Trans>Change Password</Trans>
-            </Button>
+            </TrackerButton>
           </form>
         )}
       </Formik>

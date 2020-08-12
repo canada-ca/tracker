@@ -2,16 +2,19 @@ import { theme as chakraTheme } from '@chakra-ui/core'
 import React from 'react'
 
 const shadows = {
-  outline: '0 0 0 4px #F6C95E',
+  outline: '0 0 0 4px #FEC04F',
   medium: `0.4em 0.4em 0.3em #D5D5D5`,
   outlineHover: '0 0 0 6px #D5D5D5',
   outlineLeft: '-2px 0 0 0 #D5D5D5, 2px 0 0 0 inset #D5D5D5',
 }
 
 const colors = {
-  strong: '#5CB95B',
-  moderate: '#ffbf47',
-  weak: '#e53e3e',
+  // strong: '#5CB95B',
+  // moderate: '#ffbf47',
+  // weak: '#e53e3e',
+  strong: '#278400',
+  moderate: '#FF9900',
+  weak: '#D3080C',
   unknown: '#B0B0B0',
   green: {
     50: '#F2FFF0',
@@ -42,7 +45,7 @@ const colors = {
     50: '#FFFDF0',
     100: '#FEF1BF',
     200: '#FADE89',
-    250: '#FF9F40',
+    250: '#FEC04F',
     300: '#F6C95E',
     400: '#ECB64B',
     500: '#D6962E',

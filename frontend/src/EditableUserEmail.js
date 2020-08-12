@@ -27,6 +27,7 @@ import { useLingui } from '@lingui/react'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
+import { TrackerButton } from './TrackerButton'
 
 function EditableUserEmail({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -82,15 +83,16 @@ function EditableUserEmail({ detailValue }) {
       <Stack isInline align="center">
         <Icon name="email" color="gray.300" />
         <Text>{detailValue}</Text>
-        <Button
+        <TrackerButton
           ml="auto"
           onClick={onOpen}
-          size="sm"
-          color="gray.50"
-          bg="blue.900"
+          variant="primary"
+          fontSize="sm"
+          px="3"
+          py="2"
         >
           <Trans>Edit</Trans>
-        </Button>
+        </TrackerButton>
       </Stack>
 
       <SlideIn in={isOpen}>
@@ -145,19 +147,19 @@ function EditableUserEmail({ detailValue }) {
                     </ModalBody>
 
                     <ModalFooter>
-                      <Button
-                        color="gray.50"
-                        bg="blue.900"
+                      <TrackerButton
                         isLoading={isSubmitting}
                         type="submit"
                         mr="4"
+                        variant="primary"
                       >
                         <Trans>Confirm</Trans>
-                      </Button>
+                      </TrackerButton>
                       <Button
-                        color="gray.50"
-                        bg="blue.900"
-                        variant="outline"
+                        color="blue.900"
+                        bg="transparent"
+                        borderColor="blue.900"
+                        borderWidth="1px"
                         onClick={onClose}
                       >
                         <Trans>Close</Trans>

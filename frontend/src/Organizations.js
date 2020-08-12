@@ -79,6 +79,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
         </Stack>
         <Stack isInline align="center">
           <Button
+            mb="4"
             onClick={() =>
               fetchMore({
                 query: REVERSE_PAGINATED_ORGANIZATIONS,
@@ -94,6 +95,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
           </Button>
 
           <Button
+            mb="4"
             onClick={() =>
               fetchMore({
                 variables: {

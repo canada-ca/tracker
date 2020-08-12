@@ -19,6 +19,7 @@ import { useUserState } from './UserState'
 import { AUTHENTICATE } from './graphql/mutations'
 import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
+import { TrackerButton } from './TrackerButton'
 
 export default function SignInPage() {
   const { login } = useUserState()
@@ -107,14 +108,13 @@ export default function SignInPage() {
             </Link>
 
             <Stack spacing={4} isInline justifyContent="space-between">
-              <Button
-                color="gray.50"
-                bg="blue.900"
+              <TrackerButton
+                variant="primary"
                 isLoading={isSubmitting}
                 type="submit"
               >
                 <Trans>Sign In</Trans>
-              </Button>
+              </TrackerButton>
 
               <Button
                 as={RouteLink}

@@ -9,15 +9,14 @@ import {
   InputLeftElement,
   Icon,
   Input,
-  Button,
   Divider,
-  IconButton,
   useToast,
 } from '@chakra-ui/core'
 import { PaginationButtons } from './PaginationButtons'
 import { Domain } from './Domain'
 import { string, object } from 'prop-types'
 import { ListOf } from './ListOf'
+import { TrackerButton } from './TrackerButton'
 
 export function AdminDomains({ domainsData, orgName }) {
   let domains = []
@@ -115,17 +114,18 @@ export function AdminDomains({ domainsData, orgName }) {
             }}
           />
         </InputGroup>
-        <Button
-          width={['100%', '75%']}
-          leftIcon="add"
-          color="gray.50"
-          bg="blue.900"
+        <TrackerButton
+          width={['100%', '80%']}
           onClick={() => {
             addDomain(domainSearch)
           }}
+          variant="primary"
         >
-          <Trans>Add Domain</Trans>
-        </Button>
+          <Stack isInline align="center" justifyContent="center">
+            <Icon name="add" />
+            <Trans>Add Domain</Trans>
+          </Stack>
+        </TrackerButton>
       </SimpleGrid>
       <Divider />
 
@@ -142,22 +142,26 @@ export function AdminDomains({ domainsData, orgName }) {
             >
               {({ url, lastRan }, index) => (
                 <Stack key={'admindomain' + index} isInline align="center">
-                  <IconButton
-                    size="xs"
-                    color="gray.50"
-                    bg="red.600"
-                    icon="minus"
+                  <TrackerButton
                     onClick={() => {
                       removeDomain(url)
                     }}
-                  />
-                  <IconButton
-                    size="xs"
-                    icon="edit"
-                    color="gray.50"
-                    bg="blue.900"
+                    variant="danger"
+                    px="2"
+                    py="1"
+                    fontSize="xs"
+                  >
+                    <Icon name="minus" />
+                  </TrackerButton>
+                  <TrackerButton
+                    variant="primary"
+                    px="2"
+                    py="1"
+                    fontSize="xs"
                     onClick={() => window.alert('edit domain')}
-                  />
+                  >
+                    <Icon name="edit" />
+                  </TrackerButton>
                   <Domain url={url} lastRan={lastRan} />
                 </Stack>
               )}

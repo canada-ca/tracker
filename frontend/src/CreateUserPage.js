@@ -13,6 +13,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import DisplayNameField from './DisplayNameField'
 import { fieldRequirements } from './fieldRequirements'
+import { TrackerButton } from './TrackerButton'
 
 export default function CreateUserPage() {
   const { login } = useUserState()
@@ -140,15 +141,14 @@ export default function CreateUserPage() {
             <LanguageSelect name="lang" width="100%" mb="4" />
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
-              <Button
-                isLoading={isSubmitting}
-                color="gray.50"
-                bg="blue.900"
+              <TrackerButton
                 type="submit"
                 id="submitBtn"
+                isLoading={isSubmitting}
+                variant="primary"
               >
                 <Trans>Create Account</Trans>
-              </Button>
+              </TrackerButton>
 
               <Button
                 as={RouteLink}

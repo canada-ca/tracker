@@ -1,6 +1,6 @@
 import React from 'react'
 import { string } from 'prop-types'
-import { Heading, Button, Stack, Select, useToast } from '@chakra-ui/core'
+import { Heading, Stack, Select, useToast } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 import { t, Trans } from '@lingui/macro'
 import { Formik, Field } from 'formik'
@@ -10,6 +10,7 @@ import { useUserState } from './UserState'
 import { useLingui } from '@lingui/react'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
+import { TrackerButton } from './TrackerButton'
 
 function EditableUserLanguage({ currentLang }) {
   const { currentUser } = useUserState()
@@ -74,21 +75,23 @@ function EditableUserLanguage({ currentLang }) {
       >
         {({ handleSubmit, isSubmitting, getFieldProps }) => (
           <form id="langForm" onSubmit={handleSubmit}>
-            <Stack isInline align="center">
-              <Field id="lang" component={Select} {...getFieldProps('lang')}>
+            <Stack isInline align="center" justifyContent="space-between">
+              <Field
+                id="lang"
+                component={Select}
+                {...getFieldProps('lang')}
+                w={['42%', '57%']}
+              >
                 <option value="ENGLISH">English</option>
                 <option value="FRENCH">Français</option>
               </Field>
-
-              <Button
+              <TrackerButton
                 type="submitBtn"
                 isLoading={isSubmitting}
-                px="8"
-                color="gray.50"
-                bg="blue.900"
+                variant="primary"
               >
                 <Trans>Save Language</Trans>
-              </Button>
+              </TrackerButton>
             </Stack>
           </form>
         )}
