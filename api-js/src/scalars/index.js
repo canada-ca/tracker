@@ -1,5 +1,5 @@
 const { Acronym } = require('./organization-acronym.js')
-const { Selectors } = require('./selectors.js')
+const { Selectors } = require('./selector.js')
 const { Slug } = require('./slug.js')
 const { Year } = require('./year.js')
 
