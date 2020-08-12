@@ -3,8 +3,7 @@ import { useQuery } from '@apollo/client'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import {
-  Link,
-  Icon,
+  IconButton,
   Heading,
   Stack,
   useToast,
@@ -14,7 +13,7 @@ import {
 import { ORGANIZATION_BY_SLUG } from './graphql/queries'
 import { useLingui } from '@lingui/react'
 import { useUserState } from './UserState'
-import { Link as ReactRouterLink, useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import SummaryTable from './SummaryTable'
 import makeSummaryTableData from './makeSummaryTableData'
 
@@ -23,6 +22,7 @@ export default function OrganizationDetails() {
   const { orgSlug } = useParams()
   const { currentUser } = useUserState()
   const toast = useToast()
+  const history = useHistory()
   const { loading, _error, data } = useQuery(ORGANIZATION_BY_SLUG, {
     variables: { slug: orgSlug },
     context: {
@@ -103,14 +103,13 @@ export default function OrganizationDetails() {
     <Layout>
       <Stack spacing={10} shouldWrapChildren>
         <Stack isInline align="center">
-          <Link as={ReactRouterLink} to={'/organizations'}>
-            <Icon
-              alt={i18n._(t`back to organizations`)}
-              color="gray.900"
-              name="arrow-left"
-              fontSize="2xl"
-            />
-          </Link>
+          <IconButton
+            icon="arrow-left"
+            onClick={history.goBack}
+            color="gray.900"
+            fontSize="2xl"
+            aria-label="back to organizations"
+          />
           <Heading as="h1">
             <Trans>{domainName}</Trans>
           </Heading>

@@ -37,7 +37,7 @@ export function TrackerButton({ variant, size, ...props }) {
     <PseudoBox
       as="button"
       fontWeight="semibold"
-      rounded="4px"
+      rounded="md"
       transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
       overflow="hidden"
       px="4"
