@@ -25,7 +25,7 @@ describe('<Organisations />', () => {
           },
           result: {
             data: {
-              organizations: {
+              pagination: {
                 edges: [
                   {
                     cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -100,7 +100,7 @@ describe('<Organisations />', () => {
           },
           result: {
             data: {
-              organizations: {
+              pagination: {
                 edges: [
                   {
                     cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -134,7 +134,41 @@ describe('<Organisations />', () => {
           },
           result: {
             data: {
-              organizations: {
+              pagination: {
+                edges: [
+                  {
+                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    node: {
+                      id: 'T3JnYW5pemF0aW9uczoxCg==',
+                      acronym: 'ORG2',
+                      name: 'organization two',
+                      slug: 'organization-two',
+                      domainCount: 5,
+                      __typename: 'Organizations',
+                    },
+                    __typename: 'OrganizationsEdge',
+                  },
+                ],
+                pageInfo: {
+                  hasNextPage: false,
+                  endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  hasPreviousPage: true,
+                  startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  __typename: 'PageInfo',
+                },
+                __typename: 'OrganizationsConnection',
+              },
+            },
+          },
+        },
+        {
+          request: {
+            query: PAGINATED_ORGANIZATIONS,
+            variables: { first: 1, after: 'YXJyYXljb25uZWN0aW9uOjA=' },
+          },
+          result: {
+            data: {
+              pagination: {
                 edges: [
                   {
                     cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -213,7 +247,7 @@ describe('<Organisations />', () => {
             },
             result: {
               data: {
-                organizations: {
+                pagination: {
                   edges: [
                     {
                       cursor: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
@@ -247,10 +281,10 @@ describe('<Organisations />', () => {
             },
             result: {
               data: {
-                organizations: {
+                pagination: {
                   edges: [
                     {
-                      cursor: 'Y3Vyc29yOnYyOpHOAA_zRw==',
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                       node: {
                         id: 'T3JnYW5pemF0aW9uczoxCg==',
                         acronym: 'ORG2',
@@ -264,9 +298,9 @@ describe('<Organisations />', () => {
                   ],
                   pageInfo: {
                     hasNextPage: false,
-                    endCursor: 'Y3Vyc29yOnYyOpHOAA_zRw==',
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                     hasPreviousPage: true,
-                    startCursor: 'Y3Vyc29yOnYyOpHOAA_zRw==',
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
                     __typename: 'PageInfo',
                   },
                   __typename: 'OrganizationsConnection',
@@ -277,11 +311,11 @@ describe('<Organisations />', () => {
           {
             request: {
               query: REVERSE_PAGINATED_ORGANIZATIONS,
-              variables: { last: 1, before: 'Y3Vyc29yOnYyOpHOAA_zRw==' },
+              variables: { last: 1, before: 'YXJyYXljb25uZWN0aW9uOjA=' },
             },
             result: {
               data: {
-                organizations: {
+                pagination: {
                   edges: [
                     {
                       cursor: 'Y3Vyc29yOnYyOpHOAAfgfQ==',
@@ -344,9 +378,7 @@ describe('<Organisations />', () => {
 
         const next = await waitFor(() => getByText('Next'))
 
-        await waitFor(() => {
-          fireEvent.click(next)
-        })
+        fireEvent.click(next)
 
         await waitFor(() =>
           expect(getByText(/organization two/)).toBeInTheDocument(),
@@ -354,9 +386,7 @@ describe('<Organisations />', () => {
 
         const previous = await waitFor(() => getByText('Previous'))
 
-        await waitFor(() => {
-          fireEvent.click(previous)
-        })
+        fireEvent.click(previous)
 
         await waitFor(() =>
           expect(getByText(/organization one/)).toBeInTheDocument(),
@@ -371,7 +401,7 @@ describe('<Organisations />', () => {
           query: PAGINATED_ORGANIZATIONS,
           variables: { first: 1 },
           data: {
-            organizations: {
+            pagination: {
               edges: [
                 {
                   cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -402,11 +432,45 @@ describe('<Organisations />', () => {
           {
             request: {
               query: PAGINATED_ORGANIZATIONS,
+              variables: { first: 1 },
+            },
+            result: {
+              data: {
+                pagination: {
+                  edges: [
+                    {
+                      cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                      node: {
+                        id: 'T3JnYW5pemF0aW9uczoyCg==',
+                        acronym: 'ORG1',
+                        name: 'organization one',
+                        slug: 'organization-one',
+                        domainCount: 5,
+                        __typename: 'Organizations',
+                      },
+                      __typename: 'OrganizationsEdge',
+                    },
+                  ],
+                  pageInfo: {
+                    hasNextPage: true,
+                    endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    hasPreviousPage: false,
+                    startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    __typename: 'PageInfo',
+                  },
+                  __typename: 'OrganizationsConnection',
+                },
+              },
+            },
+          },
+          {
+            request: {
+              query: PAGINATED_ORGANIZATIONS,
               variables: { first: 1, after: 'YXJyYXljb25uZWN0aW9uOjA=' },
             },
             result: {
               data: {
-                organizations: {
+                pagination: {
                   edges: [
                     {
                       cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -440,7 +504,7 @@ describe('<Organisations />', () => {
             },
             result: {
               data: {
-                organizations: {
+                pagination: {
                   edges: [
                     {
                       cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
@@ -468,12 +532,13 @@ describe('<Organisations />', () => {
             },
           },
         ]
+
         const history = createMemoryHistory({
           initialEntries: ['/organizations'],
           initialIndex: 0,
         })
 
-        const { getByText } = render(
+        const { queryByText } = render(
           <UserStateProvider
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
@@ -495,17 +560,15 @@ describe('<Organisations />', () => {
         )
 
         await waitFor(() =>
-          expect(getByText(/organization one/)).toBeInTheDocument(),
+          expect(queryByText(/organization one/)).toBeInTheDocument(),
         )
 
-        const next = await waitFor(() => getByText('Next'))
+        const next = queryByText('Next')
 
-        await waitFor(() => {
-          fireEvent.click(next)
-        })
+        fireEvent.click(next)
 
         await waitFor(() =>
-          expect(getByText(/organization two/)).toBeInTheDocument(),
+          expect(queryByText(/organization two/)).toBeInTheDocument(),
         )
       })
     })
