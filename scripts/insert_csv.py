@@ -280,7 +280,7 @@ async def insert():
 
             # If not, create the domain
             if domain_exists is False:
-                domain_slug = url.replace(".", "-").replace(' ', '-')
+                domain_slug = slugify(url)
                 logging.info(f"Domain Name: {url}")
                 logging.info(f"Domain Slug: {domain_slug}")
                 domain_insert = Domains.insert().values(domain=url, slug=domain_slug, organization_id=org_result.get("id"))
