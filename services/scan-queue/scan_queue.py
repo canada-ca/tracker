@@ -39,7 +39,7 @@ def Server(process_name, queues=default_queues):
         logging.info("HTTPS scan request received.")
         try:
             payload = request.get_json(force=True)
-            designated_queue = app.config["queues"].get("https", None)
+            designated_queue = flask_app.config["queues"].get("https", None)
             designated_queue.enqueue(dispatch_https, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
             msg = "HTTPS scan request enqueued."
             logging.info(msg)
@@ -54,7 +54,7 @@ def Server(process_name, queues=default_queues):
         logging.info("SSL scan request received.")
         try:
             payload = request.get_json(force=True)
-            designated_queue = app.config["queues"].get("ssl", None)
+            designated_queue = flask_app.config["queues"].get("ssl", None)
             designated_queue.enqueue(dispatch_ssl, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
             msg = "SSL scan request enqueued."
             logging.info(msg)
@@ -70,7 +70,7 @@ def Server(process_name, queues=default_queues):
         logging.info("DNS scan request received.")
         try:
             payload = request.get_json(force=True)
-            designated_queue = app.config["queues"].get("ssl", None)
+            designated_queue = flask_app.config["queues"].get("ssl", None)
             designated_queue.enqueue(dispatch_dns, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
             msg = "DNS scan request enqueued."
             logging.info(msg)

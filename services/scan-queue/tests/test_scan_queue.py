@@ -2,13 +2,14 @@ import pytest
 from pretend import stub
 from scan_queue import Server, dispatch_dns, dispatch_https, dispatch_ssl
 
-test_queues = {"https": stub(enqueue=lambda func, payload, cli, retry, job_timeout, result_ttl: None),
-               "ssl": stub(enqueue=lambda func, payload, cli, retry, job_timeout, result_ttl: None),
-               "dns": stub(enqueue=lambda func, payload, cli, retry, job_timeout, result_ttl: None)}
+test_queues = {"https": stub(enqueue=lambda func, payload, retry, job_timeout, result_ttl: None),
+               "ssl": stub(enqueue=lambda func, payload, retry, job_timeout, result_ttl: None),
+               "dns": stub(enqueue=lambda func, payload, retry, job_timeout, result_ttl: None)}
 
 @pytest.fixture
 def app():
     client = Server("test", queues=test_queues)
+    return client
 
 @pytest.fixture
 def client(app):
@@ -24,7 +25,7 @@ def test_enqueue_dns(client):
 
     res = client.post('/dns', json=test_payload)
 
-    assert res.text == "DNS scan request enqueued."
+    assert res.data.decode("utf-8") == "DNS scan request enqueued."
 
 
 def test_enqueue_https(client):
@@ -35,7 +36,7 @@ def test_enqueue_https(client):
 
     res = client.post('/https', json=test_payload)
 
-    assert res.text == "HTTPS scan request enqueued."
+    assert res.data.decode("utf-8") == "HTTPS scan request enqueued."
 
 
 def test_enqueue_ssl(client):
@@ -46,4 +47,4 @@ def test_enqueue_ssl(client):
 
     res = client.post('/ssl', json=test_payload)
 
-    assert res.text == "SSL scan request enqueued."
+    assert res.data.decode("utf-8") == "SSL scan request enqueued."
