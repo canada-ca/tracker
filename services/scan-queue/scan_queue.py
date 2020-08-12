@@ -4,7 +4,6 @@ import time
 import requests
 import logging
 import json
-import dill
 import emoji
 import traceback
 import asyncio
@@ -30,21 +29,19 @@ default_queues = {"https": https_queue,
                   "dns": dns_queue}
 
 
-def Server(process_name, server_client=requests, queues=default_queues):
+def Server(process_name, queues=default_queues):
 
     flask_app = Flask(process_name)
-    flask_app.config["client"] = server_client
     flask_app.config["queues"] = queues
     return flask_app
 
 app = Server(__name__)
 
 
-def dispatch_https(payload, client_str):
+def dispatch_https(payload):
     logging.info("Dispatching HTTPS scan request")
-    client = dill.loads(client_str)
     try:
-        client.post(HTTPS_URL, json=payload)
+        requests.post(HTTPS_URL, json=payload)
         return "Dispatched HTTPS scan request."
     except Exception as e:
         msg = f"An unexpected error occurred while attempting to dispatch HTTPS scan request: ({type(e).__name__}: {str(e)})"
@@ -52,11 +49,10 @@ def dispatch_https(payload, client_str):
         logging.error(f"Full traceback: {traceback.format_exc()}")
         return msg
 
-def dispatch_ssl(payload, client_str):
+def dispatch_ssl(payload):
     logging.info("Dispatching SSL scan request")
-    client = dill.loads(client_str)
     try:
-        client.post(SSL_URL, json=payload)
+        requests.post(SSL_URL, json=payload)
         return "Dispatched SSL scan request."
     except Exception as e:
         msg = f"An unexpected error occurred while attempting to dispatch SSL scan request: ({type(e).__name__}: {str(e)})"
@@ -64,11 +60,10 @@ def dispatch_ssl(payload, client_str):
         logging.error(f"Full traceback: {traceback.format_exc()}")
         return msg
 
-def dispatch_dns(payload, client_str):
+def dispatch_dns(payload):
     logging.info("Dispatching DNS scan request")
-    client = dill.loads(client_str)
     try:
-        client.post(DNS_URL, json=payload)
+        requests.post(DNS_URL, json=payload)
         return "Dispatched DNS scan request."
     except Exception as e:
         msg = f"An unexpected error occurred while attempting to dispatch DNS scan request: ({type(e).__name__}: {str(e)})"
@@ -82,7 +77,7 @@ def enqueue_https():
     try:
         payload = request.get_json(force=True)
         designated_queue = app.config["queues"].get("https", None)
-        designated_queue.enqueue(dispatch_https, payload, dill.dumps(app.config["client"]), retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
+        designated_queue.enqueue(dispatch_https, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
         msg = "HTTPS scan request enqueued."
         logging.info(msg)
     except Exception as e:
@@ -97,7 +92,7 @@ def enqueue_ssl():
     try:
         payload = request.get_json(force=True)
         designated_queue = app.config["queues"].get("ssl", None)
-        designated_queue.enqueue(dispatch_ssl, payload, dill.dumps(app.config["client"]), retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
+        designated_queue.enqueue(dispatch_ssl, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
         msg = "SSL scan request enqueued."
         logging.info(msg)
     except Exception as e:
@@ -113,7 +108,7 @@ def enqueue_dns():
     try:
         payload = request.get_json(force=True)
         designated_queue = app.config["queues"].get("ssl", None)
-        designated_queue.enqueue(dispatch_dns, payload, dill.dumps(app.config["client"]), retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
+        designated_queue.enqueue(dispatch_dns, payload, retry=Retry(max=3), job_timeout=86400, result_ttl=86400)
         msg = "DNS scan request enqueued."
         logging.info(msg)
     except Exception as e:
