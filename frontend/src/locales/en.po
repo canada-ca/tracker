@@ -955,6 +955,10 @@ msgstr "More than 10 lookups - Follow implementation guide"
 msgid "New Display Name:"
 msgstr "New Display Name:"
 
+#: src/AdminDomains.js:317
+msgid "New Domain Url"
+msgstr "New Domain Url"
+
 #: src/AdminDomains.js:311
 msgid "New Domain Url:"
 msgstr "New Domain Url:"

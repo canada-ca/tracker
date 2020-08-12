@@ -948,6 +948,10 @@ msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage :"
 
+#: src/AdminDomains.js:317
+msgid "New Domain Url"
+msgstr "Nouvel Url de domaine"
+
 #: src/AdminDomains.js:311
 msgid "New Domain Url:"
 msgstr "Nouvelle URL de domaine :"

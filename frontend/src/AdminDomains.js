@@ -45,7 +45,7 @@ import { fieldRequirements } from './fieldRequirements'
 export function AdminDomains({ domainsData, orgName }) {
   let domains = []
   if (domainsData && domainsData.edges) {
-    domains = domainsData.edges.map(e => e.node)
+    domains = domainsData.edges.map((e) => e.node)
   }
 
   const [domainList, setDomainList] = useState(domains)
@@ -64,7 +64,7 @@ export function AdminDomains({ domainsData, orgName }) {
   const currentDomains = domainList.slice(indexOfFirstDomain, indexOfLastDomain)
 
   // Change page
-  const paginate = pageNumber => setCurrentPage(pageNumber)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   // Update domains list if domainsData changes (domain added, removed, updated)
   useEffect(() => {
@@ -175,7 +175,7 @@ export function AdminDomains({ domainsData, orgName }) {
             type="text"
             placeholder={i18n._(t`Search for a domain`)}
             value={domainSearch}
-            onChange={e => {
+            onChange={(e) => {
               setDomainSearch(e.target.value)
             }}
           />
@@ -255,7 +255,7 @@ export function AdminDomains({ domainsData, orgName }) {
       )}
 
       <SlideIn in={isOpen}>
-        {styles => (
+        {(styles) => (
           <Modal
             isOpen={true}
             onClose={onClose}
@@ -272,7 +272,7 @@ export function AdminDomains({ domainsData, orgName }) {
                   displayName: true,
                 }}
                 validationSchema={updatedDomainValidationSchema}
-                onSubmit={async values => {
+                onSubmit={async (values) => {
                   // Submit update detail mutation
                   await updateDomain({
                     variables: {
@@ -314,7 +314,7 @@ export function AdminDomains({ domainsData, orgName }) {
                               <Input
                                 {...field}
                                 id="newDomainUrl"
-                                placeholder="New Domain Url"
+                                placeholder={i18n._(t`New Domain Url`)}
                                 ref={initialFocusRef}
                               />
                               <FormErrorMessage>
