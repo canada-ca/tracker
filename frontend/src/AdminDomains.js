@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import {
-  Text,
   Stack,
+  Text,
   SimpleGrid,
   InputGroup,
   InputLeftElement,
