@@ -22,11 +22,11 @@ describe('given a domainLoaderBySlug dataloader', () => {
     ))
     await truncate()
     await collections.domains.save({
-      url: 'test.canada.ca',
+      domain: 'test.canada.ca',
       slug: 'test-canada-ca',
     })
     await collections.domains.save({
-      url: 'test.gc.ca',
+      domain: 'test.gc.ca',
       slug: 'test-gc-ca',
     })
     consoleOutput = []
@@ -41,7 +41,7 @@ describe('given a domainLoaderBySlug dataloader', () => {
       // Get Domain From db
       const expectedCursor = await query`
         FOR domain IN domains
-          FILTER domain.url == "test.canada.ca"
+          FILTER domain.domain == "test.canada.ca"
           RETURN domain
       `
       const expectedDomain = await expectedCursor.next()
@@ -76,7 +76,7 @@ describe('given a domainLoaderBySlug dataloader', () => {
     it('returns an error', async () => {
       const expectedCursor = await query`
         FOR domain IN domains
-          FILTER domain.url == "test.canada.ca"
+          FILTER domain.domain == "test.canada.ca"
           RETURN domain
       `
       const expectedDomain = await expectedCursor.next()
@@ -99,7 +99,7 @@ describe('given a domainLoaderBySlug dataloader', () => {
     it('throws an error', async () => {
       const expectedCursor = await query`
         FOR domain IN domains
-          FILTER domain.url == "test.canada.ca"
+          FILTER domain.domain == "test.canada.ca"
           RETURN domain
       `
       const expectedDomain = await expectedCursor.next()
