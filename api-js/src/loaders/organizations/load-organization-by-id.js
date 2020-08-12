@@ -21,7 +21,7 @@ module.exports.orgLoaderById = (query, language) =>
         orgMap[org._key] = org
       })
     } catch (err) {
-      console.error(`Cursor error during orgLoaderById: ${err}`)
+      console.error(`Cursor error occurred during orgLoaderById: ${err}`)
       throw new Error('Unable to find organization. Please try again.')
     }
 

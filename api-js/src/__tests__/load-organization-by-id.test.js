@@ -189,7 +189,7 @@ describe('given a orgLoaderById dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Cursor error during orgLoaderById: Error: Cursor error occurred.`,
+        `Cursor error occurred during orgLoaderById: Error: Cursor error occurred.`,
       ])
     })
   })
