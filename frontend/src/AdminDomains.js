@@ -55,7 +55,13 @@ export function AdminDomains({ domainsData, orgName }) {
   const [editingDomainUrl, setEditingDomainUrl] = useState()
   const toast = useToast()
   const { i18n } = useLingui()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: updateIsOpen, onOpen: updateOnOpen, onClose: updateOnClose } = useDisclosure()
+  const {
+    isOpen: removeIsOpen,
+    onOpen: removeOnOpen,
+    onClose: removeOnClose,
+  } = useDisclosure()
+  const [selectedRemoveDomain, setSelectedRemoveDomain] = useState()
   const initialFocusRef = useRef()
 
   // Get current domains
@@ -105,29 +111,33 @@ export function AdminDomains({ domainsData, orgName }) {
     },
   })
 
-  const [removeDomain] = useMutation(REMOVE_DOMAIN, {
-    refetchQueries: ['Domains'],
-    onError(error) {
-      toast({
-        title: i18n._(t`An error occurred.`),
-        description: error.message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'bottom-left',
-      })
+  const [removeDomain, { loading: removeDomainLoading }] = useMutation(
+    REMOVE_DOMAIN,
+    {
+      refetchQueries: ['Domains'],
+      onError(error) {
+        toast({
+          title: i18n._(t`An error occurred.`),
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      },
+      onCompleted() {
+        removeOnClose()
+        toast({
+          title: i18n._(t`Domain removed`),
+          description: i18n._(t`Domain removed from ${orgName}`),
+          status: 'info',
+          duration: 9000,
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      },
     },
-    onCompleted() {
-      toast({
-        title: i18n._(t`Domain removed`),
-        description: i18n._(t`Domain removed from ${orgName}`),
-        status: 'info',
-        duration: 9000,
-        isClosable: true,
-        position: 'bottom-left',
-      })
-    },
-  })
+  )
 
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
     refetchQueries: ['Domains'],
@@ -150,7 +160,7 @@ export function AdminDomains({ domainsData, orgName }) {
         isClosable: true,
         position: 'bottom-left',
       })
-      onClose()
+      updateOnClose()
     },
   })
 
@@ -224,7 +234,9 @@ export function AdminDomains({ domainsData, orgName }) {
                     variantColor="red"
                     icon="minus"
                     onClick={() => {
-                      removeDomain({ variables: { url: url } })
+                      setSelectedRemoveDomain(url)
+                      removeOnOpen()
+                      // removeDomain({ variables: { url: url } })
                     }}
                   />
                   <IconButton
@@ -233,7 +245,7 @@ export function AdminDomains({ domainsData, orgName }) {
                     variantColor="blue"
                     onClick={() => {
                       setEditingDomainUrl(url)
-                      onOpen()
+                      updateOnOpen()
                     }}
                   />
                   <Domain url={url} lastRan={lastRan} />
@@ -254,11 +266,11 @@ export function AdminDomains({ domainsData, orgName }) {
         />
       )}
 
-      <SlideIn in={isOpen}>
+      <SlideIn in={updateIsOpen}>
         {(styles) => (
           <Modal
             isOpen={true}
-            onClose={onClose}
+            onClose={updateOnClose}
             initialFocusRef={initialFocusRef}
           >
             <ModalOverlay opacity={styles.opacity} />
@@ -338,7 +350,7 @@ export function AdminDomains({ domainsData, orgName }) {
                       <Button
                         variantColor="teal"
                         variant="outline"
-                        onClick={onClose}
+                        onClick={updateOnClose}
                       >
                         <Trans>Close</Trans>
                       </Button>
@@ -346,6 +358,50 @@ export function AdminDomains({ domainsData, orgName }) {
                   </form>
                 )}
               </Formik>
+            </ModalContent>
+          </Modal>
+        )}
+      </SlideIn>
+
+      <SlideIn in={removeIsOpen}>
+        {(styles) => (
+          <Modal
+            isOpen={true}
+            onClose={removeOnClose}
+          >
+            <ModalOverlay opacity={styles.opacity} />
+            <ModalContent pb={4} {...styles}>
+              <ModalHeader>
+                <Trans>Remove Domain</Trans>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Stack spacing={4} p={25}>
+                  <Heading as="h3" size="sm">
+                    <Trans>
+                      Confirm removal of domain {selectedRemoveDomain}:
+                    </Trans>
+                  </Heading>
+                </Stack>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  variantColor="teal"
+                  isLoading={removeDomainLoading}
+                  mr={4}
+                  onClick={() =>
+                    removeDomain({
+                      variables: { url: selectedRemoveDomain },
+                    })
+                  }
+                >
+                  <Trans>Confirm</Trans>
+                </Button>
+                <Button variantColor="teal" variant="outline" onClick={removeOnClose}>
+                  <Trans>Close</Trans>
+                </Button>
+              </ModalFooter>
             </ModalContent>
           </Modal>
         )}
