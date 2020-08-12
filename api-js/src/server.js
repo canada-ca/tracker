@@ -28,6 +28,7 @@ const {
 } = require('./notify')
 
 const {
+  orgLoaderByDomainId,
   orgLoaderById,
   orgLoaderBySlug,
   userLoaderByUserName,
@@ -105,6 +106,7 @@ const Server = (context = {}) => {
           sendVerificationEmail,
         },
         loaders: {
+          orgLoaderByDomainId: orgLoaderByDomainId(query, request.language),
           orgLoaderById: orgLoaderById(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),
           userLoaderByUserName: userLoaderByUserName(query),
