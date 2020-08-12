@@ -15,7 +15,6 @@ spec:
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: "3"
-        autoscaling.knative.dev/minScale: "1"
         autoscaling.knative.dev/maxScale: "10"
     spec:
       timeoutSeconds: 900
@@ -42,7 +41,6 @@ spec:
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: "3"
-        autoscaling.knative.dev/minScale: "1"
         autoscaling.knative.dev/maxScale: "10"
     spec:
       timeoutSeconds: 900

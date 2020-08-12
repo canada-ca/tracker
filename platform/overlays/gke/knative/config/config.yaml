@@ -25,7 +25,6 @@ spec:
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: "4"
-        autoscaling.knative.dev/minScale: "10"
         autoscaling.knative.dev/maxScale: "25"
     spec:
       timeoutSeconds: 900
@@ -75,8 +74,7 @@ spec:
         # Knative concurrency-based autoscaling (default).
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
-        #autoscaling.knative.dev/target: "1"
-        autoscaling.knative.dev/minScale: "4"
+        autoscaling.knative.dev/target: "4"
         autoscaling.knative.dev/maxScale: "4"
     spec:
       timeoutSeconds: 900
@@ -127,7 +125,6 @@ spec:
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: "4"
-        autoscaling.knative.dev/minScale: "10"
         autoscaling.knative.dev/maxScale: "20"
     spec:
       timeoutSeconds: 900
@@ -178,7 +175,6 @@ spec:
         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
         autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: "4"
-        autoscaling.knative.dev/minScale: "10"
         autoscaling.knative.dev/maxScale: "20"
     spec:
       timeoutSeconds: 900
@@ -209,60 +205,6 @@ spec:
                 secretKeyRef:
                   name: scanners
                   key: DB_NAME
-
----
-
-apiVersion: serving.knative.dev/v1 # Current version of Knative
-kind: Service
-metadata:
-  name: dispatcher
-  namespace: scanners
-  labels:
-    app: scanners
-spec:
-  template:
-    metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port:   '9090'
-        # Knative concurrency-based autoscaling (default).
-        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
-        autoscaling.knative.dev/metric: concurrency
-        #autoscaling.knative.dev/target: "8"
-        autoscaling.knative.dev/minScale: "1"
-        autoscaling.knative.dev/maxScale: "1"
-    spec:
-      timeoutSeconds: 900
-      containers:
-        - name: dispatcher
-          image: gcr.io/track-compliance/scanners/dispatcher:master # The URL to the image of the app
-          env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_PASS
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_HOST
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: scanners
-                  key: DB_NAME
-
----
-
-# Everything after this is just structure for the above.
 
 ---
 
