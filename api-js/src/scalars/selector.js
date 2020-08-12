@@ -22,7 +22,7 @@ module.exports.Selectors = new GraphQLScalarType({
   parseLiteral(ast) {
     if (ast.kind !== Kind.STRING) {
       throw new GraphQLError(
-        `Can only validate lists as selectors but got a: ${ast.kind}`,
+        `Can only validate strings as selectors but got a: ${ast.kind}`,
       )
     }
     return validate(ast.value)

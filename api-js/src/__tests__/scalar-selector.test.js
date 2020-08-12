@@ -107,7 +107,7 @@ describe('given a selectors scalar', () => {
         )}`, () => {
           expect(() => Selectors.parseLiteral(literal, {})).toThrow(
             new TypeError(
-              `Can only validate lists as selectors but got a: ${literal.kind}`,
+              `Can only validate strings as selectors but got a: ${literal.kind}`,
             ),
           )
         })
