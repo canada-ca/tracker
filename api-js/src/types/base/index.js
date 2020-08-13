@@ -58,6 +58,7 @@ const domainType = new GraphQLObjectType({
       description: 'The organization that this domain belongs to.',
       resolve: async ({ _id }, _, { loaders: { orgLoaderByDomainId }}) => {
         const organization = await orgLoaderByDomainId.load(_id)
+        organization.id = organization._key
         return organization
       },
     },
