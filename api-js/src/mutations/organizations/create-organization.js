@@ -80,7 +80,7 @@ const createOrganization = new mutationWithClientMutationId({
       type: organizationType,
       description: 'The newly created organization.',
       resolve: async (payload) => {
-        return payload
+        return payload.organization
       },
     },
   }),
@@ -192,15 +192,17 @@ const createOrganization = new mutationWithClientMutationId({
     )
 
     return {
-      id: organization._key,
-      slug: organization.slug,
-      acronym: organization.acronym,
-      name: organization.name,
-      zone: organization.zone,
-      sector: organization.sector,
-      country: organization.country,
-      province: organization.province,
-      city: organization.city,
+      organization: {
+        id: organization._key,
+        slug: organization.slug,
+        acronym: organization.acronym,
+        name: organization.name,
+        zone: organization.zone,
+        sector: organization.sector,
+        country: organization.country,
+        province: organization.province,
+        city: organization.city,
+      },
     }
   },
 })
