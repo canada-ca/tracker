@@ -3,7 +3,6 @@ import { useLingui } from '@lingui/react'
 import {
   Stack,
   SimpleGrid,
-  Divider,
   Icon,
   InputGroup,
   InputLeftElement,
@@ -178,7 +177,6 @@ export default function UserList({
           <Trans>Invite User</Trans>
         </TrackerButton>
       </SimpleGrid>
-      <Divider />
 
       {userList.length === 0 ? (
         <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>

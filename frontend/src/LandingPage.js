@@ -1,13 +1,13 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Heading, Text, Divider } from '@chakra-ui/core'
+import { Heading, Text } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
 
 export function LandingPage() {
   return (
     <Layout>
-      <Heading as="h1">
+      <Heading as="h1" mb="2">
         <Trans>Track Web Security Compliance</Trans>
       </Heading>
       <Text fontSize="lg">
@@ -19,7 +19,6 @@ export function LandingPage() {
         </Trans>
       </Text>
       <SummaryGroup name="dashboard" />
-      <Divider />
       <Text>
         <Trans>
           *All data represented is mocked for demonstration purposes

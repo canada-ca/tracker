@@ -9,7 +9,6 @@ import {
   InputLeftElement,
   Icon,
   Input,
-  Divider,
   useToast,
 } from '@chakra-ui/core'
 import { PaginationButtons } from './PaginationButtons'
@@ -125,7 +124,6 @@ export function AdminDomains({ domainsData, orgName }) {
           <Trans>Add Domain</Trans>
         </TrackerButton>
       </SimpleGrid>
-      <Divider />
 
       <Stack spacing={10} shouldWrapChildren>
         <Stack direction="row" spacing={4}>

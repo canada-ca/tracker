@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Heading, Stack, useToast, Divider } from '@chakra-ui/core'
+import { Heading, Stack, useToast } from '@chakra-ui/core'
 import { DOMAINS } from './graphql/queries'
 import { useUserState } from './UserState'
 import { Domain } from './Domain'
@@ -33,19 +33,16 @@ export default function DomainsPage() {
   })
 
   // TODO: refactor without useEffect
-  useEffect(
-    () => {
-      const fetchDomains = async () => {
-        let domainsData = []
-        if (data && data.domains.edges) {
-          domainsData = data.domains.edges.map(e => e.node)
-          setDomains(domainsData)
-        }
+  useEffect(() => {
+    const fetchDomains = async () => {
+      let domainsData = []
+      if (data && data.domains.edges) {
+        domainsData = data.domains.edges.map(e => e.node)
+        setDomains(domainsData)
       }
-      fetchDomains()
-    },
-    [data],
-  )
+    }
+    fetchDomains()
+  }, [data])
 
   if (loading)
     return (
@@ -64,34 +61,32 @@ export default function DomainsPage() {
 
   return (
     <Layout>
-      <Stack spacing={10} shouldWrapChildren>
+      <Stack spacing={10} shouldWrapChildren mb="4">
         <Heading as="h1">
           <Trans>Domains</Trans>
         </Heading>
-        {data &&
-          data.domains && (
-            <Stack spacing={4}>
-              <Stack spacing={4} direction="row" flexWrap="wrap">
-                <DomainList domains={currentDomains}>
-                  {domain => (
-                    <Domain
-                      key={domain.url}
-                      url={domain.url}
-                      lastRan={domain.lastRan}
-                    />
-                  )}
-                </DomainList>
-              </Stack>
-              <PaginationButtons
-                perPage={domainsPerPage}
-                total={domains.length}
-                paginate={paginate}
-                currentPage={currentPage}
-                setPerPage={setDomainsPerPage}
-              />
+        {data && data.domains && (
+          <Stack spacing={4}>
+            <Stack spacing={4} direction="row" flexWrap="wrap">
+              <DomainList domains={currentDomains}>
+                {domain => (
+                  <Domain
+                    key={domain.url}
+                    url={domain.url}
+                    lastRan={domain.lastRan}
+                  />
+                )}
+              </DomainList>
             </Stack>
-          )}
-        <Divider />
+            <PaginationButtons
+              perPage={domainsPerPage}
+              total={domains.length}
+              paginate={paginate}
+              currentPage={currentPage}
+              setPerPage={setDomainsPerPage}
+            />
+          </Stack>
+        )}
       </Stack>
     </Layout>
   )

@@ -2,14 +2,7 @@ import React from 'react'
 import { useQuery } from '@apollo/client'
 import { t, Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import {
-  IconButton,
-  Heading,
-  Stack,
-  useToast,
-  Divider,
-  Text,
-} from '@chakra-ui/core'
+import { IconButton, Heading, Stack, useToast, Text } from '@chakra-ui/core'
 import { ORGANIZATION_BY_SLUG } from './graphql/queries'
 import { useLingui } from '@lingui/react'
 import { useUserState } from './UserState'
@@ -101,7 +94,7 @@ export default function OrganizationDetails() {
   const tableEntries = Math.floor(Math.random() * 20)
   return (
     <Layout>
-      <Stack spacing={10} shouldWrapChildren>
+      <Stack spacing={10} shouldWrapChildren mb="4">
         <Stack isInline align="center">
           <IconButton
             icon="arrow-left"
@@ -125,8 +118,6 @@ export default function OrganizationDetails() {
               <Trans>No domains yet.</Trans>
             </Text>
           )}
-
-          <Divider />
         </Stack>
       </Stack>
       <Trans>*All data represented is mocked for demonstration purposes</Trans>
