@@ -7,6 +7,7 @@ import json
 import emoji
 import traceback
 import asyncio
+import signal
 import datetime as dt
 from scan import https
 from starlette.applications import Starlette
@@ -38,10 +39,20 @@ def scan_https(domain):
 def Server(server_client=requests):
 
     async def scan(scan_request):
+
+        logging.info("Scan request received")
+        inbound_payload = await scan_request.json()
+
+        def timeout_handler(signum, frame):
+            msg = "Timeout while performing scan"
+            logging.error(msg)
+            dispatch_results({"scan_type": "https", "scan_id": scan_id, "results": {}}, server_client)
+            return PlainTextResponse(msg)
+
         try:
-            logging.info("Scan request received")
             start_time = dt.datetime.now()
-            inbound_payload = await scan_request.json()
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(80)
             try:
                 domain = inbound_payload["domain"]
                 scan_id = inbound_payload["scan_id"]
@@ -62,15 +73,17 @@ def Server(server_client=requests):
                 raise Exception("HTTPS scan not completed")
 
         except Exception as e:
+            signal.alarm(0)
             msg = f"(ID={scan_id}) An unexpected error occurred while attempting to process HTTPS scan request: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
-            dispatch_results({"scan_type": "https", "scan_id": scan_id, "results": {}})
+            dispatch_results({"scan_type": "https", "scan_id": scan_id, "results": {}}, server_client)
             return PlainTextResponse(msg)
 
-        dispatch_results(outbound_payload, server_client)
+        signal.alarm(0)
         end_time = dt.datetime.now()
         elapsed_time = end_time - start_time
+        dispatch_results(outbound_payload, server_client)
         msg = f"(ID={scan_id}) HTTPS scan completed in {elapsed_time.total_seconds()} seconds."
         logging.info(msg)
 
