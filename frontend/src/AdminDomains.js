@@ -227,7 +227,11 @@ export function AdminDomains({ domainsData, orgName }) {
               })
             } else {
               createDomain({
-                variables: { orgSlug: slugify(orgName), url: domainSearch },
+                variables: {
+                  orgSlug: slugify(orgName),
+                  url: domainSearch,
+                  selectors: [],
+                },
               })
             }
           }}
@@ -257,7 +261,6 @@ export function AdminDomains({ domainsData, orgName }) {
                     onClick={() => {
                       setSelectedRemoveDomain(url)
                       removeOnOpen()
-                      // removeDomain({ variables: { url: url } })
                     }}
                   />
                   <IconButton
@@ -311,6 +314,7 @@ export function AdminDomains({ domainsData, orgName }) {
                     variables: {
                       currentUrl: editingDomainUrl,
                       updatedUrl: values.newDomainUrl,
+                      updatedSelectors: [],
                     },
                   })
                 }}
