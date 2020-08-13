@@ -8,7 +8,7 @@ module.exports.orgLoaderById = (query, language) =>
       cursor = await query`
         FOR org IN organizations
           FILTER ${ids}[** FILTER CURRENT == org._key]
-          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE(${language}, org.orgDetails))
+          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
       console.error(`Database error when running orgLoaderById: ${err}`)

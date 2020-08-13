@@ -8,7 +8,7 @@ module.exports.orgLoaderBySlug = (query, language) =>
       cursor = await query`
         FOR org IN organizations
           FILTER ${slugs}[** FILTER (LOWER(CURRENT) == LOWER(TRANSLATE(${language}, org.orgDetails).slug))]
-          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE(${language}, org.orgDetails))
+          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
       console.error(`Database error when running orgLoaderBySlug: ${err}`)

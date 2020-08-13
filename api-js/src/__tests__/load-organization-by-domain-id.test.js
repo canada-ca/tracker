@@ -22,6 +22,7 @@ describe('given a orgLoaderById dataloader', () => {
     ))
     await truncate()
     await collections.organizations.save({
+      blueCheck: true,
       orgDetails: {
         en: {
           slug: 'treasury-board-secretariat',
@@ -46,6 +47,7 @@ describe('given a orgLoaderById dataloader', () => {
       },
     })
     await collections.organizations.save({
+      blueCheck: true,
       orgDetails: {
         en: {
           slug: 'communications-security-establishment',
@@ -72,7 +74,7 @@ describe('given a orgLoaderById dataloader', () => {
     const orgCursor = await query`
       FOR org IN organizations
         FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
     `
     org = await orgCursor.next()
     consoleOutput = []
@@ -111,7 +113,7 @@ describe('given a orgLoaderById dataloader', () => {
         const expectedOrgCursor = await query`
           FOR org IN organizations
           FILTER org.orgDetails.en.slug == "treasury-board-secretariat"
-          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
         `
         const expectedOrg = await expectedOrgCursor.next()
 
@@ -132,7 +134,7 @@ describe('given a orgLoaderById dataloader', () => {
         const expectedOrgCursor = await query`
           FOR org IN organizations
           FILTER org.orgDetails.en.slug == "treasury-board-secretariat"
-          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("fr", org.orgDetails))
+          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
         `
         const expectedOrg = await expectedOrgCursor.next()
 
@@ -190,7 +192,7 @@ describe('given a orgLoaderById dataloader', () => {
           const expectedOrgCursor = await query`
             FOR org IN organizations
             FILTER org.orgDetails.en.slug == "treasury-board-secretariat"
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
           `
           const expectedOrg = await expectedOrgCursor.next()
           const expectedOrgs = []
@@ -220,7 +222,7 @@ describe('given a orgLoaderById dataloader', () => {
           const expectedOrgCursor = await query`
             FOR org IN organizations
             FILTER org.orgDetails.en.slug == "treasury-board-secretariat"
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("fr", org.orgDetails))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
           `
           const expectedOrg = await expectedOrgCursor.next()
           const expectedOrgs = []
@@ -253,7 +255,7 @@ describe('given a orgLoaderById dataloader', () => {
         const orgCursor = await query`
           FOR org IN organizations
             FILTER (LOWER("centre-de-la-securite-des-telecommunications") == LOWER(TRANSLATE("fr", org.orgDetails).slug))
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
         `
         org = await orgCursor.next()
 
@@ -289,7 +291,7 @@ describe('given a orgLoaderById dataloader', () => {
           const expectedOrgs = []
           const expectedOrgCursor = await query`
             FOR org IN organizations
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
           `
           while (expectedOrgCursor.hasNext()) {
             const tempOrg = await expectedOrgCursor.next()
@@ -320,7 +322,7 @@ describe('given a orgLoaderById dataloader', () => {
           const expectedOrgs = []
           const expectedOrgCursor = await query`
             FOR org IN organizations
-              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("fr", org.orgDetails))
+              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
           `
           while (expectedOrgCursor.hasNext()) {
             const tempOrg = await expectedOrgCursor.next()

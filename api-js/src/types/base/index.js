@@ -11,10 +11,7 @@ const {
   connectionDefinitions,
   connectionArgs,
 } = require('graphql-relay')
-const {
-  GraphQLDateTime,
-  GraphQLEmailAddress,
-} = require('graphql-scalars')
+const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
 const { RoleEnums, LanguageEnums } = require('../../enums')
 const { Acronym, Domain, Slug, Selectors } = require('../../scalars')
 const { nodeInterface } = require('../node')
@@ -56,7 +53,7 @@ const domainType = new GraphQLObjectType({
     organization: {
       type: organizationType,
       description: 'The organization that this domain belongs to.',
-      resolve: async ({ _id }, _, { loaders: { orgLoaderByDomainId }}) => {
+      resolve: async ({ _id }, _, { loaders: { orgLoaderByDomainId } }) => {
         const organization = await orgLoaderByDomainId.load(_id)
         organization.id = organization._key
         return organization
@@ -142,6 +139,13 @@ const organizationType = new GraphQLObjectType({
       description: 'The city in which the organization resides.',
       resolve: async ({ city }) => {
         return city
+      },
+    },
+    blueCheck: {
+      type: GraphQLBoolean,
+      description: 'Wether the organization is a verified organization.',
+      resolve: async ({ blueCheck }) => {
+        return blueCheck
       },
     },
     domainCount: {

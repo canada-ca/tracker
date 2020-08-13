@@ -10,7 +10,7 @@ module.exports.orgLoaderByDomainId = (query, language) =>
         LET orgIds = (FOR v, e IN 1..1 ANY id claims RETURN { _from: e._from, _to: e._to })
         FOR orgId IN orgIds
           LET org = DOCUMENT(orgId._from)
-          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _to: orgId._to }, TRANSLATE(${language}, org.orgDetails))
+          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _to: orgId._to, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
       console.error(`Database error occurred while running orgLoaderByDomainId: ${err}`)

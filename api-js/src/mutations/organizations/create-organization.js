@@ -130,6 +130,7 @@ const createOrganization = new mutationWithClientMutationId({
 
     // Create new organization
     const organizationDetails = {
+      blueCheck: false,
       orgDetails: {
         en: {
           slug: slugEN,
@@ -159,7 +160,7 @@ const createOrganization = new mutationWithClientMutationId({
     try {
       cursor = await query`
         INSERT ${organizationDetails} INTO organizations 
-        RETURN MERGE({ _id: NEW._id, _key: NEW._key, _rev: NEW._rev }, TRANSLATE(${request.language}, NEW.orgDetails))
+        RETURN MERGE({ _id: NEW._id, _key: NEW._key, _rev: NEW._rev, blueCheck: NEW.blueCheck }, TRANSLATE(${request.language}, NEW.orgDetails))
       `
     } catch (err) {
       console.error(
@@ -194,14 +195,7 @@ const createOrganization = new mutationWithClientMutationId({
     return {
       organization: {
         id: organization._key,
-        slug: organization.slug,
-        acronym: organization.acronym,
-        name: organization.name,
-        zone: organization.zone,
-        sector: organization.sector,
-        country: organization.country,
-        province: organization.province,
-        city: organization.city,
+        ...organization,
       },
     }
   },
