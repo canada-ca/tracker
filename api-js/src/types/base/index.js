@@ -4,6 +4,7 @@ const {
   GraphQLBoolean,
   GraphQLInt,
   GraphQLID,
+  GraphQLList,
 } = require('graphql')
 const {
   globalIdField,
@@ -13,10 +14,9 @@ const {
 const {
   GraphQLDateTime,
   GraphQLEmailAddress,
-  GraphQLURL,
 } = require('graphql-scalars')
 const { RoleEnums, LanguageEnums } = require('../../enums')
-const { Acronym, Slug, Selectors } = require('../../scalars')
+const { Acronym, Domain, Slug, Selectors } = require('../../scalars')
 const { nodeInterface } = require('../node')
 const { emailScanConnection, webScanConnection } = require('./scan')
 
@@ -24,11 +24,11 @@ const domainType = new GraphQLObjectType({
   name: 'Domain',
   fields: () => ({
     id: globalIdField('domains'),
-    url: {
-      type: GraphQLURL,
+    domain: {
+      type: Domain,
       description: 'Domain that scans will be ran on.',
-      resolve: async ({ url }) => {
-        return url
+      resolve: async ({ domain }) => {
+        return domain
       },
     },
     slug: {
@@ -46,7 +46,7 @@ const domainType = new GraphQLObjectType({
       },
     },
     selectors: {
-      type: Selectors,
+      type: new GraphQLList(Selectors),
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
       resolve: async ({ selectors }) => {
@@ -56,8 +56,8 @@ const domainType = new GraphQLObjectType({
     organization: {
       type: organizationType,
       description: 'The organization that this domain belongs to.',
-      resolve: async ({ id }, _, { loaders: { orgLoaderById }}) => {
-        const organization = await orgLoaderById.load(id)
+      resolve: async ({ _id }, _, { loaders: { orgLoaderByDomainId }}) => {
+        const organization = await orgLoaderByDomainId.load(_id)
         return organization
       },
     },
