@@ -226,6 +226,7 @@ describe('usePaginatedCollection', () => {
       fireEvent.click(next)
 
       await waitFor(() => {
+        expect(queryByText(/repo one/)).not.toBeInTheDocument()
         expect(queryByText(/repo two/)).toBeInTheDocument()
         expect(getAllByText(/repo two/)).toHaveLength(1)
       })
@@ -235,6 +236,7 @@ describe('usePaginatedCollection', () => {
       fireEvent.click(previous)
 
       await waitFor(() => {
+        expect(queryByText(/repo two/)).not.toBeInTheDocument()
         expect(queryByText(/repo one/)).toBeInTheDocument()
         expect(getAllByText(/repo one/)).toHaveLength(1)
       })
