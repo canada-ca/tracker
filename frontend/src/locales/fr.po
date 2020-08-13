@@ -115,7 +115,7 @@ msgstr "Détails du compte"
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/AdminDomains.js:214
+#: src/AdminDomains.js:220
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
@@ -163,10 +163,10 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre langue."
 msgid "An error occurred while updating your password."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre mot de passe."
 
-#: src/AdminDomains.js:93
-#: src/AdminDomains.js:120
-#: src/AdminDomains.js:146
-#: src/AdminDomains.js:200
+#: src/AdminDomains.js:99
+#: src/AdminDomains.js:126
+#: src/AdminDomains.js:152
+#: src/AdminDomains.js:206
 #: src/CreateUserPage.js:52
 #: src/SignInPage.js:41
 msgid "An error occurred."
@@ -258,8 +258,8 @@ msgstr "Changement de la langue de l'utilisateur"
 msgid "Changed User Password"
 msgstr "Modification du mot de passe de l'utilisateur"
 
-#: src/AdminDomains.js:355
-#: src/AdminDomains.js:402
+#: src/AdminDomains.js:361
+#: src/AdminDomains.js:408
 #: src/EditableUserDisplayName.js:153
 #: src/EditableUserEmail.js:153
 #: src/EditableUserPassword.js:176
@@ -286,8 +286,8 @@ msgstr "Fermer"
 #~ msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 #~ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/AdminDomains.js:348
-#: src/AdminDomains.js:399
+#: src/AdminDomains.js:354
+#: src/AdminDomains.js:401
 #: src/EditableUserDisplayName.js:146
 #: src/EditableUserEmail.js:146
 #: src/EditableUserPassword.js:169
@@ -315,9 +315,9 @@ msgstr "Confirmez le mot de passe :"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: src/AdminDomains.js:381
-msgid "Confirm removal of domain {selectedRemoveDomain}:"
-msgstr "Confirmer la suppression du domaine {selectedRemoveDomain} :"
+#: src/AdminDomains.js:384
+msgid "Confirm removal of domain:"
+msgstr "Confirmer la suppression du domaine :"
 
 #: src/guidanceTagConstants.js:204
 msgid "Contact 3rd party"
@@ -340,7 +340,7 @@ msgstr "Créez un compte en entrant un courriel et un mot de passe."
 msgid "Current Display Name:"
 msgstr "Nom de l'affichage actuel :"
 
-#: src/AdminDomains.js:306
+#: src/AdminDomains.js:312
 msgid "Current Domain URL:"
 msgstr "URL du domaine actuel :"
 
@@ -487,11 +487,11 @@ msgstr "Passe Dmarc"
 msgid "Domain"
 msgstr "Domaine"
 
-#: src/AdminDomains.js:176
+#: src/AdminDomains.js:182
 msgid "Domain List"
 msgstr "Liste des domaines"
 
-#: src/AdminDomains.js:103
+#: src/AdminDomains.js:109
 msgid "Domain added"
 msgstr "Domaine ajouté"
 
@@ -507,7 +507,7 @@ msgstr "Le domaine ne passe pas par défaut en HTTPS"
 msgid "Domain does not enforce HTTPS"
 msgstr "Le domaine n'applique pas le HTTPS"
 
-#: src/AdminDomains.js:157
+#: src/AdminDomains.js:163
 msgid "Domain from {orgName} successfully updated"
 msgstr "Le domaine de {orgName} a été mis à jour avec succès"
 
@@ -519,15 +519,15 @@ msgstr "Domaine non préchargé par le HSTS"
 msgid "Domain not pre-loaded by HSTS, but is pre-load ready"
 msgstr "Le domaine n'est pas préchargé par le HSTS, mais est prêt à être préchargé"
 
-#: src/AdminDomains.js:131
+#: src/AdminDomains.js:137
 msgid "Domain removed"
 msgstr "Domaine supprimé"
 
-#: src/AdminDomains.js:132
+#: src/AdminDomains.js:138
 msgid "Domain removed from {orgName}"
 msgstr "Domaine supprimé de {orgName}."
 
-#: src/AdminDomains.js:156
+#: src/AdminDomains.js:162
 msgid "Domain updated"
 msgstr "Domaine mis à jour"
 
@@ -539,7 +539,7 @@ msgstr "Le champ de l'url du domaine ne doit pas être vide"
 msgid "Domain uses potentially-outsourced DMARC service"
 msgstr "Le domaine utilise un service DMARC potentiellement externalisé"
 
-#: src/AdminDomains.js:104
+#: src/AdminDomains.js:110
 msgid "Domain was added to {orgName}"
 msgstr "Le domaine a été ajouté à {orgName}"
 
@@ -548,7 +548,7 @@ msgid "Domain:"
 msgstr "Domaine:"
 
 #: src/App.js:55
-#: src/DomainsPage.js:69
+#: src/DomainsPage.js:49
 msgid "Domains"
 msgstr "Domaines"
 
@@ -562,7 +562,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/AdminDomains.js:300
+#: src/AdminDomains.js:306
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
@@ -851,10 +851,10 @@ msgid "Last scanned:"
 msgstr "Dernier scan:"
 
 #: src/CreateUserPage.js:85
-#: src/DomainsPage.js:53
+#: src/DomainsPage.js:42
 #: src/ForgotPasswordPage.js:53
 #: src/OrganizationDetails.js:53
-#: src/Organizations.js:51
+#: src/Organizations.js:42
 #: src/QRcodePage.js:21
 #: src/ResetPasswordPage.js:52
 #: src/SignInPage.js:72
@@ -954,11 +954,11 @@ msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage :"
 
-#: src/AdminDomains.js:329
+#: src/AdminDomains.js:335
 msgid "New Domain Url"
 msgstr "Nouvel Url de domaine"
 
-#: src/AdminDomains.js:323
+#: src/AdminDomains.js:329
 msgid "New Domain Url:"
 msgstr "Nouvelle URL de domaine :"
 
@@ -970,19 +970,21 @@ msgstr "Nouvelle adresse électronique :"
 msgid "New Password:"
 msgstr "Nouveau mot de passe :"
 
-#: src/AdminDomains.js:201
+#: src/AdminDomains.js:207
 msgid "New domain name cannot be empty"
 msgstr "Un nouveau nom de domaine ne peut pas être vide"
 
-#: src/Organizations.js:108
+#: src/DomainsPage.js:68
+#: src/Organizations.js:69
 msgid "Next"
 msgstr "Suivant"
 
-#: src/AdminDomains.js:226
+#: src/AdminDomains.js:232
+#: src/DomainsPage.js:51
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/Organizations.js:65
+#: src/Organizations.js:51
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
@@ -1027,7 +1029,7 @@ msgid "Organization:"
 msgstr "Organisation:"
 
 #: src/App.js:59
-#: src/Organizations.js:59
+#: src/Organizations.js:49
 msgid "Organizations"
 msgstr "Organisations"
 
@@ -1235,7 +1237,8 @@ msgstr "préalpha"
 msgid "Prefix Org"
 msgstr "Préfixe Org"
 
-#: src/Organizations.js:93
+#: src/DomainsPage.js:64
+#: src/Organizations.js:65
 msgid "Previous"
 msgstr "Précédent"
 
@@ -1319,7 +1322,7 @@ msgstr ""
 #~ msgid "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
 #~ msgstr "Les messages reçus ont échoué à la fois au SPF et au DKIM, et donc à la DMARC. La politique du DMARC spécifiée pour le domaine a été appliquée à ces messages."
 
-#: src/AdminDomains.js:375
+#: src/AdminDomains.js:378
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
@@ -1445,7 +1448,7 @@ msgstr "Sauvegarder la langue"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
-#: src/AdminDomains.js:186
+#: src/AdminDomains.js:192
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
@@ -1765,7 +1768,8 @@ msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez 
 msgid "back to organizations"
 msgstr "retour aux organisations"
 
-#: src/Organizations.js:44
+#: src/DomainsPage.js:35
+#: src/Organizations.js:35
 msgid "error {0}"
 msgstr "erreur {0}"
 
