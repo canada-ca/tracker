@@ -29,7 +29,6 @@ const {
 
 const {
   domainLoaderById,
-  domainLoaderBySlug,
   orgLoaderByDomainId,
   orgLoaderById,
   orgLoaderBySlug,
@@ -73,7 +72,7 @@ const Server = (context = {}) => {
       mutation: createMutationSchema(),
     }),
     context: ({ req: request, res: response }) => {
-      const { query, collections } = context
+      const { query, collections, transaction } = context
       // Get user id from token
       let userId
       const token = request.headers.authorization || ''
@@ -84,6 +83,7 @@ const Server = (context = {}) => {
       return {
         query,
         collections,
+        transaction,
         request,
         response,
         userId,
@@ -109,7 +109,6 @@ const Server = (context = {}) => {
         },
         loaders: {
           domainLoaderById: domainLoaderById(query),
-          domainLoaderBySlug: domainLoaderBySlug(query),
           orgLoaderByDomainId: orgLoaderByDomainId(query, request.language),
           orgLoaderById: orgLoaderById(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),

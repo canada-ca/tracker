@@ -13,11 +13,11 @@ const { makeMigrations } = require('./migrations')
 
 ;(async () => {
   const { migrate } = await ArangoTools({ rootPass, url })
-  const { query, collections } = await migrate(
+  const { query, collections, transaction } = await migrate(
     makeMigrations({ databaseName, rootPass }),
   )
 
-  Server({ query, collections }).listen(PORT, (err) => {
+  Server({ query, collections, transaction }).listen(PORT, (err) => {
     if (err) throw err
     console.log(`🚀 API listening on port ${PORT}`)
   })
