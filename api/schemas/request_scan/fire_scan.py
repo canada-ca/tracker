@@ -54,7 +54,9 @@ def fire_scan(
     try:
         # Get latest scan entry
         if scan_type == "mail":
-            scan_orm = db_session.query(Mail_scans).order_by(Mail_scans.id.desc()).first()
+            scan_orm = (
+                db_session.query(Mail_scans).order_by(Mail_scans.id.desc()).first()
+            )
             scan_id = scan_orm.id
             payload = {
                 "scan_id": scan_id,

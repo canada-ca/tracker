@@ -228,7 +228,6 @@ def scan_ssl(domain):
 
 
 def Server(server_client=requests):
-
     async def scan(scan_request):
 
         logging.info("Scan request received")
@@ -237,7 +236,9 @@ def Server(server_client=requests):
         def timeout_handler(signum, frame):
             msg = "Timeout while performing scan"
             logging.error(msg)
-            dispatch_results({"scan_type": "ssl", "scan_id": scan_id, "results": {}}, server_client)
+            dispatch_results(
+                {"scan_type": "ssl", "scan_id": scan_id, "results": {}}, server_client
+            )
             return PlainTextResponse(msg)
 
         try:
@@ -267,7 +268,9 @@ def Server(server_client=requests):
             signal.alarm(0)
             msg = f"(ID={scan_id}) The designated domain could not be resolved: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
-            dispatch_results({"scan_type": "ssl", "scan_id": scan_id, "results": {}}, server_client)
+            dispatch_results(
+                {"scan_type": "ssl", "scan_id": scan_id, "results": {}}, server_client
+            )
             return PlainTextResponse(msg)
 
         except Exception as e:
@@ -275,7 +278,9 @@ def Server(server_client=requests):
             msg = f"(ID={scan_id}) An unexpected error occurred while attempting to process SSL scan request: ({type(e).__name__}: {str(e)})"
             logging.error(msg)
             logging.error(f"Full traceback: {traceback.format_exc()}")
-            dispatch_results({"scan_type": "ssl", "scan_id": scan_id, "results": {}}, server_client)
+            dispatch_results(
+                {"scan_type": "ssl", "scan_id": scan_id, "results": {}}, server_client
+            )
             return PlainTextResponse(msg)
 
         signal.alarm(0)
@@ -287,19 +292,19 @@ def Server(server_client=requests):
 
         return PlainTextResponse(msg)
 
-
     async def startup():
         logging.info(emoji.emojize("ASGI server started :rocket:"))
-
 
     async def shutdown():
         logging.info(emoji.emojize("ASGI server shutting down..."))
 
     routes = [
-        Route('/', scan, methods=['POST']),
+        Route("/", scan, methods=["POST"]),
     ]
 
-    starlette_app = Starlette(debug=True, routes=routes, on_startup=[startup], on_shutdown=[shutdown])
+    starlette_app = Starlette(
+        debug=True, routes=routes, on_startup=[startup], on_shutdown=[shutdown]
+    )
 
     return starlette_app
 

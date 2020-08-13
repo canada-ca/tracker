@@ -12,15 +12,24 @@ engine = create_engine(TEST_DATABASE_URI)
 
 def test_retrieval():
 
-    input_domains = [{"domain": "cyber.gc.ca"},
-                     {"domain": "canada.ca"},
-                     {"domain": "forces.gc.ca"}]
+    input_domains = [
+        {"domain": "cyber.gc.ca"},
+        {"domain": "canada.ca"},
+        {"domain": "forces.gc.ca"},
+    ]
 
     session = sessionmaker(bind=engine, autocommit=True)
     test_session = session()
 
     with test_session.begin():
-        test_session.execute(Users.insert().values(user_name="system", user_password="sysuserpass", display_name="system", preferred_lang="English"))
+        test_session.execute(
+            Users.insert().values(
+                user_name="system",
+                user_password="sysuserpass",
+                display_name="system",
+                preferred_lang="English",
+            )
+        )
 
         for domain in input_domains:
             test_session.execute(Domains.insert().values(domain=domain["domain"]))
@@ -29,6 +38,8 @@ def test_retrieval():
 
     client_stub = stub(post=lambda url, headers: None)
 
-    response = Service(database=databases.Database(TEST_DATABASE_URI), client=client_stub)
+    response = Service(
+        database=databases.Database(TEST_DATABASE_URI), client=client_stub
+    )
 
     assert all(domain["domain"] in response["Dispatched"] for domain in input_domains)

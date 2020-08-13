@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '641d69cc2685'
+revision = "641d69cc2685"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -49,9 +49,7 @@ def upgrade():
         sa.Column("user_password", sa.String()),
         sa.Column("preferred_lang", sa.String()),
         sa.Column("failed_login_attempts", sa.Integer(), default=0),
-        sa.Column(
-            "failed_login_attempt_time", sa.Float(), default=0, nullable=True
-        ),
+        sa.Column("failed_login_attempt_time", sa.Float(), default=0, nullable=True),
         sa.Column("tfa_validated", sa.Boolean(), default=False),
     )
     op.create_table(
@@ -83,85 +81,55 @@ def upgrade():
     op.create_table(
         "web_scans",
         sa.Column("id", sa.Integer(), primary_key=True),
-        sa.Column(
-            "domain_id", sa.Integer(), sa.ForeignKey("domains.id")
-        ),
+        sa.Column("domain_id", sa.Integer(), sa.ForeignKey("domains.id")),
         sa.Column("scan_date", sa.DateTime()),
-        sa.Column(
-            "initiated_by", sa.Integer(), sa.ForeignKey("users.id")
-        ),
+        sa.Column("initiated_by", sa.Integer(), sa.ForeignKey("users.id")),
     )
     op.create_table(
         "mail_scans",
         sa.Column("id", sa.Integer(), primary_key=True),
-        sa.Column(
-            "domain_id", sa.Integer(), sa.ForeignKey("domains.id")
-        ),
+        sa.Column("domain_id", sa.Integer(), sa.ForeignKey("domains.id")),
         sa.Column("scan_date", sa.DateTime()),
         sa.Column("selectors", sa.ARRAY(sa.String())),
         sa.Column("dmarc_phase", sa.Integer()),
-        sa.Column(
-            "initiated_by", sa.Integer(), sa.ForeignKey("users.id")
-        ),
+        sa.Column("initiated_by", sa.Integer(), sa.ForeignKey("users.id")),
     )
     op.create_table(
         "dmarc_scans",
         sa.Column(
-            "id",
-            sa.Integer(),
-            sa.ForeignKey("mail_scans.id"),
-            primary_key=True,
+            "id", sa.Integer(), sa.ForeignKey("mail_scans.id"), primary_key=True,
         ),
         sa.Column("dmarc_scan", sa.JSON()),
     )
     op.create_table(
         "dkim_scans",
         sa.Column(
-            "id",
-            sa.Integer(),
-            sa.ForeignKey("mail_scans.id"),
-            primary_key=True,
+            "id", sa.Integer(), sa.ForeignKey("mail_scans.id"), primary_key=True,
         ),
         sa.Column("dkim_scan", sa.JSON()),
     )
     op.create_table(
         "mx_scans",
         sa.Column(
-            "id",
-            sa.Integer(),
-            sa.ForeignKey("mail_scans.id"),
-            primary_key=True,
+            "id", sa.Integer(), sa.ForeignKey("mail_scans.id"), primary_key=True,
         ),
         sa.Column("mx_scan", sa.JSON()),
     )
     op.create_table(
         "spf_scans",
         sa.Column(
-            "id",
-            sa.Integer(),
-            sa.ForeignKey("mail_scans.id"),
-            primary_key=True,
+            "id", sa.Integer(), sa.ForeignKey("mail_scans.id"), primary_key=True,
         ),
         sa.Column("spf_scan", sa.JSON()),
     )
     op.create_table(
         "https_scans",
-        sa.Column(
-            "id",
-            sa.Integer(),
-            sa.ForeignKey("web_scans.id"),
-            primary_key=True,
-        ),
+        sa.Column("id", sa.Integer(), sa.ForeignKey("web_scans.id"), primary_key=True,),
         sa.Column("https_scan", sa.JSON()),
     )
     op.create_table(
         "ssl_scans",
-        sa.Column(
-            "id",
-            sa.Integer(),
-            sa.ForeignKey("web_scans.id"),
-            primary_key=True,
-        ),
+        sa.Column("id", sa.Integer(), sa.ForeignKey("web_scans.id"), primary_key=True,),
         sa.Column("ssl_scan", sa.JSON()),
     )
     op.create_table(

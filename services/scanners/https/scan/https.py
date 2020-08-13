@@ -888,9 +888,7 @@ def basic_check(endpoint):
     # See https://github.com/kennethreitz/requests/blob/master/requests/exceptions.py
     except requests.exceptions.RequestException as err:
         endpoint.live = False
-        logging.debug(
-            "{}: Unexpected other requests exception.".format(endpoint.url)
-        )
+        logging.debug("{}: Unexpected other requests exception.".format(endpoint.url))
         return
 
     except Exception as err:
@@ -1160,9 +1158,7 @@ def https_check(endpoint):
         endpoint.live = False
         endpoint.https_valid = False
         logging.debug(
-            "{}: Error in sslyze server connectivity check".format(
-                endpoint.url
-            )
+            "{}: Error in sslyze server connectivity check".format(endpoint.url)
         )
         return
     except Exception as err:
@@ -1184,7 +1180,9 @@ def https_check(endpoint):
         scanner.queue_scan(scan_request)
         # Retrieve results from generator object
         scan_result = [x for x in scanner.get_results()][0]
-        cert_plugin_result = scan_result.scan_commands_results.get("certificate_info", None)
+        cert_plugin_result = scan_result.scan_commands_results.get(
+            "certificate_info", None
+        )
     except Exception as err:
         try:
             if "timed out" in str(err):
@@ -1196,7 +1194,9 @@ def https_check(endpoint):
                 scanner.queue_scan(scan_request)
                 # Retrieve results from generator object
                 scan_result = [x for x in scanner.get_results()][0]
-                cert_plugin_result = scan_result.scan_commands_results.get("certificate_info", None)
+                cert_plugin_result = scan_result.scan_commands_results.get(
+                    "certificate_info", None
+                )
             else:
                 logging.debug(
                     "{}: Unknown exception in sslyze scanner certificate plugin.".format(
@@ -1412,9 +1412,7 @@ def load_preload_pending():
     try:
         request = requests.get(pending_url)
     except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as err:
-        logging.debug(
-            "Failed to fetch pending preload list: {}".format(pending_url)
-        )
+        logging.debug("Failed to fetch pending preload list: {}".format(pending_url))
         logging.debug("{}".format(err))
         return []
 

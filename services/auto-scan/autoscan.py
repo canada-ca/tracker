@@ -228,7 +228,6 @@ Classification = sqlalchemy.Table(
 
 
 def Service(database=databases.Database(DATABASE_URI), client=requests):
-
     async def dispatch_web(domain, scan_id):
 
         payload = {
@@ -287,7 +286,11 @@ def Service(database=databases.Database(DATABASE_URI), client=requests):
                     initiated_by=system.get("id"),
                 )
 
-                update_domain = Domains.update().values(last_run=scan_time).where(Domains.c.id == domain.get("id"))
+                update_domain = (
+                    Domains.update()
+                    .values(last_run=scan_time)
+                    .where(Domains.c.id == domain.get("id"))
+                )
 
                 for insertion in [web_insert, mail_insert, update_domain]:
                     await database.execute(insertion)
@@ -304,7 +307,7 @@ def Service(database=databases.Database(DATABASE_URI), client=requests):
                 await domain
 
             await database.disconnect()
-            return {"Dispatched": [domain.get('domain') for domain in domains]}
+            return {"Dispatched": [domain.get("domain") for domain in domains]}
 
         except Exception as e:
             try:

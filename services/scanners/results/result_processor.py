@@ -10,16 +10,22 @@ import random
 import databases
 import asyncio
 import datetime
-#from arango import ArangoClient
+
+# from arango import ArangoClient
 from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import ARRAY
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse, JSONResponse
-from asyncpg.exceptions import ConnectionDoesNotExistError, TooManyConnectionsError, UniqueViolationError, CannotConnectNowError
+from asyncpg.exceptions import (
+    ConnectionDoesNotExistError,
+    TooManyConnectionsError,
+    UniqueViolationError,
+    CannotConnectNowError,
+)
 from utils import formatted_dictionary
 
-#TEMPORARY
+# TEMPORARY
 import sqlalchemy
 from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -231,19 +237,20 @@ Guidance = sqlalchemy.Table(
     sqlalchemy.Column("ref_links", sqlalchemy.String),
 )
 
-#END TEMPORARY
+# END TEMPORARY
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 MIN_HSTS_AGE = 31536000  # one year
 
-#DB_USER = os.getenv("DB_USER")
-#DB_PASS = ""
-#DB_PORT = os.getenv("DB_PORT")
-#DB_NAME = os.getenv("DB_NAME")
-#DB_HOST = os.getenv("DB_HOST")
+# DB_USER = os.getenv("DB_USER")
+# DB_PASS = ""
+# DB_PORT = os.getenv("DB_PORT")
+# DB_NAME = os.getenv("DB_NAME")
+# DB_HOST = os.getenv("DB_HOST")
 
-#client = ArangoClient(hosts=DB_HOST)
+# client = ArangoClient(hosts=DB_HOST)
+
 
 def process_https(results):
     logging.info("Processing HTTPS scan results...")
@@ -463,12 +470,16 @@ async def insert_https(report, scan_id, db):
             await db.disconnect()
         except:
             pass
-        logging.error(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
-        logging.error(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
+        logging.error(
+            f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}"
+        )
+        logging.error(
+            f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}"
+        )
 
     logging.info("HTTPS Scan inserted into database")
 
-    '''
+    """
     try:
         #collection_check = db.has_collection('https_scans')
         #while collection_check.status() != 'done':
@@ -499,7 +510,7 @@ async def insert_https(report, scan_id, db):
         logging.error(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
         logging.error(f"(HTTPS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
         return
-    '''
+    """
 
 
 async def insert_ssl(report, scan_id, db):
@@ -520,12 +531,16 @@ async def insert_ssl(report, scan_id, db):
             await db.disconnect()
         except:
             pass
-        logging.error(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
-        logging.error(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
+        logging.error(
+            f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}"
+        )
+        logging.error(
+            f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}"
+        )
 
     logging.info("SSL Scan inserted into database")
 
-    '''
+    """
     try:
         #collection_check = db.has_collection('ssl_scans')
         #while collection_check.status() != 'done':
@@ -555,7 +570,7 @@ async def insert_ssl(report, scan_id, db):
     except Exception as e:
         logging.error(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
         logging.error(f"(SSL SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
-    '''
+    """
 
 
 async def insert_dns(report, scan_id, db):
@@ -616,12 +631,16 @@ async def insert_dns(report, scan_id, db):
             await db.disconnect()
         except:
             pass
-        logging.error(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
-        logging.error(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
+        logging.error(
+            f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}"
+        )
+        logging.error(
+            f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}"
+        )
 
     logging.info("DNS Scans inserted into database")
 
-    '''
+    """
     try:
         #collection_check = db.has_collection('dmarc_scans')
         #while collection_check.status() != 'done':
@@ -686,24 +705,24 @@ async def insert_dns(report, scan_id, db):
         logging.error(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - An unknown exception occurred while attempting database insertion(s): {str(e)}")
         logging.error(f"(DNS SCAN, ID={scan_id}, TIME={datetime.datetime.utcnow()}) - Full traceback: {traceback.format_exc()}")
         return
-    '''
+    """
 
 
 DEFAULT_FUNCTIONS = {
-        "insert": {"https": insert_https, "ssl": insert_ssl, "dns": insert_dns,},
-        "process": {"https": process_https, "ssl": process_ssl, "dns": process_dns,},
-    }
+    "insert": {"https": insert_https, "ssl": insert_ssl, "dns": insert_dns,},
+    "process": {"https": process_https, "ssl": process_ssl, "dns": process_dns,},
+}
 
 
 def Server(database_uri=DATABASE_URI, functions=DEFAULT_FUNCTIONS):
 
-    #database = client.db(DB_NAME, username=DB_USER, password=DB_PASS)
-    #async_db = database.begin_async_execution(return_result=True)
+    # database = client.db(DB_NAME, username=DB_USER, password=DB_PASS)
+    # async_db = database.begin_async_execution(return_result=True)
 
-    #TEMPORARY
+    # TEMPORARY
     async_db = databases.Database(database_uri)
 
-    #END TEMPORARY
+    # END TEMPORARY
 
     async def process(result_request):
         logging.info(f"Results received.")
@@ -714,7 +733,9 @@ def Server(database_uri=DATABASE_URI, functions=DEFAULT_FUNCTIONS):
                 results = payload_dict["results"]
                 scan_type = payload_dict["scan_type"]
                 scan_id = payload_dict["scan_id"]
-                logging.info(f"Results received for {scan_type} scan with ID {scan_id} (TIME={datetime.datetime.utcnow()})")
+                logging.info(
+                    f"Results received for {scan_type} scan with ID {scan_id} (TIME={datetime.datetime.utcnow()})"
+                )
             except KeyError:
                 msg = f"Invalid result format received: {str(payload_dict)}"
                 logging.error(msg)
@@ -733,19 +754,19 @@ def Server(database_uri=DATABASE_URI, functions=DEFAULT_FUNCTIONS):
             logging.error(msg)
             return PlainTextResponse(msg)
 
-
     async def startup():
         logging.info(emoji.emojize("ASGI server started :rocket:"))
-
 
     async def shutdown():
         logging.info(emoji.emojize("ASGI server shutting down..."))
 
     routes = [
-        Route('/', process, methods=['POST']),
+        Route("/", process, methods=["POST"]),
     ]
 
-    starlette_app = Starlette(debug=True, routes=routes, on_startup=[startup], on_shutdown=[shutdown])
+    starlette_app = Starlette(
+        debug=True, routes=routes, on_startup=[startup], on_shutdown=[shutdown]
+    )
 
     return starlette_app
 
