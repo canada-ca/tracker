@@ -41,6 +41,7 @@ import { Field, Formik } from 'formik'
 import FormErrorMessage from '@chakra-ui/core/dist/FormErrorMessage'
 import { object as yupObject, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
+import { useUserState } from './UserState'
 
 export function AdminDomains({ domainsData, orgName }) {
   let domains = []
@@ -55,7 +56,11 @@ export function AdminDomains({ domainsData, orgName }) {
   const [editingDomainUrl, setEditingDomainUrl] = useState()
   const toast = useToast()
   const { i18n } = useLingui()
-  const { isOpen: updateIsOpen, onOpen: updateOnOpen, onClose: updateOnClose } = useDisclosure()
+  const {
+    isOpen: updateIsOpen,
+    onOpen: updateOnOpen,
+    onClose: updateOnClose,
+  } = useDisclosure()
   const {
     isOpen: removeIsOpen,
     onOpen: removeOnOpen,
@@ -63,6 +68,7 @@ export function AdminDomains({ domainsData, orgName }) {
   } = useDisclosure()
   const [selectedRemoveDomain, setSelectedRemoveDomain] = useState()
   const initialFocusRef = useRef()
+  const { currentUser } = useUserState()
 
   // Get current domains
   const indexOfLastDomain = currentPage * domainsPerPage
@@ -88,6 +94,11 @@ export function AdminDomains({ domainsData, orgName }) {
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['Domains'],
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -114,6 +125,11 @@ export function AdminDomains({ domainsData, orgName }) {
   const [removeDomain, { loading: removeDomainLoading }] = useMutation(
     REMOVE_DOMAIN,
     {
+      context: {
+        headers: {
+          authorization: currentUser.jwt,
+        },
+      },
       refetchQueries: ['Domains'],
       onError(error) {
         toast({
@@ -141,6 +157,11 @@ export function AdminDomains({ domainsData, orgName }) {
 
   const [updateDomain] = useMutation(UPDATE_DOMAIN, {
     refetchQueries: ['Domains'],
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
     onError(error) {
       toast({
         title: i18n._(t`An error occurred.`),
@@ -365,10 +386,7 @@ export function AdminDomains({ domainsData, orgName }) {
 
       <SlideIn in={removeIsOpen}>
         {(styles) => (
-          <Modal
-            isOpen={true}
-            onClose={removeOnClose}
-          >
+          <Modal isOpen={true} onClose={removeOnClose}>
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent pb={4} {...styles}>
               <ModalHeader>
@@ -377,11 +395,10 @@ export function AdminDomains({ domainsData, orgName }) {
               <ModalCloseButton />
               <ModalBody>
                 <Stack spacing={4} p={25}>
-                  <Heading as="h3" size="sm">
-                    <Trans>
-                      Confirm removal of domain {selectedRemoveDomain}:
-                    </Trans>
-                  </Heading>
+                  <Text>
+                    <Trans>Confirm removal of domain:</Trans>
+                  </Text>
+                  <Text fontWeight="bold">{selectedRemoveDomain}</Text>
                 </Stack>
               </ModalBody>
 
@@ -398,7 +415,11 @@ export function AdminDomains({ domainsData, orgName }) {
                 >
                   <Trans>Confirm</Trans>
                 </Button>
-                <Button variantColor="teal" variant="outline" onClick={removeOnClose}>
+                <Button
+                  variantColor="teal"
+                  variant="outline"
+                  onClick={removeOnClose}
+                >
                   <Trans>Close</Trans>
                 </Button>
               </ModalFooter>
