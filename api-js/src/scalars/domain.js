@@ -13,9 +13,9 @@ const validate = (value) => {
 }
 
 module.exports.Domain = new GraphQLScalarType({
-  name: 'Domain',
+  name: 'DomainScalar',
   description:
-    '',
+    'String that conforms to a domain structure.',
   serialize: validate,
   parseValue: validate,
 
