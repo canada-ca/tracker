@@ -3,7 +3,7 @@ import React from 'react'
 
 const shadows = {
   outline: '0 0 0 4px #FEC04F',
-  medium: `0.4em 0.4em 0.3em #D5D5D5`,
+  medium: ' 0 0 0.4em 0.2em #D5D5D5',
   outlineHover: '0 0 0 6px #D5D5D5',
   outlineLeft: '-2px 0 0 0 #D5D5D5, 2px 0 0 0 inset #D5D5D5',
 }
