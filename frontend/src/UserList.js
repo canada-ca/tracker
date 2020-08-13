@@ -174,10 +174,10 @@ export default function UserList({
             addUser(userSearch, Math.floor(Math.random() * 1000))
           }}
         >
-          <Stack isInline align="center" justifyContent="center">
-            <Icon name="add" />
-            <Trans>Invite User</Trans>
-          </Stack>
+          {/* <Stack isInline align="center" justifyContent="center"> */}
+          <Icon name="add" />
+          <Trans>Invite User</Trans>
+          {/* </Stack> */}
         </TrackerButton>
       </SimpleGrid>
       <Divider />
@@ -209,7 +209,6 @@ export default function UserList({
                         variant="danger"
                         onClick={() => removeUser(node)}
                         px="3"
-                        py="1"
                       >
                         <Icon name="minus" />
                       </TrackerButton>
@@ -238,7 +237,6 @@ export default function UserList({
                         variant="primary"
                         fontSize="sm"
                         px="3"
-                        py="2"
                       >
                         <Trans>Apply</Trans>
                       </TrackerButton>

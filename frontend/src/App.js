@@ -55,16 +55,12 @@ export default function App() {
           <Link to="/dmarc-report">
             <Trans>Report</Trans>
           </Link>
-          {/* {isLoggedIn() && ( */}
           <Link to="/domains">
             <Trans>Domains</Trans>
           </Link>
-          {/* )} */}
-          {/* {isLoggedIn() && ( */}
           <Link to="/organizations">
             <Trans>Organizations</Trans>
           </Link>
-          {/* )} */}
           {isLoggedIn() && (
             <Link to="/user">
               <Trans>User Profile</Trans>

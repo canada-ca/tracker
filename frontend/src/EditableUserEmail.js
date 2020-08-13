@@ -89,7 +89,6 @@ function EditableUserEmail({ detailValue }) {
           variant="primary"
           fontSize="sm"
           px="3"
-          py="2"
         >
           <Trans>Edit</Trans>
         </TrackerButton>

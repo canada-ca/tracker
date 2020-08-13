@@ -148,7 +148,6 @@ export function AdminDomains({ domainsData, orgName }) {
                     }}
                     variant="danger"
                     px="2"
-                    py="1"
                     fontSize="xs"
                   >
                     <Icon name="minus" />
@@ -156,7 +155,6 @@ export function AdminDomains({ domainsData, orgName }) {
                   <TrackerButton
                     variant="primary"
                     px="2"
-                    py="1"
                     fontSize="xs"
                     onClick={() => window.alert('edit domain')}
                   >

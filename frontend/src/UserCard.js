@@ -36,7 +36,7 @@ export function UserCard({ userName, displayName, tfa, role }) {
             <Badge
               color="blue.900"
               bg="transparent"
-              borderColor="blue.600"
+              borderColor="blue.900"
               borderWidth="1px"
             >
               {role}
