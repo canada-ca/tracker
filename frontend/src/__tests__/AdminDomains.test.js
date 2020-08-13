@@ -54,13 +54,21 @@ describe('<AdminDomains />', () => {
 
   it(`gracefully handles a "no results" empty list`, async () => {
     const { getByText } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
-          <MockedProvider>
-            <AdminDomains domainsData={null} />
-          </MockedProvider>
-        </I18nProvider>
-      </ThemeProvider>,
+      <UserStateProvider
+        initialState={{
+          userName: 'testuser@testemail.gc.ca',
+          jwt: 'string',
+          tfa: false,
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={setupI18n()}>
+            <MockedProvider>
+              <AdminDomains domainsData={null} />
+            </MockedProvider>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
 
     await waitFor(() => {
