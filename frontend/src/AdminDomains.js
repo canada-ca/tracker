@@ -121,10 +121,8 @@ export function AdminDomains({ domainsData, orgName }) {
           }}
           variant="primary"
         >
-          <Stack isInline align="center" justifyContent="center">
-            <Icon name="add" />
-            <Trans>Add Domain</Trans>
-          </Stack>
+          <Icon name="add" />
+          <Trans>Add Domain</Trans>
         </TrackerButton>
       </SimpleGrid>
       <Divider />

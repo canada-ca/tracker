@@ -174,10 +174,8 @@ export default function UserList({
             addUser(userSearch, Math.floor(Math.random() * 1000))
           }}
         >
-          {/* <Stack isInline align="center" justifyContent="center"> */}
           <Icon name="add" />
           <Trans>Invite User</Trans>
-          {/* </Stack> */}
         </TrackerButton>
       </SimpleGrid>
       <Divider />

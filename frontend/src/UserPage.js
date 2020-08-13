@@ -95,10 +95,8 @@ export default function UserPage() {
             }}
             isDisabled={!!location.state}
           >
-            <Stack isInline align="center">
-              <Icon name="lock" />
-              <Trans>Enable 2FA</Trans>
-            </Stack>
+            <Icon name="lock" />
+            <Trans>Enable 2FA</Trans>
           </TrackerButton>
 
           <TrackerButton
@@ -107,10 +105,8 @@ export default function UserPage() {
               window.alert('coming soon')
             }}
           >
-            <Stack isInline align="center">
-              <Icon name="edit" />
-              <Trans>Manage API keys</Trans>
-            </Stack>
+            <Icon name="edit" />
+            <Trans>Manage API keys</Trans>
           </TrackerButton>
         </Stack>
       </Stack>

@@ -9,12 +9,10 @@ const shadows = {
 }
 
 const colors = {
-  // strong: '#5CB95B',
-  // moderate: '#ffbf47',
-  // weak: '#e53e3e',
   strong: '#278400',
   moderate: '#FF9900',
   weak: '#D3080C',
+  info: '#269ABC',
   unknown: '#B0B0B0',
   green: {
     50: '#F2FFF0',

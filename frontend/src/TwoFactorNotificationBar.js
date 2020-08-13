@@ -12,7 +12,7 @@ export function TwoFactorNotificationBar() {
         mx="auto"
         width="100%"
       >
-        <Text>
+        <Text fontWeight="medium">
           <Trans>
             You have not enabled Two Factor Authentication. To maximize your
             account's security,{' '}
