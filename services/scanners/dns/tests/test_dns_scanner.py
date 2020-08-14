@@ -7,7 +7,7 @@ from dns_scanner import Server
 def test_scan():
     client_stub = stub(post=lambda url, json: None)
 
-    test_app = Server(default_client=client_stub)
+    test_app = Server(server_client=client_stub)
 
     test_client = TestClient(test_app)
 
@@ -17,6 +17,6 @@ def test_scan():
         "selectors": ["selector1._domainkey", "selector2._domainkey"],
     }
 
-    res = test_client.post("/scan", json=test_payload)
+    res = test_client.post("/", json=test_payload)
 
-    assert res.text == "DNS scan completed. Scan results dispatched to result-processor"
+    assert "(ID=1) DNS scan completed" in res.text

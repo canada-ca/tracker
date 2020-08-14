@@ -1,17 +1,19 @@
 FROM ubuntu:20.04
 
 # Copy local code to the container image.
-ENV SCANNER_HOME /dns
-WORKDIR $SCANNER_HOME
+ENV HOME /queue
+WORKDIR $HOME
 COPY . ./
+
+RUN chmod +x docker-entrypoint.sh && touch redis-server.log
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends apt-utils && \
 apt-get install -y --no-install-recommends python3 python3-pip && \
 apt-get install -y --no-install-recommends python3-setuptools python3-wheel && \
-apt-get install -y --no-install-recommends build-essential python3-dev
+apt-get install -y --no-install-recommends build-essential python3-dev redis-server systemd
 
 RUN pip3 install -r requirements.txt
+RUN sed -i 's/\/var\/log\/redis\/redis-server\.log/\"\"/g' /etc/redis/redis.conf
 
-# Run the web service on container startup. Using uvicorn, in this case.
-CMD exec gunicorn dns_scanner:app -w 4 --timeout 1000 -k uvicorn.workers.UvicornWorker
+CMD exec ~/./docker-entrypoint.sh

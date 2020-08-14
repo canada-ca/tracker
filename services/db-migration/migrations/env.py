@@ -8,7 +8,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-sys.path = ['', '..'] + sys.path[1:]
+sys.path = ["", ".."] + sys.path[1:]
 
 DB_USER = os.getenv("POSTGRES_USER")
 DB_PASS = os.getenv("POSTGRES_PASSWORD")
@@ -30,9 +30,7 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-config.set_main_option(
-    "sqlalchemy.url", DATABASE_URI
-)
+config.set_main_option("sqlalchemy.url", DATABASE_URI)
 
 from models import metadata
 
@@ -58,9 +56,7 @@ def run_migrations_offline():
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url,
-        target_metadata=target_metadata,
-        literal_binds=True,
+        url=url, target_metadata=target_metadata, literal_binds=True,
     )
 
     with context.begin_transaction():

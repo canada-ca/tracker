@@ -8,7 +8,7 @@ from app import logger
 from db import db_session
 from models import Web_scans, Mail_scans, Domains
 
-DISPATCHER_URL = "http://dispatcher.tracker.svc.cluster.local"
+QUEUE_URL = "http://scan-queue.scanners.svc.cluster.local"
 
 
 def fire_scan(
@@ -51,29 +51,36 @@ def fire_scan(
 
     db_session.commit()
 
-    # Get latest scan entry
-    if scan_type == "mail":
-        scan_orm = db_session.query(Mail_scans).order_by(Mail_scans.id.desc()).first()
-        scan_id = scan_orm.id
-    elif scan_type == "web":
-        scan_orm = db_session.query(Web_scans).order_by(Web_scans.id.desc()).first()
-        scan_id = scan_orm.id
-
-    payload = {
-        "scan_id": scan_id,
-        "domain": url,
-        "selectors": selectors,
-        "user_init": True,
-    }
-
-    headers = {
-        "Content-Type": "application/json",
-        "Data": str(payload),
-        "Scan-Type": scan_type,
-    }
-
     try:
-        status = requests.post(DISPATCHER_URL + "/receive", headers=headers)
+        # Get latest scan entry
+        if scan_type == "mail":
+            scan_orm = (
+                db_session.query(Mail_scans).order_by(Mail_scans.id.desc()).first()
+            )
+            scan_id = scan_orm.id
+            payload = {
+                "scan_id": scan_id,
+                "domain": url,
+                "selectors": selectors,
+            }
+            dns_status = requests.post(QUEUE_URL + "/dns", json=payload)
+            assert dns_status.text == "DNS scan request enqueued."
+            confirmation = "Mail scan request enqueued."
+
+        elif scan_type == "web":
+            scan_orm = db_session.query(Web_scans).order_by(Web_scans.id.desc()).first()
+            scan_id = scan_orm.id
+            payload = {
+                "scan_id": scan_id,
+                "domain": url,
+            }
+            confirmation = "DNS scan request enqueued."
+            https_status = requests.post(QUEUE_URL + "/https", json=payload)
+            assert https_status.text == "HTTPS scan request enqueued."
+            ssl_status = requests.post(QUEUE_URL + "/ssl", json=payload)
+            assert ssl_status.text == "SSL scan request enqueued."
+            confirmation = "Web scan requests enqueued."
+
     except Exception as e:
         # If scan fails delete latest scan entry to keep db clear of scans with no data
         try:
@@ -96,4 +103,4 @@ def fire_scan(
         )
         raise GraphQLError("Error, unable to request scan.")
 
-    return str(status.text)
+    return confirmation
