@@ -11,9 +11,10 @@ export const Navigation = ({ children, ...props }) => {
       justify="space-between"
       wrap="wrap"
       padding={{ sm: '0.6rem', md: '0.80rem', lg: '1rem', xl: '1rem' }}
-      bg="gray.550"
+      bg="#fff"
       py={15.5}
-      color="white"
+      color="#002D42"
+      borderBottom="2px solid #D5D5D5"
       {...props}
     >
       <Flex
