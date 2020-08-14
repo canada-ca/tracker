@@ -13,8 +13,9 @@ export const Navigation = ({ children, ...props }) => {
       padding={{ sm: '0.6rem', md: '0.80rem', lg: '1rem', xl: '1rem' }}
       bg="#fff"
       py={15.5}
-      color="#002D42"
-      borderBottom="2px solid #D5D5D5"
+      color="blue.900"
+      borderBottom="2px solid"
+      borderBottomColor="gray.300"
       {...props}
     >
       <Flex

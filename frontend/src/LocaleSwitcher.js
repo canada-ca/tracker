@@ -13,9 +13,9 @@ const Toggler = (props) => {
       padding={0}
       onClick={() => activate(locale)}
       _focus={{
-        outline: `3px solid #ffbf47`,
+        outline: `3px solid yellow.250`,
       }}
-      bg="#002D42"
+      bg="blue.900"
       color="#fff"
     >
       <VisuallyHidden>{locales[locale]}</VisuallyHidden>
@@ -28,7 +28,7 @@ const Toggler = (props) => {
         d={{ base: 'none', md: 'flex' }}
         alignItems="center"
         justifyContent="center"
-        _hover={{ color:"#FEC04F", outline: `1px solid #FEC04F` }}
+        _hover={{ color:"yellow.250", border:"1px solid", borderColor:"yellow.250" }}
       >
         {locales[locale]}
         <Image

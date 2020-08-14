@@ -2,7 +2,7 @@ import React from 'react'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { useLingui } from '@lingui/react'
 import sigEn from './images/goc-header-logo-en.svg'
-import sigFr from './images/goc-signature-block-fr.svg'
+import sigFr from './images/goc-header-logo-fr.svg'
 import { Flex, Box, Image } from '@chakra-ui/core'
 import { Layout } from './Layout'
 
@@ -10,7 +10,7 @@ export const TopBanner = (props) => {
   const { i18n } = useLingui()
 
   return (
-    <Flex bg="#002D42"  borderBottom="3px solid #FEC04F">
+    <Flex bg="blue.900"  borderBottom="3px solid" borderBottomColor="yellow.250">
       <Layout>
         <Flex
           maxW={{ sm: 540, md: 768, lg: 960, xl: 1200 }}
@@ -20,7 +20,7 @@ export const TopBanner = (props) => {
           fontFamily="body"
           {...props}
         > 
-          <Box py={4} width={{ base: 272, md: 360 }}>
+          <Box py="4" width={{ base: 272, md: 360 }}>
             <Image
               src={i18n.locale === 'en' ? sigEn : sigFr}
               pr={16}
