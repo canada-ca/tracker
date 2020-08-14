@@ -94,7 +94,8 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
                             endDate
                             categoryTotals {
                                 fullPass
-                                partialPass
+                                passSpfOnly
+                                passDkimOnly
                                 fail
                             }
                         }

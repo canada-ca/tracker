@@ -9,8 +9,11 @@ class CategoryTotals(graphene.ObjectType):
     full_pass = graphene.Int(
         description="Amount of messages that have are passing SPF and DKIM."
     )
-    partial_pass = graphene.Int(
-        description="Amount of messages that are passing either SPF or DKIM, but failing one."
+    pass_spf_only = graphene.Int(
+        description="Amount of messages that are passing SPF, but failing DKIM."
+    )
+    pass_dkim_only = graphene.Int(
+        description="Amount of messages that are passing DKIM, but failing SPF."
     )
     fail = graphene.Int(description="Amount of messages that fail both SPF and DKIM.")
     total = graphene.Int(description="Sum of all categories.")
@@ -18,12 +21,22 @@ class CategoryTotals(graphene.ObjectType):
     def resolve_full_pass(self: dict, info, **kwargs):
         return self.get("fullPass")
 
-    def resolve_partial_pass(self: dict, info, **kwargs):
-        return self.get("partialPass")
+    def resolve_pass_spf_only(self: dict, info):
+        return self.get("passSpfOnly", None)
+
+    def resolve_pass_dkim_only(self: dict, info):
+        return self.get("passDkimOnly", None)
 
     def resolve_fail(self: dict, info, **kwargs):
         return self.get("fail")
 
     def resolve_total(self: dict, info, **kwargs):
-        total = sum((self.get("fullPass"), self.get("partialPass"), self.get("fail"),))
+        total = sum(
+            (
+                self.get("fullPass"),
+                self.get("passSpfOnly"),
+                self.get("passDkimOnly"),
+                self.get("fail"),
+            )
+        )
         return total
