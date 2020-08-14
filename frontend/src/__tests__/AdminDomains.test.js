@@ -6,6 +6,8 @@ import { I18nProvider } from '@lingui/react'
 import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 import { AdminDomains } from '../AdminDomains'
+import { MockedProvider } from '@apollo/client/testing'
+import { SIGN_UP } from '../graphql/mutations'
 
 describe('<AdminDomains />', () => {
   it('successfully renders with mocked data', async () => {
@@ -35,7 +37,9 @@ describe('<AdminDomains />', () => {
         <ThemeProvider theme={theme}>
           <I18nProvider i18n={setupI18n()}>
             <MemoryRouter initialEntries={['/']}>
-              <AdminDomains domainsData={mocks} />
+              <MockedProvider>
+                <AdminDomains domainsData={mocks} />
+              </MockedProvider>
             </MemoryRouter>
           </I18nProvider>
         </ThemeProvider>
@@ -50,11 +54,21 @@ describe('<AdminDomains />', () => {
 
   it(`gracefully handles a "no results" empty list`, async () => {
     const { getByText } = render(
-      <ThemeProvider theme={theme}>
-        <I18nProvider i18n={setupI18n()}>
-          <AdminDomains domainsData={null} />
-        </I18nProvider>
-      </ThemeProvider>,
+      <UserStateProvider
+        initialState={{
+          userName: 'testuser@testemail.gc.ca',
+          jwt: 'string',
+          tfa: false,
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <I18nProvider i18n={setupI18n()}>
+            <MockedProvider>
+              <AdminDomains domainsData={null} />
+            </MockedProvider>
+          </I18nProvider>
+        </ThemeProvider>
+      </UserStateProvider>,
     )
 
     await waitFor(() => {

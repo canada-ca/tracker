@@ -1,17 +1,21 @@
 import os
 import sys
+import time
 import requests
 import logging
 import json
 import emoji
+import asyncio
+import traceback
+import signal
+import datetime as dt
 from enum import Enum
 from OpenSSL import SSL
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount, WebSocketRoute
 from starlette.responses import PlainTextResponse, JSONResponse
-from starlette.background import BackgroundTask
 from sslyze.server_connectivity import ServerConnectivityTester
-from sslyze.errors import ConnectionToServerFailed
+from sslyze.errors import ConnectionToServerFailed, ServerHostnameCouldNotBeResolved
 from sslyze.plugins.scan_commands import ScanCommand
 from sslyze.connection_helpers.tls_connection import SslConnection
 from sslyze.scanner import Scanner, ServerScanRequest
@@ -22,6 +26,8 @@ from sslyze.server_setting import (
 )
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
+QUEUE_URL = "http://result-queue.scanners.svc.cluster.local/ssl"
 
 
 class TlsVersionEnum(Enum):
@@ -34,15 +40,9 @@ class TlsVersionEnum(Enum):
     TLSV1_2 = 5
 
 
-def startup():
-    logging.info(emoji.emojize("ASGI server started :rocket:"))
-
-
 def dispatch_results(payload, client):
-    # Post results to result-handling service
-    client.post(
-        url="http://result-processor.tracker.svc.cluster.local/process", json=payload
-    )
+    client.post(QUEUE_URL, json=payload)
+    logging.info("Scan results dispatched to result-processor")
 
 
 def get_server_info(domain):
@@ -153,6 +153,7 @@ def scan_ssl(domain):
     # Wait for asynchronous scans to complete
     # get_results() returns a generator with a single "ServerScanResult". We only want that object
     scan_results = [x for x in scanner.get_results()][0]
+    logging.info("Scan results retrieved from generator")
 
     res = {
         "TLS": {
@@ -168,6 +169,7 @@ def scan_ssl(domain):
 
         # If CipherSuitesScanResults
         if name.endswith("suites"):
+            logging.info("Parsing Cipher Suite Scan results...")
 
             accepted_cipher_list = list()
             for c in result.accepted_cipher_suites:
@@ -181,26 +183,33 @@ def scan_ssl(domain):
 
             res["TLS"]["rejected_cipher_list"] = rejected_cipher_list
 
-            # We want the preferred cipher for the highest SSL/TLS version supported
-            if str(result.tls_version_used).split(".")[1] == highest_tls_supported:
-                res["TLS"][
-                    "preferred_cipher"
-                ] = result.cipher_suite_preferred_by_server.cipher_suite.name
+            if result.cipher_suite_preferred_by_server is not None:
+                # We want the preferred cipher for the highest SSL/TLS version supported
+                if str(result.tls_version_used).split(".")[1] == highest_tls_supported:
+                    res["TLS"][
+                        "preferred_cipher"
+                    ] = result.cipher_suite_preferred_by_server.cipher_suite.name
 
         elif name == "openssl_ccs_injection":
+            logging.info("Parsing OpenSSL CCS Injection Vulnerability Scan results...")
             res[
                 "is_vulnerable_to_ccs_injection"
             ] = result.is_vulnerable_to_ccs_injection
 
         elif name == "heartbleed":
+            logging.info("Parsing Heartbleed Vulnerability Scan results...")
             res["is_vulnerable_to_heartbleed"] = result.is_vulnerable_to_heartbleed
 
         elif name == "certificate_info":
-            res["signature_algorithm"] = (
-                result.certificate_deployments[0]
-                .verified_certificate_chain[0]
-                .signature_hash_algorithm.__class__.__name__
-            )
+            logging.info("Parsing Certificate Info Scan results...")
+            try:
+                res["signature_algorithm"] = (
+                    result.certificate_deployments[0]
+                    .verified_certificate_chain[0]
+                    .signature_hash_algorithm.__class__.__name__
+                )
+            except TypeError:
+                res["signature_algorithm"] = None
 
     rc4 = False
     triple_des = False
@@ -218,43 +227,84 @@ def scan_ssl(domain):
     return res
 
 
-def Server(default_client=requests):
-    async def scan(request):
+def Server(server_client=requests):
+    async def scan(scan_request):
+
+        logging.info("Scan request received")
+        inbound_payload = await scan_request.json()
+
+        def timeout_handler(signum, frame):
+            msg = "Timeout while performing scan"
+            logging.error(msg)
+            dispatch_results(
+                {"scan_type": "ssl", "scan_id": scan_id, "results": {}}, server_client
+            )
+            return PlainTextResponse(msg)
+
         try:
-            client = request.app.state.client
+            start_time = dt.datetime.now()
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(80)
+            try:
+                domain = inbound_payload["domain"]
+                scan_id = inbound_payload["scan_id"]
+            except KeyError:
+                msg = f"Invalid scan request format received: {str(inbound_payload)}"
+                logging.error(msg)
+                return PlainTextResponse(msg)
 
-            logging.info("Scan request received")
-            inbound_payload = await request.json()
-            domain = inbound_payload["domain"]
-            scan_id = inbound_payload["scan_id"]
-
-            logging.info("Performing scan...")
+            logging.info(f"(ID={scan_id}) Performing scan...")
             scan_results = scan_ssl(domain)
 
             if scan_results is not None:
                 outbound_payload = json.dumps(
                     {"results": scan_results, "scan_type": "ssl", "scan_id": scan_id}
                 )
-                logging.info(f"Scan results: {str(scan_results)}")
+                logging.info(f"(ID={scan_id}) Scan results: {str(scan_results)}")
             else:
                 raise Exception("SSL scan not completed")
-            dispatch_results(outbound_payload, client)
-        except Exception as e:
-            return PlainTextResponse(
-                f"An error occurred while attempting to process SSL scan request: {str(e)}"
-            )
 
-        return PlainTextResponse(
-            "SSL scan completed. Scan results dispatched to result-processor"
-        )
+        except ServerHostnameCouldNotBeResolved as e:
+            signal.alarm(0)
+            msg = f"(ID={scan_id}) The designated domain could not be resolved: ({type(e).__name__}: {str(e)})"
+            logging.error(msg)
+            dispatch_results(
+                {"scan_type": "ssl", "scan_id": scan_id, "results": {}}, server_client
+            )
+            return PlainTextResponse(msg)
+
+        except Exception as e:
+            signal.alarm(0)
+            msg = f"(ID={scan_id}) An unexpected error occurred while attempting to process SSL scan request: ({type(e).__name__}: {str(e)})"
+            logging.error(msg)
+            logging.error(f"Full traceback: {traceback.format_exc()}")
+            dispatch_results(
+                {"scan_type": "ssl", "scan_id": scan_id, "results": {}}, server_client
+            )
+            return PlainTextResponse(msg)
+
+        signal.alarm(0)
+        end_time = dt.datetime.now()
+        elapsed_time = end_time - start_time
+        dispatch_results(outbound_payload, server_client)
+        msg = f"(ID={scan_id}) SSL scan completed in {elapsed_time.total_seconds()} seconds."
+        logging.info(msg)
+
+        return PlainTextResponse(msg)
+
+    async def startup():
+        logging.info(emoji.emojize("ASGI server started :rocket:"))
+
+    async def shutdown():
+        logging.info(emoji.emojize("ASGI server shutting down..."))
 
     routes = [
-        Route("/scan", scan, methods=["POST"]),
+        Route("/", scan, methods=["POST"]),
     ]
 
-    starlette_app = Starlette(debug=True, routes=routes, on_startup=[startup])
-
-    starlette_app.state.client = default_client
+    starlette_app = Starlette(
+        debug=True, routes=routes, on_startup=[startup], on_shutdown=[shutdown]
+    )
 
     return starlette_app
 
