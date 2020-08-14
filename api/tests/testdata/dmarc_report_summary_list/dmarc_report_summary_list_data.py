@@ -114,12 +114,22 @@ dmarc_report_summary_list_data = {
             {
                 "startDate": "2019-07-01",
                 "endDate": "2019-07-31",
-                "categoryTotals": {"passSpfOnly": 0, "passDkimOnly": 0, "fullPass": 0, "fail": 0,},
+                "categoryTotals": {
+                    "passSpfOnly": 0,
+                    "passDkimOnly": 0,
+                    "fullPass": 0,
+                    "fail": 0,
+                },
             },
             {
                 "startDate": "2019-06-01",
                 "endDate": "2019-06-30",
-                "categoryTotals": {"passSpfOnly": 0, "passDkimOnly": 0, "fullPass": 0, "fail": 0,},
+                "categoryTotals": {
+                    "passSpfOnly": 0,
+                    "passDkimOnly": 0,
+                    "fullPass": 0,
+                    "fail": 0,
+                },
             },
         ]
     }
