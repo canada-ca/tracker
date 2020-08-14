@@ -11,7 +11,9 @@ module.exports.domainLoaderById = (query) =>
           RETURN domain
       `
     } catch (err) {
-      console.error(`Database error occurred when running domainLoaderById: ${err}`)
+      console.error(
+        `Database error occurred when running domainLoaderById: ${err}`,
+      )
       throw new Error('Unable to find domain. Please try again.')
     }
 

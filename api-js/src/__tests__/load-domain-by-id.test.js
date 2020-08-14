@@ -87,7 +87,9 @@ describe('given a domainLoaderById dataloader', () => {
       try {
         await loader.load(expectedDomain._key)
       } catch (err) {
-        expect(err).toEqual(new Error('Unable to find domain. Please try again.'))
+        expect(err).toEqual(
+          new Error('Unable to find domain. Please try again.'),
+        )
       }
 
       expect(consoleOutput).toEqual([
@@ -115,7 +117,9 @@ describe('given a domainLoaderById dataloader', () => {
       try {
         await loader.load(expectedDomain._key)
       } catch (err) {
-        expect(err).toEqual(new Error('Unable to find domain. Please try again.'))
+        expect(err).toEqual(
+          new Error('Unable to find domain. Please try again.'),
+        )
       }
 
       expect(consoleOutput).toEqual([

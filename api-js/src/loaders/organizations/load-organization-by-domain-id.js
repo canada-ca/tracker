@@ -1,9 +1,9 @@
 const DataLoader = require('dataloader')
 
-module.exports.orgLoaderByDomainId = (query, language) => 
+module.exports.orgLoaderByDomainId = (query, language) =>
   new DataLoader(async (ids) => {
     let cursor
-    
+
     try {
       cursor = await query`
       FOR id IN ${ids}
@@ -13,7 +13,9 @@ module.exports.orgLoaderByDomainId = (query, language) =>
           RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, _to: orgId._to, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
-      console.error(`Database error occurred while running orgLoaderByDomainId: ${err}`)
+      console.error(
+        `Database error occurred while running orgLoaderByDomainId: ${err}`,
+      )
       throw new Error('Unable to find organization. Please try again.')
     }
 
@@ -27,9 +29,9 @@ module.exports.orgLoaderByDomainId = (query, language) =>
       throw new Error('Unable to find organization. Please try again.')
     }
 
-    return ids.map((id) =>  {
+    return ids.map((id) => {
       const org = orgMap[id]
       delete org._to
       return org
     })
-})
+  })

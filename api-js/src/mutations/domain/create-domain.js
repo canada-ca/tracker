@@ -54,16 +54,24 @@ const createDomain = new mutationWithClientMutationId({
     // Check to see if org exists
     const org = await orgLoaderById.load(orgId)
 
-    if(typeof org === 'undefined') {
-      console.warn(`User: ${userId} attempted to create a domain to an organization: ${orgId} that does not exist.`)
+    if (typeof org === 'undefined') {
+      console.warn(
+        `User: ${userId} attempted to create a domain to an organization: ${orgId} that does not exist.`,
+      )
       throw new Error('Unable to create domain. Please try again.')
     }
 
     // Check to see if user belongs to org
     const permission = await checkPermission(user._id, org._id, query)
 
-    if (permission !== 'user' && permission !== 'admin' && permission !== 'super_admin') {
-      console.warn(`User: ${userId} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`)
+    if (
+      permission !== 'user' &&
+      permission !== 'admin' &&
+      permission !== 'super_admin'
+    ) {
+      console.warn(
+        `User: ${userId} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`,
+      )
       throw new Error('Unable to create domain. Please try again.')
     }
 
@@ -87,30 +95,42 @@ const createDomain = new mutationWithClientMutationId({
               RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE(${request.language}, org.orgDetails))
       `
     } catch (err) {
-      console.error(`Database error occurred while running check to see if domain already exists in an org: ${err}`)
+      console.error(
+        `Database error occurred while running check to see if domain already exists in an org: ${err}`,
+      )
       throw new Error('Unable to create domain. Please try again.')
     }
 
     const checkDomain = await checkDomainCursor.next()
-    
-    if(typeof checkDomain !== 'undefined') {
-      console.warn(`User: ${userId} attempted to create a domain for: ${org.slug}, however that org already has that domain claimed.`)
+
+    if (typeof checkDomain !== 'undefined') {
+      console.warn(
+        `User: ${userId} attempted to create a domain for: ${org.slug}, however that org already has that domain claimed.`,
+      )
       throw new Error('Unable to create domain. Please try again.')
     }
 
     // Insert into DB
     const trx = await transaction(collections)
-    const insertedDomain = await trx.run(() => collections.domains.save(insertDomain))
-    await trx.run(() => collections.claims.save({ _from: org._id, _to: insertedDomain._id}))
+    const insertedDomain = await trx.run(() =>
+      collections.domains.save(insertDomain),
+    )
+    await trx.run(() =>
+      collections.claims.save({ _from: org._id, _to: insertedDomain._id }),
+    )
     try {
       await trx.commit()
     } catch (err) {
-      console.error(`Database error occurred while committing create domain transaction: ${err}`)
+      console.error(
+        `Database error occurred while committing create domain transaction: ${err}`,
+      )
       throw new Error('Unable to create domain. Please try again.')
     }
 
     const returnDomain = await domainLoaderById.load(insertedDomain._key)
-    console.info(`User: ${userId} successfully created ${returnDomain.slug} in org: ${org.slug}.`)
+    console.info(
+      `User: ${userId} successfully created ${returnDomain.slug} in org: ${org.slug}.`,
+    )
 
     returnDomain.id = insertedDomain._key
     return {
