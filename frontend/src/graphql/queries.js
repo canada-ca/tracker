@@ -524,14 +524,18 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
   }
 `
 
-export const DMARC_SUMMARIES = gql`
-  query DmarcSummaries($orgSlug: Slug!) {
-    dmarcSummaries(orgSlug: $orgSlug) {
-      total
-      categories {
-        name
-        count
-        percentage
+export const DMARC_REPORT_SUMMARY_TABLE = gql`
+  query DmarcReportSummaryTable($period: PeriodEnums!, $year: Year!) {
+    dmarcReportSummaryTable(period: $period, year: $year) {
+      month
+      year
+      domains {
+        domain
+        fullPassPercentage
+        passSpfOnlyPercentage
+        passDkimOnlyPercentage
+        failPercentage
+        totalMessages
       }
     }
   }

@@ -486,13 +486,78 @@ input DmarcReportSummaryListInput {
 }
 
 """
-A query object used to grab the data to create the dmarc pass/fail by domain table
+A query object used to grab the data to create dmarc by domain table
 """
-type DmarcSummaries {
+type DmarcReportSummaryTable {
   """
-  Summary containing dmarc pass/fail categories and total number of messages
+  The month that the data is related to.
   """
-  categorizedSummary: CategorizedSummary
+  month: PeriodEnums
+
+  """
+  The year that the data is related to.
+  """
+  year: Year! @examples(values: [2019, 2020])
+
+  domains: [DmarcReportSummaryTableObject] @listLength(min: 10, max: 20)
+}
+
+type DmarcReportSummaryTableObject {
+  """
+  Domain name of data
+  """
+  domain: URL
+    @examples(
+      values: [
+        "javascript:alert('XSS')"
+        "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
+        "rcmp-grc.gc.ca"
+        "tbs-sct.gc.ca"
+        "canada.ca"
+        "cra-arc.gc.ca"
+        "pm.gc.ca"
+        "cse-cst.gc.ca"
+        "forces.gc.ca"
+        "jAva&Tab;script:alert('XSS')"
+        "cra.arc.gc.ca"
+        "cra-arc.gc.ca"
+        "cse-cst.gc.ca"
+        "cyber.gc.ca"
+        "dfait-maeci.gc.ca"
+        "dfo-mpo.gc.ca"
+        "ec.gc.ca"
+        "forces.gc.ca"
+        "gccollab.ca"
+        "gccollaboration.ca"
+        "goc-gdc.ca"
+        "hc-sc.gc.ca"
+      ]
+    )
+
+  """
+  Total number of messages recieved for domain
+  """
+  totalMessages: Int
+
+  """
+  Percentage of messages that passed both DKIM and SPF
+  """
+  fullPassPercentage: Int
+
+  """
+  Percentage of messages that passed SPF but failed DKIM
+  """
+  passSpfOnlyPercentage: Int
+
+  """
+  Percentage of messages that passed DKIM but failed SPF
+  """
+  passDkimOnlyPercentage: Int
+
+  """
+  Percentage of messages that failed both DKIM and SPF
+  """
+  failPercentage: Int
 }
 
 type Domain implements Node {
@@ -1360,6 +1425,14 @@ type Query {
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
 
   """
+  A query object used to grab the data to create dmarc by domain table
+  """
+  dmarcReportSummaryTable(
+    period: PeriodEnums!
+    year: Year!
+  ): DmarcReportSummaryTable
+
+  """
   Query used for gathering data for dmarc report detail tables.
   """
   dmarcReportDetailTables(
@@ -1438,16 +1511,6 @@ type Query {
     """
     year: Year!
   ): DmarcReportSummary
-
-  """
-  A query object used to grab data for the dmarc pass/fail by domain table
-  """
-  dmarcSummaries(
-    """
-    Slug of organization to get data from
-    """
-    orgSlug: Slug!
-  ): CategorizedSummary
 
   """
   An graphql object that will be used to populate a userList component in the front end
