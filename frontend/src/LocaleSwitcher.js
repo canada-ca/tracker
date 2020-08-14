@@ -1,7 +1,8 @@
 import React from 'react'
 import { useLingui } from '@lingui/react'
 import { locales, activate } from './i18n.config'
-import { Box, PseudoBox, VisuallyHidden } from '@chakra-ui/core'
+import svgGlobe from './images/vector-globe.svg'
+import { Box, PseudoBox, VisuallyHidden, Image } from '@chakra-ui/core'
 
 const Toggler = (props) => {
   const { locale } = props // eslint-disable-line
@@ -12,19 +13,29 @@ const Toggler = (props) => {
       padding={0}
       onClick={() => activate(locale)}
       _focus={{
-        outline: `3px solid #ffbf47`,
+        outline: `3px solid yellow.250`,
       }}
-      color="blue.600"
+      bg="blue.900"
+      color="#fff"
     >
       <VisuallyHidden>{locales[locale]}</VisuallyHidden>
       <PseudoBox
         aria-hidden
-        fontSize="lg"
+        fontSize="sm"
+        pl={2}
+        py={1}
+        textTransform="uppercase"
         d={{ base: 'none', md: 'flex' }}
         alignItems="center"
         justifyContent="center"
+        _hover={{ color:"yellow.250", border:"1px solid", borderColor:"yellow.250" }}
       >
         {locales[locale]}
+        <Image
+              src={ svgGlobe }
+              px={2}
+              alt={('Symbol of the Government of Canada')}
+            />
       </PseudoBox>
       <PseudoBox
         aria-hidden
