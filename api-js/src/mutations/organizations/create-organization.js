@@ -88,6 +88,8 @@ const createOrganization = new mutationWithClientMutationId({
     args,
     {
       request,
+      collections,
+      transaction,
       query,
       userId,
       auth: { userRequired },
@@ -155,37 +157,57 @@ const createOrganization = new mutationWithClientMutationId({
       },
     }
 
-    // Insert organization into db
+    // Generate list of collections names
+    const collectionStrings = []
+    for (const property in collections) {
+      collectionStrings.push(property.toString())
+    }
+
+    // Setup Trans action
+    const trx = await transaction(collectionStrings)
+
     let cursor
     try {
-      cursor = await query`
-        INSERT ${organizationDetails} INTO organizations 
-        RETURN MERGE({ _id: NEW._id, _key: NEW._key, _rev: NEW._rev, blueCheck: NEW.blueCheck }, TRANSLATE(${request.language}, NEW.orgDetails))
-      `
+      cursor = await trx.run(
+        async () =>
+          await query`
+            INSERT ${organizationDetails} INTO organizations 
+            RETURN MERGE({ _id: NEW._id, _key: NEW._key, _rev: NEW._rev, blueCheck: NEW.blueCheck }, TRANSLATE(${request.language}, NEW.orgDetails))
+          `,
+      )
     } catch (err) {
       console.error(
-        `Database error occurred when user: ${userId} was creating new organization ${slugEN}: ${err}`,
+        `Transaction error occurred when user: ${userId} was creating new organization ${slugEN}: ${err}`,
       )
       throw new Error('Unable to create organization. Please try again.')
     }
-
     const organization = await cursor.next()
 
     try {
-      await query`
-        INSERT {
-          _from: ${organization._id},
-          _to: ${user._id},
-          permission: "admin"
-        } INTO affiliations
-      `
+      await trx.run(
+        async () =>
+          await query`
+            INSERT {
+              _from: ${organization._id},
+              _to: ${user._id},
+              permission: "admin"
+            } INTO affiliations
+          `,
+      )
     } catch (err) {
       console.error(
-        `Database error occurred when inserting edge definition for user: ${userId} to ${slugEN}: ${err}`,
+        `Transaction error occurred when inserting edge definition for user: ${userId} to ${slugEN}: ${err}`,
       )
-      throw new Error(
-        'Error creating affiliation. Please contact a system administrator for assistance.',
+      throw new Error('Unable to create new organization. Please try again.')
+    }
+
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(
+        `Transaction error occurred when committing new organization: ${slugEN} for user: ${userId} to db: ${err}`,
       )
+      throw new Error('Unable to create new organization. Please try again.')
     }
 
     console.info(
