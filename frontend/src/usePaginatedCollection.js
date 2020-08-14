@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { setQueryAlias } from './setQueryAlias'
+import { indexes } from './indexes'
 
 export function usePaginatedCollection({
   recordsPerPage = 10,
@@ -29,13 +30,12 @@ export function usePaginatedCollection({
 
   let currentEdges
 
-  const indexOfFirstElement = currentPage * recordsPerPage - 1
-  const indexOfLastElement = currentPage * recordsPerPage + recordsPerPage - 1
-
   if (data?.pagination?.edges?.length > recordsPerPage) {
     currentEdges = data.pagination.edges.slice(
-      indexOfFirstElement,
-      indexOfLastElement,
+      ...indexes({
+        page: currentPage,
+        recordsPerPage,
+      }),
     )
   } else {
     currentEdges = data?.pagination?.edges
