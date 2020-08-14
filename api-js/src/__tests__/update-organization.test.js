@@ -19,7 +19,7 @@ const {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('updating an organization', () => {
-  let query, drop, truncate, migrate, schema, collections
+  let query, drop, truncate, migrate, schema, collections, transaction
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -39,7 +39,7 @@ describe('updating an organization', () => {
     console.error = mockedError
     // Generate DB Items
     ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
+    ;({ query, drop, truncate, collections, transaction } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
     await truncate()
@@ -167,6 +167,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -232,6 +234,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -297,6 +301,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -362,6 +368,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -427,6 +435,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -492,6 +502,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -557,6 +569,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -635,6 +649,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -702,6 +718,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -767,6 +785,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -832,6 +852,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -897,6 +919,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -962,6 +986,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1027,6 +1053,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1092,6 +1120,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1170,6 +1200,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1264,6 +1296,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1329,6 +1363,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1394,6 +1430,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1459,6 +1497,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1524,6 +1564,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1589,6 +1631,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1654,6 +1698,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1732,6 +1778,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1799,6 +1847,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1864,6 +1914,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1929,6 +1981,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -1994,6 +2048,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -2059,6 +2115,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -2124,6 +2182,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -2189,6 +2249,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -2267,6 +2329,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -2384,6 +2448,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -2433,6 +2499,8 @@ describe('updating an organization', () => {
               null,
               {
                 query,
+                collections,
+                transaction,
                 userId: user._key,
                 auth: {
                   checkPermission,
@@ -2515,6 +2583,8 @@ describe('updating an organization', () => {
             null,
             {
               query,
+              collections,
+              transaction,
               userId: user._key,
               auth: {
                 checkPermission,
@@ -2624,6 +2694,8 @@ describe('updating an organization', () => {
             null,
             {
               query: mockQuery,
+              collections,
+              transaction,
               userId: user._key,
               auth: {
                 checkPermission,
@@ -2710,6 +2782,8 @@ describe('updating an organization', () => {
             null,
             {
               query: mockQuery,
+              collections,
+              transaction,
               userId: user._key,
               auth: {
                 checkPermission,
@@ -2734,7 +2808,94 @@ describe('updating an organization', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while upserting org: ${org._key}, err: Error: Database error occurred.`,
+            `Transaction error occurred while upserting org: ${org._key}, err: Error: Database error occurred.`,
+          ])
+        })
+      })
+      describe('when committing transaction', () => {
+        it('returns an error', async () => {
+          const orgLoader = orgLoaderById(query, 'en')
+          const userLoader = userLoaderById(query)
+
+          transaction = jest.fn().mockReturnValue({
+            run() {
+              return {
+                next() {
+                  return {
+                    orgDetails: {
+                      en: {
+                        slug: 'treasury-board-secretariat',
+                        acronym: 'TBS',
+                        name: 'Treasury Board of Canada Secretariat',
+                        zone: 'FED',
+                        sector: 'TBS',
+                        country: 'Canada',
+                        province: 'Ontario',
+                        city: 'Ottawa',
+                      },
+                      fr: {
+                        slug: 'secretariat-conseil-tresor',
+                        acronym: 'SCT',
+                        name: 'Secrétariat du Conseil Trésor du Canada',
+                        zone: 'FED',
+                        sector: 'TBS',
+                        country: 'Canada',
+                        province: 'Ontario',
+                        city: 'Ottawa',
+                      },
+                    },
+                  }
+                },
+              }
+            },
+            commit() {
+              throw new Error('Database error occurred.')
+            },
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                updateOrganization(
+                  input: { id: "${b64OrgId}", cityEN: "A New City" }
+                ) {
+                  organization {
+                    city
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              query: query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: {
+                checkPermission,
+                userRequired,
+              },
+              validators: {
+                cleanseInput,
+                slugify,
+              },
+              loaders: {
+                orgLoaderById: orgLoader,
+                userLoaderById: userLoader,
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Unable to update organization. Please try again.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Transaction error occurred while committing org: ${org._key}, err: Error: Database error occurred.`,
           ])
         })
       })

@@ -92,6 +92,8 @@ const updateOrganization = new mutationWithClientMutationId({
     args,
     {
       query,
+      collections,
+      transaction,
       userId,
       auth: { checkPermission, userRequired },
       loaders: { orgLoaderById, userLoaderById },
@@ -186,17 +188,38 @@ const updateOrganization = new mutationWithClientMutationId({
       },
     }
 
+    // Generate list of collections names
+    const collectionStrings = []
+    for (const property in collections) {
+      collectionStrings.push(property.toString())
+    }
+
+    // Setup Trans action
+    const trx = await transaction(collectionStrings)
+
     // Upsert new org details
     try {
-      await query`
-        UPSERT { _key: ${orgKey} }
-          INSERT ${updatedOrgDetails}
-          UPDATE ${updatedOrgDetails}
-          IN organizations
-      `
+      await trx.run(
+        async () =>
+          await query`
+            UPSERT { _key: ${orgKey} }
+              INSERT ${updatedOrgDetails}
+              UPDATE ${updatedOrgDetails}
+              IN organizations
+          `,
+      )
     } catch (err) {
       console.error(
-        `Database error occurred while upserting org: ${orgKey}, err: ${err}`,
+        `Transaction error occurred while upserting org: ${orgKey}, err: ${err}`,
+      )
+      throw new Error('Unable to update organization. Please try again.')
+    }
+
+    try {
+      await trx.commit()
+    } catch (err) {
+      console.error(
+        `Transaction error occurred while committing org: ${orgKey}, err: ${err}`,
       )
       throw new Error('Unable to update organization. Please try again.')
     }
