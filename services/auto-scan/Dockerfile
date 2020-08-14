@@ -8,13 +8,15 @@ COPY . ./
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends apt-utils && \
 apt-get install -y --no-install-recommends python3 python3-pip && \
-apt-get install -y --no-install-recommends python3-setuptools python3-wheel
+apt-get install -y --no-install-recommends python3-setuptools python3-wheel && \
+apt-get install -y --no-install-recommends build-essential python3-dev
 
 # Install dependencies.
-RUN python3 -m pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-RUN chmod +x autoscan.py
+RUN chmod +x docker-entrypoint.sh
+
 RUN useradd -r -u 1001 autoscan
 USER autoscan
 
-ENTRYPOINT ["python3", "autoscan.py"]
+CMD exec ~/./docker-entrypoint.sh

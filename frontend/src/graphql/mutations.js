@@ -69,7 +69,6 @@ export const SEND_PASSWORD_RESET_LINK = gql`
   }
 `
 
-
 export const UPDATE_USER_ROLES = gql`
   mutation UpdateUserRoles($input: UpdateUserRoleInput!) {
     updateUserRole(input: $input) {
@@ -96,8 +95,43 @@ export const UPDATE_USER_PROFILE = gql`
         preferredLang: $preferredLang
         currentPassword: $currentPassword
       }
-    )
-    {
+    ) {
+      status
+    }
+  }
+`
+
+export const CREATE_DOMAIN = gql`
+  mutation CreateDomain($orgSlug: Slug!, $url: URL!, $selectors: Selectors) {
+    createDomain(
+      input: { orgSlug: $orgSlug, url: $url, selectors: $selectors }
+    ) {
+      status
+    }
+  }
+`
+
+export const REMOVE_DOMAIN = gql`
+  mutation RemoveDomain($url: URL!) {
+    removeDomain(input: { url: $url }) {
+      status
+    }
+  }
+`
+
+export const UPDATE_DOMAIN = gql`
+  mutation UpdateDomain(
+    $currentUrl: URL!
+    $updatedUrl: URL!
+    $updatedSelectors: Selectors
+  ) {
+    updateDomain(
+      input: {
+        currentUrl: $currentUrl
+        updatedUrl: $updatedUrl
+        updatedSelectors: $updatedSelectors
+      }
+    ) {
       status
     }
   }

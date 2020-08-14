@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { setQueryAlias } from './setQueryAlias'
+import { indexes } from './indexes'
 
 export function usePaginatedCollection({
   recordsPerPage = 10,
@@ -17,6 +19,8 @@ export function usePaginatedCollection({
     alias: 'pagination',
   })
 
+  const [currentPage, setCurrentPage] = useState(1)
+
   const { loading, error, data, fetchMore } = useQuery(fwdQuery, {
     variables: { first: recordsPerPage },
     context: {
@@ -24,12 +28,26 @@ export function usePaginatedCollection({
     },
   })
 
+  let currentEdges
+
+  if (data?.pagination?.edges?.length > recordsPerPage) {
+    currentEdges = data.pagination.edges.slice(
+      ...indexes({
+        page: currentPage,
+        recordsPerPage,
+      }),
+    )
+  } else {
+    currentEdges = data?.pagination?.edges
+  }
+
   return {
     loading,
     error,
-    edges: data ? data.pagination.edges : undefined,
-    nodes: data ? data.pagination.edges.map((e) => e.node) : undefined,
+    edges: currentEdges,
+    nodes: currentEdges?.map((e) => e.node),
     next: () => {
+      setCurrentPage(currentPage + 1)
       return fetchMore({
         variables: {
           first: recordsPerPage,
@@ -39,6 +57,7 @@ export function usePaginatedCollection({
       })
     },
     previous: () => {
+      setCurrentPage(currentPage > 2 ? currentPage - 1 : 1)
       return fetchMore({
         query: bkwrdQuery,
         variables: {

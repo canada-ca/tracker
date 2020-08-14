@@ -568,7 +568,7 @@ type DomainConnection {
   """
   Contains the nodes in this connection.
   """
-  edges: [DomainEdge]!
+  edges: [DomainEdge]! @listLength(min: 3, max: 5)
 }
 """
 A Relay edge containing a `Domain` and its cursor.

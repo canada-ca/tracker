@@ -22,4 +22,7 @@ export const fieldRequirements = {
     required: { message: t`Please choose your preferred language` },
     oneOf: { types: ['ENGLISH', 'FRENCH'], message: '' },
   },
+  domainUrl: {
+    required: { message: t`Domain url field must not be empty` },
+  },
 }

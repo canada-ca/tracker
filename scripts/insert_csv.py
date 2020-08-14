@@ -5,6 +5,7 @@ import asyncio
 import logging
 import databases
 import sqlalchemy
+from slugify import slugify
 from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -261,7 +262,7 @@ async def insert():
 
             # If not, create the org
             if org_exists is False:
-                org_slug = org.replace('.', '-').replace(' ', '-')
+                org_slug = slugify(org)
                 org_acronym = org.upper().replace('.', '-').replace(' ', '-')
                 logging.info(f"Org Name: {org}")
                 logging.info(f"Org Slug: {org_slug}")
@@ -279,7 +280,7 @@ async def insert():
 
             # If not, create the domain
             if domain_exists is False:
-                domain_slug = url.replace(".", "-").replace(' ', '-')
+                domain_slug = slugify(url)
                 logging.info(f"Domain Name: {url}")
                 logging.info(f"Domain Slug: {domain_slug}")
                 domain_insert = Domains.insert().values(domain=url, slug=domain_slug, organization_id=org_result.get("id"))

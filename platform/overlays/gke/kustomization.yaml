@@ -15,9 +15,9 @@ resources:
 - postgres-service.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-9d2e21e
+  newTag: master-909c076
 - name: gcr.io/track-compliance/frontend
-  newTag: master-b57e463
+  newTag: master-6b2b52b
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml
