@@ -82,7 +82,7 @@ export default function ResetPasswordPage() {
             aria-label="form"
             name="form"
           >
-            <Heading as="h1" fontSize="2xl" mb="6">
+            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
               <Trans>Enter and confirm your new password.</Trans>
             </Heading>
 
@@ -93,6 +93,7 @@ export default function ResetPasswordPage() {
               isLoading={isSubmitting}
               id="submitBtn"
               variant="primary"
+              mb="4"
             >
               <Trans>Change Password</Trans>
             </TrackerButton>

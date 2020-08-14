@@ -83,7 +83,7 @@ export default function ForgotPasswordPage() {
 
             <EmailField name="email" mb="4" />
 
-            <Stack spacing={4} isInline justifyContent="space-between">
+            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
               <TrackerButton
                 type="submit"
                 id="submitBtn"

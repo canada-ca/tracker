@@ -179,7 +179,7 @@ export default function UserList({
       </SimpleGrid>
 
       {userList.length === 0 ? (
-        <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
           <Trans>No users in this organization</Trans>
         </Text>
       ) : (

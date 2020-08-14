@@ -26,8 +26,8 @@ export default function QRcodePage() {
 
   if (data)
     return (
-      <Stack spacing={4} mx="auto" alignItems="center" px="8" overflow="hidden">
-        <Text textAlign={['center']} mx="auto" fontSize="2xl">
+      <Stack spacing="4" mx="auto" alignItems="center" px="8" overflow="hidden">
+        <Text textAlign="center" mx="auto" fontSize="2xl">
           <Trans>
             Scan this QR code with a 2FA app like Authy or Google Authenticator
           </Trans>
@@ -42,7 +42,7 @@ export default function QRcodePage() {
           />
         </Box>
 
-        <Text mt={6} textAlign={['center']} mx="auto" fontSize="lg">
+        <Text mt="6" textAlign="center" mx="auto" fontSize="lg">
           <Trans>
             Your 2FA app will then have a valid code that you can use when you
             sign in.

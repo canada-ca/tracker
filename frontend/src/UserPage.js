@@ -87,7 +87,10 @@ export default function UserPage() {
           </Checkbox>
         </CheckboxGroup>
         <Divider />
-        <Stack isInline>
+        <Stack
+          isInline={[false, true]}
+          justifyContent={['space-between', 'flex-start']}
+        >
           <TrackerButton
             variant="primary"
             onClick={() => {

@@ -102,6 +102,7 @@ export default function AdminPage() {
               <AdminPanel
                 orgName={orgName}
                 permission={adminAffiliations[orgName]}
+                mr="4"
               />
               <Trans>
                 *search bars do not actively search databases currently. They
@@ -109,7 +110,7 @@ export default function AdminPage() {
               </Trans>
             </Stack>
           ) : (
-            <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
+            <Text fontSize="2xl" fontWeight="bold" textAlign="center">
               <Trans>Select an organization to view admin options</Trans>
             </Text>
           )}

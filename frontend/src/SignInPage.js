@@ -93,7 +93,7 @@ export default function SignInPage() {
             aria-label="form"
             name="form"
           >
-            <Heading as="h1" fontSize="2xl" mb="6">
+            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
               <Trans>Sign in with your username and password.</Trans>
             </Heading>
 
@@ -107,7 +107,7 @@ export default function SignInPage() {
               </Text>
             </Link>
 
-            <Stack spacing={4} isInline justifyContent="space-between">
+            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
               <TrackerButton
                 variant="primary"
                 isLoading={isSubmitting}
