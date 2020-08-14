@@ -14,6 +14,7 @@ import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
 import { DmarcGuidancePage } from './DmarcGuidancePage'
+import DmarcByDomainPage from './DmarcByDomainPage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -65,6 +66,12 @@ export default function App() {
           ) : (
             <Link to="/sign-in">
               <Trans>Sign In</Trans>
+            </Link>
+          )}
+
+          {isLoggedIn() && (
+            <Link to="/dmarc-summaries">
+              <Trans>DMARC Report</Trans>
             </Link>
           )}
 
@@ -140,6 +147,27 @@ export default function App() {
                     <Route
                       path={`${url}/:domainSlug`}
                       component={DmarcGuidancePage}
+                      exact
+                    />
+                  </>
+                )}
+              />
+
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
+                path="/dmarc-summaries"
+                render={({ match: { url } }) => (
+                  <>
+                    <Route
+                      path={`${url}`}
+                      component={DmarcByDomainPage}
+                      exact
+                    />
+                    <Route
+                      path={`${url}/:domainSlug`}
+                      component={DmarcReportPage}
+                      exact
                     />
                   </>
                 )}
