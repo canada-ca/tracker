@@ -372,7 +372,7 @@ export function AdminDomains({ domainsData, orgName }) {
                       >
                         <Trans>Confirm</Trans>
                       </TrackerButton>
-                      <TrackerButton
+                      <Button
                         color="blue.900"
                         bg="transparent"
                         borderColor="blue.900"
@@ -381,7 +381,7 @@ export function AdminDomains({ domainsData, orgName }) {
                         onClick={updateOnClose}
                       >
                         <Trans>Close</Trans>
-                      </TrackerButton>
+                      </Button>
                     </ModalFooter>
                   </form>
                 )}

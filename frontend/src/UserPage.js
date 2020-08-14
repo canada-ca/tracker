@@ -68,7 +68,7 @@ export default function UserPage() {
         <EditableUserLanguage currentLang={queryUserData.userPage.lang} />
       </Stack>
 
-      <Stack Stack p={25} spacing={4}>
+      <Stack Stack p={25} spacing="4">
         <Heading as="h1" size="lg" textAlign="left">
           <Trans>Account Details</Trans>
         </Heading>
@@ -87,10 +87,7 @@ export default function UserPage() {
           </Checkbox>
         </CheckboxGroup>
         <Divider />
-        <Stack
-          isInline={[false, true]}
-          justifyContent={['space-between', 'flex-start']}
-        >
+        <Stack w={['100%', '40%']}>
           <TrackerButton
             variant="primary"
             onClick={() => {
