@@ -22,6 +22,7 @@ import {
   ModalFooter,
   FormLabel,
   FormControl,
+  Button,
 } from '@chakra-ui/core'
 import { PaginationButtons } from './PaginationButtons'
 import { Domain } from './Domain'
@@ -41,11 +42,10 @@ import { object as yupObject, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { useUserState } from './UserState'
 
-
 export function AdminDomains({ domainsData, orgName }) {
   let domains = []
   if (domainsData && domainsData.edges) {
-    domains = domainsData.edges.map((e) => e.node)
+    domains = domainsData.edges.map(e => e.node)
   }
 
   const [domainList, setDomainList] = useState(domains)
@@ -75,7 +75,7 @@ export function AdminDomains({ domainsData, orgName }) {
   const currentDomains = domainList.slice(indexOfFirstDomain, indexOfLastDomain)
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   // Update domains list if domainsData changes (domain added, removed, updated)
   useEffect(() => {
@@ -204,7 +204,7 @@ export function AdminDomains({ domainsData, orgName }) {
             type="text"
             placeholder={i18n._(t`Search for a domain`)}
             value={domainSearch}
-            onChange={(e) => {
+            onChange={e => {
               setDomainSearch(e.target.value)
             }}
           />
@@ -291,7 +291,7 @@ export function AdminDomains({ domainsData, orgName }) {
       )}
 
       <SlideIn in={updateIsOpen}>
-        {(styles) => (
+        {styles => (
           <Modal
             isOpen={true}
             onClose={updateOnClose}
@@ -308,7 +308,7 @@ export function AdminDomains({ domainsData, orgName }) {
                   displayName: true,
                 }}
                 validationSchema={updatedDomainValidationSchema}
-                onSubmit={async (values) => {
+                onSubmit={async values => {
                   // Submit update detail mutation
                   await updateDomain({
                     variables: {
@@ -364,21 +364,24 @@ export function AdminDomains({ domainsData, orgName }) {
                     </ModalBody>
 
                     <ModalFooter>
-                      <Button
-                        variantColor="teal"
+                      <TrackerButton
+                        variant="primary"
                         isLoading={isSubmitting}
                         type="submit"
-                        mr={4}
+                        mr="4"
                       >
                         <Trans>Confirm</Trans>
-                      </Button>
-                      <Button
-                        variantColor="teal"
+                      </TrackerButton>
+                      <TrackerButton
+                        color="blue.900"
+                        bg="transparent"
+                        borderColor="blue.900"
+                        borderWidth="1px"
                         variant="outline"
                         onClick={updateOnClose}
                       >
                         <Trans>Close</Trans>
-                      </Button>
+                      </TrackerButton>
                     </ModalFooter>
                   </form>
                 )}
@@ -389,7 +392,7 @@ export function AdminDomains({ domainsData, orgName }) {
       </SlideIn>
 
       <SlideIn in={removeIsOpen}>
-        {(styles) => (
+        {styles => (
           <Modal isOpen={true} onClose={removeOnClose}>
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent pb={4} {...styles}>
@@ -407,8 +410,8 @@ export function AdminDomains({ domainsData, orgName }) {
               </ModalBody>
 
               <ModalFooter>
-                <Button
-                  variantColor="teal"
+                <TrackerButton
+                  variant="primary"
                   isLoading={removeDomainLoading}
                   mr={4}
                   onClick={() =>
@@ -418,9 +421,12 @@ export function AdminDomains({ domainsData, orgName }) {
                   }
                 >
                   <Trans>Confirm</Trans>
-                </Button>
+                </TrackerButton>
                 <Button
-                  variantColor="teal"
+                  color="blue.900"
+                  bg="transparent"
+                  borderColor="blue.900"
+                  borderWidth="1px"
                   variant="outline"
                   onClick={removeOnClose}
                 >
