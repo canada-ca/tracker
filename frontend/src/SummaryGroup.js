@@ -43,9 +43,9 @@ export function SummaryGroup() {
       columns={[1, 1, 1, 2]}
       spacing="30px"
       justifyItems="center"
-      maxWidth="60em"
+      maxWidth="width.60"
       mx="auto"
-      p="2em"
+      p="8"
     >
       <SummaryCard
         title={i18n._(t`Web Configuration`)}

@@ -1,13 +1,14 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Text, Stack, Button, Box, useToast } from '@chakra-ui/core'
+import { Heading, Box, useToast } from '@chakra-ui/core'
 import PasswordConfirmation from './PasswordConfirmation'
 import { object, string, ref } from 'yup'
 import { Formik } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { UPDATE_PASSWORD } from './graphql/mutations'
+import { TrackerButton } from './TrackerButton'
 
 export default function ResetPasswordPage() {
   const { i18n } = useLingui()
@@ -55,7 +56,7 @@ export default function ResetPasswordPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Box mx="auto">
+    <Box px="8" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -81,26 +82,21 @@ export default function ResetPasswordPage() {
             aria-label="form"
             name="form"
           >
-            <Stack align="center">
-              <Text fontSize="2xl" mb="4">
-                <Trans>Enter and confirm your new password.</Trans>
-              </Text>
-            </Stack>
-
-            <br />
+            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
+              <Trans>Enter and confirm your new password.</Trans>
+            </Heading>
 
             <PasswordConfirmation mb="4" spacing="4" />
 
-            <Stack spacing={4} isInline>
-              <Button
-                variantColor="teal"
-                type="submit"
-                isLoading={isSubmitting}
-                id="submitBtn"
-              >
-                <Trans>Change Password</Trans>
-              </Button>
-            </Stack>
+            <TrackerButton
+              type="submit"
+              isLoading={isSubmitting}
+              id="submitBtn"
+              variant="primary"
+              mb="4"
+            >
+              <Trans>Change Password</Trans>
+            </TrackerButton>
           </form>
         )}
       </Formik>

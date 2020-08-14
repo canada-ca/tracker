@@ -38,7 +38,7 @@ const DisplayNameField = WithPseudoBox(function DisplayNameField({
       </FormLabel>
       <InputGroup>
         <InputLeftElement>
-          <Icon name="person" color="gray.300" size="1.5rem" />
+          <Icon name="person" color="gray.300" size="icons.lg" />
         </InputLeftElement>
         <Input
           {...field}

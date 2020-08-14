@@ -45,17 +45,17 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
 
   return (
     <Layout>
-      <Heading as="h1">
+      <Heading as="h1" mb="4">
         <Trans>Domains</Trans>
       </Heading>
-      <ListOf elements={nodes} ifEmpty={() => <Trans>No Domains</Trans>}>
+      <ListOf elements={nodes} ifEmpty={() => <Trans>No Domains</Trans>} mb="4">
         {({ id, url, slug, lastRan }, index) => (
           <Box key={`${slug}:${id}:${index}`}>
             <Domain key={url} url={url} lastRan={lastRan} />
           </Box>
         )}
       </ListOf>
-      <Stack isInline align="center">
+      <Stack isInline align="center" mb="4">
         <Button
           onClick={previous}
           disable={!!hasPreviousPage}

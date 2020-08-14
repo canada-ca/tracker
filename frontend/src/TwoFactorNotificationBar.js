@@ -5,14 +5,14 @@ import { Trans } from '@lingui/macro'
 
 export function TwoFactorNotificationBar() {
   return (
-    <Box bg="tomato" p={2}>
+    <Box bg="yellow.250" p="2">
       <Flex
         maxW={{ sm: 540, md: 768, lg: 960, xl: 1200 }}
         flex="1 0 auto"
         mx="auto"
         width="100%"
       >
-        <Text>
+        <Text fontWeight="medium">
           <Trans>
             You have not enabled Two Factor Authentication. To maximize your
             account's security,{' '}

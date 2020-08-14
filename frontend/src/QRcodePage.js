@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Box, Stack, Text, Button } from '@chakra-ui/core'
-import { Link as RouteLink } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { GENERATE_OTP_URL } from './graphql/queries'
@@ -9,6 +9,7 @@ import QRCode from 'qrcode.react'
 
 export default function QRcodePage() {
   const { currentUser } = useUserState()
+  const history = useHistory()
 
   // This function generates the URL when the page loads
   const { loading, error, data } = useQuery(GENERATE_OTP_URL, {
@@ -25,8 +26,8 @@ export default function QRcodePage() {
 
   if (data)
     return (
-      <Stack spacing={4} mx="auto" alignItems="center">
-        <Text alignItems="center" mx="auto" fontSize="2xl">
+      <Stack spacing="4" mx="auto" alignItems="center" px="8" overflow="hidden">
+        <Text textAlign="center" mx="auto" fontSize="2xl">
           <Trans>
             Scan this QR code with a 2FA app like Authy or Google Authenticator
           </Trans>
@@ -41,7 +42,7 @@ export default function QRcodePage() {
           />
         </Box>
 
-        <Text mt={6} alignItems="center" mx="auto" fontSize="lg">
+        <Text mt="6" textAlign="center" mx="auto" fontSize="lg">
           <Trans>
             Your 2FA app will then have a valid code that you can use when you
             sign in.
@@ -50,21 +51,14 @@ export default function QRcodePage() {
 
         <Stack spacing={4} isInline>
           <Button
-            width={{ md: 40 }}
-            as={RouteLink}
-            to="/sign-in"
-            variantColor="teal"
+            color="blue.900"
+            bg="transparent"
+            borderColor="blue.900"
+            borderWidth="1px"
+            mb="4"
+            onClick={history.goBack}
           >
-            <Trans>Sign In</Trans>
-          </Button>
-          <Button
-            width={{ md: 40 }}
-            as={RouteLink}
-            to="/"
-            variantColor="teal"
-            variant="outline"
-          >
-            <Trans>Home</Trans>
+            <Trans>Back</Trans>
           </Button>
         </Stack>
       </Stack>

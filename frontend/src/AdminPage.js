@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Stack, Text, Select, Divider, useToast } from '@chakra-ui/core'
+import { Stack, Text, Select, useToast } from '@chakra-ui/core'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Layout } from './Layout'
@@ -86,6 +86,7 @@ export default function AdminPage() {
               <Trans>Organization: </Trans>
             </Text>
             <Select
+              aria-label="Select an organization"
               w="25%"
               size="lg"
               variant="filled"
@@ -101,15 +102,15 @@ export default function AdminPage() {
               <AdminPanel
                 orgName={orgName}
                 permission={adminAffiliations[orgName]}
+                mr="4"
               />
-              <Divider />
               <Trans>
                 *search bars do not actively search databases currently. They
                 are used to demonstrate the 'add' button feature
               </Trans>
             </Stack>
           ) : (
-            <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
+            <Text fontSize="2xl" fontWeight="bold" textAlign="center">
               <Trans>Select an organization to view admin options</Trans>
             </Text>
           )}

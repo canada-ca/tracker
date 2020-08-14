@@ -5,7 +5,7 @@ import sigEn from './images/goc-signature-block-en.svg'
 import sigFr from './images/goc-signature-block-fr.svg'
 import { Flex, Box, Image } from '@chakra-ui/core'
 
-export const TopBanner = (props) => {
+export const TopBanner = props => {
   const { i18n } = useLingui()
 
   return (

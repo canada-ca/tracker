@@ -13,6 +13,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import DisplayNameField from './DisplayNameField'
 import { fieldRequirements } from './fieldRequirements'
+import { TrackerButton } from './TrackerButton'
 
 export default function CreateUserPage() {
   const { login } = useUserState()
@@ -98,7 +99,7 @@ export default function CreateUserPage() {
     )
 
   return (
-    <Box mx="auto">
+    <Box px="8" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
         initialValues={{
@@ -123,42 +124,42 @@ export default function CreateUserPage() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <form id="form" onSubmit={handleSubmit}>
-            <Stack spacing="6" align="center">
-              <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
-                <Trans>
-                  Create an account by entering an email and password.
-                </Trans>
-              </Heading>
+            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
+              <Trans>
+                Create an account by entering an email and password.
+              </Trans>
+            </Heading>
 
-              {addUserToOrgText}
+            {addUserToOrgText}
 
-              <EmailField name="email" width="100%" />
+            <EmailField name="email" width="100%" mb="4" />
 
-              <DisplayNameField name="displayName" width="100%" />
+            <DisplayNameField name="displayName" width="100%" mb="4" />
 
-              <PasswordConfirmation mb="4" width="100%" spacing="6" />
+            <PasswordConfirmation spacing="4" width="100%" mb="4" />
 
-              <LanguageSelect name="lang" width="100%" />
+            <LanguageSelect name="lang" width="100%" mb="4" />
 
-              <Stack spacing={4} isInline mr="auto">
-                <Button
-                  variantColor="teal"
-                  isLoading={isSubmitting}
-                  type="submit"
-                  id="submitBtn"
-                >
-                  <Trans>Create Account</Trans>
-                </Button>
+            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
+              <TrackerButton
+                type="submit"
+                id="submitBtn"
+                isLoading={isSubmitting}
+                variant="primary"
+              >
+                <Trans>Create Account</Trans>
+              </TrackerButton>
 
-                <Button
-                  as={RouteLink}
-                  to="/sign-in"
-                  variantColor="teal"
-                  variant="outline"
-                >
-                  <Trans>Back</Trans>
-                </Button>
-              </Stack>
+              <Button
+                as={RouteLink}
+                to="/sign-in"
+                color="blue.900"
+                bg="transparent"
+                borderColor="blue.900"
+                borderWidth="1px"
+              >
+                <Trans>Back</Trans>
+              </Button>
             </Stack>
           </form>
         )}

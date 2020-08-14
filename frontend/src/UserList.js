@@ -4,14 +4,11 @@ import {
   FormLabel,
   Stack,
   SimpleGrid,
-  Divider,
-  Button,
   Icon,
   InputGroup,
   InputLeftElement,
   Input,
   Text,
-  IconButton,
   useToast,
   Select,
   Box,
@@ -22,6 +19,7 @@ import { UserCard } from './UserCard'
 import { string, shape, boolean } from 'prop-types'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_ROLES } from './graphql/mutations'
+import { TrackerButton } from './TrackerButton'
 
 export default function UserList({
   permission,
@@ -150,11 +148,11 @@ export default function UserList({
   }
 
   return (
-    <Stack mb={6} w="100%">
+    <Stack mb="6" w="100%">
       <Text fontSize="2xl" fontWeight="bold">
         <Trans>User List</Trans>
       </Text>
-      <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
+      <SimpleGrid mb="6" columns={{ md: 1, lg: 2 }} spacing="15px">
         <InputGroup>
           <InputLeftElement>
             <Icon name="search" color="gray.300" />
@@ -168,20 +166,20 @@ export default function UserList({
             }}
           />
         </InputGroup>
-        <Button
-          leftIcon="add"
-          variantColor="blue"
+        <TrackerButton
+          width={['100%', '75%']}
+          variant="primary"
           onClick={() => {
             addUser(userSearch, Math.floor(Math.random() * 1000))
           }}
         >
+          <Icon name="add" />
           <Trans>Invite User</Trans>
-        </Button>
+        </TrackerButton>
       </SimpleGrid>
-      <Divider />
 
       {userList.length === 0 ? (
-        <Text fontSize="2xl" fontWeight="bold" textAlign={['center']}>
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center">
           <Trans>No users in this organization</Trans>
         </Text>
       ) : (
@@ -203,12 +201,13 @@ export default function UserList({
                 ) : (
                   <Box key={`${node.username}:${index}`}>
                     <Stack isInline align="center">
-                      <IconButton
-                        icon="minus"
-                        size="sm"
-                        variantColor="red"
+                      <TrackerButton
+                        variant="danger"
                         onClick={() => removeUser(node)}
-                      />
+                        px="3"
+                      >
+                        <Icon name="minus" />
+                      </TrackerButton>
                       <UserCard
                         userName={node.userName}
                         displayName={node.displayName}
@@ -230,13 +229,14 @@ export default function UserList({
                         <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>
                         <option value="ADMIN">{i18n._(t`ADMIN`)}</option>
                       </Select>
-                      <Button
-                        size="sm"
-                        variantColor="blue"
+                      <TrackerButton
                         onClick={() => handleClick(userRole, node.userName)}
+                        variant="primary"
+                        fontSize="sm"
+                        px="3"
                       >
                         <Trans>Apply</Trans>
-                      </Button>
+                      </TrackerButton>
                     </Stack>
                   </Box>
                 )}
@@ -254,7 +254,7 @@ export default function UserList({
           )
         })
       )}
-      <Divider />
+
       {userList.length > 0 && (
         <PaginationButtons
           perPage={usersPerPage}

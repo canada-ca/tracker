@@ -45,10 +45,14 @@ export default function Organisations({ orgsPerPage = 10 }) {
 
   return (
     <Layout>
-      <Heading as="h1">
+      <Heading as="h1" mb="4">
         <Trans>Organizations</Trans>
       </Heading>
-      <ListOf elements={nodes} ifEmpty={() => <Trans>No Organizations</Trans>}>
+      <ListOf
+        elements={nodes}
+        ifEmpty={() => <Trans>No Organizations</Trans>}
+        mb="4"
+      >
         {({ name, slug, domainCount }, index) => (
           <Box key={`${slug}:${index}`}>
             <Organization slug={slug} name={name} domainCount={domainCount} />
@@ -56,7 +60,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
           </Box>
         )}
       </ListOf>
-      <Stack isInline align="center">
+      <Stack isInline align="center" mb="4">
         <Button
           onClick={previous}
           disable={!!hasPreviousPage}

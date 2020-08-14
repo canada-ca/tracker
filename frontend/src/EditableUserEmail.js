@@ -27,6 +27,7 @@ import { useLingui } from '@lingui/react'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
+import { TrackerButton } from './TrackerButton'
 
 function EditableUserEmail({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -45,7 +46,9 @@ function EditableUserEmail({ detailValue }) {
       },
       onError: ({ message }) => {
         toast({
-          title: i18n._(t`An error occurred while updating your email address.`),
+          title: i18n._(
+            t`An error occurred while updating your email address.`,
+          ),
           description: message,
           status: 'error',
           duration: 9000,
@@ -80,9 +83,15 @@ function EditableUserEmail({ detailValue }) {
       <Stack isInline align="center">
         <Icon name="email" color="gray.300" />
         <Text>{detailValue}</Text>
-        <Button ml="auto" onClick={onOpen} size="sm" variantColor="teal">
+        <TrackerButton
+          ml="auto"
+          onClick={onOpen}
+          variant="primary"
+          fontSize="sm"
+          px="3"
+        >
           <Trans>Edit</Trans>
-        </Button>
+        </TrackerButton>
       </Stack>
 
       <SlideIn in={isOpen}>
@@ -93,7 +102,7 @@ function EditableUserEmail({ detailValue }) {
             initialFocusRef={initialFocusRef}
           >
             <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
+            <ModalContent pb="4" {...styles}>
               <Formik
                 validateOnBlur={false}
                 initialValues={{
@@ -121,7 +130,7 @@ function EditableUserEmail({ detailValue }) {
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                      <Stack spacing={4} p={25}>
+                      <Stack spacing="4" p="6">
                         <Heading as="h3" size="sm">
                           <Trans>Current Email:</Trans>
                         </Heading>
@@ -137,17 +146,19 @@ function EditableUserEmail({ detailValue }) {
                     </ModalBody>
 
                     <ModalFooter>
-                      <Button
-                        variantColor="teal"
+                      <TrackerButton
                         isLoading={isSubmitting}
                         type="submit"
-                        mr={4}
+                        mr="4"
+                        variant="primary"
                       >
                         <Trans>Confirm</Trans>
-                      </Button>
+                      </TrackerButton>
                       <Button
-                        variantColor="teal"
-                        variant="outline"
+                        color="blue.900"
+                        bg="transparent"
+                        borderColor="blue.900"
+                        borderWidth="1px"
                         onClick={onClose}
                       >
                         <Trans>Close</Trans>

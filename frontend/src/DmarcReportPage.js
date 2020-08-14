@@ -91,7 +91,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
 
   const formattedBarData = {
-    periods: barData.demoDmarcReportSummaryList.map((entry) => {
+    periods: barData.demoDmarcReportSummaryList.map(entry => {
       return { month: entry.month, year: entry.year, ...entry.categoryTotals }
     }),
   }
@@ -289,42 +289,42 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         columns={fullPassColumns}
         title={i18n._(t`Fully Aligned by IP Address`)}
         initialSort={initialSort}
-        mb="30px"
+        mb="8"
       />
       <DmarcReportTable
         data={spfFailureData}
         columns={spfFailureColumns}
         title={i18n._(t`SPF Failures by IP Address`)}
         initialSort={initialSort}
-        mb="30px"
+        mb="8"
       />
       <DmarcReportTable
         data={spfMisalignedData}
         columns={spfMisalignedColumns}
         title={i18n._(t`SPF Misalignment by IP Address`)}
         initialSort={initialSort}
-        mb="30px"
+        mb="8"
       />
       <DmarcReportTable
         data={dkimFailureData}
         columns={dkimFailureColumns}
         title={i18n._(t`DKIM Failures by IP Address`)}
         initialSort={initialSort}
-        mb="30px"
+        mb="8"
       />
       <DmarcReportTable
         data={dkimMisalignedData}
         columns={dkimMisalignedColumns}
         title={i18n._(t`DKIM Misalignment by IP Address`)}
         initialSort={initialSort}
-        mb="30px"
+        mb="8"
       />
       <DmarcReportTable
         data={dmarcFailureData}
         columns={dmarcFailureColumns}
         title={i18n._(t`DMARC Failures by IP Address`)}
         initialSort={initialSort}
-        mb="30px"
+        mb="8"
       />
     </Box>
   )
