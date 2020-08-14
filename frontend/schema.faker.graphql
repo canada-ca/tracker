@@ -538,26 +538,31 @@ type DmarcReportSummaryTableObject {
   Total number of messages recieved for domain
   """
   totalMessages: Int
+    @fake(type: number, options: { minNumber: 100, maxNumber: 10000 })
 
   """
   Percentage of messages that passed both DKIM and SPF
   """
   fullPassPercentage: Int
+    @fake(type: number, options: { minNumber: 0, maxNumber: 100 })
 
   """
   Percentage of messages that passed SPF but failed DKIM
   """
   passSpfOnlyPercentage: Int
+    @fake(type: number, options: { minNumber: 0, maxNumber: 100 })
 
   """
   Percentage of messages that passed DKIM but failed SPF
   """
   passDkimOnlyPercentage: Int
+    @fake(type: number, options: { minNumber: 0, maxNumber: 100 })
 
   """
   Percentage of messages that failed both DKIM and SPF
   """
   failPercentage: Int
+    @fake(type: number, options: { minNumber: 0, maxNumber: 100 })
 }
 
 type Domain implements Node {
@@ -1428,7 +1433,14 @@ type Query {
   A query object used to grab the data to create dmarc by domain table
   """
   dmarcReportSummaryTable(
+    """
+    The period for data you wish to recieve
+    """
     period: PeriodEnums!
+
+    """
+    The year for data you wish to recieve
+    """
     year: Year!
   ): DmarcReportSummaryTable
 

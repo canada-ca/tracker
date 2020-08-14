@@ -69,11 +69,11 @@ export default function App() {
             </Link>
           )}
 
-          {isLoggedIn() && (
-            <Link to="/dmarc-summaries">
-              <Trans>DMARC Report</Trans>
-            </Link>
-          )}
+          {/*{isLoggedIn() && (*/}
+          <Link to="/dmarc-summaries">
+            <Trans>DMARC Report</Trans>
+          </Link>
+          {/*)}*/}
 
           <Link to="/dmarc-report">
             <Trans>Report</Trans>
@@ -154,7 +154,8 @@ export default function App() {
               />
 
               <RouteIf
-                condition={isLoggedIn()}
+                // condition={isLoggedIn()}
+                condition={true}
                 alternate="/sign-in"
                 path="/dmarc-summaries"
                 render={({ match: { url } }) => (

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { useTable, usePagination, useSortBy } from 'react-table'
-import { array, string } from 'prop-types'
+import { array, bool, string } from 'prop-types'
 import {
   Box,
   Button,
@@ -9,14 +9,17 @@ import {
   Icon,
   IconButton,
   Input,
+  Link,
   Select,
   Stack,
   Text,
 } from '@chakra-ui/core'
+import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 import WithPseudoBox from './withPseudoBox'
+import { slugify } from './slugify'
 
 const Table = styled.table`
 width: calc(100% - 2px);
@@ -104,7 +107,14 @@ td, th {
 `
 
 function DmarcReportTable({ ...props }) {
-  const { data, columns, title, initialSort } = props
+  const {
+    data,
+    columns,
+    title,
+    initialSort,
+    hideTitleButton,
+    linkColumns,
+  } = props
   const [show, setShow] = React.useState(true)
   const { i18n } = useLingui()
 
@@ -156,11 +166,43 @@ function DmarcReportTable({ ...props }) {
 
   const wrapperRef = useRef(null)
 
+  const titleButtonElement = !hideTitleButton ? (
+    <Button bg="gray.700" color="white" onClick={handleShow} width="100%">
+      {title}
+    </Button>
+  ) : (
+    ''
+  )
+
+  // Render cell with link when required (external or internal)
+  // Using ternary to get rid of unnecessary checks to linkColumns if
+  // linkColumns is empty
+  const renderLinkableCell = linkColumns
+    ? (cell) => {
+        for (let i = 0; i < linkColumns.length; i++) {
+          if (linkColumns[i].column === cell.column.id) {
+            if (linkColumns[i].isExternal) {
+              return (
+                <Link href={`https://www.${cell.value}`} isExternal={true}>
+                  {cell.render('Cell')}
+                </Link>
+              )
+            } else {
+              return (
+                <Link as={RouteLink} to={slugify(cell.value)}>
+                  {cell.render('Cell')}
+                </Link>
+              )
+            }
+          }
+        }
+        return cell.render('Cell')
+      }
+    : (cell) => cell.render('Cell')
+
   return (
     <Box ref={wrapperRef}>
-      <Button bg="gray.700" color="white" onClick={handleShow} width="100%">
-        {title}
-      </Button>
+      {titleButtonElement}
       <Collapse isOpen={show}>
         <Box width="100%" overflowX="auto">
           <Table {...getTableProps()} flatHeaders={flatHeaders}>
@@ -181,6 +223,7 @@ function DmarcReportTable({ ...props }) {
                           {...column.getHeaderProps(
                             column.getSortByToggleProps(),
                           )}
+                          style={{ textAlign: 'center' }}
                         >
                           {column.render('Header')}
                           <span>
@@ -212,7 +255,7 @@ function DmarcReportTable({ ...props }) {
                           key={`${title}:${rowIndex}:${cellIndex}`}
                           {...cell.getCellProps()}
                         >
-                          {cell.render('Cell')}
+                          {renderLinkableCell(cell)}
                         </td>
                       )
                     })}
@@ -310,6 +353,8 @@ DmarcReportTable.propTypes = {
   columns: array.isRequired,
   title: string.isRequired,
   initialSort: array.isRequired,
+  hideTitleButton: bool,
+  linkColumns: array,
 }
 
 export default WithPseudoBox(DmarcReportTable)
