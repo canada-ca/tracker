@@ -33,8 +33,7 @@ const removeOrganization = new mutationWithClientMutationId({
     },
   ) => {
     // Cleanse Input
-    const temp = cleanseInput(args.orgId)
-    const { type: _orgType, id: orgId } = fromGlobalId(temp)
+    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get user
     const user = await userRequired(userId, userLoaderById)
