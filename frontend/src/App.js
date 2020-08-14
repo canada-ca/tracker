@@ -86,12 +86,12 @@ export default function App() {
                   isClosable: true,
                 })
               }}
-              ml="auto"
+              ml={[null, 'auto']}
             >
               <Trans>Sign Out</Trans>
             </Link>
           ) : (
-            <Link to="/sign-in" ml="auto">
+            <Link to="/sign-in" ml={[null, 'auto']}>
               <Trans>Sign In</Trans>
             </Link>
           )}
