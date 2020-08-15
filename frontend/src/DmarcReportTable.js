@@ -158,7 +158,7 @@ function DmarcReportTable({ ...props }) {
 
   return (
     <Box ref={wrapperRef}>
-      <Button bg="blue.900" color="white" onClick={handleShow} width="100%">
+      <Button bg="primary" color="white" onClick={handleShow} width="100%">
         {title}
       </Button>
       <Collapse isOpen={show}>

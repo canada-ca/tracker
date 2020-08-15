@@ -153,9 +153,9 @@ export default function CreateUserPage() {
               <Button
                 as={RouteLink}
                 to="/sign-in"
-                color="blue.900"
+                color="primary"
                 bg="transparent"
-                borderColor="blue.900"
+                borderColor="primary"
                 borderWidth="1px"
               >
                 <Trans>Back</Trans>
