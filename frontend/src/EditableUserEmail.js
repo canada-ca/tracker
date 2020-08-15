@@ -155,9 +155,9 @@ function EditableUserEmail({ detailValue }) {
                         <Trans>Confirm</Trans>
                       </TrackerButton>
                       <Button
-                        color="blue.900"
+                        color="primary"
                         bg="transparent"
-                        borderColor="blue.900"
+                        borderColor="primary"
                         borderWidth="1px"
                         onClick={onClose}
                       >
