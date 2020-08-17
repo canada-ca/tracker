@@ -2,7 +2,7 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import { DMARC_REPORT_SUMMARY_TABLE } from './graphql/queries'
-import { Box } from '@chakra-ui/core'
+import { Box, Heading } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -62,6 +62,7 @@ export default function DmarcByDomainPage() {
   const percentageColumns = [
     {
       Header: i18n._(t`DMARC Messages`),
+      hidden: true,
       columns: [
         domain,
         totalMessages,
@@ -75,6 +76,10 @@ export default function DmarcByDomainPage() {
 
   return (
     <Box width="100%">
+      <Heading as="h1" textAlign="center" size="lg" mb="4px">
+        <Trans>DMARC Messages</Trans>
+      </Heading>
+
       <DmarcReportTable
         data={tableData.dmarcReportSummaryTable.domains}
         columns={percentageColumns}
@@ -82,7 +87,7 @@ export default function DmarcByDomainPage() {
         initialSort={initialSort}
         mb="30px"
         hideTitleButton={true}
-        linkColumns={[{ column: 'domain', isExternal: true }]}
+        linkColumns={[{ column: 'domain', isExternal: false }]}
       />
     </Box>
   )

@@ -1,6 +1,12 @@
 import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
-import { useTable, usePagination, useSortBy } from 'react-table'
+import {
+  useTable,
+  usePagination,
+  useSortBy,
+  useFilters,
+  useGlobalFilter,
+} from 'react-table'
 import { array, bool, string } from 'prop-types'
 import {
   Box,
@@ -20,6 +26,7 @@ import { useLingui } from '@lingui/react'
 
 import WithPseudoBox from './withPseudoBox'
 import { slugify } from './slugify'
+import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 
 const Table = styled.table`
 width: calc(100% - 2px);
@@ -141,6 +148,9 @@ function DmarcReportTable({ ...props }) {
     setPageSize,
     flatHeaders,
     state: { pageIndex, pageSize },
+    preGlobalFilteredRows,
+    setGlobalFilter,
+    state,
   } = useTable(
     {
       columns,
@@ -150,6 +160,8 @@ function DmarcReportTable({ ...props }) {
         pageSize: defaultPageSize,
       },
     },
+    useFilters,
+    useGlobalFilter,
     useSortBy,
     usePagination,
   )
@@ -183,6 +195,7 @@ function DmarcReportTable({ ...props }) {
           if (linkColumns[i].column === cell.column.id) {
             if (linkColumns[i].isExternal) {
               return (
+                // TODO: Check for http[s]? and www before prepending
                 <Link href={`https://www.${cell.value}`} isExternal={true}>
                   {cell.render('Cell')}
                 </Link>
@@ -204,6 +217,13 @@ function DmarcReportTable({ ...props }) {
     <Box ref={wrapperRef}>
       {titleButtonElement}
       <Collapse isOpen={show}>
+        <ReactTableGlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={state.globalFilter}
+          setGlobalFilter={setGlobalFilter}
+          mt="4px"
+          mb="4px"
+        />
         <Box width="100%" overflowX="auto">
           <Table {...getTableProps()} flatHeaders={flatHeaders}>
             <thead>
