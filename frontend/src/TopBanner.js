@@ -19,7 +19,7 @@ export const TopBanner = props => {
           align="center"
           fontFamily="body"
           {...props}
-        > 
+        >
           <Box py="4" width={{ base: 272, md: 360 }}>
             <Image
               src={i18n.locale === 'en' ? sigEn : sigFr}

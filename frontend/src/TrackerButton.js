@@ -11,12 +11,12 @@ export function TrackerButton({ variant, children, ...props }) {
 
   if (variant === 'primary') {
     color = 'gray.50'
-    bg = 'blue.900'
+    bg = 'primary'
     hoverColor = 'blue.600'
   } else if (variant === 'outline') {
-    color = 'blue.900'
+    color = 'primary'
     bg = 'transparent'
-    borderColor = 'blue.900'
+    borderColor = 'primary'
     borderWidth = '1px'
     hoverColor = 'blue.50'
   } else if (variant === 'danger') {
