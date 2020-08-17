@@ -13,7 +13,9 @@ class DmarcReportSummaryTableObject(graphene.ObjectType):
     total_messages = graphene.Int(
         description="The total amount of messages sent by this domain."
     )
-    full_pass_percentage = graphene.Int(description="Percentage of messages that are a full pass.")
+    full_pass_percentage = graphene.Int(
+        description="Percentage of messages that are a full pass."
+    )
     pass_spf_only_percentage = graphene.Int(
         description="Percentage of messages that are passing only spf."
     )
@@ -30,10 +32,10 @@ class DmarcReportSummaryTableObject(graphene.ObjectType):
     def resolve_total_messages(self: dict, info):
         total_messages = sum(
             (
-                self.get('categoryTotals', {}).get("fullPass", 0),
-                self.get('categoryTotals', {}).get("passSpfOnly", 0),
-                self.get('categoryTotals', {}).get("passDkimOnly", 0),
-                self.get('categoryTotals', {}).get("fail", 0),
+                self.get("categoryTotals", {}).get("fullPass", 0),
+                self.get("categoryTotals", {}).get("passSpfOnly", 0),
+                self.get("categoryTotals", {}).get("passDkimOnly", 0),
+                self.get("categoryTotals", {}).get("fail", 0),
             )
         )
         return total_messages
@@ -41,14 +43,14 @@ class DmarcReportSummaryTableObject(graphene.ObjectType):
     def resolve_full_pass_percentage(self: dict, info):
         total_messages = sum(
             (
-                self.get('categoryTotals', {}).get("fullPass", 0),
-                self.get('categoryTotals', {}).get("passSpfOnly", 0),
-                self.get('categoryTotals', {}).get("passDkimOnly", 0),
-                self.get('categoryTotals', {}).get("fail", 0),
+                self.get("categoryTotals", {}).get("fullPass", 0),
+                self.get("categoryTotals", {}).get("passSpfOnly", 0),
+                self.get("categoryTotals", {}).get("passDkimOnly", 0),
+                self.get("categoryTotals", {}).get("fail", 0),
             )
         )
 
-        full_pass = self.get('categoryTotals', {}).get("fullPass", 0)
+        full_pass = self.get("categoryTotals", {}).get("fullPass", 0)
         if full_pass == 0:
             return 0
 
@@ -58,14 +60,14 @@ class DmarcReportSummaryTableObject(graphene.ObjectType):
     def resolve_pass_spf_only_percentage(self: dict, info):
         total_messages = sum(
             (
-                self.get('categoryTotals', {}).get("fullPass", 0),
-                self.get('categoryTotals', {}).get("passSpfOnly", 0),
-                self.get('categoryTotals', {}).get("passDkimOnly", 0),
-                self.get('categoryTotals', {}).get("fail", 0),
+                self.get("categoryTotals", {}).get("fullPass", 0),
+                self.get("categoryTotals", {}).get("passSpfOnly", 0),
+                self.get("categoryTotals", {}).get("passDkimOnly", 0),
+                self.get("categoryTotals", {}).get("fail", 0),
             )
         )
 
-        pass_spf_only = self.get('categoryTotals', {}).get("passSpfOnly", 0)
+        pass_spf_only = self.get("categoryTotals", {}).get("passSpfOnly", 0)
         if pass_spf_only == 0:
             return 0
 
@@ -75,14 +77,14 @@ class DmarcReportSummaryTableObject(graphene.ObjectType):
     def resolve_pass_dkim_only_percentage(self: dict, info):
         total_messages = sum(
             (
-                self.get('categoryTotals', {}).get("fullPass", 0),
-                self.get('categoryTotals', {}).get("passSpfOnly", 0),
-                self.get('categoryTotals', {}).get("passDkimOnly", 0),
-                self.get('categoryTotals', {}).get("fail", 0),
+                self.get("categoryTotals", {}).get("fullPass", 0),
+                self.get("categoryTotals", {}).get("passSpfOnly", 0),
+                self.get("categoryTotals", {}).get("passDkimOnly", 0),
+                self.get("categoryTotals", {}).get("fail", 0),
             )
         )
 
-        pass_dkim_only = self.get('categoryTotals', {}).get("passDkimOnly", 0)
+        pass_dkim_only = self.get("categoryTotals", {}).get("passDkimOnly", 0)
 
         if pass_dkim_only == 0:
             return 0
@@ -93,17 +95,17 @@ class DmarcReportSummaryTableObject(graphene.ObjectType):
     def resolve_fail_percentage(self: dict, info):
         total_messages = sum(
             (
-                self.get('categoryTotals', {}).get("fullPass", 0),
-                self.get('categoryTotals', {}).get("passSpfOnly", 0),
-                self.get('categoryTotals', {}).get("passDkimOnly", 0),
-                self.get('categoryTotals', {}).get("fail", 0),
+                self.get("categoryTotals", {}).get("fullPass", 0),
+                self.get("categoryTotals", {}).get("passSpfOnly", 0),
+                self.get("categoryTotals", {}).get("passDkimOnly", 0),
+                self.get("categoryTotals", {}).get("fail", 0),
             )
         )
 
-        fail = self.get('categoryTotals', {}).get("fail", 0)
+        fail = self.get("categoryTotals", {}).get("fail", 0)
         if fail == 0:
             return 0
-        
+
         percentage = round((fail / total_messages) * 100)
         return percentage
 

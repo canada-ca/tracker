@@ -14,22 +14,29 @@ from functions.external_graphql_api_request import send_request
 from functions.input_validators import cleanse_input
 from functions.start_end_date_generation import generate_start_end_date
 from models import Domains, Organizations, User_affiliations, Users
-from schemas.dmarc_report_summary_table.dmarc_report_summary_table import DmarcReportSummaryTable
+from schemas.dmarc_report_summary_table.dmarc_report_summary_table import (
+    DmarcReportSummaryTable,
+)
 
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
 DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
+
 
 @require_token
 def resolve_dmarc_report_summary_table(self, info, **kwargs):
     user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
-    period = cleanse_input(kwargs.get('period'))
-    year = cleanse_input(kwargs.get('year'))
-    
+    period = cleanse_input(kwargs.get("period"))
+    year = cleanse_input(kwargs.get("year"))
+
     print(datetime.now())
     dataList = []
     for role in user_roles:
-        domains = db_session.query(Domains).filter(Domains.organization_id == role["org_id"]).all()
+        domains = (
+            db_session.query(Domains)
+            .filter(Domains.organization_id == role["org_id"])
+            .all()
+        )
         if domains is not None:
             for domain in domains:
                 # Create start and end date values
@@ -98,14 +105,14 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
                 )
 
                 temp_dict = data.get("getDmarcSummaryByPeriod", {}).get("period", {})
-                temp_dict.update( {'domain' : domain.domain} )
+                temp_dict.update({"domain": domain.domain})
                 dataList.append(temp_dict)
-    
+
     print(datetime.now())
     return DmarcReportSummaryTable(
         # Get Month Name
         calendar.month_name[int(dataList[0].get("endDate")[5:7].lstrip("0"))],
         # Get Year
         dataList[0].get("endDate")[0:4].lstrip("0"),
-        dataList
+        dataList,
     )
