@@ -37,7 +37,9 @@ def create_client(api_domain, auth_token) -> Client:
     return client
 
 
-def send_request(api_domain, auth_token, variables: dict, query) -> dict:
+def send_request(
+    api_domain, auth_token, variables: dict, query, summary_table=False
+) -> dict:
     """
     This function sends the request to the external API, with a pre-determined
     query
@@ -68,7 +70,10 @@ def send_request(api_domain, auth_token, variables: dict, query) -> dict:
                 logger.error(
                     f"Error occurred on the dmarc-report-api side: {str(error_dict.get('message'))}"
                 )
-                raise GraphQLError("Error when querying dmarc-report-api.")
+                if summary_table:
+                    return {}
+                else:
+                    raise GraphQLError("Error when querying dmarc-report-api.")
 
         except ValueError as ve:
             logger.error(

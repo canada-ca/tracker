@@ -73,8 +73,9 @@ def test_valid_dmarc_report_summary_list_query_as_super_admin(save, mocker, capl
                 year
                 month
                 categoryTotals {
+                    passSpfOnly
+                    passDkimOnly
                     fullPass
-                    partialPass
                     fail
                     total
                 }
@@ -134,8 +135,9 @@ def test_valid_dmarc_report_summary_list_query_as_org_admin(save, mocker, caplog
                 year
                 month
                 categoryTotals {
+                    passSpfOnly
+                    passDkimOnly
                     fullPass
-                    partialPass
                     fail
                     total
                 }
@@ -195,8 +197,9 @@ def test_valid_dmarc_report_summary_list_query_as_user_write(save, mocker, caplo
                 year
                 month
                 categoryTotals {
+                    passSpfOnly
+                    passDkimOnly
                     fullPass
-                    partialPass
                     fail
                     total
                 }
@@ -256,8 +259,9 @@ def test_valid_dmarc_report_summary_list_query_as_user_read(save, mocker, caplog
                 year
                 month
                 categoryTotals {
+                    passSpfOnly
+                    passDkimOnly
                     fullPass
-                    partialPass
                     fail
                     total
                 }
@@ -324,8 +328,9 @@ def test_dmarc_report_summary_list_admin_from_different_org_cant_access_data(
                 year
                 month
                 categoryTotals {
+                    passSpfOnly
+                    passDkimOnly
                     fullPass
-                    partialPass
                     fail
                     total
                 }
@@ -393,8 +398,9 @@ def test_dmarc_report_summary_list_user_write_from_different_org_cant_access_dat
                 year
                 month
                 categoryTotals {
+                    passSpfOnly
+                    passDkimOnly
                     fullPass
-                    partialPass
                     fail
                     total
                 }
@@ -462,8 +468,9 @@ def test_dmarc_report_summary_list_user_read_from_different_org_cant_access_data
                 year
                 month
                 categoryTotals {
+                    passSpfOnly
+                    passDkimOnly
                     fullPass
-                    partialPass
                     fail
                     total
                 }
@@ -523,8 +530,9 @@ def test_dmarc_report_summary_list_to_ensure_error_occurs_when_domain_does_not_e
                 year
                 month
                 categoryTotals {
+                    passSpfOnly
+                    passDkimOnly
                     fullPass
-                    partialPass
                     fail
                     total
                 }
