@@ -136,15 +136,12 @@ const createDomain = new mutationWithClientMutationId({
         collections.claims.save({ _from: org._id, _to: insertedDomain._id }),
       )
     } else {
-      let selectorList
-      if (typeof selectors !== 'undefined') {
-        selectorList = checkDomain.selectors
-        selectors.forEach((selector) => {
-          if (!checkDomain.selectors.includes(selector)) {
-            selectorList.push(selector)
-          }
-        })
-      }
+      const selectorList = checkDomain.selectors
+      selectors.forEach((selector) => {
+        if (!checkDomain.selectors.includes(selector)) {
+          selectorList.push(selector)
+        }
+      })
       insertDomain.selectors = selectorList
 
       await trx.run(async () => await query`
