@@ -12,7 +12,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
       boxShadow="medium"
       width="min-content"
     >
-      <Box bg="blue.900" px="8">
+      <Box bg="primary" px="8">
         <Text
           fontSize="xl"
           fontWeight="semibold"

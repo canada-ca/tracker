@@ -34,9 +34,9 @@ export function UserCard({ userName, displayName, tfa, role }) {
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack isInline align="center">
             <Badge
-              color="blue.900"
+              color="primary"
               bg="transparent"
-              borderColor="blue.900"
+              borderColor="primary"
               borderWidth="1px"
             >
               {role}

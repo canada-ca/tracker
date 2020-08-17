@@ -101,7 +101,7 @@ export default function SignInPage() {
 
             <PasswordField name="password" mb="1" />
 
-            <Link as={RouteLink} to="/forgot-password" color="blue.900">
+            <Link as={RouteLink} to="/forgot-password" color="primary">
               <Text mb="4">
                 <Trans>Forgot your password?</Trans>
               </Text>
@@ -119,9 +119,9 @@ export default function SignInPage() {
               <Button
                 as={RouteLink}
                 to="/create-user"
-                color="blue.900"
+                color="primary"
                 bg="transparent"
-                borderColor="blue.900"
+                borderColor="primary"
                 borderWidth="1px"
               >
                 <Trans>Create Account</Trans>
