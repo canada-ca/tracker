@@ -1,11 +1,11 @@
 const { Kind, GraphQLError, GraphQLScalarType } = require('graphql')
 
 const validate = (value) => {
-  const SLUG_REGEX = /\b((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}\b/
+  const DOMAIN_REGEX = /\b((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}\b/
   if (typeof value !== typeof 'string') {
     throw new TypeError(`Value is not a string: ${typeof value}`)
   }
-  if (!SLUG_REGEX.test(value)) {
+  if (!DOMAIN_REGEX.test(value)) {
     throw new TypeError(`Value is not a valid domain: ${value}`)
   }
 
