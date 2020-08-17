@@ -39,14 +39,20 @@ const createDomain = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, userRequired },
-      loaders: { domainLoaderById, orgLoaderById, userLoaderById },
+      loaders: { domainLoaderBySlug, orgLoaderById, userLoaderById },
       validators: { cleanseInput, slugify },
     },
   ) => {
     // Cleanse input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const domain = cleanseInput(args.domain)
-    const selectors = args.selectors.map((selector) => cleanseInput(selector))
+    
+    let selectors
+    if (typeof args.selectors !== 'undefined') {
+      selectors = args.selectors.map((selector) => cleanseInput(selector))
+    } else {
+      selectors = []
+    }
 
     // Get User
     const user = await userRequired(userId, userLoaderById)
@@ -101,23 +107,57 @@ const createDomain = new mutationWithClientMutationId({
       throw new Error('Unable to create domain. Please try again.')
     }
 
-    const checkDomain = await checkDomainCursor.next()
+    const checkOrgDomain = await checkDomainCursor.next()
 
-    if (typeof checkDomain !== 'undefined') {
+    if (typeof checkOrgDomain !== 'undefined') {
       console.warn(
         `User: ${userId} attempted to create a domain for: ${org.slug}, however that org already has that domain claimed.`,
       )
       throw new Error('Unable to create domain. Please try again.')
     }
 
-    // Insert into DB
-    const trx = await transaction(collections)
-    const insertedDomain = await trx.run(() =>
-      collections.domains.save(insertDomain),
-    )
-    await trx.run(() =>
-      collections.claims.save({ _from: org._id, _to: insertedDomain._id }),
-    )
+    // Check to see if domain already exists in db
+    const checkDomain = await domainLoaderBySlug.load(insertDomain.slug)
+
+    // Generate list of collections names
+    const collectionStrings = []
+    for (const property in collections) {
+      collectionStrings.push(property.toString())
+    }
+
+    // Setup Transaction
+    const trx = await transaction(collectionStrings)
+        
+    if (typeof checkDomain === 'undefined') {
+      const insertedDomain = await trx.run(() =>
+        collections.domains.save(insertDomain),
+      )
+      await trx.run(() =>
+        collections.claims.save({ _from: org._id, _to: insertedDomain._id }),
+      )
+    } else {
+      let selectorList
+      if (typeof selectors !== 'undefined') {
+        selectorList = checkDomain.selectors
+        selectors.forEach((selector) => {
+          if (!checkDomain.selectors.includes(selector)) {
+            selectorList.push(selector)
+          }
+        })
+      }
+      insertDomain.selectors = selectorList
+
+      await trx.run(async () => await query`
+        UPSERT { _key: ${checkDomain._key} }
+          INSERT ${insertDomain}
+          UPDATE ${insertDomain}
+          IN domains
+      `)
+      await trx.run(() =>
+        collections.claims.save({ _from: org._id, _to: checkDomain._id }),
+      )
+    }
+
     try {
       await trx.commit()
     } catch (err) {
@@ -127,12 +167,15 @@ const createDomain = new mutationWithClientMutationId({
       throw new Error('Unable to create domain. Please try again.')
     }
 
-    const returnDomain = await domainLoaderById.load(insertedDomain._key)
+    // Clear dataloader incase anything was updated or inserted into domain
+    await domainLoaderBySlug.clear(insertDomain.slug)
+    const returnDomain = await domainLoaderBySlug.load(insertDomain.slug)
+
     console.info(
       `User: ${userId} successfully created ${returnDomain.slug} in org: ${org.slug}.`,
     )
 
-    returnDomain.id = insertedDomain._key
+    returnDomain.id = returnDomain._key
     return {
       domain: {
         ...returnDomain,

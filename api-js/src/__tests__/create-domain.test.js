@@ -14,7 +14,7 @@ const bcrypt = require('bcrypt')
 const { cleanseInput, slugify } = require('../validators')
 const { checkPermission, tokenize, userRequired } = require('../auth')
 const {
-  domainLoaderById,
+  domainLoaderBySlug,
   orgLoaderById,
   orgLoaderByDomainId,
   userLoaderById,
@@ -176,7 +176,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
+                domainLoaderBySlug: domainLoaderBySlug(query),
                 orgLoaderById: orgLoaderById(query, 'en'),
                 orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
                 userLoaderById: userLoaderById(query),
@@ -286,7 +286,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
+                domainLoaderBySlug: domainLoaderBySlug(query),
                 orgLoaderById: orgLoaderById(query, 'en'),
                 orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
                 userLoaderById: userLoaderById(query),
@@ -372,7 +372,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderById: domainLoaderById(query),
+              domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
               orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
               userLoaderById: userLoaderById(query),
@@ -457,7 +457,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderById: domainLoaderById(query),
+              domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
               orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
               userLoaderById: userLoaderById(query),
@@ -529,18 +529,117 @@ describe('create a domain', () => {
           _to: user._id,
           permission: 'super_admin',
         })
-        const domain = await collections.domains.save({
-          domain: 'test.gc.ca',
+      })
+      describe('selectors are not added', () => {
+        beforeEach(async () => {
+          const domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            slug: 'test-gc-ca',
+            selectors: [
+              'selector1._domainkey', 
+              'selector2._domainkey',
+            ],
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
         })
-        await collections.claims.save({
-          _from: org._id,
-          _to: domain._id,
+        it('returns the domain', async () => {
+          const response = await graphql(
+            schema,
+            `
+            mutation {
+              createDomain(
+                input: {
+                  orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                  domain: "test.gc.ca"
+                }
+              ) {
+                domain {
+                  id
+                  domain
+                  slug
+                  lastRan
+                  selectors
+                  organization {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          `,
+            null,
+            {
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              loaders: {
+                domainLoaderBySlug: domainLoaderBySlug(query),
+                orgLoaderById: orgLoaderById(query, 'en'),
+                orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+                userLoaderById: userLoaderById(query),
+              },
+              validators: { cleanseInput, slugify },
+            },
+          )
+
+          const domainCursor = await query`
+          FOR domain IN domains
+            RETURN domain
+        `
+          const domain = await domainCursor.next()
+
+          const expectedResponse = {
+            data: {
+              createDomain: {
+                domain: {
+                  id: toGlobalId('domains', domain._key),
+                  domain: 'test.gc.ca',
+                  slug: 'test-gc-ca',
+                  lastRan: null,
+                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  organization: {
+                    id: toGlobalId('organizations', secondOrg._key),
+                    name: 'Communications Security Establishment',
+                  },
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully created ${domain.slug} in org: communications-security-establishment.`,
+          ])
         })
       })
-      it('returns the domain', async () => {
-        const response = await graphql(
-          schema,
-          `
+      describe('selectors are the same', () => {
+        beforeEach(async () => {
+          const domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            slug: 'test-gc-ca',
+            selectors: [
+              'selector1._domainkey', 
+              'selector2._domainkey',
+            ],
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+        })
+        it('returns the domain', async () => {
+          const response = await graphql(
+            schema,
+            `
             mutation {
               createDomain(
                 input: {
@@ -563,56 +662,153 @@ describe('create a domain', () => {
               }
             }
           `,
-          null,
-          {
-            request: {
-              language: 'en',
+            null,
+            {
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              loaders: {
+                domainLoaderBySlug: domainLoaderBySlug(query),
+                orgLoaderById: orgLoaderById(query, 'en'),
+                orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+                userLoaderById: userLoaderById(query),
+              },
+              validators: { cleanseInput, slugify },
             },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, userRequired },
-            loaders: {
-              domainLoaderById: domainLoaderById(query),
-              orgLoaderById: orgLoaderById(query, 'en'),
-              orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
-              userLoaderById: userLoaderById(query),
-            },
-            validators: { cleanseInput, slugify },
-          },
-        )
+          )
 
-        const domainCursor = await query`
+          const domainCursor = await query`
           FOR domain IN domains
             RETURN domain
         `
-        await domainCursor.next()
-        const domain = await domainCursor.next()
+          const domain = await domainCursor.next()
 
-        const expectedResponse = {
-          data: {
-            createDomain: {
-              domain: {
-                id: toGlobalId('domains', domain._key),
-                domain: 'test.gc.ca',
-                slug: 'test-gc-ca',
-                lastRan: null,
-                selectors: ['selector1._domainkey', 'selector2._domainkey'],
-                organization: {
-                  id: toGlobalId('organizations', secondOrg._key),
-                  name: 'Communications Security Establishment',
+          const expectedResponse = {
+            data: {
+              createDomain: {
+                domain: {
+                  id: toGlobalId('domains', domain._key),
+                  domain: 'test.gc.ca',
+                  slug: 'test-gc-ca',
+                  lastRan: null,
+                  selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                  organization: {
+                    id: toGlobalId('organizations', secondOrg._key),
+                    name: 'Communications Security Establishment',
+                  },
                 },
               },
             },
-          },
-        }
+          }
 
-        expect(response).toEqual(expectedResponse)
+          expect(response).toEqual(expectedResponse)
 
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully created ${domain.slug} in org: communications-security-establishment.`,
-        ])
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully created ${domain.slug} in org: communications-security-establishment.`,
+          ])
+        })
+      })
+      describe('new selectors are added', () => {
+        beforeEach(async () => {
+          const domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            slug: 'test-gc-ca',
+            selectors: [
+              'selector1._domainkey', 
+              'selector2._domainkey',
+            ],
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+        })
+        it('returns the domain', async () => {
+          const response = await graphql(
+            schema,
+            `
+            mutation {
+              createDomain(
+                input: {
+                  orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                  domain: "test.gc.ca"
+                  selectors: ["selector3._domainkey", "selector4._domainkey"]
+                }
+              ) {
+                domain {
+                  id
+                  domain
+                  slug
+                  lastRan
+                  selectors
+                  organization {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          `,
+            null,
+            {
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              loaders: {
+                domainLoaderBySlug: domainLoaderBySlug(query),
+                orgLoaderById: orgLoaderById(query, 'en'),
+                orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+                userLoaderById: userLoaderById(query),
+              },
+              validators: { cleanseInput, slugify },
+            },
+          )
+
+          const domainCursor = await query`
+          FOR domain IN domains
+            RETURN domain
+        `
+          const domain = await domainCursor.next()
+
+          const expectedResponse = {
+            data: {
+              createDomain: {
+                domain: {
+                  id: toGlobalId('domains', domain._key),
+                  domain: 'test.gc.ca',
+                  slug: 'test-gc-ca',
+                  lastRan: null,
+                  selectors: [
+                    'selector1._domainkey', 
+                    'selector2._domainkey',
+                    'selector3._domainkey', 
+                    'selector4._domainkey',
+                  ],
+                  organization: {
+                    id: toGlobalId('organizations', secondOrg._key),
+                    name: 'Communications Security Establishment',
+                  },
+                },
+              },
+            },
+          }
+
+          expect(response).toEqual(expectedResponse)
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully created ${domain.slug} in org: communications-security-establishment.`,
+          ])
+        })
       })
     })
   })
@@ -655,7 +851,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderById: domainLoaderById(query),
+              domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
               orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
               userLoaderById: userLoaderById(query),
@@ -712,7 +908,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderById: domainLoaderById(query),
+              domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
               orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
               userLoaderById: userLoaderById(query),
@@ -784,7 +980,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderById: domainLoaderById(query),
+              domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
               orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
               userLoaderById: userLoaderById(query),
@@ -813,7 +1009,7 @@ describe('create a domain', () => {
           })
         })
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderById(query)
+          const domainLoader = domainLoaderBySlug(query)
           const orgIdLoader = orgLoaderById(query, 'en')
           const orgDomainIdLoader = orgLoaderByDomainId(query, 'en')
           const userIdLoader = userLoaderById(query)
@@ -868,7 +1064,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderById: domainLoader,
+                domainLoaderBySlug: domainLoader,
                 orgLoaderById: orgIdLoader,
                 orgLoaderByDomainId: orgDomainIdLoader,
                 userLoaderById: userIdLoader,
@@ -896,7 +1092,7 @@ describe('create a domain', () => {
           })
         })
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderById(query)
+          const domainLoader = domainLoaderBySlug(query)
           const orgIdLoader = orgLoaderById(query, 'en')
           const orgDomainIdLoader = orgLoaderByDomainId(query, 'en')
           const userIdLoader = userLoaderById(query)
@@ -946,7 +1142,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderById: domainLoader,
+                domainLoaderBySlug: domainLoader,
                 orgLoaderById: orgIdLoader,
                 orgLoaderByDomainId: orgDomainIdLoader,
                 userLoaderById: userIdLoader,
