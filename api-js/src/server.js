@@ -29,6 +29,7 @@ const {
 
 const {
   domainLoaderById,
+  domainLoaderBySlug,
   orgLoaderByDomainId,
   orgLoaderById,
   orgLoaderBySlug,
@@ -109,6 +110,7 @@ const Server = (context = {}) => {
         },
         loaders: {
           domainLoaderById: domainLoaderById(query),
+          domainLoaderBySlug: domainLoaderBySlug(query),
           orgLoaderByDomainId: orgLoaderByDomainId(query, request.language),
           orgLoaderById: orgLoaderById(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),
