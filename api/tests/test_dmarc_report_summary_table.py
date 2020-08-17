@@ -11,7 +11,10 @@ from models import (
     Users,
     User_affiliations,
 )
-from tests.testdata.dmarc_report_summary_table import api_return_data_1, api_return_data_2
+from tests.testdata.dmarc_report_summary_table import (
+    api_return_data_1,
+    api_return_data_2,
+)
 from tests.test_functions import run, json
 
 
@@ -24,7 +27,9 @@ def save():
         cleanup()
 
 
-def test_valid_get_dmarc_report_summary_table_query_as_super_admin(save, mocker, caplog):
+def test_valid_get_dmarc_report_summary_table_query_as_super_admin(
+    save, mocker, caplog
+):
     """
     Test to see if super admins can query any data
     """
@@ -46,7 +51,9 @@ def test_valid_get_dmarc_report_summary_table_query_as_super_admin(save, mocker,
         acronym="ORG1",
         name="Organization 1",
         slug="organization-1",
-        domains=[Domains(domain="test.domain.canada.ca", slug="test-domain-canada-ca"),],
+        domains=[
+            Domains(domain="test.domain.canada.ca", slug="test-domain-canada-ca"),
+        ],
     )
     save(org_one)
 
@@ -97,26 +104,26 @@ def test_valid_get_dmarc_report_summary_table_query_as_super_admin(save, mocker,
     expected_result = {
         "data": {
             "dmarcReportSummaryTable": {
-                "year": '2020',
+                "year": "2020",
                 "month": "May",
                 "domains": [
                     {
                         "domain": "test.domain.gc.ca",
-                        'failPercentage': 6,
-                        'fullPassPercentage': 90,
-                        'passDkimOnlyPercentage': 2,
-                        'passSpfOnlyPercentage': 2,
-                        'totalMessages': 9237
+                        "failPercentage": 6,
+                        "fullPassPercentage": 90,
+                        "passDkimOnlyPercentage": 2,
+                        "passSpfOnlyPercentage": 2,
+                        "totalMessages": 9237,
                     },
                     {
-                        'domain': 'test.domain.canada.ca',
-                        'failPercentage': 6,
-                        'fullPassPercentage': 90,
-                        'passDkimOnlyPercentage': 2,
-                        'passSpfOnlyPercentage': 2,
-                        'totalMessages': 9237
+                        "domain": "test.domain.canada.ca",
+                        "failPercentage": 6,
+                        "fullPassPercentage": 90,
+                        "passDkimOnlyPercentage": 2,
+                        "passSpfOnlyPercentage": 2,
+                        "totalMessages": 9237,
                     },
-                ]
+                ],
             }
         }
     }
@@ -188,7 +195,7 @@ def test_valid_get_dmarc_report_summary_table_query_as_org_admin(save, mocker, c
     expected_result = {
         "data": {
             "dmarcReportSummaryTable": {
-                "year": '2020',
+                "year": "2020",
                 "month": "May",
                 "domains": [
                     {
@@ -197,9 +204,9 @@ def test_valid_get_dmarc_report_summary_table_query_as_org_admin(save, mocker, c
                         "fullPassPercentage": 90,
                         "passDkimOnlyPercentage": 2,
                         "passSpfOnlyPercentage": 2,
-                        "totalMessages": 9237
+                        "totalMessages": 9237,
                     }
-                ]
+                ],
             }
         }
     }
@@ -271,7 +278,7 @@ def test_valid_get_dmarc_report_summary_table_query_as_user_write(save, mocker, 
     expected_result = {
         "data": {
             "dmarcReportSummaryTable": {
-                "year": '2020',
+                "year": "2020",
                 "month": "May",
                 "domains": [
                     {
@@ -280,9 +287,9 @@ def test_valid_get_dmarc_report_summary_table_query_as_user_write(save, mocker, 
                         "fullPassPercentage": 90,
                         "passDkimOnlyPercentage": 2,
                         "passSpfOnlyPercentage": 2,
-                        "totalMessages": 9237
+                        "totalMessages": 9237,
                     }
-                ]
+                ],
             }
         }
     }
@@ -354,7 +361,7 @@ def test_valid_get_dmarc_report_summary_table_query_as_user_read(save, mocker, c
     expected_result = {
         "data": {
             "dmarcReportSummaryTable": {
-                "year": '2020',
+                "year": "2020",
                 "month": "May",
                 "domains": [
                     {
@@ -363,9 +370,9 @@ def test_valid_get_dmarc_report_summary_table_query_as_user_read(save, mocker, c
                         "fullPassPercentage": 90,
                         "passDkimOnlyPercentage": 2,
                         "passSpfOnlyPercentage": 2,
-                        "totalMessages": 9237
+                        "totalMessages": 9237,
                     }
-                ]
+                ],
             }
         }
     }
@@ -434,7 +441,10 @@ def test_dmarc_report_summary_to_ensure_error_occurs_when_no_domains_exist(
         fail("Expected to error out, instead: {}".format(json(result)))
 
     [error] = result["errors"]
-    assert error["message"] == "Error, dmarc report summary table information cannot be found."
+    assert (
+        error["message"]
+        == "Error, dmarc report summary table information cannot be found."
+    )
     assert (
         f"User: {super_admin.id} tried to select DmarcReportSummaryTable information for all their domains, however they have no associated domains."
         in caplog.text

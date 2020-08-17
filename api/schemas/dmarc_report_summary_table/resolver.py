@@ -116,11 +116,17 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
             dataList.append(temp_dict)
 
     else:
-        logger.warn(f"User: {user_id} tried to select DmarcReportSummaryTable information for all their domains, however they have no associated domains.")
-        raise GraphQLError('Error, dmarc report summary table information cannot be found.')
+        logger.warn(
+            f"User: {user_id} tried to select DmarcReportSummaryTable information for all their domains, however they have no associated domains."
+        )
+        raise GraphQLError(
+            "Error, dmarc report summary table information cannot be found."
+        )
 
     print(dataList)
-    logger.info(f"User: {user_id} successfully retrieved the DmarcReportSummaryTable information for all their domains.")
+    logger.info(
+        f"User: {user_id} successfully retrieved the DmarcReportSummaryTable information for all their domains."
+    )
     return DmarcReportSummaryTable(
         # Get Month Name
         calendar.month_name[int(dataList[0].get("endDate")[5:7].lstrip("0"))],
