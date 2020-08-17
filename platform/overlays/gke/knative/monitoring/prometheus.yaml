@@ -173,10 +173,6 @@ data:
         - source_labels: [__meta_kubernetes_namespace]
           regex: scanners
           action: keep
-
-        #- source_labels: [__meta_kubernetes_pod_label_app]
-        #  regex: scanners
-        #  action: keep
         - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
           action: keep
           regex: true
