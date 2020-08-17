@@ -17,6 +17,10 @@ from models import Domains, Organizations, User_affiliations, Users
 from schemas.dmarc_report_summary_table.dmarc_report_summary_table import (
     DmarcReportSummaryTable,
 )
+from tests.testdata.dmarc_report_summary_table import (
+    api_return_data_1,
+    api_return_data_2,
+)
 
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
 DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
@@ -29,7 +33,7 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
     period = cleanse_input(kwargs.get("period"))
     year = cleanse_input(kwargs.get("year"))
 
-    dataList = []
+    data_list = []
 
     if is_super_admin(user_roles=user_roles):
         domains = db_session.query(Domains).all()
@@ -113,7 +117,7 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
 
             temp_dict = data.get("getDmarcSummaryByPeriod", {}).get("period", {})
             temp_dict.update({"domain": domain.domain})
-            dataList.append(temp_dict)
+            data_list.append(temp_dict)
 
     else:
         logger.warn(
@@ -123,14 +127,36 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
             "Error, dmarc report summary table information cannot be found."
         )
 
-    print(dataList)
     logger.info(
         f"User: {user_id} successfully retrieved the DmarcReportSummaryTable information for all their domains."
     )
     return DmarcReportSummaryTable(
         # Get Month Name
-        calendar.month_name[int(dataList[0].get("endDate")[5:7].lstrip("0"))],
+        calendar.month_name[int(data_list[0].get("endDate")[5:7].lstrip("0"))],
         # Get Year
-        dataList[0].get("endDate")[0:4].lstrip("0"),
-        dataList,
+        data_list[0].get("endDate")[0:4].lstrip("0"),
+        data_list,
+    )
+
+
+def resolve_demo_dmarc_report_summary_table(self, info, **kwargs):
+    data_list = []
+    faked_data = [
+        {"domain": "test.gc.ca", "data": api_return_data_1},
+        {"domain": "test.canada.ca", "data": api_return_data_2},
+    ]
+
+    for data in faked_data:
+        temp_dict = (
+            data.get("data", {}).get("getDmarcSummaryByPeriod", {}).get("period", {})
+        )
+        temp_dict.update({"domain": data.get("domain")})
+        data_list.append(temp_dict)
+
+    return DmarcReportSummaryTable(
+        # Get Month Name
+        calendar.month_name[int(data_list[0].get("endDate")[5:7].lstrip("0"))],
+        # Get Year
+        data_list[0].get("endDate")[0:4].lstrip("0"),
+        data_list,
     )
