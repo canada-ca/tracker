@@ -13,9 +13,9 @@ const Toggler = (props) => {
       padding={0}
       onClick={() => activate(locale)}
       _focus={{
-        outline: `3px solid yellow.250`,
+        outline: `3px solid accent`,
       }}
-      bg="blue.900"
+      bg="primary"
       color="#fff"
     >
       <VisuallyHidden>{locales[locale]}</VisuallyHidden>
@@ -28,13 +28,13 @@ const Toggler = (props) => {
         d={{ base: 'none', md: 'flex' }}
         alignItems="center"
         justifyContent="center"
-        _hover={{ color:"yellow.250", border:"1px solid", borderColor:"yellow.250" }}
+        _hover={{ color:"accent", border:"1px solid", borderColor:"accent" }}
       >
         {locales[locale]}
         <Image
               src={ svgGlobe }
               px={2}
-              alt={('Symbol of the Government of Canada')}
+              alt={('SVG Globe')}
             />
       </PseudoBox>
       <PseudoBox

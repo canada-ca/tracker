@@ -10,7 +10,7 @@ export const TopBanner = props => {
   const { i18n } = useLingui()
 
   return (
-    <Flex bg="blue.900"  borderBottom="3px solid" borderBottomColor="yellow.250">
+    <Flex bg="primary"  borderBottom="3px solid" borderBottomColor="accent">
       <Layout>
         <Flex
           maxW={{ sm: 540, md: 768, lg: 960, xl: 1200 }}
