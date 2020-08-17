@@ -13,7 +13,7 @@ export const Navigation = ({ children, ...props }) => {
       padding={{ sm: '0.6rem', md: '0.80rem', lg: '1rem', xl: '1rem' }}
       bg="#fff"
       py={15.5}
-      color="blue.900"
+      color="primary"
       borderBottom="2px solid"
       borderBottomColor="gray.300"
       {...props}
