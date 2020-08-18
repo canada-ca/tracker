@@ -8,7 +8,7 @@ https_result_data = {
     "self_signed_cert": False,
 }
 
-expected_https_tags= ['https11']
+expected_https_tags = ["https11"]
 
 ssl_result_data = {
     "rc4": False,
@@ -39,7 +39,7 @@ ssl_result_data = {
     "acceptable_certificate": True,
 }
 
-expected_ssl_tags= ['ssl6']
+expected_ssl_tags = ["ssl6"]
 
 dns_result_data = {
     "mx": {
@@ -192,4 +192,8 @@ dns_result_data = {
     },
 }
 
-expected_dns_tags= {'dmarc': ['dmarc12', 'dmarc13', 'dmarc15'], 'dkim': ['dkim9', 'dkim12'], 'spf': ['spf8', 'spf11', 'spf11', 'spf11']}
+expected_dns_tags = {
+    "dmarc": ["dmarc12", "dmarc13", "dmarc15"],
+    "dkim": ["dkim9", "dkim12"],
+    "spf": ["spf8", "spf11", "spf11", "spf11"],
+}

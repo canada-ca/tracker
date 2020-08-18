@@ -310,9 +310,7 @@ def process_https(results):
             tags.append("https13")
 
     # Self Signed Cert
-    self_signed_cert = results.get("https", {}).get(
-        "self_signed_cert", None
-    )
+    self_signed_cert = results.get("https", {}).get("self_signed_cert", None)
 
     if self_signed_cert is not None:
         if self_signed_cert is True:
@@ -341,9 +339,7 @@ def process_ssl(results):
             tags.append("ssl4")
 
     # Signature Algorithm
-    signature_algorithm = results.get(
-        "signature_algorithm", None
-    )
+    signature_algorithm = results.get("signature_algorithm", None)
 
     if signature_algorithm is not None:
         if isinstance(signature_algorithm, str):
@@ -368,9 +364,7 @@ def process_ssl(results):
             tags.append("ssl7")
 
     # openssl ccs injection
-    openssl_ccs_injection = results.get("ssl", {}).get(
-        "openssl_ccs_injection", None
-    )
+    openssl_ccs_injection = results.get("ssl", {}).get("openssl_ccs_injection", None)
 
     if openssl_ccs_injection is not None:
         if openssl_ccs_injection is True:
@@ -440,7 +434,8 @@ def process_dns(results):
 
     # Check P Policy Tag
     p_policy_tag = (
-        results["dmarc"].get("dmarc", {})
+        results["dmarc"]
+        .get("dmarc", {})
         .get("tags", {})
         .get("p", {})
         .get("value", None)
@@ -461,7 +456,8 @@ def process_dns(results):
 
     # Check PCT Tag
     pct_tag = (
-        results["dmarc"].get("dmarc", {})
+        results["dmarc"]
+        .get("dmarc", {})
         .get("tags", {})
         .get("pct", {})
         .get("value", None)
@@ -484,7 +480,8 @@ def process_dns(results):
 
     # Check RUA Tag
     rua_tag = (
-        results["dmarc"].get("dmarc", {})
+        results["dmarc"]
+        .get("dmarc", {})
         .get("tags", {})
         .get("rua", {})
         .get("value", None)
@@ -503,7 +500,8 @@ def process_dns(results):
 
     # Check RUF Tag
     ruf_tag = (
-        results["dmarc"].get("dmarc", {})
+        results["dmarc"]
+        .get("dmarc", {})
         .get("tags", {})
         .get("ruf", {})
         .get("value", None)
@@ -529,7 +527,8 @@ def process_dns(results):
 
     # Check SP tag
     sp_tag = (
-        results["dmarc"].get("dmarc", {})
+        results["dmarc"]
+        .get("dmarc", {})
         .get("tags", {})
         .get("sp", {})
         .get("value", None)
@@ -715,7 +714,8 @@ async def insert_dns(report, tags, scan_id, db):
                                 report["dkim"]["selector"]["update-recommended"] = True
 
         dmarc_insert_query = Dmarc_scans.insert().values(
-            dmarc_scan={"dmarc": report["dmarc"], "tags": tags["dmarc"]}, id=scan.get("id")
+            dmarc_scan={"dmarc": report["dmarc"], "tags": tags["dmarc"]},
+            id=scan.get("id"),
         )
         mx_insert_query = Mx_scans.insert().values(
             mx_scan={"mx": report["mx"]}, id=scan.get("id")
