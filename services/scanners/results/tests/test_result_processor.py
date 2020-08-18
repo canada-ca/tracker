@@ -43,7 +43,22 @@ def setup():
         )
 
 
-async def test_process_and_insert_https():
+def test_process_https():
+    tags = process_https(https_result_data)
+    assert tags = expected_https_tags
+
+
+def test_process_ssl():
+    tags = process_ssl(ssl_result_data)
+    assert tags = expected_ssl_tags
+
+
+def test_process_dns():
+    tags = process_dns(dns_result_data)
+    assert tags = expected_dns_tags
+
+
+async def test_insert_https():
     setup()
 
     test_client = TestClient(test_app)
@@ -58,9 +73,10 @@ async def test_process_and_insert_https():
         )
 
     assert inserted_results.get("https_scan")["https"] is not None
+    assert inserted_results.get("https_scan")["tags"] is not None
 
 
-async def test_process_and_insert_ssl():
+async def test_insert_ssl():
     test_client = TestClient(test_app)
 
     test_payload = {"results": ssl_result_data, "scan_id": 1, "scan_type": "ssl"}
@@ -73,9 +89,10 @@ async def test_process_and_insert_ssl():
         )
 
     assert inserted_results.get("ssl_scan")["ssl"] is not None
+    assert inserted_results.get("ssl_scan")["tags"] is not None
 
 
-async def test_process_and_insert_dns():
+async def test_insert_dns():
     test_client = TestClient(test_app)
 
     test_payload = {"results": dns_result_data, "scan_id": 1, "scan_type": "dns"}
@@ -97,6 +114,9 @@ async def test_process_and_insert_dns():
         )
 
     assert inserted_dmarc_results.get("dmarc_scan")["dmarc"] is not None
+    assert inserted_dmarc_results.get("dmarc_scan")["tags"] is not None
     assert inserted_spf_results.get("spf_scan")["spf"] is not None
+    assert inserted_dmarc_results.get("spf_scan")["tags"] is not None
     assert inserted_mx_results.get("mx_scan")["mx"] is not None
     assert inserted_dkim_results.get("dkim_scan")["dkim"] is not None
+    assert inserted_dmarc_results.get("dkim_scan")["tags"] is not None
