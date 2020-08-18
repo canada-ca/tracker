@@ -225,6 +225,7 @@ export const REVERSE_PAGINATED_DOMAINS = gql`
       }
       pageInfo {
         hasNextPage
+        hasNextPage
         endCursor
         hasPreviousPage
         startCursor
@@ -301,7 +302,8 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -316,7 +318,8 @@ export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -335,7 +338,8 @@ export const DMARC_REPORT_SUMMARY = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -358,7 +362,8 @@ export const DEMO_DMARC_REPORT_SUMMARY = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }

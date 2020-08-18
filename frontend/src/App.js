@@ -149,6 +149,11 @@ export default function App() {
                       component={DmarcGuidancePage}
                       exact
                     />
+                    <Route
+                      path={`${url}/:domainSlug/dmarc-report`}
+                      component={DmarcReportPage}
+                      exact
+                    />
                   </>
                 )}
               />

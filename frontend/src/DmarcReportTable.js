@@ -121,6 +121,8 @@ function DmarcReportTable({ ...props }) {
     initialSort,
     hideTitleButton,
     linkColumns,
+    prependLink,
+    appendLink,
   } = props
   const [show, setShow] = React.useState(true)
   const { i18n } = useLingui()
@@ -202,7 +204,10 @@ function DmarcReportTable({ ...props }) {
               )
             } else {
               return (
-                <Link as={RouteLink} to={slugify(cell.value)}>
+                <Link
+                  as={RouteLink}
+                  to={`${prependLink}${slugify(cell.value)}${appendLink}`}
+                >
                   {cell.render('Cell')}
                 </Link>
               )
@@ -375,6 +380,8 @@ DmarcReportTable.propTypes = {
   initialSort: array.isRequired,
   hideTitleButton: bool,
   linkColumns: array,
+  prependLink: string,
+  appendLink: string,
 }
 
 export default WithPseudoBox(DmarcReportTable)

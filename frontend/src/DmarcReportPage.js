@@ -2,8 +2,8 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import {
-  DEMO_DMARC_REPORT_DETAIL_TABLES,
-  DEMO_DMARC_REPORT_SUMMARY_LIST,
+  DMARC_REPORT_DETAIL_TABLES,
+  DMARC_REPORT_SUMMARY_LIST,
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
@@ -21,7 +21,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { i18n } = useLingui()
 
   const { loading: barLoading, error: barError, data: barData } = useQuery(
-    DEMO_DMARC_REPORT_SUMMARY_LIST,
+    DMARC_REPORT_SUMMARY_LIST,
     {
       context: {
         headers: {
@@ -36,7 +36,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     loading: tableLoading,
     error: tableError,
     data: tableData,
-  } = useQuery(DEMO_DMARC_REPORT_DETAIL_TABLES, {
+  } = useQuery(DMARC_REPORT_DETAIL_TABLES, {
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -91,13 +91,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
 
   const formattedBarData = {
-    periods: barData.demoDmarcReportSummaryList.map((entry) => {
+    periods: barData.dmarcReportSummaryList.map((entry) => {
       return { month: entry.month, year: entry.year, ...entry.categoryTotals }
     }),
   }
   formattedBarData.strengths = { ...strengths }
 
-  const detailTablesData = tableData.demoDmarcReportDetailTables.detailTables
+  const detailTablesData = tableData.dmarcReportDetailTables.detailTables
 
   const fullPassData = detailTablesData.fullPass
   const spfFailureData = detailTablesData.spfFailure
@@ -250,11 +250,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   return (
     <Box width="100%">
-      <Text>
-        <Trans>
-          *All data represented is mocked for demonstration purposes
-        </Trans>
-      </Text>
       <Stack align="center" isInline={cardAndGraphInline}>
         <SummaryCard
           title={i18n._(t`DMARC Report`)}

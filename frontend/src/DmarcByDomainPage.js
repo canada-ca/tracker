@@ -88,6 +88,8 @@ export default function DmarcByDomainPage() {
         mb="30px"
         hideTitleButton={true}
         linkColumns={[{ column: 'domain', isExternal: false }]}
+        prependLink="domains/"
+        appendLink="/dmarc-report"
       />
     </Box>
   )
