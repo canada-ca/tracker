@@ -67,21 +67,12 @@ export default function App() {
               <Trans>User Profile</Trans>
             </Link>
           )}
-          ) : (
-            <Link to="/sign-in">
-              <Trans>Sign In</Trans>
-            </Link>
-          )}
 
           {/*{isLoggedIn() && (*/}
           <Link to="/dmarc-summaries">
             <Trans>DMARC Report</Trans>
           </Link>
           {/*)}*/}
-
-          <Link to="/dmarc-report">
-            <Trans>Report</Trans>
-          </Link>
 
           {isLoggedIn() && (
             <Link to="/admin">
