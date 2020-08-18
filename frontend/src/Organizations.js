@@ -9,7 +9,8 @@ import {
   REVERSE_PAGINATED_ORGANIZATIONS as BACKWARD,
 } from './graphql/queries'
 import { useUserState } from './UserState'
-import { Organization } from './Organization'
+// import { Organization } from './Organization'
+import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 
 export default function Organisations({ orgsPerPage = 10 }) {
@@ -55,7 +56,11 @@ export default function Organisations({ orgsPerPage = 10 }) {
       >
         {({ name, slug, domainCount }, index) => (
           <Box key={`${slug}:${index}`}>
-            <Organization slug={slug} name={name} domainCount={domainCount} />
+            <OrganizationCard
+              slug={slug}
+              name={name}
+              domainCount={domainCount}
+            />
             <Divider borderColor="gray.900" />
           </Box>
         )}

@@ -249,7 +249,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const cardAndGraphInline = graphWidth !== '100%'
 
   return (
-    <Box width="100%">
+    <Box width="100%" px="4" mx="auto" overflow="hidden">
       <Text>
         <Trans>
           *All data represented is mocked for demonstration purposes
