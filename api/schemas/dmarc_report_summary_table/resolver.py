@@ -9,45 +9,47 @@ from app import logger
 from db import db_session
 from enums.period import PeriodEnums
 from functions.auth_wrappers import require_token
-from functions.auth_functions import is_user_read
+from functions.auth_functions import is_super_admin
 from functions.external_graphql_api_request import send_request
 from functions.input_validators import cleanse_input
 from functions.start_end_date_generation import generate_start_end_date
-from models import Domains
-from schemas.dmarc_report_summary.dmarc_report_summary import DmarcReportSummary
-
-# Only for demo purposes
-from tests.testdata.dmarc_report_summary import api_return_data
+from models import Domains, Organizations, User_affiliations, Users
+from schemas.dmarc_report_summary_table.dmarc_report_summary_table import (
+    DmarcReportSummaryTable,
+)
+from tests.testdata.dmarc_report_summary_table import (
+    api_return_data_1,
+    api_return_data_2,
+)
 
 DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
 DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
 
 
 @require_token
-def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
-    """
-    This function is used to resolve the get_yearly_dmarc_report_summary query
-    :param self: A graphql field object
-    :param info: Request information
-    :param kwargs: Various Arguments passed in
-    :return: Returns a DmarcReportDoughnut
-    """
+def resolve_dmarc_report_summary_table(self, info, **kwargs):
     user_id = kwargs.get("user_id")
     user_roles = kwargs.get("user_roles")
-    domain_slug = cleanse_input(kwargs.get("domain_slug"))
     period = cleanse_input(kwargs.get("period"))
     year = cleanse_input(kwargs.get("year"))
 
-    # Get Domains org_id
-    domain_orm = db_session.query(Domains).filter(Domains.slug == domain_slug).first()
+    data_list = []
 
-    # Check to see if domain exists
-    if domain_orm is not None:
-        # Check to see if user can view this domain
-        if is_user_read(user_roles=user_roles, org_id=domain_orm.organization_id):
-            # Get Domain
-            domain = domain_orm.domain
+    if is_super_admin(user_roles=user_roles):
+        domains = db_session.query(Domains).all()
+    else:
+        domains = []
+        for role in user_roles:
+            org_domains = (
+                db_session.query(Domains)
+                .filter(Domains.organization_id == role["org_id"])
+                .all()
+            )
+            for domain in org_domains:
+                domains.append(domain)
 
+    if domains:
+        for domain in domains:
             # Create start and end date values
             if period == PeriodEnums.LAST30DAYS:
                 thirty_days = True
@@ -68,7 +70,7 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
 
             # Create variable dict for request
             variables = {
-                "domain": domain,
+                "domain": domain.domain,
                 "startDate": start_date,
                 "endDate": end_date,
                 "thirtyDays": thirty_days,
@@ -110,47 +112,51 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
                 auth_token=DMARC_REPORT_API_TOKEN,
                 query=query,
                 variables=variables,
+                summary_table=True,
             )
 
-            data = data.get("getDmarcSummaryByPeriod").get("period")
+            temp_dict = data.get("getDmarcSummaryByPeriod", {}).get("period", {})
+            temp_dict.update({"domain": domain.domain})
+            data_list.append(temp_dict)
 
-            logger.info(
-                f"User: {user_id} successfully retrieved the DmarcReportSummary for: {domain_slug}."
-            )
-            return DmarcReportSummary(
-                # Get Month Name
-                calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
-                # Get Year
-                data.get("endDate")[0:4].lstrip("0"),
-                # Get Category Data
-                data.get("categoryTotals"),
-            )
-        else:
-            logger.warning(
-                f"User: {user_id} tried to retrieved the DmarcReportSummary for: {domain_slug} but does not have access to {domain_orm.organization.slug}."
-            )
-            raise GraphQLError("Error, dmarc summary cannot be found.")
     else:
-        logger.warning(
-            f"User: {user_id} tried to retrieved the DmarcReportSummary for: {domain_slug} but domain does not exist."
+        logger.warn(
+            f"User: {user_id} tried to select DmarcReportSummaryTable information for all their domains, however they have no associated domains."
         )
-        raise GraphQLError("Error, dmarc summary cannot be found.")
+        raise GraphQLError(
+            "Error, dmarc report summary table information cannot be found."
+        )
 
-
-def resolve_demo_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
-    """
-    This function is used to resolve the get_yearly_dmarc_report_summary query
-    :param self: A graphql field object
-    :param info: Request information
-    :param kwargs: Various Arguments passed in
-    :return: Returns a DmarcReportDoughnut
-    """
-    data = api_return_data.get("getDmarcSummaryByPeriod").get("period")
-    return DmarcReportSummary(
+    logger.info(
+        f"User: {user_id} successfully retrieved the DmarcReportSummaryTable information for all their domains."
+    )
+    return DmarcReportSummaryTable(
         # Get Month Name
-        calendar.month_name[int(data.get("endDate")[5:7].lstrip("0"))],
+        calendar.month_name[int(data_list[0].get("endDate")[5:7].lstrip("0"))],
         # Get Year
-        data.get("endDate")[0:4].lstrip("0"),
-        # Get Category Data
-        data.get("categoryTotals"),
+        data_list[0].get("endDate")[0:4].lstrip("0"),
+        data_list,
+    )
+
+
+def resolve_demo_dmarc_report_summary_table(self, info, **kwargs):
+    data_list = []
+    faked_data = [
+        {"domain": "test.gc.ca", "data": api_return_data_1},
+        {"domain": "test.canada.ca", "data": api_return_data_2},
+    ]
+
+    for data in faked_data:
+        temp_dict = (
+            data.get("data", {}).get("getDmarcSummaryByPeriod", {}).get("period", {})
+        )
+        temp_dict.update({"domain": data.get("domain")})
+        data_list.append(temp_dict)
+
+    return DmarcReportSummaryTable(
+        # Get Month Name
+        calendar.month_name[int(data_list[0].get("endDate")[5:7].lstrip("0"))],
+        # Get Year
+        data_list[0].get("endDate")[0:4].lstrip("0"),
+        data_list,
     )

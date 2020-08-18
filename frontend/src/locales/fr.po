@@ -111,7 +111,15 @@ msgstr "La liste de chiffrement acceptée contient le chiffrement de flux RC4, t
 msgid "Account Details"
 msgstr "Détails du compte"
 
-#: src/CreateUserPage.js:71
+#: src/UserPage.js:83
+msgid "Administrative Account"
+msgstr "Compte Administratif"
+
+#: src/UserPage.js:86
+msgid "Account Active"
+msgstr "Compte Actif"
+
+#: src/CreateUserPage.js:55
 msgid "Account created."
 msgstr "Compte créé"
 
@@ -202,6 +210,7 @@ msgstr "B.3.1 Enregistrements DMARC"
 
 #: src/CreateUserPage.js:159
 #: src/ForgotPasswordPage.js:105
+#: src/QRcodePage.js:60
 msgid "Back"
 msgstr "Retour"
 
@@ -798,7 +807,6 @@ msgstr ""
 #~ msgstr "Masquer les conseils"
 
 #: src/App.js:52
-#: src/QRcodePage.js:67
 msgid "Home"
 msgstr "Accueil"
 
@@ -1466,8 +1474,8 @@ msgstr "Sélectionnez votre langue préférée"
 #~ msgstr "Sélectionnez votre langue préférée"
 
 #: src/LanguageSelect.js:21
-msgid "Select Your Preferred Language:"
-msgstr "Sélectionnez votre langue préférée :"
+msgid "Language:"
+msgstr "La langue:"
 
 #: src/AdminPage.js:65
 msgid "Select an organization"
@@ -1486,8 +1494,7 @@ msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
 #: src/App.js:67
-#: src/QRcodePage.js:58
-#: src/SignInPage.js:115
+#: src/SignInPage.js:112
 msgid "Sign In"
 msgstr "Se connecter"
 
@@ -1495,11 +1502,19 @@ msgstr "Se connecter"
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/UserPage.js:127
+#: src/App.js:98
 msgid "Sign Out"
 msgstr "Déconnexion"
 
-#: src/SignInPage.js:96
+#: src/App.js:90
+msgid "Sign Out."
+msgstr "Déconnexion."
+
+#: src/App.js:91
+msgid "You have successfully been signed out."
+msgstr "Vous avez été déconnecté avec succès."
+
+#: src/SignInPage.js:93
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 

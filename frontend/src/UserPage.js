@@ -4,12 +4,11 @@ import { string } from 'prop-types'
 import {
   Stack,
   SimpleGrid,
-  Button,
   Divider,
   Checkbox,
   CheckboxGroup,
-  useToast,
   Heading,
+  Icon,
 } from '@chakra-ui/core'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
@@ -19,12 +18,12 @@ import EditableUserLanguage from './EditableUserLanguage'
 import EditableUserDisplayName from './EditableUserDisplayName'
 import EditableUserEmail from './EditableUserEmail'
 import EditableUserPassword from './EditableUserPassword'
+import { TrackerButton } from './TrackerButton'
 
 export default function UserPage() {
   const location = useLocation()
-  const toast = useToast()
   const history = useHistory()
-  const { currentUser, logout } = useUserState()
+  const { currentUser } = useUserState()
 
   const {
     loading: queryUserLoading,
@@ -69,63 +68,47 @@ export default function UserPage() {
         <EditableUserLanguage currentLang={queryUserData.userPage.lang} />
       </Stack>
 
-      <Stack Stack p={25} spacing={4}>
-        <Heading as="h1" size="lg" textAlign="center">
+      <Stack Stack p={25} spacing="4">
+        <Heading as="h1" size="lg" textAlign="left">
           <Trans>Account Details</Trans>
         </Heading>
         <CheckboxGroup
           mt="20px"
-          variantColor="teal"
           defaultValue={[
             queryUserData.userPage.userAffiliations[0].admin ? 'admin' : '',
             'active',
           ]}
         >
-          <Checkbox value="admin">Administrative Account</Checkbox>
-          <Checkbox value="active">Account Active</Checkbox>
+          <Checkbox value="admin">
+            <Trans>Administrative Account</Trans>
+          </Checkbox>
+          <Checkbox value="active">
+            <Trans>Account Active</Trans>
+          </Checkbox>
         </CheckboxGroup>
         <Divider />
-        <Stack isInline>
-          <Button
-            leftIcon="lock"
-            variantColor="blue"
+        <Stack w={['100%', '40%']}>
+          <TrackerButton
+            variant="primary"
             onClick={() => {
               history.push('/two-factor-code')
             }}
             isDisabled={!!location.state}
           >
+            <Icon name="lock" />
             <Trans>Enable 2FA</Trans>
-          </Button>
-          <Button
-            leftIcon="edit"
-            variantColor="teal"
+          </TrackerButton>
+
+          <TrackerButton
+            variant="primary"
             onClick={() => {
               window.alert('coming soon')
             }}
           >
+            <Icon name="edit" />
             <Trans>Manage API keys</Trans>
-          </Button>
+          </TrackerButton>
         </Stack>
-
-        <Button
-          variantColor="teal"
-          w={'50%'}
-          onClick={() => {
-            // This clears the JWT, essentially logging the user out in one go
-            logout()
-            history.push('/')
-            toast({
-              title: 'Sign Out.',
-              description: 'You have successfully been signed out.',
-              status: 'success',
-              duration: 9000,
-              isClosable: true,
-            })
-          }}
-          isDisabled={!!location.state}
-        >
-          <Trans>Sign Out</Trans>
-        </Button>
       </Stack>
     </SimpleGrid>
   )

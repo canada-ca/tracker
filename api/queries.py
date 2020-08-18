@@ -27,6 +27,12 @@ from schemas.dmarc_report_summary import (
     demo_dmarc_report_summary,
 )
 
+# Get dmarc report
+from schemas.dmarc_report_summary_table import (
+    dmarc_report_summary_table,
+    demo_dmarc_report_summary_table,
+)
+
 # Is User an Admin Query
 from schemas.is_user_admin import is_user_admin
 
@@ -177,7 +183,13 @@ class Query(graphene.ObjectType):
     dmarc_report_summary = dmarc_report_summary
     demo_dmarc_report_summary = demo_dmarc_report_summary
 
-    # -- End Dmarc Report Queries
+    # --- End Dmarc Report  Queries ---
+
+    # --- Start Dmarc Report Summary Table ---
+    dmarc_report_summary_table = dmarc_report_summary_table
+    demo_dmarc_report_summary_table = demo_dmarc_report_summary_table
+
+    # --- End Dmarc Report Summary Table ---
 
     # -- Start Summaries Queries --
     email_summary = email_summary

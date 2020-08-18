@@ -3,12 +3,12 @@ import { Route, Switch } from 'react-router-dom'
 import { useLingui } from '@lingui/react'
 import { LandingPage } from './LandingPage'
 import { Main } from './Main'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Flex, Link, CSSReset } from '@chakra-ui/core'
+import { Flex, Link, CSSReset, useToast } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
@@ -33,7 +33,8 @@ const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
 export default function App() {
   // Hooks to be used with this functional component
   const { i18n } = useLingui()
-  const { currentUser, isLoggedIn } = useUserState()
+  const toast = useToast()
+  const { currentUser, isLoggedIn, logout } = useUserState()
 
   return (
     <>
@@ -52,17 +53,20 @@ export default function App() {
           <Link to="/">
             <Trans>Home</Trans>
           </Link>
+          <Link to="/dmarc-report">
+            <Trans>Report</Trans>
+          </Link>
           <Link to="/domains">
             <Trans>Domains</Trans>
           </Link>
-
           <Link to="/organizations">
             <Trans>Organizations</Trans>
           </Link>
-          {isLoggedIn() ? (
+          {isLoggedIn() && (
             <Link to="/user">
               <Trans>User Profile</Trans>
             </Link>
+          )}
           ) : (
             <Link to="/sign-in">
               <Trans>Sign In</Trans>
@@ -82,6 +86,30 @@ export default function App() {
           {isLoggedIn() && (
             <Link to="/admin">
               <Trans>Admin Profile</Trans>
+            </Link>
+          )}
+          {isLoggedIn() ? (
+            <Link
+              to="/"
+              onClick={() => {
+                logout()
+                toast({
+                  title: i18n._(t`Sign Out.`),
+                  description: i18n._(
+                    t`You have successfully been signed out.`,
+                  ),
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                })
+              }}
+              ml={[null, 'auto']}
+            >
+              <Trans>Sign Out</Trans>
+            </Link>
+          ) : (
+            <Link to="/sign-in" ml={[null, 'auto']}>
+              <Trans>Sign In</Trans>
             </Link>
           )}
         </Navigation>

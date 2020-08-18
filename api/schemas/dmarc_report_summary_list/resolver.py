@@ -72,12 +72,10 @@ def resolve_dmarc_report_summary_list(self, info, **kwargs):
                             startDate
                             endDate
                             categoryTotals {
-                                dmarcFailNone
-                                dmarcFailQuarantine
-                                dmarcFailReject
-                                spfFailDkimPass
-                                spfPassDkimFail
-                                spfPassDkimPass
+                                fullPass
+                                passSpfOnly
+                                passDkimOnly
+                                fail
                             }
                         }
                     }

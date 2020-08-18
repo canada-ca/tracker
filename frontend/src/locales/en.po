@@ -111,7 +111,15 @@ msgstr "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18
 msgid "Account Details"
 msgstr "Account Details"
 
-#: src/CreateUserPage.js:71
+#: src/UserPage.js:83
+msgid "Administrative Account"
+msgstr "Administrative Account"
+
+#: src/UserPage.js:86
+msgid "Account Active"
+msgstr "Account Active"
+
+#: src/CreateUserPage.js:55
 msgid "Account created."
 msgstr "Account created."
 
@@ -202,6 +210,7 @@ msgstr "B.3.1 DMARC Records"
 
 #: src/CreateUserPage.js:159
 #: src/ForgotPasswordPage.js:105
+#: src/QRcodePage.js:60
 msgid "Back"
 msgstr "Back"
 
@@ -646,7 +655,7 @@ msgstr "Enter and confirm your new password."
 
 #: src/ForgotPasswordPage.js:78
 msgid "Enter your user account's verified email address and we will send you a password reset link."
-msgstr "Enter your user account's verified email addres and we will send you a password reset link."
+msgstr "Enter your user account's verified email address and we will send you a password reset link."
 
 #: src/DmarcReportPage.js:124
 msgid "Envelope From"
@@ -813,7 +822,6 @@ msgstr "HTTPS-weakly-enforced"
 #~ msgstr "Hide Guidance"
 
 #: src/App.js:52
-#: src/QRcodePage.js:67
 msgid "Home"
 msgstr "Home"
 
@@ -1493,8 +1501,8 @@ msgstr "Select Preferred Language"
 #~ msgstr "Select Your Preferred Language"
 
 #: src/LanguageSelect.js:21
-msgid "Select Your Preferred Language:"
-msgstr "Select Your Preferred Language:"
+msgid "Language:"
+msgstr "Language:"
 
 #: src/AdminPage.js:65
 msgid "Select an organization"
@@ -1513,8 +1521,7 @@ msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
 #: src/App.js:67
-#: src/QRcodePage.js:58
-#: src/SignInPage.js:115
+#: src/SignInPage.js:112
 msgid "Sign In"
 msgstr "Sign In"
 
@@ -1522,11 +1529,19 @@ msgstr "Sign In"
 msgid "Sign In."
 msgstr "Sign In."
 
-#: src/UserPage.js:127
+#: src/App.js:98
 msgid "Sign Out"
 msgstr "Sign Out"
 
-#: src/SignInPage.js:96
+#: src/App.js:90
+msgid "Sign Out."
+msgstr "Sign Out."
+
+#: src/App.js:91
+msgid "You have successfully been signed out."
+msgstr "You have successfully been signed out."
+
+#: src/SignInPage.js:93
 msgid "Sign in with your username and password."
 msgstr "Sign in with your username and password."
 

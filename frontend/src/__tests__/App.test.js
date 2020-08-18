@@ -109,14 +109,14 @@ describe('<App/>', () => {
           },
         },
       ]
-      it('renders the domains page', async () => {
-        const { queryByText } = render(
+      it('renders the sign-in page', async () => {
+        const { getByText } = render(
           <UserStateProvider
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
             <ThemeProvider theme={theme}>
               <I18nProvider i18n={setupI18n()}>
-                <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
+                <MemoryRouter initialEntries={['/sign-in']} initialIndex={0}>
                   <MockedProvider mocks={mocks} addTypename={false}>
                     <App />
                   </MockedProvider>
@@ -125,7 +125,9 @@ describe('<App/>', () => {
             </ThemeProvider>
           </UserStateProvider>,
         )
-        const domains = await waitFor(() => queryByText(/Domains/i))
+        const domains = await waitFor(() =>
+          getByText(/Sign in with your username and password./i),
+        )
         await waitFor(() => {
           expect(domains).toBeInTheDocument()
         })

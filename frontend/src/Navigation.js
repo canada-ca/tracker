@@ -11,9 +11,11 @@ export const Navigation = ({ children, ...props }) => {
       justify="space-between"
       wrap="wrap"
       padding={{ sm: '0.6rem', md: '0.80rem', lg: '1rem', xl: '1rem' }}
-      bg="gray.550"
+      bg="#fff"
       py={15.5}
-      color="white"
+      color="primary"
+      borderBottom="2px solid"
+      borderBottomColor="gray.300"
       {...props}
     >
       <Flex
@@ -24,8 +26,14 @@ export const Navigation = ({ children, ...props }) => {
         align="center"
         direction="row"
       >
-        <Stack isInline alignItems="center" flexWrap="wrap" spacing={6}>
-          {React.Children.map(children, (child) => {
+        <Stack
+          isInline
+          alignItems="center"
+          flexWrap="wrap"
+          spacing="6"
+          w="100%"
+        >
+          {React.Children.map(children, child => {
             if (child !== null) {
               return React.cloneElement(child, {
                 as: ReactRouterLink,

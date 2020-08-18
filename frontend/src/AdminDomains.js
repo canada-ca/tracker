@@ -9,9 +9,6 @@ import {
   InputLeftElement,
   Icon,
   Input,
-  Button,
-  Divider,
-  IconButton,
   useToast,
   useDisclosure,
   SlideIn,
@@ -25,11 +22,13 @@ import {
   ModalFooter,
   FormLabel,
   FormControl,
+  Button,
 } from '@chakra-ui/core'
 import { PaginationButtons } from './PaginationButtons'
 import { Domain } from './Domain'
 import { string, object, func } from 'prop-types'
 import { ListOf } from './ListOf'
+import { TrackerButton } from './TrackerButton'
 import { useMutation } from '@apollo/client'
 import {
   CREATE_DOMAIN,
@@ -46,7 +45,7 @@ import { useUserState } from './UserState'
 export function AdminDomains({ domainsData, orgName }) {
   let domains = []
   if (domainsData && domainsData.edges) {
-    domains = domainsData.edges.map((e) => e.node)
+    domains = domainsData.edges.map(e => e.node)
   }
 
   const [domainList, setDomainList] = useState(domains)
@@ -76,7 +75,7 @@ export function AdminDomains({ domainsData, orgName }) {
   const currentDomains = domainList.slice(indexOfFirstDomain, indexOfLastDomain)
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   // Update domains list if domainsData changes (domain added, removed, updated)
   useEffect(() => {
@@ -192,12 +191,11 @@ export function AdminDomains({ domainsData, orgName }) {
   })
 
   return (
-    <Stack mb={6} w="100%">
+    <Stack mb="6" w="100%">
       <Text fontSize="2xl" fontWeight="bold">
         <Trans>Domain List</Trans>
       </Text>
-
-      <SimpleGrid mb={6} columns={{ md: 1, lg: 2 }} spacing="15px">
+      <SimpleGrid mb="6" columns={{ md: 1, lg: 2 }} spacing="15px">
         <InputGroup>
           <InputLeftElement>
             <Icon name="search" color="gray.300" />
@@ -206,15 +204,13 @@ export function AdminDomains({ domainsData, orgName }) {
             type="text"
             placeholder={i18n._(t`Search for a domain`)}
             value={domainSearch}
-            onChange={(e) => {
+            onChange={e => {
               setDomainSearch(e.target.value)
             }}
           />
         </InputGroup>
-        <Button
-          width={'100%'}
-          leftIcon="add"
-          variantColor="blue"
+        <TrackerButton
+          width={['100%', '80%']}
           onClick={() => {
             if (!domainSearch) {
               toast({
@@ -235,11 +231,12 @@ export function AdminDomains({ domainsData, orgName }) {
               })
             }
           }}
+          variant="primary"
         >
+          <Icon name="add" />
           <Trans>Add Domain</Trans>
-        </Button>
+        </TrackerButton>
       </SimpleGrid>
-      <Divider />
 
       <Stack spacing={10} shouldWrapChildren>
         <Stack direction="row" spacing={4}>
@@ -254,24 +251,28 @@ export function AdminDomains({ domainsData, orgName }) {
             >
               {({ url, lastRan }, index) => (
                 <Stack key={'admindomain' + index} isInline align="center">
-                  <IconButton
-                    size="xs"
-                    variantColor="red"
-                    icon="minus"
+                  <TrackerButton
                     onClick={() => {
                       setSelectedRemoveDomain(url)
                       removeOnOpen()
                     }}
-                  />
-                  <IconButton
-                    size="xs"
-                    icon="edit"
-                    variantColor="blue"
+                    variant="danger"
+                    px="2"
+                    fontSize="xs"
+                  >
+                    <Icon name="minus" />
+                  </TrackerButton>
+                  <TrackerButton
+                    variant="primary"
+                    px="2"
+                    fontSize="xs"
                     onClick={() => {
                       setEditingDomainUrl(url)
                       updateOnOpen()
                     }}
-                  />
+                  >
+                    <Icon name="edit" />
+                  </TrackerButton>
                   <Domain url={url} lastRan={lastRan} />
                 </Stack>
               )}
@@ -280,7 +281,6 @@ export function AdminDomains({ domainsData, orgName }) {
         </Stack>
       </Stack>
 
-      <Divider />
       {domainList.length > 0 && (
         <PaginationButtons
           perPage={domainsPerPage}
@@ -291,7 +291,7 @@ export function AdminDomains({ domainsData, orgName }) {
       )}
 
       <SlideIn in={updateIsOpen}>
-        {(styles) => (
+        {styles => (
           <Modal
             isOpen={true}
             onClose={updateOnClose}
@@ -308,7 +308,7 @@ export function AdminDomains({ domainsData, orgName }) {
                   displayName: true,
                 }}
                 validationSchema={updatedDomainValidationSchema}
-                onSubmit={async (values) => {
+                onSubmit={async values => {
                   // Submit update detail mutation
                   await updateDomain({
                     variables: {
@@ -364,16 +364,19 @@ export function AdminDomains({ domainsData, orgName }) {
                     </ModalBody>
 
                     <ModalFooter>
-                      <Button
-                        variantColor="teal"
+                      <TrackerButton
+                        variant="primary"
                         isLoading={isSubmitting}
                         type="submit"
-                        mr={4}
+                        mr="4"
                       >
                         <Trans>Confirm</Trans>
-                      </Button>
+                      </TrackerButton>
                       <Button
-                        variantColor="teal"
+                        color="primary"
+                        bg="transparent"
+                        borderColor="primary"
+                        borderWidth="1px"
                         variant="outline"
                         onClick={updateOnClose}
                       >
@@ -389,7 +392,7 @@ export function AdminDomains({ domainsData, orgName }) {
       </SlideIn>
 
       <SlideIn in={removeIsOpen}>
-        {(styles) => (
+        {styles => (
           <Modal isOpen={true} onClose={removeOnClose}>
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent pb={4} {...styles}>
@@ -407,8 +410,8 @@ export function AdminDomains({ domainsData, orgName }) {
               </ModalBody>
 
               <ModalFooter>
-                <Button
-                  variantColor="teal"
+                <TrackerButton
+                  variant="primary"
                   isLoading={removeDomainLoading}
                   mr={4}
                   onClick={() =>
@@ -418,9 +421,12 @@ export function AdminDomains({ domainsData, orgName }) {
                   }
                 >
                   <Trans>Confirm</Trans>
-                </Button>
+                </TrackerButton>
                 <Button
-                  variantColor="teal"
+                  color="primary"
+                  bg="transparent"
+                  borderColor="primary"
+                  borderWidth="1px"
                   variant="outline"
                   onClick={removeOnClose}
                 >

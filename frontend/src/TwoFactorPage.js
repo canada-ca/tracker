@@ -57,17 +57,17 @@ export function TwoFactorPage() {
           actions.setSubmitting(false)
         }}
       >
-        {(props) => (
+        {props => (
           <form onSubmit={props.handleSubmit}>
             <Field name="otpCode" validate={validateCode}>
               {({ field, form }) => (
                 <FormControl
-                  mt={4}
-                  mb={4}
+                  mt="4"
+                  mb="4"
                   isInvalid={form.errors.otpCode && form.touched.otpCode}
                 >
                   <InputGroup>
-                    <InputLeftElement color="gray.300" fontSize="1.2em">
+                    <InputLeftElement color="gray.300" size="icons.md">
                       <Icon name="lock" color="gray.300" />
                     </InputLeftElement>
                     <Input
@@ -82,7 +82,8 @@ export function TwoFactorPage() {
             </Field>
 
             <Button
-              variantColor="teal"
+              color="gray.50"
+              bg="primary"
               isLoading={props.isSubmitting}
               type="submit"
             >

@@ -102,7 +102,7 @@ td, th {
     padding-right: 10px;
     white-space: nowrap;
   }
-  ${(props) =>
+  ${props =>
     props.flatHeaders.slice(1).map((headerObj, index) => {
       return `
         td:nth-of-type(${index + 1}):before {
@@ -170,7 +170,7 @@ function DmarcReportTable({ ...props }) {
 
   const [goToPageValue, setGoToPageNumber] = useState(pageIndex + 1)
 
-  const handleGoToPageChange = (event) => {
+  const handleGoToPageChange = event => {
     if (isNaN(event.target.value)) return 0 // TODO: Error handling here?
     setGoToPageNumber(event.target.value)
 
@@ -180,6 +180,11 @@ function DmarcReportTable({ ...props }) {
 
   const wrapperRef = useRef(null)
 
+  return (
+    <Box ref={wrapperRef}>
+      <Button bg="primary" color="white" onClick={handleShow} width="100%">
+        {title}
+      </Button>
   const titleButtonElement = !hideTitleButton ? (
     <Button bg="gray.700" color="white" onClick={handleShow} width="100%">
       {title}
@@ -235,7 +240,7 @@ function DmarcReportTable({ ...props }) {
               {headerGroups.map((headerGroup, index) => {
                 return (
                   <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => {
+                    {headerGroup.headers.map(column => {
                       // Using column.Header since column.id _sometimes_ has appended numbers
                       const key =
                         column.depth === 0
@@ -347,19 +352,19 @@ function DmarcReportTable({ ...props }) {
               <Input
                 width="6rem"
                 value={goToPageValue}
-                onChange={(event) => {
+                onChange={event => {
                   handleGoToPageChange(event)
                 }}
               />
               <Select
                 value={pageSize}
-                onChange={(e) => {
+                onChange={e => {
                   setPageSize(Number(e.target.value))
                   wrapperRef.current.scrollIntoView(true)
                 }}
                 width="fit-content"
               >
-                {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                {[5, 10, 20, 30, 40, 50].map(pageSize => (
                   <option key={pageSize} value={pageSize}>
                     {i18n._(t`Show ${pageSize}`)}
                   </option>
