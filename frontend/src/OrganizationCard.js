@@ -30,11 +30,11 @@ export function OrganizationCard({ name, slug, domainCount, ...rest }) {
           </Text>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Text>HTTPS:</Text>
+          <Text fontWeight="bold">Web Configuration</Text>
           <Progress value={80} bg="gray.300" w={['50%', '100%']} />
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Text>DMARC:</Text>
+          <Text fontWeight="bold">Email Configuration</Text>
           <Progress value={80} bg="gray.300" w={['50%', '100%']} />
         </Box>
       </PseudoBox>

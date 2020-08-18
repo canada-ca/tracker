@@ -3,13 +3,13 @@ import { number } from 'prop-types'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
-import { Stack, Button, Heading, Box } from '@chakra-ui/core'
+import { Stack, Button, Heading, Box, Divider } from '@chakra-ui/core'
 import {
   REVERSE_PAGINATED_DOMAINS as BACKWARD,
   PAGINATED_DOMAINS as FORWARD,
 } from './graphql/queries'
 import { useUserState } from './UserState'
-import { Domain } from './Domain'
+import { DomainCard } from './DomainCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
@@ -51,7 +51,8 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
       <ListOf elements={nodes} ifEmpty={() => <Trans>No Domains</Trans>} mb="4">
         {({ id, url, slug, lastRan }, index) => (
           <Box key={`${slug}:${id}:${index}`}>
-            <Domain key={url} url={url} lastRan={lastRan} />
+            <DomainCard key={url} url={url} lastRan={lastRan} />
+            <Divider borderColor="gray.900" />
           </Box>
         )}
       </ListOf>
