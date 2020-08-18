@@ -76,18 +76,28 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
 
   const strengths = {
-    strong: {
-      types: ['fullPass'],
-      name: i18n._(t`Pass`),
-    },
-    moderate: {
-      types: ['partialPass'],
-      name: i18n._(t`Partial Pass`),
-    },
-    weak: {
-      types: ['fail'],
-      name: i18n._(t`Fail`),
-    },
+    strong: [
+      {
+        name: 'fullPass',
+        displayName: i18n._(t`Pass`),
+      },
+    ],
+    moderate: [
+      {
+        name: 'passSpfOnly',
+        displayName: i18n._(t`Pass Only SPF`),
+      },
+      {
+        name: 'passDkimOnly',
+        displayName: i18n._(t`Pass Only DKIM`),
+      },
+    ],
+    weak: [
+      {
+        name: 'fail',
+        displayName: i18n._(t`Fail`),
+      },
+    ],
   }
 
   const formattedBarData = {
@@ -95,7 +105,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       return { month: entry.month, year: entry.year, ...entry.categoryTotals }
     }),
   }
-  formattedBarData.strengths = { ...strengths }
+  formattedBarData.strengths = strengths
 
   const detailTablesData = tableData.dmarcReportDetailTables.detailTables
 

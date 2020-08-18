@@ -14,7 +14,6 @@ import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
 import { DmarcGuidancePage } from './DmarcGuidancePage'
-import DmarcByDomainPage from './DmarcByDomainPage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -29,6 +28,7 @@ const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
 const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
+const DmarcByDomainPage = lazy(() => import('./DmarcByDomainPage'))
 
 export default function App() {
   // Hooks to be used with this functional component

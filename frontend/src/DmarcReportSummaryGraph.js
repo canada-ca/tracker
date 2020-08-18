@@ -97,14 +97,14 @@ function DmarcReportSummaryGraph({ ...props }) {
             margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
           />
           {Object.entries(strengths).map(([strengthName, strengthDetails]) => {
-            return strengthDetails.types.map((type) => {
+            return strengthDetails.map((type) => {
               return (
                 <Bar
-                  key={`Bar:${type}`}
-                  dataKey={type}
+                  key={`Bar:${type.name}`}
+                  dataKey={type.name}
                   stackId="a"
                   fill={colors[strengthName]}
-                  name={strengthDetails.name}
+                  name={type.displayName}
                 />
               )
             })

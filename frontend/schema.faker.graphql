@@ -100,6 +100,16 @@ type CategoryTotals {
   partialPass: Int
 
   """
+  Amount of messages that passed SPF and failed DKIM
+  """
+  passSpfOnly: Int
+
+  """
+  Amount of messages that pass DKIM and failed SPF
+  """
+  passDkimOnly: Int
+
+  """
   Amount of messages that failed all checks
   """
   fail: Int
