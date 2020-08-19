@@ -89,8 +89,6 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
                         thirtyDays: $thirtyDays
                     ) {
                         period {
-                            startDate
-                            endDate
                             categoryTotals {
                                 fullPass
                                 passSpfOnly
@@ -105,7 +103,6 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
 
             # Send request
             data = send_request(query=query, variables=variables, summary_table=True,)
-
             temp_dict = data.get("getDmarcSummaryByPeriod", {}).get("period", {})
             temp_dict.update({"domain": domain.domain})
             data_list.append(temp_dict)
@@ -121,11 +118,12 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
     logger.info(
         f"User: {user_id} successfully retrieved the DmarcReportSummaryTable information for all their domains."
     )
+
     return DmarcReportSummaryTable(
         # Get Month Name
-        calendar.month_name[int(data_list[0].get("endDate")[5:7].lstrip("0"))],
+        datetime.strptime(period.lower(), "%b").strftime("%B"),
         # Get Year
-        data_list[0].get("endDate")[0:4].lstrip("0"),
+        year,
         data_list,
     )
 
@@ -146,8 +144,8 @@ def resolve_demo_dmarc_report_summary_table(self, info, **kwargs):
 
     return DmarcReportSummaryTable(
         # Get Month Name
-        calendar.month_name[int(data_list[0].get("endDate")[5:7].lstrip("0"))],
+        datetime.strptime(period.lower(), "%b").strftime("%B"),
         # Get Year
-        data_list[0].get("endDate")[0:4].lstrip("0"),
+        year,
         data_list,
     )
