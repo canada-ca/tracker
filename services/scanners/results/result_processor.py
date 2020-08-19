@@ -233,8 +233,6 @@ Guidance = sqlalchemy.Table(
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-MIN_HSTS_AGE = 31536000  # one year
-
 
 def process_https(results):
     tags = []

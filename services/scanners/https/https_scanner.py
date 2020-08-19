@@ -16,6 +16,8 @@ from starlette.responses import PlainTextResponse, JSONResponse
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+MIN_HSTS_AGE = 31536000  # one year
+
 QUEUE_URL = "http://result-queue.scanners.svc.cluster.local/https"
 
 
