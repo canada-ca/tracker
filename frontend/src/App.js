@@ -53,32 +53,31 @@ export default function App() {
           <Link to="/">
             <Trans>Home</Trans>
           </Link>
-          <Link to="/dmarc-report">
-            <Trans>Report</Trans>
+
+          <Link to="/dmarc-summaries">
+            <Trans>DMARC Report</Trans>
           </Link>
+
           <Link to="/domains">
             <Trans>Domains</Trans>
           </Link>
+
           <Link to="/organizations">
             <Trans>Organizations</Trans>
           </Link>
+
           {isLoggedIn() && (
             <Link to="/user">
               <Trans>User Profile</Trans>
             </Link>
           )}
 
-          {/*{isLoggedIn() && (*/}
-          <Link to="/dmarc-summaries">
-            <Trans>DMARC Report</Trans>
-          </Link>
-          {/*)}*/}
-
           {isLoggedIn() && (
             <Link to="/admin">
               <Trans>Admin Profile</Trans>
             </Link>
           )}
+
           {isLoggedIn() ? (
             <Link
               to="/"
@@ -178,8 +177,7 @@ export default function App() {
               />
 
               <RouteIf
-                // condition={isLoggedIn()}
-                condition={true}
+                condition={isLoggedIn()}
                 alternate="/sign-in"
                 path="/dmarc-summaries"
                 render={({ match: { url } }) => (
@@ -187,11 +185,6 @@ export default function App() {
                     <Route
                       path={`${url}`}
                       component={DmarcByDomainPage}
-                      exact
-                    />
-                    <Route
-                      path={`${url}/:domainSlug`}
-                      component={DmarcReportPage}
                       exact
                     />
                   </>

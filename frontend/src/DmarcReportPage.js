@@ -4,21 +4,37 @@ import { useQuery } from '@apollo/client'
 import {
   DMARC_REPORT_DETAIL_TABLES,
   DMARC_REPORT_SUMMARY_LIST,
+  DMARC_REPORT_SUMMARY,
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
-import { Box, Stack, Text } from '@chakra-ui/core'
+import {Box, Heading, Stack, Text} from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import theme from './theme/canada'
+import { useParams } from 'react-router-dom'
 
 const { colors } = theme
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
   const { i18n } = useLingui()
+  const { domainSlug } = useParams()
+
+  const {
+    loading: summaryLoading,
+    error: summaryError,
+    data: summaryData,
+  } = useQuery(DMARC_REPORT_SUMMARY, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
+      },
+    },
+    variables: { domainSlug: domainSlug, period: 'LAST30DAYS', year: '2020' },
+  })
 
   const { loading: barLoading, error: barError, data: barData } = useQuery(
     DMARC_REPORT_SUMMARY_LIST,
@@ -28,7 +44,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           authorization: currentUser.jwt,
         },
       },
-      variables: { domainSlug: 'test-domain-slug' },
+      variables: { domainSlug: domainSlug },
     },
   )
 
@@ -43,37 +59,32 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       },
     },
     variables: {
-      domainSlug: 'test-domain-slug',
+      domainSlug: domainSlug,
       period: 'LAST30DAYS',
       year: '2020',
     },
   })
 
-  if (tableLoading || barLoading) return <p>Loading...</p>
+  if (tableLoading || barLoading || summaryLoading) return <p>Loading...</p>
   // TODO: Properly handle these errors
-  if (tableError || barError) return <p>Error</p>
+  if (tableError || barError || summaryError) return <p>Error</p>
 
-  // TODO: remove this after the new api function lands.
-  const summaryData = {
-    categories: [
-      {
-        name: 'fullPass',
-        count: 33,
-        percentage: 33,
-      },
-      {
-        name: 'partialPass',
-        count: 33,
-        percentage: 33,
-      },
-      {
-        name: 'fail',
-        count: 33,
-        percentage: 33,
-      },
-    ],
-    total: 100,
+  const total = summaryData.dmarcReportSummary.categoryTotals.total
+
+  const summaryDataTotals = summaryData.dmarcReportSummary.categoryTotals
+
+  const allowedCategories = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
+
+  const formattedSummaryData = {
+    categories: allowedCategories.map((category) => {
+      return {
+        name: category,
+        count: summaryDataTotals[category],
+        percentage: Math.round((10 * total) / summaryDataTotals[category]) / 10,
+      }
+    }),
   }
+  formattedSummaryData.total = total
 
   const strengths = {
     strong: [
@@ -260,6 +271,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   return (
     <Box width="100%">
+      <Heading as="h1" textAlign="center">
+        {domainSlug.toUpperCase()}
+      </Heading>
       <Stack align="center" isInline={cardAndGraphInline}>
         <SummaryCard
           title={i18n._(t`DMARC Report`)}
@@ -269,8 +283,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
               name: i18n._(t`Pass`),
               color: colors.strong,
             },
-            partialPass: {
-              name: i18n._(t`Partial Pass`),
+            passSpfOnly: {
+              name: i18n._(t`Pass SPF Only`),
+              color: colors.moderate,
+            },
+            passDkimOnly: {
+              name: i18n._(t`Pass DKIM Only`),
               color: colors.moderate,
             },
             fail: {
@@ -278,7 +296,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
               color: colors.weak,
             },
           }}
-          data={summaryData}
+          data={formattedSummaryData}
           width={cardWidth}
           mx="auto"
         />
