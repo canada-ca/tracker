@@ -65,11 +65,8 @@ def send_request(
         return data
 
     except Exception as e:
-        logger.error(
-            f"Error occurred on the dmarc-report-api side: {str(e)}"
-        )
+        logger.error(f"Error occurred on the dmarc-report-api side: {str(e)}")
         if summary_table:
             return {}
         else:
             raise GraphQLError("Error when querying dmarc-report-api.")
-

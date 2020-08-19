@@ -121,7 +121,7 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
 
     return DmarcReportSummaryTable(
         # Get Month Name
-        datetime.strptime(period.lower(),'%b').strftime('%B'),
+        datetime.strptime(period.lower(), "%b").strftime("%B"),
         # Get Year
         year,
         data_list,
@@ -143,8 +143,8 @@ def resolve_demo_dmarc_report_summary_table(self, info, **kwargs):
         data_list.append(temp_dict)
 
     return DmarcReportSummaryTable(
-         # Get Month Name
-        datetime.strptime(period.lower(),'%b').strftime('%B'),
+        # Get Month Name
+        datetime.strptime(period.lower(), "%b").strftime("%B"),
         # Get Year
         year,
         data_list,
