@@ -45,17 +45,17 @@ def setup():
 
 def test_process_https():
     tags = process_https(https_result_data)
-    assert tags = expected_https_tags
+    assert tags == expected_https_tags
 
 
 def test_process_ssl():
     tags = process_ssl(ssl_result_data)
-    assert tags = expected_ssl_tags
+    assert tags == expected_ssl_tags
 
 
 def test_process_dns():
     tags = process_dns(dns_result_data)
-    assert tags = expected_dns_tags
+    assert tags == expected_dns_tags
 
 
 async def test_insert_https():
