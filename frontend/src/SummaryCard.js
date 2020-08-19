@@ -1,8 +1,8 @@
 import React from 'react'
-import { PieChart } from 'react-minimal-pie-chart'
-import { Text, Stack, Box } from '@chakra-ui/core'
+import { Text, Box } from '@chakra-ui/core'
 import { objectOf, number, string, shape, arrayOf } from 'prop-types'
 
+import { Doughnut, Segment } from './Doughnut'
 function SummaryCard({ title, categoryDisplay, description, data }) {
   return (
     <Box
@@ -11,8 +11,9 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
       overflow="hidden"
       boxShadow="medium"
       width="min-content"
+      height="min-content"
     >
-      <Box bg="blue.900" px="8">
+      <Box bg="primary" px="8">
         <Text
           fontSize="xl"
           fontWeight="semibold"
@@ -32,38 +33,24 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
       </Box>
 
       <Box width="boxes.2">
-        <PieChart
-          data={data.categories.map(({ name, count }) => ({
+        <Doughnut
+          title={title}
+          data={data.categories.map(({ name, count, percentage }) => ({
             title: categoryDisplay[name].name,
-            color: categoryDisplay[name].color,
-            value: count,
+            count,
+            percentage,
+            total: data.total,
           }))}
-          radius={43}
-          lineWidth={42}
-          paddingAngle={1}
-        />
+          color="#2e2e40"
+          height={320}
+          width={320}
+          valueAccessor={(d) => d.count}
+        >
+          {(segmentProps, index) => (
+            <Segment key={`segment:${index}`} {...segmentProps} />
+          )}
+        </Doughnut>
       </Box>
-      <Stack align="center" spacing={0}>
-        {data.categories
-          .map(({ name, count, percentage }) => {
-            return (
-              <Text
-                key={`${name}:Badge:${count}:${percentage}`}
-                color="white"
-                px="2"
-                backgroundColor={categoryDisplay[name].color}
-                fontWeight="bold"
-                fontSize="sm"
-                width="100%"
-                textAlign="center"
-              >
-                {`${categoryDisplay[name].name}: ${count} - ${percentage}% `}
-              </Text>
-            )
-          })
-          .sort((a, b) => a.count - b.count) // mutate the array last
-        }
-      </Stack>
     </Box>
   )
 }
