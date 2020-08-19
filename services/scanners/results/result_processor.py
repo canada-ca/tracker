@@ -547,7 +547,7 @@ def process_dns(results):
 
     if results["spf"].get("missing", None) is not None:
         tags["spf"].append("spf2")
-        return tagsß
+        return tags
 
     dkim_record = results["dkim"].get("txt_record", None)
     if dkim_record is not None:
