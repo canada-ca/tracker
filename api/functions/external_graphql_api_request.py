@@ -8,10 +8,7 @@ from graphql import GraphQLError
 from app import logger
 
 
-def create_transport(
-    api_domain=os.getenv("DMARC_REPORT_API_URL"),
-    auth_token=os.getenv("DMARC_REPORT_API_TOKEN"),
-) -> RequestsHTTPTransport:
+def create_transport(api_domain, auth_token) -> RequestsHTTPTransport:
     """
     This function creates the transport object to send requests to an external
     API
@@ -27,10 +24,7 @@ def create_transport(
     return transport
 
 
-def create_client(
-    api_domain=os.getenv("DMARC_REPORT_API_URL"),
-    auth_token=os.getenv("DMARC_REPORT_API_TOKEN"),
-) -> Client:
+def create_client(api_domain, auth_token) -> Client:
     """
     This function is used to create the client that will execute the query
     :param api_domain: External API URL used to create the transport object
