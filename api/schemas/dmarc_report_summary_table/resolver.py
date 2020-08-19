@@ -119,6 +119,10 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
         f"User: {user_id} successfully retrieved the DmarcReportSummaryTable information for all their domains."
     )
 
+    if period == 'last30days':
+        current_month = int(datetime.today().month)
+        period = calendar.month_abbr[current_month]
+
     return DmarcReportSummaryTable(
         # Get Month Name
         datetime.strptime(period.lower(), "%b").strftime("%B"),
@@ -129,6 +133,9 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
 
 
 def resolve_demo_dmarc_report_summary_table(self, info, **kwargs):
+    period = cleanse_input(kwargs.get("period"))
+    year = cleanse_input(kwargs.get("year"))
+
     data_list = []
     faked_data = [
         {"domain": "test.gc.ca", "data": api_return_data_1},
@@ -141,6 +148,9 @@ def resolve_demo_dmarc_report_summary_table(self, info, **kwargs):
         )
         temp_dict.update({"domain": data.get("domain")})
         data_list.append(temp_dict)
+
+    if period == 'last30days':
+        period = calendar.month_abbr(datetime.today().month())
 
     return DmarcReportSummaryTable(
         # Get Month Name
