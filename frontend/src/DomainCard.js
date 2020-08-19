@@ -17,13 +17,23 @@ export function DomainCard({ url, lastRan, ...rest }) {
   const history = useHistory()
   const { path, _url } = useRouteMatch()
 
+  const webProtocols = [
+    'HTTPS',
+    'HSTS',
+    'HSTS Preloaded',
+    'SSL',
+    'Protocols & Ciphers',
+    'Certificate Use',
+  ]
+  const emailProtocols = ['SPF', 'DKIM', 'DMARC']
+
   const generateWebStatusIcon = () => {
     const randNum = Math.floor(Math.random() * 100 + 1)
     let statusIcon
     if (randNum < 70) {
-      statusIcon = <Icon name="check" color="strong" />
+      statusIcon = <Icon name="check-circle" color="strong" size="icons.sm" />
     } else {
-      statusIcon = <Icon name="warning" color="weak" />
+      statusIcon = <Icon name="warning" color="weak" size="icons.sm" />
     }
     return statusIcon
   }
@@ -32,11 +42,11 @@ export function DomainCard({ url, lastRan, ...rest }) {
     const randNum = Math.floor(Math.random() * 100 + 1)
     let statusIcon
     if (randNum < 33) {
-      statusIcon = <Icon name="check" color="strong" />
+      statusIcon = <Icon name="check-circle" color="strong" size="icons.sm" />
     } else if (randNum >= 33 && randNum < 66) {
-      statusIcon = <Icon name="warning-2" color="moderate" />
+      statusIcon = <Icon name="warning-2" color="moderate" size="icons.sm" />
     } else {
-      statusIcon = <Icon name="warning" color="weak" />
+      statusIcon = <Icon name="warning" color="weak" size="icons.sm" />
     }
     return statusIcon
   }
@@ -53,10 +63,11 @@ export function DomainCard({ url, lastRan, ...rest }) {
         _hover={{ borderColor: 'gray.100', bg: 'gray.100' }}
         p="8"
       >
-        <Box flexShrink="0" minW="15%">
-          <Text fontSize="xl">{url}</Text>
+        <Box flexShrink="0" minW="12%">
+          <Text fontWeight="semibold">Domain:</Text>
+          {url}
         </Box>
-        <Divider orientation="vertical" />
+        <Divider orientation={['horizontal', 'vertical']} />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           {lastRan ? (
             <Box>
@@ -66,66 +77,42 @@ export function DomainCard({ url, lastRan, ...rest }) {
               {lastRan}
             </Box>
           ) : (
-            <Text fontWeight="bold">
+            <Text fontWeight="bold" fontSize="sm">
               <Trans>Not scanned yet.</Trans>
             </Text>
           )}
         </Box>
-        <Divider orientation="vertical" />
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align="center">
-            <Text fontWeight="bold">HTTPS</Text>
-            {generateWebStatusIcon()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align="center">
-            <Text fontWeight="bold">HSTS</Text>
-            {generateWebStatusIcon()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align="center">
-            <Text fontWeight="bold">HSTS Preloaded</Text>
-            {generateWebStatusIcon()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align="center">
-            <Text fontWeight="bold">SSL</Text>
-            {generateWebStatusIcon()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align="center">
-            <Text fontWeight="bold">Protocols & Ciphers</Text>
-            {generateWebStatusIcon()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align="center">
-            <Text fontWeight="bold">Certificate Use</Text>
-            {generateWebStatusIcon()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align="center">
-            <Text fontWeight="bold">SPF</Text>
-            {generateEmailStatusIcon()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align="center">
-            <Text fontWeight="bold">DKIM</Text>
-            {generateEmailStatusIcon()}
-          </Stack>
-        </Box>
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Stack align="center">
-            <Text fontWeight="bold">DMARC</Text>
-            {generateEmailStatusIcon()}
-          </Stack>
-        </Box>
+        <Divider orientation={['horizontal', 'vertical']} />
+        {webProtocols.map(protocol => {
+          return (
+            <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} key={protocol}>
+              <Stack
+                align={['right', 'center']}
+                flexDirection={['row', 'column']}
+              >
+                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                  {protocol}:
+                </Text>
+                {generateWebStatusIcon()}
+              </Stack>
+            </Box>
+          )
+        })}
+        {emailProtocols.map(protocol => {
+          return (
+            <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} key={protocol}>
+              <Stack
+                align={['right', 'center']}
+                flexDirection={['row', 'column']}
+              >
+                <Text fontWeight="bold" fontSize="sm" mr={['2', '0']}>
+                  {protocol}:
+                </Text>
+                {generateEmailStatusIcon()}
+              </Stack>
+            </Box>
+          )
+        })}
       </PseudoBox>
     </ListItem>
   )
