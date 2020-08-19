@@ -22,9 +22,6 @@ from tests.testdata.dmarc_report_summary_table import (
     api_return_data_2,
 )
 
-DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
-DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
-
 
 @require_token
 def resolve_dmarc_report_summary_table(self, info, **kwargs):
@@ -107,13 +104,7 @@ def resolve_dmarc_report_summary_table(self, info, **kwargs):
             )
 
             # Send request
-            data = send_request(
-                api_domain=DMARC_REPORT_API_URL,
-                auth_token=DMARC_REPORT_API_TOKEN,
-                query=query,
-                variables=variables,
-                summary_table=True,
-            )
+            data = send_request(query=query, variables=variables, summary_table=True,)
 
             temp_dict = data.get("getDmarcSummaryByPeriod", {}).get("period", {})
             temp_dict.update({"domain": domain.domain})
