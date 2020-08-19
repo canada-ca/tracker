@@ -3,20 +3,43 @@ import { Trans } from '@lingui/macro'
 import {
   Text,
   ListItem,
-  Progress,
   PseudoBox,
   Box,
-  Link,
   Icon,
   Stack,
+  Divider,
 } from '@chakra-ui/core'
 import { useHistory } from 'react-router-dom'
 import { string } from 'prop-types'
-import { sanitizeUrl } from './sanitizeUrl'
 import { slugify } from './slugify'
 
 export function DomainCard({ url, lastRan, ...rest }) {
   const history = useHistory()
+
+  const generateWebStatusIcon = () => {
+    const randNum = Math.floor(Math.random() * 100 + 1)
+    let statusIcon
+    if (randNum < 70) {
+      statusIcon = <Icon name="check" color="strong" />
+    } else {
+      statusIcon = <Icon name="warning" color="weak" />
+    }
+    return statusIcon
+  }
+
+  const generateEmailStatusIcon = () => {
+    const randNum = Math.floor(Math.random() * 100 + 1)
+    let statusIcon
+    if (randNum < 33) {
+      statusIcon = <Icon name="check" color="strong" />
+    } else if (randNum >= 33 && randNum < 66) {
+      statusIcon = <Icon name="warning-2" color="moderate" />
+    } else {
+      statusIcon = <Icon name="warning" color="weak" />
+    }
+    return statusIcon
+  }
+
   return (
     <ListItem {...rest}>
       <PseudoBox
@@ -30,19 +53,9 @@ export function DomainCard({ url, lastRan, ...rest }) {
         p="8"
       >
         <Box flexShrink="0" minW="15%">
-          {/* <Link
-            // TODO: have the API enforce a scheme
-            // so we don't need to guess badly here.
-            href={`http://${sanitizeUrl(url)}`}
-            isExternal
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {url}
-            <Icon name="external-link" mx="2px" />
-          </Link> */}
-          <Text>{url}</Text>
+          <Text fontSize="xl">{url}</Text>
         </Box>
+        <Divider orientation="vertical" />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           {lastRan ? (
             <Box>
@@ -57,58 +70,59 @@ export function DomainCard({ url, lastRan, ...rest }) {
             </Text>
           )}
         </Box>
+        <Divider orientation="vertical" />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align="center">
             <Text fontWeight="bold">HTTPS</Text>
-            <Icon name="check" color="strong" />
+            {generateWebStatusIcon()}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align="center">
             <Text fontWeight="bold">HSTS</Text>
-            <Icon name="check" color="strong" />
+            {generateWebStatusIcon()}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align="center">
             <Text fontWeight="bold">HSTS Preloaded</Text>
-            <Icon name="check" color="strong" />
+            {generateWebStatusIcon()}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align="center">
             <Text fontWeight="bold">SSL</Text>
-            <Icon name="check" color="strong" />
+            {generateWebStatusIcon()}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align="center">
             <Text fontWeight="bold">Protocols & Ciphers</Text>
-            <Icon name="check" color="strong" />
+            {generateWebStatusIcon()}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align="center">
             <Text fontWeight="bold">Certificate Use</Text>
-            <Icon name="check" color="strong" />
+            {generateWebStatusIcon()}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align="center">
             <Text fontWeight="bold">SPF</Text>
-            <Icon name="check" color="strong" />
+            {generateEmailStatusIcon()}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align="center">
             <Text fontWeight="bold">DKIM</Text>
-            <Icon name="check" color="strong" />
+            {generateEmailStatusIcon()}
           </Stack>
         </Box>
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Stack align="center">
             <Text fontWeight="bold">DMARC</Text>
-            <Icon name="check" color="strong" />
+            {generateEmailStatusIcon()}
           </Stack>
         </Box>
       </PseudoBox>

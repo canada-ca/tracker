@@ -1,12 +1,25 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
-import { Text, ListItem, Progress, PseudoBox, Box } from '@chakra-ui/core'
+// import { Trans } from '@lingui/macro'
+import {
+  Text,
+  ListItem,
+  Progress,
+  PseudoBox,
+  Box,
+  Stack,
+  Divider,
+} from '@chakra-ui/core'
 import { useRouteMatch, useHistory } from 'react-router-dom'
 import { string, number } from 'prop-types'
 
 export function OrganizationCard({ name, slug, domainCount, ...rest }) {
   const { path, _url } = useRouteMatch()
   const history = useHistory()
+
+  const webValue = Math.floor(Math.random() * 100) + 1
+
+  const emailValue = Math.floor(Math.random() * 100) + 1
+
   return (
     <ListItem {...rest}>
       <PseudoBox
@@ -18,24 +31,33 @@ export function OrganizationCard({ name, slug, domainCount, ...rest }) {
         }}
         _hover={{ borderColor: 'gray.100', bg: 'gray.100' }}
         p="8"
+        mx="auto"
       >
         <Box flexShrink="0" minW="15%">
-          <Text mt="1" fontSize="md" fontWeight="semibold">
+          <Text mt="1" fontSize="lg" fontWeight="semibold">
             {name}
           </Text>
         </Box>
+        <Divider orientation="vertical" />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Text fontSize="md" minW="10%">
-            Services: {domainCount}
-          </Text>
+          <Stack isInline align="center">
+            <Text minW="10%" fontWeight="semibold">
+              Services:
+            </Text>
+            <Text>{domainCount}</Text>
+          </Stack>
         </Box>
+        <Divider orientation="vertical" />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Text fontWeight="bold">Web Configuration</Text>
-          <Progress value={80} bg="gray.300" w={['50%', '100%']} />
+          <Text>{webValue}%</Text>
+          <Progress value={webValue} bg="gray.300" w={['50%', '100%']} />
         </Box>
+        <Divider orientation="vertical" />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Text fontWeight="bold">Email Configuration</Text>
-          <Progress value={80} bg="gray.300" w={['50%', '100%']} />
+          <Text>{emailValue}%</Text>
+          <Progress value={emailValue} bg="gray.300" w={['50%', '100%']} />
         </Box>
       </PseudoBox>
     </ListItem>
