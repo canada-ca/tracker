@@ -27,7 +27,7 @@ export function OrganizationCard({ name, slug, domainCount, ...rest }) {
         display={{ md: 'flex' }}
         alignItems="center"
         onClick={() => {
-          history.push(`${path}/${slug}`)
+          history.push(`${path}/${slug}/domains`)
         }}
         _hover={{ borderColor: 'gray.100', bg: 'gray.100' }}
         p="8"

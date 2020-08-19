@@ -7,7 +7,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
 
-export function DmarcGuidancePage() {
+export default function DmarcGuidancePage() {
   const { currentUser } = useUserState()
   const { domainSlug } = useParams()
   const history = useHistory()

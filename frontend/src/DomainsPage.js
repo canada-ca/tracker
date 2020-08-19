@@ -3,7 +3,14 @@ import { number } from 'prop-types'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
-import { Stack, Button, Heading, Box, Divider } from '@chakra-ui/core'
+import {
+  Stack,
+  Button,
+  Heading,
+  Box,
+  Divider,
+  IconButton,
+} from '@chakra-ui/core'
 import {
   REVERSE_PAGINATED_DOMAINS as BACKWARD,
   PAGINATED_DOMAINS as FORWARD,
@@ -11,8 +18,10 @@ import {
 import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
+import { useHistory } from 'react-router-dom'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
+  const history = useHistory()
   const { currentUser } = useUserState()
   const {
     loading,
@@ -45,9 +54,18 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
 
   return (
     <Layout>
-      <Heading as="h1" mb="4">
-        <Trans>Domains</Trans>
-      </Heading>
+      <Stack isInline align="center" mb="4">
+        <IconButton
+          icon="arrow-left"
+          onClick={history.goBack}
+          color="gray.900"
+          fontSize="2xl"
+          aria-label="back to organizations"
+        />
+        <Heading as="h1">
+          <Trans>Domains</Trans>
+        </Heading>
+      </Stack>
       <ListOf elements={nodes} ifEmpty={() => <Trans>No Domains</Trans>} mb="4">
         {({ id, url, slug, lastRan }, index) => (
           <Box key={`${slug}:${id}:${index}`}>

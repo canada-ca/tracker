@@ -13,7 +13,6 @@ import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
-import { DmarcGuidancePage } from './DmarcGuidancePage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const DomainsPage = lazy(() => import('./DomainsPage'))
@@ -24,10 +23,10 @@ const UserList = lazy(() => import('./UserList'))
 const SignInPage = lazy(() => import('./SignInPage'))
 const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 const Organizations = lazy(() => import('./Organizations'))
-const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
 const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
+const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
 
 export default function App() {
   // Hooks to be used with this functional component
@@ -54,9 +53,6 @@ export default function App() {
           </Link>
           <Link to="/dmarc-report">
             <Trans>Report</Trans>
-          </Link>
-          <Link to="/domains">
-            <Trans>Domains</Trans>
           </Link>
           <Link to="/organizations">
             <Trans>Organizations</Trans>
@@ -125,8 +121,20 @@ export default function App() {
                   <>
                     <Route path={`${url}`} component={Organizations} exact />
                     <Route
-                      path={`${url}/:orgSlug`}
-                      component={OrganizationDetails}
+                      path={`${url}/:orgSlug/domains`}
+                      render={({ match: { url } }) => (
+                        <>
+                          <Route
+                            path={`${url}`}
+                            component={DomainsPage}
+                            exact
+                          />
+                          <Route
+                            path={`${url}/:domainSlug`}
+                            component={DmarcGuidancePage}
+                          />
+                        </>
+                      )}
                     />
                   </>
                 )}
@@ -147,21 +155,6 @@ export default function App() {
               >
                 <UserList />
               </RouteIf>
-
-              <RouteIf
-                condition={isLoggedIn()}
-                alternate="/sign-in"
-                path="/domains"
-                render={({ match: { url } }) => (
-                  <>
-                    <Route path={`${url}`} component={DomainsPage} exact />
-                    <Route
-                      path={`${url}/:domainSlug`}
-                      component={DmarcGuidancePage}
-                    />
-                  </>
-                )}
-              />
 
               <RouteIf
                 condition={isLoggedIn()}

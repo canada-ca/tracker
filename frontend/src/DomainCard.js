@@ -9,12 +9,13 @@ import {
   Stack,
   Divider,
 } from '@chakra-ui/core'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useRouteMatch } from 'react-router-dom'
 import { string } from 'prop-types'
 import { slugify } from './slugify'
 
 export function DomainCard({ url, lastRan, ...rest }) {
   const history = useHistory()
+  const { path, _url } = useRouteMatch()
 
   const generateWebStatusIcon = () => {
     const randNum = Math.floor(Math.random() * 100 + 1)
@@ -47,7 +48,7 @@ export function DomainCard({ url, lastRan, ...rest }) {
         display={{ md: 'flex' }}
         alignItems="center"
         onClick={() => {
-          history.push(`domains/${slugify(url)}`)
+          history.push(`${path}/${slugify(url)}`)
         }}
         _hover={{ borderColor: 'gray.100', bg: 'gray.100' }}
         p="8"

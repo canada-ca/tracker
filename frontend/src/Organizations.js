@@ -9,7 +9,6 @@ import {
   REVERSE_PAGINATED_ORGANIZATIONS as BACKWARD,
 } from './graphql/queries'
 import { useUserState } from './UserState'
-// import { Organization } from './Organization'
 import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 
