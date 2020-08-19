@@ -1,4 +1,5 @@
 import json
+import os
 
 from gql import Client
 from gql.transport.requests import RequestsHTTPTransport
@@ -7,7 +8,10 @@ from graphql import GraphQLError
 from app import logger
 
 
-def create_transport(api_domain, auth_token) -> RequestsHTTPTransport:
+def create_transport(
+    api_domain=os.getenv("DMARC_REPORT_API_URL"),
+    auth_token=os.getenv("DMARC_REPORT_API_TOKEN"),
+) -> RequestsHTTPTransport:
     """
     This function creates the transport object to send requests to an external
     API
@@ -23,7 +27,10 @@ def create_transport(api_domain, auth_token) -> RequestsHTTPTransport:
     return transport
 
 
-def create_client(api_domain, auth_token) -> Client:
+def create_client(
+    api_domain=os.getenv("DMARC_REPORT_API_URL"),
+    auth_token=os.getenv("DMARC_REPORT_API_TOKEN"),
+) -> Client:
     """
     This function is used to create the client that will execute the query
     :param api_domain: External API URL used to create the transport object
@@ -38,7 +45,11 @@ def create_client(api_domain, auth_token) -> Client:
 
 
 def send_request(
-    api_domain, auth_token, variables: dict, query, summary_table=False
+    variables: dict,
+    query,
+    summary_table=False,
+    api_domain=os.getenv("DMARC_REPORT_API_URL"),
+    auth_token=os.getenv("DMARC_REPORT_API_TOKEN"),
 ) -> dict:
     """
     This function sends the request to the external API, with a pre-determined

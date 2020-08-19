@@ -20,10 +20,6 @@ from schemas.dmarc_report_summary_list.dmarc_report_summary_list import (
 from tests.testdata.dmarc_report_summary_list import dmarc_report_summary_list_data
 
 
-DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
-DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
-
-
 @require_token
 def resolve_dmarc_report_summary_list(self, info, **kwargs):
     """
@@ -84,12 +80,7 @@ def resolve_dmarc_report_summary_list(self, info, **kwargs):
             )
 
             # Send request
-            data = send_request(
-                api_domain=DMARC_REPORT_API_URL,
-                auth_token=DMARC_REPORT_API_TOKEN,
-                query=query,
-                variables=variables,
-            )
+            data = send_request(query=query, variables=variables,)
 
             rtr_list = []
 
