@@ -40,7 +40,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
         {
           personalisation: {
             create_account_link: 'TestLink.ca',
-            display_name: user.displayName,
+            display_name: user.userName,
             organization_name: 'Test Org',
           },
         },
@@ -76,7 +76,7 @@ describe('given the sendOrgInviteCreateAccount function', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Error ocurred when sending password org create account invite email for ${user._key}: Error: Notification error occurred.`,
+        `Error ocurred when sending org create account invite email for ${user._key}: Error: Notification error occurred.`,
       ])
     })
   })

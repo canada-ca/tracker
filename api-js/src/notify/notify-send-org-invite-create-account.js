@@ -11,13 +11,13 @@ const sendOrgInviteCreateAccount = async ({
     await notifyClient.sendEmail(templateId, user.userName, {
       personalisation: {
         create_account_link: createAccountLink,
-        display_name: user.displayName,
+        display_name: user.userName,
         organization_name: orgName,
       },
     })
   } catch (err) {
     console.error(
-      `Error ocurred when sending password org create account invite email for ${user._key}: ${err}`,
+      `Error ocurred when sending org create account invite email for ${user._key}: ${err}`,
     )
     throw new Error('Unable to send org invite email. Please try again.')
   }
