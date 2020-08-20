@@ -31,12 +31,12 @@ demo_dmarc_report_summary_table = graphene.Field(
     period=graphene.Argument(
         PeriodEnums,
         description="The period in which the returned data is relevant to.",
-        required=False,
+        required=True,
     ),
     year=graphene.Argument(
         Year,
         description="The year in which the returned data is relevant to.",
-        required=False,
+        required=True,
     ),
     description="Query for creating domain summary table.",
     resolver=resolve_demo_dmarc_report_summary_table,
