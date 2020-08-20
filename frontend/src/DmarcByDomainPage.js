@@ -158,7 +158,7 @@ export default function DmarcByDomainPage() {
       hideTitleButton={true}
       linkColumns={[{ column: 'domain', isExternal: false }]}
       prependLink="domains/"
-      appendLink="/dmarc-report"
+      appendLink={`/dmarc-report/${selectedPeriod}/${selectedYear}`}
     />
   )
 

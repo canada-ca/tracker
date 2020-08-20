@@ -168,7 +168,7 @@ export default function App() {
                       exact
                     />
                     <Route
-                      path={`${url}/:domainSlug/dmarc-report`}
+                      path={`${url}/:domainSlug/dmarc-report/:period?/:year?`}
                       component={DmarcReportPage}
                       exact
                     />
