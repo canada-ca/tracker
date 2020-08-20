@@ -14,7 +14,7 @@ import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import theme from './theme/canada'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 
 const { colors } = theme
 
@@ -22,6 +22,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
   const { i18n } = useLingui()
   const { domainSlug, period, year } = useParams()
+  const history = useHistory()
 
   const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period || 'LAST30DAYS')
@@ -36,7 +37,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     loading: summaryLoading,
     error: summaryError,
     data: summaryData,
-    refetch: summaryRefetch,
   } = useQuery(DMARC_REPORT_SUMMARY, {
     context: {
       headers: {
@@ -66,7 +66,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     loading: tableLoading,
     error: tableError,
     data: tableData,
-    refetch: tableRefetch,
   } = useQuery(DMARC_REPORT_DETAIL_TABLES, {
     context: {
       headers: {
@@ -135,14 +134,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     }
   }
 
-  // refetch data for selected date
+  // Show data for newly selected date
   const handleChange = (e) => {
     setSelectedDate(e.target.value)
     const [newPeriod, newYear] = e.target.value.split(', ')
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
-    summaryRefetch()
-    tableRefetch()
+    history.push(`/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`)
   }
 
   const cardWidth = window.matchMedia('(max-width: 500px)').matches
