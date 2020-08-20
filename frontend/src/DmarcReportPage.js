@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import {
@@ -8,7 +8,7 @@ import {
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
-import { Box, Heading, Stack, Text } from '@chakra-ui/core'
+import { Box, Heading, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
@@ -22,16 +22,26 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
   const { i18n } = useLingui()
   const { domainSlug, period, year } = useParams()
+  // const currentDate = new Date()
+  // const currentMonth =
+  //   period ||
+  //   currentDate.toLocaleString('default', { month: 'long' }).toUpperCase()
+  // const selectedYear = year || currentDate.getFullYear()
+
   const currentDate = new Date()
-  const currentMonth = period || currentDate
-    .toLocaleString('default', { month: 'long' })
-    .toUpperCase()
-  const selectedYear = year || currentDate.getFullYear()
+  const [selectedPeriod, setSelectedPeriod] = useState(period || 'LAST30DAYS')
+  const [selectedYear, setSelectedYear] = useState(
+    year || currentDate.getFullYear().toString(),
+  )
+  const [selectedDate, setSelectedDate] = useState(
+    `${selectedPeriod}, ${selectedYear}`,
+  )
 
   const {
     loading: summaryLoading,
     error: summaryError,
     data: summaryData,
+    refetch: summaryRefetch,
   } = useQuery(DMARC_REPORT_SUMMARY, {
     context: {
       headers: {
@@ -40,27 +50,30 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
     variables: {
       domainSlug: domainSlug,
-      period: currentMonth,
+      period: selectedPeriod,
       year: selectedYear,
     },
   })
 
-  const { loading: barLoading, error: barError, data: barData } = useQuery(
-    DMARC_REPORT_SUMMARY_LIST,
-    {
-      context: {
-        headers: {
-          authorization: currentUser.jwt,
-        },
+  const {
+    loading: barLoading,
+    error: barError,
+    data: barData,
+    refetch: barRefetch,
+  } = useQuery(DMARC_REPORT_SUMMARY_LIST, {
+    context: {
+      headers: {
+        authorization: currentUser.jwt,
       },
-      variables: { domainSlug: domainSlug },
     },
-  )
+    variables: { domainSlug: domainSlug },
+  })
 
   const {
     loading: tableLoading,
     error: tableError,
     data: tableData,
+    refetch: tableRefetch,
   } = useQuery(DMARC_REPORT_DETAIL_TABLES, {
     context: {
       headers: {
@@ -69,7 +82,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
     variables: {
       domainSlug: domainSlug,
-      period: currentMonth,
+      period: selectedPeriod,
       year: selectedYear,
     },
   })
@@ -77,6 +90,64 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   if (tableLoading || barLoading || summaryLoading) return <p>Loading...</p>
   // TODO: Properly handle these errors
   if (tableError || barError || summaryError) return <p>Error</p>
+
+  const months = [
+    t`January`,
+    t`February`,
+    t`March`,
+    t`April`,
+    t`May`,
+    t`June`,
+    t`July`,
+    t`August`,
+    t`September`,
+    t`October`,
+    t`November`,
+    t`December`,
+  ]
+
+  const options = [
+    <option
+      key="LAST30DAYS"
+      value={`LAST30DAYS, ${currentDate.getFullYear().toString()}`}
+    >
+      {i18n._(t`Last 30 Days`)}
+    </option>,
+  ]
+
+  // add dmarc date selection options
+  for (let i = currentDate.getMonth(), j = 13; j > 0; i--, j--) {
+    // handle previous year
+    if (i < 0) {
+      const value = `${months[months.length + i].toUpperCase()}, ${
+        currentDate.getFullYear() - 1
+      }`
+      options.push(
+        <option key={value} value={value}>
+          {value}
+        </option>,
+      )
+    }
+    // handle current year
+    else {
+      const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
+      options.push(
+        <option key={value} value={value}>
+          {value}
+        </option>,
+      )
+    }
+  }
+
+  const handleChange = (e) => {
+    setSelectedDate(e.target.value)
+    const [newPeriod, newYear] = e.target.value.split(', ')
+    setSelectedPeriod(newPeriod)
+    setSelectedYear(newYear)
+    summaryRefetch()
+    barRefetch()
+    tableRefetch()
+  }
 
   const cardWidth = window.matchMedia('(max-width: 500px)').matches
     ? '100%'
@@ -382,6 +453,20 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       <Heading as="h1" textAlign="center">
         {domainSlug.toUpperCase()}
       </Heading>
+
+      <Stack isInline align="center">
+        <Text fontWeight="bold">
+          <Trans>Showing data for period: </Trans>
+        </Text>
+        <Select
+          width="fit-content"
+          onChange={(e) => handleChange(e)}
+          value={selectedDate}
+        >
+          {options}
+        </Select>
+      </Stack>
+
       <Stack align="center" isInline={cardAndGraphInline}>
         {summaryCardDisplay}
         <DmarcTimeGraph
