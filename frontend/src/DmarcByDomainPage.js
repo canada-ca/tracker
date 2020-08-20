@@ -37,7 +37,12 @@ export default function DmarcByDomainPage() {
   })
 
   // TODO: Properly handle these errors
-  if (tableError) return <p>Error</p>
+  if (tableError)
+    return (
+      <Heading as="h3" size="lg" textAlign="center">
+        <Trans>Error while querying for DMARC report summary table</Trans>
+      </Heading>
+    )
 
   // Initial sorting category for detail tables
   const initialSort = [{ id: 'totalMessages', desc: true }]

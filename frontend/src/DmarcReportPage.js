@@ -86,8 +86,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         <Trans>Loading...</Trans>
       </Text>
     )
-  // TODO: Properly handle these errors
-  if (tableError || barError || summaryError) return <p>Error</p>
 
   const months = [
     t`January`,
@@ -137,6 +135,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     }
   }
 
+  // refetch data for selected date
   const handleChange = (e) => {
     setSelectedDate(e.target.value)
     const [newPeriod, newYear] = e.target.value.split(', ')
@@ -197,33 +196,36 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       }
       formattedSummaryData.total = total
 
+      const categoryDisplay = {
+        fullPass: {
+          name: i18n._(t`Pass`),
+          color: colors.strong,
+        },
+        passSpfOnly: {
+          name: i18n._(t`Pass SPF Only`),
+          color: colors.moderate,
+        },
+        passDkimOnly: {
+          name: i18n._(t`Pass DKIM Only`),
+          color: colors.moderate,
+        },
+        fail: {
+          name: i18n._(t`Fail`),
+          color: colors.weak,
+        },
+      }
+
       summaryCardDisplay = (
         <SummaryCard
           title={i18n._(t`DMARC Report`)}
           description={i18n._(t`DMARC Report`)}
-          categoryDisplay={{
-            fullPass: {
-              name: i18n._(t`Pass`),
-              color: colors.strong,
-            },
-            passSpfOnly: {
-              name: i18n._(t`Pass SPF Only`),
-              color: colors.moderate,
-            },
-            passDkimOnly: {
-              name: i18n._(t`Pass DKIM Only`),
-              color: colors.moderate,
-            },
-            fail: {
-              name: i18n._(t`Fail`),
-              color: colors.weak,
-            },
-          }}
+          categoryDisplay={categoryDisplay}
           data={formattedSummaryData}
         />
       )
     }
   } else {
+    // handle errors / loading / no data
     summaryCardDisplay = (
       <Heading as="h3" size="lg" textAlign="center" width="320px">
         {summaryLoading ? (
@@ -237,6 +239,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
   }
 
+  // Create dmarc bar graph if not loading and no errors
   let barDisplay
   if (!barLoading && !barError) {
     const strengths = {
@@ -280,6 +283,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       />
     )
   } else {
+    // handle errors / loading
     barDisplay = (
       <Heading as="h3" size="lg" textAlign="center">
         {barLoading ? (
@@ -481,7 +485,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         />
       </>
     )
-  } else
+  }
+  // handle errors / loading / no data
+  else
     tableDisplay = (
       <Heading as="h3" size="lg" textAlign="center">
         {tableLoading ? (
