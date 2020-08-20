@@ -1,3 +1,5 @@
+import { t } from '@lingui/macro'
+
 export const rawSummaryListData = {
   dmarcReportSummaryList: [
     {
@@ -145,3 +147,35 @@ export const rawSummaryListData = {
     },
   ],
 }
+
+const strengths = {
+  strong: [
+    {
+      name: 'fullPass',
+      displayName: t`Pass`,
+    },
+  ],
+  moderate: [
+    {
+      name: 'passSpfOnly',
+      displayName: t`Pass Only SPF`,
+    },
+    {
+      name: 'passDkimOnly',
+      displayName: t`Pass Only DKIM`,
+    },
+  ],
+  weak: [
+    {
+      name: 'fail',
+      displayName: t`Fail`,
+    },
+  ],
+}
+
+export const formattedBarData = {
+  periods: rawSummaryListData.dmarcReportSummaryList.map((entry) => {
+    return { month: entry.month, year: entry.year, ...entry.categoryTotals }
+  }),
+}
+formattedBarData.strengths = strengths
