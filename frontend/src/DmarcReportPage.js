@@ -22,11 +22,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
   const { i18n } = useLingui()
   const { domainSlug, period, year } = useParams()
-  // const currentDate = new Date()
-  // const currentMonth =
-  //   period ||
-  //   currentDate.toLocaleString('default', { month: 'long' }).toUpperCase()
-  // const selectedYear = year || currentDate.getFullYear()
 
   const currentDate = new Date()
   const [selectedPeriod, setSelectedPeriod] = useState(period || 'LAST30DAYS')
@@ -55,19 +50,17 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
   })
 
-  const {
-    loading: barLoading,
-    error: barError,
-    data: barData,
-    refetch: barRefetch,
-  } = useQuery(DMARC_REPORT_SUMMARY_LIST, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
+  const { loading: barLoading, error: barError, data: barData } = useQuery(
+    DMARC_REPORT_SUMMARY_LIST,
+    {
+      context: {
+        headers: {
+          authorization: currentUser.jwt,
+        },
       },
+      variables: { domainSlug: domainSlug },
     },
-    variables: { domainSlug: domainSlug },
-  })
+  )
 
   const {
     loading: tableLoading,
@@ -87,7 +80,12 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
   })
 
-  if (tableLoading || barLoading || summaryLoading) return <p>Loading...</p>
+  if (tableLoading && barLoading && summaryLoading)
+    return (
+      <Text>
+        <Trans>Loading...</Trans>
+      </Text>
+    )
   // TODO: Properly handle these errors
   if (tableError || barError || summaryError) return <p>Error</p>
 
@@ -145,7 +143,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
     summaryRefetch()
-    barRefetch()
     tableRefetch()
   }
 
@@ -157,105 +154,150 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     ? '35%'
     : '20%'
 
+  const graphWidth =
+    cardWidth.slice(0, -1) <= 20
+      ? `${100 - Number(cardWidth.slice(0, -1))}%`
+      : '100%'
+
+  const cardAndGraphInline = graphWidth !== '100%'
+
   // Create summary card if no error and categoryTotals data present
   let summaryCardDisplay
   if (
     !summaryError &&
+    !summaryLoading &&
     summaryData.dmarcReportSummary.categoryTotals.total !== 0
   ) {
-    const summaryDataTotals = summaryData.dmarcReportSummary.categoryTotals
-    const total = summaryDataTotals.total
+    if (summaryLoading) {
+      summaryCardDisplay = (
+        <Text>
+          <Trans>Loading...</Trans>
+        </Text>
+      )
+    } else {
+      const summaryDataTotals = summaryData.dmarcReportSummary.categoryTotals
+      const total = summaryDataTotals.total
 
-    const allowedCategories = [
-      'fullPass',
-      'passSpfOnly',
-      'passDkimOnly',
-      'fail',
-    ]
+      const allowedCategories = [
+        'fullPass',
+        'passSpfOnly',
+        'passDkimOnly',
+        'fail',
+      ]
 
-    const formattedSummaryData = {
-      categories: allowedCategories.map((category) => {
-        return {
-          name: category,
-          count: summaryDataTotals[category],
-          percentage:
-            Math.round((10 * total) / summaryDataTotals[category]) / 10,
-        }
-      }),
+      const formattedSummaryData = {
+        categories: allowedCategories.map((category) => {
+          return {
+            name: category,
+            count: summaryDataTotals[category],
+            percentage:
+              Math.round((10 * total) / summaryDataTotals[category]) / 10,
+          }
+        }),
+      }
+      formattedSummaryData.total = total
+
+      summaryCardDisplay = (
+        <SummaryCard
+          title={i18n._(t`DMARC Report`)}
+          description={i18n._(t`Description of DMARC report`)}
+          categoryDisplay={{
+            fullPass: {
+              name: i18n._(t`Pass`),
+              color: colors.strong,
+            },
+            passSpfOnly: {
+              name: i18n._(t`Pass SPF Only`),
+              color: colors.moderate,
+            },
+            passDkimOnly: {
+              name: i18n._(t`Pass DKIM Only`),
+              color: colors.moderate,
+            },
+            fail: {
+              name: i18n._(t`Fail`),
+              color: colors.weak,
+            },
+          }}
+          data={formattedSummaryData}
+        />
+      )
     }
-    formattedSummaryData.total = total
-
-    summaryCardDisplay = (
-      <SummaryCard
-        title={i18n._(t`DMARC Report`)}
-        description={i18n._(t`Description of DMARC report`)}
-        categoryDisplay={{
-          fullPass: {
-            name: i18n._(t`Pass`),
-            color: colors.strong,
-          },
-          passSpfOnly: {
-            name: i18n._(t`Pass SPF Only`),
-            color: colors.moderate,
-          },
-          passDkimOnly: {
-            name: i18n._(t`Pass DKIM Only`),
-            color: colors.moderate,
-          },
-          fail: {
-            name: i18n._(t`Fail`),
-            color: colors.weak,
-          },
-        }}
-        data={formattedSummaryData}
-        width={cardWidth}
-        mx="auto"
-      />
-    )
   } else {
     summaryCardDisplay = (
-      <Heading as="h3" size="lg" textAlign="center">
-        <Trans>No data for the current period</Trans>
+      <Heading as="h3" size="lg" textAlign="center" width="320px">
+        {summaryLoading ? (
+          <Trans>Loading...</Trans>
+        ) : summaryError ? (
+          <Trans>Error while querying for summary card</Trans>
+        ) : (
+          <Trans>No data for the current period</Trans>
+        )}
       </Heading>
     )
   }
 
-  const strengths = {
-    strong: [
-      {
-        name: 'fullPass',
-        displayName: i18n._(t`Pass`),
-      },
-    ],
-    moderate: [
-      {
-        name: 'passSpfOnly',
-        displayName: i18n._(t`Pass Only SPF`),
-      },
-      {
-        name: 'passDkimOnly',
-        displayName: i18n._(t`Pass Only DKIM`),
-      },
-    ],
-    weak: [
-      {
-        name: 'fail',
-        displayName: i18n._(t`Fail`),
-      },
-    ],
-  }
+  let barDisplay
+  if (!barLoading && !barError) {
+    const strengths = {
+      strong: [
+        {
+          name: 'fullPass',
+          displayName: i18n._(t`Pass`),
+        },
+      ],
+      moderate: [
+        {
+          name: 'passSpfOnly',
+          displayName: i18n._(t`Pass Only SPF`),
+        },
+        {
+          name: 'passDkimOnly',
+          displayName: i18n._(t`Pass Only DKIM`),
+        },
+      ],
+      weak: [
+        {
+          name: 'fail',
+          displayName: i18n._(t`Fail`),
+        },
+      ],
+    }
 
-  const formattedBarData = {
-    periods: barData.dmarcReportSummaryList.map((entry) => {
-      return { month: entry.month, year: entry.year, ...entry.categoryTotals }
-    }),
+    const formattedBarData = {
+      periods: barData.dmarcReportSummaryList.map((entry) => {
+        return { month: entry.month, year: entry.year, ...entry.categoryTotals }
+      }),
+    }
+    formattedBarData.strengths = strengths
+
+    barDisplay = (
+      <DmarcTimeGraph
+        data={formattedBarData}
+        width={graphWidth}
+        mr="400px"
+        responsiveWidth={summaryListResponsiveWidth}
+      />
+    )
+  } else {
+    barDisplay = (
+      <Heading as="h3" size="lg" textAlign="center">
+        {barLoading ? (
+          <Trans>Loading...</Trans>
+        ) : barError ? (
+          <Trans>Error while querying for summary bar graph</Trans>
+        ) : (
+          ''
+        )}
+      </Heading>
+    )
   }
-  formattedBarData.strengths = strengths
 
   // Create report tables if no errors and message data exist
   let tableDisplay
   if (
     !tableError &&
+    !tableLoading &&
     tableData.dmarcReportDetailTables.detailTables.fullPass.length > 0
   ) {
     const detailTablesData = tableData.dmarcReportDetailTables.detailTables
@@ -439,14 +481,18 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         />
       </>
     )
-  } else tableDisplay = ''
-
-  const graphWidth =
-    cardWidth.slice(0, -1) <= 20
-      ? `${100 - Number(cardWidth.slice(0, -1))}%`
-      : '100%'
-
-  const cardAndGraphInline = graphWidth !== '100%'
+  } else
+    tableDisplay = (
+      <Heading as="h3" size="lg" textAlign="center">
+        {tableLoading ? (
+          <Trans>Loading...</Trans>
+        ) : tableError ? (
+          <Trans>Error while querying for summary tables</Trans>
+        ) : (
+          ''
+        )}
+      </Heading>
+    )
 
   return (
     <Box width="100%">
@@ -467,14 +513,13 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         </Select>
       </Stack>
 
-      <Stack align="center" isInline={cardAndGraphInline}>
+      <Stack
+        align="center"
+        isInline={cardAndGraphInline}
+        spacing="space-between"
+      >
         {summaryCardDisplay}
-        <DmarcTimeGraph
-          data={formattedBarData}
-          width={graphWidth}
-          mx="auto"
-          responsiveWidth={summaryListResponsiveWidth}
-        />
+        {barDisplay}
       </Stack>
       {tableDisplay}
     </Box>
