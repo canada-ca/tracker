@@ -9,7 +9,7 @@ const shadows = {
 }
 
 const colors = {
-  primary: '#0D467D',
+  primary: '#2e2e40',
   accent: '#FEC04F',
   strong: '#278400',
   moderate: '#FF9900',

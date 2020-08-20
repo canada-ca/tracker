@@ -77,7 +77,7 @@ type CategorizedSummary {
   """
   List of SummaryCategory objects with data for different computed categories.
   """
-  categories: [SummaryCategory] @listLength(min: 2, max: 2)
+  categories: [SummaryCategory] @listLength(min: 2, max: 3)
 
   """
   Total domains that were checked under this summary.
