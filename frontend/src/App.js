@@ -207,7 +207,7 @@ export default function App() {
                 <QRcodePage userName={currentUser.userName} />
               </RouteIf>
 
-              <Route path="/dmarc-report">
+              <Route path="/dmarc-report/:period?/:year?">
                 <DmarcReportPage />
               </Route>
 

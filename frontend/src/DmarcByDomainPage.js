@@ -83,7 +83,7 @@ export default function DmarcByDomainPage() {
       <DmarcReportTable
         data={tableData.dmarcReportSummaryTable.domains}
         columns={percentageColumns}
-        title={i18n._(t`Pass/Fail Ratios by Domain - Last 30 Days`)}
+        title={i18n._(t`Pass/Fail Ratios by Domain`)}
         initialSort={initialSort}
         mb="30px"
         hideTitleButton={true}

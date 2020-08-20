@@ -8,7 +8,7 @@ import {
 } from './graphql/queries'
 import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
-import {Box, Heading, Stack, Text} from '@chakra-ui/core'
+import { Box, Heading, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
@@ -21,7 +21,12 @@ const { colors } = theme
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
   const { i18n } = useLingui()
-  const { domainSlug } = useParams()
+  const { domainSlug, period, year } = useParams()
+  const currentDate = new Date()
+  const currentMonth = period || currentDate
+    .toLocaleString('default', { month: 'long' })
+    .toUpperCase()
+  const selectedYear = year || currentDate.getFullYear()
 
   const {
     loading: summaryLoading,
@@ -33,7 +38,11 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         authorization: currentUser.jwt,
       },
     },
-    variables: { domainSlug: domainSlug, period: 'LAST30DAYS', year: '2020' },
+    variables: {
+      domainSlug: domainSlug,
+      period: currentMonth,
+      year: selectedYear,
+    },
   })
 
   const { loading: barLoading, error: barError, data: barData } = useQuery(
@@ -60,8 +69,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
     variables: {
       domainSlug: domainSlug,
-      period: 'LAST30DAYS',
-      year: '2020',
+      period: currentMonth,
+      year: selectedYear,
     },
   })
 
@@ -69,22 +78,76 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   // TODO: Properly handle these errors
   if (tableError || barError || summaryError) return <p>Error</p>
 
-  const total = summaryData.dmarcReportSummary.categoryTotals.total
+  const cardWidth = window.matchMedia('(max-width: 500px)').matches
+    ? '100%'
+    : window.matchMedia('(max-width: 800px)').matches
+    ? '50%'
+    : window.matchMedia('(max-width: 1200px)').matches
+    ? '35%'
+    : '20%'
 
-  const summaryDataTotals = summaryData.dmarcReportSummary.categoryTotals
+  // Create summary card if no error and categoryTotals data present
+  let summaryCardDisplay
+  if (
+    !summaryError &&
+    summaryData.dmarcReportSummary.categoryTotals.total !== 0
+  ) {
+    const summaryDataTotals = summaryData.dmarcReportSummary.categoryTotals
+    const total = summaryDataTotals.total
 
-  const allowedCategories = ['fullPass', 'passSpfOnly', 'passDkimOnly', 'fail']
+    const allowedCategories = [
+      'fullPass',
+      'passSpfOnly',
+      'passDkimOnly',
+      'fail',
+    ]
 
-  const formattedSummaryData = {
-    categories: allowedCategories.map((category) => {
-      return {
-        name: category,
-        count: summaryDataTotals[category],
-        percentage: Math.round((10 * total) / summaryDataTotals[category]) / 10,
-      }
-    }),
+    const formattedSummaryData = {
+      categories: allowedCategories.map((category) => {
+        return {
+          name: category,
+          count: summaryDataTotals[category],
+          percentage:
+            Math.round((10 * total) / summaryDataTotals[category]) / 10,
+        }
+      }),
+    }
+    formattedSummaryData.total = total
+
+    summaryCardDisplay = (
+      <SummaryCard
+        title={i18n._(t`DMARC Report`)}
+        description={i18n._(t`Description of DMARC report`)}
+        categoryDisplay={{
+          fullPass: {
+            name: i18n._(t`Pass`),
+            color: colors.strong,
+          },
+          passSpfOnly: {
+            name: i18n._(t`Pass SPF Only`),
+            color: colors.moderate,
+          },
+          passDkimOnly: {
+            name: i18n._(t`Pass DKIM Only`),
+            color: colors.moderate,
+          },
+          fail: {
+            name: i18n._(t`Fail`),
+            color: colors.weak,
+          },
+        }}
+        data={formattedSummaryData}
+        width={cardWidth}
+        mx="auto"
+      />
+    )
+  } else {
+    summaryCardDisplay = (
+      <Heading as="h3" size="lg" textAlign="center">
+        <Trans>No data for the current period</Trans>
+      </Heading>
+    )
   }
-  formattedSummaryData.total = total
 
   const strengths = {
     strong: [
@@ -118,149 +181,194 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
   formattedBarData.strengths = strengths
 
-  const detailTablesData = tableData.dmarcReportDetailTables.detailTables
+  // Create report tables if no errors and message data exist
+  let tableDisplay
+  if (
+    !tableError &&
+    tableData.dmarcReportDetailTables.detailTables.fullPass.length > 0
+  ) {
+    const detailTablesData = tableData.dmarcReportDetailTables.detailTables
 
-  const fullPassData = detailTablesData.fullPass
-  const spfFailureData = detailTablesData.spfFailure
-  const spfMisalignedData = detailTablesData.spfMisaligned
-  const dkimFailureData = detailTablesData.dkimFailure
-  const dkimMisalignedData = detailTablesData.dkimMisaligned
-  const dmarcFailureData = detailTablesData.dmarcFailure
+    const fullPassData = detailTablesData.fullPass
+    const spfFailureData = detailTablesData.spfFailure
+    const spfMisalignedData = detailTablesData.spfMisaligned
+    const dkimFailureData = detailTablesData.dkimFailure
+    const dkimMisalignedData = detailTablesData.dkimMisaligned
+    const dmarcFailureData = detailTablesData.dmarcFailure
 
-  // Initial sorting category for detail tables
-  const initialSort = [{ id: 'totalMessages', desc: true }]
+    // Initial sorting category for detail tables
+    const initialSort = [{ id: 'totalMessages', desc: true }]
 
-  const [
-    sourceIpAddress,
-    envelopeFrom,
-    dkimDomains,
-    dkimSelectors,
-    totalMessages,
-    countryCode,
-    prefixOrg,
-    dnsHost,
-    spfDomains,
-  ] = [
-    { Header: i18n._(t`Source IP Address`), accessor: 'sourceIpAddress' },
-    { Header: i18n._(t`Envelope From`), accessor: 'envelopeFrom' },
-    { Header: i18n._(t`DKIM Domains`), accessor: 'dkimDomains' },
-    { Header: i18n._(t`DKIM Selectors`), accessor: 'dkimSelectors' },
-    { Header: i18n._(t`Total Messages`), accessor: 'totalMessages' },
-    { Header: i18n._(t`Country Code`), accessor: 'countryCode' },
-    { Header: i18n._(t`Prefix Org`), accessor: 'prefixOrg' },
-    { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' },
-    { Header: i18n._(t`SPF Domains`), accessor: 'spfDomains' },
-  ]
+    const [
+      sourceIpAddress,
+      envelopeFrom,
+      dkimDomains,
+      dkimSelectors,
+      totalMessages,
+      countryCode,
+      prefixOrg,
+      dnsHost,
+      spfDomains,
+    ] = [
+      { Header: i18n._(t`Source IP Address`), accessor: 'sourceIpAddress' },
+      { Header: i18n._(t`Envelope From`), accessor: 'envelopeFrom' },
+      { Header: i18n._(t`DKIM Domains`), accessor: 'dkimDomains' },
+      { Header: i18n._(t`DKIM Selectors`), accessor: 'dkimSelectors' },
+      { Header: i18n._(t`Total Messages`), accessor: 'totalMessages' },
+      { Header: i18n._(t`Country Code`), accessor: 'countryCode' },
+      { Header: i18n._(t`Prefix Org`), accessor: 'prefixOrg' },
+      { Header: i18n._(t`DNS Host`), accessor: 'dnsHost' },
+      { Header: i18n._(t`SPF Domains`), accessor: 'spfDomains' },
+    ]
 
-  const fullPassColumns = [
-    {
-      Header: i18n._(t`Fully Aligned by IP Address`),
-      hidden: true,
-      columns: [
-        sourceIpAddress,
-        envelopeFrom,
-        countryCode,
-        prefixOrg,
-        dnsHost,
-        spfDomains,
-        dkimDomains,
-        dkimSelectors,
-        totalMessages,
-      ],
-    },
-  ]
+    const fullPassColumns = [
+      {
+        Header: i18n._(t`Fully Aligned by IP Address`),
+        hidden: true,
+        columns: [
+          sourceIpAddress,
+          envelopeFrom,
+          countryCode,
+          prefixOrg,
+          dnsHost,
+          spfDomains,
+          dkimDomains,
+          dkimSelectors,
+          totalMessages,
+        ],
+      },
+    ]
 
-  const spfFailureColumns = [
-    {
-      Header: i18n._(t`SPF Failures by IP Address`),
-      hidden: true,
-      columns: [
-        sourceIpAddress,
-        envelopeFrom,
-        countryCode,
-        prefixOrg,
-        dnsHost,
-        spfDomains,
-        totalMessages,
-      ],
-    },
-  ]
+    const spfFailureColumns = [
+      {
+        Header: i18n._(t`SPF Failures by IP Address`),
+        hidden: true,
+        columns: [
+          sourceIpAddress,
+          envelopeFrom,
+          countryCode,
+          prefixOrg,
+          dnsHost,
+          spfDomains,
+          totalMessages,
+        ],
+      },
+    ]
 
-  const spfMisalignedColumns = [
-    {
-      Header: i18n._(t`SPF Misalignment by IP Address`),
-      hidden: true,
-      columns: [
-        sourceIpAddress,
-        envelopeFrom,
-        countryCode,
-        prefixOrg,
-        dnsHost,
-        spfDomains,
-        totalMessages,
-      ],
-    },
-  ]
+    const spfMisalignedColumns = [
+      {
+        Header: i18n._(t`SPF Misalignment by IP Address`),
+        hidden: true,
+        columns: [
+          sourceIpAddress,
+          envelopeFrom,
+          countryCode,
+          prefixOrg,
+          dnsHost,
+          spfDomains,
+          totalMessages,
+        ],
+      },
+    ]
 
-  const dkimFailureColumns = [
-    {
-      Header: i18n._(t`DKIM Failures by IP Address`),
-      hidden: true,
-      columns: [
-        sourceIpAddress,
-        envelopeFrom,
-        countryCode,
-        prefixOrg,
-        dnsHost,
-        dkimDomains,
-        dkimSelectors,
-        totalMessages,
-      ],
-    },
-  ]
+    const dkimFailureColumns = [
+      {
+        Header: i18n._(t`DKIM Failures by IP Address`),
+        hidden: true,
+        columns: [
+          sourceIpAddress,
+          envelopeFrom,
+          countryCode,
+          prefixOrg,
+          dnsHost,
+          dkimDomains,
+          dkimSelectors,
+          totalMessages,
+        ],
+      },
+    ]
 
-  const dkimMisalignedColumns = [
-    {
-      Header: i18n._(t`DKIM Misalignment by IP Address`),
-      hidden: true,
-      columns: [
-        sourceIpAddress,
-        envelopeFrom,
-        countryCode,
-        prefixOrg,
-        dnsHost,
-        dkimDomains,
-        dkimSelectors,
-        totalMessages,
-      ],
-    },
-  ]
+    const dkimMisalignedColumns = [
+      {
+        Header: i18n._(t`DKIM Misalignment by IP Address`),
+        hidden: true,
+        columns: [
+          sourceIpAddress,
+          envelopeFrom,
+          countryCode,
+          prefixOrg,
+          dnsHost,
+          dkimDomains,
+          dkimSelectors,
+          totalMessages,
+        ],
+      },
+    ]
 
-  const dmarcFailureColumns = [
-    {
-      Header: i18n._(t`DMARC Failures by IP Address`),
-      hidden: true,
-      columns: [
-        sourceIpAddress,
-        envelopeFrom,
-        countryCode,
-        prefixOrg,
-        dnsHost,
-        spfDomains,
-        dkimDomains,
-        dkimSelectors,
-        totalMessages,
-      ],
-    },
-  ]
-
-  const cardWidth = window.matchMedia('(max-width: 500px)').matches
-    ? '100%'
-    : window.matchMedia('(max-width: 800px)').matches
-    ? '50%'
-    : window.matchMedia('(max-width: 1200px)').matches
-    ? '35%'
-    : '20%'
+    const dmarcFailureColumns = [
+      {
+        Header: i18n._(t`DMARC Failures by IP Address`),
+        hidden: true,
+        columns: [
+          sourceIpAddress,
+          envelopeFrom,
+          countryCode,
+          prefixOrg,
+          dnsHost,
+          spfDomains,
+          dkimDomains,
+          dkimSelectors,
+          totalMessages,
+        ],
+      },
+    ]
+    tableDisplay = (
+      <>
+        <DmarcReportTable
+          data={fullPassData}
+          columns={fullPassColumns}
+          title={i18n._(t`Fully Aligned by IP Address`)}
+          initialSort={initialSort}
+          mb="8"
+        />
+        <DmarcReportTable
+          data={spfFailureData}
+          columns={spfFailureColumns}
+          title={i18n._(t`SPF Failures by IP Address`)}
+          initialSort={initialSort}
+          mb="8"
+        />
+        <DmarcReportTable
+          data={spfMisalignedData}
+          columns={spfMisalignedColumns}
+          title={i18n._(t`SPF Misalignment by IP Address`)}
+          initialSort={initialSort}
+          mb="8"
+        />
+        <DmarcReportTable
+          data={dkimFailureData}
+          columns={dkimFailureColumns}
+          title={i18n._(t`DKIM Failures by IP Address`)}
+          initialSort={initialSort}
+          mb="8"
+        />
+        <DmarcReportTable
+          data={dkimMisalignedData}
+          columns={dkimMisalignedColumns}
+          title={i18n._(t`DKIM Misalignment by IP Address`)}
+          initialSort={initialSort}
+          mb="8"
+        />
+        <DmarcReportTable
+          data={dmarcFailureData}
+          columns={dmarcFailureColumns}
+          title={i18n._(t`DMARC Failures by IP Address`)}
+          initialSort={initialSort}
+          mb="8"
+        />
+      </>
+    )
+  } else tableDisplay = ''
 
   const graphWidth =
     cardWidth.slice(0, -1) <= 20
@@ -275,31 +383,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         {domainSlug.toUpperCase()}
       </Heading>
       <Stack align="center" isInline={cardAndGraphInline}>
-        <SummaryCard
-          title={i18n._(t`DMARC Report`)}
-          description={i18n._(t`Description of DMARC report`)}
-          categoryDisplay={{
-            fullPass: {
-              name: i18n._(t`Pass`),
-              color: colors.strong,
-            },
-            passSpfOnly: {
-              name: i18n._(t`Pass SPF Only`),
-              color: colors.moderate,
-            },
-            passDkimOnly: {
-              name: i18n._(t`Pass DKIM Only`),
-              color: colors.moderate,
-            },
-            fail: {
-              name: i18n._(t`Fail`),
-              color: colors.weak,
-            },
-          }}
-          data={formattedSummaryData}
-          width={cardWidth}
-          mx="auto"
-        />
+        {summaryCardDisplay}
         <DmarcTimeGraph
           data={formattedBarData}
           width={graphWidth}
@@ -307,48 +391,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           responsiveWidth={summaryListResponsiveWidth}
         />
       </Stack>
-      <DmarcReportTable
-        data={fullPassData}
-        columns={fullPassColumns}
-        title={i18n._(t`Fully Aligned by IP Address`)}
-        initialSort={initialSort}
-        mb="8"
-      />
-      <DmarcReportTable
-        data={spfFailureData}
-        columns={spfFailureColumns}
-        title={i18n._(t`SPF Failures by IP Address`)}
-        initialSort={initialSort}
-        mb="8"
-      />
-      <DmarcReportTable
-        data={spfMisalignedData}
-        columns={spfMisalignedColumns}
-        title={i18n._(t`SPF Misalignment by IP Address`)}
-        initialSort={initialSort}
-        mb="8"
-      />
-      <DmarcReportTable
-        data={dkimFailureData}
-        columns={dkimFailureColumns}
-        title={i18n._(t`DKIM Failures by IP Address`)}
-        initialSort={initialSort}
-        mb="8"
-      />
-      <DmarcReportTable
-        data={dkimMisalignedData}
-        columns={dkimMisalignedColumns}
-        title={i18n._(t`DKIM Misalignment by IP Address`)}
-        initialSort={initialSort}
-        mb="8"
-      />
-      <DmarcReportTable
-        data={dmarcFailureData}
-        columns={dmarcFailureColumns}
-        title={i18n._(t`DMARC Failures by IP Address`)}
-        initialSort={initialSort}
-        mb="8"
-      />
+      {tableDisplay}
     </Box>
   )
 }
