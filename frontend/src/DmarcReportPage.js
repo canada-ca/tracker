@@ -200,7 +200,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       summaryCardDisplay = (
         <SummaryCard
           title={i18n._(t`DMARC Report`)}
-          description={i18n._(t`Description of DMARC report`)}
+          description={i18n._(t`DMARC Report`)}
           categoryDisplay={{
             fullPass: {
               name: i18n._(t`Pass`),
@@ -500,8 +500,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         {domainSlug.toUpperCase()}
       </Heading>
 
-      <Stack isInline align="center">
-        <Text fontWeight="bold">
+      <Stack isInline align="center" mb="4px">
+        <Text fontWeight="bold" textAlign="center">
           <Trans>Showing data for period: </Trans>
         </Text>
         <Select
@@ -517,6 +517,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         align="center"
         isInline={cardAndGraphInline}
         spacing="space-between"
+        mb="8"
       >
         {summaryCardDisplay}
         {barDisplay}

@@ -10,13 +10,15 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 const ReactTableGlobalFilter = ({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
 }) => {
+  const { i18n } = useLingui()
   const count = preGlobalFilteredRows.length
   const [value, setValue] = React.useState(globalFilter)
   const onChange = useAsyncDebounce((value) => {
@@ -29,7 +31,7 @@ const ReactTableGlobalFilter = ({
         <Trans>Search:</Trans>
       </Text>
 
-      <InputGroup w="20rem">
+      <InputGroup w={{ sm: '100%', md: '20rem' }}>
         <InputLeftElement>
           <Icon name="search" />
         </InputLeftElement>
@@ -39,7 +41,7 @@ const ReactTableGlobalFilter = ({
             setValue(e.target.value)
             onChange(e.target.value)
           }}
-          placeholder={`${count} records...`}
+          placeholder={i18n._(t`${count} records...`)}
         />
       </InputGroup>
     </Stack>

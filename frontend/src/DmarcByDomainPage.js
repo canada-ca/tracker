@@ -163,8 +163,8 @@ export default function DmarcByDomainPage() {
         <Trans>DMARC Messages</Trans>
       </Heading>
 
-      <Stack isInline align="center">
-        <Text fontWeight="bold">
+      <Stack isInline align="center" mb="4px">
+        <Text fontWeight="bold" textAlign="center">
           <Trans>Showing data for period: </Trans>
         </Text>
         <Select
