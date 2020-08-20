@@ -27,6 +27,9 @@ const mocks = [
   },
 ]
 
+const currentDate = new Date()
+console.log(currentDate.getFullYear().toString())
+
 describe('<DmarcByDomainPage />', () => {
   it('renders', async () => {
     const { getAllByText } = render(
