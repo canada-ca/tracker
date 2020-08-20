@@ -1,29 +1,10 @@
 const { GraphQLObjectType } = require('graphql')
 const { nodeField } = require('../types')
 // const { i18n: internationalization } = require('lingui-i18n')
-const {
-  dmarcReportDetailTables,
-  demoDmarcReportDetailTables,
-  dmarcReportSummary,
-  demoDmarcReportSummary,
-  dmarcReportSummaryList,
-  demoDmarcReportSummaryList,
-} = require('./dmarc-report')
-const {
-  findDomainBySlug,
-  findDomainsByOrg,
-  findMyDomains,
-} = require('./domains')
-const {
-  findMyOrganizations,
-  findOrganizationBySlug,
-} = require('./organizations')
-const {
-  emailSummary,
-  demoEmailSummary,
-  webSummary,
-  demoWebSummary,
-} = require('./summaries')
+const dmarcReportQueries = require('./dmarc-report')
+const domainQueries = require('./domains')
+const organizationQueries = require('./organizations')
+const summaryQueries = require('./summaries')
 
 // const createQuerySchema = i18n => {
 const createQuerySchema = () => {
@@ -33,24 +14,13 @@ const createQuerySchema = () => {
       // Node Query
       node: nodeField,
       // Dmarc report queries
-      dmarcReportDetailTables,
-      demoDmarcReportDetailTables,
-      dmarcReportSummary,
-      demoDmarcReportSummary,
-      dmarcReportSummaryList,
-      demoDmarcReportSummaryList,
+      ...dmarcReportQueries,
       // Domain Queries
-      findDomainBySlug,
-      findDomainsByOrg,
-      findMyDomains,
+      ...domainQueries,
       // Organization Queries
-      findMyOrganizations,
-      findOrganizationBySlug,
+      ...organizationQueries,
       // Summary Queries
-      emailSummary,
-      demoEmailSummary,
-      webSummary,
-      demoWebSummary,
+      ...summaryQueries,
     }),
   })
 }

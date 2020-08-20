@@ -1,28 +1,11 @@
 const { GraphQLObjectType } = require('graphql')
 // const { i18n: internationalization } = require('lingui-i18n')
 
-const { createDomain, removeDomain, updateDomain } = require('./domain')
-const {
-  createOrganization,
-  removeOrganization,
-  updateOrganization,
-} = require('./organizations')
-const { requestScan } = require('./scans')
-const {
-  authenticate,
-  resetPassword,
-  sendEmailVerification,
-  sendPasswordResetLink,
-  sendPhoneCode,
-  signIn,
-  signUp,
-  updateUserPassword,
-  updateUserProfile,
-  verifyAccount,
-  verifyPhoneNumber,
-} = require('./user')
-
-const { inviteUserToOrg, updateUserRole } = require('./user-affiliations')
+const domainMutations = require('./domain')
+const organizationMutations = require('./organizations')
+const scanMutations = require('./scans')
+const userMutations = require('./user')
+const userAffiliationMutations = require('./user-affiliations')
 
 // const createMutationSchema = i18n => {
 const createMutationSchema = () => {
@@ -30,30 +13,15 @@ const createMutationSchema = () => {
     name: 'Mutation',
     fields: () => ({
       // Domain Mutations
-      createDomain,
-      removeDomain,
-      updateDomain,
+      ...domainMutations,
       // Organization Mutations
-      createOrganization,
-      removeOrganization,
-      updateOrganization,
+      ...organizationMutations,
       // Scan Mutations
-      requestScan,
+      ...scanMutations,
       // User Mutations
-      authenticate,
-      resetPassword,
-      sendEmailVerification,
-      sendPasswordResetLink,
-      sendPhoneCode,
-      signIn,
-      signUp,
-      updateUserPassword,
-      updateUserProfile,
-      verifyAccount,
-      verifyPhoneNumber,
+      ...userMutations,
       // User Affiliations Mutations
-      inviteUserToOrg,
-      updateUserRole,
+      ...userAffiliationMutations,
     }),
   })
 }

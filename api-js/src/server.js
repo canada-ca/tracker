@@ -10,22 +10,9 @@ const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
 
 const bcrypt = require('bcrypt')
-const {
-  checkPermission,
-  tokenize,
-  userRequired,
-  verifyToken,
-} = require('./auth')
+const authFunctions = require('./auth')
 const { cleanseInput, slugify } = require('./validators')
-const {
-  sendAuthEmail,
-  sendAuthTextMsg,
-  sendOrgInviteCreateAccount,
-  sendOrgInviteEmail,
-  sendPasswordResetEmail,
-  sendTfaTextMsg,
-  sendVerificationEmail,
-} = require('./notify')
+const notifyFunctions = require('./notify')
 
 const {
   domainLoaderById,
@@ -72,8 +59,10 @@ const Server = (context = {}) => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     }),
+
     context: ({ req: request, res: response }) => {
       const { query, collections, transaction } = context
+      const { verifyToken } = authFunctions
       // Get user id from token
       let userId
       const token = request.headers.authorization || ''
@@ -90,23 +79,14 @@ const Server = (context = {}) => {
         userId,
         auth: {
           bcrypt,
-          checkPermission,
-          tokenize,
-          userRequired,
-          verifyToken,
+          ...authFunctions,
         },
         validators: {
           cleanseInput,
           slugify,
         },
         notify: {
-          sendAuthEmail,
-          sendAuthTextMsg,
-          sendOrgInviteCreateAccount,
-          sendOrgInviteEmail,
-          sendPasswordResetEmail,
-          sendTfaTextMsg,
-          sendVerificationEmail,
+          ...notifyFunctions,
         },
         loaders: {
           domainLoaderById: domainLoaderById(query),
