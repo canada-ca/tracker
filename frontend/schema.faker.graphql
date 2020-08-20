@@ -92,32 +92,32 @@ type CategoryTotals {
   """
   Amount of messages that passed all checks
   """
-  fullPass: Int
+  fullPass: Int @examples(values: [0])
 
   """
   Amount of messages that passed some checks
   """
-  partialPass: Int
+  partialPass: Int @examples(values: [0])
 
   """
   Amount of messages that passed SPF and failed DKIM
   """
-  passSpfOnly: Int
+  passSpfOnly: Int @examples(values: [0])
 
   """
   Amount of messages that pass DKIM and failed SPF
   """
-  passDkimOnly: Int
+  passDkimOnly: Int @examples(values: [0])
 
   """
   Amount of messages that failed all checks
   """
-  fail: Int
+  fail: Int @examples(values: [0])
 
   """
   The sum of all different categories.
   """
-  total: Int
+  total: Int @examples(values: [0])
 }
 """
 This class handles the inner nested dict given by key: 'content'.
