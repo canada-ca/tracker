@@ -74,7 +74,7 @@ export default function UserList({
   if (error) return <p>{String(error)}</p>
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   const addUser = (name, id) => {
     if (name !== '') {
@@ -109,8 +109,8 @@ export default function UserList({
     }
   }
 
-  const removeUser = (user) => {
-    const temp = userList.filter((c) => c.node.id !== user.id)
+  const removeUser = user => {
+    const temp = userList.filter(c => c.node.id !== user.id)
     if (temp) {
       setUserList(temp)
       if (currentUsers.length <= 1 && userList.length > 1)
@@ -161,7 +161,7 @@ export default function UserList({
             type="text"
             placeholder={i18n._(t`Search for a user`)}
             value={userSearch}
-            onChange={(e) => {
+            onChange={e => {
               setUserSearch(e.target.value)
             }}
           />
@@ -223,7 +223,7 @@ export default function UserList({
                         size="sm"
                         name="role"
                         defaultValue={userRole}
-                        onChange={(e) => (userRole = e.target.value)}
+                        onChange={e => (userRole = e.target.value)}
                       >
                         <option value="USER_READ">{i18n._(t`READ`)}</option>
                         <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>

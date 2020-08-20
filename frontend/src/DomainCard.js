@@ -9,14 +9,12 @@ import {
   Stack,
   Divider,
 } from '@chakra-ui/core'
-import { useHistory, useRouteMatch } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { string } from 'prop-types'
 import { slugify } from './slugify'
 
 export function DomainCard({ url, lastRan, ...rest }) {
   const history = useHistory()
-  const { path, _url } = useRouteMatch()
-
   const webProtocols = [
     'HTTPS',
     'HSTS',
@@ -58,9 +56,9 @@ export function DomainCard({ url, lastRan, ...rest }) {
         display={{ md: 'flex' }}
         alignItems="center"
         onClick={() => {
-          history.push(`${path}/${slugify(url)}`)
+          history.push(`/domains/${slugify(url)}`)
         }}
-        _hover={{ borderColor: 'gray.100', bg: 'gray.100' }}
+        _hover={{ bg: 'gray.100' }}
         p="8"
       >
         <Box flexShrink="0" minW="12%">

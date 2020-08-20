@@ -20,15 +20,13 @@ export function UserCard({ userName, displayName, tfa, role }) {
       _hover={{ borderColor: 'gray.200', bg: 'gray.200' }}
       p="8"
     >
-      <Box flexShrink="0" minW="15%">
+      <Box flexShrink="0" minW="10%">
         <Text mt="1" fontSize="md" fontWeight="semibold">
           {displayName}
         </Text>
       </Box>
-      <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-        <Text fontSize="md" minW="10%">
-          {userName}
-        </Text>
+      <Box flexShrink="0" minW="20%" ml={{ md: 2 }} mr={{ md: 2 }}>
+        <Text fontSize="md">{userName}</Text>
       </Box>
       {role && (
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>

@@ -15,7 +15,6 @@ import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
-const DomainsPage = lazy(() => import('./DomainsPage'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
 const QRcodePage = lazy(() => import('./QRcodePage'))
 const UserPage = lazy(() => import('./UserPage'))
@@ -23,6 +22,7 @@ const UserList = lazy(() => import('./UserList'))
 const SignInPage = lazy(() => import('./SignInPage'))
 const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 const Organizations = lazy(() => import('./Organizations'))
+const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
 const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
@@ -113,6 +113,11 @@ export default function App() {
                 component={ResetPasswordPage}
               />
 
+              <Route
+                path="/domains/:domainSlug"
+                component={DmarcGuidancePage}
+              />
+
               <RouteIf
                 condition={isLoggedIn()}
                 alternate="/sign-in"
@@ -121,20 +126,9 @@ export default function App() {
                   <>
                     <Route path={`${url}`} component={Organizations} exact />
                     <Route
-                      path={`${url}/:orgSlug/domains`}
-                      render={({ match: { url } }) => (
-                        <>
-                          <Route
-                            path={`${url}`}
-                            component={DomainsPage}
-                            exact
-                          />
-                          <Route
-                            path={`${url}/:domainSlug`}
-                            component={DmarcGuidancePage}
-                          />
-                        </>
-                      )}
+                      path={`${url}/:orgSlug`}
+                      component={OrganizationDetails}
+                      exact
                     />
                   </>
                 )}
