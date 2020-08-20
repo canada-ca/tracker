@@ -105,12 +105,16 @@ const updateDomain = new mutationWithClientMutationId({
           RETURN e
       `
     } catch (err) {
-      console.error(`Database error occurred while user: ${userId} attempted to update domain: ${domainId}, error: ${err}`)
+      console.error(
+        `Database error occurred while user: ${userId} attempted to update domain: ${domainId}, error: ${err}`,
+      )
       throw new Error('Unable to update domain. Please try again.')
     }
 
     if (countCursor.count < 1) {
-      console.warn(`User: ${userId} attempted to update domain: ${domainId} for org: ${orgId}, however that org has no claims to that domain.`)
+      console.warn(
+        `User: ${userId} attempted to update domain: ${domainId} for org: ${orgId}, however that org has no claims to that domain.`,
+      )
       throw new Error('Unable to update domain. Please try again.')
     }
 
@@ -142,7 +146,9 @@ const updateDomain = new mutationWithClientMutationId({
       `,
       )
     } catch (err) {
-      console.error(`Transaction run error occurred when user: ${userId} attempted to update domain: ${domainId}, error: ${err}`)
+      console.error(
+        `Transaction run error occurred when user: ${userId} attempted to update domain: ${domainId}, error: ${err}`,
+      )
       throw new Error('Unable to update domain. Please try again.')
     }
 
@@ -150,7 +156,9 @@ const updateDomain = new mutationWithClientMutationId({
     try {
       await trx.commit()
     } catch (err) {
-      console.error(`Transaction commit error occurred when user: ${userId} attempted to update domain: ${domainId}, error: ${err}`)
+      console.error(
+        `Transaction commit error occurred when user: ${userId} attempted to update domain: ${domainId}, error: ${err}`,
+      )
       throw new Error('Unable to update domain. Please try again.')
     }
 

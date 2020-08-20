@@ -46,7 +46,7 @@ const createDomain = new mutationWithClientMutationId({
     // Cleanse input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
     const domain = cleanseInput(args.domain)
-    
+
     let selectors
     if (typeof args.selectors !== 'undefined') {
       selectors = args.selectors.map((selector) => cleanseInput(selector))
@@ -127,7 +127,7 @@ const createDomain = new mutationWithClientMutationId({
 
     // Setup Transaction
     const trx = await transaction(collectionStrings)
-        
+
     if (typeof checkDomain === 'undefined') {
       const insertedDomain = await trx.run(() =>
         collections.domains.save(insertDomain),
@@ -144,12 +144,15 @@ const createDomain = new mutationWithClientMutationId({
       })
       insertDomain.selectors = selectorList
 
-      await trx.run(async () => await query`
+      await trx.run(
+        async () =>
+          await query`
         UPSERT { _key: ${checkDomain._key} }
           INSERT ${insertDomain}
           UPDATE ${insertDomain}
           IN domains
-      `)
+      `,
+      )
       await trx.run(() =>
         collections.claims.save({ _from: org._id, _to: checkDomain._id }),
       )

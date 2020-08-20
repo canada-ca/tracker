@@ -1650,10 +1650,18 @@ describe('removing a domain', () => {
         const userLoader = userLoaderById(query)
 
         query = jest
-        .fn()
-        .mockReturnValueOnce({ next() { return 'admin' }})
-        .mockReturnValueOnce({ next() { return 'admin' }})
-        .mockRejectedValue(new Error('Database error occurred.'))
+          .fn()
+          .mockReturnValueOnce({
+            next() {
+              return 'admin'
+            },
+          })
+          .mockReturnValueOnce({
+            next() {
+              return 'admin'
+            },
+          })
+          .mockRejectedValue(new Error('Database error occurred.'))
 
         const response = await graphql(
           schema,
@@ -1804,14 +1812,14 @@ describe('removing a domain', () => {
           const domainLoader = domainLoaderById(query)
           const orgLoader = orgLoaderById(query, 'en')
           const userLoader = userLoaderById(query)
-  
+
           const cursor = {
             count: 1,
             next() {
               return 'admin'
             },
           }
-  
+
           query = jest
             .fn()
             .mockReturnValueOnce(cursor)
@@ -1823,7 +1831,7 @@ describe('removing a domain', () => {
             .mockReturnValueOnce(undefined)
             .mockReturnValueOnce(undefined)
             .mockRejectedValue(new Error('Transaction error occurred.'))
-  
+
           const response = await graphql(
             schema,
             `
@@ -1853,11 +1861,11 @@ describe('removing a domain', () => {
               },
             },
           )
-  
+
           const error = [
             new GraphQLError('Unable to remove domain. Please try again.'),
           ]
-  
+
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Transaction error occurred while user: ${user._key} attempted to remove test-gc-ca in org: treasury-board-secretariat, error: Error: Transaction error occurred.`,
@@ -1869,21 +1877,21 @@ describe('removing a domain', () => {
           const domainLoader = domainLoaderById(query)
           const orgLoader = orgLoaderById(query, 'en')
           const userLoader = userLoaderById(query)
-  
+
           const cursor = {
             count: 2,
             next() {
               return 'admin'
             },
           }
-  
+
           query = jest
             .fn()
             .mockReturnValueOnce(cursor)
             .mockReturnValueOnce(cursor)
             .mockReturnValueOnce(cursor)
             .mockRejectedValue(new Error('Transaction error occurred.'))
-  
+
           const response = await graphql(
             schema,
             `
@@ -1913,11 +1921,11 @@ describe('removing a domain', () => {
               },
             },
           )
-  
+
           const error = [
             new GraphQLError('Unable to remove domain. Please try again.'),
           ]
-  
+
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
             `Transaction error occurred while user: ${user._key} attempted to remove claim for test-gc-ca in org: treasury-board-secretariat, error: Error: Transaction error occurred.`,

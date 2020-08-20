@@ -1275,10 +1275,18 @@ describe('updating a domain', () => {
         const userLoader = userLoaderById(query)
 
         query = jest
-        .fn()
-        .mockReturnValueOnce({ next() { return 'admin' }})
-        .mockReturnValueOnce({ next() { return 'admin' }})
-        .mockRejectedValue(new Error('Database error occurred.'))
+          .fn()
+          .mockReturnValueOnce({
+            next() {
+              return 'admin'
+            },
+          })
+          .mockReturnValueOnce({
+            next() {
+              return 'admin'
+            },
+          })
+          .mockRejectedValue(new Error('Database error occurred.'))
 
         const response = await graphql(
           schema,

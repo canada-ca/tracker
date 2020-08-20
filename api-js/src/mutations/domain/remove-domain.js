@@ -50,7 +50,9 @@ const removeDomain = new mutationWithClientMutationId({
 
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
-      console.warn(`User: ${userId} attempted to remove ${domainId} however no domain is associated with that id.`)
+      console.warn(
+        `User: ${userId} attempted to remove ${domainId} however no domain is associated with that id.`,
+      )
       throw new Error('Unable to remove domain. Please try again.')
     }
 
@@ -90,7 +92,9 @@ const removeDomain = new mutationWithClientMutationId({
         FOR v, e IN 1..1 ANY ${domain._id} claims RETURN True
       `
     } catch (err) {
-      console.error(`Database error occurred for user: ${userId}, when counting domain claims for domain: ${domain.slug}, error: ${err}`)
+      console.error(
+        `Database error occurred for user: ${userId}, when counting domain claims for domain: ${domain.slug}, error: ${err}`,
+      )
       throw new Error('Unable to remove domain. Please try again.')
     }
 
@@ -182,7 +186,7 @@ const removeDomain = new mutationWithClientMutationId({
         throw new Error('Unable to remove domain. Please try again.')
       }
     } else {
-      try{
+      try {
         await trx.run(async () => {
           await query`
             LET domainEdges = (FOR v, e IN 1..1 ANY ${domain._id} claims RETURN { _key: e._key, _from: e._from, _to: e._to })
@@ -197,7 +201,9 @@ const removeDomain = new mutationWithClientMutationId({
           `
         })
       } catch (err) {
-        console.error(`Transaction error occurred while user: ${userId} attempted to remove claim for ${domain.slug} in org: ${org.slug}, error: ${err}`)
+        console.error(
+          `Transaction error occurred while user: ${userId} attempted to remove claim for ${domain.slug} in org: ${org.slug}, error: ${err}`,
+        )
         throw new Error('Unable to remove domain. Please try again.')
       }
     }

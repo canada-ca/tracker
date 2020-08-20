@@ -594,8 +594,8 @@ describe('create an organization', () => {
 
           transaction = jest.fn().mockReturnValue({
             run() {
-              return { 
-                next() { 
+              return {
+                next() {
                   return { _id: 1 }
                 },
               }

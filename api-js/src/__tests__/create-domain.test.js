@@ -535,10 +535,7 @@ describe('create a domain', () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
             slug: 'test-gc-ca',
-            selectors: [
-              'selector1._domainkey', 
-              'selector2._domainkey',
-            ],
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
           await collections.claims.save({
             _from: org._id,
@@ -626,10 +623,7 @@ describe('create a domain', () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
             slug: 'test-gc-ca',
-            selectors: [
-              'selector1._domainkey', 
-              'selector2._domainkey',
-            ],
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
           await collections.claims.save({
             _from: org._id,
@@ -718,10 +712,7 @@ describe('create a domain', () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
             slug: 'test-gc-ca',
-            selectors: [
-              'selector1._domainkey', 
-              'selector2._domainkey',
-            ],
+            selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
           await collections.claims.save({
             _from: org._id,
@@ -789,9 +780,9 @@ describe('create a domain', () => {
                   slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: [
-                    'selector1._domainkey', 
+                    'selector1._domainkey',
                     'selector2._domainkey',
-                    'selector3._domainkey', 
+                    'selector3._domainkey',
                     'selector4._domainkey',
                   ],
                   organization: {
