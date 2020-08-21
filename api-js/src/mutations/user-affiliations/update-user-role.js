@@ -97,7 +97,7 @@ const updateUserRole = new mutationWithClientMutationId({
       affiliationCursor = await query`
       FOR v, e IN 1..1 ANY ${requestedUser._id} affiliations 
         FILTER e._from == ${org._id}
-        RETURN { _key: e.key, permission: e.permission }
+        RETURN { _key: e._key, permission: e.permission }
       `
     } catch (err) {
       console.error(
