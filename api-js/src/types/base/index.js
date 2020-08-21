@@ -50,14 +50,11 @@ const domainType = new GraphQLObjectType({
         return selectors
       },
     },
-    organization: {
-      type: organizationType,
+    organizations: {
+      type: organizationConnection.connectionType,
+      args: connectionArgs,
       description: 'The organization that this domain belongs to.',
-      resolve: async ({ _id }, _, { loaders: { orgLoaderByDomainId } }) => {
-        const organization = await orgLoaderByDomainId.load(_id)
-        organization.id = organization._key
-        return organization
-      },
+      resolve: async ({ _id }, _, __) => {},
     },
     email: {
       type: emailScanConnection.connectionType,
