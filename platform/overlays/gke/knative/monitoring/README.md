@@ -2,29 +2,9 @@
 
 This directory contains manifest files for Kubernetes deployments which provide log aggregation and observability for the scanners as well as the API to aid in facilitating the monitoring and debugging of behaviour within the application's backend.
 
-## Loki and Promtail
-
-Assuming you have `helm` installed and configured:
-
-- First, add the Loki helm chart to your repo. Loki will provide log aggregation.
-
-  `helm repo add loki https://grafana.github.io/loki/charts`
-
-- Update helm repository.
-
-  `helm repo update`
-
-- Deploy Loki in a custom namespace (In this case, `scanners`).
-
-  `helm upgrade --install loki --namespace=scanners loki/loki-stack`
-
-- Deploy Promtail in the cluster for log collection.
-
-  `helm upgrade --install promtail loki/promtail --set "loki.serviceName=loki"`
-
 ## Grafana
 
-After the above steps have been completed, perform the following to configure the Grafana dashboard:
+Perform the following to configure the Grafana dashboard:
 
 - Expose the `Grafana` deployment (located within the `scan-monitoring` namespace)
 
