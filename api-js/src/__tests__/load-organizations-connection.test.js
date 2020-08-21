@@ -5,18 +5,17 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
-
-const { loadOrganizationsConnections } = require('../loaders/organizations/load-organizations-connection')
+const { loadOrganizationsConnections } = require('../loaders')
 
 describe('given the load organizations connection function', () => {
-  let query, drop, truncate, migrate, collections, transaction, user
+  let query, drop, truncate, migrate, collections, user
 
   let consoleOutput = []
   // const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     // console.error = mockedError
     ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections, transaction } = await migrate(
+    ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
   })
@@ -97,12 +96,15 @@ describe('given the load organizations connection function', () => {
 
   describe('', () => {
     it('', async () => {
-      const connectionArgs = {
-        last: 1,
-      }
-      const organizations = await loadOrganizationsConnections(connectionArgs, query, user._key, cleanseInput)
+      const loader = loadOrganizationsConnections(query, 'en', user._key, cleanseInput)
 
-      expect(organizations).toEqual('')
+      const connectionArgs = {
+        first: 1,
+      }
+      const orgs = await loader(connectionArgs)
+
+      expect(orgs).toEqual('')
     })
   })
+
 })

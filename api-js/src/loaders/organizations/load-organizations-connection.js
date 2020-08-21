@@ -1,12 +1,12 @@
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
 const { aql } = require('arangojs')
 
-const loadOrganizationsConnections = async (
-  { after, before, first, last },
+const loadOrganizationsConnections = (
   query,
+  language,
   userId,
   cleanseInput,
-) => {
+) => async ({ after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -43,7 +43,9 @@ const loadOrganizationsConnections = async (
       RETURN orgKeys
     `
   } catch (err) {
-    console.error(`Database error occurred while user: ${userId} was trying to gather org information in loadOrganizationsConnections.`)
+    console.error(
+      `Database error occurred while user: ${userId} was trying to gather org information in loadOrganizationsConnections.`,
+    )
     throw new Error('Unable to load organizations. Please try again.')
   }
 
@@ -57,7 +59,7 @@ const loadOrganizationsConnections = async (
       ${afterTemplate} 
       ${beforeTemplate} 
       ${limitTemplate}
-      RETURN org
+      RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
     `
   } catch (err) {
     console.error(err)
