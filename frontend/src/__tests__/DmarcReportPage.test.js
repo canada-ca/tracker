@@ -113,30 +113,6 @@ describe('<DmarcReportPage />', () => {
     await waitFor(() => getAllByText(/Showing data for period:/i))
   })
 
-  it('renders summary card', async () => {
-    const { getAllByText } = render(
-      <UserStateProvider
-        initialState={{ userName: null, jwt: null, tfa: null }}
-      >
-        <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
-            <MemoryRouter
-              initialEntries={['/domains/test-domain-slug/dmarc-report']}
-              initialIndex={0}
-            >
-              <Route path="/domains/:domainSlug/dmarc-report">
-                <MockedProvider mocks={mocks} addTypename={false}>
-                  <DmarcReportPage summaryListResponsiveWidth={500} />
-                </MockedProvider>
-              </Route>
-            </MemoryRouter>
-          </I18nProvider>
-        </ThemeProvider>
-      </UserStateProvider>,
-    )
-    await waitFor(() => getAllByText(/^Pass SPF Only:/i))
-  })
-
   it('renders bar graph', async () => {
     const { getAllByText } = render(
       <UserStateProvider

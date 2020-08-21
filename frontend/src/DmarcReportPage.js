@@ -11,7 +11,6 @@ import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
-import theme from './theme/canada'
 import { useParams, useHistory } from 'react-router-dom'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
