@@ -227,6 +227,76 @@ def scan_ssl(domain):
     return res
 
 
+def process_results(results):
+    logging.info("Processing SSL scan results...")
+    report = {}
+
+    # Get cipher/protocol data via sslyze for a host.
+
+    if results is None or results == {}:
+        report = {"missing": True}
+
+    else:
+        ###
+        # BOD 18-01 (cyber.dhs.gov) cares about SSLv2, SSLv3, RC4, and 3DES.
+        any_rc4 = results.get("rc4", "False")
+
+        any_3des = results.get("3des", "False")
+
+        ###
+        # ITPIN cares about usage of TLS 1.0/1.1/1.2
+
+        for version in [
+            "SSL_2_0",
+            "SSL_3_0",
+            "TLS_1_0",
+            "TLS_1_1",
+            "TLS_1_2",
+            "TLS_1_3",
+        ]:
+            if version in results["TLS"]["supported"]:
+                report[version] = True
+            else:
+                report[version] = False
+
+        signature_algorithm = results.get("signature_algorithm", "unknown")
+
+        heartbleed = results.get("is_vulnerable_to_heartbleed", False)
+        ccs_injection = results.get("is_vulnerable_to_ccs_injection", False)
+
+        if signature_algorithm in ["SHA256", "SHA384", "AEAD"]:
+            good_cert = True
+        else:
+            good_cert = False
+
+        strong_ciphers = []
+        acceptable_ciphers = []
+        weak_ciphers = []
+        for cipher in results["TLS"]["accepted_cipher_list"]:
+            if "RC4" in cipher or "3DES" in cipher:
+                weak_ciphers.append(cipher)
+            elif ("ECDHE" in cipher) and ("GCM" in cipher or "CHACHA20" in cipher):
+                strong_ciphers.append(cipher)
+            elif "ECDHE" in cipher or "DHE" in cipher:
+                acceptable_ciphers.append(cipher)
+            else:
+                weak_ciphers.append(cipher)
+
+        report["rc4"] = any_rc4
+        report["3des"] = any_3des
+        report["strong_ciphers"] = strong_ciphers
+        report["acceptable_ciphers"] = acceptable_ciphers
+        report["weak_ciphers"] = weak_ciphers
+        report["acceptable_certificate"] = good_cert
+        report["signature_algorithm"] = signature_algorithm
+        report["preferred_cipher"] = results["TLS"]["preferred_cipher"]
+        report["heartbleed"] = heartbleed
+        report["openssl_ccs_injection"] = ccs_injection
+
+    logging.info(f"Processed SSL scan results: {str(report)}")
+    return report
+
+
 def Server(server_client=requests):
     async def scan(scan_request):
 
@@ -257,8 +327,15 @@ def Server(server_client=requests):
             scan_results = scan_ssl(domain)
 
             if scan_results is not None:
+
+                processed_results = process_results(scan_results)
+
                 outbound_payload = json.dumps(
-                    {"results": scan_results, "scan_type": "ssl", "scan_id": scan_id}
+                    {
+                        "results": processed_results,
+                        "scan_type": "ssl",
+                        "scan_id": scan_id,
+                    }
                 )
                 logging.info(f"(ID={scan_id}) Scan results: {str(scan_results)}")
             else:

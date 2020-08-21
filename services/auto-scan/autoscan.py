@@ -221,14 +221,13 @@ Guidance = sqlalchemy.Table(
 
 
 def Dispatch(database=databases.Database(DATABASE_URI), client=requests):
-
     async def dispatch_https(domain, scan_id):
 
         payload = {
             "scan_id": scan_id,
             "domain": domain.get("domain"),
         }
-        client.post(QUEUE_URL+"/https", json=payload)
+        client.post(QUEUE_URL + "/https", json=payload)
 
     async def dispatch_ssl(domain, scan_id):
 
@@ -236,7 +235,7 @@ def Dispatch(database=databases.Database(DATABASE_URI), client=requests):
             "scan_id": scan_id,
             "domain": domain.get("domain"),
         }
-        client.post(QUEUE_URL+"/ssl", json=payload)
+        client.post(QUEUE_URL + "/ssl", json=payload)
 
     async def dispatch_dns(domain, scan_id):
 
@@ -245,7 +244,7 @@ def Dispatch(database=databases.Database(DATABASE_URI), client=requests):
             "domain": domain.get("domain"),
             "selectors": domain.get("selectors"),
         }
-        client.post(QUEUE_URL+"/dns", json=payload)
+        client.post(QUEUE_URL + "/dns", json=payload)
 
     async def scan():
         logging.info("Retrieving domains for scheduled scan...")
@@ -265,7 +264,7 @@ def Dispatch(database=databases.Database(DATABASE_URI), client=requests):
 
             for domain in domains:
                 count = count + 1
-                dispatched.append(domain.get('domain'))
+                dispatched.append(domain.get("domain"))
                 logging.info(f"Dispatching scan number {count} of {len(domains)}")
                 logging.info(f"Requesting scan for {domain.get('domain')}")
 
@@ -281,7 +280,11 @@ def Dispatch(database=databases.Database(DATABASE_URI), client=requests):
                     initiated_by=system.get("id"),
                 )
 
-                update_domain = Domains.update().values(last_run=scan_time).where(Domains.c.id == domain.get("id"))
+                update_domain = (
+                    Domains.update()
+                    .values(last_run=scan_time)
+                    .where(Domains.c.id == domain.get("id"))
+                )
 
                 for insertion in [web_insert, mail_insert, update_domain]:
                     await database.execute(insertion)
@@ -303,10 +306,13 @@ def Dispatch(database=databases.Database(DATABASE_URI), client=requests):
                 await database.disconnect()
             except:
                 pass
-            logging.error(f"An unexpected error occurred while initiating scheduled scan: {str(e)}\n\nFull traceback: {traceback.format_exc()}")
+            logging.error(
+                f"An unexpected error occurred while initiating scheduled scan: {str(e)}\n\nFull traceback: {traceback.format_exc()}"
+            )
             return [domain for domain in dispatched]
 
     return asyncio.run(scan())
+
 
 if __name__ == "__main__":
     dispatched_domains = Dispatch()

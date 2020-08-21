@@ -241,7 +241,7 @@ async def insert():
     # Iterate through all .csv files
     for i in files:
         file = open(os.path.join(path, i), "rU")
-        reader = csv.reader(file, delimiter=',')
+        reader = csv.reader(file, delimiter=",")
         first_row = True
         for row in reader:
             # Skip first row (header)
@@ -258,16 +258,18 @@ async def insert():
             org_query = select([Organizations]).where(Organizations.c.name == org)
             org_result = await database.fetch_one(org_query)
 
-            org_exists = (org_result is not None)
+            org_exists = org_result is not None
 
             # If not, create the org
             if org_exists is False:
                 org_slug = slugify(org)
-                org_acronym = org.upper().replace('.', '-').replace(' ', '-')
+                org_acronym = org.upper().replace(".", "-").replace(" ", "-")
                 logging.info(f"Org Name: {org}")
                 logging.info(f"Org Slug: {org_slug}")
                 logging.info(f"Org Acronym: {org_acronym}")
-                org_insert = Organizations.insert().values(name=org, slug=org_slug, acronym=org_acronym)
+                org_insert = Organizations.insert().values(
+                    name=org, slug=org_slug, acronym=org_acronym
+                )
                 await database.execute(org_insert)
                 org_query = select([Organizations]).where(Organizations.c.name == org)
                 org_result = await database.fetch_one(org_query)
@@ -276,14 +278,16 @@ async def insert():
             domain_query = select([Domains]).where(Domains.c.domain == url)
             domain_result = await database.fetch_one(domain_query)
 
-            domain_exists = (domain_result is not None)
+            domain_exists = domain_result is not None
 
             # If not, create the domain
             if domain_exists is False:
                 domain_slug = slugify(url)
                 logging.info(f"Domain Name: {url}")
                 logging.info(f"Domain Slug: {domain_slug}")
-                domain_insert = Domains.insert().values(domain=url, slug=domain_slug, organization_id=org_result.get("id"))
+                domain_insert = Domains.insert().values(
+                    domain=url, slug=domain_slug, organization_id=org_result.get("id")
+                )
                 await database.execute(domain_insert)
 
     await database.disconnect()
