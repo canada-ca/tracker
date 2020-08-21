@@ -23,7 +23,6 @@ export default function DmarcByDomainPage() {
     loading: tableLoading,
     error: tableError,
     data: tableData,
-    refetch: tableRefetch,
   } = useQuery(DMARC_REPORT_SUMMARY_TABLE, {
     context: {
       headers: {
@@ -88,19 +87,20 @@ export default function DmarcByDomainPage() {
   ]
 
   const months = [
-    t`January`,
-    t`February`,
-    t`March`,
-    t`April`,
-    t`May`,
-    t`June`,
-    t`July`,
-    t`August`,
-    t`September`,
-    t`October`,
-    t`November`,
-    t`December`,
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ]
+  console.log()
 
   const options = [
     <option
@@ -118,18 +118,26 @@ export default function DmarcByDomainPage() {
       const value = `${months[months.length + i].toUpperCase()}, ${
         currentDate.getFullYear() - 1
       }`
+      const translatedValue = `${i18n
+        ._(months[months.length + i])
+        .toUpperCase()}, ${currentDate.getFullYear() - 1}`
+
       options.push(
         <option key={value} value={value}>
-          {value}
+          {translatedValue}
         </option>,
       )
     }
     // handle current year
     else {
       const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
+      const translatedValue = `${i18n
+        ._(months[i])
+        .toUpperCase()}, ${currentDate.getFullYear()}`
+
       options.push(
         <option key={value} value={value}>
-          {value}
+          {translatedValue}
         </option>,
       )
     }
@@ -140,7 +148,6 @@ export default function DmarcByDomainPage() {
     const [newPeriod, newYear] = e.target.value.split(', ')
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
-    tableRefetch()
   }
 
   // Replace table with "Loading..." if waiting for query

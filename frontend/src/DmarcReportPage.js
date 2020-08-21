@@ -4,9 +4,7 @@ import { useQuery } from '@apollo/client'
 import {
   DMARC_REPORT_DETAIL_TABLES,
   DMARC_REPORT_SUMMARY_LIST,
-  DMARC_REPORT_SUMMARY,
 } from './graphql/queries'
-import SummaryCard from './SummaryCard'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
 import { Box, Heading, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
@@ -15,8 +13,6 @@ import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import theme from './theme/canada'
 import { useParams, useHistory } from 'react-router-dom'
-
-const { colors } = theme
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -32,23 +28,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const [selectedDate, setSelectedDate] = useState(
     `${selectedPeriod}, ${selectedYear}`,
   )
-
-  const {
-    loading: summaryLoading,
-    error: summaryError,
-    data: summaryData,
-  } = useQuery(DMARC_REPORT_SUMMARY, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    variables: {
-      domainSlug: domainSlug,
-      period: selectedPeriod,
-      year: selectedYear,
-    },
-  })
 
   const { loading: barLoading, error: barError, data: barData } = useQuery(
     DMARC_REPORT_SUMMARY_LIST,
@@ -79,7 +58,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     },
   })
 
-  if (tableLoading && barLoading && summaryLoading)
+  if (tableLoading && barLoading)
     return (
       <Text>
         <Trans>Loading...</Trans>
@@ -87,18 +66,18 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
 
   const months = [
-    t`January`,
-    t`February`,
-    t`March`,
-    t`April`,
-    t`May`,
-    t`June`,
-    t`July`,
-    t`August`,
-    t`September`,
-    t`October`,
-    t`November`,
-    t`December`,
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ]
 
   const options = [
@@ -117,18 +96,26 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       const value = `${months[months.length + i].toUpperCase()}, ${
         currentDate.getFullYear() - 1
       }`
+      const translatedValue = `${i18n
+        ._(months[months.length + i])
+        .toUpperCase()}, ${currentDate.getFullYear() - 1}`
+
       options.push(
         <option key={value} value={value}>
-          {value}
+          {translatedValue}
         </option>,
       )
     }
     // handle current year
     else {
       const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
+      const translatedValue = `${i18n
+        ._(months[i])
+        .toUpperCase()}, ${currentDate.getFullYear()}`
+
       options.push(
         <option key={value} value={value}>
-          {value}
+          {translatedValue}
         </option>,
       )
     }
@@ -141,100 +128,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     setSelectedPeriod(newPeriod)
     setSelectedYear(newYear)
     history.push(`/domains/${domainSlug}/dmarc-report/${newPeriod}/${newYear}`)
-  }
-
-  const cardWidth = window.matchMedia('(max-width: 500px)').matches
-    ? '100%'
-    : window.matchMedia('(max-width: 800px)').matches
-    ? '50%'
-    : window.matchMedia('(max-width: 1200px)').matches
-    ? '35%'
-    : '20%'
-
-  const graphWidth =
-    cardWidth.slice(0, -1) <= 20
-      ? `${100 - Number(cardWidth.slice(0, -1))}%`
-      : '100%'
-
-  const cardAndGraphInline = graphWidth !== '100%'
-
-  // Create summary card if no error and categoryTotals data present
-  let summaryCardDisplay
-  if (
-    !summaryError &&
-    !summaryLoading &&
-    summaryData.dmarcReportSummary.categoryTotals.total !== 0
-  ) {
-    if (summaryLoading) {
-      summaryCardDisplay = (
-        <Text>
-          <Trans>Loading...</Trans>
-        </Text>
-      )
-    } else {
-      const summaryDataTotals = summaryData.dmarcReportSummary.categoryTotals
-      const total = summaryDataTotals.total
-
-      const allowedCategories = [
-        'fullPass',
-        'passSpfOnly',
-        'passDkimOnly',
-        'fail',
-      ]
-
-      const formattedSummaryData = {
-        categories: allowedCategories.map((category) => {
-          return {
-            name: category,
-            count: summaryDataTotals[category],
-            percentage:
-              Math.round((10 * total) / summaryDataTotals[category]) / 10,
-          }
-        }),
-      }
-      formattedSummaryData.total = total
-
-      const categoryDisplay = {
-        fullPass: {
-          name: i18n._(t`Pass`),
-          color: colors.strong,
-        },
-        passSpfOnly: {
-          name: i18n._(t`Pass SPF Only`),
-          color: colors.moderate,
-        },
-        passDkimOnly: {
-          name: i18n._(t`Pass DKIM Only`),
-          color: colors.moderate,
-        },
-        fail: {
-          name: i18n._(t`Fail`),
-          color: colors.weak,
-        },
-      }
-
-      summaryCardDisplay = (
-        <SummaryCard
-          title={i18n._(t`DMARC Report`)}
-          description={i18n._(t`DMARC Report`)}
-          categoryDisplay={categoryDisplay}
-          data={formattedSummaryData}
-        />
-      )
-    }
-  } else {
-    // handle errors / loading / no data
-    summaryCardDisplay = (
-      <Heading as="h3" size="lg" textAlign="center" width="320px">
-        {summaryLoading ? (
-          <Trans>Loading...</Trans>
-        ) : summaryError ? (
-          <Trans>Error while querying for summary card</Trans>
-        ) : (
-          <Trans>No data for the current period</Trans>
-        )}
-      </Heading>
-    )
   }
 
   // Create dmarc bar graph if not loading and no errors
@@ -252,6 +145,8 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           name: 'passSpfOnly',
           displayName: i18n._(t`Pass Only SPF`),
         },
+      ],
+      moderateAlt: [
         {
           name: 'passDkimOnly',
           displayName: i18n._(t`Pass Only DKIM`),
@@ -275,7 +170,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     barDisplay = (
       <DmarcTimeGraph
         data={formattedBarData}
-        width={graphWidth}
+        width="100%"
         mr="400px"
         responsiveWidth={summaryListResponsiveWidth}
       />
@@ -517,15 +412,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         </Select>
       </Stack>
 
-      <Stack
-        align="center"
-        isInline={cardAndGraphInline}
-        spacing="space-between"
-        mb="8"
-      >
-        {summaryCardDisplay}
-        {barDisplay}
-      </Stack>
+      {barDisplay}
       {tableDisplay}
     </Box>
   )

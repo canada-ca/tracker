@@ -1427,7 +1427,7 @@ type Query {
     The slugified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug!
-  ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
+  ): [DmarcReportSummaryList] @listLength(min: 14, max: 14)
 
   """
   A query object used to grab the data to create dmarc report bar graph.
