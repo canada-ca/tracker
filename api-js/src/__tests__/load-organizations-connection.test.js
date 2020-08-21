@@ -5,15 +5,16 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
-const { loadOrganizationsConnections } = require('../loaders')
+const { loadOrganizationsConnections, orgLoaderById } = require('../loaders')
+const { toGlobalId } = require('graphql-relay')
 
 describe('given the load organizations connection function', () => {
-  let query, drop, truncate, migrate, collections, user
+  let query, drop, truncate, migrate, collections, user, org, orgTwo
 
   let consoleOutput = []
-  // const mockedError = (output) => consoleOutput.push(output)
+  const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
-    // console.error = mockedError
+    console.error = mockedError
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
@@ -29,7 +30,7 @@ describe('given the load organizations connection function', () => {
       tfaValidated: false,
       emailValidated: false,
     })
-    const orgTwo = await collections.organizations.save({
+    org = await collections.organizations.save({
       orgDetails: {
         en: {
           slug: 'treasury-board-secretariat',
@@ -53,7 +54,7 @@ describe('given the load organizations connection function', () => {
         },
       },
     })
-    const org = await collections.organizations.save({
+    orgTwo = await collections.organizations.save({
       orgDetails: {
         en: {
           slug: 'communications-security-establishment',
@@ -93,18 +94,100 @@ describe('given the load organizations connection function', () => {
   afterAll(async () => {
     await drop()
   })
+  describe('given a successful load', () => {
+    describe('language is set to english', () => {
+      describe('using no cursor', () => {
+        it('returns an organization', async () => {
+          const connectionLoader = loadOrganizationsConnections(
+            query,
+            'en',
+            user._key,
+            cleanseInput,
+          )
 
-  describe('', () => {
-    it('', async () => {
-      const loader = loadOrganizationsConnections(query, 'en', user._key, cleanseInput)
+          const connectionArgs = {}
+          const orgs = await connectionLoader(connectionArgs)
 
-      const connectionArgs = {
-        first: 1,
-      }
-      const orgs = await loader(connectionArgs)
+          const orgLoader = orgLoaderById(query, 'en')
+          const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
-      expect(orgs).toEqual('')
+          expectedOrgs[0].id = expectedOrgs[0]._key
+          expectedOrgs[1].id = expectedOrgs[1]._key
+
+          const expectedStructure = {
+            edges: [
+              {
+                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
+                node: {
+                  ...expectedOrgs[0],
+                },
+              },
+              {
+                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
+                node: {
+                  ...expectedOrgs[1],
+                },
+              },
+            ],
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
+              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
+            },
+          }
+
+          expect(orgs).toEqual(expectedStructure)
+        })
+      })
+      describe('using after cursor', () => {
+        it('returns an organization', async () => {})
+      })
+      describe('using before cursor', () => {
+        it('returns an organization', async () => {})
+      })
+      describe('using no limit', () => {
+        it('returns an organization', async () => {})
+      })
+      describe('using first limit', () => {
+        it('returns an organization', async () => {})
+      })
+      describe('using last limit', () => {
+        it('returns an organization', async () => {})
+      })
+    })
+    describe('language is set to french', () => {
+      describe('using no cursor', () => {
+        it('returns an organization', async () => {})
+      })
+      describe('using after cursor', () => {
+        it('returns an organization', async () => {})
+      })
+      describe('using before cursor', () => {
+        it('returns an organization', async () => {})
+      })
+      describe('using no limit', () => {
+        it('returns an organization', async () => {})
+      })
+      describe('using first limit', () => {
+        it('returns an organization', async () => {})
+      })
+      describe('using last limit', () => {
+        it('returns an organization', async () => {})
+      })
     })
   })
-
+  describe('given an unsuccessful load', () => {
+    describe('user has first and last arguments set at the same time', () => {
+      it('returns an error message', async () => {})
+    })
+  })
+  describe('given a database error', () => {
+    describe('when gathering affiliated organizations', () => {
+      it('returns an error message', async () => {})
+    })
+    describe('when gathering organizations', () => {
+      it('returns an error message', async () => {})
+    })
+  })
 })
