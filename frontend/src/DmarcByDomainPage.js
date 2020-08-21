@@ -6,6 +6,7 @@ import { Box, Heading, Text, Stack, Select } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import {months} from "./months";
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -85,22 +86,6 @@ export default function DmarcByDomainPage() {
       ],
     },
   ]
-
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-  console.log()
 
   const options = [
     <option

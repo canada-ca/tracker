@@ -12,6 +12,7 @@ import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { useParams, useHistory } from 'react-router-dom'
+import {months} from "./months";
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -63,21 +64,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         <Trans>Loading...</Trans>
       </Text>
     )
-
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
 
   const options = [
     <option
@@ -398,7 +384,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         {domainSlug.toUpperCase()}
       </Heading>
 
-      <Stack isInline align="center" mb="4px">
+      {barDisplay}
+
+      <Stack isInline align="center" mb="16px">
         <Text fontWeight="bold" textAlign="center">
           <Trans>Showing data for period: </Trans>
         </Text>
@@ -411,7 +399,6 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         </Select>
       </Stack>
 
-      {barDisplay}
       {tableDisplay}
     </Box>
   )
