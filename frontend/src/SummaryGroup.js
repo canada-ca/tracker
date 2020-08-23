@@ -55,6 +55,10 @@ export function SummaryGroup() {
             name: i18n._(t`Non-compliant TLS`),
             color: colors.weak,
           },
+          'partial-pass': {
+            name: i18n._(t`Partially-compliant TLS`),
+            color: colors.moderate,
+          },
           'full-pass': {
             name: i18n._(t`Policy compliant TLS`),
             color: colors.strong,

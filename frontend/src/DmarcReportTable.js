@@ -1,7 +1,13 @@
 import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
-import { useTable, usePagination, useSortBy } from 'react-table'
-import { array, string } from 'prop-types'
+import {
+  useTable,
+  usePagination,
+  useSortBy,
+  useFilters,
+  useGlobalFilter,
+} from 'react-table'
+import { array, bool, string } from 'prop-types'
 import {
   Box,
   Button,
@@ -9,14 +15,18 @@ import {
   Icon,
   IconButton,
   Input,
+  Link,
   Select,
   Stack,
   Text,
 } from '@chakra-ui/core'
+import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 import WithPseudoBox from './withPseudoBox'
+import { slugify } from './slugify'
+import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 
 const Table = styled.table`
 width: calc(100% - 2px);
@@ -92,7 +102,7 @@ td, th {
     padding-right: 10px;
     white-space: nowrap;
   }
-  ${props =>
+  ${(props) =>
     props.flatHeaders.slice(1).map((headerObj, index) => {
       return `
         td:nth-of-type(${index + 1}):before {
@@ -104,7 +114,16 @@ td, th {
 `
 
 function DmarcReportTable({ ...props }) {
-  const { data, columns, title, initialSort } = props
+  const {
+    data,
+    columns,
+    title,
+    initialSort,
+    hideTitleButton,
+    linkColumns,
+    prependLink,
+    appendLink,
+  } = props
   const [show, setShow] = React.useState(true)
   const { i18n } = useLingui()
 
@@ -131,6 +150,9 @@ function DmarcReportTable({ ...props }) {
     setPageSize,
     flatHeaders,
     state: { pageIndex, pageSize },
+    preGlobalFilteredRows,
+    setGlobalFilter,
+    state,
   } = useTable(
     {
       columns,
@@ -140,13 +162,15 @@ function DmarcReportTable({ ...props }) {
         pageSize: defaultPageSize,
       },
     },
+    useFilters,
+    useGlobalFilter,
     useSortBy,
     usePagination,
   )
 
   const [goToPageValue, setGoToPageNumber] = useState(pageIndex + 1)
 
-  const handleGoToPageChange = event => {
+  const handleGoToPageChange = (event) => {
     if (isNaN(event.target.value)) return 0 // TODO: Error handling here?
     setGoToPageNumber(event.target.value)
 
@@ -156,19 +180,62 @@ function DmarcReportTable({ ...props }) {
 
   const wrapperRef = useRef(null)
 
+  const titleButtonElement = !hideTitleButton ? (
+    <Button bg="primary" color="white" onClick={handleShow} width="100%">
+      {title}
+    </Button>
+  ) : (
+    ''
+  )
+
+  // Render cell with link when required (external or internal)
+  // Using ternary to get rid of unnecessary checks to linkColumns if
+  // linkColumns is empty
+  const renderLinkableCell = linkColumns
+    ? (cell) => {
+        for (let i = 0; i < linkColumns.length; i++) {
+          if (linkColumns[i].column === cell.column.id) {
+            if (linkColumns[i].isExternal) {
+              return (
+                // TODO: Check for http[s]? and www before prepending
+                <Link href={`https://www.${cell.value}`} isExternal={true}>
+                  {cell.render('Cell')}
+                </Link>
+              )
+            } else {
+              return (
+                <Link
+                  as={RouteLink}
+                  to={`${prependLink}${slugify(cell.value)}${appendLink}`}
+                >
+                  {cell.render('Cell')}
+                </Link>
+              )
+            }
+          }
+        }
+        return cell.render('Cell')
+      }
+    : (cell) => cell.render('Cell')
+
   return (
     <Box ref={wrapperRef}>
-      <Button bg="primary" color="white" onClick={handleShow} width="100%">
-        {title}
-      </Button>
+      {titleButtonElement}
       <Collapse isOpen={show}>
+        <ReactTableGlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={state.globalFilter}
+          setGlobalFilter={setGlobalFilter}
+          mt="4px"
+          mb="4px"
+        />
         <Box width="100%" overflowX="auto">
           <Table {...getTableProps()} flatHeaders={flatHeaders}>
             <thead>
               {headerGroups.map((headerGroup, index) => {
                 return (
                   <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map(column => {
+                    {headerGroup.headers.map((column) => {
                       // Using column.Header since column.id _sometimes_ has appended numbers
                       const key =
                         column.depth === 0
@@ -181,6 +248,7 @@ function DmarcReportTable({ ...props }) {
                           {...column.getHeaderProps(
                             column.getSortByToggleProps(),
                           )}
+                          style={{ textAlign: 'center' }}
                         >
                           {column.render('Header')}
                           <span>
@@ -212,7 +280,7 @@ function DmarcReportTable({ ...props }) {
                           key={`${title}:${rowIndex}:${cellIndex}`}
                           {...cell.getCellProps()}
                         >
-                          {cell.render('Cell')}
+                          {renderLinkableCell(cell)}
                         </td>
                       )
                     })}
@@ -279,19 +347,19 @@ function DmarcReportTable({ ...props }) {
               <Input
                 width="6rem"
                 value={goToPageValue}
-                onChange={event => {
+                onChange={(event) => {
                   handleGoToPageChange(event)
                 }}
               />
               <Select
                 value={pageSize}
-                onChange={e => {
+                onChange={(e) => {
                   setPageSize(Number(e.target.value))
                   wrapperRef.current.scrollIntoView(true)
                 }}
                 width="fit-content"
               >
-                {[5, 10, 20, 30, 40, 50].map(pageSize => (
+                {[5, 10, 20, 30, 40, 50].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
                     {i18n._(t`Show ${pageSize}`)}
                   </option>
@@ -310,6 +378,10 @@ DmarcReportTable.propTypes = {
   columns: array.isRequired,
   title: string.isRequired,
   initialSort: array.isRequired,
+  hideTitleButton: bool,
+  linkColumns: array,
+  prependLink: string,
+  appendLink: string,
 }
 
 export default WithPseudoBox(DmarcReportTable)
