@@ -13,6 +13,7 @@ import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import theme from './theme/canada'
+import { BarChart } from './BarChart'
 
 const { colors } = theme
 
@@ -91,7 +92,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   }
 
   const formattedBarData = {
-    periods: barData.demoDmarcReportSummaryList.map(entry => {
+    periods: barData.demoDmarcReportSummaryList.map((entry) => {
       return { month: entry.month, year: entry.year, ...entry.categoryTotals }
     }),
   }
@@ -255,6 +256,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           *All data represented is mocked for demonstration purposes
         </Trans>
       </Text>
+      <BarChart />
       <Stack align="center" isInline={cardAndGraphInline}>
         <SummaryCard
           title={i18n._(t`DMARC Report`)}

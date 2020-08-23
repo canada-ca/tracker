@@ -39,8 +39,7 @@ scheme for const data:
 }
 */
 
-function DmarcReportSummaryGraph({ ...props }) {
-  const { data, responsiveWidth } = props
+function DmarcReportSummaryGraph({ data, responsiveWidth }) {
   const { periods, strengths } = data
   const ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
   const { colors } = theme
