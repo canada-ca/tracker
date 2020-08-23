@@ -207,9 +207,13 @@ export default function App() {
                 <QRcodePage userName={currentUser.userName} />
               </RouteIf>
 
-              <Route path="/dmarc-report/:period?/:year?">
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
+                path="/dmarc-report/:period?/:year?"
+              >
                 <DmarcReportPage />
-              </Route>
+              </RouteIf>
 
               <Route component={PageNotFound} />
             </Switch>
