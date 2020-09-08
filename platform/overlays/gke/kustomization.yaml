@@ -9,6 +9,7 @@ resources:
 - knative/config/config.yaml
 - knative/config/autoscan.yaml
 - knative/monitoring/prometheus.yaml
+- knative/monitoring/loki-stack.yaml
 - knative/monitoring/grafana/grafana.yaml
 - http-01-challenge-destination-rule.yaml
 - postgres-endpoint.yaml
