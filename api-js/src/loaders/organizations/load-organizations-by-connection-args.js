@@ -1,7 +1,7 @@
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
 const { aql } = require('arangojs')
 
-const loadOrganizationsConnections = (
+const orgLoaderByConnectionArgs = (
   query,
   language,
   userId,
@@ -14,19 +14,19 @@ const loadOrganizationsConnections = (
 
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(org._key) > ${afterId}`
+    afterTemplate = aql`FILTER TO_NUMBER(org._key) > TO_NUMBER(${afterId})`
   }
 
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(org._key) < ${beforeId}`
+    beforeTemplate = aql`FILTER TO_NUMBER(org._key) < TO_NUMBER(${beforeId})`
   }
 
   let limitTemplate = aql``
   if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT org._key ASC LIMIT ${first + 1}`
+    limitTemplate = aql`SORT org._key ASC LIMIT TO_NUMBER(${first + 1})`
   } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT org._key DESC LIMIT ${last + 1}`
+    limitTemplate = aql`SORT org._key DESC LIMIT TO_NUMBER(${last + 1})`
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
       `User: ${userId} tried to have first and last set in organizations connection query`,
@@ -44,12 +44,20 @@ const loadOrganizationsConnections = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather org information in loadOrganizationsConnections.`,
+      `Database error occurred while user: ${userId} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
     )
     throw new Error('Unable to load organizations. Please try again.')
   }
 
-  const acceptedOrgs = await acceptedOrgsCursor.next()
+  let acceptedOrgs
+  try {
+    acceptedOrgs = await acceptedOrgsCursor.next()
+  } catch (err) {
+    console.error(
+      `Cursor error occurred while user: ${userId} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
+    )
+    throw new Error('Unable to load organizations. Please try again.')
+  }
 
   let orgCursor
   try {
@@ -62,11 +70,21 @@ const loadOrganizationsConnections = (
       RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
     `
   } catch (err) {
-    console.error(err)
-    throw new Error('Unable to retrieve organizations. Please try again.')
+    console.error(
+      `Database error occurred while user: ${userId} was trying to gather orgs in loadOrganizationsConnections.`,
+    )
+    throw new Error('Unable to load organizations. Please try again.')
   }
 
-  const organizations = await orgCursor.all()
+  let organizations
+  try {
+    organizations = await orgCursor.all()
+  } catch (err) {
+    console.error(
+      `Cursor error occurred while user: ${userId} was trying to gather orgs in loadOrganizationsConnections.`,
+    )
+    throw new Error('Unable to load organizations. Please try again.')
+  }
 
   const hasNextPage = !!(
     typeof first !== 'undefined' && organizations.length > first
@@ -118,5 +136,5 @@ const loadOrganizationsConnections = (
 }
 
 module.exports = {
-  loadOrganizationsConnections,
+  orgLoaderByConnectionArgs,
 }

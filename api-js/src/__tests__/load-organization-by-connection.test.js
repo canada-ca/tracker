@@ -13,8 +13,10 @@ describe('given the load organizations connection function', () => {
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     console.error = mockedError
+    console.warn = mockedWarn
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
@@ -598,15 +600,165 @@ describe('given the load organizations connection function', () => {
   })
   describe('given an unsuccessful load', () => {
     describe('user has first and last arguments set at the same time', () => {
-      it('returns an error message', async () => {})
+      it('returns an error message', async () => {
+        const connectionLoader = orgLoaderByConnectionArgs(
+          query,
+          'en',
+          user._key,
+          cleanseInput,
+        )
+
+        try {
+          const connectionArgs = {
+            first: 1,
+            last: 1,
+          }
+          await connectionLoader(connectionArgs)
+        } catch (err) {
+          expect(err).toEqual(
+            new Error(
+              'Error, unable to have first, and last set at the same time.',
+            ),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `User: ${user._key} tried to have first and last set in organizations connection query`,
+        ])
+      })
     })
   })
   describe('given a database error', () => {
     describe('when gathering affiliated organizations', () => {
-      it('returns an error message', async () => {})
+      it('returns an error message', async () => {
+        const query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+
+        const connectionLoader = orgLoaderByConnectionArgs(
+          query,
+          'en',
+          user._key,
+          cleanseInput,
+        )
+
+        try {
+          const connectionArgs = {}
+          await connectionLoader(connectionArgs)
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to load organizations. Please try again.'),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error occurred while user: ${user._key} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
+        ])
+      })
     })
     describe('when gathering organizations', () => {
-      it('returns an error message', async () => {})
+      it('returns an error message', async () => {
+        const cursor = {
+          next() {
+            return ['org1']
+          },
+        }
+        const query = jest
+          .fn()
+          .mockReturnValueOnce(cursor)
+          .mockRejectedValue(new Error('Database error occurred.'))
+
+        const connectionLoader = orgLoaderByConnectionArgs(
+          query,
+          'en',
+          user._key,
+          cleanseInput,
+        )
+
+        try {
+          const connectionArgs = {}
+          await connectionLoader(connectionArgs)
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to load organizations. Please try again.'),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error occurred while user: ${user._key} was trying to gather orgs in loadOrganizationsConnections.`,
+        ])
+      })
+    })
+    describe('given a cursor error', () => {
+      describe('when gathering affiliated organizations', () => {
+        it('returns an error message', async () => {
+          const cursor = {
+            next() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          const query = jest
+            .fn()
+            .mockReturnValueOnce(cursor)
+  
+          const connectionLoader = orgLoaderByConnectionArgs(
+            query,
+            'en',
+            user._key,
+            cleanseInput,
+          )
+  
+          try {
+            const connectionArgs = {}
+            await connectionLoader(connectionArgs)
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load organizations. Please try again.'),
+            )
+          }
+  
+          expect(consoleOutput).toEqual([
+            `Cursor error occurred while user: ${user._key} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
+          ])
+        })
+      })
+      describe('when gathering organizations', () => {
+        it('returns an error message', async () => {
+          const cursor = {
+            next() {
+              return ['org1']
+            },
+          }
+          const query = jest
+            .fn()
+            .mockReturnValueOnce(cursor)
+            .mockReturnValue({
+              next() {
+                throw new Error('Cursor error occurred.')
+              },
+            })
+  
+          const connectionLoader = orgLoaderByConnectionArgs(
+            query,
+            'en',
+            user._key,
+            cleanseInput,
+          )
+  
+          try {
+            const connectionArgs = {}
+            await connectionLoader(connectionArgs)
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load organizations. Please try again.'),
+            )
+          }
+  
+          expect(consoleOutput).toEqual([
+            `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadOrganizationsConnections.`,
+          ])
+        })
+      })
     })
   })
 })
