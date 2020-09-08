@@ -1,8 +1,6 @@
 const dotenv = require('dotenv-safe')
 dotenv.config()
 
-const { SIGN_IN_KEY } = process.env
-
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
@@ -16,7 +14,7 @@ const { checkPermission, tokenize, userRequired } = require('../auth')
 const {
   domainLoaderBySlug,
   orgLoaderById,
-  orgLoaderByDomainId,
+  orgLoaderConnectionArgsByDomainId,
   userLoaderById,
   userLoaderByUserName,
 } = require('../loaders')
@@ -157,9 +155,13 @@ describe('create a domain', () => {
                     slug
                     lastRan
                     selectors
-                    organization {
-                      id
-                      name
+                    organizations {
+                      edges{ 
+                        node {
+                          id
+                          name
+                        }
+                      }
                     }
                   }
                 }
@@ -178,7 +180,12 @@ describe('create a domain', () => {
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
                 orgLoaderById: orgLoaderById(query, 'en'),
-                orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
                 userLoaderById: userLoaderById(query),
               },
               validators: { cleanseInput, slugify },
@@ -200,9 +207,15 @@ describe('create a domain', () => {
                   slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
-                  organization: {
-                    id: toGlobalId('organizations', org._key),
-                    name: 'Treasury Board of Canada Secretariat',
+                  organizations: {
+                    edges: [
+                      {
+                        node: {
+                          id: toGlobalId('organizations', org._key),
+                          name: 'Treasury Board of Canada Secretariat',
+                        },
+                      },
+                    ],
                   },
                 },
               },
@@ -267,9 +280,13 @@ describe('create a domain', () => {
                     slug
                     lastRan
                     selectors
-                    organization {
-                      id
-                      name
+                    organizations {
+                      edges{ 
+                        node {
+                          id
+                          name
+                        }
+                      }
                     }
                   }
                 }
@@ -288,7 +305,12 @@ describe('create a domain', () => {
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
                 orgLoaderById: orgLoaderById(query, 'en'),
-                orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
                 userLoaderById: userLoaderById(query),
               },
               validators: { cleanseInput, slugify },
@@ -310,9 +332,15 @@ describe('create a domain', () => {
                   slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
-                  organization: {
-                    id: toGlobalId('organizations', org._key),
-                    name: 'Treasury Board of Canada Secretariat',
+                  organizations: {
+                    edges: [
+                      {
+                        node: {
+                          id: toGlobalId('organizations', org._key),
+                          name: 'Treasury Board of Canada Secretariat',
+                        },
+                      },
+                    ],
                   },
                 },
               },
@@ -353,9 +381,13 @@ describe('create a domain', () => {
                   slug
                   lastRan
                   selectors
-                  organization {
-                    id
-                    name
+                  organizations {
+                    edges{ 
+                      node {
+                        id
+                        name
+                      }
+                    }
                   }
                 }
               }
@@ -374,7 +406,12 @@ describe('create a domain', () => {
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
-              orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                query,
+                'en',
+                user._key,
+                cleanseInput,
+              ),
               userLoaderById: userLoaderById(query),
             },
             validators: { cleanseInput, slugify },
@@ -396,9 +433,15 @@ describe('create a domain', () => {
                 slug: 'test-gc-ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
-                organization: {
-                  id: toGlobalId('organizations', org._key),
-                  name: 'Treasury Board of Canada Secretariat',
+                organizations: {
+                  edges: [
+                    {
+                      node: {
+                        id: toGlobalId('organizations', org._key),
+                        name: 'Treasury Board of Canada Secretariat',
+                      },
+                    },
+                  ],
                 },
               },
             },
@@ -438,9 +481,13 @@ describe('create a domain', () => {
                   slug
                   lastRan
                   selectors
-                  organization {
-                    id
-                    name
+                  organizations {
+                    edges{ 
+                      node {
+                        id
+                        name
+                      }
+                    }
                   }
                 }
               }
@@ -459,7 +506,12 @@ describe('create a domain', () => {
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
-              orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                query,
+                'en',
+                user._key,
+                cleanseInput,
+              ),
               userLoaderById: userLoaderById(query),
             },
             validators: { cleanseInput, slugify },
@@ -481,9 +533,15 @@ describe('create a domain', () => {
                 slug: 'test-gc-ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
-                organization: {
-                  id: toGlobalId('organizations', org._key),
-                  name: 'Treasury Board of Canada Secretariat',
+                organizations: {
+                  edges: [
+                    {
+                      node: {
+                        id: toGlobalId('organizations', org._key),
+                        name: 'Treasury Board of Canada Secretariat',
+                      },
+                    },
+                  ],
                 },
               },
             },
@@ -559,9 +617,13 @@ describe('create a domain', () => {
                   slug
                   lastRan
                   selectors
-                  organization {
-                    id
-                    name
+                  organizations {
+                    edges{ 
+                      node {
+                        id
+                        name
+                      }
+                    }
                   }
                 }
               }
@@ -580,7 +642,12 @@ describe('create a domain', () => {
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
                 orgLoaderById: orgLoaderById(query, 'en'),
-                orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
                 userLoaderById: userLoaderById(query),
               },
               validators: { cleanseInput, slugify },
@@ -602,9 +669,21 @@ describe('create a domain', () => {
                   slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
-                  organization: {
-                    id: toGlobalId('organizations', secondOrg._key),
-                    name: 'Communications Security Establishment',
+                  organizations: {
+                    edges: [
+                      {
+                        node: {
+                          id: toGlobalId('organizations', org._key),
+                          name: 'Treasury Board of Canada Secretariat',
+                        },
+                      },
+                      {
+                        node: {
+                          id: toGlobalId('organizations', secondOrg._key),
+                          name: 'Communications Security Establishment',
+                        },
+                      },
+                    ],
                   },
                 },
               },
@@ -648,9 +727,13 @@ describe('create a domain', () => {
                   slug
                   lastRan
                   selectors
-                  organization {
-                    id
-                    name
+                  organizations {
+                    edges{ 
+                      node {
+                        id
+                        name
+                      }
+                    }
                   }
                 }
               }
@@ -669,7 +752,12 @@ describe('create a domain', () => {
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
                 orgLoaderById: orgLoaderById(query, 'en'),
-                orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
                 userLoaderById: userLoaderById(query),
               },
               validators: { cleanseInput, slugify },
@@ -691,9 +779,21 @@ describe('create a domain', () => {
                   slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
-                  organization: {
-                    id: toGlobalId('organizations', secondOrg._key),
-                    name: 'Communications Security Establishment',
+                  organizations: {
+                    edges: [
+                      {
+                        node: {
+                          id: toGlobalId('organizations', org._key),
+                          name: 'Treasury Board of Canada Secretariat',
+                        },
+                      },
+                      {
+                        node: {
+                          id: toGlobalId('organizations', secondOrg._key),
+                          name: 'Communications Security Establishment',
+                        },
+                      },
+                    ],
                   },
                 },
               },
@@ -737,9 +837,13 @@ describe('create a domain', () => {
                   slug
                   lastRan
                   selectors
-                  organization {
-                    id
-                    name
+                  organizations {
+                    edges{ 
+                      node {
+                        id
+                        name
+                      }
+                    }
                   }
                 }
               }
@@ -758,7 +862,12 @@ describe('create a domain', () => {
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
                 orgLoaderById: orgLoaderById(query, 'en'),
-                orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
                 userLoaderById: userLoaderById(query),
               },
               validators: { cleanseInput, slugify },
@@ -785,9 +894,21 @@ describe('create a domain', () => {
                     'selector3._domainkey',
                     'selector4._domainkey',
                   ],
-                  organization: {
-                    id: toGlobalId('organizations', secondOrg._key),
-                    name: 'Communications Security Establishment',
+                  organizations: {
+                    edges: [
+                      {
+                        node: {
+                          id: toGlobalId('organizations', org._key),
+                          name: 'Treasury Board of Canada Secretariat',
+                        },
+                      },
+                      {
+                        node: {
+                          id: toGlobalId('organizations', secondOrg._key),
+                          name: 'Communications Security Establishment',
+                        },
+                      },
+                    ],
                   },
                 },
               },
@@ -823,9 +944,13 @@ describe('create a domain', () => {
                   slug
                   lastRan
                   selectors
-                  organization {
-                    id
-                    name
+                  organizations {
+                    edges {
+                      node {
+                        id
+                        name
+                      }
+                    }
                   }
                 }
               }
@@ -844,7 +969,12 @@ describe('create a domain', () => {
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
-              orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                query,
+                'en',
+                user._key,
+                cleanseInput,
+              ),
               userLoaderById: userLoaderById(query),
             },
             validators: { cleanseInput, slugify },
@@ -880,9 +1010,13 @@ describe('create a domain', () => {
                   slug
                   lastRan
                   selectors
-                  organization {
-                    id
-                    name
+                  organizations {
+                    edges{ 
+                      node {
+                        id
+                        name
+                      }
+                    }
                   }
                 }
               }
@@ -901,7 +1035,12 @@ describe('create a domain', () => {
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
-              orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                query,
+                'en',
+                user._key,
+                cleanseInput,
+              ),
               userLoaderById: userLoaderById(query),
             },
             validators: { cleanseInput, slugify },
@@ -952,9 +1091,13 @@ describe('create a domain', () => {
                   slug
                   lastRan
                   selectors
-                  organization {
-                    id
-                    name
+                  organizations {
+                    edges{ 
+                      node {
+                        id
+                        name
+                      }
+                    }
                   }
                 }
               }
@@ -973,7 +1116,12 @@ describe('create a domain', () => {
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
               orgLoaderById: orgLoaderById(query, 'en'),
-              orgLoaderByDomainId: orgLoaderByDomainId(query, 'en'),
+              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                query,
+                'en',
+                user._key,
+                cleanseInput,
+              ),
               userLoaderById: userLoaderById(query),
             },
             validators: { cleanseInput, slugify },
@@ -1002,8 +1150,13 @@ describe('create a domain', () => {
         it('returns an error message', async () => {
           const domainLoader = domainLoaderBySlug(query)
           const orgIdLoader = orgLoaderById(query, 'en')
-          const orgDomainIdLoader = orgLoaderByDomainId(query, 'en')
           const userIdLoader = userLoaderById(query)
+          const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+            query,
+            'en',
+            user._key,
+            cleanseInput,
+          )
 
           query = jest
             .fn()
@@ -1036,9 +1189,13 @@ describe('create a domain', () => {
                     slug
                     lastRan
                     selectors
-                    organization {
-                      id
-                      name
+                    organizations {
+                      edges{ 
+                        node {
+                          id
+                          name
+                        }
+                      }
                     }
                   }
                 }
@@ -1057,7 +1214,7 @@ describe('create a domain', () => {
               loaders: {
                 domainLoaderBySlug: domainLoader,
                 orgLoaderById: orgIdLoader,
-                orgLoaderByDomainId: orgDomainIdLoader,
+                orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
                 userLoaderById: userIdLoader,
               },
               validators: { cleanseInput, slugify },
@@ -1085,8 +1242,13 @@ describe('create a domain', () => {
         it('returns an error message', async () => {
           const domainLoader = domainLoaderBySlug(query)
           const orgIdLoader = orgLoaderById(query, 'en')
-          const orgDomainIdLoader = orgLoaderByDomainId(query, 'en')
           const userIdLoader = userLoaderById(query)
+          const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+            query,
+            'en',
+            user._key,
+            cleanseInput,
+          )
 
           transaction = jest.fn().mockReturnValueOnce({
             run() {
@@ -1114,9 +1276,13 @@ describe('create a domain', () => {
                     slug
                     lastRan
                     selectors
-                    organization {
-                      id
-                      name
+                    organizations {
+                      edges{ 
+                        node {
+                          id
+                          name
+                        }
+                      }
                     }
                   }
                 }
@@ -1135,7 +1301,7 @@ describe('create a domain', () => {
               loaders: {
                 domainLoaderBySlug: domainLoader,
                 orgLoaderById: orgIdLoader,
-                orgLoaderByDomainId: orgDomainIdLoader,
+                orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
                 userLoaderById: userIdLoader,
               },
               validators: { cleanseInput, slugify },
