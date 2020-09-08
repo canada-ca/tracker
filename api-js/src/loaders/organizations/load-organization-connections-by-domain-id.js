@@ -39,10 +39,13 @@ const orgLoaderConnectionArgsByDomainId = (
   let acceptedOrgsCursor
   try {
     acceptedOrgsCursor = await query`
+    LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
     LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+    LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
+    LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
     LET claimKeys = (FOR v, e IN 1..1 INBOUND ${domainId} claims RETURN v._key)
-    LET orgKeys = INTERSECTION(affiliationKeys, claimKeys)
-      RETURN orgKeys
+    LET orgKeys = INTERSECTION(keys, claimKeys)
+      RETURN claimKeys
     `
   } catch (err) {
     console.error(
@@ -99,12 +102,6 @@ const orgLoaderConnectionArgsByDomainId = (
     organizations.pop()
   }
 
-  const startCursor = toGlobalId('organizations', organizations[0]._key)
-  const endCursor = toGlobalId(
-    'organizations',
-    organizations[organizations.length - 1]._key,
-  )
-
   const edges = []
   organizations.forEach(async (organization) => {
     organization.id = organization._key
@@ -125,6 +122,12 @@ const orgLoaderConnectionArgsByDomainId = (
       },
     }
   }
+
+  const startCursor = toGlobalId('organizations', organizations[0]._key)
+  const endCursor = toGlobalId(
+    'organizations',
+    organizations[organizations.length - 1]._key,
+  )
 
   return {
     edges,

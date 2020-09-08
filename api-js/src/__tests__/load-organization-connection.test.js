@@ -597,6 +597,38 @@ describe('given the load organizations connection function', () => {
         })
       })
     })
+    describe('no organizations are found', () => {
+      it('returns empty structure', async () => {
+        await query`
+          FOR org IN organizations
+            REMOVE org IN organizations
+        `
+
+        const connectionLoader = orgLoaderByConnectionArgs(
+          query,
+          'en',
+          user._key,
+          cleanseInput,
+        )
+
+        const connectionArgs = {
+          last: 1,
+        }
+        const orgs = await connectionLoader(connectionArgs)
+
+        const expectedStructure = {
+          edges: [],
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: '',
+            endCursor: '',
+          },
+        }
+
+        expect(orgs).toEqual(expectedStructure)
+      })
+    })
   })
   describe('given an unsuccessful load', () => {
     describe('user has first and last arguments set at the same time', () => {

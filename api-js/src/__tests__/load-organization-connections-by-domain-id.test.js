@@ -5,7 +5,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
-const { orgLoaderByConnectionArgs, orgLoaderById } = require('../loaders')
+const { orgLoaderConnectionArgsByDomainId, orgLoaderById } = require('../loaders')
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load organizations connection function', () => {
@@ -112,7 +112,7 @@ describe('given the load organizations connection function', () => {
     describe('language is set to english', () => {
       describe('using no cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,
@@ -156,7 +156,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using after cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,
@@ -196,7 +196,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using before cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,
@@ -236,7 +236,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using no limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,
@@ -280,7 +280,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using first limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,
@@ -320,7 +320,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using last limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,
@@ -362,7 +362,7 @@ describe('given the load organizations connection function', () => {
     describe('language is set to french', () => {
       describe('using no cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'fr',
             user._key,
@@ -406,7 +406,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using after cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'fr',
             user._key,
@@ -446,7 +446,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using before cursor', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'fr',
             user._key,
@@ -486,7 +486,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using no limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'fr',
             user._key,
@@ -530,7 +530,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using first limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'fr',
             user._key,
@@ -570,7 +570,7 @@ describe('given the load organizations connection function', () => {
       })
       describe('using last limit', () => {
         it('returns an organization', async () => {
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'fr',
             user._key,
@@ -609,11 +609,38 @@ describe('given the load organizations connection function', () => {
         })
       })
     })
+    describe('no organizations are found', () => {
+      it('returns empty structure', async () => {
+        const connectionLoader = orgLoaderConnectionArgsByDomainId(
+          query,
+          'en',
+          user._key,
+          cleanseInput,
+        )
+
+        const connectionArgs = {
+          last: 1,
+        }
+        const orgs = await connectionLoader({ domainId: 'domains/1', ...connectionArgs})
+
+        const expectedStructure = {
+          edges: [],
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+            startCursor: '',
+            endCursor: '',
+          },
+        }
+
+        expect(orgs).toEqual(expectedStructure)
+      })
+    })
   })
   describe('given an unsuccessful load', () => {
     describe('user has first and last arguments set at the same time', () => {
       it('returns an error message', async () => {
-        const connectionLoader = orgLoaderByConnectionArgs(
+        const connectionLoader = orgLoaderConnectionArgsByDomainId(
           query,
           'en',
           user._key,
@@ -647,7 +674,7 @@ describe('given the load organizations connection function', () => {
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        const connectionLoader = orgLoaderByConnectionArgs(
+        const connectionLoader = orgLoaderConnectionArgsByDomainId(
           query,
           'en',
           user._key,
@@ -680,7 +707,7 @@ describe('given the load organizations connection function', () => {
           .mockReturnValueOnce(cursor)
           .mockRejectedValue(new Error('Database error occurred.'))
 
-        const connectionLoader = orgLoaderByConnectionArgs(
+        const connectionLoader = orgLoaderConnectionArgsByDomainId(
           query,
           'en',
           user._key,
@@ -713,7 +740,7 @@ describe('given the load organizations connection function', () => {
             .fn()
             .mockReturnValueOnce(cursor)
   
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,
@@ -750,7 +777,7 @@ describe('given the load organizations connection function', () => {
               },
             })
   
-          const connectionLoader = orgLoaderByConnectionArgs(
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,

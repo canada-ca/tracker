@@ -39,8 +39,11 @@ const orgLoaderByConnectionArgs = (
   let acceptedOrgsCursor
   try {
     acceptedOrgsCursor = await query`
-    LET orgKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key )
-      RETURN orgKeys
+    LET superAdmin = (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN e.permission)
+    LET affiliationKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+    LET superAdminOrgs = (FOR org IN organizations RETURN org._key)
+    LET keys = ('super_admin' IN superAdmin ? superAdminOrgs : affiliationKeys)
+      RETURN keys
     `
   } catch (err) {
     console.error(
@@ -97,12 +100,6 @@ const orgLoaderByConnectionArgs = (
     organizations.pop()
   }
 
-  const startCursor = toGlobalId('organizations', organizations[0]._key)
-  const endCursor = toGlobalId(
-    'organizations',
-    organizations[organizations.length - 1]._key,
-  )
-
   const edges = []
   organizations.forEach(async (organization) => {
     organization.id = organization._key
@@ -123,6 +120,12 @@ const orgLoaderByConnectionArgs = (
       },
     }
   }
+
+  const startCursor = toGlobalId('organizations', organizations[0]._key)
+  const endCursor = toGlobalId(
+    'organizations',
+    organizations[organizations.length - 1]._key,
+  )
 
   return {
     edges,
