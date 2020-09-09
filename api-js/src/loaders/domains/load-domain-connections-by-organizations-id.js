@@ -15,19 +15,19 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
 
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
-    afterTemplate = aql`FILTER TO_NUMBER(org._key) > TO_NUMBER(${afterId})`
+    afterTemplate = aql`FILTER TO_NUMBER(domain._key) > TO_NUMBER(${afterId})`
   }
 
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
-    beforeTemplate = aql`FILTER TO_NUMBER(org._key) < TO_NUMBER(${beforeId})`
+    beforeTemplate = aql`FILTER TO_NUMBER(domain._key) < TO_NUMBER(${beforeId})`
   }
 
   let limitTemplate = aql``
   if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT org._key ASC LIMIT TO_NUMBER(${first + 1})`
+    limitTemplate = aql`SORT domain._key ASC LIMIT TO_NUMBER(${first + 1})`
   } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT org._key DESC LIMIT TO_NUMBER(${last + 1})`
+    limitTemplate = aql`SORT domain._key DESC LIMIT TO_NUMBER(${last + 1})`
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
       `User: ${userId} tried to have first and last set in domain connection query`,
@@ -60,7 +60,7 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
     acceptedDomains = await acceptedDomainsCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather affiliated orgs in loadDomainConnectionsByOrgId.`,
+      `Cursor error occurred while user: ${userId} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
     )
     throw new Error('Unable to load domains. Please try again.')
   }
@@ -77,7 +77,7 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather orgs in loadDomainConnectionsByOrgId.`,
+      `Database error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId.`,
     )
     throw new Error('Unable to load domains. Please try again.')
   }
@@ -87,9 +87,9 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
     domains = await domainCursor.all()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather orgs in loadDomainConnectionsByOrgId.`,
+      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId.`,
     )
-    throw new Error('Unable to load organizations. Please try again.')
+    throw new Error('Unable to load domains. Please try again.')
   }
 
   const hasNextPage = !!(typeof first !== 'undefined' && domains.length > first)
