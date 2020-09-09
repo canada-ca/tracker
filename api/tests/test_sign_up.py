@@ -22,7 +22,7 @@ def test_successful_creation_english(db, mocker, caplog):
     """
     Test that ensures a user can be created successfully using the api endpoint
     """
-    _, session = db
+    save, session = db
 
     mocker.patch(
         "schemas.sign_up.create_user.send_verification_email",
@@ -30,28 +30,43 @@ def test_successful_creation_english(db, mocker, caplog):
         return_value="delivered",
     )
 
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(
+        exp_period=1,
+        parameters={
+            "user_name": user_name,
+            "org_id": org.id,
+            "requested_level": "admin",
+        },
+    )
+
     caplog.set_level(logging.INFO)
     result = run(
-        mutation="""
-        mutation {
+        mutation=f"""
+        mutation {{
             signUp(
-                input: {
+                input: {{
                     displayName: "user-test"
                     userName: "different-email@testemail.ca"
                     password: "testpassword123"
                     confirmPassword: "testpassword123"
                     preferredLang: ENGLISH
-                }
-            ) {
-                authResult {
-                    user {
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
                         userName
                         displayName
                         lang
-                    }
-                }
-            }
-        }
+                    }}
+                }}
+            }}
+        }}
         """,
     )
 
@@ -86,7 +101,7 @@ def test_successful_creation_french(db, mocker, caplog):
     """
     Test that ensures a user can be created successfully using the api endpoint
     """
-    _, session = db
+    save, session = db
 
     mocker.patch(
         "schemas.sign_up.create_user.send_verification_email",
@@ -94,28 +109,43 @@ def test_successful_creation_french(db, mocker, caplog):
         return_value="delivered",
     )
 
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(
+        exp_period=1,
+        parameters={
+            "user_name": user_name,
+            "org_id": org.id,
+            "requested_level": "admin",
+        },
+    )
+
     caplog.set_level(logging.INFO)
     result = run(
-        mutation="""
-        mutation {
+        mutation=f"""
+        mutation {{
             signUp(
-                input: {
+                input: {{
                     displayName: "user-test"
                     userName: "different-email@testemail.ca"
                     password: "testpassword123"
                     confirmPassword: "testpassword123"
                     preferredLang: FRENCH
-                }
-            ) {
-                authResult {
-                    user {
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
                         userName
                         displayName
                         lang
-                    }
-                }
-            }
-        }
+                    }}
+                }}
+            }}
+        }}
         """,
     )
 
@@ -145,10 +175,29 @@ def test_successful_creation_french(db, mocker, caplog):
     assert result == expected_result
     assert f"Successfully created new user: {user.id}" in caplog.text
 
-
-def test_email_address_in_use(db, caplog):
+def test_email_address_in_use(db, caplog, mocker):
     """Test that ensures each user has a unique email address"""
     save, session = db
+
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(
+        exp_period=1,
+        parameters={
+            "user_name": user_name,
+            "org_id": org.id,
+            "requested_level": "admin",
+        },
+    )
 
     test_user = Users(
         display_name="testuser",
@@ -159,25 +208,26 @@ def test_email_address_in_use(db, caplog):
 
     caplog.set_level(logging.WARNING)
     error_result = run(
-        mutation="""
-        mutation {
+        mutation=f"""
+        mutation {{
             signUp(
-                input: {
+                input: {{
                     displayName: "testuser"
                     userName: "testuser@testemail.ca"
                     password: "testpassword123"
                     confirmPassword: "testpassword123"
                     preferredLang: ENGLISH
-                }
-            ) {
-                authResult {
-                    user {
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
                         userName
                         displayName
-                    }
-                }
-            }
-        }
+                    }}
+                }}
+            }}
+        }}
         """,
     )
 
@@ -200,33 +250,54 @@ def test_email_address_in_use(db, caplog):
     )
 
 
-def test_password_too_short(db, caplog):
+def test_password_too_short(db, caplog, mocker):
     """
     Test that ensure that a user's password meets the valid length requirements
     """
-    save, _ = db
+    save, session = db
+
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(
+        exp_period=1,
+        parameters={
+            "user_name": user_name,
+            "org_id": org.id,
+            "requested_level": "admin",
+        },
+    )
 
     caplog.set_level(logging.WARNING)
     result = run(
-        mutation="""
-        mutation {
+        mutation=f"""
+        mutation {{
             signUp(
-                input: {
+                input: {{
                     displayName: "testuser"
                     userName: "testuser@testemail.ca"
                     password: "test"
                     confirmPassword: "test"
                     preferredLang: FRENCH
-                }
-            ) {
-                authResult {
-                    user {
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
                         userName
                         displayName
-                    }
-                }
-            }
-        }
+                    }}
+                }}
+            }}
+        }}
         """,
     )
 
@@ -245,31 +316,54 @@ def test_password_too_short(db, caplog):
     )
 
 
-def test_passwords_do_not_match(caplog):
+def test_passwords_do_not_match(caplog, mocker, db):
     """
     Test to ensure that user password matches their password confirmation
     """
+    save, session = db
+
+    mocker.patch(
+        "schemas.sign_up.create_user.send_verification_email",
+        autospec=True,
+        return_value="delivered",
+    )
+
+    org = Organizations(name="test org", slug="test-org", acronym="TEST-ORG",)
+    save(org)
+
+    user_name = "new.account@istio.actually.works"
+
+    sign_up_token = tokenize(
+        exp_period=1,
+        parameters={
+            "user_name": user_name,
+            "org_id": org.id,
+            "requested_level": "admin",
+        },
+    )
+
     caplog.set_level(logging.WARNING)
     result = run(
-        mutation="""
-        mutation {
+        mutation=f"""
+        mutation {{
             signUp(
-                input: {
+                input: {{
                     displayName: "testuser"
                     userName: "testuser@testemail.ca"
                     password: "testpassword123"
                     confirmPassword: "passwordtest123"
                     preferredLang: ENGLISH
-                }
-            ) {
-                authResult {
-                    user {
+                    signUpToken: "{sign_up_token}"
+                }}
+            ) {{
+                authResult {{
+                    user {{
                         userName
                         displayName
-                    }
-                }
-            }
-        }
+                    }}
+                }}
+            }}
+        }}
         """,
     )
 
