@@ -175,6 +175,7 @@ def test_successful_creation_french(db, mocker, caplog):
     assert result == expected_result
     assert f"Successfully created new user: {user.id}" in caplog.text
 
+
 def test_email_address_in_use(db, caplog, mocker):
     """Test that ensures each user has a unique email address"""
     save, session = db
