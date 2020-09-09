@@ -11,8 +11,6 @@ import {
 import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
-import { EditDomainButton } from './EditDomainButton'
-import { RemoveDomainButton } from './RemoveDomainButton'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -50,14 +48,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
       <ListOf elements={nodes} ifEmpty={() => <Trans>No Domains</Trans>} mb="4">
         {({ id, url, slug, lastRan }, index) => (
           <Box key={`${slug}:${id}:${index}`}>
-            {/* <Stack isInline align="center">
-              <Stack justifyContent="space-around">
-                <EditDomainButton url={url} />
-                <Divider />
-                <RemoveDomainButton url={url} />
-              </Stack> */}
             <DomainCard key={url} url={url} lastRan={lastRan} />
-            {/* </Stack> */}
             <Divider borderColor="gray.900" />
           </Box>
         )}

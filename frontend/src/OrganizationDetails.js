@@ -19,6 +19,7 @@ import { useUserState } from './UserState'
 import { useParams, useHistory } from 'react-router-dom'
 import DomainsPage from './DomainsPage'
 import UserList from './UserList'
+import { OrganizationSummary } from './OrganizationSummary'
 
 export default function OrganizationDetails() {
   const { i18n } = useLingui()
@@ -74,13 +75,15 @@ export default function OrganizationDetails() {
       </Stack>
       <Tabs isFitted>
         <TabList mb="4">
-          {/* <Tab>Summary</Tab>  */}
+          <Tab>Summary</Tab>
           <Tab>Domains</Tab>
           <Tab>Users</Tab>
         </TabList>
 
         <TabPanels>
-          {/* <TabPanel>summary panel</TabPanel> */}
+          <TabPanel>
+            <OrganizationSummary />
+          </TabPanel>
           <TabPanel>
             <DomainsPage />
           </TabPanel>
