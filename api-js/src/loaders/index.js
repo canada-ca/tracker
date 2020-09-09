@@ -1,5 +1,10 @@
 const { domainLoaderByKey, domainLoaderBySlug } = require('./domains')
-const { orgLoaderByKey, orgLoaderBySlug, orgLoaderByConnectionArgs, orgLoaderConnectionArgsByDomainId } = require('./organizations')
+const {
+  orgLoaderByKey,
+  orgLoaderBySlug,
+  orgLoaderByConnectionArgs,
+  orgLoaderConnectionArgsByDomainId,
+} = require('./organizations')
 const { userLoaderByUserName, userLoaderByKey } = require('./user')
 
 module.exports = {

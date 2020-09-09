@@ -54,8 +54,15 @@ const domainType = new GraphQLObjectType({
       type: organizationConnection.connectionType,
       args: connectionArgs,
       description: 'The organization that this domain belongs to.',
-      resolve: async ({ _id }, args, { loaders: { orgLoaderConnectionArgsByDomainId }}) => {
-        const orgs = await orgLoaderConnectionArgsByDomainId({ domainId: _id, ...args})
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { orgLoaderConnectionArgsByDomainId } },
+      ) => {
+        const orgs = await orgLoaderConnectionArgsByDomainId({
+          domainId: _id,
+          ...args,
+        })
         return orgs
       },
     },
@@ -253,7 +260,8 @@ const userAffiliationsType = new GraphQLObjectType({
     },
   }),
   interfaces: [nodeInterface],
-  description: '',
+  description:
+    'User Affiliations containing the permission level for the given organization, the users information, and the organizations information.',
 })
 
 const userAffiliationsConnection = connectionDefinitions({
