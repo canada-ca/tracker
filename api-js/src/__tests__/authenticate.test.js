@@ -13,7 +13,7 @@ const { createMutationSchema } = require('../mutations')
 const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize, verifyToken } = require('../auth')
-const { userLoaderById } = require('../loaders')
+const { userLoaderByKey } = require('../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -108,7 +108,7 @@ describe('authenticate user account', () => {
             cleanseInput,
           },
           loaders: {
-            userLoaderById: userLoaderById(query),
+            userLoaderByKey: userLoaderByKey(query),
           },
         },
       )
@@ -189,7 +189,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -243,7 +243,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -300,7 +300,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -374,7 +374,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -407,7 +407,7 @@ describe('authenticate user account', () => {
             RETURN user
         `
         const user = await cursor.next()
-        const loader = userLoaderById(query)
+        const loader = userLoaderByKey(query)
         const token = tokenize({
           parameters: { userId: user._key },
           secret: String(SIGN_IN_KEY),
@@ -453,7 +453,7 @@ describe('authenticate user account', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: loader,
+              userLoaderByKey: loader,
             },
           },
         )

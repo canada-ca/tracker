@@ -1,10 +1,10 @@
-const { orgLoaderById } = require('./load-organization-by-id')
+const { orgLoaderByKey } = require('./load-organization-by-key')
 const { orgLoaderBySlug } = require('./load-organization-by-slug')
 const { orgLoaderByConnectionArgs } = require('./load-organizations-connection-args')
 const { orgLoaderConnectionArgsByDomainId } = require('./load-organization-connections-by-domain-id')
 
 module.exports = {
-  orgLoaderById,
+  orgLoaderByKey,
   orgLoaderBySlug,
   orgLoaderByConnectionArgs,
   orgLoaderConnectionArgsByDomainId,

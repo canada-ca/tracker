@@ -6,7 +6,7 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
 const { orgLoaderBySlug } = require('../loaders')
 
-describe('given a orgLoaderById dataloader', () => {
+describe('given a orgLoaderByKey dataloader', () => {
   let query, drop, truncate, migrate, collections
 
   let consoleOutput = []

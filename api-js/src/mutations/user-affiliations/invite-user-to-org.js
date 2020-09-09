@@ -45,7 +45,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, tokenize, userRequired },
-      loaders: { orgLoaderById, userLoaderById, userLoaderByUserName },
+      loaders: { orgLoaderByKey, userLoaderByKey, userLoaderByUserName },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
       validators: { cleanseInput },
     },
@@ -56,7 +56,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     const preferredLang = cleanseInput(args.preferredLang)
 
     // Get requesting user
-    const user = await userRequired(userId, userLoaderById)
+    const user = await userRequired(userId, userLoaderByKey)
 
     // Make sure user is not inviting themselves
     if (user.userName === userName) {
@@ -67,7 +67,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     }
 
     // Check to see if requested org exists
-    const org = await orgLoaderById.load(orgId)
+    const org = await orgLoaderByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(

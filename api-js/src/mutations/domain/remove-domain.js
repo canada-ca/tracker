@@ -33,7 +33,7 @@ const removeDomain = new mutationWithClientMutationId({
       userId,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
-      loaders: { domainLoaderById, orgLoaderById, userLoaderById },
+      loaders: { domainLoaderByKey, orgLoaderByKey, userLoaderByKey },
     },
   ) => {
     // Cleanse Input
@@ -43,10 +43,10 @@ const removeDomain = new mutationWithClientMutationId({
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get User
-    const user = await userRequired(userId, userLoaderById)
+    const user = await userRequired(userId, userLoaderByKey)
 
     // Get domain from db
-    const domain = await domainLoaderById.load(domainId)
+    const domain = await domainLoaderByKey.load(domainId)
 
     // Check to see if domain exists
     if (typeof domain === 'undefined') {
@@ -57,7 +57,7 @@ const removeDomain = new mutationWithClientMutationId({
     }
 
     // Get Org from db
-    const org = await orgLoaderById.load(orgId)
+    const org = await orgLoaderByKey.load(orgId)
 
     // Check to see if org exists
     if (typeof org === 'undefined') {

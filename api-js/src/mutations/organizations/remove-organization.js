@@ -29,17 +29,17 @@ const removeOrganization = new mutationWithClientMutationId({
       userId,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
-      loaders: { orgLoaderById, userLoaderById },
+      loaders: { orgLoaderByKey, userLoaderByKey },
     },
   ) => {
     // Cleanse Input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get user
-    const user = await userRequired(userId, userLoaderById)
+    const user = await userRequired(userId, userLoaderByKey)
 
     // Get org from db
-    const organization = await orgLoaderById.load(orgId)
+    const organization = await orgLoaderByKey.load(orgId)
 
     // Check to see if org exists
     if (typeof organization === 'undefined') {

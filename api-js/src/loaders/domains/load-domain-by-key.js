@@ -1,6 +1,6 @@
 const DataLoader = require('dataloader')
 
-module.exports.domainLoaderById = (query) =>
+module.exports.domainLoaderByKey = (query) =>
   new DataLoader(async (ids) => {
     let cursor
 
@@ -12,7 +12,7 @@ module.exports.domainLoaderById = (query) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when running domainLoaderById: ${err}`,
+        `Database error occurred when running domainLoaderByKey: ${err}`,
       )
       throw new Error('Unable to find domain. Please try again.')
     }
@@ -23,7 +23,7 @@ module.exports.domainLoaderById = (query) =>
         domainMap[domain._key] = domain
       })
     } catch (err) {
-      console.error(`Cursor error occurred during domainLoaderById: ${err}`)
+      console.error(`Cursor error occurred during domainLoaderByKey: ${err}`)
       throw new Error('Unable to find domain. Please try again.')
     }
 

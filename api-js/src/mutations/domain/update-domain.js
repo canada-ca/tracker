@@ -45,7 +45,7 @@ const updateDomain = new mutationWithClientMutationId({
       userId,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput, slugify },
-      loaders: { domainLoaderById, orgLoaderById, userLoaderById },
+      loaders: { domainLoaderByKey, orgLoaderByKey, userLoaderByKey },
     },
   ) => {
     const { id: domainId } = fromGlobalId(cleanseInput(args.domainId))
@@ -60,10 +60,10 @@ const updateDomain = new mutationWithClientMutationId({
     }
 
     // Get User
-    const user = await userRequired(userId, userLoaderById)
+    const user = await userRequired(userId, userLoaderByKey)
 
     // Check to see if domain exists
-    const domain = await domainLoaderById.load(domainId)
+    const domain = await domainLoaderByKey.load(domainId)
 
     if (typeof domain === 'undefined') {
       console.warn(
@@ -73,7 +73,7 @@ const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if org exists
-    const org = await orgLoaderById.load(orgId)
+    const org = await orgLoaderByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(
@@ -163,8 +163,8 @@ const updateDomain = new mutationWithClientMutationId({
     }
 
     // Clear dataloader and load updated domain
-    await domainLoaderById.clear(domain._key)
-    const returnDomain = await domainLoaderById.load(domain._key)
+    await domainLoaderByKey.clear(domain._key)
+    const returnDomain = await domainLoaderByKey.load(domain._key)
 
     console.info(`User: ${userId} successfully updated domain: ${domainId}.`)
     returnDomain.id = returnDomain._key

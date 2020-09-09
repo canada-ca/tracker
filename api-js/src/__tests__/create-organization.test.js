@@ -15,7 +15,7 @@ const { cleanseInput, slugify } = require('../validators')
 const { tokenize, userRequired } = require('../auth')
 const {
   orgLoaderBySlug,
-  userLoaderById,
+  userLoaderByKey,
   userLoaderByUserName,
 } = require('../loaders')
 
@@ -150,7 +150,7 @@ describe('create an organization', () => {
             },
             loaders: {
               orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             validators: {
               cleanseInput,
@@ -252,7 +252,7 @@ describe('create an organization', () => {
             },
             loaders: {
               orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             validators: {
               cleanseInput,
@@ -381,7 +381,7 @@ describe('create an organization', () => {
             },
             loaders: {
               orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             validators: {
               cleanseInput,
@@ -411,7 +411,7 @@ describe('create an organization', () => {
           const user = await userCursor.next()
 
           const orgLoader = orgLoaderBySlug(query, 'en')
-          const userLoader = userLoaderById(query)
+          const userLoader = userLoaderByKey(query)
 
           query = jest
             .fn()
@@ -467,7 +467,7 @@ describe('create an organization', () => {
               },
               loaders: {
                 orgLoaderBySlug: orgLoader,
-                userLoaderById: userLoader,
+                userLoaderByKey: userLoader,
               },
               validators: {
                 cleanseInput,
@@ -498,7 +498,7 @@ describe('create an organization', () => {
           const user = await userCursor.next()
 
           const orgLoader = orgLoaderBySlug(query, 'en')
-          const userLoader = userLoaderById(query)
+          const userLoader = userLoaderByKey(query)
 
           query = jest
             .fn()
@@ -559,7 +559,7 @@ describe('create an organization', () => {
               },
               loaders: {
                 orgLoaderBySlug: orgLoader,
-                userLoaderById: userLoader,
+                userLoaderByKey: userLoader,
               },
               validators: {
                 cleanseInput,
@@ -590,7 +590,7 @@ describe('create an organization', () => {
           const user = await userCursor.next()
 
           const orgLoader = orgLoaderBySlug(query, 'en')
-          const userLoader = userLoaderById(query)
+          const userLoader = userLoaderByKey(query)
 
           transaction = jest.fn().mockReturnValue({
             run() {
@@ -655,7 +655,7 @@ describe('create an organization', () => {
               },
               loaders: {
                 orgLoaderBySlug: orgLoader,
-                userLoaderById: userLoader,
+                userLoaderByKey: userLoader,
               },
               validators: {
                 cleanseInput,

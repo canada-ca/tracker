@@ -5,7 +5,10 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
-const { orgLoaderConnectionArgsByDomainId, orgLoaderById } = require('../loaders')
+const {
+  orgLoaderConnectionArgsByDomainId,
+  orgLoaderByKey,
+} = require('../loaders')
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load organizations connection function', () => {
@@ -120,9 +123,12 @@ describe('given the load organizations connection function', () => {
           )
 
           const connectionArgs = {}
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -163,7 +169,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -172,7 +178,10 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {
             after: toGlobalId('organizations', expectedOrgs[0].id),
           }
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
           const expectedStructure = {
             edges: [
@@ -203,7 +212,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -212,7 +221,10 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {
             before: toGlobalId('organizations', expectedOrgs[1].id),
           }
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
           const expectedStructure = {
             edges: [
@@ -244,9 +256,12 @@ describe('given the load organizations connection function', () => {
           )
 
           const connectionArgs = {}
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -287,7 +302,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -296,7 +311,10 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {
             first: 1,
           }
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
           const expectedStructure = {
             edges: [
@@ -327,7 +345,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -336,7 +354,10 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {
             last: 1,
           }
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
           const expectedStructure = {
             edges: [
@@ -370,9 +391,12 @@ describe('given the load organizations connection function', () => {
           )
 
           const connectionArgs = {}
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -413,7 +437,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -422,7 +446,10 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {
             after: toGlobalId('organizations', expectedOrgs[0].id),
           }
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
           const expectedStructure = {
             edges: [
@@ -453,7 +480,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -462,7 +489,10 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {
             before: toGlobalId('organizations', expectedOrgs[1].id),
           }
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
           const expectedStructure = {
             edges: [
@@ -494,9 +524,12 @@ describe('given the load organizations connection function', () => {
           )
 
           const connectionArgs = {}
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -537,7 +570,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -546,7 +579,10 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {
             first: 1,
           }
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
           const expectedStructure = {
             edges: [
@@ -577,7 +613,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -586,7 +622,10 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {
             last: 1,
           }
-          const orgs = await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          const orgs = await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
 
           const expectedStructure = {
             edges: [
@@ -621,7 +660,10 @@ describe('given the load organizations connection function', () => {
         const connectionArgs = {
           last: 1,
         }
-        const orgs = await connectionLoader({ domainId: 'domains/1', ...connectionArgs})
+        const orgs = await connectionLoader({
+          domainId: 'domains/1',
+          ...connectionArgs,
+        })
 
         const expectedStructure = {
           edges: [],
@@ -652,7 +694,7 @@ describe('given the load organizations connection function', () => {
             first: 1,
             last: 1,
           }
-          await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          await connectionLoader({ domainId: domain._id, ...connectionArgs })
         } catch (err) {
           expect(err).toEqual(
             new Error(
@@ -683,7 +725,7 @@ describe('given the load organizations connection function', () => {
 
         try {
           const connectionArgs = {}
-          await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          await connectionLoader({ domainId: domain._id, ...connectionArgs })
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to load organizations. Please try again.'),
@@ -716,7 +758,7 @@ describe('given the load organizations connection function', () => {
 
         try {
           const connectionArgs = {}
-          await connectionLoader({ domainId: domain._id , ...connectionArgs})
+          await connectionLoader({ domainId: domain._id, ...connectionArgs })
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to load organizations. Please try again.'),
@@ -736,26 +778,24 @@ describe('given the load organizations connection function', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          const query = jest
-            .fn()
-            .mockReturnValueOnce(cursor)
-  
+          const query = jest.fn().mockReturnValueOnce(cursor)
+
           const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,
             cleanseInput,
           )
-  
+
           try {
             const connectionArgs = {}
-            await connectionLoader({ domainId: domain._id , ...connectionArgs})
+            await connectionLoader({ domainId: domain._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(
               new Error('Unable to load organizations. Please try again.'),
             )
           }
-  
+
           expect(consoleOutput).toEqual([
             `Cursor error occurred while user: ${user._key} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
           ])
@@ -776,23 +816,23 @@ describe('given the load organizations connection function', () => {
                 throw new Error('Cursor error occurred.')
               },
             })
-  
+
           const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
             user._key,
             cleanseInput,
           )
-  
+
           try {
             const connectionArgs = {}
-            await connectionLoader({ domainId: domain._id , ...connectionArgs})
+            await connectionLoader({ domainId: domain._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(
               new Error('Unable to load organizations. Please try again.'),
             )
           }
-  
+
           expect(consoleOutput).toEqual([
             `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadOrganizationsConnections.`,
           ])

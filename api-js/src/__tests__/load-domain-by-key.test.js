@@ -4,9 +4,9 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
-const { domainLoaderById } = require('../loaders')
+const { domainLoaderByKey } = require('../loaders')
 
-describe('given a domainLoaderById dataloader', () => {
+describe('given a domainLoaderByKey dataloader', () => {
   let query, drop, truncate, migrate, collections
 
   let consoleOutput = []
@@ -46,7 +46,7 @@ describe('given a domainLoaderById dataloader', () => {
       `
       const expectedDomain = await expectedCursor.next()
 
-      const loader = domainLoaderById(query)
+      const loader = domainLoaderByKey(query)
       const user = await loader.load(expectedDomain._key)
 
       expect(user).toEqual(expectedDomain)
@@ -67,7 +67,7 @@ describe('given a domainLoaderById dataloader', () => {
         expectedDomains.push(tempUser)
       }
 
-      const loader = domainLoaderById(query)
+      const loader = domainLoaderByKey(query)
       const users = await loader.loadMany(domainIds)
       expect(users).toEqual(expectedDomains)
     })
@@ -82,7 +82,7 @@ describe('given a domainLoaderById dataloader', () => {
       const expectedDomain = await expectedCursor.next()
 
       query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-      const loader = domainLoaderById(query)
+      const loader = domainLoaderByKey(query)
 
       try {
         await loader.load(expectedDomain._key)
@@ -93,7 +93,7 @@ describe('given a domainLoaderById dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Database error occurred when running domainLoaderById: Error: Database error occurred.`,
+        `Database error occurred when running domainLoaderByKey: Error: Database error occurred.`,
       ])
     })
   })
@@ -112,7 +112,7 @@ describe('given a domainLoaderById dataloader', () => {
         },
       }
       query = jest.fn().mockReturnValue(cursor)
-      const loader = domainLoaderById(query)
+      const loader = domainLoaderByKey(query)
 
       try {
         await loader.load(expectedDomain._key)
@@ -123,7 +123,7 @@ describe('given a domainLoaderById dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Cursor error occurred during domainLoaderById: Error: Cursor error occurred.`,
+        `Cursor error occurred during domainLoaderByKey: Error: Cursor error occurred.`,
       ])
     })
   })

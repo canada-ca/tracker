@@ -10,7 +10,7 @@ const { createMutationSchema } = require('../mutations')
 const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize, verifyToken } = require('../auth')
-const { userLoaderByUserName, userLoaderById } = require('../loaders')
+const { userLoaderByUserName, userLoaderByKey } = require('../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -125,7 +125,7 @@ describe('reset users password', () => {
           },
           loaders: {
             userLoaderByUserName: userLoaderByUserName(query),
-            userLoaderById: userLoaderById(query),
+            userLoaderByKey: userLoaderByKey(query),
           },
         },
       )
@@ -228,7 +228,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -277,7 +277,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -326,7 +326,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -382,7 +382,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -438,7 +438,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -494,7 +494,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -519,7 +519,7 @@ describe('reset users password', () => {
         const user = await userCursor.next()
 
         const userNameLoader = userLoaderByUserName(query)
-        const userIdLoader = userLoaderById(query)
+        const userIdLoader = userLoaderByKey(query)
 
         const resetToken = tokenize({
           parameters: { userId: user._key, currentPassword: user.password },
@@ -554,7 +554,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userNameLoader,
-              userLoaderById: userIdLoader,
+              userLoaderByKey: userIdLoader,
             },
           },
         )
@@ -579,7 +579,7 @@ describe('reset users password', () => {
         const user = await userCursor.next()
 
         const userNameLoader = userLoaderByUserName(query)
-        const userIdLoader = userLoaderById(query)
+        const userIdLoader = userLoaderByKey(query)
 
         const resetToken = tokenize({
           parameters: { userId: user._key, currentPassword: user.password },
@@ -617,7 +617,7 @@ describe('reset users password', () => {
             },
             loaders: {
               userLoaderByUserName: userNameLoader,
-              userLoaderById: userIdLoader,
+              userLoaderByKey: userIdLoader,
             },
           },
         )

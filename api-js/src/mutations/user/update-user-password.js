@@ -35,7 +35,7 @@ const updateUserPassword = new mutationWithClientMutationId({
       query,
       userId,
       auth: { bcrypt },
-      loaders: { userLoaderById },
+      loaders: { userLoaderByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -53,7 +53,7 @@ const updateUserPassword = new mutationWithClientMutationId({
     }
 
     // Get user from db
-    const user = await userLoaderById.load(userId)
+    const user = await userLoaderByKey.load(userId)
 
     if (typeof user === 'undefined') {
       console.warn(

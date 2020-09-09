@@ -10,7 +10,7 @@ const { createMutationSchema } = require('../mutations')
 const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
-const { userLoaderByUserName, userLoaderById } = require('../loaders')
+const { userLoaderByUserName, userLoaderByKey } = require('../loaders')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -121,7 +121,7 @@ describe('authenticate user account', () => {
           },
           loaders: {
             userLoaderByUserName: userLoaderByUserName(query),
-            userLoaderById: userLoaderById(query),
+            userLoaderByKey: userLoaderByKey(query),
           },
         },
       )
@@ -220,7 +220,7 @@ describe('authenticate user account', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -265,7 +265,7 @@ describe('authenticate user account', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -317,7 +317,7 @@ describe('authenticate user account', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -371,7 +371,7 @@ describe('authenticate user account', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -425,7 +425,7 @@ describe('authenticate user account', () => {
             },
             loaders: {
               userLoaderByUserName: userLoaderByUserName(query),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -452,7 +452,7 @@ describe('authenticate user account', () => {
         const user = await cursor.next()
 
         const userNameLoader = userLoaderByUserName(query)
-        const idLoader = userLoaderById(query)
+        const idLoader = userLoaderByKey(query)
 
         query = jest
           .fn()
@@ -486,7 +486,7 @@ describe('authenticate user account', () => {
             },
             loaders: {
               userLoaderByUserName: userNameLoader,
-              userLoaderById: idLoader,
+              userLoaderByKey: idLoader,
             },
           },
         )

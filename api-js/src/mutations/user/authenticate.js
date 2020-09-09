@@ -32,7 +32,7 @@ const authenticate = new mutationWithClientMutationId({
     {
       query,
       auth: { tokenize, verifyToken },
-      loaders: { userLoaderById },
+      loaders: { userLoaderByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -55,7 +55,7 @@ const authenticate = new mutationWithClientMutationId({
     }
 
     // Gather sign in user
-    const user = await userLoaderById.load(tokenParameters.userId)
+    const user = await userLoaderByKey.load(tokenParameters.userId)
 
     if (typeof user === 'undefined') {
       console.warn(

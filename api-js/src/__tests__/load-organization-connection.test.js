@@ -5,7 +5,7 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
-const { orgLoaderByConnectionArgs, orgLoaderById } = require('../loaders')
+const { orgLoaderByConnectionArgs, orgLoaderByKey } = require('../loaders')
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load organizations connection function', () => {
@@ -110,7 +110,7 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {}
           const orgs = await connectionLoader(connectionArgs)
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -151,7 +151,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -191,7 +191,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -234,7 +234,7 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {}
           const orgs = await connectionLoader(connectionArgs)
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -275,7 +275,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -315,7 +315,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'en')
+          const orgLoader = orgLoaderByKey(query, 'en')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -360,7 +360,7 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {}
           const orgs = await connectionLoader(connectionArgs)
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -401,7 +401,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -441,7 +441,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -484,7 +484,7 @@ describe('given the load organizations connection function', () => {
           const connectionArgs = {}
           const orgs = await connectionLoader(connectionArgs)
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -525,7 +525,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -565,7 +565,7 @@ describe('given the load organizations connection function', () => {
             cleanseInput,
           )
 
-          const orgLoader = orgLoaderById(query, 'fr')
+          const orgLoader = orgLoaderByKey(query, 'fr')
           const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
 
           expectedOrgs[0].id = expectedOrgs[0]._key
@@ -729,17 +729,15 @@ describe('given the load organizations connection function', () => {
               throw new Error('Cursor error occurred.')
             },
           }
-          const query = jest
-            .fn()
-            .mockReturnValueOnce(cursor)
-  
+          const query = jest.fn().mockReturnValueOnce(cursor)
+
           const connectionLoader = orgLoaderByConnectionArgs(
             query,
             'en',
             user._key,
             cleanseInput,
           )
-  
+
           try {
             const connectionArgs = {}
             await connectionLoader(connectionArgs)
@@ -748,7 +746,7 @@ describe('given the load organizations connection function', () => {
               new Error('Unable to load organizations. Please try again.'),
             )
           }
-  
+
           expect(consoleOutput).toEqual([
             `Cursor error occurred while user: ${user._key} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
           ])
@@ -769,14 +767,14 @@ describe('given the load organizations connection function', () => {
                 throw new Error('Cursor error occurred.')
               },
             })
-  
+
           const connectionLoader = orgLoaderByConnectionArgs(
             query,
             'en',
             user._key,
             cleanseInput,
           )
-  
+
           try {
             const connectionArgs = {}
             await connectionLoader(connectionArgs)
@@ -785,7 +783,7 @@ describe('given the load organizations connection function', () => {
               new Error('Unable to load organizations. Please try again.'),
             )
           }
-  
+
           expect(consoleOutput).toEqual([
             `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadOrganizationsConnections.`,
           ])

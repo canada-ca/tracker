@@ -11,8 +11,8 @@ const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { checkPermission, tokenize, userRequired } = require('../auth')
 const {
-  orgLoaderById,
-  userLoaderById,
+  orgLoaderByKey,
+  userLoaderByKey,
   userLoaderByUserName,
 } = require('../loaders')
 const { toGlobalId } = require('graphql-relay')
@@ -200,8 +200,8 @@ describe('removing an organization', () => {
               auth: { checkPermission, userRequired },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -243,8 +243,8 @@ describe('removing an organization', () => {
               auth: { checkPermission, userRequired },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -302,8 +302,8 @@ describe('removing an organization', () => {
               auth: { checkPermission, userRequired },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -345,8 +345,8 @@ describe('removing an organization', () => {
               auth: { checkPermission, userRequired },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -417,8 +417,8 @@ describe('removing an organization', () => {
             auth: { checkPermission, userRequired },
             validators: { cleanseInput },
             loaders: {
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -460,8 +460,8 @@ describe('removing an organization', () => {
             auth: { checkPermission, userRequired },
             validators: { cleanseInput },
             loaders: {
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -527,8 +527,8 @@ describe('removing an organization', () => {
             auth: { checkPermission, userRequired },
             validators: { cleanseInput },
             loaders: {
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -633,8 +633,8 @@ describe('removing an organization', () => {
               auth: { checkPermission, userRequired },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -687,8 +687,8 @@ describe('removing an organization', () => {
               auth: { checkPermission, userRequired },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -748,8 +748,8 @@ describe('removing an organization', () => {
       })
       describe('when running scan transactions', () => {
         it('returns an error message', async () => {
-          const orgLoader = orgLoaderById(query, 'en')
-          const userLoader = userLoaderById(query)
+          const orgLoader = orgLoaderByKey(query, 'en')
+          const userLoader = userLoaderByKey(query)
 
           transaction = jest.fn().mockReturnValue({
             run() {
@@ -779,8 +779,8 @@ describe('removing an organization', () => {
               auth: { checkPermission, userRequired },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderById: orgLoader,
-                userLoaderById: userLoader,
+                orgLoaderByKey: orgLoader,
+                userLoaderByKey: userLoader,
               },
             },
           )
@@ -799,8 +799,8 @@ describe('removing an organization', () => {
       })
       describe('when running domain, affiliations, org transactions', () => {
         it('returns an error message', async () => {
-          const orgLoader = orgLoaderById(query, 'en')
-          const userLoader = userLoaderById(query)
+          const orgLoader = orgLoaderByKey(query, 'en')
+          const userLoader = userLoaderByKey(query)
 
           const cursor = {
             next() {
@@ -841,8 +841,8 @@ describe('removing an organization', () => {
               auth: { checkPermission, userRequired },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderById: orgLoader,
-                userLoaderById: userLoader,
+                orgLoaderByKey: orgLoader,
+                userLoaderByKey: userLoader,
               },
             },
           )
@@ -861,8 +861,8 @@ describe('removing an organization', () => {
       })
       describe('when committing transaction', () => {
         it('returns an error message', async () => {
-          const orgLoader = orgLoaderById(query, 'en')
-          const userLoader = userLoaderById(query)
+          const orgLoader = orgLoaderByKey(query, 'en')
+          const userLoader = userLoaderByKey(query)
 
           transaction = jest.fn().mockReturnValue({
             run() {
@@ -895,8 +895,8 @@ describe('removing an organization', () => {
               auth: { checkPermission, userRequired },
               validators: { cleanseInput },
               loaders: {
-                orgLoaderById: orgLoader,
-                userLoaderById: userLoader,
+                orgLoaderByKey: orgLoader,
+                userLoaderByKey: userLoader,
               },
             },
           )

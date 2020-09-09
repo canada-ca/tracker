@@ -26,7 +26,7 @@ const verifyAccount = new mutationWithClientMutationId({
       query,
       userId,
       auth: { verifyToken },
-      loaders: { userLoaderById },
+      loaders: { userLoaderByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -41,7 +41,7 @@ const verifyAccount = new mutationWithClientMutationId({
     }
 
     // Check if user exists
-    const user = await userLoaderById.load(userId)
+    const user = await userLoaderByKey.load(userId)
 
     if (typeof user === 'undefined') {
       console.warn(

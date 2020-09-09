@@ -4,10 +4,10 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
-let { userLoaderById } = require('../loaders')
+let { userLoaderByKey } = require('../loaders')
 const { userRequired } = require('../auth')
 
-describe('given a userLoaderById dataloader', () => {
+describe('given a userLoaderByKey dataloader', () => {
   let query, drop, truncate, migrate, collections
 
   let consoleOutput = []
@@ -48,7 +48,7 @@ describe('given a userLoaderById dataloader', () => {
       `
       const expectedUser = await expectedCursor.next()
 
-      const user = await userRequired(expectedUser._key, userLoaderById(query))
+      const user = await userRequired(expectedUser._key, userLoaderByKey(query))
 
       expect(user).toEqual(expectedUser)
     })
@@ -56,7 +56,7 @@ describe('given a userLoaderById dataloader', () => {
   describe('user id is undefined', () => {
     it('throws an error', async () => {
       try {
-        await userRequired(undefined, userLoaderById(query))
+        await userRequired(undefined, userLoaderByKey(query))
       } catch (err) {
         expect(err).toEqual(new Error('Authentication error. Please sign in.'))
       }
@@ -71,7 +71,7 @@ describe('given a userLoaderById dataloader', () => {
       await truncate()
 
       try {
-        await userRequired('1', userLoaderById(query))
+        await userRequired('1', userLoaderByKey(query))
       } catch (err) {
         expect(err).toEqual(new Error('Authentication error. Please sign in.'))
       }
@@ -83,7 +83,7 @@ describe('given a userLoaderById dataloader', () => {
   })
   describe('database error occurs', () => {
     it('throws an error', async () => {
-      userLoaderById = () => {
+      userLoaderByKey = () => {
         return {
           load() {
             throw new Error('Database error occurred.')
@@ -92,7 +92,7 @@ describe('given a userLoaderById dataloader', () => {
       }
 
       try {
-        await userRequired('1', userLoaderById(query))
+        await userRequired('1', userLoaderByKey(query))
       } catch (err) {
         expect(err).toEqual(new Error('Authentication error. Please sign in.'))
       }

@@ -36,7 +36,7 @@ const updateUserProfile = new mutationWithClientMutationId({
     {
       query,
       userId,
-      loaders: { userLoaderById },
+      loaders: { userLoaderByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -54,7 +54,7 @@ const updateUserProfile = new mutationWithClientMutationId({
     }
 
     // Get user info from DB
-    const user = await userLoaderById.load(userId)
+    const user = await userLoaderByKey.load(userId)
 
     if (typeof user === 'undefined') {
       console.warn(

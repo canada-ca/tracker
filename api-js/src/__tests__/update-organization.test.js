@@ -11,8 +11,8 @@ const bcrypt = require('bcrypt')
 const { cleanseInput, slugify } = require('../validators')
 const { checkPermission, tokenize, userRequired } = require('../auth')
 const {
-  orgLoaderById,
-  userLoaderById,
+  orgLoaderByKey,
+  userLoaderByKey,
   userLoaderByUserName,
 } = require('../loaders')
 
@@ -179,8 +179,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -246,8 +246,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -313,8 +313,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -380,8 +380,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -447,8 +447,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -514,8 +514,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -581,8 +581,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -661,8 +661,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -730,8 +730,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -797,8 +797,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -864,8 +864,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -931,8 +931,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -998,8 +998,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1065,8 +1065,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1132,8 +1132,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1212,8 +1212,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1308,8 +1308,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1375,8 +1375,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1442,8 +1442,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1509,8 +1509,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1576,8 +1576,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1643,8 +1643,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1710,8 +1710,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1790,8 +1790,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1859,8 +1859,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1926,8 +1926,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -1993,8 +1993,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -2060,8 +2060,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -2127,8 +2127,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -2194,8 +2194,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -2261,8 +2261,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -2341,8 +2341,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'fr'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -2460,8 +2460,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -2511,8 +2511,8 @@ describe('updating an organization', () => {
                   slugify,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                 },
               },
             )
@@ -2595,8 +2595,8 @@ describe('updating an organization', () => {
                 slugify,
               },
               loaders: {
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -2666,8 +2666,8 @@ describe('updating an organization', () => {
       })
       describe('when gathering all the org details', () => {
         it('returns an error', async () => {
-          const orgLoader = orgLoaderById(query, 'en')
-          const userLoader = userLoaderById(query)
+          const orgLoader = orgLoaderByKey(query, 'en')
+          const userLoader = userLoaderByKey(query)
 
           const mockQuery = jest
             .fn()
@@ -2706,8 +2706,8 @@ describe('updating an organization', () => {
                 slugify,
               },
               loaders: {
-                orgLoaderById: orgLoader,
-                userLoaderById: userLoader,
+                orgLoaderByKey: orgLoader,
+                userLoaderByKey: userLoader,
               },
             },
           )
@@ -2726,8 +2726,8 @@ describe('updating an organization', () => {
       })
       describe('when updating/inserting new org details', () => {
         it('returns an error', async () => {
-          const orgLoader = orgLoaderById(query, 'en')
-          const userLoader = userLoaderById(query)
+          const orgLoader = orgLoaderByKey(query, 'en')
+          const userLoader = userLoaderByKey(query)
 
           const mockQuery = jest
             .fn()
@@ -2794,8 +2794,8 @@ describe('updating an organization', () => {
                 slugify,
               },
               loaders: {
-                orgLoaderById: orgLoader,
-                userLoaderById: userLoader,
+                orgLoaderByKey: orgLoader,
+                userLoaderByKey: userLoader,
               },
             },
           )
@@ -2814,8 +2814,8 @@ describe('updating an organization', () => {
       })
       describe('when committing transaction', () => {
         it('returns an error', async () => {
-          const orgLoader = orgLoaderById(query, 'en')
-          const userLoader = userLoaderById(query)
+          const orgLoader = orgLoaderByKey(query, 'en')
+          const userLoader = userLoaderByKey(query)
 
           transaction = jest.fn().mockReturnValue({
             run() {
@@ -2881,8 +2881,8 @@ describe('updating an organization', () => {
                 slugify,
               },
               loaders: {
-                orgLoaderById: orgLoader,
-                userLoaderById: userLoader,
+                orgLoaderByKey: orgLoader,
+                userLoaderByKey: userLoader,
               },
             },
           )

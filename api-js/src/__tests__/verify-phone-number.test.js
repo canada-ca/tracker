@@ -9,7 +9,7 @@ const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
 
-const { userLoaderById } = require('../loaders')
+const { userLoaderByKey } = require('../loaders')
 
 describe('user send password reset email', () => {
   const originalInfo = console.info
@@ -79,7 +79,7 @@ describe('user send password reset email', () => {
           userId: user._key,
           query,
           loaders: {
-            userLoaderById: userLoaderById(query),
+            userLoaderByKey: userLoaderByKey(query),
           },
         },
       )
@@ -123,7 +123,7 @@ describe('user send password reset email', () => {
             userId: undefined,
             query,
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -154,7 +154,7 @@ describe('user send password reset email', () => {
             userId: 1,
             query,
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -203,7 +203,7 @@ describe('user send password reset email', () => {
             userId: user._key,
             query,
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -252,7 +252,7 @@ describe('user send password reset email', () => {
             userId: user._key,
             query,
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -287,7 +287,7 @@ describe('user send password reset email', () => {
         `
         const user = await cursor.next()
 
-        const idLoader = userLoaderById(query)
+        const idLoader = userLoaderByKey(query)
 
         query = jest
           .fn()
@@ -307,7 +307,7 @@ describe('user send password reset email', () => {
             userId: user._key,
             query,
             loaders: {
-              userLoaderById: idLoader,
+              userLoaderByKey: idLoader,
             },
           },
         )

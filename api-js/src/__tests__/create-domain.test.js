@@ -13,9 +13,9 @@ const { cleanseInput, slugify } = require('../validators')
 const { checkPermission, tokenize, userRequired } = require('../auth')
 const {
   domainLoaderBySlug,
-  orgLoaderById,
+  orgLoaderByKey,
   orgLoaderConnectionArgsByDomainId,
-  userLoaderById,
+  userLoaderByKey,
   userLoaderByUserName,
 } = require('../loaders')
 
@@ -179,14 +179,14 @@ describe('create a domain', () => {
               auth: { checkPermission, userRequired },
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
                   'en',
                   user._key,
                   cleanseInput,
                 ),
-                userLoaderById: userLoaderById(query),
+                userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
             },
@@ -304,14 +304,14 @@ describe('create a domain', () => {
               auth: { checkPermission, userRequired },
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
                   'en',
                   user._key,
                   cleanseInput,
                 ),
-                userLoaderById: userLoaderById(query),
+                userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
             },
@@ -405,14 +405,14 @@ describe('create a domain', () => {
             auth: { checkPermission, userRequired },
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
-              orgLoaderById: orgLoaderById(query, 'en'),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
                 'en',
                 user._key,
                 cleanseInput,
               ),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             validators: { cleanseInput, slugify },
           },
@@ -505,14 +505,14 @@ describe('create a domain', () => {
             auth: { checkPermission, userRequired },
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
-              orgLoaderById: orgLoaderById(query, 'en'),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
                 'en',
                 user._key,
                 cleanseInput,
               ),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             validators: { cleanseInput, slugify },
           },
@@ -641,14 +641,14 @@ describe('create a domain', () => {
               auth: { checkPermission, userRequired },
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
                   'en',
                   user._key,
                   cleanseInput,
                 ),
-                userLoaderById: userLoaderById(query),
+                userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
             },
@@ -751,14 +751,14 @@ describe('create a domain', () => {
               auth: { checkPermission, userRequired },
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
                   'en',
                   user._key,
                   cleanseInput,
                 ),
-                userLoaderById: userLoaderById(query),
+                userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
             },
@@ -861,14 +861,14 @@ describe('create a domain', () => {
               auth: { checkPermission, userRequired },
               loaders: {
                 domainLoaderBySlug: domainLoaderBySlug(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
                   'en',
                   user._key,
                   cleanseInput,
                 ),
-                userLoaderById: userLoaderById(query),
+                userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
             },
@@ -968,14 +968,14 @@ describe('create a domain', () => {
             auth: { checkPermission, userRequired },
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
-              orgLoaderById: orgLoaderById(query, 'en'),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
                 'en',
                 user._key,
                 cleanseInput,
               ),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             validators: { cleanseInput, slugify },
           },
@@ -1034,14 +1034,14 @@ describe('create a domain', () => {
             auth: { checkPermission, userRequired },
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
-              orgLoaderById: orgLoaderById(query, 'en'),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
                 'en',
                 user._key,
                 cleanseInput,
               ),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             validators: { cleanseInput, slugify },
           },
@@ -1115,14 +1115,14 @@ describe('create a domain', () => {
             auth: { checkPermission, userRequired },
             loaders: {
               domainLoaderBySlug: domainLoaderBySlug(query),
-              orgLoaderById: orgLoaderById(query, 'en'),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
                 'en',
                 user._key,
                 cleanseInput,
               ),
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             validators: { cleanseInput, slugify },
           },
@@ -1149,8 +1149,8 @@ describe('create a domain', () => {
         })
         it('returns an error message', async () => {
           const domainLoader = domainLoaderBySlug(query)
-          const orgIdLoader = orgLoaderById(query, 'en')
-          const userIdLoader = userLoaderById(query)
+          const orgIdLoader = orgLoaderByKey(query, 'en')
+          const userIdLoader = userLoaderByKey(query)
           const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
@@ -1213,9 +1213,9 @@ describe('create a domain', () => {
               auth: { checkPermission, userRequired },
               loaders: {
                 domainLoaderBySlug: domainLoader,
-                orgLoaderById: orgIdLoader,
+                orgLoaderByKey: orgIdLoader,
                 orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                userLoaderById: userIdLoader,
+                userLoaderByKey: userIdLoader,
               },
               validators: { cleanseInput, slugify },
             },
@@ -1241,8 +1241,8 @@ describe('create a domain', () => {
         })
         it('returns an error message', async () => {
           const domainLoader = domainLoaderBySlug(query)
-          const orgIdLoader = orgLoaderById(query, 'en')
-          const userIdLoader = userLoaderById(query)
+          const orgIdLoader = orgLoaderByKey(query, 'en')
+          const userIdLoader = userLoaderByKey(query)
           const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
             'en',
@@ -1300,9 +1300,9 @@ describe('create a domain', () => {
               auth: { checkPermission, userRequired },
               loaders: {
                 domainLoaderBySlug: domainLoader,
-                orgLoaderById: orgIdLoader,
+                orgLoaderByKey: orgIdLoader,
                 orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                userLoaderById: userIdLoader,
+                userLoaderByKey: userIdLoader,
               },
               validators: { cleanseInput, slugify },
             },

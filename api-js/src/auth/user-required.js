@@ -1,4 +1,4 @@
-const userRequired = async (userId, userLoaderById) => {
+const userRequired = async (userId, userLoaderByKey) => {
   if (typeof userId === 'undefined') {
     console.warn(
       `User attempted to access controlled content, but userId was undefined.`,
@@ -8,7 +8,7 @@ const userRequired = async (userId, userLoaderById) => {
 
   let user, userDoesNotExist
   try {
-    user = await userLoaderById.load(userId)
+    user = await userLoaderByKey.load(userId)
     if (typeof user === 'undefined') {
       userDoesNotExist = true
     }

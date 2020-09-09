@@ -27,7 +27,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
     {
       query,
       userId,
-      loaders: { userLoaderById },
+      loaders: { userLoaderByKey },
       validators: { cleanseInput },
       notify: { sendTfaTextMsg },
     },
@@ -44,7 +44,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
     }
 
     // Get User From Db
-    let user = await userLoaderById.load(userId)
+    let user = await userLoaderByKey.load(userId)
 
     if (typeof user === 'undefined') {
       console.warn(
@@ -86,8 +86,8 @@ const sendPhoneCode = new mutationWithClientMutationId({
     }
 
     // Get newly updated user
-    await userLoaderById.clear(user._key)
-    user = await userLoaderById.load(user._key)
+    await userLoaderByKey.clear(user._key)
+    user = await userLoaderByKey.load(user._key)
 
     let templateId
     if (user.preferredLang === 'french') {

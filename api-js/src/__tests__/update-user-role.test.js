@@ -14,8 +14,8 @@ const { cleanseInput } = require('../validators')
 const { checkPermission, tokenize, userRequired } = require('../auth')
 const {
   userLoaderByUserName,
-  orgLoaderById,
-  userLoaderById,
+  orgLoaderByKey,
+  userLoaderByKey,
 } = require('../loaders')
 const { toGlobalId } = require('graphql-relay')
 
@@ -178,8 +178,8 @@ describe('update a users role', () => {
                   userRequired,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
                 validators: {
@@ -230,8 +230,8 @@ describe('update a users role', () => {
                   userRequired,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
                 validators: {
@@ -291,8 +291,8 @@ describe('update a users role', () => {
                   userRequired,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
                 validators: {
@@ -343,8 +343,8 @@ describe('update a users role', () => {
                   userRequired,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
                 validators: {
@@ -413,8 +413,8 @@ describe('update a users role', () => {
                   userRequired,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
                 validators: {
@@ -515,8 +515,8 @@ describe('update a users role', () => {
               userRequired,
             },
             loaders: {
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
               userLoaderByUserName: userLoaderByUserName(query),
             },
             validators: {
@@ -563,8 +563,8 @@ describe('update a users role', () => {
               userRequired,
             },
             loaders: {
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
               userLoaderByUserName: userLoaderByUserName(query),
             },
             validators: {
@@ -611,8 +611,8 @@ describe('update a users role', () => {
               userRequired,
             },
             loaders: {
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
               userLoaderByUserName: userLoaderByUserName(query),
             },
             validators: {
@@ -666,8 +666,8 @@ describe('update a users role', () => {
               userRequired,
             },
             loaders: {
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
               userLoaderByUserName: userLoaderByUserName(query),
             },
             validators: {
@@ -747,8 +747,8 @@ describe('update a users role', () => {
               userRequired,
             },
             loaders: {
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
               userLoaderByUserName: userLoaderByUserName(query),
             },
             validators: {
@@ -802,8 +802,8 @@ describe('update a users role', () => {
               userRequired,
             },
             loaders: {
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
               userLoaderByUserName: userLoaderByUserName(query),
             },
             validators: {
@@ -866,8 +866,8 @@ describe('update a users role', () => {
                   userRequired,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
                 validators: {
@@ -930,8 +930,8 @@ describe('update a users role', () => {
                   userRequired,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
                 validators: {
@@ -994,8 +994,8 @@ describe('update a users role', () => {
                   userRequired,
                 },
                 loaders: {
-                  orgLoaderById: orgLoaderById(query, 'en'),
-                  userLoaderById: userLoaderById(query),
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
                   userLoaderByUserName: userLoaderByUserName(query),
                 },
                 validators: {
@@ -1057,8 +1057,8 @@ describe('update a users role', () => {
                 userRequired,
               },
               loaders: {
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
                 userLoaderByUserName: userLoaderByUserName(query),
               },
               validators: {
@@ -1139,8 +1139,8 @@ describe('update a users role', () => {
     })
     describe('when getting current affiliation', () => {
       it('returns an error message', async () => {
-        const orgLoader = orgLoaderById(query, 'en')
-        const userLoaderId = userLoaderById(query)
+        const orgLoader = orgLoaderByKey(query, 'en')
+        const userLoaderId = userLoaderByKey(query)
         const userLoaderUserName = userLoaderByUserName(query)
 
         query = jest
@@ -1183,8 +1183,8 @@ describe('update a users role', () => {
               userRequired,
             },
             loaders: {
-              orgLoaderById: orgLoader,
-              userLoaderById: userLoaderId,
+              orgLoaderByKey: orgLoader,
+              userLoaderByKey: userLoaderId,
               userLoaderByUserName: userLoaderUserName,
             },
             validators: {
@@ -1264,8 +1264,8 @@ describe('update a users role', () => {
     })
     describe('when running transaction', () => {
       it('returns an error message', async () => {
-        const orgLoader = orgLoaderById(query, 'en')
-        const userLoaderId = userLoaderById(query)
+        const orgLoader = orgLoaderByKey(query, 'en')
+        const userLoaderId = userLoaderByKey(query)
         const userLoaderUserName = userLoaderByUserName(query)
 
         transaction = jest.fn().mockReturnValue({
@@ -1300,8 +1300,8 @@ describe('update a users role', () => {
               userRequired,
             },
             loaders: {
-              orgLoaderById: orgLoader,
-              userLoaderById: userLoaderId,
+              orgLoaderByKey: orgLoader,
+              userLoaderByKey: userLoaderId,
               userLoaderByUserName: userLoaderUserName,
             },
             validators: {
@@ -1322,8 +1322,8 @@ describe('update a users role', () => {
     })
     describe('when committing transaction', () => {
       it('returns an error message', async () => {
-        const orgLoader = orgLoaderById(query, 'en')
-        const userLoaderId = userLoaderById(query)
+        const orgLoader = orgLoaderByKey(query, 'en')
+        const userLoaderId = userLoaderByKey(query)
         const userLoaderUserName = userLoaderByUserName(query)
 
         transaction = jest.fn().mockReturnValue({
@@ -1361,8 +1361,8 @@ describe('update a users role', () => {
               userRequired,
             },
             loaders: {
-              orgLoaderById: orgLoader,
-              userLoaderById: userLoaderId,
+              orgLoaderByKey: orgLoader,
+              userLoaderByKey: userLoaderId,
               userLoaderByUserName: userLoaderUserName,
             },
             validators: {

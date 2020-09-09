@@ -1,7 +1,7 @@
-const { domainLoaderById } = require('./load-domain-by-id')
+const { domainLoaderByKey } = require('./load-domain-by-key')
 const { domainLoaderBySlug } = require('./load-domain-by-slug')
 
 module.exports = {
-  domainLoaderById,
+  domainLoaderByKey,
   domainLoaderBySlug,
 }

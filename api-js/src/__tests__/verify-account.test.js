@@ -11,7 +11,7 @@ const { createMutationSchema } = require('../mutations')
 
 const { cleanseInput } = require('../validators')
 const { tokenize, verifyToken } = require('../auth')
-const { userLoaderById } = require('../loaders')
+const { userLoaderByKey } = require('../loaders')
 
 describe('user send password reset email', () => {
   const originalInfo = console.info
@@ -94,7 +94,7 @@ describe('user send password reset email', () => {
             cleanseInput,
           },
           loaders: {
-            userLoaderById: userLoaderById(query),
+            userLoaderByKey: userLoaderByKey(query),
           },
         },
       )
@@ -149,7 +149,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -190,7 +190,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -248,7 +248,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -308,7 +308,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -368,7 +368,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -407,7 +407,7 @@ describe('user send password reset email', () => {
           parameters: { userId: user._key },
         })
 
-        const loader = userLoaderById(query)
+        const loader = userLoaderByKey(query)
 
         query = jest
           .fn()
@@ -434,7 +434,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: loader,
+              userLoaderByKey: loader,
             },
           },
         )

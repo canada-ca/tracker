@@ -1,6 +1,6 @@
 const DataLoader = require('dataloader')
 
-module.exports.orgLoaderById = (query, language) =>
+module.exports.orgLoaderByKey = (query, language) =>
   new DataLoader(async (ids) => {
     let cursor
 
@@ -11,7 +11,7 @@ module.exports.orgLoaderById = (query, language) =>
           RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
-      console.error(`Database error when running orgLoaderById: ${err}`)
+      console.error(`Database error when running orgLoaderByKey: ${err}`)
       throw new Error('Unable to find organization. Please try again.')
     }
 
@@ -21,7 +21,7 @@ module.exports.orgLoaderById = (query, language) =>
         orgMap[org._key] = org
       })
     } catch (err) {
-      console.error(`Cursor error occurred during orgLoaderById: ${err}`)
+      console.error(`Cursor error occurred during orgLoaderByKey: ${err}`)
       throw new Error('Unable to find organization. Please try again.')
     }
 

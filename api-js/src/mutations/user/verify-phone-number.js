@@ -21,7 +21,7 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { query, userId, loaders: { userLoaderById } },
+    { query, userId, loaders: { userLoaderByKey } },
   ) => {
     // Cleanse Input
     const twoFactorCode = args.twoFactorCode
@@ -34,7 +34,7 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
     }
 
     // Get User From DB
-    const user = await userLoaderById.load(userId)
+    const user = await userLoaderByKey.load(userId)
 
     if (typeof user === 'undefined') {
       console.warn(

@@ -15,14 +15,14 @@ const { cleanseInput, slugify } = require('./validators')
 const notifyFunctions = require('./notify')
 
 const {
-  domainLoaderById,
+  domainLoaderByKey,
   domainLoaderBySlug,
-  orgLoaderById,
+  orgLoaderByKey,
   orgLoaderBySlug,
   orgLoaderByConnectionArgs,
   orgLoaderConnectionArgsByDomainId,
   userLoaderByUserName,
-  userLoaderById,
+  userLoaderByKey,
 } = require('./loaders')
 
 // internationalization.load({
@@ -90,14 +90,14 @@ const Server = (context = {}) => {
           ...notifyFunctions,
         },
         loaders: {
-          domainLoaderById: domainLoaderById(query),
+          domainLoaderByKey: domainLoaderByKey(query),
           domainLoaderBySlug: domainLoaderBySlug(query),
-          orgLoaderById: orgLoaderById(query, request.language),
+          orgLoaderByKey: orgLoaderByKey(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),
           orgLoaderByConnectionArgs: orgLoaderByConnectionArgs(query, request.language, userId, cleanseInput),
           orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(query, request.language, userId, cleanseInput),
           userLoaderByUserName: userLoaderByUserName(query),
-          userLoaderById: userLoaderById(query),
+          userLoaderByKey: userLoaderByKey(query),
         },
       }
     },

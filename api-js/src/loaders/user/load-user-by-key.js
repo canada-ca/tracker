@@ -1,6 +1,6 @@
 const DataLoader = require('dataloader')
 
-module.exports.userLoaderById = (query) =>
+module.exports.userLoaderByKey = (query) =>
   new DataLoader(async (ids) => {
     let cursor
 
@@ -12,7 +12,7 @@ module.exports.userLoaderById = (query) =>
       `
     } catch (err) {
       console.error(
-        `Database error occurred when running userLoaderById: ${err}`,
+        `Database error occurred when running userLoaderByKey: ${err}`,
       )
       throw new Error('Unable to find user. Please try again.')
     }
@@ -23,7 +23,7 @@ module.exports.userLoaderById = (query) =>
         userMap[user._key] = user
       })
     } catch (err) {
-      console.error(`Cursor error occurred during userLoaderById: ${err}`)
+      console.error(`Cursor error occurred during userLoaderByKey: ${err}`)
       throw new Error('Unable to find user. Please try again.')
     }
 

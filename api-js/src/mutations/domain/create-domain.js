@@ -39,7 +39,7 @@ const createDomain = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, userRequired },
-      loaders: { domainLoaderBySlug, orgLoaderById, userLoaderById },
+      loaders: { domainLoaderBySlug, orgLoaderByKey, userLoaderByKey },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -55,10 +55,10 @@ const createDomain = new mutationWithClientMutationId({
     }
 
     // Get User
-    const user = await userRequired(userId, userLoaderById)
+    const user = await userRequired(userId, userLoaderByKey)
 
     // Check to see if org exists
-    const org = await orgLoaderById.load(orgId)
+    const org = await orgLoaderByKey.load(orgId)
 
     if (typeof org === 'undefined') {
       console.warn(

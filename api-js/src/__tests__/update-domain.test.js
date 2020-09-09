@@ -12,9 +12,9 @@ const bcrypt = require('bcrypt')
 const { cleanseInput, slugify } = require('../validators')
 const { checkPermission, tokenize, userRequired } = require('../auth')
 const {
-  domainLoaderById,
-  orgLoaderById,
-  userLoaderById,
+  domainLoaderByKey,
+  orgLoaderByKey,
+  userLoaderByKey,
   userLoaderByUserName,
 } = require('../loaders')
 
@@ -179,9 +179,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -247,9 +247,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -316,9 +316,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -390,9 +390,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -458,9 +458,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -527,9 +527,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -601,9 +601,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -669,9 +669,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -738,9 +738,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -819,9 +819,9 @@ describe('updating a domain', () => {
               slugify,
             },
             loaders: {
-              domainLoaderById: domainLoaderById(query),
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              domainLoaderByKey: domainLoaderByKey(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -894,9 +894,9 @@ describe('updating a domain', () => {
               slugify,
             },
             loaders: {
-              domainLoaderById: domainLoaderById(query),
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              domainLoaderByKey: domainLoaderByKey(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -1031,9 +1031,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -1097,9 +1097,9 @@ describe('updating a domain', () => {
                 slugify,
               },
               loaders: {
-                domainLoaderById: domainLoaderById(query),
-                orgLoaderById: orgLoaderById(query, 'en'),
-                userLoaderById: userLoaderById(query),
+                domainLoaderByKey: domainLoaderByKey(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
               },
             },
           )
@@ -1203,9 +1203,9 @@ describe('updating a domain', () => {
               slugify,
             },
             loaders: {
-              domainLoaderById: domainLoaderById(query),
-              orgLoaderById: orgLoaderById(query, 'en'),
-              userLoaderById: userLoaderById(query),
+              domainLoaderByKey: domainLoaderByKey(query),
+              orgLoaderByKey: orgLoaderByKey(query, 'en'),
+              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -1270,9 +1270,9 @@ describe('updating a domain', () => {
     })
     describe('while checking for edge connections', () => {
       it('returns an error message', async () => {
-        const domainLoader = domainLoaderById(query)
-        const orgLoader = orgLoaderById(query, 'en')
-        const userLoader = userLoaderById(query)
+        const domainLoader = domainLoaderByKey(query)
+        const orgLoader = orgLoaderByKey(query, 'en')
+        const userLoader = userLoaderByKey(query)
 
         query = jest
           .fn()
@@ -1328,9 +1328,9 @@ describe('updating a domain', () => {
               slugify,
             },
             loaders: {
-              domainLoaderById: domainLoader,
-              orgLoaderById: orgLoader,
-              userLoaderById: userLoader,
+              domainLoaderByKey: domainLoader,
+              orgLoaderByKey: orgLoader,
+              userLoaderByKey: userLoader,
             },
           },
         )
@@ -1399,9 +1399,9 @@ describe('updating a domain', () => {
     })
     describe('when running domain upsert', () => {
       it('returns an error message', async () => {
-        const domainLoader = domainLoaderById(query)
-        const orgLoader = orgLoaderById(query, 'en')
-        const userLoader = userLoaderById(query)
+        const domainLoader = domainLoaderByKey(query)
+        const orgLoader = orgLoaderByKey(query, 'en')
+        const userLoader = userLoaderByKey(query)
 
         transaction = jest.fn().mockReturnValue({
           run() {
@@ -1449,9 +1449,9 @@ describe('updating a domain', () => {
               slugify,
             },
             loaders: {
-              domainLoaderById: domainLoader,
-              orgLoaderById: orgLoader,
-              userLoaderById: userLoader,
+              domainLoaderByKey: domainLoader,
+              orgLoaderByKey: orgLoader,
+              userLoaderByKey: userLoader,
             },
           },
         )
@@ -1468,9 +1468,9 @@ describe('updating a domain', () => {
     })
     describe('when committing transaction', () => {
       it('returns an error message', async () => {
-        const domainLoader = domainLoaderById(query)
-        const orgLoader = orgLoaderById(query, 'en')
-        const userLoader = userLoaderById(query)
+        const domainLoader = domainLoaderByKey(query)
+        const orgLoader = orgLoaderByKey(query, 'en')
+        const userLoader = userLoaderByKey(query)
 
         transaction = jest.fn().mockReturnValue({
           run() {
@@ -1521,9 +1521,9 @@ describe('updating a domain', () => {
               slugify,
             },
             loaders: {
-              domainLoaderById: domainLoader,
-              orgLoaderById: orgLoader,
-              userLoaderById: userLoader,
+              domainLoaderByKey: domainLoader,
+              orgLoaderByKey: orgLoader,
+              userLoaderByKey: userLoader,
             },
           },
         )

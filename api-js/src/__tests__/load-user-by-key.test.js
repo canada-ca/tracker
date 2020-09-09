@@ -4,9 +4,9 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
-const { userLoaderById } = require('../loaders')
+const { userLoaderByKey } = require('../loaders')
 
-describe('given a userLoaderById dataloader', () => {
+describe('given a userLoaderByKey dataloader', () => {
   let query, drop, truncate, migrate, collections
 
   let consoleOutput = []
@@ -52,7 +52,7 @@ describe('given a userLoaderById dataloader', () => {
       `
       const expectedUser = await expectedCursor.next()
 
-      const loader = userLoaderById(query)
+      const loader = userLoaderByKey(query)
       const user = await loader.load(expectedUser._key)
 
       expect(user).toEqual(expectedUser)
@@ -73,7 +73,7 @@ describe('given a userLoaderById dataloader', () => {
         expectedUsers.push(tempUser)
       }
 
-      const loader = userLoaderById(query)
+      const loader = userLoaderByKey(query)
       const users = await loader.loadMany(userIds)
       expect(users).toEqual(expectedUsers)
     })
@@ -88,7 +88,7 @@ describe('given a userLoaderById dataloader', () => {
       const expectedUser = await expectedCursor.next()
 
       query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-      const loader = userLoaderById(query)
+      const loader = userLoaderByKey(query)
 
       try {
         await loader.load(expectedUser._key)
@@ -97,7 +97,7 @@ describe('given a userLoaderById dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Database error occurred when running userLoaderById: Error: Database error occurred.`,
+        `Database error occurred when running userLoaderByKey: Error: Database error occurred.`,
       ])
     })
   })
@@ -116,7 +116,7 @@ describe('given a userLoaderById dataloader', () => {
         },
       }
       query = jest.fn().mockReturnValue(cursor)
-      const loader = userLoaderById(query)
+      const loader = userLoaderByKey(query)
 
       try {
         await loader.load(expectedUser._key)
@@ -125,7 +125,7 @@ describe('given a userLoaderById dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Cursor error occurred during userLoaderById: Error: Cursor error occurred.`,
+        `Cursor error occurred during userLoaderByKey: Error: Cursor error occurred.`,
       ])
     })
   })

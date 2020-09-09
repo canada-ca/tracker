@@ -4,9 +4,9 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
-const { orgLoaderById } = require('../loaders')
+const { orgLoaderByKey } = require('../loaders')
 
-describe('given a orgLoaderById dataloader', () => {
+describe('given a orgLoaderByKey dataloader', () => {
   let query, drop, truncate, migrate, collections
 
   let consoleOutput = []
@@ -89,7 +89,7 @@ describe('given a orgLoaderById dataloader', () => {
         `
         const expectedOrg = await expectedCursor.next()
 
-        const loader = orgLoaderById(query, 'en')
+        const loader = orgLoaderByKey(query, 'en')
         const org = await loader.load(expectedOrg._key)
 
         expect(org).toEqual(expectedOrg)
@@ -105,7 +105,7 @@ describe('given a orgLoaderById dataloader', () => {
         `
         const expectedOrg = await expectedCursor.next()
 
-        const loader = orgLoaderById(query, 'fr')
+        const loader = orgLoaderByKey(query, 'fr')
         const org = await loader.load(expectedOrg._key)
 
         expect(org).toEqual(expectedOrg)
@@ -128,7 +128,7 @@ describe('given a orgLoaderById dataloader', () => {
           expectedOrgs.push(tempOrg)
         }
 
-        const loader = orgLoaderById(query, 'en')
+        const loader = orgLoaderByKey(query, 'en')
         const orgs = await loader.loadMany(orgIds)
         expect(orgs).toEqual(expectedOrgs)
       })
@@ -148,7 +148,7 @@ describe('given a orgLoaderById dataloader', () => {
           expectedOrgs.push(tempOrg)
         }
 
-        const loader = orgLoaderById(query, 'fr')
+        const loader = orgLoaderByKey(query, 'fr')
         const orgs = await loader.loadMany(orgIds)
         expect(orgs).toEqual(expectedOrgs)
       })
@@ -157,7 +157,7 @@ describe('given a orgLoaderById dataloader', () => {
   describe('database error is raised', () => {
     it('returns an error', async () => {
       query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-      const loader = orgLoaderById(query)
+      const loader = orgLoaderByKey(query)
 
       try {
         await loader.load('1')
@@ -168,7 +168,7 @@ describe('given a orgLoaderById dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Database error when running orgLoaderById: Error: Database error occurred.`,
+        `Database error when running orgLoaderByKey: Error: Database error occurred.`,
       ])
     })
   })
@@ -180,7 +180,7 @@ describe('given a orgLoaderById dataloader', () => {
         },
       }
       query = jest.fn().mockReturnValue(cursor)
-      const loader = orgLoaderById(query)
+      const loader = orgLoaderByKey(query)
 
       try {
         await loader.load('1')
@@ -191,7 +191,7 @@ describe('given a orgLoaderById dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Cursor error occurred during orgLoaderById: Error: Cursor error occurred.`,
+        `Cursor error occurred during orgLoaderByKey: Error: Cursor error occurred.`,
       ])
     })
   })

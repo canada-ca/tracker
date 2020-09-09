@@ -12,7 +12,7 @@ const { createMutationSchema } = require('../mutations')
 const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
-const { userLoaderById } = require('../loaders')
+const { userLoaderByKey } = require('../loaders')
 
 const mockNotify = jest.fn()
 
@@ -95,7 +95,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             notify: {
               sendTfaTextMsg: mockNotify,
@@ -170,7 +170,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             notify: {
               sendTfaTextMsg: mockNotify,
@@ -231,7 +231,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             notify: {
               sendTfaTextMsg: mockNotify,
@@ -273,7 +273,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: userLoaderById(query),
+              userLoaderByKey: userLoaderByKey(query),
             },
             notify: {
               sendTfaTextMsg: mockNotify,
@@ -308,7 +308,7 @@ describe('user send password reset email', () => {
               RETURN user
         `
         const user = await cursor.next()
-        const loaderById = userLoaderById(query)
+        const loaderById = userLoaderByKey(query)
 
         query = jest
           .fn()
@@ -336,7 +336,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: loaderById,
+              userLoaderByKey: loaderById,
             },
             notify: {
               sendTfaTextMsg: mockNotify,
@@ -371,7 +371,7 @@ describe('user send password reset email', () => {
               RETURN user
         `
         const user = await cursor.next()
-        const loaderById = userLoaderById(query)
+        const loaderById = userLoaderByKey(query)
 
         query = jest
           .fn()
@@ -400,7 +400,7 @@ describe('user send password reset email', () => {
               cleanseInput,
             },
             loaders: {
-              userLoaderById: loaderById,
+              userLoaderByKey: loaderById,
             },
             notify: {
               sendTfaTextMsg: mockNotify,

@@ -35,7 +35,7 @@ const resetPassword = new mutationWithClientMutationId({
     {
       query,
       auth: { verifyToken, bcrypt },
-      loaders: { userLoaderById },
+      loaders: { userLoaderByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -59,7 +59,7 @@ const resetPassword = new mutationWithClientMutationId({
     }
 
     // Check if user exists
-    const user = await userLoaderById.load(tokenParameters.userId)
+    const user = await userLoaderByKey.load(tokenParameters.userId)
 
     if (typeof user === 'undefined') {
       console.warn(

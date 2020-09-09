@@ -96,7 +96,7 @@ const updateOrganization = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderById, userLoaderById },
+      loaders: { orgLoaderByKey, userLoaderByKey },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -122,12 +122,12 @@ const updateOrganization = new mutationWithClientMutationId({
     const slugFR = slugify(nameFR)
 
     // Get user
-    const user = await userRequired(userId, userLoaderById)
+    const user = await userRequired(userId, userLoaderByKey)
 
     // Check to see if org exists
     const n = orgId.lastIndexOf('/')
     const orgKey = orgId.substring(n + 1)
-    const currentOrg = await orgLoaderById.load(orgKey)
+    const currentOrg = await orgLoaderByKey.load(orgKey)
 
     if (typeof currentOrg === 'undefined') {
       console.warn(
@@ -224,8 +224,8 @@ const updateOrganization = new mutationWithClientMutationId({
       throw new Error('Unable to update organization. Please try again.')
     }
 
-    await orgLoaderById.clear(orgKey)
-    const organization = await orgLoaderById.load(orgKey)
+    await orgLoaderByKey.clear(orgKey)
+    const organization = await orgLoaderByKey.load(orgKey)
 
     console.info(`User: ${userId}, successfully updated org ${orgKey}.`)
     return {
