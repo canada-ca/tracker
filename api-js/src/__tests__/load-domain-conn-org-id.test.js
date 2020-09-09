@@ -413,7 +413,11 @@ describe('given the load domain connection using org id function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('Error, unable to have first, and last set at the same time.'))
+          expect(err).toEqual(
+            new Error(
+              'Error, unable to have first, and last set at the same time.',
+            ),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -425,7 +429,9 @@ describe('given the load domain connection using org id function', () => {
   describe('given a database error', () => {
     describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
       it('returns an error message', async () => {
-        const query = jest.fn().mockRejectedValue(new Error('Database Error Occurred.'))
+        const query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database Error Occurred.'))
 
         const connectionLoader = domainLoaderConnectionsByOrgId(
           query,
@@ -440,7 +446,9 @@ describe('given the load domain connection using org id function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('Unable to load domains. Please try again.'))
+          expect(err).toEqual(
+            new Error('Unable to load domains. Please try again.'),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -451,11 +459,13 @@ describe('given the load domain connection using org id function', () => {
     describe('when gathering domains', () => {
       it('returns an error message', async () => {
         const query = jest
-        .fn()
-        .mockReturnValueOnce({
-          next() { return ['domain1'] },
-        })
-        .mockRejectedValue(new Error('Database Error Occurred.'))
+          .fn()
+          .mockReturnValueOnce({
+            next() {
+              return ['domain1']
+            },
+          })
+          .mockRejectedValue(new Error('Database Error Occurred.'))
 
         const connectionLoader = domainLoaderConnectionsByOrgId(
           query,
@@ -470,7 +480,9 @@ describe('given the load domain connection using org id function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('Unable to load domains. Please try again.'))
+          expect(err).toEqual(
+            new Error('Unable to load domains. Please try again.'),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -502,7 +514,9 @@ describe('given the load domain connection using org id function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('Unable to load domains. Please try again.'))
+          expect(err).toEqual(
+            new Error('Unable to load domains. Please try again.'),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -539,7 +553,9 @@ describe('given the load domain connection using org id function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(new Error('Unable to load domains. Please try again.'))
+          expect(err).toEqual(
+            new Error('Unable to load domains. Please try again.'),
+          )
         }
 
         expect(consoleOutput).toEqual([
