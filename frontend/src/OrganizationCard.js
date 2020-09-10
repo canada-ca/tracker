@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/core'
 import { useRouteMatch, useHistory } from 'react-router-dom'
 import { string, number } from 'prop-types'
+import { Trans } from '@lingui/macro'
 
 export function OrganizationCard({ name, slug, domainCount, ...rest }) {
   const { path, _url } = useRouteMatch()
@@ -40,20 +41,24 @@ export function OrganizationCard({ name, slug, domainCount, ...rest }) {
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} mb={['2', '0']}>
           <Stack isInline align="center">
             <Text minW="10%" fontWeight="semibold">
-              Services:
+              <Trans>Services:</Trans>
             </Text>
             <Text fontSize="lg">{domainCount}</Text>
           </Stack>
         </Box>
         <Divider orientation="vertical" />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} mb={['2', '0']}>
-          <Text fontWeight="bold">Web Configuration</Text>
+          <Text fontWeight="bold">
+            <Trans>Web Configuration</Trans>
+          </Text>
           <Text>{webValue}%</Text>
           <Progress value={webValue} bg="gray.300" w={['50%', '100%']} />
         </Box>
         <Divider orientation="vertical" />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
-          <Text fontWeight="bold">Email Configuration</Text>
+          <Text fontWeight="bold">
+            <Trans>Email Configuration</Trans>
+          </Text>
           <Text>{emailValue}%</Text>
           <Progress value={emailValue} bg="gray.300" w={['50%', '100%']} />
         </Box>

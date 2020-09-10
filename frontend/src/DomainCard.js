@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import {
   Text,
   ListItem,
@@ -9,19 +9,21 @@ import {
   Stack,
   Divider,
 } from '@chakra-ui/core'
+import { useLingui } from '@lingui/react'
 import { useHistory } from 'react-router-dom'
 import { string } from 'prop-types'
 import { slugify } from './slugify'
 
 export function DomainCard({ url, lastRan, ...rest }) {
   const history = useHistory()
+  const { i18n } = useLingui()
   const webProtocols = [
     'HTTPS',
     'HSTS',
-    'HSTS Preloaded',
+    i18n._(t`HSTS Preloaded`),
     'SSL',
-    'Protocols & Ciphers',
-    'Certificate Use',
+    i18n._(t`Protocols & Ciphers`),
+    i18n._(t`Certificate Use`),
   ]
   const emailProtocols = ['SPF', 'DKIM', 'DMARC']
 
@@ -62,7 +64,9 @@ export function DomainCard({ url, lastRan, ...rest }) {
         p="8"
       >
         <Box flexShrink="0" minW="12%">
-          <Text fontWeight="semibold">Domain:</Text>
+          <Text fontWeight="semibold">
+            <Trans>Domain:</Trans>
+          </Text>
           {url}
         </Box>
         <Divider orientation={['horizontal', 'vertical']} />

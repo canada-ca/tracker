@@ -28,7 +28,7 @@ export default function OrganizationDetails() {
   const toast = useToast()
   const history = useHistory()
   const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
-    variables: { slug: orgSlug, orgSlug: orgSlug },
+    variables: { slug: orgSlug },
     context: {
       headers: {
         authorization: currentUser.jwt,
@@ -47,7 +47,7 @@ export default function OrganizationDetails() {
   })
 
   let orgName = ''
-  if (data && data.organization.domains.edges) {
+  if (data?.organization.domains.edges) {
     orgName = data.organization.name
   }
 
@@ -75,9 +75,15 @@ export default function OrganizationDetails() {
       </Stack>
       <Tabs isFitted>
         <TabList mb="4">
-          <Tab>Summary</Tab>
-          <Tab>Domains</Tab>
-          <Tab>Users</Tab>
+          <Tab>
+            <Trans>Summary</Trans>
+          </Tab>
+          <Tab>
+            <Trans>Domains</Trans>
+          </Tab>
+          <Tab>
+            <Trans>Users</Trans>
+          </Tab>
         </TabList>
 
         <TabPanels>

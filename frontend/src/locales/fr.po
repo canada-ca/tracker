@@ -16,6 +16,8 @@ msgstr ""
 #: src/DmarcReportPage.js:254
 #: src/LandingPage.js:24
 #: src/OrganizationDetails.js:133
+#: src/Organizations.js:80
+#: src/DomainsPage.js:69
 msgid "*All data represented is mocked for demonstration purposes"
 msgstr "*Toutes les données représentées sont simulées à des fins de démonstration"
 
@@ -492,9 +494,9 @@ msgstr "Dmarc partiel"
 msgid "Dmarc pass"
 msgstr "Passe Dmarc"
 
-#: src/OrganizationDetails.js:60
-msgid "Domain"
-msgstr "Domaine"
+#: src/DomainCard.js:66
+msgid "Domain:"
+msgstr "Domaine:"
 
 #: src/AdminDomains.js:182
 msgid "Domain List"
@@ -558,6 +560,7 @@ msgstr "Domaine:"
 
 #: src/App.js:55
 #: src/DomainsPage.js:49
+#: src/OrganizationDetails.js:82
 msgid "Domains"
 msgstr "Domaines"
 
@@ -593,6 +596,7 @@ msgstr "Courriel"
 #~ msgstr "Adresse électronique :"
 
 #: src/SummaryGroup.js:66
+#: src/OrganizationCard.js:60
 msgid "Email Configuration"
 msgstr "Configuration du courriel"
 
@@ -829,6 +833,14 @@ msgstr ""
 msgid "Internet facing services: {domainCount}"
 msgstr "Services d'accès à Internet: {domainCount}"
 
+#: src/OrganizationSummary.js:13
+msgid "Internet facing services:"
+msgstr "Services d'accès à Internet:"
+
+#: src/OrganizationSummary.js:20
+msgid "Users joined:"
+msgstr "Les utilisateurs se sont inscrits :"
+
 #: src/ForgotPasswordPage.js:19
 #: src/fieldRequirements.js:7
 msgid "Invalid email"
@@ -855,6 +867,7 @@ msgid "Language:"
 msgstr "La langue :"
 
 #: src/Domain.js:40
+#: src/DomainCard.js:73
 msgid "Last scanned:"
 msgstr "Dernier scan:"
 
@@ -1025,6 +1038,7 @@ msgid "Non-compliant TLS"
 msgstr "TLS non conforme"
 
 #: src/Domain.js:51
+#: src/DomainCard.js:79
 msgid "Not scanned yet."
 msgstr "Pas encore scanné."
 
@@ -1727,6 +1741,7 @@ msgid "WRITE"
 msgstr "ÉCRIRE"
 
 #: src/SummaryGroup.js:51
+#: src/OrganizationCard.js:52
 msgid "Web Configuration"
 msgstr "Configuration Web"
 
@@ -1887,3 +1902,11 @@ msgstr ""
 #: src/DmarcGuidancePage.js:42
 msgid "{orgName}"
 msgstr ""
+
+#: src/OrganizationDetails.js:79
+msgid "Summary"
+msgstr "Résumé"
+
+#: src/OrganizationDetails.js:85
+msgid "Users"
+msgstr "Utilisateurs"

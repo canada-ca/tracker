@@ -77,6 +77,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
           <Trans>Next</Trans>
         </Button>
       </Stack>
+      <Trans>*All data represented is mocked for demonstration purposes</Trans>
     </Layout>
   )
 }

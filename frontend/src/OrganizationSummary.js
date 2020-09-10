@@ -9,12 +9,16 @@ export function OrganizationSummary() {
     <Layout>
       <Box fontSize="xl">
         <Stack isInline align="center">
-          <Text fontWeight="semibold">Services in Organization:</Text>
+          <Text fontWeight="semibold">
+            <Trans>Internet facing services:</Trans>
+          </Text>
           <Text>18</Text>
         </Stack>
 
         <Stack isInline align="center">
-          <Text fontWeight="semibold">Users in Organization:</Text>
+          <Text fontWeight="semibold">
+            <Trans>Users joined:</Trans>
+          </Text>
           <Text>7</Text>
         </Stack>
       </Box>
