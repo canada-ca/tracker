@@ -7,6 +7,8 @@ spec:
   schedule: "*/360 * * * *"
   concurrencyPolicy: Forbid
   startingDeadlineSeconds: 180
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 0
   jobTemplate:
     spec:
       template:
