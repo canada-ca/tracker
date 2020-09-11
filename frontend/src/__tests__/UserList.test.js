@@ -133,7 +133,7 @@ describe('<UserList />', () => {
         },
       ]
 
-      const { getAllByText, getByDisplayValue, getByText } = render(
+      const { getAllByText, getByDisplayValue, getByText, getByLabelText } = render(
         <UserStateProvider
           initialState={{
             userName: 'testadmin@testemail.gc.ca',
@@ -157,7 +157,7 @@ describe('<UserList />', () => {
         </UserStateProvider>,
       )
 
-      const userRole = getByDisplayValue(/READ/i)
+      const userRole = getByLabelText(/Role:/i)
       await waitFor(() => {
         expect(userRole.type).toEqual('select-one')
       })
