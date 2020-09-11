@@ -45,7 +45,7 @@ import { useUserState } from './UserState'
 export function AdminDomains({ domainsData, orgName }) {
   let domains = []
   if (domainsData && domainsData.edges) {
-    domains = domainsData.edges.map(e => e.node)
+    domains = domainsData.edges.map((e) => e.node)
   }
 
   const [domainList, setDomainList] = useState(domains)
@@ -75,7 +75,7 @@ export function AdminDomains({ domainsData, orgName }) {
   const currentDomains = domainList.slice(indexOfFirstDomain, indexOfLastDomain)
 
   // Change page
-  const paginate = pageNumber => setCurrentPage(pageNumber)
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   // Update domains list if domainsData changes (domain added, removed, updated)
   useEffect(() => {
@@ -195,50 +195,48 @@ export function AdminDomains({ domainsData, orgName }) {
       <Text fontSize="2xl" fontWeight="bold">
         <Trans>Domain List</Trans>
       </Text>
-      <SimpleGrid mb="6" columns={{ md: 1, lg: 2 }} spacing="15px">
-        <InputGroup>
-          <InputLeftElement>
-            <Icon name="search" color="gray.300" />
-          </InputLeftElement>
-          <Input
-            type="text"
-            placeholder={i18n._(t`Search for a domain`)}
-            value={domainSearch}
-            onChange={e => {
-              setDomainSearch(e.target.value)
-            }}
-          />
-        </InputGroup>
-        <TrackerButton
-          width={['100%', '80%']}
-          onClick={() => {
-            if (!domainSearch) {
-              toast({
-                title: i18n._(t`An error occurred.`),
-                description: i18n._(t`New domain name cannot be empty`),
-                status: 'error',
-                duration: 9000,
-                isClosable: true,
-                position: 'bottom-left',
-              })
-            } else {
-              createDomain({
-                variables: {
-                  orgSlug: slugify(orgName),
-                  url: domainSearch,
-                  selectors: [],
-                },
-              })
-            }
+      <InputGroup width="100%" mb="8px">
+        <InputLeftElement>
+          <Icon name="search" color="gray.300" />
+        </InputLeftElement>
+        <Input
+          type="text"
+          placeholder={i18n._(t`Search for a domain`)}
+          value={domainSearch}
+          onChange={(e) => {
+            setDomainSearch(e.target.value)
           }}
-          variant="primary"
-        >
-          <Icon name="add" />
-          <Trans>Add Domain</Trans>
-        </TrackerButton>
-      </SimpleGrid>
+        />
+      </InputGroup>
+      <TrackerButton
+        width="100%"
+        onClick={() => {
+          if (!domainSearch) {
+            toast({
+              title: i18n._(t`An error occurred.`),
+              description: i18n._(t`New domain name cannot be empty`),
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+              position: 'bottom-left',
+            })
+          } else {
+            createDomain({
+              variables: {
+                orgSlug: slugify(orgName),
+                url: domainSearch,
+                selectors: [],
+              },
+            })
+          }
+        }}
+        variant="primary"
+      >
+        <Icon name="add" />
+        <Trans>Add Domain</Trans>
+      </TrackerButton>
 
-      <Stack spacing={10} shouldWrapChildren>
+      <Stack spacing={10} shouldWrapChildren width="100%">
         <Stack direction="row" spacing={4}>
           <Stack spacing={4} flexWrap="wrap">
             <ListOf
@@ -291,7 +289,7 @@ export function AdminDomains({ domainsData, orgName }) {
       )}
 
       <SlideIn in={updateIsOpen}>
-        {styles => (
+        {(styles) => (
           <Modal
             isOpen={true}
             onClose={updateOnClose}
@@ -308,7 +306,7 @@ export function AdminDomains({ domainsData, orgName }) {
                   displayName: true,
                 }}
                 validationSchema={updatedDomainValidationSchema}
-                onSubmit={async values => {
+                onSubmit={async (values) => {
                   // Submit update detail mutation
                   await updateDomain({
                     variables: {
@@ -392,7 +390,7 @@ export function AdminDomains({ domainsData, orgName }) {
       </SlideIn>
 
       <SlideIn in={removeIsOpen}>
-        {styles => (
+        {(styles) => (
           <Modal isOpen={true} onClose={removeOnClose}>
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent pb={4} {...styles}>

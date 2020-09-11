@@ -137,4 +137,24 @@ export const UPDATE_DOMAIN = gql`
   }
 `
 
+export const INVITE_USER_TO_ORG = gql`
+  mutation InviteUserToOrg(
+    $userName: EmailAddress!
+    $requestedRole: RoleEnums!
+    $orgSlug: Slug!
+    $preferredLanguage: LanguageEnums!
+  ) {
+    inviteUserToOrg(
+      input: {
+        userName: $userName
+        requestedRole: $requestedRole
+        orgSlug: $orgSlug
+        preferredLanguage: $preferredLanguage
+      }
+    ) {
+      status
+    }
+  }
+`
+
 export default ''
