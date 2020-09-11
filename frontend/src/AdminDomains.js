@@ -4,7 +4,6 @@ import { useLingui } from '@lingui/react'
 import {
   Stack,
   Text,
-  SimpleGrid,
   InputGroup,
   InputLeftElement,
   Icon,
