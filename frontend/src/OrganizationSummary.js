@@ -12,14 +12,14 @@ export function OrganizationSummary() {
           <Text fontWeight="semibold">
             <Trans>Internet facing services:</Trans>
           </Text>
-          <Text>18</Text>
+          <Text>{Math.floor(Math.random() * 20 + 1)}</Text>
         </Stack>
 
         <Stack isInline align="center">
           <Text fontWeight="semibold">
             <Trans>Users joined:</Trans>
           </Text>
-          <Text>7</Text>
+          <Text>{Math.floor(Math.random() * 4 + 7)}</Text>{' '}
         </Stack>
       </Box>
       <SummaryGroup />
