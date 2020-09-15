@@ -53,11 +53,12 @@ export default function Organisations({ orgsPerPage = 10 }) {
         ifEmpty={() => <Trans>No Organizations</Trans>}
         mb="4"
       >
-        {({ name, slug, domainCount }, index) => (
+        {({ name, slug, acronym, domainCount }, index) => (
           <Box key={`${slug}:${index}`}>
             <OrganizationCard
               slug={slug}
               name={name}
+              acronym={acronym}
               domainCount={domainCount}
             />
             <Divider borderColor="gray.900" />

@@ -12,11 +12,17 @@ import { useRouteMatch, useHistory } from 'react-router-dom'
 import { string, number } from 'prop-types'
 import { Trans } from '@lingui/macro'
 
-export function OrganizationCard({ name, slug, domainCount, ...rest }) {
+export function OrganizationCard({
+  name,
+  acronym,
+  slug,
+  domainCount,
+  ...rest
+}) {
   const { path, _url } = useRouteMatch()
   const history = useHistory()
-  const webValue = Math.floor(Math.random() * 100) + 1
-  const emailValue = Math.floor(Math.random() * 100) + 1
+  const webValue = Math.floor(Math.random() * 10) * 10 + 10
+  const emailValue = Math.floor(Math.random() * 10) * 10 + 10
 
   return (
     <ListItem {...rest}>
@@ -31,21 +37,38 @@ export function OrganizationCard({ name, slug, domainCount, ...rest }) {
         p="8"
         mx="auto"
       >
-        <Box flexShrink="0" minW="15%" mb={['2', '0']}>
-          <Text mt="1" fontSize="lg" fontWeight="semibold" as="u">
-            {name}
-          </Text>
+        <Box flexShrink="0" minW="50%" mb={['2', '0']}>
+          <Stack isInline align="center">
+            <Text mt="1" fontSize="md" fontWeight="semibold" as="u">
+              {name}
+            </Text>
+            <Text mt="1" fontSize="md" fontWeight="semibold">
+              ({acronym})
+            </Text>
+          </Stack>
         </Box>
         <Divider orientation="vertical" />
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} mb={['2', '0']}>
+        <Box
+          flexShrink="0"
+          minW="10%"
+          ml={{ md: 2 }}
+          mr={{ md: 2 }}
+          mb={['2', '0']}
+        >
           <Stack isInline align="center">
-            <Text minW="10%" fontWeight="semibold">
+            <Text fontWeight="semibold">
               <Trans>Services: {domainCount}</Trans>
             </Text>
           </Stack>
         </Box>
         <Divider orientation="vertical" />
-        <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} mb={['2', '0']}>
+        <Box
+          flexShrink="0"
+          minW="15%"
+          ml={{ md: 2 }}
+          mr={{ md: 2 }}
+          mb={['2', '0']}
+        >
           <Text fontWeight="bold">
             <Trans>Web Configuration</Trans>
           </Text>
@@ -67,6 +90,7 @@ export function OrganizationCard({ name, slug, domainCount, ...rest }) {
 
 OrganizationCard.propTypes = {
   name: string.isRequired,
+  acronym: string.isRequired,
   slug: string.isRequired,
   domainCount: number.isRequired,
 }
