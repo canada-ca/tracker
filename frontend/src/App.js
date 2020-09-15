@@ -17,7 +17,7 @@ import { RouteIf } from './RouteIf'
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
 const QRcodePage = lazy(() => import('./QRcodePage'))
-const DomainsPage = lazy(() => import('./DomainsPage'))
+// const DomainsPage = lazy(() => import('./DomainsPage'))
 const UserPage = lazy(() => import('./UserPage'))
 const UserList = lazy(() => import('./UserList'))
 const SignInPage = lazy(() => import('./SignInPage'))
@@ -58,9 +58,9 @@ export default function App() {
             <Trans>DMARC Report</Trans>
           </Link>
 
-          <Link to="/domains">
+          {/* <Link to="/domains">
             <Trans>Domains</Trans>
-          </Link>
+          </Link> */}
 
           <Link to="/organizations">
             <Trans>Organizations</Trans>
@@ -167,7 +167,7 @@ export default function App() {
                 path="/domains"
                 render={({ match: { url } }) => (
                   <>
-                    <Route path={`${url}`} component={DomainsPage} exact />
+                    {/* <Route path={`${url}`} component={DomainsPage} exact /> */}
                     <Route
                       path={`${url}/:domainSlug`}
                       component={DmarcGuidancePage}
