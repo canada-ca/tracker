@@ -1,4 +1,4 @@
-import { arc as Arc, pie as Pie } from 'd3'
+import { arc as Arc, pie as Pie } from 'd3-shape'
 
 export function useArcs({
   innerRadius,

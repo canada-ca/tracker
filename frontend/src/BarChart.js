@@ -1,23 +1,20 @@
 import React from 'react'
-import { object, string, arrayOf, number } from 'prop-types'
-import {
-  max,
-  range as d3Range,
-  scaleBand,
-  scaleLinear,
-  scaleOrdinal,
-  stack,
-} from 'd3'
-import * as d3 from 'd3'
+import { func, object, string, arrayOf, number } from 'prop-types'
+import { Axis } from './Axis'
+import { useStack } from './useStack'
+import { useRange } from './useRange'
+import { useLinearScale, useBandScale, useOrdinalScale } from './scales'
+import theme from './theme/canada'
 import { data as chartdata } from './chartdata'
-window.d3 = d3
 
-const dmarc = chartdata.map((d) => ({
-  month: `${d.month.slice(0, 3)}, ${d.year}`,
-  ...d.categoryTotals,
-}))
+function splitCamelCase(string) {
+  return string
+    .split(/(?=[A-Z])/)
+    .map((s) => s.toLowerCase())
+    .join(' ')
+}
 
-function Bar({ color = '#2e2e40', ...rest }) {
+function Bar({ color = '#ccc', ...rest }) {
   const style = {
     fill: color,
   }
@@ -33,207 +30,267 @@ Bar.propTypes = {
   color: string,
 }
 
-function YAxis({ domain, range, ...rest }) {
-  const style = {
-    stroke: '#2e2e40',
-    strokeWidth: '1px',
-  }
-
-  const textStyle = {
-    fontSize: '0.8em',
-    fill: '#2e2e40',
-    textAnchor: 'end',
-  }
-
-  const [start, end] = range
-
-  const ticks = d3Range(start, end, end / domain.length)
-  console.log({ ticks })
-
+function Graph({ series: stack, children, ...rest }) {
   return (
     <g {...rest}>
-      <line x1={0} y1={start} y2={end} x2={0} style={style} />
-      {ticks.map((tick, index) => (
-        <g key={`y_labels:${index}`} transform={`translate(${-5},${56})`}>
-          <text
-            key={`yaxis:label:${index}`}
-            style={textStyle}
-            y={tick}
-            x={0}
-            fontFamily="Arial"
-          >
-            {domain[index]}
-          </text>
-          <line
-            key={`yaxis:tick:${index}`}
-            style={style}
-            y1={tick}
-            x1={0}
-            y2={tick}
-            x2={0}
-          />
-        </g>
-      ))}
+      {stack.map((series) => {
+        return series.map((datum, index) => {
+          return children({ datum, key: series.key }, index)
+        })
+      })}
     </g>
   )
 }
 
-YAxis.propTypes = {
-  range: arrayOf(number),
-  domain: arrayOf(number),
+Graph.propTypes = {
+  series: arrayOf(arrayOf(arrayOf(number))),
+  children: func,
 }
 
-function XAxis({
-  domain = [],
-  range,
-  step,
-  stroke = '#2e2e40',
-  strokeWidth = '1px',
-  ...rest
-}) {
-  const style = {
-    stroke,
-    strokeWidth,
-  }
-
-  const [start, end] = range
-
-  const ticks = d3Range(start, end, step)
-
-  return (
-    <g {...rest}>
-      <line x1={start} y1={0} x2={end} y2={0} style={style} />
-      {ticks.map((tick, index) => (
-        <g key={`xaxis:group:${index}`}>
-          <line
-            key={`xaxis:tick:${index}`}
-            style={style}
-            x1={tick + step / 2}
-            y1={0}
-            x2={tick + step / 2}
-            y2={4}
-          />
-          <text
-            key={`xaxis:label:${index}`}
-            style={{ fill: '#2e2e40' }}
-            x={tick}
-            y={20}
-            fontFamily="Arial"
-            fontSize="10"
-          >
-            {domain[index]}
-          </text>
-        </g>
-      ))}
-    </g>
-  )
-}
-
-XAxis.propTypes = {
-  domain: arrayOf(string),
-  range: arrayOf(number),
-  stroke: string,
-  strokeWidth: string,
-  step: number,
-}
-
-export function BarChart({
-  data = dmarc,
+export function Chart({
+  data,
   width: w = 800,
   height: h = 500,
-  title = 'Chart showing DMARC pass/fail summary',
-  colors = ['#2E2E40', '#4F4F5E', '#70707C', '#92929B', '#B3B3B9'],
+  title,
+  colors,
+  keys,
 }) {
-  const margin = { top: 0, right: 0, bottom: 100, left: 100 }
+  const margin = { top: 0, right: 110, bottom: 50, left: 100 }
 
   const width = w - margin.left - margin.right
   const height = h - margin.top - margin.bottom
 
-  const series = stack().keys([
-    'fullPass',
-    'passDkimOnly',
-    'passSpfOnly',
-    'fail',
-  ])(data)
+  // create a series of series: 1 layer per key
+  const { series, max } = useStack({
+    data,
+    offset: 'none',
+    keys,
+  })
 
-  console.log('series', series)
-
-  const y = scaleLinear()
-    .domain([0, max(series, (d) => max(d, (d) => d[1]))])
-    .range([margin.bottom, height])
+  // map email volume to pixels, descending order
+  const y = useLinearScale({ domain: [0, max], range: [height, 0] })
 
   const months = data.map((d) => d.month)
 
-  const x = scaleBand().domain(months).range([0, width])
+  // map months to pixels
+  const x = useBandScale({ domain: months, range: [0, width] })
 
-  const color = scaleOrdinal()
-    .domain(series.map((d) => d.key))
-    .range(colors)
+  // map keys to colors
+  const color = useOrdinalScale({
+    domain: keys,
+    range: colors,
+  })
+
+  const xTicks = useRange({ start: 0, end: width, step: x.bandwidth() })
 
   return (
-    <svg width={w} height={h}>
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
       <title>{title}</title>
-      <YAxis
-        transform={`translate(${margin.left},${0})`}
-        domain={y.ticks().reverse()}
-        range={[-margin.bottom, height]}
-      />
+      <g transform={`translate(${w - margin.right}, ${height / 3})`}>
+        {keys.map((key, index) => {
+          const y = 25 * (index + 1)
+          return (
+            <g key={`legend:${key}:${index}`}>
+              <rect
+                style={{ fill: color(key), stroke: theme.colors.primary }}
+                y={y}
+                x={0}
+                width={20}
+                height={20}
+              />
+              <text
+                key={`xaxis:label:${index}`}
+                style={{ fill: theme.colors.primary }}
+                y={y + 14}
+                x={25}
+                fontFamily="Arial"
+                fontSize="12"
+              >
+                {splitCamelCase(key)}
+              </text>
+            </g>
+          )
+        })}
+      </g>
+      <g transform={`translate(${w / 10},0)`}>
+        <Axis
+          ticks={y.ticks().reverse()}
+          label={() => (
+            <text
+              transform={`translate(${-45}, ${height / 2}) rotate(-90)`}
+              style={{ fill: '#2e2e40' }}
+              x={0}
+              y={0}
+              fontFamily="Arial"
+              fontSize="15"
+            >
+              Emails
+            </text>
+          )}
+          border={() => (
+            <line
+              x1={0}
+              y1={y.range()[0]}
+              y2={y.range()[1]}
+              x2={0}
+              style={{ stroke: '#2e2e40', strokeWidth: '1px' }}
+            />
+          )}
+        >
+          {(tick, index) => {
+            const scaled = y(tick)
+            return (
+              <g key={`ylabels:${index}`}>
+                <text
+                  key={`yaxis:label:${index}`}
+                  style={{
+                    fontSize: '0.8em',
+                    fill: '#2e2e40',
+                    textAnchor: 'end',
+                  }}
+                  y={scaled + 4}
+                  x={-5}
+                  fontFamily="Arial"
+                >
+                  {tick}
+                </text>
+                <line
+                  key={`yaxis:tick:${index}`}
+                  style={{ stroke: '#2e2e40', strokeWidth: '1px' }}
+                  y1={scaled}
+                  x1={0}
+                  y2={scaled}
+                  x2={-4}
+                />
+              </g>
+            )
+          }}
+        </Axis>
 
-      <g
-        className="chart"
-        transform={`translate(${margin.left},${h}) scale(1, -1)`}
-      >
-        {series.map((individualSeries) => {
-          console.log('individualSeries', individualSeries)
-          return individualSeries.map((datum, index) => {
-            console.log({ datum })
+        <Graph series={series}>
+          {({ datum, key }, index) => {
+            const [lower, upper] = datum
             return (
               <Bar
                 key={index}
                 x={x(datum.data.month)}
-                y={y(datum[0])}
+                y={y(upper)}
                 width={x.bandwidth()}
-                height={y(datum[1]) - y(datum[0])}
-                color={color(individualSeries.key)}
+                height={y(lower) - y(upper)}
+                color={color(key)}
               />
             )
-          })
-        })}
+          }}
+        </Graph>
+
+        <Axis
+          transform={`translate(${0},${height})`}
+          ticks={xTicks}
+          label={() => (
+            <text
+              style={{ fill: theme.colors.primary }}
+              x={width / 2}
+              y={40}
+              fontFamily="Arial"
+              fontSize="18"
+            >
+              Months
+            </text>
+          )}
+          border={() => (
+            <line
+              x1={x.range()[0]}
+              y1={0}
+              x2={x.range()[1]}
+              y2={0}
+              style={{ stroke: theme.colors.primary, strokeWidth: '1px' }}
+            />
+          )}
+        >
+          {(tick, index) => {
+            return (
+              <g key={`xaxis:group:${index}`}>
+                <line
+                  key={`xaxis:tick:${index}`}
+                  style={{ stroke: theme.colors.primary, strokeWidth: '1px' }}
+                  x1={tick + x.bandwidth() / 2}
+                  y1={0}
+                  x2={tick + x.bandwidth() / 2}
+                  y2={4}
+                />
+                <text
+                  key={`xaxis:label:${index}`}
+                  style={{ fill: theme.colors.primary }}
+                  x={tick}
+                  y={20}
+                  fontFamily="Arial"
+                  fontSize="10"
+                >
+                  {x.domain()[index]}
+                </text>
+              </g>
+            )
+          }}
+        </Axis>
       </g>
-      <XAxis
-        transform={`translate(${0},${height})`}
-        step={x.bandwidth()}
-        domain={months}
-        range={[margin.left, width]}
-      />
-      <text
-        transform={`translate(${50}, ${height /2}) rotate(-90)`}
-        style={{ fill: '#2e2e40' }}
-        x={0}
-        y={0}
-        fontFamily="Arial"
-        fontSize="20"
-      >
-        Emails
-      </text>
-      <text
-        transform={`translate(${width / 2}, ${450}) rotate(0)`}
-        style={{ fill: '#2e2e40' }}
-        x={0}
-        y={0}
-        fontFamily="Arial"
-        fontSize="20"
-      >
-        Months
-      </text>
     </svg>
   )
 }
 
-BarChart.propTypes = {
+Chart.propTypes = {
   height: number,
   width: number,
   title: string,
   data: arrayOf(object),
-  colors: arrayOf(object),
+  colors: arrayOf(string),
+  keys: arrayOf(string),
+}
+
+export function BarChart() {
+  const months = {
+    January: 0,
+    February: 1,
+    March: 2,
+    April: 3,
+    May: 4,
+    June: 5,
+    July: 6,
+    August: 7,
+    September: 8,
+    October: 9,
+    November: 10,
+    December: 11,
+  }
+
+  const dmarc = chartdata
+    // sort by date: oldest to newest
+    .sort((a, b) => {
+      return (
+        new Date(a.year, months[a.month], 0) -
+        new Date(b.year, months[b.month], 0)
+      )
+    })
+    .map((d) => {
+      return {
+        month: `${d.month.slice(0, 3)}, ${d.year}`,
+        ...d.categoryTotals,
+      }
+    })
+
+  return (
+    <Chart
+      data={dmarc}
+      width={900}
+      height={350}
+      title="Chart showing DMARC pass/fail summary"
+      colors={[
+        theme.colors.primary,
+        '#4F4F5E',
+        '#70707C',
+        '#92929B',
+        '#B3B3B9',
+      ]}
+      keys={['fullPass', 'passDkimOnly', 'passSpfOnly', 'fail']}
+    />
+  )
 }

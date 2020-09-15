@@ -1,7 +1,7 @@
 import React from 'react'
 import { object, arrayOf, number, string, func } from 'prop-types'
 import { Box } from '@chakra-ui/core'
-import { scaleOrdinal } from 'd3'
+import { scaleOrdinal } from 'd3-scale'
 import { useArcs } from './useArcs'
 import { ZigZag, CrossHatch, Dots, Stripes } from './patterns'
 
