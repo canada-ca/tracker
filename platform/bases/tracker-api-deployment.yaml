@@ -166,6 +166,16 @@ spec:
               key: DB_HOST
         - name: DB_PORT
           value: "5432"
+        - name: DMARC_REPORT_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DMARC_REPORT_API_URL
+        - name: DMARC_REPORT_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: api
+              key: DMARC_REPORT_API_TOKEN
         resources:
           limits:
             cpu: 300m

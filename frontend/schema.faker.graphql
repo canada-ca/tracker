@@ -77,7 +77,7 @@ type CategorizedSummary {
   """
   List of SummaryCategory objects with data for different computed categories.
   """
-  categories: [SummaryCategory] @listLength(min: 2, max: 2)
+  categories: [SummaryCategory] @listLength(min: 2, max: 3)
 
   """
   Total domains that were checked under this summary.
@@ -98,6 +98,16 @@ type CategoryTotals {
   Amount of messages that passed some checks
   """
   partialPass: Int
+
+  """
+  Amount of messages that passed SPF and failed DKIM
+  """
+  passSpfOnly: Int
+
+  """
+  Amount of messages that pass DKIM and failed SPF
+  """
+  passDkimOnly: Int
 
   """
   Amount of messages that failed all checks
@@ -483,6 +493,86 @@ input DmarcReportSummaryListInput {
   The slugified version of the domain you wish to retrieve data for.
   """
   domainSlug: Slug!
+}
+
+"""
+A query object used to grab the data to create dmarc by domain table
+"""
+type DmarcReportSummaryTable {
+  """
+  The month that the data is related to.
+  """
+  month: PeriodEnums
+
+  """
+  The year that the data is related to.
+  """
+  year: Year! @examples(values: [2019, 2020])
+
+  domains: [DmarcReportSummaryTableObject] @listLength(min: 10, max: 20)
+}
+
+type DmarcReportSummaryTableObject {
+  """
+  Domain name of data
+  """
+  domain: URL
+    @examples(
+      values: [
+        "javascript:alert('XSS')"
+        "javascript:eval('aler'+(!![]+[])[+[]])('xss')"
+        "rcmp-grc.gc.ca"
+        "tbs-sct.gc.ca"
+        "canada.ca"
+        "cra-arc.gc.ca"
+        "pm.gc.ca"
+        "cse-cst.gc.ca"
+        "forces.gc.ca"
+        "jAva&Tab;script:alert('XSS')"
+        "cra.arc.gc.ca"
+        "cra-arc.gc.ca"
+        "cse-cst.gc.ca"
+        "cyber.gc.ca"
+        "dfait-maeci.gc.ca"
+        "dfo-mpo.gc.ca"
+        "ec.gc.ca"
+        "forces.gc.ca"
+        "gccollab.ca"
+        "gccollaboration.ca"
+        "goc-gdc.ca"
+        "hc-sc.gc.ca"
+      ]
+    )
+
+  """
+  Total number of messages recieved for domain
+  """
+  totalMessages: Int
+    @fake(type: number, options: { minNumber: 100, maxNumber: 10000 })
+
+  """
+  Percentage of messages that passed both DKIM and SPF
+  """
+  fullPassPercentage: Int
+    @fake(type: number, options: { minNumber: 0, maxNumber: 100 })
+
+  """
+  Percentage of messages that passed SPF but failed DKIM
+  """
+  passSpfOnlyPercentage: Int
+    @fake(type: number, options: { minNumber: 0, maxNumber: 100 })
+
+  """
+  Percentage of messages that passed DKIM but failed SPF
+  """
+  passDkimOnlyPercentage: Int
+    @fake(type: number, options: { minNumber: 0, maxNumber: 100 })
+
+  """
+  Percentage of messages that failed both DKIM and SPF
+  """
+  failPercentage: Int
+    @fake(type: number, options: { minNumber: 0, maxNumber: 100 })
 }
 
 type Domain implements Node {
@@ -1337,7 +1427,7 @@ type Query {
     The slugified version of the domain you wish to retrieve data for.
     """
     domainSlug: Slug!
-  ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
+  ): [DmarcReportSummaryList] @listLength(min: 14, max: 14)
 
   """
   A query object used to grab the data to create dmarc report bar graph.
@@ -1348,6 +1438,21 @@ type Query {
     """
     domainSlug: Slug!
   ): [DmarcReportSummaryList] @listLength(min: 13, max: 13)
+
+  """
+  A query object used to grab the data to create dmarc by domain table
+  """
+  dmarcReportSummaryTable(
+    """
+    The period for data you wish to recieve
+    """
+    period: PeriodEnums!
+
+    """
+    The year for data you wish to recieve
+    """
+    year: Year!
+  ): DmarcReportSummaryTable
 
   """
   Query used for gathering data for dmarc report detail tables.
@@ -1867,7 +1972,7 @@ type SummaryCategory {
   """
   Category of computed summary which the other fields relate to.
   """
-  name: String @examples(values: ["full-pass", "full-fail"])
+  name: String @examples(values: ["full-pass", "full-fail", "partial-pass"])
 
   """
   Total count of domains that fall into this category.

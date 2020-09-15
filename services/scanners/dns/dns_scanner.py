@@ -108,7 +108,7 @@ async def scan_dkim(domain, selectors):
         record[selector] = {}
         try:
             # Retrieve public key from DNS
-            pk_txt = dnsplug.get_txt_dnspython(f"{selector}.{domain}")
+            pk_txt = dnsplug.get_txt_dnspython(f"{selector}._domainkey.{domain}")
             logging.info("Public key (TXT) retrieved from DNS")
 
             pk, keysize, ktag = load_pk(f"{selector}.{domain}", pk_txt)
@@ -144,6 +144,28 @@ async def scan_dkim(domain, selectors):
     logging.info("DKIM scan completed")
 
     return record
+
+
+def process_results(results):
+    logging.info("Processing DNS scan results...")
+
+    if results is not None and results != {}:
+        report = {
+            "dmarc": results["dmarc"],
+            "spf": results["spf"],
+            "mx": results["mx"],
+            "dkim": results["dkim"],
+        }
+    else:
+        report = {
+            "dmarc": {"missing": True},
+            "spf": {"missing": True},
+            "mx": {"missing": True},
+            "dkim": {"missing": True},
+        }
+
+    logging.info(f"Processed DNS scan results: {str(report)}")
+    return report
 
 
 def Server(server_client=requests):
@@ -188,8 +210,15 @@ def Server(server_client=requests):
             scan_results["dkim"] = dkim_results
 
             if scan_results["dmarc"] != {"missing": True}:
+
+                processed_results = process_results(scan_results)
+
                 outbound_payload = json.dumps(
-                    {"results": scan_results, "scan_type": "dns", "scan_id": scan_id}
+                    {
+                        "results": processed_results,
+                        "scan_type": "dns",
+                        "scan_id": scan_id,
+                    }
                 )
                 logging.info(f"(ID={scan_id}) Scan results: {str(scan_results)}")
             else:

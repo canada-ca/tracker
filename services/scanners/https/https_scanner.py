@@ -16,6 +16,8 @@ from starlette.responses import PlainTextResponse, JSONResponse
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+MIN_HSTS_AGE = 31536000  # one year
+
 QUEUE_URL = "http://result-queue.scanners.svc.cluster.local/https"
 
 
@@ -34,6 +36,114 @@ def scan_https(domain):
     except Exception as e:
         logging.error("An error occurred while scanning domain - %s", str(e))
         return None
+
+
+def process_results(results):
+    logging.info("Processing HTTPS scan results...")
+    report = {}
+
+    if results is None or results == {}:
+        report = {"missing": True}
+
+    else:
+        # Assumes that HTTPS would be technically present, with or without issues
+        if results["Downgrades HTTPS"]:
+            https = "Downgrades HTTPS"  # No
+        else:
+            if results["Valid HTTPS"]:
+                https = "Valid HTTPS"  # Yes
+            elif results["HTTPS Bad Chain"] and not results["HTTPS Bad Hostname"]:
+                https = "Bad Chain"  # Yes
+            else:
+                https = "Bad Hostname"  # No
+
+        report["implementation"] = https
+
+        # Is HTTPS enforced?
+
+        if https == ("Downgrades HTTPS" or "Bad Hostname"):
+            behavior = "Not Enforced"  # N/A
+
+        else:
+
+            # "Strict" means HTTP immediately redirects to HTTPS,
+            # *and* that HTTP eventually redirects to HTTPS.
+            #
+            # Since a pure redirector domain can't "default" to HTTPS
+            # for itself, we'll say it "Enforces HTTPS" if it immediately
+            # redirects to an HTTPS URL.
+            if results["Strictly Forces HTTPS"] and (
+                results["Defaults to HTTPS"] or results["Redirect"]
+            ):
+                behavior = "Strict"  # Yes (Strict)
+
+            # "Moderate" means HTTP eventually redirects to HTTPS.
+            elif not results["Strictly Forces HTTPS"] and results["Defaults to HTTPS"]:
+                behavior = "Moderate"  # Yes
+
+            # Either both are False, or just 'Strict Force' is True,
+            # which doesn't matter on its own.
+            # A "present" is better than a downgrade.
+            else:
+                behavior = "Weak"  # Present (considered 'No')
+
+        report["enforced"] = behavior
+
+        ###
+        # Characterize the presence and completeness of HSTS.
+
+        if results["HSTS Max Age"]:
+            hsts_age = int(results["HSTS Max Age"])
+        else:
+            hsts_age = None
+
+        # Otherwise, without HTTPS there can be no HSTS for the domain directly.
+        if https == "Downgrades HTTPS" or https == "Bad Hostname":
+            hsts = "No HSTS"  # N/A (considered 'No')
+
+        else:
+
+            # HSTS is present for the canonical endpoint.
+            if results["HSTS"] and hsts_age is not None:
+
+                # Say No for too-short max-age's, and note in the extended details.
+                if hsts_age >= MIN_HSTS_AGE:
+                    hsts = "HSTS Fully Implemented"  # Yes, directly
+                else:
+                    hsts = "HSTS Max Age Too Short"  # No
+            else:
+                hsts = "No HSTS"  # No
+
+        # Separate preload status from HSTS status:
+        #
+        # * Domains can be preloaded through manual overrides.
+        # * Confusing to mix an endpoint-level decision with a domain-level decision.
+        if results["HSTS Preloaded"]:
+            preloaded = "HSTS Preloaded"  # Yes
+        elif results["HSTS Preload Ready"]:
+            preloaded = "HSTS Preload Ready"  # Ready for submission
+        else:
+            preloaded = "HSTS Not Preloaded"  # No
+
+        # Certificate info
+        if results["HTTPS Expired Cert"]:
+            expired = True
+        else:
+            expired = False
+
+        if results["HTTPS Self Signed Cert"]:
+            self_signed = True
+        else:
+            self_signed = False
+
+        report["hsts"] = hsts
+        report["hsts_age"] = hsts_age
+        report["preload_status"] = preloaded
+        report["expired_cert"] = expired
+        report["self_signed_cert"] = self_signed
+
+    logging.info(f"Processed HTTPS scan results: {str(report)}")
+    return report
 
 
 def Server(server_client=requests):
@@ -66,8 +176,15 @@ def Server(server_client=requests):
             scan_results = scan_https(domain)
 
             if scan_results is not None:
+
+                processed_results = process_results(scan_results)
+
                 outbound_payload = json.dumps(
-                    {"results": scan_results, "scan_type": "https", "scan_id": scan_id}
+                    {
+                        "results": processed_results,
+                        "scan_type": "https",
+                        "scan_id": scan_id,
+                    }
                 )
                 logging.info(f"(ID={scan_id}) Scan results: {str(scan_results)}")
             else:

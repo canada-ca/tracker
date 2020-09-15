@@ -6,6 +6,7 @@ api/schema.json
 api/api.current.graphql
 
 **/node_modules
+**/coverage
 
 *.log
 
@@ -36,6 +37,7 @@ scanner/logs
 
 # IDE Files
 .idea/
+.vscode/
 
 # jupyter File
 api/.ipynb

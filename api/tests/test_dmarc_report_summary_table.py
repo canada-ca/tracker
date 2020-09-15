@@ -79,7 +79,7 @@ def test_valid_get_dmarc_report_summary_table_query_as_super_admin(
         query="""
         query {
             dmarcReportSummaryTable (
-                period: AUGUST
+                period: MAY
                 year: "2020"
             ) {
                 month
@@ -170,7 +170,7 @@ def test_valid_get_dmarc_report_summary_table_query_as_org_admin(save, mocker, c
         query="""
         query {
             dmarcReportSummaryTable (
-                period: AUGUST
+                period: MAY
                 year: "2020"
             ) {
                 month
@@ -253,7 +253,7 @@ def test_valid_get_dmarc_report_summary_table_query_as_user_write(save, mocker, 
         query="""
         query {
             dmarcReportSummaryTable (
-                period: AUGUST
+                period: MAY
                 year: "2020"
             ) {
                 month
@@ -336,7 +336,7 @@ def test_valid_get_dmarc_report_summary_table_query_as_user_read(save, mocker, c
         query="""
         query {
             dmarcReportSummaryTable (
-                period: AUGUST
+                period: MAY
                 year: "2020"
             ) {
                 month
@@ -418,7 +418,7 @@ def test_dmarc_report_summary_to_ensure_error_occurs_when_no_domains_exist(
         query="""
         query {
             dmarcReportSummaryTable (
-                period: AUGUST
+                period: MAY
                 year: "2020"
             ) {
                 month

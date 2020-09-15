@@ -86,54 +86,22 @@ data:
           severity: Info
         annotations:
           summary: SSL Scanner is not running
-    - name: DMARC Alert
+    - name: DNS Alert
       rules:
-      - alert: DMARCScannerHighTraffic
-        expr: queue_requests_per_second{serving_knative_dev_service="dmarc-scanner"} > 10
+      - alert: DNSScannerHighTraffic
+        expr: queue_requests_per_second{serving_knative_dev_service="dns-scanner"} > 10
         for: 20s
         labels:
           severity: Medium
         annotations:
-          summary: DMARC Scanner experiencing high volume of traffic
-      - alert: DMARCScannerDown
-        expr: up{serving_knative_dev_service="dmarc-scanner"} == 0
+          summary: DNS Scanner experiencing high volume of traffic
+      - alert: DNSScannerDown
+        expr: up{serving_knative_dev_service="dns-scanner"} == 0
         for: 5s
         labels:
           severity: Info
         annotations:
-          summary: DMARC Scanner is not running
-    - name: DKIM Alert
-      rules:
-      - alert: DKIMScannerHighTraffic
-        expr: queue_requests_per_second{serving_knative_dev_service="dkim-scanner"} > 10
-        for: 20s
-        labels:
-          severity: Medium
-        annotations:
-          summary: DKIM Scanner experiencing high volume of traffic
-      - alert: DKIMScannerDown
-        expr: up{serving_knative_dev_service="dkim-scanner"} == 0
-        for: 5s
-        labels:
-          severity: Info
-        annotations:
-          summary: DKIM Scanner is not running
-    - name: Dispatcher Alert
-      rules:
-      - alert: DispatcherHighTraffic
-        expr: queue_requests_per_second{serving_knative_dev_service="dispatcher"} > 10
-        for: 20s
-        labels:
-          severity: Medium
-        annotations:
-          summary: Dispatcher experiencing high volume of traffic
-      - alert: DispatcherDown
-        expr: up{serving_knative_dev_service="dispatcher"} == 0
-        for: 5s
-        labels:
-          severity: Info
-        annotations:
-          summary: Dispatcher is not running
+          summary: DNS Scanner is not running
     - name: Results Alert
       rules:
       - alert: ResultProcessorHighTraffic
@@ -150,6 +118,38 @@ data:
           severity: Info
         annotations:
           summary: Result Processor is not running
+    - name: Scan Queue Alert
+      rules:
+      - alert: ScanQueueHighTraffic
+        expr: queue_requests_per_second{serving_knative_dev_service="scan-queue"} > 10
+        for: 20s
+        labels:
+          severity: Medium
+        annotations:
+          summary: Scan Queue experiencing high volume of traffic
+      - alert: ScanQueueDown
+        expr: up{serving_knative_dev_service="scan-queue"} == 0
+        for: 5s
+        labels:
+          severity: Info
+        annotations:
+          summary: Scan Queue is not running
+    - name: Result Queue Alert
+      rules:
+      - alert: ResultQueueHighTraffic
+        expr: queue_requests_per_second{serving_knative_dev_service="result-queue"} > 10
+        for: 20s
+        labels:
+          severity: Medium
+        annotations:
+          summary: Result Queue experiencing high volume of traffic
+      - alert: ResultQueueDown
+        expr: up{serving_knative_dev_service="result-queue"} == 0
+        for: 5s
+        labels:
+          severity: Info
+        annotations:
+          summary: Result Queue is not running
   prometheus.yml: |-
     global:
       scrape_interval: 5s
@@ -170,8 +170,8 @@ data:
         - role: pod
 
         relabel_configs:
-        - source_labels: [__meta_kubernetes_pod_label_app]
-          regex: scanners
+        - source_labels: [__meta_kubernetes_namespace]
+          regex: scanners|api
           action: keep
         - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
           action: keep

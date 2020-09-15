@@ -1,0 +1,7 @@
+node_modules
+README.md
+cloudbuild.yaml
+coverage
+**/*.test.js
+**/*/.env
+.git

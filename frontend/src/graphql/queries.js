@@ -260,6 +260,7 @@ export const REVERSE_PAGINATED_DOMAINS = gql`
       }
       pageInfo {
         hasNextPage
+        hasNextPage
         endCursor
         hasPreviousPage
         startCursor
@@ -336,7 +337,8 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -351,7 +353,8 @@ export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -370,7 +373,8 @@ export const DMARC_REPORT_SUMMARY = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -393,7 +397,8 @@ export const DEMO_DMARC_REPORT_SUMMARY = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -554,6 +559,23 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
           dkimDomains
           dkimSelectors
         }
+      }
+    }
+  }
+`
+
+export const DMARC_REPORT_SUMMARY_TABLE = gql`
+  query DmarcReportSummaryTable($period: PeriodEnums!, $year: Year!) {
+    dmarcReportSummaryTable(period: $period, year: $year) {
+      month
+      year
+      domains {
+        domain
+        fullPassPercentage
+        passSpfOnlyPercentage
+        passDkimOnlyPercentage
+        failPercentage
+        totalMessages
       }
     }
   }

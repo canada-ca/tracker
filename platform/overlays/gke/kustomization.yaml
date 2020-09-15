@@ -9,15 +9,16 @@ resources:
 - knative/config/config.yaml
 - knative/config/autoscan.yaml
 - knative/monitoring/prometheus.yaml
+- knative/monitoring/loki-stack.yaml
 - knative/monitoring/grafana/grafana.yaml
 - http-01-challenge-destination-rule.yaml
 - postgres-endpoint.yaml
 - postgres-service.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-10bea40
+  newTag: master-48bd61d
 - name: gcr.io/track-compliance/frontend
-  newTag: master-15d0b87
+  newTag: master-320b5fd
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml

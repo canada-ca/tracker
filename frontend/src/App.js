@@ -26,6 +26,7 @@ const OrganizationDetails = lazy(() => import('./OrganizationDetails'))
 const AdminPage = lazy(() => import('./AdminPage'))
 const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'))
+const DmarcByDomainPage = lazy(() => import('./DmarcByDomainPage'))
 const DmarcGuidancePage = lazy(() => import('./DmarcGuidancePage'))
 
 export default function App() {
@@ -51,22 +52,31 @@ export default function App() {
           <Link to="/">
             <Trans>Home</Trans>
           </Link>
-          <Link to="/dmarc-report">
-            <Trans>Report</Trans>
+
+          <Link to="/dmarc-summaries">
+            <Trans>DMARC Report</Trans>
           </Link>
+
+          <Link to="/domains">
+            <Trans>Domains</Trans>
+          </Link>
+
           <Link to="/organizations">
             <Trans>Organizations</Trans>
           </Link>
+
           {isLoggedIn() && (
             <Link to="/user">
               <Trans>User Profile</Trans>
             </Link>
           )}
+
           {isLoggedIn() && (
             <Link to="/admin">
               <Trans>Admin Profile</Trans>
             </Link>
           )}
+
           {isLoggedIn() ? (
             <Link
               to="/"
@@ -153,6 +163,42 @@ export default function App() {
               <RouteIf
                 condition={isLoggedIn()}
                 alternate="/sign-in"
+                path="/domains"
+                render={({ match: { url } }) => (
+                  <>
+                    <Route path={`${url}`} component={DomainsPage} exact />
+                    <Route
+                      path={`${url}/:domainSlug`}
+                      component={DmarcGuidancePage}
+                      exact
+                    />
+                    <Route
+                      path={`${url}/:domainSlug/dmarc-report/:period?/:year?`}
+                      component={DmarcReportPage}
+                      exact
+                    />
+                  </>
+                )}
+              />
+
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
+                path="/dmarc-summaries"
+                render={({ match: { url } }) => (
+                  <>
+                    <Route
+                      path={`${url}`}
+                      component={DmarcByDomainPage}
+                      exact
+                    />
+                  </>
+                )}
+              />
+
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
                 path="/user"
               >
                 <UserPage userName={currentUser.userName} />
@@ -166,9 +212,13 @@ export default function App() {
                 <QRcodePage userName={currentUser.userName} />
               </RouteIf>
 
-              <Route path="/dmarc-report">
+              <RouteIf
+                condition={isLoggedIn()}
+                alternate="/sign-in"
+                path="/dmarc-report/:period?/:year?"
+              >
                 <DmarcReportPage />
-              </Route>
+              </RouteIf>
 
               <Route component={PageNotFound} />
             </Switch>

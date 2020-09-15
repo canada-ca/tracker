@@ -1,36 +1,15 @@
 export const rawSummaryCardData = {
-  categories: [
-    {
-      name: 'fullPass',
-      value: 33,
-      percentage: 33,
+  dmarcReportSummary: {
+    month: 'LAST30DAYS',
+    year: "2020",
+    categoryTotals: {
+      fullPass: 60298,
+      passSpfOnly: 55644,
+      passDkimOnly: 74128,
+      fail: 36592,
+      total: 86881,
+      __typename: 'CategoryTotals',
     },
-    {
-      name: 'partialPass',
-      value: 33,
-      percentage: 33,
-    },
-    {
-      name: 'fail',
-      value: 33,
-      percentage: 33,
-    },
-  ],
-  total: 100,
-}
-
-export const formattedSummaryCardData = { ...rawSummaryCardData }
-formattedSummaryCardData.strengths = {
-  strong: {
-    types: ['fullPass'],
-    name: 'Pass',
-  },
-  moderate: {
-    types: ['partialPass'],
-    name: 'Partial Pass',
-  },
-  weak: {
-    types: ['fail'],
-    name: 'Fail',
+    __typename: 'DmarcReportSummary',
   },
 }
