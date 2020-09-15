@@ -202,7 +202,7 @@ describe('<Organisations />', () => {
         initialIndex: 0,
       })
 
-      const { getByText } = render(
+      const { getAllByText } = render(
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
@@ -223,10 +223,9 @@ describe('<Organisations />', () => {
         </UserStateProvider>,
       )
 
-      const link = await waitFor(() => getByText(/organization one/i))
-      await waitFor(() => {
-        fireEvent.click(link)
-      })
+      const orgCards = await waitFor(() => getAllByText(/organization one/i))
+      const leftClick = { button: 0 }
+      fireEvent.click(orgCards[0], leftClick)
 
       await waitFor(() =>
         expect(history.location.pathname).toEqual(

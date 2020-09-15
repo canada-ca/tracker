@@ -4,7 +4,12 @@ import { MockedProvider } from '@apollo/client/testing'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { UserStateProvider } from '../UserState'
-import { ORGANIZATION_BY_SLUG } from '../graphql/queries'
+import {
+  ORG_DETAILS_PAGE,
+  PAGINATED_DOMAINS,
+  REVERSE_PAGINATED_DOMAINS,
+  WEB_AND_EMAIL_SUMMARIES,
+} from '../graphql/queries'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import OrganizationDetails from '../OrganizationDetails'
@@ -39,7 +44,7 @@ describe('<OrganizationDetails />', () => {
       const mocks = [
         {
           request: {
-            query: ORGANIZATION_BY_SLUG,
+            query: ORG_DETAILS_PAGE,
             variables: { slug: 'tbs-sct-gc-ca' },
           },
           result: {
@@ -60,6 +65,111 @@ describe('<OrganizationDetails />', () => {
                     },
                   ],
                 },
+              },
+              userList: {
+                pageInfo: {
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                },
+                edges: [
+                  {
+                    node: {
+                      id: 'VXNlckxpc3RJdGVtOig0LCAzKQ==',
+                      userName: 'testuser@testemail.gc.ca',
+                      role: 'ADMIN',
+                      tfa: false,
+                      displayName: 'testuser',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+        {
+          request: {
+            query: PAGINATED_DOMAINS,
+            variables: { first: 10 },
+          },
+          result: {
+            data: {
+              pagination: {
+                edges: [
+                  {
+                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    node: {
+                      id: 'T3JnYW5pemF0aW9uczoyCg==',
+                      url: 'tbs-sct.gc.ca',
+                      slug: 'tbs-sct-gc-ca',
+                      lastRan: 'somedate',
+                      __typename: 'Domains',
+                    },
+                    __typename: 'DomainsEdge',
+                  },
+                  {
+                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                    node: {
+                      id: 'T3JnYW5pemF0aW9uczoxCg==',
+                      url: 'rcmp-grc.gc.ca',
+                      slug: 'rcmp-grc-gc-ca',
+                      lastRan: 'organization-two',
+                      __typename: 'Domains',
+                    },
+                    __typename: 'DomainsEdge',
+                  },
+                ],
+                pageInfo: {
+                  hasNextPage: true,
+                  endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  hasPreviousPage: false,
+                  startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+                  __typename: 'PageInfo',
+                },
+                __typename: 'DomainsConnection',
+              },
+            },
+          },
+        },
+        {
+          request: {
+            query: WEB_AND_EMAIL_SUMMARIES,
+          },
+          result: {
+            data: {
+              webSummary: {
+                categories: [
+                  {
+                    name: 'full-pass',
+                    count: 7468,
+                    percentage: 56.6,
+                  },
+                  {
+                    name: 'full-fail',
+                    count: 5738,
+                    percentage: 43.4,
+                  },
+                ],
+                total: 13206,
+              },
+              emailSummary: {
+                categories: [
+                  {
+                    name: 'full-pass',
+                    count: 2091,
+                    percentage: 11.2,
+                  },
+                  {
+                    name: 'full-fail',
+                    count: 8604,
+                    percentage: 46.2,
+                  },
+                  {
+                    name: 'partial-pass',
+                    count: 7918,
+                    percentage: 42.5,
+                  },
+                ],
+                total: 18613,
               },
             },
           },

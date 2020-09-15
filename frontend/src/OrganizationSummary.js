@@ -22,7 +22,7 @@ export function OrganizationSummary() {
           <Text>7</Text>
         </Stack>
       </Box>
-      <SummaryGroup name="dashboard" />
+      <SummaryGroup />
       <Trans>*All data represented is mocked for demonstration purposes</Trans>
     </Layout>
   )

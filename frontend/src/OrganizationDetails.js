@@ -1,6 +1,6 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import {
   IconButton,
@@ -14,7 +14,6 @@ import {
   TabPanel,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
-import { useLingui } from '@lingui/react'
 import { useUserState } from './UserState'
 import { useParams, useHistory } from 'react-router-dom'
 import DomainsPage from './DomainsPage'
@@ -22,7 +21,6 @@ import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
 
 export default function OrganizationDetails() {
-  const { i18n } = useLingui()
   const { orgSlug } = useParams()
   const { currentUser } = useUserState()
   const toast = useToast()
@@ -47,7 +45,7 @@ export default function OrganizationDetails() {
   })
 
   let orgName = ''
-  if (data?.organization.domains.edges) {
+  if (data?.organization) {
     orgName = data.organization.name
   }
 

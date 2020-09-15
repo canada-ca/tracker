@@ -1,5 +1,4 @@
 import React from 'react'
-// import { Trans } from '@lingui/macro'
 import {
   Text,
   ListItem,
@@ -41,9 +40,8 @@ export function OrganizationCard({ name, slug, domainCount, ...rest }) {
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} mb={['2', '0']}>
           <Stack isInline align="center">
             <Text minW="10%" fontWeight="semibold">
-              <Trans>Services:</Trans>
+              <Trans>Services: {domainCount}</Trans>
             </Text>
-            <Text fontSize="lg">{domainCount}</Text>
           </Stack>
         </Box>
         <Divider orientation="vertical" />
