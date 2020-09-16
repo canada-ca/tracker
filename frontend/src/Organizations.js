@@ -45,7 +45,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
 
   return (
     <Layout>
-      <Heading as="h1" mb="4">
+      <Heading as="h1" mb="4" textAlign={['center', 'left']}>
         <Trans>Organizations</Trans>
       </Heading>
       <ListOf

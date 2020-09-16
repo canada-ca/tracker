@@ -62,7 +62,7 @@ export function DomainCard({ url, lastRan, ...rest }) {
         }}
         _hover={{ bg: 'gray.100' }}
         p="8"
-        as="button"
+        tabIndex={0}
       >
         <Box flexShrink="0" minW="12%">
           <Text fontWeight="semibold">

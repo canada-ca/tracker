@@ -32,7 +32,7 @@ export default function OrganizationDetails() {
         authorization: currentUser.jwt,
       },
     },
-    onError: error => {
+    onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({
         title: 'Error',
@@ -67,7 +67,7 @@ export default function OrganizationDetails() {
           fontSize="2xl"
           aria-label="back to organizations"
         />
-        <Heading as="h1">
+        <Heading as="h1" textAlign={['center', 'left']}>
           <Trans>{orgName}</Trans>
         </Heading>
       </Stack>
