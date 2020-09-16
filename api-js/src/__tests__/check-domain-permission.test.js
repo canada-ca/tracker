@@ -69,8 +69,8 @@ describe('given the check domain permission function', () => {
     await drop()
   })
 
-  describe('if the user belongs to an org which has a claim for a given organization', () => {
-    let user
+  describe('given a successful domain permission check', () => {
+    let user, permitted
     beforeEach(async () => {
       const userCursor = await query`
         FOR user IN users
@@ -79,59 +79,61 @@ describe('given the check domain permission function', () => {
       `
       user = await userCursor.next()
     })
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
+    describe('if the user belongs to an org which has a claim for a given organization', () => {
+      afterEach(async () => {
+        await query`
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+          RETURN true
+        `
+        await query`
+          FOR affiliation IN affiliations
+            REMOVE affiliation IN affiliations
+        `
+      })
+        describe('if the user has super-admin-level permissions', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'super_admin',
+            })
+          })
+          it('will return true', async () => {
+            permitted = await checkDomainPermission(user._id, domain._id, query)
+            expect(permitted).toEqual(true)
+          })
+        })
+        describe('if the user has admin-level permissions', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+          })
+          it('will return true', async () => {
+            permitted = await checkDomainPermission(user._id, domain._id, query)
+            expect(permitted).toEqual(true)
+          })
+        })
+        describe('if the user has user-level permissions', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('will return true', async () => {
+            permitted = await checkDomainPermission(user._id, domain._id, query)
+            expect(permitted).toEqual(true)
+          })
+        })
     })
-      describe('if the user has super-admin-level permissions', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'super_admin',
-          })
-        })
-        it('will return true', async () => {
-          const permitted = await checkDomainPermission(user._id, domain._id, query)
-          expect(permitted).toEqual(true)
-        })
-      })
-      describe('if the user has admin-level permissions', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        it('will return true', async () => {
-          const permitted = await checkDomainPermission(user._id, domain._id, query)
-          expect(permitted).toEqual(true)
-        })
-      })
-      describe('if the user has user-level permissions', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
-          })
-        })
-        it('will return true', async () => {
-          const permitted = await checkDomainPermission(user._id, domain._id, query)
-          expect(permitted).toEqual(true)
-        })
-      })
   })
 
-  describe('if the user does not belong to an org which has a claim for a given organization', () => {
+  describe('given an unsuccessful domain permission check', () => {
     let user
     beforeEach(async () => {
       const userCursor = await query`
@@ -141,9 +143,26 @@ describe('given the check domain permission function', () => {
       `
       user = await userCursor.next()
     })
-    it('will return false', async () => {
-      const permitted = await checkDomainPermission(user._id, domain._id, query)
-      expect(permitted).toEqual(false)
+    describe('if the user does not belong to an org which has a claim for a given organization', () => {
+      it('will return false', async () => {
+        permitted = await checkDomainPermission(user._id, domain._id, query)
+        expect(permitted).toEqual(false)
+      })
+    })
+    describe('if a database error is encountered during permission check', () => {
+      it('returns an appropriate error message', async () => {
+        mockQuery = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+        try {
+          await checkDomainPermission(user._id, domain._id, mockQuery)
+        } catch (err) {
+          expect(err).toEqual(new Error('Authentication error. Please sign in again.'))
+          expect(consoleOutput).toEqual([
+            `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Database error occurred.`,
+          ])
+        }
+      })
     })
   })
 })

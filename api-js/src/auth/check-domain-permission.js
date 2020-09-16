@@ -12,7 +12,7 @@ const checkDomainPermission = async (userId, domainId, query) => {
     `
   } catch (err) {
     console.error(
-      `Database error when retrieving affiliated organization claims for user with ID ${userId} and domain with ID ${domainId}: ${err}`,
+      `Error when retrieving affiliated organization claims for user with ID ${userId} and domain with ID ${domainId}: ${err}`,
     )
     throw new Error('Authentication error. Please sign in again.')
   }

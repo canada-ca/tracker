@@ -4,14 +4,15 @@ const { domainType } = require('../../types')
 
 const findDomainBySlug = {
   type: domainType,
-  description: 'Retrieve information relating to a specific domain by providing a slug.',
+  description: 'Retrieve a specific domain by providing a slug.',
   args: {
     urlSlug: {
       type: GraphQLNonNull(Slug),
-      description: 'The slugified domain for which you wish to retrieve data.',
+      description: 'The slugified name of the domain you wish to retrieve.',
     },
   },
   resolve: async (
+    _,
     args,
     {
       userKey,
@@ -30,24 +31,21 @@ const findDomainBySlug = {
     // Retrieve domain by slug
     const domain = await domainLoaderBySlug.load(urlSlug)
 
-    // Check user permission for domain access
-    const permitted = await checkDomainPermission(user._id, domain._id, query)
-
-    if ( !permitted ) {
-      console.warn(`User ${user._id} not permitted to access domain.`)
-      throw new Error(`User ${user._id} is not permitted to access specified domain.`)
-    }
-
-    if (domain == null) {
+    if (typeof domain === 'undefined') {
       console.warn(`Could not retrieve domain.`)
       throw new Error(`No domain with the provided slug could be found.`)
     }
 
-    if (typeof domain === 'undefined') {
-      console.warn('Undefined domain.')
-      throw new Error("Query returned domain with type 'undefined'.")
+    // Check user permission for domain access
+    const permitted = await checkDomainPermission(user._id, domain._id, query)
+
+    if ( !permitted ) {
+      console.warn(`User ${user._key} not permitted to access domain.`)
+      throw new Error(`User ${user._key} is not permitted to access specified domain.`)
     }
-    console.info(`User ${user._id} successfully retrieved domain ${domain._id}.`)
+
+    console.info(`User ${user._key} successfully retrieved domain ${domain._key}.`)
+    domain.id = domain._key
     return domain
   },
 }

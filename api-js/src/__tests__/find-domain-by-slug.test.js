@@ -110,7 +110,7 @@ describe('given findDomainBySlugQuery', () => {
       domain: 'test.gc.ca',
       slug: 'test-gc-ca',
       lastRan: null,
-      selectors: ['selector1', 'selector2'],
+      selectors: ['selector1._domainkey', 'selector2._domainkey'],
     })
     await collections.claims.save({
       _to: domain._id,
@@ -131,8 +131,23 @@ describe('given findDomainBySlugQuery', () => {
           RETURN user
       `
       user = await userCursor.next()
+      await collections.affiliations.save({
+        _from: org._id,
+        _to: user._id,
+        permission: 'user',
+      })
     })
-
+    afterEach(async () => {
+      await query`
+        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+        RETURN true
+      `
+      await query`
+        FOR affiliation IN affiliations
+          REMOVE affiliation IN affiliations
+      `
+    })
     describe('authorized user queries domain by slug', () => {
       it('returns domain', async () => {
         const response = await graphql(
@@ -142,7 +157,11 @@ describe('given findDomainBySlugQuery', () => {
             findDomainBySlug (
               urlSlug: "test-gc-ca"
             ) {
-              domain
+              id,
+              domain,
+              slug,
+              lastRan,
+              selectors,
             }
           }
           `,
@@ -167,20 +186,17 @@ describe('given findDomainBySlugQuery', () => {
         const expectedResponse = {
           data: {
             findDomainBySlug: {
-              domain: {
-                id: toGlobalId('domains', domain._id),
-                domain: 'test.gc.ca',
-                slug: 'test-gc-ca',
-                lastRan: null,
-                selectors: ['selector3', 'selector4'],
-              },
+              id: toGlobalId('domains', domain._key),
+              domain: 'test.gc.ca',
+              slug: 'test-gc-ca',
+              lastRan: null,
+              selectors: ['selector1._domainkey', 'selector2._domainkey'],
             },
           },
         }
-
         expect(response).toEqual(expectedResponse)
         expect(consoleOutput).toEqual([
-          `User ${user._id} successfully retrieved domain ${domain._id}.`,
+          `User ${user._key} successfully retrieved domain ${domain._key}.`,
         ])
       })
     })
@@ -197,7 +213,7 @@ describe('given findDomainBySlugQuery', () => {
         `
         user = await userCursor.next()
       })
-      it('returns an error message', async () => {
+      it('returns an appropriate error message', async () => {
         const response = await graphql(
           schema,
           `
@@ -205,7 +221,11 @@ describe('given findDomainBySlugQuery', () => {
             findDomainBySlug (
               urlSlug: "not-test-gc-ca"
             ) {
-              domain
+              id,
+              domain,
+              slug,
+              lastRan,
+              selectors,
             }
           }
           `,
@@ -282,7 +302,7 @@ describe('given findDomainBySlugQuery', () => {
         `
         user = await userCursor.next()
       })
-      it('returns an error message', async () => {
+      it('returns an appropriate error message', async () => {
         const response = await graphql(
           schema,
           `
@@ -290,7 +310,11 @@ describe('given findDomainBySlugQuery', () => {
             findDomainBySlug (
               urlSlug: "not-test-gc-ca"
             ) {
-              domain
+              id,
+              domain,
+              slug,
+              lastRan,
+              selectors,
             }
           }
           `,
@@ -313,12 +337,12 @@ describe('given findDomainBySlugQuery', () => {
         )
 
         const error = [
-          new GraphQLError(`User ${user._id} is not permitted to access specified domain.`),
+          new GraphQLError(`User ${user._key} is not permitted to access specified domain.`),
         ]
 
         expect(response.errors).toEqual(error)
         expect(consoleOutput).toEqual([
-          `User ${user._id} not permitted to access domain.`,
+          `User ${user._key} not permitted to access domain.`,
         ])
       })
     })
