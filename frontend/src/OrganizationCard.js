@@ -36,6 +36,7 @@ export function OrganizationCard({
         _hover={{ bg: 'gray.100' }}
         p="8"
         mx="auto"
+        as="button"
       >
         <Box flexShrink="0" minW="50%" mb={['2', '0']}>
           <Stack isInline align="center">

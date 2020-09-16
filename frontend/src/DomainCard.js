@@ -62,6 +62,7 @@ export function DomainCard({ url, lastRan, ...rest }) {
         }}
         _hover={{ bg: 'gray.100' }}
         p="8"
+        as="button"
       >
         <Box flexShrink="0" minW="12%">
           <Text fontWeight="semibold">
@@ -85,7 +86,7 @@ export function DomainCard({ url, lastRan, ...rest }) {
           )}
         </Box>
         <Divider orientation={['horizontal', 'vertical']} />
-        {webProtocols.map(protocol => {
+        {webProtocols.map((protocol) => {
           return (
             <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} key={protocol}>
               <Stack
@@ -100,7 +101,7 @@ export function DomainCard({ url, lastRan, ...rest }) {
             </Box>
           )
         })}
-        {emailProtocols.map(protocol => {
+        {emailProtocols.map((protocol) => {
           return (
             <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }} key={protocol}>
               <Stack
