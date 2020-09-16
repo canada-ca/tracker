@@ -55,7 +55,7 @@ export function Chart({
   colors,
   keys,
 }) {
-  const margin = { top: 0, right: 110, bottom: 50, left: 100 }
+  const margin = { top: 0, right: 0, bottom: 50, left: 100 }
 
   const width = w - margin.left - margin.right
   const height = h - margin.top - margin.bottom
@@ -86,23 +86,23 @@ export function Chart({
   return (
     <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
       <title>{title}</title>
-      <g transform={`translate(${w - margin.right}, ${height / 3})`}>
+      <g transform={`translate(${width /3.5}, ${height + 25})`}>
         {keys.map((key, index) => {
-          const y = 25 * (index + 1)
+          const x = 130 * (index + 1)
           return (
             <g key={`legend:${key}:${index}`}>
               <rect
                 style={{ fill: color(key), stroke: theme.colors.primary }}
-                y={y}
-                x={0}
+                y={0}
+                x={x}
                 width={20}
                 height={20}
               />
               <text
                 key={`xaxis:label:${index}`}
                 style={{ fill: theme.colors.primary }}
-                y={y + 14}
-                x={25}
+                y={15}
+                x={x + 25}
                 fontFamily="Arial"
                 fontSize="12"
               >
@@ -117,12 +117,12 @@ export function Chart({
           ticks={y.ticks().reverse()}
           label={() => (
             <text
-              transform={`translate(${-45}, ${height / 2}) rotate(-90)`}
+              transform={`translate(${-45}, ${height}) rotate(-90)`}
               style={{ fill: '#2e2e40' }}
               x={0}
               y={0}
               fontFamily="Arial"
-              fontSize="15"
+              fontSize="18"
             >
               Emails
             </text>
@@ -189,7 +189,7 @@ export function Chart({
           label={() => (
             <text
               style={{ fill: theme.colors.primary }}
-              x={width / 2}
+              x={0}
               y={40}
               fontFamily="Arial"
               fontSize="18"
