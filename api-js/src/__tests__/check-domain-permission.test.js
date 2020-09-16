@@ -91,45 +91,45 @@ describe('given the check domain permission function', () => {
             REMOVE affiliation IN affiliations
         `
       })
-        describe('if the user has super-admin-level permissions', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'super_admin',
-            })
-          })
-          it('will return true', async () => {
-            permitted = await checkDomainPermission(user._id, domain._id, query)
-            expect(permitted).toEqual(true)
+      describe('if the user has super-admin-level permissions', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'super_admin',
           })
         })
-        describe('if the user has admin-level permissions', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'admin',
-            })
-          })
-          it('will return true', async () => {
-            permitted = await checkDomainPermission(user._id, domain._id, query)
-            expect(permitted).toEqual(true)
+        it('will return true', async () => {
+          permitted = await checkDomainPermission(user._id, domain._id, query)
+          expect(permitted).toEqual(true)
+        })
+      })
+      describe('if the user has admin-level permissions', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
           })
         })
-        describe('if the user has user-level permissions', () => {
-          beforeEach(async () => {
-            await collections.affiliations.save({
-              _from: org._id,
-              _to: user._id,
-              permission: 'user',
-            })
-          })
-          it('will return true', async () => {
-            permitted = await checkDomainPermission(user._id, domain._id, query)
-            expect(permitted).toEqual(true)
+        it('will return true', async () => {
+          permitted = await checkDomainPermission(user._id, domain._id, query)
+          expect(permitted).toEqual(true)
+        })
+      })
+      describe('if the user has user-level permissions', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
           })
         })
+        it('will return true', async () => {
+          permitted = await checkDomainPermission(user._id, domain._id, query)
+          expect(permitted).toEqual(true)
+        })
+      })
     })
   })
 
@@ -144,12 +144,14 @@ describe('given the check domain permission function', () => {
       user = await userCursor.next()
     })
     describe('if the user does not belong to an org which has a claim for a given organization', () => {
+      let permitted
       it('will return false', async () => {
         permitted = await checkDomainPermission(user._id, domain._id, query)
         expect(permitted).toEqual(false)
       })
     })
     describe('if a database error is encountered during permission check', () => {
+      let mockQuery
       it('returns an appropriate error message', async () => {
         mockQuery = jest
           .fn()
@@ -157,7 +159,9 @@ describe('given the check domain permission function', () => {
         try {
           await checkDomainPermission(user._id, domain._id, mockQuery)
         } catch (err) {
-          expect(err).toEqual(new Error('Authentication error. Please sign in again.'))
+          expect(err).toEqual(
+            new Error('Authentication error. Please sign in again.'),
+          )
           expect(consoleOutput).toEqual([
             `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Database error occurred.`,
           ])

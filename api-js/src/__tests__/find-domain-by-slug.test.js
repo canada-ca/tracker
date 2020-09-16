@@ -153,17 +153,15 @@ describe('given findDomainBySlugQuery', () => {
         const response = await graphql(
           schema,
           `
-          query {
-            findDomainBySlug (
-              urlSlug: "test-gc-ca"
-            ) {
-              id,
-              domain,
-              slug,
-              lastRan,
-              selectors,
+            query {
+              findDomainBySlug(urlSlug: "test-gc-ca") {
+                id
+                domain
+                slug
+                lastRan
+                selectors
+              }
             }
-          }
           `,
           null,
           {
@@ -217,17 +215,15 @@ describe('given findDomainBySlugQuery', () => {
         const response = await graphql(
           schema,
           `
-          query {
-            findDomainBySlug (
-              urlSlug: "not-test-gc-ca"
-            ) {
-              id,
-              domain,
-              slug,
-              lastRan,
-              selectors,
+            query {
+              findDomainBySlug(urlSlug: "not-test-gc-ca") {
+                id
+                domain
+                slug
+                lastRan
+                selectors
+              }
             }
-          }
           `,
           null,
           {
@@ -252,9 +248,7 @@ describe('given findDomainBySlugQuery', () => {
         ]
 
         expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `Could not retrieve domain.`,
-        ])
+        expect(consoleOutput).toEqual([`Could not retrieve domain.`])
       })
     })
 
@@ -306,17 +300,15 @@ describe('given findDomainBySlugQuery', () => {
         const response = await graphql(
           schema,
           `
-          query {
-            findDomainBySlug (
-              urlSlug: "not-test-gc-ca"
-            ) {
-              id,
-              domain,
-              slug,
-              lastRan,
-              selectors,
+            query {
+              findDomainBySlug(urlSlug: "not-test-gc-ca") {
+                id
+                domain
+                slug
+                lastRan
+                selectors
+              }
             }
-          }
           `,
           null,
           {
@@ -337,7 +329,9 @@ describe('given findDomainBySlugQuery', () => {
         )
 
         const error = [
-          new GraphQLError(`User ${user._key} is not permitted to access specified domain.`),
+          new GraphQLError(
+            `User ${user._key} is not permitted to access specified domain.`,
+          ),
         ]
 
         expect(response.errors).toEqual(error)

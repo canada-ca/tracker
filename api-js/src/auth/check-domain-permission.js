@@ -1,5 +1,4 @@
 const checkDomainPermission = async (userId, domainId, query) => {
-
   let userAffiliatedClaims
 
   // Retrieve user affiliations and affiliated organizations owning provided domain
@@ -17,7 +16,7 @@ const checkDomainPermission = async (userId, domainId, query) => {
     throw new Error('Authentication error. Please sign in again.')
   }
   const claim = await userAffiliatedClaims.next()
-  return ( claim[0] !== undefined )
+  return claim[0] !== undefined
 }
 
 module.exports = {
