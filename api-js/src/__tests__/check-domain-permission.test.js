@@ -70,38 +70,33 @@ describe('given the check domain permission function', () => {
   })
 
   describe('if the user belongs to an org which has a claim for a given organization', () => {
-    let user, org
+    let user
     beforeEach(async () => {
       const userCursor = await query`
         FOR user IN users
           FILTER user.userName == "test.account@istio.actually.exists"
           RETURN user
       `
-      const orgCursor = await query`
-        FOR org IN organizations
-          FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-      `
       user = await userCursor.next()
-      org = await orgCursor.next()
+    })
+    afterEach(async () => {
+      await query`
+        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+        RETURN true
+      `
+      await query`
+        FOR affiliation IN affiliations
+          REMOVE affiliation IN affiliations
+      `
     })
       describe('if the user has super-admin-level permissions', () => {
-        let domain
         beforeEach(async () => {
-          await query`
-            INSERT {
-              _from: ${org._id},
-              _to: ${user._id},
-              permission: "super_admin"
-            } INTO affiliations
-          `
-
-          const domainCursor = await query`
-            FOR domain IN domains
-              FILTER domains.domain == "test.gc.ca'"
-              RETURN domain
-          `
-          domain = domainCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'super_admin',
+          })
         })
         it('will return true', async () => {
           const permitted = await checkDomainPermission(user._id, domain._id, query)
@@ -109,22 +104,12 @@ describe('given the check domain permission function', () => {
         })
       })
       describe('if the user has admin-level permissions', () => {
-        let domain
         beforeEach(async () => {
-          await query`
-            INSERT {
-              _from: ${org._id},
-              _to: ${user._id},
-              permission: "admin"
-            } INTO affiliations
-          `
-
-          const domainCursor = await query`
-            FOR domain IN domains
-              FILTER domains.domain == "test.gc.ca'"
-              RETURN domain
-          `
-          domain = domainCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
         })
         it('will return true', async () => {
           const permitted = await checkDomainPermission(user._id, domain._id, query)
@@ -132,50 +117,33 @@ describe('given the check domain permission function', () => {
         })
       })
       describe('if the user has user-level permissions', () => {
-        let domain
         beforeEach(async () => {
-          await query`
-            INSERT {
-              _from: ${org._id},
-              _to: ${user._id},
-              permission: "super_admin"
-            } INTO affiliations
-          `
-
-          const domainCursor = await query`
-            FOR domain IN domains
-              FILTER domains.domain == "test.gc.ca'"
-              RETURN domain
-          `
-          domain = domainCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
         })
         it('will return true', async () => {
           const permitted = await checkDomainPermission(user._id, domain._id, query)
           expect(permitted).toEqual(true)
         })
       })
-    })
+  })
 
-    describe('if the user does not belong to an org which has a claim for a given organization', () => {
-      let user, domain
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-
-        const domainCursor = await query`
-          FOR domain IN domains
-            FILTER domains.domain == "test.gc.ca'"
-            RETURN domain
-        `
-        domain = domainCursor.next()
-      })
-      it('will return false', async () => {
-        const permitted = await checkDomainPermission(user._id, domain._id, query)
-        expect(permitted).toEqual(false)
-      })
+  describe('if the user does not belong to an org which has a claim for a given organization', () => {
+    let user
+    beforeEach(async () => {
+      const userCursor = await query`
+        FOR user IN users
+          FILTER user.userName == "test.account@istio.actually.exists"
+          RETURN user
+      `
+      user = await userCursor.next()
     })
+    it('will return false', async () => {
+      const permitted = await checkDomainPermission(user._id, domain._id, query)
+      expect(permitted).toEqual(false)
+    })
+  })
 })

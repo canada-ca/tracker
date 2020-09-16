@@ -19,7 +19,7 @@ const {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findDomainBySlugQuery', () => {
-  let query, drop, truncate, migrate, schema, collections
+  let query, drop, truncate, migrate, schema, collections, domain, org
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -81,6 +81,41 @@ describe('given findDomainBySlugQuery', () => {
       },
     )
     consoleOutput = []
+
+    org = await collections.organizations.save({
+      orgDetails: {
+        en: {
+          slug: 'treasury-board-secretariat',
+          acronym: 'TBS',
+          name: 'Treasury Board of Canada Secretariat',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+        fr: {
+          slug: 'secretariat-conseil-tresor',
+          acronym: 'SCT',
+          name: 'Secrétariat du Conseil Trésor du Canada',
+          zone: 'FED',
+          sector: 'TBS',
+          country: 'Canada',
+          province: 'Ontario',
+          city: 'Ottawa',
+        },
+      },
+    })
+    domain = await collections.domains.save({
+      domain: 'test.gc.ca',
+      slug: 'test-gc-ca',
+      lastRan: null,
+      selectors: ['selector1', 'selector2'],
+    })
+    await collections.claims.save({
+      _to: domain._id,
+      _from: org._id,
+    })
   })
 
   afterEach(async () => {
@@ -88,43 +123,8 @@ describe('given findDomainBySlugQuery', () => {
   })
 
   describe('given successful domain retrieval', () => {
-    let org, user, domain
+    let user
     beforeEach(async () => {
-      org = await collections.organizations.save({
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-        },
-      })
-      domain = await collections.domains.save({
-        domain: 'test.gc.ca',
-        slug: 'test-gc-ca',
-        lastRan: null,
-        selectors: ['selector1', 'selector2'],
-      })
-      await collections.claims.save({
-        _to: domain._id,
-        _from: org._id,
-      })
-
       const userCursor = await query`
         FOR user IN users
           FILTER user.userName == "test.account@istio.actually.exists"
@@ -133,7 +133,7 @@ describe('given findDomainBySlugQuery', () => {
       user = await userCursor.next()
     })
 
-    describe('user queries domain by slug', () => {
+    describe('authorized user queries domain by slug', () => {
       it('returns domain', async () => {
         const response = await graphql(
           schema,
@@ -148,7 +148,8 @@ describe('given findDomainBySlugQuery', () => {
           `,
           null,
           {
-            userId: user._id,
+            userKey: user._key,
+            query: query,
             auth: {
               checkDomainPermission,
               userRequired,
@@ -186,44 +187,6 @@ describe('given findDomainBySlugQuery', () => {
   })
 
   describe('given unsuccessful domain retrieval', () => {
-    let org, domain
-    beforeEach(async () => {
-      org = await collections.organizations.save({
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-        },
-      })
-      domain = await collections.domains.save({
-        domain: 'test.gc.ca',
-        slug: 'test-gc-ca',
-        lastRan: null,
-        selectors: ['selector1', 'selector2'],
-      })
-      await collections.claims.save({
-        _to: domain._id,
-        _from: org._id,
-      })
-    })
-
     describe('domain cannot be found', () => {
       let user
       beforeEach(async () => {
@@ -248,7 +211,8 @@ describe('given findDomainBySlugQuery', () => {
           `,
           null,
           {
-            userId: user._id,
+            userKey: user._key,
+            query: query,
             auth: {
               checkDomainPermission,
               userRequired,
@@ -332,7 +296,8 @@ describe('given findDomainBySlugQuery', () => {
           `,
           null,
           {
-            userId: user._id,
+            userKey: user._key,
+            query: query,
             auth: {
               checkDomainPermission,
               userRequired,

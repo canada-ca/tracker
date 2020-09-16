@@ -5,8 +5,8 @@ const checkDomainPermission = async (userId, domainId, query) => {
   // Retrieve user affiliations and affiliated organizations owning provided domain
   try {
     userAffiliatedClaims = await query`
-      LET userAffiliations = (FOR v, e IN 1 INBOUND ${userId} affiliations RETURN e._from)
-      LET domainClaims = (FOR v, e IN 1..1 INBOUND ${domainId} claims RETURN e._from)
+      LET userAffiliations = (FOR v, e IN 1..1 ANY ${userId} affiliations RETURN e._from)
+      LET domainClaims = (FOR v, e IN 1..1 ANY ${domainId} claims RETURN e._from)
       LET affiliatedClaims = INTERSECTION(userAffiliations, domainClaims)
         RETURN affiliatedClaims
     `
@@ -16,12 +16,8 @@ const checkDomainPermission = async (userId, domainId, query) => {
     )
     throw new Error('Authentication error. Please sign in again.')
   }
-
-  if (userAffiliatedClaims.count() > 0) {
-    return true
-  } else {
-    return false
-  }
+  const claim = await userAffiliatedClaims.next()
+  return ( claim[0] !== undefined )
 }
 
 module.exports = {
