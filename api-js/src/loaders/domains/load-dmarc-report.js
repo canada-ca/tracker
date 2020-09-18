@@ -61,17 +61,11 @@ const generateDetailTableFields = (subField) => {
 
 const domainLoaderDmarcReport = async (info, domain) => {
   const detailTables = []
-  let startDateStr = ''
-  let endDateStr = ''
   let categoryTotalsStr = ''
   let detailTablesStr = ''
 
   info.fieldNodes[0].selectionSet.selections.forEach((field) => {
-    if (field.name.value === 'startDate') {
-      startDateStr = 'startDate'
-    } else if (field.name.value === 'endDate') {
-      endDateStr = 'endDate'
-    } else if (field.name.value === 'categoryTotals') {
+    if (field.name.value === 'categoryTotals') {
       const selectionArr = []
       if (field.selectionSet.selections.length !== 0) {
         field.selectionSet.selections.forEach((subField) => {
@@ -119,7 +113,7 @@ const domainLoaderDmarcReport = async (info, domain) => {
 
   const gqlQuery = `{\n${info.fieldName}(\n${queryArgs.join(
     '\n',
-  )}\n){\n${startDateStr}\n${endDateStr}\n${categoryTotalsStr}\n${detailTablesStr}\n}\n}`
+  )}\n){\n\n${categoryTotalsStr}\n${detailTablesStr}\n}\n}`
 
   let data
   try {
