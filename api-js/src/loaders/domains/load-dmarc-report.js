@@ -2,7 +2,7 @@ require('isomorphic-fetch')
 
 const { DMARC_REPORT_API_URL } = process.env
 
-const generateDetailTableQuery = (subField) => {
+const generateDetailTableFields = (subField) => {
   let paginationArgs = ''
   let cursor = ''
   let edgeSelection = ''
@@ -11,14 +11,10 @@ const generateDetailTableQuery = (subField) => {
   const paginationArr = []
   if (subField.arguments.length !== 0) {
     subField.arguments.forEach((arg) => {
-      if (arg.name.value === 'first')
-        paginationArr.push(`first: ${arg.value.value}`)
-      else if (arg.name.value === 'last')
-        paginationArr.push(`last: ${arg.value.value}`)
-      else if (arg.name.value === 'before')
-        paginationArr.push(`before: "${arg.value.value}"`)
-      else if (arg.name.value === 'after')
-        paginationArr.push(`after: "${arg.value.value}"`)
+      if (arg.name.value === 'first' || arg.name.value === 'last')
+        paginationArr.push(`${arg.name.value}: ${arg.value.value}`)
+      else if (arg.name.value === 'before' || arg.name.value === 'after')
+        paginationArr.push(`${arg.name.value}: "${arg.value.value}"`)
     })
     paginationArgs = paginationArr.join(' ')
   }
@@ -39,13 +35,9 @@ const generateDetailTableQuery = (subField) => {
         })
 
         if (cursor !== '' || nodeSelections.length > 0) {
-          edgeSelection = `
-          edges {
-            ${cursor}
-            node { 
-              ${nodeSelections.join(' ')} 
-            }
-          }`
+          edgeSelection = `edges {\n${cursor}\nnode{\n${nodeSelections.join(
+            ' ',
+          )}\n}\n}\n`
         }
       }
     } else if (subField.name.value === 'pageInfo') {
@@ -68,10 +60,10 @@ const generateDetailTableQuery = (subField) => {
 }
 
 const domainLoaderDmarcReport = async (info, domain) => {
+  const detailTables = []
   let startDateStr = ''
   let endDateStr = ''
   let categoryTotalsStr = ''
-  const detailTables = []
   let detailTablesStr = ''
 
   info.fieldNodes[0].selectionSet.selections.forEach((field) => {
@@ -83,58 +75,23 @@ const domainLoaderDmarcReport = async (info, domain) => {
       const selectionArr = []
       if (field.selectionSet.selections.length !== 0) {
         field.selectionSet.selections.forEach((subField) => {
-          if (subField.name.value === 'fail') selectionArr.push('fail')
-          else if (subField.name.value === 'fullPass')
-            selectionArr.push('fullPass')
-          else if (subField.name.value === 'passDkimOnly')
-            selectionArr.push('passDkimOnly')
-          else if (subField.name.value === 'passSpfOnly')
-            selectionArr.push('passSpfOnly')
+          selectionArr.push(subField.name.value)
         })
 
         const selections = selectionArr.join(' ')
         categoryTotalsStr = `categoryTotals {\n${selections}\n}\n`
       }
     } else if (field.name.value === 'detailTables') {
-      let dkimFailure = ''
-      let dmarcFailure = ''
-      let fullPass = ''
-      let spfFailure = ''
       if (field.selectionSet.selections.length !== 0) {
         field.selectionSet.selections.forEach((subField) => {
-          if (subField.name.value === 'dkimFailure') {
-            const {
-              paginationArgs,
-              pageInfoSelection,
-              edgeSelection,
-            } = generateDetailTableQuery(subField)
-            dkimFailure = `dkimFailure (\n${paginationArgs}\n){\n${pageInfoSelection}\n${edgeSelection}\n}\n`
-            detailTables.push(dkimFailure)
-          } else if (subField.name.value === 'dmarcFailure') {
-            const {
-              paginationArgs,
-              pageInfoSelection,
-              edgeSelection,
-            } = generateDetailTableQuery(subField)
-            dmarcFailure = `dmarcFailure (\n${paginationArgs}\n){\n${pageInfoSelection}\n${edgeSelection}\n}\n`
-            detailTables.push(dmarcFailure)
-          } else if (subField.name.value === 'fullPass') {
-            const {
-              paginationArgs,
-              pageInfoSelection,
-              edgeSelection,
-            } = generateDetailTableQuery(subField)
-            fullPass = `fullPass (\n${paginationArgs}\n){\n${pageInfoSelection}\n${edgeSelection}\n}\n`
-            detailTables.push(fullPass)
-          } else if (subField.name.value === 'spfFailure') {
-            const {
-              paginationArgs,
-              pageInfoSelection,
-              edgeSelection,
-            } = generateDetailTableQuery(subField)
-            spfFailure = `spfFailure (\n${paginationArgs}\n){\n${pageInfoSelection}\n${edgeSelection}\n}\n`
-            detailTables.push(spfFailure)
-          }
+          const {
+            paginationArgs,
+            pageInfoSelection,
+            edgeSelection,
+          } = generateDetailTableFields(subField)
+          detailTables.push(
+            `${subField.name.value} (\n${paginationArgs}\n){\n${pageInfoSelection}\n${edgeSelection}\n}\n`,
+          )
         })
       }
     }
@@ -172,8 +129,12 @@ const domainLoaderDmarcReport = async (info, domain) => {
       body: JSON.stringify({ query: gqlQuery }),
     }).then((response) => response.json())
   } catch (err) {
-    console.error(`Fetch error occurred well trying to retrieve ${info.fieldName} from the dmarc-report-api, error: ${err}`)
-    throw new Error(`Unable to retrieve ${info.fieldName} for domain: ${domain}.`)
+    console.error(
+      `Fetch error occurred well trying to retrieve ${info.fieldName} from the dmarc-report-api, error: ${err}`,
+    )
+    throw new Error(
+      `Unable to retrieve ${info.fieldName} for domain: ${domain}.`,
+    )
   }
 
   return data
