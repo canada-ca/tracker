@@ -63,9 +63,12 @@ const domainLoaderDmarcReport = async (info, domain) => {
   const detailTables = []
   let categoryTotalsStr = ''
   let detailTablesStr = ''
+  let startEndDateStr = ''
 
   info.fieldNodes[0].selectionSet.selections.forEach((field) => {
-    if (field.name.value === 'categoryTotals') {
+    if (field.name.value === "month" || field.name.value === 'year') {
+      startEndDateStr = 'startDate\nendDate'
+    } else if (field.name.value === 'categoryTotals') {
       const selectionArr = []
       if (field.selectionSet.selections.length !== 0) {
         field.selectionSet.selections.forEach((subField) => {
@@ -113,7 +116,7 @@ const domainLoaderDmarcReport = async (info, domain) => {
 
   const gqlQuery = `{\n${info.fieldName}(\n${queryArgs.join(
     '\n',
-  )}\n){\n\n${categoryTotalsStr}\n${detailTablesStr}\n}\n}`
+  )}\n){\n${startEndDateStr}\n${categoryTotalsStr}\n${detailTablesStr}\n}\n}`
 
   let data
   try {
