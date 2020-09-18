@@ -6,11 +6,11 @@ import sigFr from './images/goc-header-logo-fr.svg'
 import { Flex, Box, Image } from '@chakra-ui/core'
 import { Layout } from './Layout'
 
-export const TopBanner = props => {
+export const TopBanner = (props) => {
   const { i18n } = useLingui()
 
   return (
-    <Flex bg="primary"  borderBottom="3px solid" borderBottomColor="accent">
+    <Flex bg="primary" borderBottom="3px solid" borderBottomColor="accent">
       <Layout>
         <Flex
           maxW={{ sm: 540, md: 768, lg: 960, xl: 1200 }}
@@ -30,7 +30,7 @@ export const TopBanner = props => {
             />
           </Box>
           <Box py={4} pl={0} pr={4} ml="auto">
-            <LocaleSwitcher/>
+            <LocaleSwitcher />
           </Box>
         </Flex>
       </Layout>

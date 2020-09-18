@@ -1,25 +1,21 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Heading, Text } from '@chakra-ui/core'
+import { Text, Image, Stack } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
 import { WelcomeMessage } from './WelcomeMessage'
 
 export function LandingPage() {
   return (
     <Layout>
-      {/* <Heading as="h1" mb="2">
-        <Trans>Track Web Security Compliance</Trans>
-      </Heading>
-      <Text fontSize="lg">
-        <Trans>
-          Canadians rely on the Government of Canada to provide secure digital
-          services. A new policy notice guides government websites to adopt good
-          web security practices. Track how government sites are becoming more
-          secure.
-        </Trans>
-      </Text> */}
-      <WelcomeMessage />
+      <Stack align="center">
+        <Image
+          src="src/images/tracker-logo-transparent.png"
+          size={['100%', '0%']}
+        />
+        <WelcomeMessage />
+      </Stack>
+
       <SummaryGroup name="dashboard" />
       <Text>
         <Trans>

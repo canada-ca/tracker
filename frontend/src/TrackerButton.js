@@ -12,7 +12,7 @@ export function TrackerButton({ variant, children, ...props }) {
   if (variant === 'primary') {
     color = 'gray.50'
     bg = 'primary'
-    hoverColor = 'blue.600'
+    hoverColor = 'gray.600'
   } else if (variant === 'outline') {
     color = 'primary'
     bg = 'transparent'
