@@ -9,6 +9,9 @@
     "node": true,
     "jest/globals": true
   },
+  "globals": {
+    "fetch": true
+  },
   "rules": {
     "no-control-regex": "off",
     "semi": ["error", "never"],
