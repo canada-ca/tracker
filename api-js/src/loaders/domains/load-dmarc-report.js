@@ -66,7 +66,7 @@ const domainLoaderDmarcReport = async (info, domain) => {
   let startEndDateStr = ''
 
   info.fieldNodes[0].selectionSet.selections.forEach((field) => {
-    if (field.name.value === "month" || field.name.value === 'year') {
+    if (field.name.value === 'month' || field.name.value === 'year') {
       startEndDateStr = 'startDate\nendDate'
     } else if (field.name.value === 'categoryTotals') {
       const selectionArr = []
