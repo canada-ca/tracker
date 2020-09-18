@@ -5,6 +5,7 @@ const {
   GraphQLInt,
   GraphQLID,
   GraphQLList,
+  GraphQLNonNull,
 } = require('graphql')
 const {
   globalIdField,
@@ -12,10 +13,11 @@ const {
   connectionArgs,
 } = require('graphql-relay')
 const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
-const { RoleEnums, LanguageEnums } = require('../../enums')
-const { Acronym, Domain, Slug, Selectors } = require('../../scalars')
+const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
+const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
 const { emailScanConnection, webScanConnection } = require('./scan')
+const { periodType } = require('./dmarc-report')
 
 const domainType = new GraphQLObjectType({
   name: 'Domain',
@@ -24,24 +26,18 @@ const domainType = new GraphQLObjectType({
     domain: {
       type: Domain,
       description: 'Domain that scans will be ran on.',
-      resolve: async ({ domain }) => {
-        return domain
-      },
+      resolve: async ({ domain }) => domain,
     },
     lastRan: {
       type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
-      resolve: async ({ lastRan }) => {
-        return lastRan
-      },
+      resolve: async ({ lastRan }) => lastRan,
     },
     selectors: {
       type: new GraphQLList(Selectors),
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: async ({ selectors }) => {
-        return selectors
-      },
+      resolve: async ({ selectors }) => selectors,
     },
     organizations: {
       type: organizationConnection.connectionType,
@@ -70,6 +66,32 @@ const domainType = new GraphQLObjectType({
       description: 'HTTPS, and SSL scan results.',
       args: connectionArgs,
       resolve: async () => {},
+    },
+    dmarcSummaryByPeriod: {
+      description: 'Summarized DMARC aggregate reports.',
+      args: {
+        month: {
+          type: GraphQLNonNull(PeriodEnums),
+          description: 'The month in which the returned data is relevant to.',
+        },
+        year: {
+          type: GraphQLNonNull(Year),
+          description: 'The year in which the returned data is relevant to.',
+        },
+      },
+      type: periodType,
+      resolve: async ({ domain }, __, { loaders: { domainLoaderDmarcReport }}, info) => {
+        const { data: { dmarcSummaryByPeriod } } = await domainLoaderDmarcReport(info, domain)
+        return dmarcSummaryByPeriod
+      },
+    },
+    yearlyDmarcSummaries: {
+      description: 'Yearly summarized DMARC aggregate reports.',
+      type: new GraphQLList(periodType),
+      resolve: async ({ domain }, __, { loaders: { domainLoaderDmarcReport }}, info) => {
+        const { data: { yearlyDmarcSummaries } } = await domainLoaderDmarcReport(info, domain)
+        return yearlyDmarcSummaries
+      },
     },
   }),
   interfaces: [nodeInterface],
