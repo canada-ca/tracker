@@ -41,7 +41,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
             percentage,
             total: data.total,
           }))}
-          color="#2e2e40"
+          color="#E75124"
           height={320}
           width={320}
           valueAccessor={(d) => d.count}

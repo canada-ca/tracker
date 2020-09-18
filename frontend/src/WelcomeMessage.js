@@ -21,8 +21,8 @@ export function WelcomeMessage() {
           </Text>
         </Stack>
         <Image
-          src="src/images/tracker-logo.png"
-          size={['30%', '80%']}
+          src="src/images/tracker_v-03.png"
+          size="80%"
           alignSelf="center"
           mx="10"
         />

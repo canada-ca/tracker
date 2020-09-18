@@ -78,6 +78,7 @@ export default function UserPage() {
             queryUserData.userPage.userAffiliations[0].admin ? 'admin' : '',
             'active',
           ]}
+          variantColor="orange"
         >
           <Checkbox value="admin">
             <Trans>Administrative Account</Trans>

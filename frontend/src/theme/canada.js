@@ -10,6 +10,7 @@ const shadows = {
 
 const colors = {
   primary: '#2e2e40',
+  primary2: '#E75124',
   accent: '#FEC04F',
   strong: '#278400',
   moderate: '#FF9900',
@@ -17,6 +18,13 @@ const colors = {
   weak: '#D3080C',
   info: '#269ABC',
   unknown: '#B0B0B0',
+  // orange: {
+  //   1: '#EE683B',
+  //   2: '#E75124',
+  //   3: '#F47E21',
+  //   4: '#B83B25',
+  //   5: '#F16D22',
+  // },
   green: {
     50: '#F2FFF0',
     100: '#C3EEBF',
@@ -101,11 +109,11 @@ const sizes = {
     lg: '1.5rem',
   },
   boxes: {
-    '2': '20rem',
+    2: '20rem',
   },
   width: {
-    '4': '4rem',
-    '60': '60rem',
+    4: '4rem',
+    60: '60rem',
   },
 }
 
@@ -114,24 +122,24 @@ const borders = {
 }
 
 const borderWidths = {
-  '0': '0',
-  '1': '0.25rem',
-  '2': '0.5rem',
-  '3': '0.75rem',
-  '4': '1rem',
+  0: '0',
+  1: '0.25rem',
+  2: '0.5rem',
+  3: '0.75rem',
+  4: '1rem',
 }
 
 const space = {
-  '0': '0',
-  '1': '0.25rem',
-  '2': '0.5rem',
-  '2.5': '0.625rem',
-  '3': '0.75rem',
-  '4': '1rem',
-  '5': '1.25rem',
-  '6': '1.5rem',
-  '7': '1.75rem',
-  '8': '2rem',
+  0: '0',
+  1: '0.25rem',
+  2: '0.5rem',
+  2.5: '0.625rem',
+  3: '0.75rem',
+  4: '1rem',
+  5: '1.25rem',
+  6: '1.5rem',
+  7: '1.75rem',
+  8: '2rem',
 }
 
 const customIcons = {

@@ -9,10 +9,7 @@ export function LandingPage() {
   return (
     <Layout>
       <Stack align="center">
-        <Image
-          src="src/images/tracker-logo-transparent.png"
-          size={['100%', '0%']}
-        />
+        <Image src="src/images/tracker_v-03.png" size={['100%', '0%']} />
         <WelcomeMessage />
       </Stack>
 
