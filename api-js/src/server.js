@@ -15,6 +15,7 @@ const { cleanseInput, slugify } = require('./validators')
 const notifyFunctions = require('./notify')
 
 const {
+  domainLoaderDmarcReport,
   domainLoaderByKey,
   domainLoaderByDomain,
   orgLoaderByKey,
@@ -90,6 +91,7 @@ const Server = (context = {}) => {
           ...notifyFunctions,
         },
         loaders: {
+          domainLoaderDmarcReport,
           domainLoaderByKey: domainLoaderByKey(query),
           domainLoaderByDomain: domainLoaderByDomain(query),
           orgLoaderByKey: orgLoaderByKey(query, request.language),
