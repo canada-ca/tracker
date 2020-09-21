@@ -1,10 +1,9 @@
-const fetch = require('isomorphic-fetch')
-
 const { DMARC_REPORT_API_URL = 'http://localhost:4001/graphql' } = process.env
 
-const dmarcReportLoader = ({generateGqlQuery, generateDetailTableFields}) => async ({
+const dmarcReportLoader = ({generateGqlQuery, generateDetailTableFields, fetch}) => async ({
   info,
   domain,
+  userId,
 }) => {
   const genGqlQuery = generateGqlQuery({generateDetailTableFields}) 
   let data
@@ -17,7 +16,7 @@ const dmarcReportLoader = ({generateGqlQuery, generateDetailTableFields}) => asy
     }).then((response) => response.json())
   } catch (err) {
     console.error(
-      `Fetch error occurred well trying to retrieve ${info.fieldName} from the dmarc-report-api, error: ${err}`,
+      `Fetch error occurred well User: ${userId} was trying to retrieve ${info.fieldName} from the dmarc-report-api, error: ${err}`,
     )
     throw new Error(
       `Unable to retrieve ${info.fieldName} for domain: ${domain}.`,
