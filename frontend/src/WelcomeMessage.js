@@ -1,8 +1,12 @@
 import React from 'react'
 import { Trans } from '@lingui/macro'
 import { Text, Box, Divider, SimpleGrid, Stack, Image } from '@chakra-ui/core'
+import trackerLogo from './images/tracker_v-03.png'
+import { useLingui } from '@lingui/react'
 
 export function WelcomeMessage() {
+  const { i18n } = useLingui()
+
   return (
     <Box bg="primary" color="gray.50" align="center">
       <SimpleGrid columns={[1, 2]}>
@@ -21,7 +25,8 @@ export function WelcomeMessage() {
           </Text>
         </Stack>
         <Image
-          src="src/images/tracker_v-03.png"
+          src={trackerLogo}
+          alt={i18n._('Tracker Logo')}
           size="80%"
           alignSelf="center"
           mx="10"
