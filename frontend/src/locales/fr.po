@@ -70,7 +70,8 @@ msgstr "A.5 Tenir les éléments à jour"
 msgid "A.5.3 Rotate DKIM Keys"
 msgstr "A.5.3 Assurer la rotation des clés DKIM"
 
-#: src/UserList.js:230
+#: src/UserList.js:214
+#: src/UserList.js:283
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -118,7 +119,7 @@ msgstr "Détails du compte"
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/AdminDomains.js:237
+#: src/AdminDomains.js:236
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
@@ -173,13 +174,15 @@ msgstr "Une erreur s'est produite lors de la mise à jour de votre mot de passe.
 #: src/AdminDomains.js:103
 #: src/AdminDomains.js:135
 #: src/AdminDomains.js:166
-#: src/AdminDomains.js:217
+#: src/AdminDomains.js:216
 #: src/CreateUserPage.js:53
 #: src/SignInPage.js:42
+#: src/UserList.js:88
+#: src/UserList.js:160
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
-#: src/UserList.js:238
+#: src/UserList.js:291
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -274,8 +277,8 @@ msgstr "Changement de la langue de l'utilisateur"
 msgid "Changed User Password"
 msgstr "Modification du mot de passe de l'utilisateur"
 
-#: src/AdminDomains.js:383
-#: src/AdminDomains.js:433
+#: src/AdminDomains.js:381
+#: src/AdminDomains.js:431
 #: src/EditableUserDisplayName.js:162
 #: src/EditableUserEmail.js:164
 #: src/EditableUserPassword.js:183
@@ -302,8 +305,8 @@ msgstr "Fermer"
 #~ msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 #~ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/AdminDomains.js:373
-#: src/AdminDomains.js:423
+#: src/AdminDomains.js:371
+#: src/AdminDomains.js:421
 #: src/EditableUserDisplayName.js:153
 #: src/EditableUserEmail.js:155
 #: src/EditableUserPassword.js:174
@@ -331,7 +334,7 @@ msgstr "Confirmez le mot de passe :"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: src/AdminDomains.js:406
+#: src/AdminDomains.js:404
 msgid "Confirm removal of domain:"
 msgstr "Confirmer la suppression du domaine :"
 
@@ -356,7 +359,7 @@ msgstr "Créez un compte en entrant un courriel et un mot de passe."
 msgid "Current Display Name:"
 msgstr "Nom de l'affichage actuel :"
 
-#: src/AdminDomains.js:331
+#: src/AdminDomains.js:329
 msgid "Current Domain URL:"
 msgstr "URL du domaine actuel :"
 
@@ -588,7 +591,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/AdminDomains.js:325
+#: src/AdminDomains.js:323
 msgid "Edit Domain Details"
 msgstr "Modifier les détails d'un domaine"
 
@@ -625,6 +628,10 @@ msgstr "Courriel envoyé"
 #: src/fieldRequirements.js:6
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
+
+#: src/UserList.js:99
+msgid "Email invitation sent to {addedUserName}"
+msgstr "Invitation par courrier électronique envoyée à jim@hotmail.com"
 
 #: src/SummaryGroup.js:71
 msgid "Email security settings summary"
@@ -895,7 +902,7 @@ msgstr "Pourcentage non valable"
 msgid "Invalid public key"
 msgstr "Clé publique invalide"
 
-#: src/UserList.js:177
+#: src/UserList.js:228
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
@@ -946,7 +953,7 @@ msgstr "Dernier scan:"
 #: src/ResetPasswordPage.js:53
 #: src/SignInPage.js:73
 #: src/SummaryGroup.js:36
-#: src/UserList.js:71
+#: src/UserList.js:112
 msgid "Loading..."
 msgstr "Chargement..."
 
@@ -1049,11 +1056,11 @@ msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage :"
 
-#: src/AdminDomains.js:354
+#: src/AdminDomains.js:352
 msgid "New Domain Url"
 msgstr "Nouvel Url de domaine"
 
-#: src/AdminDomains.js:348
+#: src/AdminDomains.js:346
 msgid "New Domain Url:"
 msgstr "Nouvelle URL de domaine :"
 
@@ -1065,7 +1072,7 @@ msgstr "Nouvelle adresse électronique :"
 msgid "New Password:"
 msgstr "Nouveau mot de passe :"
 
-#: src/AdminDomains.js:218
+#: src/AdminDomains.js:217
 msgid "New domain name cannot be empty"
 msgstr "Un nouveau nom de domaine ne peut pas être vide"
 
@@ -1074,7 +1081,7 @@ msgstr "Un nouveau nom de domaine ne peut pas être vide"
 msgid "Next"
 msgstr "Suivant"
 
-#: src/AdminDomains.js:248
+#: src/AdminDomains.js:246
 #: src/DomainsPage.js:51
 msgid "No Domains"
 msgstr "Aucun domaine"
@@ -1107,7 +1114,7 @@ msgstr "Aucun domaine n'a encore été scanné."
 msgid "No domains yet."
 msgstr "Aucun domaine pour l'instant."
 
-#: src/UserList.js:183
+#: src/UserList.js:236
 msgid "No users in this organization"
 msgstr "Aucun utilisateur dans cette organisation"
 
@@ -1375,7 +1382,7 @@ msgstr "Préfixe Org"
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/App.js:226
+#: src/App.js:230
 msgid "Privacy"
 msgstr "Confidentialité"
 
@@ -1407,7 +1414,8 @@ msgstr "RSA à clé publique et longueur de clé <1024"
 msgid "Public key in use for longer than 1 year"
 msgstr "Clé publique en usage depuis plus d'un an"
 
-#: src/UserList.js:228
+#: src/UserList.js:212
+#: src/UserList.js:281
 msgid "READ"
 msgstr "LIRE"
 
@@ -1455,7 +1463,7 @@ msgstr ""
 #~ msgid "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
 #~ msgstr "Les messages reçus ont échoué à la fois au SPF et au DKIM, et donc à la DMARC. La politique du DMARC spécifiée pour le domaine a été appliquée à ces messages."
 
-#: src/AdminDomains.js:400
+#: src/AdminDomains.js:398
 msgid "Remove Domain"
 msgstr "Supprimer un domaine"
 
@@ -1479,11 +1487,11 @@ msgstr "Résultats des analyses des technologies du courrier électronique (DMAR
 msgid "Results for scans of web technologies (SSL, HTTPS)."
 msgstr "Résultats des analyses des technologies du web (SSL, HTTPS)."
 
-#: src/UserList.js:59
+#: src/UserList.js:69
 msgid "Role updated"
 msgstr "Rôle mis à jour"
 
-#: src/UserList.js:218
+#: src/UserList.js:271
 msgid "Role:"
 msgstr "Fonction:"
 
@@ -1581,11 +1589,11 @@ msgstr "Sauvegarder la langue"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
-#: src/AdminDomains.js:205
+#: src/AdminDomains.js:204
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
-#: src/UserList.js:162
+#: src/UserList.js:200
 msgid "Search for a user"
 msgstr "Rechercher un utilisateur"
 
@@ -1691,7 +1699,7 @@ msgstr ""
 #~ msgid "Tag, Tag Name:"
 #~ msgstr "Le jour, le nom du jour :"
 
-#: src/App.js:236
+#: src/App.js:240
 msgid "Terms & conditions"
 msgstr "Avis"
 
@@ -1743,7 +1751,7 @@ msgstr "Représentation textuelle"
 #~ msgid "The server is configured to use a different domain for the DKIM header than for the \"header from\" address."
 #~ msgstr "Le serveur est configuré pour utiliser un domaine différent pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/UserList.js:60
+#: src/UserList.js:70
 msgid "The user's role has been successfully updated"
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 
@@ -1777,7 +1785,7 @@ msgstr "Suivre la conformité de la sécurité du Web"
 #~ msgid "TwoFactor"
 #~ msgstr "Deux facteurs"
 
-#: src/UserList.js:51
+#: src/UserList.js:61
 msgid "Unable to change user role, please try again."
 msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
@@ -1817,13 +1825,17 @@ msgstr "Impossible de mettre à jour le mot de passe"
 msgid "Use DKIM to validate outbound email sent from your custom domain"
 msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé"
 
-#: src/UserList.js:153
+#: src/UserList.js:171
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
 #: src/App.js:71
 msgid "User Profile"
 msgstr "Profil de l'utilisateur"
+
+#: src/UserList.js:98
+msgid "User invited"
+msgstr "Utilisateur invité"
 
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
@@ -1853,7 +1865,8 @@ msgstr "Vulnérable à la maladie du cœur"
 msgid "Vulnerable to OpenSSL CCS Injection"
 msgstr "Vulnérable à l'injection de CCS OpenSSL"
 
-#: src/UserList.js:229
+#: src/UserList.js:213
+#: src/UserList.js:282
 msgid "WRITE"
 msgstr "ÉCRIRE"
 
@@ -2017,7 +2030,7 @@ msgstr ""
 
 #: src/ReactTableGlobalFilter.js:44
 msgid "{count} records..."
-msgstr "19 enregistrements..."
+msgstr "{count} enregistrements..."
 
 #: src/OrganizationDetails.js:107
 msgid "{domainName}"

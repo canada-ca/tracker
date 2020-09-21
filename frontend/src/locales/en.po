@@ -70,7 +70,8 @@ msgstr "A.5 Maintain"
 msgid "A.5.3 Rotate DKIM Keys"
 msgstr "A.5.3 Rotate DKIM Keys"
 
-#: src/UserList.js:230
+#: src/UserList.js:214
+#: src/UserList.js:283
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -118,7 +119,7 @@ msgstr "Account Details"
 msgid "Account created."
 msgstr "Account created."
 
-#: src/AdminDomains.js:237
+#: src/AdminDomains.js:236
 msgid "Add Domain"
 msgstr "Add Domain"
 
@@ -173,13 +174,15 @@ msgstr "An error occurred while updating your password."
 #: src/AdminDomains.js:103
 #: src/AdminDomains.js:135
 #: src/AdminDomains.js:166
-#: src/AdminDomains.js:217
+#: src/AdminDomains.js:216
 #: src/CreateUserPage.js:53
 #: src/SignInPage.js:42
+#: src/UserList.js:88
+#: src/UserList.js:160
 msgid "An error occurred."
 msgstr "An error occurred."
 
-#: src/UserList.js:238
+#: src/UserList.js:291
 msgid "Apply"
 msgstr "Apply"
 
@@ -274,8 +277,8 @@ msgstr "Changed User Language"
 msgid "Changed User Password"
 msgstr "Changed User Password"
 
-#: src/AdminDomains.js:383
-#: src/AdminDomains.js:433
+#: src/AdminDomains.js:381
+#: src/AdminDomains.js:431
 #: src/EditableUserDisplayName.js:162
 #: src/EditableUserEmail.js:164
 #: src/EditableUserPassword.js:183
@@ -302,8 +305,8 @@ msgstr "Close"
 #~ msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 #~ msgstr "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 
-#: src/AdminDomains.js:373
-#: src/AdminDomains.js:423
+#: src/AdminDomains.js:371
+#: src/AdminDomains.js:421
 #: src/EditableUserDisplayName.js:153
 #: src/EditableUserEmail.js:155
 #: src/EditableUserPassword.js:174
@@ -339,7 +342,7 @@ msgstr "Confirm password"
 #~ msgid "Confirm removal of domain {selectedRemoveDomain}:"
 #~ msgstr "Confirm removal of domain {selectedRemoveDomain}:"
 
-#: src/AdminDomains.js:406
+#: src/AdminDomains.js:404
 msgid "Confirm removal of domain:"
 msgstr "Confirm removal of domain:"
 
@@ -364,7 +367,7 @@ msgstr "Create an account by entering an email and password."
 msgid "Current Display Name:"
 msgstr "Current Display Name:"
 
-#: src/AdminDomains.js:331
+#: src/AdminDomains.js:329
 msgid "Current Domain URL:"
 msgstr "Current Domain URL:"
 
@@ -596,7 +599,7 @@ msgstr "Edit"
 msgid "Edit Display Name"
 msgstr "Edit Display Name"
 
-#: src/AdminDomains.js:325
+#: src/AdminDomains.js:323
 msgid "Edit Domain Details"
 msgstr "Edit Domain Details"
 
@@ -640,6 +643,10 @@ msgstr "Email Sent"
 #: src/fieldRequirements.js:6
 msgid "Email cannot be empty"
 msgstr "Email cannot be empty"
+
+#: src/UserList.js:99
+msgid "Email invitation sent to {addedUserName}"
+msgstr "Email invitation sent to {addedUserName}"
 
 #: src/SummaryGroup.js:71
 msgid "Email security settings summary"
@@ -910,7 +917,7 @@ msgstr "Invalid percent"
 msgid "Invalid public key"
 msgstr "Invalid public key"
 
-#: src/UserList.js:177
+#: src/UserList.js:228
 msgid "Invite User"
 msgstr "Invite User"
 
@@ -961,7 +968,7 @@ msgstr "Last scanned:"
 #: src/ResetPasswordPage.js:53
 #: src/SignInPage.js:73
 #: src/SummaryGroup.js:36
-#: src/UserList.js:71
+#: src/UserList.js:112
 msgid "Loading..."
 msgstr "Loading..."
 
@@ -1064,11 +1071,11 @@ msgstr "More than 10 lookups - Follow implementation guide"
 msgid "New Display Name:"
 msgstr "New Display Name:"
 
-#: src/AdminDomains.js:354
+#: src/AdminDomains.js:352
 msgid "New Domain Url"
 msgstr "New Domain Url"
 
-#: src/AdminDomains.js:348
+#: src/AdminDomains.js:346
 msgid "New Domain Url:"
 msgstr "New Domain Url:"
 
@@ -1080,7 +1087,7 @@ msgstr "New Email Address:"
 msgid "New Password:"
 msgstr "New Password:"
 
-#: src/AdminDomains.js:218
+#: src/AdminDomains.js:217
 msgid "New domain name cannot be empty"
 msgstr "New domain name cannot be empty"
 
@@ -1089,7 +1096,7 @@ msgstr "New domain name cannot be empty"
 msgid "Next"
 msgstr "Next"
 
-#: src/AdminDomains.js:248
+#: src/AdminDomains.js:246
 #: src/DomainsPage.js:51
 msgid "No Domains"
 msgstr "No Domains"
@@ -1122,7 +1129,7 @@ msgstr "No domains scanned yet."
 msgid "No domains yet."
 msgstr "No domains yet."
 
-#: src/UserList.js:183
+#: src/UserList.js:236
 msgid "No users in this organization"
 msgstr "No users in this organization"
 
@@ -1390,7 +1397,7 @@ msgstr "Prefix Org"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/App.js:226
+#: src/App.js:230
 msgid "Privacy"
 msgstr "Privacy"
 
@@ -1422,7 +1429,8 @@ msgstr "Public key RSA and key length <1024"
 msgid "Public key in use for longer than 1 year"
 msgstr "Public key in use for longer than 1 year"
 
-#: src/UserList.js:228
+#: src/UserList.js:212
+#: src/UserList.js:281
 msgid "READ"
 msgstr "READ"
 
@@ -1470,7 +1478,7 @@ msgstr "RUF-none"
 #~ msgid "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
 #~ msgstr "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
 
-#: src/AdminDomains.js:400
+#: src/AdminDomains.js:398
 msgid "Remove Domain"
 msgstr "Remove Domain"
 
@@ -1502,11 +1510,11 @@ msgstr "Results for scans of web technologies (SSL, HTTPS)."
 #~ msgid "Results for scans of web technologies (SSL, HTTPS). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac."
 #~ msgstr "Results for scans of web technologies (SSL, HTTPS). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pretium cursus ornare. Vivamus at nunc sem. Suspendisse lorem tortor, euismod ac commodo vel, egestas at sem. Aliquam erat volutpat. Praesent ultricies euismod finibus. Nullam vestibulum mi at ipsum malesuada, ac."
 
-#: src/UserList.js:59
+#: src/UserList.js:69
 msgid "Role updated"
 msgstr "Role updated"
 
-#: src/UserList.js:218
+#: src/UserList.js:271
 msgid "Role:"
 msgstr "Role:"
 
@@ -1608,11 +1616,11 @@ msgstr "Save Language"
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 
-#: src/AdminDomains.js:205
+#: src/AdminDomains.js:204
 msgid "Search for a domain"
 msgstr "Search for a domain"
 
-#: src/UserList.js:162
+#: src/UserList.js:200
 msgid "Search for a user"
 msgstr "Search for a user"
 
@@ -1718,7 +1726,7 @@ msgstr "TXT-DMARC-missing"
 #~ msgid "Tag, Tag Name:"
 #~ msgstr "Tag, Tag Name:"
 
-#: src/App.js:236
+#: src/App.js:240
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -1770,7 +1778,7 @@ msgstr "Textual Representation"
 #~ msgid "The server is configured to use a different domain for the DKIM header than for the \"header from\" address."
 #~ msgstr "The server is configured to use a different domain for the DKIM header than for the \"header from\" address."
 
-#: src/UserList.js:60
+#: src/UserList.js:70
 msgid "The user's role has been successfully updated"
 msgstr "The user's role has been successfully updated"
 
@@ -1804,7 +1812,7 @@ msgstr "Track Web Security Compliance"
 #~ msgid "TwoFactor"
 #~ msgstr "TwoFactor"
 
-#: src/UserList.js:51
+#: src/UserList.js:61
 msgid "Unable to change user role, please try again."
 msgstr "Unable to change user role, please try again."
 
@@ -1848,13 +1856,17 @@ msgstr "Unable to update password"
 msgid "Use DKIM to validate outbound email sent from your custom domain"
 msgstr "Use DKIM to validate outbound email sent from your custom domain"
 
-#: src/UserList.js:153
+#: src/UserList.js:171
 msgid "User List"
 msgstr "User List"
 
 #: src/App.js:71
 msgid "User Profile"
 msgstr "User Profile"
+
+#: src/UserList.js:98
+msgid "User invited"
+msgstr "User invited"
 
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
@@ -1884,7 +1896,8 @@ msgstr "Vulnerable to Heartbleed bug"
 msgid "Vulnerable to OpenSSL CCS Injection"
 msgstr "Vulnerable to OpenSSL CCS Injection"
 
-#: src/UserList.js:229
+#: src/UserList.js:213
+#: src/UserList.js:282
 msgid "WRITE"
 msgstr "WRITE"
 
