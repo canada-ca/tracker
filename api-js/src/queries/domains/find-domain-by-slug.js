@@ -40,10 +40,8 @@ const findDomainBySlug = {
     const permitted = await checkDomainPermission(user._id, domain._id, query)
 
     if (!permitted) {
-      console.warn(`User ${user._key} not permitted to access domain.`)
-      throw new Error(
-        `User ${user._key} is not permitted to access specified domain.`,
-      )
+      console.warn(`Could not retrieve domain.`)
+      throw new Error(`Could not retrieve specified domain.`)
     }
 
     console.info(

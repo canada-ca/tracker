@@ -168,5 +168,26 @@ describe('given the check domain permission function', () => {
         }
       })
     })
+    describe('if a cursor error is encountered during permission check', () => {
+      let mockQuery
+      it('returns an appropriate error message', async () => {
+        const cursor = {
+          each() {
+            throw new Error('Cursor error occurred.')
+          },
+        }
+        mockQuery = jest.fn().mockReturnValue(cursor)
+        try {
+          await checkDomainPermission(user._id, domain._id, mockQuery)
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to find domain. Please try again.'),
+          )
+          expect(consoleOutput).toEqual([
+            `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Cursor error occurred.`,
+          ])
+        }
+      })
+    })
   })
 })

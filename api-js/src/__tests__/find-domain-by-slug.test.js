@@ -328,16 +328,10 @@ describe('given findDomainBySlugQuery', () => {
           },
         )
 
-        const error = [
-          new GraphQLError(
-            `User ${user._key} is not permitted to access specified domain.`,
-          ),
-        ]
+        const error = [new GraphQLError(`Could not retrieve specified domain.`)]
 
         expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User ${user._key} not permitted to access domain.`,
-        ])
+        expect(consoleOutput).toEqual([`Could not retrieve domain.`])
       })
     })
   })

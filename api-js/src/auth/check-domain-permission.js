@@ -1,5 +1,5 @@
 const checkDomainPermission = async (userId, domainId, query) => {
-  let userAffiliatedClaims
+  let userAffiliatedClaims, claim
 
   // Retrieve user affiliations and affiliated organizations owning provided domain
   try {
@@ -15,7 +15,15 @@ const checkDomainPermission = async (userId, domainId, query) => {
     )
     throw new Error('Authentication error. Please sign in again.')
   }
-  const claim = await userAffiliatedClaims.next()
+
+  try {
+    claim = await userAffiliatedClaims.next()
+  } catch (err) {
+    console.error(
+      `Error when retrieving affiliated organization claims for user with ID ${userId} and domain with ID ${domainId}: Cursor error occurred.`,
+    )
+    throw new Error('Unable to find domain. Please try again.')
+  }
   return claim[0] !== undefined
 }
 
