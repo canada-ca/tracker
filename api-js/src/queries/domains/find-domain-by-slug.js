@@ -32,7 +32,7 @@ const findDomainBySlug = {
     const domain = await domainLoaderBySlug.load(urlSlug)
 
     if (typeof domain === 'undefined') {
-      console.warn(`Could not retrieve domain.`)
+      console.warn(`User ${user._key} could not retrieve domain.`)
       throw new Error(`No domain with the provided slug could be found.`)
     }
 
@@ -40,7 +40,7 @@ const findDomainBySlug = {
     const permitted = await checkDomainPermission(user._id, domain._id, query)
 
     if (!permitted) {
-      console.warn(`Could not retrieve domain.`)
+      console.warn(`User ${user._key} could not retrieve domain.`)
       throw new Error(`Could not retrieve specified domain.`)
     }
 

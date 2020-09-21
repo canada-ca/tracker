@@ -248,7 +248,7 @@ describe('given findDomainBySlugQuery', () => {
         ]
 
         expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([`Could not retrieve domain.`])
+        expect(consoleOutput).toEqual([`User ${user._key} could not retrieve domain.`])
       })
     })
 
@@ -331,7 +331,7 @@ describe('given findDomainBySlugQuery', () => {
         const error = [new GraphQLError(`Could not retrieve specified domain.`)]
 
         expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([`Could not retrieve domain.`])
+        expect(consoleOutput).toEqual([`User ${user._key} could not retrieve domain.`])
       })
     })
   })
