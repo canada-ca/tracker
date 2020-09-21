@@ -10,7 +10,8 @@
     "jest/globals": true
   },
   "globals": {
-    "fetch": true
+    "fetch": true,
+    "fetchMock": true
   },
   "rules": {
     "no-control-regex": "off",
