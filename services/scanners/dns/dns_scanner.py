@@ -10,6 +10,7 @@ import asyncio
 import nacl
 import base64
 import signal
+import tldextract
 import traceback
 import datetime as dt
 from checkdmarc import *
@@ -61,8 +62,14 @@ async def scan_dmarc(domain):
         # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
         rua_domain = rua_addr.split("@", 1)[1]
 
-        # If the report destination differs from the originating domain, assert reports are being accepted.
-        if rua_domain == domain:
+        # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
+        extract = tldextract.TLDExtract(include_psl_private_domains=True)
+        extract.update()
+        parsed_domain = extract(domain)
+        org_domain = parsed_domain.domain + parsed_domain.suffix
+
+        # If the report destination does not differ from the organizational domain, assert reports are being accepted.
+        if rua_domain == org_domain:
             scan_result['dmarc']['tags']['rua']['accepting'] = True
         else:
             try:
