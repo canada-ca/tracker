@@ -15,7 +15,7 @@ const findDomainBySlug = {
     _,
     args,
     {
-      userKey,
+      userId: userKey,
       query,
       auth: { checkDomainPermission, userRequired },
       loaders: { domainLoaderBySlug, userLoaderByKey },
