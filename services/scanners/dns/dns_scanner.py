@@ -83,7 +83,7 @@ async def scan_dmarc(domain):
                     f"{domain}._report._dmarc.{rua_domain}", "TXT"
                 )
                 rua_txt_value = (
-                    rua_scan_result.response.answer[0][-1].strings[0].decode("UTF-8")
+                    rua_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
                 )
                 # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
                 scan_result["dmarc"]["tags"]["rua"]["accepting"] = (
