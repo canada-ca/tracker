@@ -172,7 +172,7 @@ describe('given the check domain permission function', () => {
       let mockQuery
       it('returns an appropriate error message', async () => {
         const cursor = {
-          each() {
+          next() {
             throw new Error('Cursor error occurred.')
           },
         }
@@ -184,7 +184,7 @@ describe('given the check domain permission function', () => {
             new Error('Unable to find domain. Please try again.'),
           )
           expect(consoleOutput).toEqual([
-            `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Cursor error occurred.`,
+            `Error when retrieving affiliated organization claims for user with ID ${user._id} and domain with ID ${domain._id}: Error: Cursor error occurred.`,
           ])
         }
       })
