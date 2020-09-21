@@ -62,6 +62,7 @@ export default function UserList({
         status: 'error',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     },
     onCompleted() {
@@ -71,6 +72,7 @@ export default function UserList({
         status: 'success',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     },
   })

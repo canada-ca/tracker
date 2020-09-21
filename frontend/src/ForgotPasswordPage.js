@@ -30,6 +30,7 @@ export default function ForgotPasswordPage() {
           status: 'error',
           duration: 9000,
           isClosable: true,
+          position: 'bottom-left',
         })
       },
       onCompleted() {
@@ -43,6 +44,7 @@ export default function ForgotPasswordPage() {
           status: 'success',
           duration: 9000,
           isClosable: true,
+          position: 'bottom-left',
         })
       },
     },
