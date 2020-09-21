@@ -215,5 +215,58 @@ describe('given the check permission function', () => {
         })
       })
     })
+    describe('cursor error occurs', () => {
+      describe('when checking if super admin', () => {
+        it('throws an error', async () => {
+          const cursor = {
+            next() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          query = jest.fn().mockReturnValue(cursor)
+
+          try {
+            await checkPermission('users/1', 'organizations/1', query)
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to check permission. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Cursor error when checking to see if user users/1 has super admin permission: Error: Cursor error occurred.`,
+          ])
+        })
+      })
+      describe('when checking for other roles', () => {
+        it('throws an error', async () => {
+          const cursor = {
+            next() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          query = jest
+            .fn()
+            .mockReturnValueOnce({
+              next() {
+                return 'user'
+              },
+            })
+            .mockReturnValue(cursor)
+
+          try {
+            await checkPermission('users/1', 'organizations/1', query)
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to check permission. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Cursor error when checking users/1's permission: Error: Cursor error occurred.`,
+          ])
+        })
+      })
+    })
   })
 })
