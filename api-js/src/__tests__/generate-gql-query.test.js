@@ -278,7 +278,7 @@ describe('given the generateGqlQuery function', () => {
             },
           ],
         }
-  
+
         const gqlQuery = gqlGen({ info, domain: undefined })
         expect(gqlQuery).toEqual(
           '{\ntestQuery(\n\n){\nstartDate\nendDate\n\n\n\n}\n}',
@@ -306,7 +306,7 @@ describe('given the generateGqlQuery function', () => {
             },
           ],
         }
-  
+
         const gqlQuery = gqlGen({ info, domain: undefined })
         expect(gqlQuery).toEqual(
           '{\ntestQuery(\n\n){\nstartDate\nendDate\n\n\n\n}\n}',
@@ -435,7 +435,7 @@ describe('given the generateGqlQuery function', () => {
               },
             ],
           }
-    
+
           const gqlQuery = gqlGen({ info, domain: undefined })
           expect(gqlQuery).toEqual(
             '{\ntestQuery(\ntestArgument: 5\n){\nstartDate\nendDate\n\n\n\n}\n}',

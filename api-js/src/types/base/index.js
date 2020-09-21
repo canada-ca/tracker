@@ -80,18 +80,32 @@ const domainType = new GraphQLObjectType({
         },
       },
       type: periodType,
-      resolve: async ({ domain }, __, { userId, loaders: { dmarcReportLoader }}, info) => {
-        const { data: { dmarcSummaryByPeriod } } = await dmarcReportLoader({info, domain, userId})
+      resolve: async (
+        { domain },
+        __,
+        { userId, loaders: { dmarcReportLoader } },
+        info,
+      ) => {
+        const {
+          data: { dmarcSummaryByPeriod },
+        } = await dmarcReportLoader({ info, domain, userId })
         return dmarcSummaryByPeriod
       },
     },
     yearlyDmarcSummaries: {
       description: 'Yearly summarized DMARC aggregate reports.',
       type: new GraphQLList(periodType),
-      resolve: async ({ domain }, __, { userId, loaders: { dmarcReportLoader }}, info) => {
+      resolve: async (
+        { domain },
+        __,
+        { userId, loaders: { dmarcReportLoader } },
+        info,
+      ) => {
         const fs = require('fs')
         fs.writeFileSync('test.json', JSON.stringify(info))
-        const { data: { yearlyDmarcSummaries } } = await dmarcReportLoader({info, domain, userId})
+        const {
+          data: { yearlyDmarcSummaries },
+        } = await dmarcReportLoader({ info, domain, userId })
         return yearlyDmarcSummaries
       },
     },

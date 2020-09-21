@@ -87,7 +87,11 @@ describe('given the domainLoaderDmarcReport function', () => {
           userId: '53521',
         })
       } catch (err) {
-        expect(err).toEqual(new Error('Unable to retrieve testQuery for domain: test.domain.gc.ca.'))
+        expect(err).toEqual(
+          new Error(
+            'Unable to retrieve testQuery for domain: test.domain.gc.ca.',
+          ),
+        )
       }
 
       expect(consoleOutput).toEqual([

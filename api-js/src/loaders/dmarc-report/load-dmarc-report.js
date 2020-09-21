@@ -1,11 +1,11 @@
 const { DMARC_REPORT_API_URL = 'http://localhost:4001/graphql' } = process.env
 
-const dmarcReportLoader = ({generateGqlQuery, generateDetailTableFields, fetch}) => async ({
-  info,
-  domain,
-  userId,
-}) => {
-  const genGqlQuery = generateGqlQuery({generateDetailTableFields}) 
+const dmarcReportLoader = ({
+  generateGqlQuery,
+  generateDetailTableFields,
+  fetch,
+}) => async ({ info, domain, userId }) => {
+  const genGqlQuery = generateGqlQuery({ generateDetailTableFields })
   let data
   try {
     const gqlQuery = genGqlQuery({ info, domain })
