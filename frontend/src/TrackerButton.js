@@ -12,7 +12,9 @@ export function TrackerButton({ variant, children, ...props }) {
   if (variant === 'primary') {
     color = 'gray.50'
     bg = 'primary2'
-    hoverColor = 'orange.600'
+    hoverColor = '#F47E21'
+    // bg = 'primary'
+    // hoverColor = 'primary2'
   } else if (variant === 'outline') {
     color = 'primary2'
     bg = 'transparent'
@@ -21,8 +23,10 @@ export function TrackerButton({ variant, children, ...props }) {
     hoverColor = 'blue.50'
   } else if (variant === 'danger') {
     color = 'gray.50'
-    bg = 'red.600'
-    hoverColor = 'red.700'
+    // bg = 'primary'
+    // hoverColor = 'red.700'
+    bg = 'red.700'
+    hoverColor = 'red.600'
   }
 
   return (
