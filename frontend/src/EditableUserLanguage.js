@@ -37,7 +37,7 @@ function EditableUserLanguage({ currentLang }) {
       onCompleted() {
         toast({
           title: t`Changed User Language`,
-          description: t`You have successfully updated your password.`,
+          description: t`You have successfully updated your preferred language.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -62,7 +62,7 @@ function EditableUserLanguage({ currentLang }) {
         validateOnBlur={false}
         initialValues={{ lang: currentLang }}
         validationSchema={validationSchema}
-        onSubmit={async values => {
+        onSubmit={async (values) => {
           // Submit update detail mutation
           await updateUserProfile({
             variables: {
