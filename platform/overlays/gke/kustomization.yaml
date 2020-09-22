@@ -6,6 +6,7 @@ resources:
 - certificate.yaml
 - letsencrypt-issuer.yaml
 - knative/config/domain-config.yaml
+- knative/config/queues.yaml
 - knative/config/config.yaml
 - knative/config/autoscan.yaml
 - knative/monitoring/prometheus.yaml
