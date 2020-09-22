@@ -88,7 +88,7 @@ export default function AdminPage() {
             </Text>
             <Select
               aria-label="Select an organization"
-              w="25%"
+              w={['100%', '25%']}
               size="lg"
               variant="filled"
               onChange={e => {

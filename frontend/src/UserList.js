@@ -117,7 +117,8 @@ export default function UserList({
   if (error) return <p>{String(error)}</p>
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = pageNumber => setCurrentPage(pageNumber)
+
 
   const removeUser = (user) => {
     const temp = userList.filter((c) => c.node.id !== user.id)
@@ -278,7 +279,7 @@ export default function UserList({
                         size="sm"
                         name="role"
                         defaultValue={userRole}
-                        onChange={(e) => (userRole = e.target.value)}
+                        onChange={e => (userRole = e.target.value)}
                       >
                         <option value="USER_READ">{i18n._(t`READ`)}</option>
                         <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>

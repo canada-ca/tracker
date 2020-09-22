@@ -13,8 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/LandingPage.js:23
-#: src/OrganizationDetails.js:123
+#: src/LandingPage.js:24
+#: src/OrganizationDetails.js:133
+#: src/Organizations.js:80
+#: src/DomainsPage.js:69
 msgid "*All data represented is mocked for demonstration purposes"
 msgstr "*All data represented is mocked for demonstration purposes"
 
@@ -519,6 +521,10 @@ msgstr "Dmarc partial"
 msgid "Dmarc pass"
 msgstr "Dmarc pass"
 
+#: src/DomainCard.js:66
+msgid "Domain:"
+msgstr "Domain:"
+
 #: src/DmarcByDomainPage.js:58
 #: src/OrganizationDetails.js:53
 msgid "Domain"
@@ -586,6 +592,7 @@ msgstr "Domain:"
 
 #: src/App.js:62
 #: src/DomainsPage.js:49
+#: src/OrganizationDetails.js:82
 msgid "Domains"
 msgstr "Domains"
 
@@ -619,7 +626,8 @@ msgstr "Email"
 #~ msgid "Email Address:"
 #~ msgstr "Email Address:"
 
-#: src/SummaryGroup.js:70
+#: src/SummaryGroup.js:66
+#: src/OrganizationCard.js:60
 msgid "Email Configuration"
 msgstr "Email Configuration"
 
@@ -904,6 +912,14 @@ msgstr "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesen
 msgid "Internet facing services: {domainCount}"
 msgstr "Internet facing services: {domainCount}"
 
+#: src/OrganizationSummary.js:13
+msgid "Internet facing services:"
+msgstr "Internet facing services:"
+
+#: src/OrganizationSummary.js:20
+msgid "Users joined:"
+msgstr "Users joined:"
+
 #: src/ForgotPasswordPage.js:20
 #: src/fieldRequirements.js:7
 msgid "Invalid email"
@@ -952,6 +968,7 @@ msgid "Last 30 Days"
 msgstr "Last 30 Days"
 
 #: src/Domain.js:40
+#: src/DomainCard.js:73
 msgid "Last scanned:"
 msgstr "Last scanned:"
 
@@ -1138,6 +1155,7 @@ msgid "Non-compliant TLS"
 msgstr "Non-compliant TLS"
 
 #: src/Domain.js:51
+#: src/DomainCard.js:79
 msgid "Not scanned yet."
 msgstr "Not scanned yet."
 
@@ -1902,6 +1920,7 @@ msgid "WRITE"
 msgstr "WRITE"
 
 #: src/SummaryGroup.js:51
+#: src/OrganizationCard.js:52
 msgid "Web Configuration"
 msgstr "Web Configuration"
 
@@ -2070,3 +2089,11 @@ msgstr "{domainName}"
 #: src/DmarcGuidancePage.js:46
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/OrganizationDetails.js:79
+msgid "Summary"
+msgstr "Summary"
+
+#: src/OrganizationDetails.js:85
+msgid "Users"
+msgstr "Users"

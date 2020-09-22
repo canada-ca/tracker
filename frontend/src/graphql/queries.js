@@ -183,6 +183,41 @@ export const ADMIN_PANEL = gql`
   }
 `
 
+export const ORG_DETAILS_PAGE = gql`
+  query OrgDetails($slug: Slug!) {
+    organization: findOrganizationDetailBySlug(slug: $slug) {
+      id
+      name
+      acronym
+      province
+      domains {
+        edges {
+          node {
+            id
+            url
+            lastRan
+          }
+        }
+      }
+    }
+    userList(orgSlug: $slug) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        node {
+          id
+          userName
+          role
+          tfa
+          displayName
+        }
+      }
+    }
+  }
+`
+
 export const PAGINATED_DOMAINS = gql`
   query Domains($first: Int, $after: String) {
     pagination: findMyDomains(first: $first, after: $after) {

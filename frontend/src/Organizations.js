@@ -9,7 +9,7 @@ import {
   REVERSE_PAGINATED_ORGANIZATIONS as BACKWARD,
 } from './graphql/queries'
 import { useUserState } from './UserState'
-import { Organization } from './Organization'
+import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 
 export default function Organisations({ orgsPerPage = 10 }) {
@@ -45,7 +45,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
 
   return (
     <Layout>
-      <Heading as="h1" mb="4">
+      <Heading as="h1" mb="4" textAlign={['center', 'left']}>
         <Trans>Organizations</Trans>
       </Heading>
       <ListOf
@@ -53,9 +53,14 @@ export default function Organisations({ orgsPerPage = 10 }) {
         ifEmpty={() => <Trans>No Organizations</Trans>}
         mb="4"
       >
-        {({ name, slug, domainCount }, index) => (
+        {({ name, slug, acronym, domainCount }, index) => (
           <Box key={`${slug}:${index}`}>
-            <Organization slug={slug} name={name} domainCount={domainCount} />
+            <OrganizationCard
+              slug={slug}
+              name={name}
+              acronym={acronym}
+              domainCount={domainCount}
+            />
             <Divider borderColor="gray.900" />
           </Box>
         )}
@@ -73,6 +78,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
           <Trans>Next</Trans>
         </Button>
       </Stack>
+      <Trans>*All data represented is mocked for demonstration purposes</Trans>
     </Layout>
   )
 }

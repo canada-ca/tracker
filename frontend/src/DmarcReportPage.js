@@ -379,7 +379,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     )
 
   return (
-    <Box width="100%">
+    <Box width="100%" px="4" mx="auto" overflow="hidden">
       <Heading as="h1" textAlign="center">
         {domainSlug.toUpperCase()}
       </Heading>
