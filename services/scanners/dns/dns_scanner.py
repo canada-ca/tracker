@@ -10,9 +10,11 @@ import asyncio
 import nacl
 import base64
 import signal
+import tldextract
 import traceback
 import datetime as dt
 from checkdmarc import *
+from dns import resolver
 from dkim import dnsplug, crypto, KeyFormatError
 from dkim.crypto import *
 from dkim.util import InvalidTagValueList
@@ -34,18 +36,63 @@ async def scan_dmarc(domain):
 
     logging.info("Initiating DMARC scan")
 
-    # Single-item list to pass off to check_domains function
+    # Single-item list to pass off to check_domains function.
     domain_list = list()
     domain_list.append(domain)
 
     try:
-        # Perform "checkdmarc" scan on provided domain
+        # Perform "checkdmarc" scan on provided domain.
         scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True)))
     except (DNSException, SPFError, DMARCError) as e:
         logging.error(
-            "Failed to check the given domains for DMARC/SPF records: %s" % str(e)
+            "Failed to check the given domains for DMARC/SPF records. (%s)" % str(e)
         )
         return None
+
+    # Retrieve 'rua' tag address.
+    try:
+        rua_addr = scan_result["dmarc"]["tags"]["rua"]["value"][0]["address"]
+    except KeyError as e:
+        logging.error(
+            "Failed to retrieve RUA address from tag value. Report acceptance check will not be performed. (KeyError: %s)"
+            % str(e)
+        )
+        rua_addr = None
+
+    if rua_addr is not None:
+        # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
+        rua_domain = rua_addr.split("@", 1)[1]
+
+        # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
+        extract = tldextract.TLDExtract(include_psl_private_domains=True)
+        extract.update()
+        parsed_domain = extract(domain)
+        org_domain = ".".join([parsed_domain.domain, parsed_domain.suffix])
+
+        # Extract organizational domain from 'rua' domain
+        parsed_rua_domain = extract(rua_domain)
+        rua_org_domain = ".".join([parsed_rua_domain.domain, parsed_rua_domain.suffix])
+
+        # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
+        if rua_org_domain == org_domain:
+            scan_result["dmarc"]["tags"]["rua"]["accepting"] = True
+        else:
+            try:
+                # Request txt record to ensure that "rua" domain accepts DMARC reports.
+                rua_scan_result = dns.resolver.query(
+                    f"{domain}._report._dmarc.{rua_domain}", "TXT"
+                )
+                rua_txt_value = (
+                    rua_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
+                )
+                # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
+                scan_result["dmarc"]["tags"]["rua"]["accepting"] = (
+                    rua_txt_value == "v=DMARC1"
+                )
+                logging.info("External reporting arrangement verified.")
+            except (DNSException, SPFError, DMARCError) as e:
+                logging.error("Failed to validate rua address: %s" % str(e))
+                scan_result["dmarc"]["tags"]["rua"]["accepting"] = "undetermined"
 
     logging.info("DMARC scan completed")
 
@@ -111,7 +158,7 @@ async def scan_dkim(domain, selectors):
             pk_txt = dnsplug.get_txt_dnspython(f"{selector}._domainkey.{domain}")
             logging.info("Public key (TXT) retrieved from DNS")
 
-            pk, keysize, ktag = load_pk(f"{selector}.{domain}", pk_txt)
+            pk, keysize, ktag = load_pk(f"{selector}._domainkey.{domain}", pk_txt)
 
             # Parse values and convert to dictionary
             pub = dkim.util.parse_tag_value(pk_txt)
