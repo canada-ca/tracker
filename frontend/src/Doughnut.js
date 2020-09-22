@@ -56,7 +56,15 @@ export const Doughnut = ({
 
       {arcs.map(({ title, count, percentage }, index) => {
         return (
-          <Box key={`legend:${index}`} backgroundColor="primary">
+          <Box
+            key={`legend:${index}`}
+            backgroundColor="primary"
+            px="2"
+            pb="2"
+            pt={index === 0 ? '2' : '0'}
+            mx="auto"
+            overflow="hidden"
+          >
             <svg
               height={30}
               width={30}

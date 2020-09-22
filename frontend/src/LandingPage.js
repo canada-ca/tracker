@@ -17,7 +17,6 @@ export function LandingPage() {
           src={trackerLogo}
           alt={i18n._('Tracker Logo')}
           size={['100%', '0%']}
-          // boxShadow="medium"
         />
         <WelcomeMessage />
       </Stack>
