@@ -5,7 +5,7 @@ metadata:
   namespace: scanners
 spec:
   schedule: "*/720 * * * *"
-  concurrencyPolicy: Forbid
+  concurrencyPolicy: Replace
   startingDeadlineSeconds: 180
   successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 0
