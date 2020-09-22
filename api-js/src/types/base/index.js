@@ -101,8 +101,6 @@ const domainType = new GraphQLObjectType({
         { userId, loaders: { dmarcReportLoader } },
         info,
       ) => {
-        const fs = require('fs')
-        fs.writeFileSync('test.json', JSON.stringify(info))
         const {
           data: { yearlyDmarcSummaries },
         } = await dmarcReportLoader({ info, domain, userId })
