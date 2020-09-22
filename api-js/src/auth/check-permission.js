@@ -15,7 +15,16 @@ const checkPermission = async (userId, orgId, query) => {
     throw new Error('Authentication error. Please sign in again.')
   }
 
-  let permission = await cursor.next()
+  let permission
+  try {
+    permission = await cursor.next()
+  } catch (err) {
+    console.error(
+      `Cursor error when checking to see if user ${userId} has super admin permission: ${err}`,
+    )
+    throw new Error('Unable to check permission. Please try again.')
+  }
+
   if (permission === 'super_admin') {
     return permission
   } else {
@@ -33,7 +42,12 @@ const checkPermission = async (userId, orgId, query) => {
       throw new Error('Authentication error. Please sign in again.')
     }
 
-    permission = await cursor.next()
+    try {
+      permission = await cursor.next()
+    } catch (err) {
+      console.error(`Cursor error when checking ${userId}'s permission: ${err}`)
+      throw new Error('Unable to check permission. Please try again.')
+    }
     return permission
   }
 }

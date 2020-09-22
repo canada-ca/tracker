@@ -91,6 +91,7 @@ export default function App() {
                   status: 'success',
                   duration: 9000,
                   isClosable: true,
+                  position: 'bottom-left',
                 })
               }}
               ml={[null, 'auto']}

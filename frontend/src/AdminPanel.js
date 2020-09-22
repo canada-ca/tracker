@@ -28,6 +28,7 @@ export default function AdminPanel({ orgName, permission }) {
         status: 'failure',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     },
   })
