@@ -18,13 +18,6 @@ const colors = {
   weak: '#D3080C',
   info: '#269ABC',
   unknown: '#B0B0B0',
-  // orange: {
-  //   100: '#EE683B',
-  //   200: '#E75124',
-  //   300: '#F47E21',
-  //   400: '#B83B25',
-  //   500: '#F16D22',
-  // },
   green: {
     50: '#F2FFF0',
     100: '#C3EEBF',

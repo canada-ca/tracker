@@ -27,7 +27,7 @@ export function WelcomeMessage() {
         <Image
           src={trackerLogo}
           alt={i18n._('Tracker Logo')}
-          size="80%"
+          size="87%"
           alignSelf="center"
           mx="10"
         />
