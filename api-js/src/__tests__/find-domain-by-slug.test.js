@@ -165,7 +165,7 @@ describe('given findDomainBySlugQuery', () => {
           `,
           null,
           {
-            userKey: user._key,
+            userId: user._key,
             query: query,
             auth: {
               checkDomainPermission,
@@ -227,7 +227,7 @@ describe('given findDomainBySlugQuery', () => {
           `,
           null,
           {
-            userKey: user._key,
+            userId: user._key,
             query: query,
             auth: {
               checkDomainPermission,
@@ -312,7 +312,7 @@ describe('given findDomainBySlugQuery', () => {
           `,
           null,
           {
-            userKey: user._key,
+            userId: user._key,
             query: query,
             auth: {
               checkDomainPermission,
