@@ -1,8 +1,8 @@
 const upsertOwnership = ({ ownerships, query }) => {
-  console.log('Assigning ownerships ...')
+  console.info('Assigning ownerships ...')
 
   Object.keys(ownerships).forEach(async (key) => {
-    console.log(`Assigning domain ownership to: ${String(key)}`)
+    console.info(`Assigning domain ownership to: ${String(key)}`)
     try {
       await query`
       LET givenDomains = ${ownerships[key]}
@@ -27,7 +27,7 @@ const upsertOwnership = ({ ownerships, query }) => {
       )
     }
   })
-  console.log('Completed assigning ownerships, exiting now.')
+  console.info('Completed assigning ownerships, exiting now.')
 }
 
 module.exports = {
