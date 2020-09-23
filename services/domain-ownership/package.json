@@ -1,0 +1,41 @@
+{
+  "name": "domain-ownership",
+  "version": "1.0.0",
+  "description": "Collects ownership information from a github repo, then applies that information to arangodb.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canada-ca/tracker.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/canada-ca/tracker/issues"
+  },
+  "homepage": "https://github.com/canada-ca/tracker#readme",
+  "dependencies": {
+    "arango-tools": "0.0.9",
+    "arangojs": "^6.14.1",
+    "dotenv-safe": "^8.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^23.20.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^26.4.1",
+    "jest-matcher-utils": "^26.4.1",
+    "prettier": "^2.0.5",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "verbose": true
+  }
+}
