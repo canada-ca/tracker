@@ -4,7 +4,11 @@ const { loadDomainOwnership } = require('../loaders')
 describe('given the loadDomainOwnership function', () => {
   const fetch = fetchMock
 
+  const consoleOutput = []
+  const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
+    console.error = mockedError
+    consoleOutput.length = 0
     fetch.resetMocks()
   })
 
@@ -36,15 +40,8 @@ describe('given the loadDomainOwnership function', () => {
       it('throws error', async () => {
         fetch.mockReject(Error('Fetch Error occurred.'))
 
-        try {
           await loadDomainOwnership({ fetch })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Error occurred while fetching domain ownership information: Error: Fetch Error occurred.',
-            ),
-          )
-        }
+          expect(consoleOutput[0]).toEqual('Error occurred while fetching domain ownership information: Error: Fetch Error occurred.')
       })
     })
   })

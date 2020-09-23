@@ -14,15 +14,15 @@ const loadDomainOwnership = async ({ fetch }) => {
       },
       body: JSON.stringify({ query: GET_FILE_CONTENTS }),
     }).then((response) => response.json())
+
+    const domainOwnership = JSON.parse(repoInfo.data.repository.object.text)
+
+    return domainOwnership
   } catch (err) {
-    throw new Error(
+    console.error(
       `Error occurred while fetching domain ownership information: ${err}`,
     )
   }
-  
-  const domainOwnership = JSON.parse(repoInfo.data.repository.object.text)
-
-  return domainOwnership
 }
 
 module.exports = {
