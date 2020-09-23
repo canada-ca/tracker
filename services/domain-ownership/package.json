@@ -4,7 +4,11 @@
   "description": "Collects ownership information from a github repo, then applies that information to arangodb.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "jest",
+    "test-coverage": "jest --coverage",
+    "lint": "eslint src",
+    "prettier": "prettier --write \"**/*.js\""
   },
   "repository": {
     "type": "git",
