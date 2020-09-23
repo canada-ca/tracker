@@ -95,7 +95,7 @@ function EditableUserDisplayName({ detailValue }) {
       </Stack>
 
       <SlideIn in={isOpen}>
-        {styles => (
+        {(styles) => (
           <Modal
             isOpen={true}
             onClose={onClose}
@@ -112,7 +112,7 @@ function EditableUserDisplayName({ detailValue }) {
                   displayName: true,
                 }}
                 validationSchema={validationSchema}
-                onSubmit={async values => {
+                onSubmit={async (values) => {
                   // Submit update detail mutation
                   await updateUserProfile({
                     variables: {

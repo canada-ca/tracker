@@ -1965,6 +1965,9 @@ msgid "You have successfully updated your email."
 msgstr "You have successfully updated your email."
 
 #: src/EditableUserLanguage.js:40
+msgid "You have successfully updated your preferred language."
+msgstr "You have successfully updated your preferred language."
+
 #: src/EditableUserPassword.js:59
 msgid "You have successfully updated your password."
 msgstr "You have successfully updated your password."

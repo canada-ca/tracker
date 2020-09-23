@@ -111,7 +111,7 @@ export default function CreateUserPage() {
           confirmPassword: '',
           lang: '',
         }}
-        onSubmit={async values => {
+        onSubmit={async (values) => {
           signUp({
             variables: {
               userName: values.email,

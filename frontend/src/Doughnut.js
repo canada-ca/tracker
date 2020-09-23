@@ -27,9 +27,9 @@ export const Doughnut = ({
   })
 
   const patterns = scaleOrdinal().range([
-    `url(#dots)`,
     color,
     `url(#stripes)`,
+    `url(#dots)`,
     `url(#crosshatch)`,
     `url(#zigzag)`,
   ])
@@ -39,10 +39,10 @@ export const Doughnut = ({
       <svg height={height} width={width}>
         <title>{title}</title>
         <defs>
-          <ZigZag width={0.4} background="#575766" color="#fff" />
-          <Dots size={1} background="#575766" color="#fff" />
-          <Stripes angle={45} background="#575766" color="#fff" />
-          <CrossHatch width={0.8} background="#575766" color="#fff" />
+          <ZigZag width={0.4} background="#F16D22" color="#fff" />
+          <Dots size={1} background="#B83B25" color="#fff" />
+          <Stripes angle={45} background="#F47E21" color="#fff" />
+          <CrossHatch width={0.8} background="#F16D22" color="#fff" />
         </defs>
         <g transform={`translate(${width / 2},${height / 2})`}>
           {arcs.map((arc, index) => {
@@ -56,7 +56,15 @@ export const Doughnut = ({
 
       {arcs.map(({ title, count, percentage }, index) => {
         return (
-          <Box key={`legend:${index}`} backgroundColor="primary">
+          <Box
+            key={`legend:${index}`}
+            backgroundColor="primary"
+            px="2"
+            pb="2"
+            pt={index === 0 ? '2' : '0'}
+            mx="auto"
+            overflow="hidden"
+          >
             <svg
               height={30}
               width={30}

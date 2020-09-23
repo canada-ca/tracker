@@ -61,7 +61,7 @@ describe('<App/>', () => {
         },
       ]
       it('renders the main page', async () => {
-        const { getByRole } = render(
+        const { getByText } = render(
           <UserStateProvider
             initialState={{ userName: null, jwt: null, tfa: null }}
           >
@@ -76,9 +76,7 @@ describe('<App/>', () => {
             </ThemeProvider>
           </UserStateProvider>,
         )
-        await waitFor(() =>
-          expect(getByRole('heading')).toHaveTextContent(/track web/i),
-        )
+        await waitFor(() => expect(getByText(/Track web security compliance/i)))
       })
     })
 

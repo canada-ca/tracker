@@ -107,7 +107,7 @@ function EditableUserPassword() {
       </Stack>
 
       <SlideIn in={isOpen}>
-        {styles => (
+        {(styles) => (
           <Modal
             isOpen={true}
             onClose={onClose}
@@ -126,7 +126,7 @@ function EditableUserPassword() {
                   currentPassword: true,
                 }}
                 validationSchema={validationSchema}
-                onSubmit={async values => {
+                onSubmit={async (values) => {
                   // Submit update detail mutation
                   await updateUserProfile({
                     variables: {

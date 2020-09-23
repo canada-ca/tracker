@@ -1935,6 +1935,9 @@ msgid "You have successfully updated your email."
 msgstr "Vous avez mis à jour votre courriel avec succès."
 
 #: src/EditableUserLanguage.js:40
+msgid "You have successfully updated your preferred language."
+msgstr "Vous avez réussi à mettre à jour votre langue préférée."
+
 #: src/EditableUserPassword.js:59
 msgid "You have successfully updated your password."
 msgstr "Vous avez mis à jour votre mot de passe avec succès."

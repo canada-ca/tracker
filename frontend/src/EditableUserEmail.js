@@ -97,7 +97,7 @@ function EditableUserEmail({ detailValue }) {
       </Stack>
 
       <SlideIn in={isOpen}>
-        {styles => (
+        {(styles) => (
           <Modal
             isOpen={true}
             onClose={onClose}
@@ -114,7 +114,7 @@ function EditableUserEmail({ detailValue }) {
                   email: true,
                 }}
                 validationSchema={validationSchema}
-                onSubmit={async values => {
+                onSubmit={async (values) => {
                   // Submit update detail mutation
                   await updateUserProfile({
                     variables: {
