@@ -1,5 +1,18 @@
 steps:
 
+    - name: 'gcr.io/cloud-builders/docker'
+      id: start_arango
+      entrypoint: /bin/sh
+      args:
+        [
+          "-c",
+          "docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$DB_PASS --name=arango arango",
+        ]
+
+    - name: mikewilliamson/wait-for
+      id: wait
+      args: ['arango:8529']
+
     - name: node:alpine
       id: install
       dir: api-js
@@ -17,6 +30,9 @@ steps:
       dir: api-js
       entrypoint: npm
       args: ['test']
+      env:
+        - DB_URL=$_DB_URL
+        - DB_PASS=$_DB_PASS
   
     - name: 'gcr.io/cloud-builders/docker'
       id: build-if-master
