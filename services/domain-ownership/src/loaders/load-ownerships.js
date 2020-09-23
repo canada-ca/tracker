@@ -17,7 +17,9 @@ const loadDomainOwnership = async () => {
       body: JSON.stringify({ query: GET_FILE_CONTENTS }),
     }).then((response) => response.json())
   } catch (err) {
-    throw new Error(`Error occurred while fetching domain ownership information: ${err}`)
+    throw new Error(
+      `Error occurred while fetching domain ownership information: ${err}`,
+    )
   }
 
   const domainOwnership = JSON.parse(repoInfo.data.repository.object.text)
