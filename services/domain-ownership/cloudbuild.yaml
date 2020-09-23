@@ -15,19 +15,19 @@ steps:
 
     - name: node:alpine
       id: install
-      dir: api-js
+      dir: services/domain-ownership
       entrypoint: npm
       args: ['ci', '--no-optional']
   
     - name: node:alpine
       id: lint
-      dir: api-js
+      dir: services/domain-ownership
       entrypoint: npm
       args: ['run', lint]
   
     - name: node:alpine
       id: test
-      dir: api-js
+      dir: services/domain-ownership
       entrypoint: npm
       args: ['test']
       env:
