@@ -40,8 +40,10 @@ describe('given the loadDomainOwnership function', () => {
       it('throws error', async () => {
         fetch.mockReject(Error('Fetch Error occurred.'))
 
-          await loadDomainOwnership({ fetch })
-          expect(consoleOutput[0]).toEqual('Error occurred while fetching domain ownership information: Error: Fetch Error occurred.')
+        await loadDomainOwnership({ fetch })
+        expect(consoleOutput[0]).toEqual(
+          'Error occurred while fetching domain ownership information: Error: Fetch Error occurred.',
+        )
       })
     })
   })

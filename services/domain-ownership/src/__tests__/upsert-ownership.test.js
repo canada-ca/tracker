@@ -173,7 +173,7 @@ describe('given the upsertOwnership function', () => {
         const cursor = await query`
           FOR v, e IN 1..1 ANY ${domain._id} ownership RETURN { _from: e._from, _to: e._to }
         `
-        
+
         const ownership = await cursor.next()
 
         setTimeout(() => {
@@ -185,8 +185,8 @@ describe('given the upsertOwnership function', () => {
   describe('database error occurs', () => {
     it('logs to the console', async () => {
       const queryMock = jest
-      .fn()
-      .mockRejectedValue(new Error('Database error occurred.'))
+        .fn()
+        .mockRejectedValue(new Error('Database error occurred.'))
 
       const ownerships = {
         TEST2: ['test.gc.ca'],
@@ -197,7 +197,6 @@ describe('given the upsertOwnership function', () => {
       } catch (err) {
         expect(err).toEqual(new Error(''))
       }
-
     })
   })
 })
