@@ -1,5 +1,7 @@
-const dotenv = require('dotenv-safe')
-dotenv.config()
+require('dotenv-safe').config({
+  allowEmptyValues: true,
+  example: './.env.example',
+})
 
 const { DB_PASS: rootPass, DB_URL: url, DB_NAME: databaseName } = process.env
 
