@@ -33,6 +33,9 @@ steps:
       env:
         - DB_URL=$_DB_URL
         - DB_PASS=$_DB_PASS
+        - DB_NAME=$_DB_NAME
+        - GITHUB_TOKEN=$_GITHUB_TOKEN
+        - GITHUB_URL=$_GITHUB_URL
   
     - name: 'gcr.io/cloud-builders/docker'
       id: build-if-master
