@@ -20,9 +20,9 @@ depends_on = None
 def upgrade():
     op.drop_table("classification")
     op.add_column(
-        "guidance", sa.Column("tag_id", sa.String(), index=True),
+        "guidance", sa.Column("tag_id", sa.String()),
     )
-    op.alter_column("guidance", "ref_links", type_=ARRAY(sa.String()))
+    op.alter_column("guidance", "ref_links", type_=ARRAY(sa.String()), postgresql_using='ref_links::character varying[]')
 
 
 def downgrade():
@@ -31,6 +31,5 @@ def downgrade():
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("UNCLASSIFIED", sa.String()),
     )
-    with op.batch_alter_table("guidance") as batch_op:
-        batch_op.drop_column("tag_id")
-        batch_op.alter_column("guidance", "ref_links", type_=sa.String())
+    op.drop_column("guidance", "tag_id")
+    op.alter_column("guidance", "ref_links", type_=sa.String())
