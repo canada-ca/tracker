@@ -163,7 +163,6 @@ export default function App() {
                 path="/domains"
                 render={({ match: { url } }) => (
                   <>
-                    {/* <Route path={`${url}`} component={DomainsPage} exact /> */}
                     <Route
                       path={`${url}/:domainSlug`}
                       component={DmarcGuidancePage}
