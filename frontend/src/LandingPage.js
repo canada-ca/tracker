@@ -16,11 +16,10 @@ export function LandingPage() {
         <Image
           src={trackerLogo}
           alt={i18n._('Tracker Logo')}
-          size={['100%', '0%']}
+          size={['100%', '100%', '0%', '0%', '0%']}
         />
         <WelcomeMessage />
       </Stack>
-
       <SummaryGroup name="dashboard" />
       <Text>
         <Trans>

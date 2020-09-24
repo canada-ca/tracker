@@ -11,11 +11,14 @@ export function WelcomeMessage() {
     <Box bg="primary" color="gray.50" align="center">
       <SimpleGrid columns={[1, 2]}>
         <Stack align="center" mx="10" my="10">
-          <Text fontSize="5xl" fontWeight="semibold">
+          <Text
+            fontSize={['3xl', '3xl', '3xl', '4xl', '5xl']}
+            fontWeight="semibold"
+          >
             <Trans>Track Web Security Compliance</Trans>
             <Divider borderColor="accent" borderWidth="2" w="20%" />
           </Text>
-          <Text fontSize="xl">
+          <Text fontSize={['xl', 'sm', 'sm', 'lg', 'xl']}>
             <Trans>
               Canadians rely on the Government of Canada to provide secure
               digital services. A new policy notice guides government websites
@@ -27,7 +30,7 @@ export function WelcomeMessage() {
         <Image
           src={trackerLogo}
           alt={i18n._('Tracker Logo')}
-          size="87%"
+          size={['0%', '0%', '80%', '80%', '87%']}
           alignSelf="center"
           mx="10"
         />
