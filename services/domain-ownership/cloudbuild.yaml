@@ -11,7 +11,7 @@ steps:
 
     - name: mikewilliamson/wait-for
       id: wait
-      args: ['arango:8529']
+      args: ['127.0.0.1:8529']
 
     - name: node:alpine
       id: install
