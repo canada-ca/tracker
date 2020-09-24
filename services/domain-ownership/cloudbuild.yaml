@@ -6,7 +6,7 @@ steps:
       args:
         [
           "-c",
-          "docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$_DB_PASS --name=arango gcr.io/track-compliance/arangodb:latest",
+          "docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_NO_AUTH=1 --name=arango gcr.io/track-compliance/arangodb:latest",
         ]
 
     - name: mikewilliamson/wait-for
