@@ -6,12 +6,12 @@ steps:
       args:
         [
           "-c",
-          "docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$DB_PASS --name=arango gcr.io/track-compliance/arangodb:latest",
+          "docker run -d --network=cloudbuild -p=8529:8529 -e ARANGO_ROOT_PASSWORD=$_DB_PASS --name=arango gcr.io/track-compliance/arangodb:latest",
         ]
 
     - name: mikewilliamson/wait-for
       id: wait
-      args: ['127.0.0.1:8529']
+      args: ['arango:8529']
 
     - name: node:alpine
       id: install
