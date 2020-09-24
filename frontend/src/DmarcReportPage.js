@@ -6,13 +6,13 @@ import {
   DMARC_REPORT_SUMMARY_LIST,
 } from './graphql/queries'
 import DmarcTimeGraph from './DmarcReportSummaryGraph'
-import { Box, Heading, Select, Stack, Text } from '@chakra-ui/core'
+import { Box, Heading, IconButton, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { useParams, useHistory } from 'react-router-dom'
-import {months} from "./months";
+import { months } from './months'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -380,9 +380,19 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   return (
     <Box width="100%" px="4" mx="auto" overflow="hidden">
-      <Heading as="h1" textAlign="center">
-        {domainSlug.toUpperCase()}
-      </Heading>
+      <Stack isInline align="center">
+        <IconButton
+          icon="arrow-left"
+          onClick={history.goBack}
+          color="gray.900"
+          fontSize="2xl"
+          aria-label="back to dmarc summaries"
+          align="left"
+        />
+        <Heading as="h1" textAlign="center">
+          {domainSlug.toUpperCase()}
+        </Heading>
+      </Stack>
 
       {barDisplay}
 

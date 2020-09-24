@@ -117,8 +117,7 @@ export default function UserList({
   if (error) return <p>{String(error)}</p>
 
   // Change page
-  const paginate = pageNumber => setCurrentPage(pageNumber)
-
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   const removeUser = (user) => {
     const temp = userList.filter((c) => c.node.id !== user.id)
@@ -191,7 +190,12 @@ export default function UserList({
       >
         {({ handleSubmit, values, errors }) => (
           <form id="form" onSubmit={handleSubmit} noValidate>
-            <Stack mb="8px" alignItems="center" w="100%" isInline>
+            <Stack
+              mb="8px"
+              alignItems="center"
+              w={permission ? '100%' : ['100%', '50%']}
+              isInline
+            >
               <InputGroup flexGrow={1}>
                 <InputLeftElement>
                   <Icon name="search" color="gray.300" />
@@ -219,7 +223,7 @@ export default function UserList({
             </Stack>
 
             <TrackerButton
-              width="100%"
+              w={permission ? '100%' : ['100%', '50%']}
               variant="primary"
               type="submit"
               onClick={() => {
@@ -279,7 +283,7 @@ export default function UserList({
                         size="sm"
                         name="role"
                         defaultValue={userRole}
-                        onChange={e => (userRole = e.target.value)}
+                        onChange={(e) => (userRole = e.target.value)}
                       >
                         <option value="USER_READ">{i18n._(t`READ`)}</option>
                         <option value="USER_WRITE">{i18n._(t`WRITE`)}</option>

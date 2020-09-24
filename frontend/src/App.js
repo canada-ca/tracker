@@ -125,11 +125,6 @@ export default function App() {
                 component={ResetPasswordPage}
               />
 
-              <Route
-                path="/domains/:domainSlug"
-                component={DmarcGuidancePage}
-              />
-
               <RouteIf
                 condition={isLoggedIn()}
                 alternate="/sign-in"
@@ -168,7 +163,6 @@ export default function App() {
                 path="/domains"
                 render={({ match: { url } }) => (
                   <>
-                    {/* <Route path={`${url}`} component={DomainsPage} exact /> */}
                     <Route
                       path={`${url}/:domainSlug`}
                       component={DmarcGuidancePage}
