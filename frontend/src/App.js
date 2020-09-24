@@ -125,11 +125,6 @@ export default function App() {
                 component={ResetPasswordPage}
               />
 
-              <Route
-                path="/domains/:domainSlug"
-                component={DmarcGuidancePage}
-              />
-
               <RouteIf
                 condition={isLoggedIn()}
                 alternate="/sign-in"
