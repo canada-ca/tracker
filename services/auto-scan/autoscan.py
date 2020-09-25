@@ -214,9 +214,20 @@ Guidance = sqlalchemy.Table(
     "guidance",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("tag_id", sqlalchemy.String),
     sqlalchemy.Column("tag_name", sqlalchemy.String),
     sqlalchemy.Column("guidance", sqlalchemy.String),
-    sqlalchemy.Column("ref_links", sqlalchemy.String),
+    sqlalchemy.Column("ref_links", ARRAY(sqlalchemy.String)),
+)
+
+Summaries = sqlalchemy.Table(
+    "summaries",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("name", sqlalchemy.String),
+    sqlalchemy.Column("count", sqlalchemy.Integer),
+    sqlalchemy.Column("percentage", sqlalchemy.Float),
+    sqlalchemy.Column("type", sqlalchemy.String),
 )
 
 
