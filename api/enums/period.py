@@ -10,7 +10,7 @@ class PeriodEnums(graphene.Enum):
     JUNE = "Jun"
     JULY = "Jul"
     AUGUST = "Aug"
-    SEPTEMBER = "Sept"
+    SEPTEMBER = "Sep"
     OCTOBER = "Oct"
     NOVEMBER = "Nov"
     DECEMBER = "Dec"
