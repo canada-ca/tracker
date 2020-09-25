@@ -81,11 +81,24 @@ const domainType = new GraphQLObjectType({
       },
       type: periodType,
       resolve: async (
-        { domain },
+        { _id, domain },
         __,
-        { userId, loaders: { dmarcReportLoader } },
+        {
+          query,
+          userId,
+          loaders: { dmarcReportLoader, userLoaderByKey },
+          auth: { checkDomainOwnership, userRequired },
+        },
         info,
       ) => {
+        const user = await userRequired(userId, userLoaderByKey)
+        const permitted = await checkDomainOwnership({ userId: user._id, domainId: _id, query })
+
+        if (!permitted) {
+          console.warn(`User: ${userId} attempted to access dmarc report period data for ${domain}, but does not belong to an org with ownership.`)
+          throw new Error(`Unable to retrieve dmarc report information for: ${domain}`)
+        }
+
         const {
           data: { dmarcSummaryByPeriod },
         } = await dmarcReportLoader({ info, domain, userId })
@@ -96,11 +109,24 @@ const domainType = new GraphQLObjectType({
       description: 'Yearly summarized DMARC aggregate reports.',
       type: new GraphQLList(periodType),
       resolve: async (
-        { domain },
+        { _id, domain },
         __,
-        { userId, loaders: { dmarcReportLoader } },
+        {
+          query,
+          userId,
+          loaders: { dmarcReportLoader, userLoaderByKey },
+          auth: { checkDomainOwnership, userRequired },
+        },
         info,
       ) => {
+        const user = await userRequired(userId, userLoaderByKey)
+        const permitted = await checkDomainOwnership({ userId: user._id, domainId: _id, query })
+
+        if (!permitted) {
+          console.warn(`User: ${userId} attempted to access dmarc report yearly data for ${domain}, but does not belong to an org with ownership.`)
+          throw new Error(`Unable to retrieve dmarc report information for: ${domain}`)
+        }
+
         const {
           data: { yearlyDmarcSummaries },
         } = await dmarcReportLoader({ info, domain, userId })
