@@ -1,5 +1,6 @@
 const { GraphQLObjectType, GraphQLString } = require('graphql')
 const moment = require('moment')
+const { categoryPercentagesType } = require('./category-percentages')
 const { categoryTotalsType } = require('./category-totals')
 const { detailTablesType } = require('./detail-tables')
 
@@ -17,6 +18,11 @@ const periodType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'End date of data collection.',
       resolve: async ({ startDate }) => moment(startDate).year(),
+    },
+    categoryPercentages: {
+      type: categoryPercentagesType,
+      description: 'Category percentages based on the category totals.',
+      resolve: async ({ categoryTotals }) => categoryTotals,
     },
     categoryTotals: {
       type: categoryTotalsType,
