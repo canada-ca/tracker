@@ -19,7 +19,6 @@ export const TopBanner = (props) => {
           w="100%"
           align="center"
           fontFamily="body"
-          justifyContent="space-between"
           {...props}
         >
           <Box py="4" width={{ base: 272, md: 360 }}>
