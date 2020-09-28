@@ -49,61 +49,7 @@ export default function App() {
           </PhaseBanner>
           <TopBanner />
         </header>
-        <Navigation>
-          <Link to="/">
-            <Trans>Home</Trans>
-          </Link>
 
-          <Link to="/dmarc-summaries">
-            <Trans>DMARC Report</Trans>
-          </Link>
-
-          {/* <Link to="/domains">
-            <Trans>Domains</Trans>
-          </Link> */}
-
-          <Link to="/organizations">
-            <Trans>Organizations</Trans>
-          </Link>
-
-          {isLoggedIn() && (
-            <Link to="/user">
-              <Trans>User Profile</Trans>
-            </Link>
-          )}
-
-          {isLoggedIn() && (
-            <Link to="/admin">
-              <Trans>Admin Profile</Trans>
-            </Link>
-          )}
-
-          {isLoggedIn() ? (
-            <Link
-              to="/"
-              onClick={() => {
-                logout()
-                toast({
-                  title: i18n._(t`Sign Out.`),
-                  description: i18n._(
-                    t`You have successfully been signed out.`,
-                  ),
-                  status: 'success',
-                  duration: 9000,
-                  isClosable: true,
-                  position: 'bottom-left',
-                })
-              }}
-              ml={[null, 'auto']}
-            >
-              <Trans>Sign Out</Trans>
-            </Link>
-          ) : (
-            <Link to="/sign-in" ml={[null, 'auto']}>
-              <Trans>Sign In</Trans>
-            </Link>
-          )}
-        </Navigation>
         {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
         <Main>
           <Suspense fallback={<div>Loading...</div>}>
@@ -241,6 +187,61 @@ export default function App() {
             <Trans>Terms & conditions</Trans>
           </Link>
         </Footer>
+        <Navigation>
+          <Link to="/">
+            <Trans>Home</Trans>
+          </Link>
+
+          <Link to="/dmarc-summaries">
+            <Trans>DMARC Report</Trans>
+          </Link>
+
+          {/* <Link to="/domains">
+            <Trans>Domains</Trans>
+          </Link> */}
+
+          <Link to="/organizations">
+            <Trans>Organizations</Trans>
+          </Link>
+
+          {isLoggedIn() && (
+            <Link to="/user">
+              <Trans>User Profile</Trans>
+            </Link>
+          )}
+
+          {isLoggedIn() && (
+            <Link to="/admin">
+              <Trans>Admin Profile</Trans>
+            </Link>
+          )}
+
+          {isLoggedIn() ? (
+            <Link
+              to="/"
+              onClick={() => {
+                logout()
+                toast({
+                  title: i18n._(t`Sign Out.`),
+                  description: i18n._(
+                    t`You have successfully been signed out.`,
+                  ),
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                  position: 'bottom-left',
+                })
+              }}
+              ml={[null, 'auto']}
+            >
+              <Trans>Sign Out</Trans>
+            </Link>
+          ) : (
+            <Link to="/sign-in" ml={[null, 'auto']}>
+              <Trans>Sign In</Trans>
+            </Link>
+          )}
+        </Navigation>
       </Flex>
     </>
   )
