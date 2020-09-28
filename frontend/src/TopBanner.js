@@ -1,8 +1,10 @@
 import React from 'react'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { useLingui } from '@lingui/react'
+import { t } from '@lingui/macro'
 import sigEn from './images/goc-header-logo-en.svg'
 import sigFr from './images/goc-header-logo-fr.svg'
+import trackerLogo from './images/tracker_v-03-transparent.png'
 import { Flex, Box, Image } from '@chakra-ui/core'
 import { Layout } from './Layout'
 
@@ -29,7 +31,14 @@ export const TopBanner = (props) => {
               alt={i18n._('Symbol of the Government of Canada')}
             />
           </Box>
-          <Box py={4} pl={0} pr={4} ml="auto">
+          <Image
+            src={trackerLogo}
+            alt={i18n._(t`Tracker Logo`)}
+            h={41}
+            ml="auto"
+            mr={4}
+          />
+          <Box py={4} pl={0} pr={4}>
             <LocaleSwitcher />
           </Box>
         </Flex>
