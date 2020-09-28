@@ -1,3 +1,5 @@
+const { DMARC_REPORT_API_TOKEN, DMARC_REPORT_API_SECRET } = process.env
+
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -87,21 +89,29 @@ const domainType = new GraphQLObjectType({
           query,
           userId,
           loaders: { dmarcReportLoader, userLoaderByKey },
-          auth: { checkDomainOwnership, userRequired },
+          auth: { checkDomainOwnership, userRequired, tokenize },
         },
         info,
       ) => {
         const user = await userRequired(userId, userLoaderByKey)
-        const permitted = await checkDomainOwnership({ userId: user._id, domainId: _id, query })
+        const permitted = await checkDomainOwnership({
+          userId: user._id,
+          domainId: _id,
+          query,
+        })
 
         if (!permitted) {
-          console.warn(`User: ${userId} attempted to access dmarc report period data for ${domain}, but does not belong to an org with ownership.`)
-          throw new Error(`Unable to retrieve dmarc report information for: ${domain}`)
+          console.warn(
+            `User: ${userId} attempted to access dmarc report period data for ${domain}, but does not belong to an org with ownership.`,
+          )
+          throw new Error(
+            `Unable to retrieve dmarc report information for: ${domain}`,
+          )
         }
 
         const {
           data: { dmarcSummaryByPeriod },
-        } = await dmarcReportLoader({ info, domain, userId })
+        } = await dmarcReportLoader({ info, domain, userId, tokenize })
         return dmarcSummaryByPeriod
       },
     },
@@ -115,21 +125,29 @@ const domainType = new GraphQLObjectType({
           query,
           userId,
           loaders: { dmarcReportLoader, userLoaderByKey },
-          auth: { checkDomainOwnership, userRequired },
+          auth: { checkDomainOwnership, userRequired, tokenize },
         },
         info,
       ) => {
         const user = await userRequired(userId, userLoaderByKey)
-        const permitted = await checkDomainOwnership({ userId: user._id, domainId: _id, query })
+        const permitted = await checkDomainOwnership({
+          userId: user._id,
+          domainId: _id,
+          query,
+        })
 
         if (!permitted) {
-          console.warn(`User: ${userId} attempted to access dmarc report yearly data for ${domain}, but does not belong to an org with ownership.`)
-          throw new Error(`Unable to retrieve dmarc report information for: ${domain}`)
+          console.warn(
+            `User: ${userId} attempted to access dmarc report yearly data for ${domain}, but does not belong to an org with ownership.`,
+          )
+          throw new Error(
+            `Unable to retrieve dmarc report information for: ${domain}`,
+          )
         }
 
         const {
           data: { yearlyDmarcSummaries },
-        } = await dmarcReportLoader({ info, domain, userId })
+        } = await dmarcReportLoader({ info, domain, userId, tokenize })
         return yearlyDmarcSummaries
       },
     },

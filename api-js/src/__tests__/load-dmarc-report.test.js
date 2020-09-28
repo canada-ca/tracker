@@ -48,6 +48,7 @@ describe('given the domainLoaderDmarcReport function', () => {
         info,
         domain: 'test.domain.gc.ca',
         userId: '53521',
+        tokenize: jest.fn(),
       })
 
       expect(data).toEqual({ data: '12345' })
@@ -85,6 +86,7 @@ describe('given the domainLoaderDmarcReport function', () => {
           info,
           domain: 'test.domain.gc.ca',
           userId: '53521',
+          tokenize: jest.fn(),
         })
       } catch (err) {
         expect(err).toEqual(
