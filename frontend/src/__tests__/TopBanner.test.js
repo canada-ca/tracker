@@ -9,14 +9,13 @@ describe('<TopBanner />', () => {
   afterEach(cleanup)
 
   it('renders using the language prop correctly', () => {
-    const { getByRole } = render(
+    const { getByAltText } = render(
       <ThemeProvider theme={theme}>
         <I18nProvider i18n={setupI18n()}>
           <TopBanner lang="en" />
         </I18nProvider>
       </ThemeProvider>,
     )
-    const test = getByRole('img')
-    expect(test.getAttribute('alt')).toBe('Symbol of the Government of Canada')
+    expect(getByAltText('Symbol of the Government of Canada'))
   })
 })
