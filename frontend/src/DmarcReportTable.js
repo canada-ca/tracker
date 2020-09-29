@@ -279,6 +279,7 @@ function DmarcReportTable({ ...props }) {
                         <td
                           key={`${title}:${rowIndex}:${cellIndex}`}
                           {...cell.getCellProps()}
+                          style={cell.column.style}
                         >
                           {renderLinkableCell(cell)}
                         </td>
@@ -334,6 +335,21 @@ function DmarcReportTable({ ...props }) {
                 icon="arrow-right"
                 aria-label="Go to last page"
               />
+              <Stack isInline align="center" spacing="4px">
+                <Box>
+                  <label htmlFor="goTo">
+                    <Trans>Go to page:</Trans>
+                  </label>
+                </Box>
+                <Input
+                  id="goTo"
+                  width="6rem"
+                  value={goToPageValue}
+                  onChange={(event) => {
+                    handleGoToPageChange(event)
+                  }}
+                />
+              </Stack>
               <Text>
                 <Trans>
                   Page {pageIndex + 1} of {pageOptions.length}
@@ -341,16 +357,6 @@ function DmarcReportTable({ ...props }) {
               </Text>
             </Stack>
             <Stack spacing="1em" isInline align="center" flexWrap="wrap">
-              <Text>
-                <Trans>Go to page:</Trans>
-              </Text>
-              <Input
-                width="6rem"
-                value={goToPageValue}
-                onChange={(event) => {
-                  handleGoToPageChange(event)
-                }}
-              />
               <Select
                 value={pageSize}
                 onChange={(e) => {
@@ -359,7 +365,7 @@ function DmarcReportTable({ ...props }) {
                 }}
                 width="fit-content"
               >
-                {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                {[5, 10, 20].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
                     {i18n._(t`Show ${pageSize}`)}
                   </option>

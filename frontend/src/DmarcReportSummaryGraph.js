@@ -91,7 +91,9 @@ function DmarcReportSummaryGraph({ ...props }) {
             tickFormatter={formatYAxisTicks}
             domain={[0, 1]}
           />
-          <Tooltip />
+          <Tooltip
+            formatter={(value, _name, _props) => value.toLocaleString()}
+          />
           <Legend
             align="center"
             margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
