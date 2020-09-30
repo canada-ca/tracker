@@ -11,6 +11,7 @@ const { createMutationSchema } = require('./mutations')
 
 const fetch = require('isomorphic-fetch')
 const bcrypt = require('bcrypt')
+const moment = require('moment')
 const authFunctions = require('./auth')
 const { cleanseInput, slugify } = require('./validators')
 const notifyFunctions = require('./notify')
@@ -82,6 +83,7 @@ const Server = (context = {}) => {
         request,
         response,
         userId,
+        moment,
         auth: {
           bcrypt,
           ...authFunctions,

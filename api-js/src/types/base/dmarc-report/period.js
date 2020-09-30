@@ -1,5 +1,4 @@
 const { GraphQLObjectType, GraphQLString } = require('graphql')
-const moment = require('moment')
 const { categoryPercentagesType } = require('./category-percentages')
 const { categoryTotalsType } = require('./category-totals')
 const { detailTablesType } = require('./detail-tables')
@@ -12,12 +11,12 @@ const periodType = new GraphQLObjectType({
     month: {
       type: GraphQLString,
       description: 'Start date of data collection.',
-      resolve: async ({ startDate }) => moment(startDate).month() + 1,
+      resolve: async ({ startDate }, _, { moment }) => moment(startDate).month() + 1,
     },
     year: {
       type: GraphQLString,
       description: 'End date of data collection.',
-      resolve: async ({ startDate }) => moment(startDate).year(),
+      resolve: async ({ startDate }, _, { moment }) => moment(startDate).year(),
     },
     categoryPercentages: {
       type: categoryPercentagesType,
