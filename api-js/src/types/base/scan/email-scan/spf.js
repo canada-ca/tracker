@@ -5,15 +5,16 @@ const {
   GraphQLList,
 } = require('graphql')
 const { globalIdField } = require('graphql-relay')
-const { GraphQLDateTime, GraphQLURL } = require('graphql-scalars')
+const { GraphQLDateTime } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
+const { Domain } = require('../../../../scalars')
 
 const spfType = new GraphQLObjectType({
   name: 'SPF',
   fields: () => ({
     id: globalIdField('spf'),
     domain: {
-      type: GraphQLURL,
+      type: Domain,
       description: `The domain the scan was ran on.`,
       resolve: async () => {},
     },

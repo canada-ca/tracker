@@ -5,15 +5,16 @@ const {
   GraphQLList,
 } = require('graphql')
 const { globalIdField } = require('graphql-relay')
-const { GraphQLDateTime, GraphQLURL } = require('graphql-scalars')
+const { GraphQLDateTime } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
+const { Domain } = require('../../../../scalars')
 
 const dmarcType = new GraphQLObjectType({
   name: 'DMARC',
   fields: () => ({
     id: globalIdField('dmarc'),
     domain: {
-      type: GraphQLURL,
+      type: Domain,
       description: `The domain the scan was ran on.`,
       resolve: async () => {},
     },
