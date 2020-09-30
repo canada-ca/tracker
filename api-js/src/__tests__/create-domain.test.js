@@ -12,7 +12,7 @@ const bcrypt = require('bcrypt')
 const { cleanseInput, slugify } = require('../validators')
 const { checkPermission, tokenize, userRequired } = require('../auth')
 const {
-  domainLoaderBySlug,
+  domainLoaderByDomain,
   orgLoaderByKey,
   orgLoaderConnectionArgsByDomainId,
   userLoaderByKey,
@@ -152,7 +152,6 @@ describe('create a domain', () => {
                   domain {
                     id
                     domain
-                    slug
                     lastRan
                     selectors
                     organizations {
@@ -178,7 +177,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderBySlug: domainLoaderBySlug(query),
+                domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -204,7 +203,6 @@ describe('create a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
-                  slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   organizations: {
@@ -225,7 +223,7 @@ describe('create a domain', () => {
           expect(response).toEqual(expectedResponse)
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully created ${domain.slug} in org: treasury-board-secretariat.`,
+            `User: ${user._key} successfully created ${domain.domain} in org: treasury-board-secretariat.`,
           ])
         })
       })
@@ -277,7 +275,6 @@ describe('create a domain', () => {
                   domain {
                     id
                     domain
-                    slug
                     lastRan
                     selectors
                     organizations {
@@ -303,7 +300,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderBySlug: domainLoaderBySlug(query),
+                domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -329,7 +326,6 @@ describe('create a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
-                  slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   organizations: {
@@ -350,7 +346,7 @@ describe('create a domain', () => {
           expect(response).toEqual(expectedResponse)
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully created ${domain.slug} in org: treasury-board-secretariat.`,
+            `User: ${user._key} successfully created ${domain.domain} in org: treasury-board-secretariat.`,
           ])
         })
       })
@@ -378,7 +374,6 @@ describe('create a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                   organizations {
@@ -404,7 +399,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderBySlug: domainLoaderBySlug(query),
+              domainLoaderByDomain: domainLoaderByDomain(query),
               orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
@@ -430,7 +425,6 @@ describe('create a domain', () => {
               domain: {
                 id: toGlobalId('domains', domain._key),
                 domain: 'test.gc.ca',
-                slug: 'test-gc-ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
                 organizations: {
@@ -451,7 +445,7 @@ describe('create a domain', () => {
         expect(response).toEqual(expectedResponse)
 
         expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully created ${domain.slug} in org: treasury-board-secretariat.`,
+          `User: ${user._key} successfully created ${domain.domain} in org: treasury-board-secretariat.`,
         ])
       })
     })
@@ -478,7 +472,6 @@ describe('create a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                   organizations {
@@ -504,7 +497,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderBySlug: domainLoaderBySlug(query),
+              domainLoaderByDomain: domainLoaderByDomain(query),
               orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
@@ -530,7 +523,6 @@ describe('create a domain', () => {
               domain: {
                 id: toGlobalId('domains', domain._key),
                 domain: 'test.gc.ca',
-                slug: 'test-gc-ca',
                 lastRan: null,
                 selectors: ['selector1._domainkey', 'selector2._domainkey'],
                 organizations: {
@@ -551,7 +543,7 @@ describe('create a domain', () => {
         expect(response).toEqual(expectedResponse)
 
         expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully created ${domain.slug} in org: treasury-board-secretariat.`,
+          `User: ${user._key} successfully created ${domain.domain} in org: treasury-board-secretariat.`,
         ])
       })
     })
@@ -592,7 +584,6 @@ describe('create a domain', () => {
         beforeEach(async () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
           await collections.claims.save({
@@ -614,7 +605,6 @@ describe('create a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                   organizations {
@@ -640,7 +630,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderBySlug: domainLoaderBySlug(query),
+                domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -666,7 +656,6 @@ describe('create a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
-                  slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   organizations: {
@@ -693,7 +682,7 @@ describe('create a domain', () => {
           expect(response).toEqual(expectedResponse)
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully created ${domain.slug} in org: communications-security-establishment.`,
+            `User: ${user._key} successfully created ${domain.domain} in org: communications-security-establishment.`,
           ])
         })
       })
@@ -701,7 +690,6 @@ describe('create a domain', () => {
         beforeEach(async () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
           await collections.claims.save({
@@ -724,7 +712,6 @@ describe('create a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                   organizations {
@@ -750,7 +737,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderBySlug: domainLoaderBySlug(query),
+                domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -776,7 +763,6 @@ describe('create a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
-                  slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   organizations: {
@@ -803,7 +789,7 @@ describe('create a domain', () => {
           expect(response).toEqual(expectedResponse)
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully created ${domain.slug} in org: communications-security-establishment.`,
+            `User: ${user._key} successfully created ${domain.domain} in org: communications-security-establishment.`,
           ])
         })
       })
@@ -811,7 +797,6 @@ describe('create a domain', () => {
         beforeEach(async () => {
           const domain = await collections.domains.save({
             domain: 'test.gc.ca',
-            slug: 'test-gc-ca',
             selectors: ['selector1._domainkey', 'selector2._domainkey'],
           })
           await collections.claims.save({
@@ -834,7 +819,6 @@ describe('create a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                   organizations {
@@ -860,7 +844,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderBySlug: domainLoaderBySlug(query),
+                domainLoaderByDomain: domainLoaderByDomain(query),
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
                 orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                   query,
@@ -886,7 +870,6 @@ describe('create a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
-                  slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: [
                     'selector1._domainkey',
@@ -918,7 +901,7 @@ describe('create a domain', () => {
           expect(response).toEqual(expectedResponse)
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully created ${domain.slug} in org: communications-security-establishment.`,
+            `User: ${user._key} successfully created ${domain.domain} in org: communications-security-establishment.`,
           ])
         })
       })
@@ -941,7 +924,6 @@ describe('create a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                   organizations {
@@ -967,7 +949,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderBySlug: domainLoaderBySlug(query),
+              domainLoaderByDomain: domainLoaderByDomain(query),
               orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
@@ -1007,7 +989,6 @@ describe('create a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                   organizations {
@@ -1033,7 +1014,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderBySlug: domainLoaderBySlug(query),
+              domainLoaderByDomain: domainLoaderByDomain(query),
               orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
@@ -1066,7 +1047,6 @@ describe('create a domain', () => {
         })
         const domain = await collections.domains.save({
           domain: 'test.gc.ca',
-          slug: 'test-gc-ca',
         })
         await collections.claims.save({
           _from: org._id,
@@ -1088,7 +1068,6 @@ describe('create a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                   organizations {
@@ -1114,7 +1093,7 @@ describe('create a domain', () => {
             userId: user._key,
             auth: { checkPermission, userRequired },
             loaders: {
-              domainLoaderBySlug: domainLoaderBySlug(query),
+              domainLoaderByDomain: domainLoaderByDomain(query),
               orgLoaderByKey: orgLoaderByKey(query, 'en'),
               orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
                 query,
@@ -1148,7 +1127,7 @@ describe('create a domain', () => {
           })
         })
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderBySlug(query)
+          const domainLoader = domainLoaderByDomain(query)
           const orgIdLoader = orgLoaderByKey(query, 'en')
           const userIdLoader = userLoaderByKey(query)
           const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1186,7 +1165,6 @@ describe('create a domain', () => {
                   domain {
                     id
                     domain
-                    slug
                     lastRan
                     selectors
                     organizations {
@@ -1212,7 +1190,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderBySlug: domainLoader,
+                domainLoaderByDomain: domainLoader,
                 orgLoaderByKey: orgIdLoader,
                 orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
                 userLoaderByKey: userIdLoader,
@@ -1240,7 +1218,7 @@ describe('create a domain', () => {
           })
         })
         it('returns an error message', async () => {
-          const domainLoader = domainLoaderBySlug(query)
+          const domainLoader = domainLoaderByDomain(query)
           const orgIdLoader = orgLoaderByKey(query, 'en')
           const userIdLoader = userLoaderByKey(query)
           const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -1273,7 +1251,6 @@ describe('create a domain', () => {
                   domain {
                     id
                     domain
-                    slug
                     lastRan
                     selectors
                     organizations {
@@ -1299,7 +1276,7 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderBySlug: domainLoader,
+                domainLoaderByDomain: domainLoader,
                 orgLoaderByKey: orgIdLoader,
                 orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
                 userLoaderByKey: userIdLoader,

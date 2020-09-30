@@ -117,7 +117,6 @@ describe('updating a domain', () => {
       })
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
-        slug: 'test-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
@@ -157,7 +156,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -192,7 +190,6 @@ describe('updating a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
-                  slug: 'test-canada-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                 },
@@ -225,7 +222,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -260,7 +256,6 @@ describe('updating a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
-                  slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
                 },
@@ -294,7 +289,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -329,7 +323,6 @@ describe('updating a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
-                  slug: 'test-canada-ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
                 },
@@ -368,7 +361,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -403,7 +395,6 @@ describe('updating a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
-                  slug: 'test-canada-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                 },
@@ -436,7 +427,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -471,7 +461,6 @@ describe('updating a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
-                  slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
                 },
@@ -505,7 +494,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -540,7 +528,6 @@ describe('updating a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
-                  slug: 'test-canada-ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
                 },
@@ -579,7 +566,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -614,7 +600,6 @@ describe('updating a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
-                  slug: 'test-canada-ca',
                   lastRan: null,
                   selectors: ['selector1._domainkey', 'selector2._domainkey'],
                 },
@@ -647,7 +632,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -682,7 +666,6 @@ describe('updating a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.gc.ca',
-                  slug: 'test-gc-ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
                 },
@@ -716,7 +699,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -751,7 +733,6 @@ describe('updating a domain', () => {
                 domain: {
                   id: toGlobalId('domains', domain._key),
                   domain: 'test.canada.ca',
-                  slug: 'test-canada-ca',
                   lastRan: null,
                   selectors: ['selector3._domainkey', 'selector4._domainkey'],
                 },
@@ -797,7 +778,6 @@ describe('updating a domain', () => {
               domain {
                 id
                 domain
-                slug
                 lastRan
                 selectors
               }
@@ -841,7 +821,6 @@ describe('updating a domain', () => {
       beforeEach(async () => {
         domain = await collections.domains.save({
           domain: 'test.gc.ca',
-          slug: 'test-gc-ca',
           lastRan: null,
           selectors: ['selector1._domainkey', 'selector2._domainkey'],
         })
@@ -872,7 +851,6 @@ describe('updating a domain', () => {
               domain {
                 id
                 domain
-                slug
                 lastRan
                 selectors
               }
@@ -965,7 +943,6 @@ describe('updating a domain', () => {
         })
         domain = await collections.domains.save({
           domain: 'test.gc.ca',
-          slug: 'test-gc-ca',
           lastRan: null,
           selectors: ['selector1._domainkey', 'selector2._domainkey'],
         })
@@ -1009,7 +986,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -1075,7 +1051,6 @@ describe('updating a domain', () => {
                 domain {
                   id
                   domain
-                  slug
                   lastRan
                   selectors
                 }
@@ -1144,7 +1119,6 @@ describe('updating a domain', () => {
         })
         domain = await collections.domains.save({
           domain: 'test.gc.ca',
-          slug: 'test-gc-ca',
           lastRan: null,
           selectors: ['selector1._domainkey', 'selector2._domainkey'],
         })
@@ -1181,7 +1155,6 @@ describe('updating a domain', () => {
               domain {
                 id
                 domain
-                slug
                 lastRan
                 selectors
               }
@@ -1250,7 +1223,6 @@ describe('updating a domain', () => {
       })
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
-        slug: 'test-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
@@ -1306,7 +1278,6 @@ describe('updating a domain', () => {
               domain {
                 id
                 domain
-                slug
                 lastRan
                 selectors
               }
@@ -1375,7 +1346,6 @@ describe('updating a domain', () => {
       })
       domain = await collections.domains.save({
         domain: 'test.gc.ca',
-        slug: 'test-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
@@ -1427,7 +1397,6 @@ describe('updating a domain', () => {
               domain {
                 id
                 domain
-                slug
                 lastRan
                 selectors
               }
@@ -1499,7 +1468,6 @@ describe('updating a domain', () => {
               domain {
                 id
                 domain
-                slug
                 lastRan
                 selectors
               }

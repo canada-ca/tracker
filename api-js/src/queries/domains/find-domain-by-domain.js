@@ -1,14 +1,14 @@
 const { GraphQLNonNull } = require('graphql')
-const { Slug } = require('../../scalars')
+const { Domain } = require('../../scalars')
 const { domainType } = require('../../types')
 
-const findDomainBySlug = {
+const findDomainByDomain = {
   type: domainType,
-  description: 'Retrieve a specific domain by providing a slug.',
+  description: 'Retrieve a specific domain by providing a domain.',
   args: {
-    urlSlug: {
-      type: GraphQLNonNull(Slug),
-      description: 'The slugified name of the domain you wish to retrieve.',
+    domain: {
+      type: GraphQLNonNull(Domain),
+      description: 'The domain you wish to retrieve information for.',
     },
   },
   resolve: async (
@@ -18,22 +18,22 @@ const findDomainBySlug = {
       userId: userKey,
       query,
       auth: { checkDomainPermission, userRequired },
-      loaders: { domainLoaderBySlug, userLoaderByKey },
+      loaders: { domainLoaderByDomain, userLoaderByKey },
       validators: { cleanseInput },
     },
   ) => {
     // Cleanse input
-    const urlSlug = cleanseInput(args.urlSlug)
+    const domainInput = cleanseInput(args.domain)
 
     // Get User
     const user = await userRequired(userKey, userLoaderByKey)
 
-    // Retrieve domain by slug
-    const domain = await domainLoaderBySlug.load(urlSlug)
+    // Retrieve domain by domain
+    const domain = await domainLoaderByDomain.load(domainInput)
 
     if (typeof domain === 'undefined') {
       console.warn(`User ${user._key} could not retrieve domain.`)
-      throw new Error(`No domain with the provided slug could be found.`)
+      throw new Error(`No domain with the provided domain could be found.`)
     }
 
     // Check user permission for domain access
@@ -53,5 +53,5 @@ const findDomainBySlug = {
 }
 
 module.exports = {
-  findDomainBySlug,
+  findDomainByDomain,
 }

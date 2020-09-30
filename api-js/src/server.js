@@ -16,7 +16,7 @@ const notifyFunctions = require('./notify')
 
 const {
   domainLoaderByKey,
-  domainLoaderBySlug,
+  domainLoaderByDomain,
   orgLoaderByKey,
   orgLoaderBySlug,
   orgLoaderByConnectionArgs,
@@ -91,7 +91,7 @@ const Server = (context = {}) => {
         },
         loaders: {
           domainLoaderByKey: domainLoaderByKey(query),
-          domainLoaderBySlug: domainLoaderBySlug(query),
+          domainLoaderByDomain: domainLoaderByDomain(query),
           orgLoaderByKey: orgLoaderByKey(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),
           orgLoaderByConnectionArgs: orgLoaderByConnectionArgs(

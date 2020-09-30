@@ -1,9 +1,9 @@
-const { findDomainBySlug } = require('./find-domain-by-slug')
+const { findDomainByDomain } = require('./find-domain-by-domain')
 const { findDomainsByOrg } = require('./find-domains-by-org')
 const { findMyDomains } = require('./find-my-domains')
 
 module.exports = {
-  findDomainBySlug,
+  findDomainByDomain,
   findDomainsByOrg,
   findMyDomains,
 }

@@ -1,27 +1,12 @@
-const {
-  domainLoaderByKey,
-  domainLoaderBySlug,
-  domainLoaderConnectionsByOrgId,
-} = require('./domains')
-const {
-  orgLoaderByKey,
-  orgLoaderBySlug,
-  orgLoaderByConnectionArgs,
-  orgLoaderConnectionArgsByDomainId,
-} = require('./organizations')
-const { userLoaderByUserName, userLoaderByKey } = require('./user')
+const domainLoaders = require('./domains')
+const orgLoaders = require('./organizations')
+const userLoaders = require('./user')
 
 module.exports = {
   // Domain Loaders
-  domainLoaderByKey,
-  domainLoaderBySlug,
-  domainLoaderConnectionsByOrgId,
+  ...domainLoaders,
   // Org Loaders
-  orgLoaderByKey,
-  orgLoaderBySlug,
-  orgLoaderByConnectionArgs,
-  orgLoaderConnectionArgsByDomainId,
+  ...orgLoaders,
   // User Loaders
-  userLoaderByUserName,
-  userLoaderByKey,
+  ...userLoaders,
 }
