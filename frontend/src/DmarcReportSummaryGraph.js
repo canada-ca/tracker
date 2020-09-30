@@ -92,7 +92,7 @@ function DmarcReportSummaryGraph({ ...props }) {
             domain={[0, 1]}
           />
           <Tooltip
-            formatter={(value, _name, _props) => value.toLocaleString()}
+            formatter={(value, _name, _props) => value.toLocaleString(i18n.locale)}
           />
           <Legend
             align="center"

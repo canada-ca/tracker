@@ -62,7 +62,7 @@ export default function DmarcByDomainPage() {
     {
       Header: i18n._(t`Total Messages`),
       accessor: 'totalMessages',
-      Cell: ({ value }) => value.toLocaleString(),
+      Cell: ({ value }) => value.toLocaleString(i18n.locale),
       style: { textAlign: 'right' },
     },
     {
