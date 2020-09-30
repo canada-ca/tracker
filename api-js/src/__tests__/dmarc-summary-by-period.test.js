@@ -6,7 +6,9 @@ const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
+
 const bcrypt = require('bcrypt')
+const moment = require('moment')
 
 const { cleanseInput } = require('../validators')
 const {
@@ -158,19 +160,11 @@ describe('given findDomainByDomain query', () => {
           `
       })
       it('returns month and end', async () => {
-        const moment = jest.fn().mockReturnValue({
-          month() {
-            return '0'
-          },
-          year() {
-            return '2020'
-          },
-        })
         const dmarcReportLoader = jest.fn().mockReturnValue({
           data: {
             dmarcSummaryByPeriod: {
-              startDate: '',
-              endDate: '',
+              startDate: '2020-01-01',
+              endDate: '2020-01-31',
             },
           },
         })
@@ -180,7 +174,7 @@ describe('given findDomainByDomain query', () => {
           `
             query {
               findDomainByDomain(domain: "test.gc.ca") {
-                dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
+                dmarcSummaryByPeriod(month: JANUARY, year: "2020") {
                   month
                   year
                 }
@@ -241,19 +235,11 @@ describe('given findDomainByDomain query', () => {
         })
       })
       it('throws an error', async () => {
-        const moment = jest.fn().mockReturnValue({
-          month() {
-            return '0'
-          },
-          year() {
-            return '2020'
-          },
-        })
         const dmarcReportLoader = jest.fn().mockReturnValue({
           data: {
             dmarcSummaryByPeriod: {
-              startDate: '',
-              endDate: '',
+              startDate: '2020-01-01',
+              endDate: '2020-01-01',
             },
           },
         })
@@ -263,7 +249,7 @@ describe('given findDomainByDomain query', () => {
           `
             query {
               findDomainByDomain(domain: "test.gc.ca") {
-                dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
+                dmarcSummaryByPeriod(month: JANUARY, year: "2020") {
                   month
                   year
                 }
