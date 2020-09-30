@@ -1,4 +1,9 @@
-const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLID } = require('graphql')
+const {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLID,
+} = require('graphql')
 const { connectionDefinitions } = require('graphql-relay')
 
 const fullPassTableType = new GraphQLObjectType({

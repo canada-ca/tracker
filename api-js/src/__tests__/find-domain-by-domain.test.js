@@ -240,11 +240,15 @@ describe('given findDomainByDomain query', () => {
         )
 
         const error = [
-          new GraphQLError(`No domain with the provided domain could be found.`),
+          new GraphQLError(
+            `No domain with the provided domain could be found.`,
+          ),
         ]
 
         expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([`User ${user._key} could not retrieve domain.`])
+        expect(consoleOutput).toEqual([
+          `User ${user._key} could not retrieve domain.`,
+        ])
       })
     })
 
@@ -325,7 +329,9 @@ describe('given findDomainByDomain query', () => {
         const error = [new GraphQLError(`Could not retrieve specified domain.`)]
 
         expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([`User ${user._key} could not retrieve domain.`])
+        expect(consoleOutput).toEqual([
+          `User ${user._key} could not retrieve domain.`,
+        ])
       })
     })
   })

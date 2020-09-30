@@ -197,7 +197,7 @@ describe('given findDomainByDomain query', () => {
             findDomainByDomain(domain: "test.gc.ca") {
               dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
                 detailTables {
-                    fullPass(first: 1) {
+                  fullPass(first: 1) {
                     edges {
                       cursor
                       node {

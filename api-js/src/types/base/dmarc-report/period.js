@@ -11,7 +11,8 @@ const periodType = new GraphQLObjectType({
     month: {
       type: GraphQLString,
       description: 'Start date of data collection.',
-      resolve: async ({ startDate }, _, { moment }) => Number(moment(startDate).month()) + 1,
+      resolve: async ({ startDate }, _, { moment }) =>
+        Number(moment(startDate).month()) + 1,
     },
     year: {
       type: GraphQLString,

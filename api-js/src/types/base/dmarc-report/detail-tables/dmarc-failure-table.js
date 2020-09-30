@@ -1,4 +1,9 @@
-const { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLID } = require('graphql')
+const {
+  GraphQLInt,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLID,
+} = require('graphql')
 const { connectionDefinitions } = require('graphql-relay')
 
 const dmarcFailureTableType = new GraphQLObjectType({

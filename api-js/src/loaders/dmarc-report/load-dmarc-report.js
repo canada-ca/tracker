@@ -1,4 +1,8 @@
-const { DMARC_REPORT_API_TOKEN, DMARC_REPORT_API_SECRET, DMARC_REPORT_API_URL = 'http://localhost:4001/graphql' } = process.env
+const {
+  DMARC_REPORT_API_TOKEN,
+  DMARC_REPORT_API_SECRET,
+  DMARC_REPORT_API_URL = 'http://localhost:4001/graphql',
+} = process.env
 
 const dmarcReportLoader = ({
   generateGqlQuery,
@@ -18,9 +22,9 @@ const dmarcReportLoader = ({
 
     data = await fetch(DMARC_REPORT_API_URL, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
-        'Authorization': authToken, 
+        Authorization: authToken,
       },
       body: JSON.stringify({ query: gqlQuery }),
     }).then((response) => response.json())
