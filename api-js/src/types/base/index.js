@@ -28,13 +28,6 @@ const domainType = new GraphQLObjectType({
         return domain
       },
     },
-    slug: {
-      type: Slug,
-      description: 'Slugified Url',
-      resolve: async ({ slug }) => {
-        return slug
-      },
-    },
     lastRan: {
       type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
