@@ -1,16 +1,17 @@
 const { GraphQLObjectType } = require('graphql')
 const { globalIdField, connectionDefinitions } = require('graphql-relay')
-const { GraphQLDateTime, GraphQLURL } = require('graphql-scalars')
+const { GraphQLDateTime } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
 const { httpsType } = require('./https')
 const { sslType } = require('./ssl')
+const { Domain } = require('../../../../scalars')
 
 const webScanType = new GraphQLObjectType({
   name: 'WebScan',
   fields: () => ({
     id: globalIdField('web-scan'),
     domain: {
-      type: GraphQLURL,
+      type: Domain,
       description: `The domain the scan was ran on.`,
       resolve: async () => {},
     },

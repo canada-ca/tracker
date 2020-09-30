@@ -1,17 +1,18 @@
 const { GraphQLObjectType, GraphQLNonNull } = require('graphql')
 const { globalIdField, connectionDefinitions } = require('graphql-relay')
-const { GraphQLDateTime, GraphQLURL } = require('graphql-scalars')
+const { GraphQLDateTime } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
 const { dkimType } = require('./dkim')
 const { dmarcType } = require('./dmarc')
 const { spfType } = require('./spf')
+const { Domain } = require('../../../../scalars')
 
 const emailScanType = new GraphQLObjectType({
   name: 'EmailScan',
   fields: () => ({
     id: globalIdField('email-scan'),
     domain: {
-      type: GraphQLURL,
+      type: Domain,
       description: `The domain the scan was ran on.`,
       resolve: async () => {},
     },
