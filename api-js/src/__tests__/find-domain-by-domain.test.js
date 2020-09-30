@@ -13,12 +13,12 @@ const { cleanseInput } = require('../validators')
 const { checkDomainPermission, tokenize, userRequired } = require('../auth')
 const {
   userLoaderByUserName,
-  domainLoaderBySlug,
+  domainLoaderByDomain,
   userLoaderByKey,
 } = require('../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
-describe('given findDomainBySlugQuery', () => {
+describe('given findDomainByDomain query', () => {
   let query, drop, truncate, migrate, schema, collections, domain, org
 
   beforeAll(async () => {
@@ -108,7 +108,6 @@ describe('given findDomainBySlugQuery', () => {
     })
     domain = await collections.domains.save({
       domain: 'test.gc.ca',
-      slug: 'test-gc-ca',
       lastRan: null,
       selectors: ['selector1._domainkey', 'selector2._domainkey'],
     })
@@ -148,16 +147,15 @@ describe('given findDomainBySlugQuery', () => {
           REMOVE affiliation IN affiliations
       `
     })
-    describe('authorized user queries domain by slug', () => {
+    describe('authorized user queries domain by domain', () => {
       it('returns domain', async () => {
         const response = await graphql(
           schema,
           `
             query {
-              findDomainBySlug(urlSlug: "test-gc-ca") {
+              findDomainByDomain(domain: "test.gc.ca") {
                 id
                 domain
-                slug
                 lastRan
                 selectors
               }
@@ -175,7 +173,7 @@ describe('given findDomainBySlugQuery', () => {
               cleanseInput,
             },
             loaders: {
-              domainLoaderBySlug: domainLoaderBySlug(query),
+              domainLoaderByDomain: domainLoaderByDomain(query),
               userLoaderByKey: userLoaderByKey(query),
             },
           },
@@ -183,10 +181,9 @@ describe('given findDomainBySlugQuery', () => {
 
         const expectedResponse = {
           data: {
-            findDomainBySlug: {
+            findDomainByDomain: {
               id: toGlobalId('domains', domain._key),
               domain: 'test.gc.ca',
-              slug: 'test-gc-ca',
               lastRan: null,
               selectors: ['selector1._domainkey', 'selector2._domainkey'],
             },
@@ -216,10 +213,9 @@ describe('given findDomainBySlugQuery', () => {
           schema,
           `
             query {
-              findDomainBySlug(urlSlug: "not-test-gc-ca") {
+              findDomainByDomain(domain: "not-test.gc.ca") {
                 id
                 domain
-                slug
                 lastRan
                 selectors
               }
@@ -237,14 +233,14 @@ describe('given findDomainBySlugQuery', () => {
               cleanseInput,
             },
             loaders: {
-              domainLoaderBySlug: domainLoaderBySlug(query),
+              domainLoaderByDomain: domainLoaderByDomain(query),
               userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
 
         const error = [
-          new GraphQLError(`No domain with the provided slug could be found.`),
+          new GraphQLError(`No domain with the provided domain could be found.`),
         ]
 
         expect(response.errors).toEqual(error)
@@ -281,7 +277,6 @@ describe('given findDomainBySlugQuery', () => {
         })
         domain = await collections.domains.save({
           domain: 'not-test.gc.ca',
-          slug: 'not-test-gc-ca',
           lastRan: null,
           selectors: ['selector1', 'selector2'],
         })
@@ -301,10 +296,9 @@ describe('given findDomainBySlugQuery', () => {
           schema,
           `
             query {
-              findDomainBySlug(urlSlug: "not-test-gc-ca") {
+              findDomainByDomain(domain: "not-test.gc.ca") {
                 id
                 domain
-                slug
                 lastRan
                 selectors
               }
@@ -322,7 +316,7 @@ describe('given findDomainBySlugQuery', () => {
               cleanseInput,
             },
             loaders: {
-              domainLoaderBySlug: domainLoaderBySlug(query),
+              domainLoaderByDomain: domainLoaderByDomain(query),
               userLoaderByKey: userLoaderByKey(query),
             },
           },
