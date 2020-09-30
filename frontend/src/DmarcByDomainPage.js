@@ -6,7 +6,7 @@ import { Box, Heading, Text, Stack, Select } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import {months} from "./months";
+import { months } from './months'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -55,21 +55,40 @@ export default function DmarcByDomainPage() {
     passDkimOnlyPercentage,
     failPercentage,
   ] = [
-    { Header: i18n._(t`Domain`), accessor: 'domain' },
-    { Header: i18n._(t`Total Messages`), accessor: 'totalMessages' },
+    {
+      Header: i18n._(t`Domain`),
+      accessor: 'domain',
+    },
+    {
+      Header: i18n._(t`Total Messages`),
+      accessor: 'totalMessages',
+      Cell: ({ value }) => value.toLocaleString(i18n.locale),
+      style: { textAlign: 'right' },
+    },
     {
       Header: i18n._(t`Full Pass %`),
       accessor: 'fullPassPercentage',
+      Cell: ({ value }) => `${value}%`,
+      style: { textAlign: 'right' },
     },
     {
       Header: i18n._(t`Fail DKIM %`),
       accessor: 'passSpfOnlyPercentage',
+      Cell: ({ value }) => `${value}%`,
+      style: { textAlign: 'right' },
     },
     {
       Header: i18n._(t`Fail SPF %`),
       accessor: 'passDkimOnlyPercentage',
+      Cell: ({ value }) => `${value}%`,
+      style: { textAlign: 'right' },
     },
-    { Header: i18n._(t`Full Fail %`), accessor: 'failPercentage' },
+    {
+      Header: i18n._(t`Full Fail %`),
+      accessor: 'failPercentage',
+      Cell: ({ value }) => `${value}%`,
+      style: { textAlign: 'right' },
+    },
   ]
 
   const percentageColumns = [
