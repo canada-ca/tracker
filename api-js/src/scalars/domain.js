@@ -1,11 +1,11 @@
 const { Kind, GraphQLError, GraphQLScalarType } = require('graphql')
+const psl = require('psl')
 
 const validate = (value) => {
-  const DOMAIN_REGEX = /\b((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}\b/
   if (typeof value !== typeof 'string') {
     throw new TypeError(`Value is not a string: ${typeof value}`)
   }
-  if (!DOMAIN_REGEX.test(value)) {
+  if (!psl.isValid(value)) {
     throw new TypeError(`Value is not a valid domain: ${value}`)
   }
 
