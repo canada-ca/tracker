@@ -2,18 +2,22 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { graphql, GraphQLSchema } = require('graphql')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-const { toGlobalId } = require('graphql-relay')
 const bcrypt = require('bcrypt')
 
 const { cleanseInput } = require('../validators')
-const { checkDomainPermission, tokenize, userRequired } = require('../auth')
 const {
-  userLoaderByUserName,
+  checkDomainPermission,
+  checkDomainOwnership,
+  tokenize,
+  userRequired,
+} = require('../auth')
+const {
   domainLoaderByDomain,
+  userLoaderByUserName,
   userLoaderByKey,
 } = require('../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -115,13 +119,17 @@ describe('given findDomainByDomain query', () => {
       _to: domain._id,
       _from: org._id,
     })
+    await collections.ownership.save({
+      _to: domain._id,
+      _from: org._id,
+    })
   })
 
   afterEach(async () => {
     await drop()
   })
 
-  describe('given successful domain retrieval', () => {
+  describe('find the dmarc report category percentages for a given dmarc report period', () => {
     let user
     beforeEach(async () => {
       const userCursor = await query`
@@ -136,6 +144,7 @@ describe('given findDomainByDomain query', () => {
         permission: 'user',
       })
     })
+
     afterEach(async () => {
       await query`
         LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
@@ -147,17 +156,35 @@ describe('given findDomainByDomain query', () => {
           REMOVE affiliation IN affiliations
       `
     })
-    describe('authorized user queries domain by domain', () => {
-      it('returns domain', async () => {
+    describe('category values are greater than 0', () => {
+      it('returns category percentages', async () => {
+        const dmarcReportLoader = jest.fn().mockReturnValue({
+          data: {
+            dmarcSummaryByPeriod: {
+              categoryTotals: {
+                fail: 10,
+                fullPass: 53,
+                passDkimOnly: 123,
+                passSpfOnly: 135,
+              },
+            },
+          },
+        })
+
         const response = await graphql(
           schema,
           `
             query {
               findDomainByDomain(domain: "test.gc.ca") {
-                id
-                domain
-                lastRan
-                selectors
+                dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
+                  categoryPercentages {
+                    failPercentage
+                    fullPassPercentage
+                    passDkimOnlyPercentage
+                    passSpfOnlyPercentage
+                    totalMessages
+                  }
+                }
               }
             }
           `,
@@ -167,6 +194,8 @@ describe('given findDomainByDomain query', () => {
             query: query,
             auth: {
               checkDomainPermission,
+              checkDomainOwnership,
+              tokenize,
               userRequired,
             },
             validators: {
@@ -174,6 +203,7 @@ describe('given findDomainByDomain query', () => {
             },
             loaders: {
               domainLoaderByDomain: domainLoaderByDomain(query),
+              dmarcReportLoader,
               userLoaderByKey: userLoaderByKey(query),
             },
           },
@@ -182,10 +212,15 @@ describe('given findDomainByDomain query', () => {
         const expectedResponse = {
           data: {
             findDomainByDomain: {
-              id: toGlobalId('domains', domain._key),
-              domain: 'test.gc.ca',
-              lastRan: null,
-              selectors: ['selector1._domainkey', 'selector2._domainkey'],
+              dmarcSummaryByPeriod: {
+                categoryPercentages: {
+                  failPercentage: 3.12,
+                  fullPassPercentage: 16.51,
+                  passDkimOnlyPercentage: 38.32,
+                  passSpfOnlyPercentage: 42.06,
+                  totalMessages: 321,
+                },
+              },
             },
           },
         }
@@ -195,29 +230,35 @@ describe('given findDomainByDomain query', () => {
         ])
       })
     })
-  })
+    describe('category totals are zero', () => {
+      it('returns category percentages', async () => {
+        const dmarcReportLoader = jest.fn().mockReturnValue({
+          data: {
+            dmarcSummaryByPeriod: {
+              categoryTotals: {
+                fail: 0,
+                fullPass: 0,
+                passDkimOnly: 0,
+                passSpfOnly: 0,
+              },
+            },
+          },
+        })
 
-  describe('given unsuccessful domain retrieval', () => {
-    describe('domain cannot be found', () => {
-      let user
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-      })
-      it('returns an appropriate error message', async () => {
         const response = await graphql(
           schema,
           `
             query {
-              findDomainByDomain(domain: "not-test.gc.ca") {
-                id
-                domain
-                lastRan
-                selectors
+              findDomainByDomain(domain: "test.gc.ca") {
+                dmarcSummaryByPeriod(month: SEPTEMBER, year: "2020") {
+                  categoryPercentages {
+                    failPercentage
+                    fullPassPercentage
+                    passDkimOnlyPercentage
+                    passSpfOnlyPercentage
+                    totalMessages
+                  }
+                }
               }
             }
           `,
@@ -227,6 +268,8 @@ describe('given findDomainByDomain query', () => {
             query: query,
             auth: {
               checkDomainPermission,
+              checkDomainOwnership,
+              tokenize,
               userRequired,
             },
             validators: {
@@ -234,103 +277,30 @@ describe('given findDomainByDomain query', () => {
             },
             loaders: {
               domainLoaderByDomain: domainLoaderByDomain(query),
+              dmarcReportLoader,
               userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
 
-        const error = [
-          new GraphQLError(
-            `No domain with the provided domain could be found.`,
-          ),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User ${user._key} could not retrieve domain.`,
-        ])
-      })
-    })
-
-    describe('user does not belong to an org which claims domain', () => {
-      let user
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'not-treasury-board-secretariat',
-              acronym: 'NTBS',
-              name: 'Not Treasury Board of Canada Secretariat',
-              zone: 'NFED',
-              sector: 'NTBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'ne-pas-secretariat-conseil-tresor',
-              acronym: 'NPSCT',
-              name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
-              zone: 'NPFED',
-              sector: 'NPTBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
+        const expectedResponse = {
+          data: {
+            findDomainByDomain: {
+              dmarcSummaryByPeriod: {
+                categoryPercentages: {
+                  failPercentage: 0,
+                  fullPassPercentage: 0,
+                  passDkimOnlyPercentage: 0,
+                  passSpfOnlyPercentage: 0,
+                  totalMessages: 0,
+                },
+              },
             },
           },
-        })
-        domain = await collections.domains.save({
-          domain: 'not-test.gc.ca',
-          lastRan: null,
-          selectors: ['selector1', 'selector2'],
-        })
-        await collections.claims.save({
-          _to: domain._id,
-          _from: org._id,
-        })
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-      })
-      it('returns an appropriate error message', async () => {
-        const response = await graphql(
-          schema,
-          `
-            query {
-              findDomainByDomain(domain: "not-test.gc.ca") {
-                id
-                domain
-                lastRan
-                selectors
-              }
-            }
-          `,
-          null,
-          {
-            userId: user._key,
-            query: query,
-            auth: {
-              checkDomainPermission,
-              userRequired,
-            },
-            validators: {
-              cleanseInput,
-            },
-            loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              userLoaderByKey: userLoaderByKey(query),
-            },
-          },
-        )
-
-        const error = [new GraphQLError(`Could not retrieve specified domain.`)]
-
-        expect(response.errors).toEqual(error)
+        }
+        expect(response).toEqual(expectedResponse)
         expect(consoleOutput).toEqual([
-          `User ${user._key} could not retrieve domain.`,
+          `User ${user._key} successfully retrieved domain ${domain._key}.`,
         ])
       })
     })

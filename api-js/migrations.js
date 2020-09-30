@@ -79,6 +79,11 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     databaseName,
     name: 'domainsSSL',
   },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'ownership',
+  },
 ]
 
 module.exports = {

@@ -9,12 +9,17 @@ const { ApolloServer } = require('apollo-server-express')
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
 
+const fetch = require('isomorphic-fetch')
 const bcrypt = require('bcrypt')
+const moment = require('moment')
 const authFunctions = require('./auth')
 const { cleanseInput, slugify } = require('./validators')
 const notifyFunctions = require('./notify')
 
 const {
+  generateDetailTableFields,
+  generateGqlQuery,
+  dmarcReportLoader,
   domainLoaderByKey,
   domainLoaderByDomain,
   orgLoaderByKey,
@@ -78,6 +83,7 @@ const Server = (context = {}) => {
         request,
         response,
         userId,
+        moment,
         auth: {
           bcrypt,
           ...authFunctions,
@@ -90,6 +96,11 @@ const Server = (context = {}) => {
           ...notifyFunctions,
         },
         loaders: {
+          dmarcReportLoader: dmarcReportLoader({
+            generateGqlQuery,
+            generateDetailTableFields,
+            fetch,
+          }),
           domainLoaderByKey: domainLoaderByKey(query),
           domainLoaderByDomain: domainLoaderByDomain(query),
           orgLoaderByKey: orgLoaderByKey(query, request.language),
