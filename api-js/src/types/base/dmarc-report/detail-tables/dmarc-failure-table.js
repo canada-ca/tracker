@@ -1,12 +1,16 @@
-const { GraphQLInt, GraphQLObjectType, GraphQLString } = require('graphql')
-const { globalIdField, connectionDefinitions } = require('graphql-relay')
+const { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLID } = require('graphql')
+const { connectionDefinitions } = require('graphql-relay')
 
 const dmarcFailureTableType = new GraphQLObjectType({
   name: 'DmarcFailureTable',
   description:
     'This table contains the data fields for senders who are in the DMARC failure category.',
   fields: () => ({
-    id: globalIdField('dmarcFail'),
+    id: {
+      type: GraphQLID,
+      description: 'The ID of the object',
+      resolve: async ({ id }) => id,
+    },
     dkimDomains: {
       type: GraphQLString,
       description: 'Domains used for DKIM validation',

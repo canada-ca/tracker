@@ -3,15 +3,20 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLBoolean,
+  GraphQLID,
 } = require('graphql')
-const { globalIdField, connectionDefinitions } = require('graphql-relay')
+const { connectionDefinitions } = require('graphql-relay')
 
 const dkimFailureTableType = new GraphQLObjectType({
   name: 'DkimFailureTable',
   description:
     'This table contains the data fields for senders who are in the DKIM fail category.',
   fields: () => ({
-    id: globalIdField('dkimFail'),
+    id: {
+      type: GraphQLID,
+      description: 'The ID of the object.',
+      resolve: async ({ id }) => id,
+    },
     dkimAligned: {
       type: GraphQLBoolean,
       description: 'Is DKIM aligned.',

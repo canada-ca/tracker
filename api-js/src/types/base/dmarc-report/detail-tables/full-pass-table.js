@@ -1,12 +1,16 @@
-const { GraphQLObjectType, GraphQLString, GraphQLInt } = require('graphql')
-const { globalIdField, connectionDefinitions } = require('graphql-relay')
+const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLID } = require('graphql')
+const { connectionDefinitions } = require('graphql-relay')
 
 const fullPassTableType = new GraphQLObjectType({
   name: 'FullPassTable',
   description:
     'This table contains the data fields for senders who are in the Full Pass category.',
   fields: () => ({
-    id: globalIdField('fullPass'),
+    id: {
+      type: GraphQLID,
+      description: 'The ID of the object',
+      resolve: async ({ id }) => id,
+    },
     dkimDomains: {
       type: GraphQLString,
       description: 'Domains used for DKIM validation',

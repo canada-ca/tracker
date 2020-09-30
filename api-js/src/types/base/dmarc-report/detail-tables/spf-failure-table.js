@@ -3,15 +3,20 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLBoolean,
+  GraphQLID,
 } = require('graphql')
-const { globalIdField, connectionDefinitions } = require('graphql-relay')
+const { connectionDefinitions } = require('graphql-relay')
 
 const spfFailureTableType = new GraphQLObjectType({
   name: 'SpfFailureTable',
   description:
     'This table contains the data fields for senders who are in the SPF fail category.',
   fields: () => ({
-    id: globalIdField('spfFail'),
+    id: {
+      type: GraphQLID,
+      description: 'The ID of the object',
+      resolve: async ({ id }) => id,
+    },
     dnsHost: {
       type: GraphQLString,
       description: 'Host from reverse DNS of source IP address.',
