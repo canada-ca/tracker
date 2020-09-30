@@ -82,7 +82,7 @@
     "prettier": "^2.1.2",
     "react-hot-loader": "^4.12.21",
     "react-test-renderer": "^16.13.1",
-    "supertest": "^4.0.2",
+    "supertest": "^5.0.0",
     "url-loader": "^4.1.0",
     "webpack": "^4.44.1",
     "webpack-bundle-analyzer": "^3.8.0",
