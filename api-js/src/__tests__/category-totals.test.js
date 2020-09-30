@@ -211,7 +211,7 @@ describe('given findDomainByDomain query', () => {
         data: {
           findDomainByDomain: {
             dmarcSummaryByPeriod: {
-              categoryPercentages: {
+              categoryTotals: {
                 fail: 10,
                 fullPass: 53,
                 passDkimOnly: 123,
