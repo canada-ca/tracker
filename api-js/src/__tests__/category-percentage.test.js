@@ -6,7 +6,6 @@ const { graphql, GraphQLSchema } = require('graphql')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-const { toGlobalId } = require('graphql-relay')
 const bcrypt = require('bcrypt')
 
 const { cleanseInput } = require('../validators')
