@@ -1,18 +1,18 @@
 const DataLoader = require('dataloader')
 
-module.exports.domainLoaderBySlug = (query) =>
-  new DataLoader(async (slugs) => {
+module.exports.domainLoaderByDomain = (query) =>
+  new DataLoader(async (domains) => {
     let cursor
 
     try {
       cursor = await query`
         FOR domain IN domains
-          FILTER ${slugs}[** FILTER CURRENT == domain.slug]
+          FILTER ${domains}[** FILTER CURRENT == domain.domain]
           RETURN domain
       `
     } catch (err) {
       console.error(
-        `Database error occurred when running domainLoaderBySlug: ${err}`,
+        `Database error occurred when running domainLoaderByDomain: ${err}`,
       )
       throw new Error('Unable to find domain. Please try again.')
     }
@@ -20,12 +20,12 @@ module.exports.domainLoaderBySlug = (query) =>
     const domainMap = {}
     try {
       await cursor.each((domain) => {
-        domainMap[domain.slug] = domain
+        domainMap[domain.domain] = domain
       })
     } catch (err) {
-      console.error(`Cursor error occurred during domainLoaderBySlug: ${err}`)
+      console.error(`Cursor error occurred during domainLoaderByDomain: ${err}`)
       throw new Error('Unable to find domain. Please try again.')
     }
 
-    return slugs.map((slug) => domainMap[slug])
+    return domains.map((domain) => domainMap[domain])
   })

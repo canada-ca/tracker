@@ -1,11 +1,11 @@
 const { domainLoaderByKey } = require('./load-domain-by-key')
-const { domainLoaderBySlug } = require('./load-domain-by-slug')
+const { domainLoaderByDomain } = require('./load-domain-by-domain')
 const {
   domainLoaderConnectionsByOrgId,
 } = require('./load-domain-connections-by-organizations-id')
 
 module.exports = {
   domainLoaderByKey,
-  domainLoaderBySlug,
+  domainLoaderByDomain,
   domainLoaderConnectionsByOrgId,
 }

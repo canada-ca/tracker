@@ -4,9 +4,9 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { makeMigrations } = require('../../migrations')
-const { domainLoaderBySlug } = require('../loaders')
+const { domainLoaderByDomain } = require('../loaders')
 
-describe('given a domainLoaderBySlug dataloader', () => {
+describe('given a domainLoaderByDomain dataloader', () => {
   let query, drop, truncate, migrate, collections
 
   let consoleOutput = []
@@ -23,11 +23,9 @@ describe('given a domainLoaderBySlug dataloader', () => {
     await truncate()
     await collections.domains.save({
       domain: 'test.canada.ca',
-      slug: 'test-canada-ca',
     })
     await collections.domains.save({
       domain: 'test.gc.ca',
-      slug: 'test-gc-ca',
     })
     consoleOutput = []
   })
@@ -46,15 +44,15 @@ describe('given a domainLoaderBySlug dataloader', () => {
       `
       const expectedDomain = await expectedCursor.next()
 
-      const loader = domainLoaderBySlug(query)
-      const user = await loader.load(expectedDomain.slug)
+      const loader = domainLoaderByDomain(query)
+      const user = await loader.load(expectedDomain.domain)
 
       expect(user).toEqual(expectedDomain)
     })
   })
   describe('provided a list of ids', () => {
     it('returns a list of users', async () => {
-      const domainIds = []
+      const domainDomains = []
       const expectedDomains = []
       const expectedCursor = await query`
         FOR domain IN domains
@@ -63,12 +61,12 @@ describe('given a domainLoaderBySlug dataloader', () => {
 
       while (expectedCursor.hasNext()) {
         const tempUser = await expectedCursor.next()
-        domainIds.push(tempUser.slug)
+        domainDomains.push(tempUser.domain)
         expectedDomains.push(tempUser)
       }
 
-      const loader = domainLoaderBySlug(query)
-      const users = await loader.loadMany(domainIds)
+      const loader = domainLoaderByDomain(query)
+      const users = await loader.loadMany(domainDomains)
       expect(users).toEqual(expectedDomains)
     })
   })
@@ -82,10 +80,10 @@ describe('given a domainLoaderBySlug dataloader', () => {
       const expectedDomain = await expectedCursor.next()
 
       query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-      const loader = domainLoaderBySlug(query)
+      const loader = domainLoaderByDomain(query)
 
       try {
-        await loader.load(expectedDomain.slug)
+        await loader.load(expectedDomain.domain)
       } catch (err) {
         expect(err).toEqual(
           new Error('Unable to find domain. Please try again.'),
@@ -93,7 +91,7 @@ describe('given a domainLoaderBySlug dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Database error occurred when running domainLoaderBySlug: Error: Database error occurred.`,
+        `Database error occurred when running domainLoaderByDomain: Error: Database error occurred.`,
       ])
     })
   })
@@ -112,10 +110,10 @@ describe('given a domainLoaderBySlug dataloader', () => {
         },
       }
       query = jest.fn().mockReturnValue(cursor)
-      const loader = domainLoaderBySlug(query)
+      const loader = domainLoaderByDomain(query)
 
       try {
-        await loader.load(expectedDomain.slug)
+        await loader.load(expectedDomain.domain)
       } catch (err) {
         expect(err).toEqual(
           new Error('Unable to find domain. Please try again.'),
@@ -123,7 +121,7 @@ describe('given a domainLoaderBySlug dataloader', () => {
       }
 
       expect(consoleOutput).toEqual([
-        `Cursor error occurred during domainLoaderBySlug: Error: Cursor error occurred.`,
+        `Cursor error occurred during domainLoaderByDomain: Error: Cursor error occurred.`,
       ])
     })
   })
