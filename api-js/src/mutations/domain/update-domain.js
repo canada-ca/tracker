@@ -44,7 +44,7 @@ const updateDomain = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, userRequired },
-      validators: { cleanseInput, slugify },
+      validators: { cleanseInput },
       loaders: { domainLoaderByKey, orgLoaderByKey, userLoaderByKey },
     },
   ) => {
@@ -130,7 +130,6 @@ const updateDomain = new mutationWithClientMutationId({
     // Update domain
     const domainToInsert = {
       domain: updatedDomain || domain.domain,
-      slug: slugify(updatedDomain) || domain.slug,
       lastRan: domain.lastRan,
       selectors: selectors || domain.selectors,
     }

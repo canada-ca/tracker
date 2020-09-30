@@ -39,8 +39,8 @@ const createDomain = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, userRequired },
-      loaders: { domainLoaderBySlug, orgLoaderByKey, userLoaderByKey },
-      validators: { cleanseInput, slugify },
+      loaders: { domainLoaderByDomain, orgLoaderByKey, userLoaderByKey },
+      validators: { cleanseInput },
     },
   ) => {
     // Cleanse input
@@ -83,7 +83,6 @@ const createDomain = new mutationWithClientMutationId({
 
     const insertDomain = {
       domain: domain,
-      slug: slugify(domain),
       lastRan: null,
       selectors: selectors,
     }
@@ -92,7 +91,7 @@ const createDomain = new mutationWithClientMutationId({
     let checkDomainCursor
     try {
       checkDomainCursor = await query`
-        LET domainIds = (FOR domain IN domains FILTER domain.slug == ${insertDomain.slug} RETURN { id: domain._id })
+        LET domainIds = (FOR domain IN domains FILTER domain.domain == ${insertDomain.domain} RETURN { id: domain._id })
         FOR domainId IN domainIds 
           LET domainEdges = (FOR v, e IN 1..1 ANY domainId.id claims RETURN { _from: e._from })
             FOR domainEdge IN domainEdges
@@ -117,7 +116,7 @@ const createDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if domain already exists in db
-    const checkDomain = await domainLoaderBySlug.load(insertDomain.slug)
+    const checkDomain = await domainLoaderByDomain.load(insertDomain.domain)
 
     // Generate list of collections names
     const collectionStrings = []
@@ -168,11 +167,11 @@ const createDomain = new mutationWithClientMutationId({
     }
 
     // Clear dataloader incase anything was updated or inserted into domain
-    await domainLoaderBySlug.clear(insertDomain.slug)
-    const returnDomain = await domainLoaderBySlug.load(insertDomain.slug)
+    await domainLoaderByDomain.clear(insertDomain.domain)
+    const returnDomain = await domainLoaderByDomain.load(insertDomain.domain)
 
     console.info(
-      `User: ${userId} successfully created ${returnDomain.slug} in org: ${org.slug}.`,
+      `User: ${userId} successfully created ${returnDomain.domain} in org: ${org.slug}.`,
     )
 
     returnDomain.id = returnDomain._key
