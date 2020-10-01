@@ -22,6 +22,7 @@ const {
   dmarcReportLoader,
   domainLoaderByKey,
   domainLoaderByDomain,
+  domainLoaderConnectionsByUserId,
   orgLoaderByKey,
   orgLoaderBySlug,
   orgLoaderByConnectionArgs,
@@ -103,6 +104,11 @@ const Server = (context = {}) => {
           }),
           domainLoaderByKey: domainLoaderByKey(query),
           domainLoaderByDomain: domainLoaderByDomain(query),
+          domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
+            query,
+            userId,
+            cleanseInput,
+          ),
           orgLoaderByKey: orgLoaderByKey(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),
           orgLoaderByConnectionArgs: orgLoaderByConnectionArgs(
