@@ -1,9 +1,9 @@
 const { GraphQLObjectType } = require('graphql')
-const { globalIdField, connectionDefinitions, connectionArgs } = require('graphql-relay')
+const { globalIdField, connectionDefinitions } = require('graphql-relay')
 const { GraphQLDateTime } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
-const { httpsConnection } = require('./https')
-const { sslConnection } = require('./ssl')
+const { httpsType } = require('./https')
+const { sslType } = require('./ssl')
 const { Domain } = require('../../../../scalars')
 
 const webScanType = new GraphQLObjectType({
@@ -21,18 +21,12 @@ const webScanType = new GraphQLObjectType({
       resolve: async () => {},
     },
     https: {
-      type: httpsConnection.connectionType,
-      args: {
-        ...connectionArgs,
-      },
+      type: httpsType,
       description: `Hyper Text Transfer Protocol Secure scan results.`,
       resolve: async () => {},
     },
     ssl: {
-      type: sslConnection.connectionType,
-      args: {
-        ...connectionArgs,
-      },
+      type: sslType,
       description: `Secure Socket Layer scan results.`,
       resolve: async () => {},
     },
