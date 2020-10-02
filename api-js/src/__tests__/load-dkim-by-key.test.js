@@ -26,12 +26,8 @@ describe('given the dkimLoaderByKey function', () => {
     consoleErrorOutput.length = 0
 
     await truncate()
-    await collections.dkim.save({
-      timestamp: '2020-09-25 20:00:33',
-    })
-    await collections.dkim.save({
-      timestamp: '2020-09-25 20:00:33',
-    })
+    await collections.dkim.save({})
+    await collections.dkim.save({})
   })
 
   afterAll(async () => {
@@ -43,7 +39,7 @@ describe('given the dkimLoaderByKey function', () => {
       // Get dkim from db
       const expectedCursor = await query`
         FOR dkimScan IN dkim
-          FILTER dkimScan.timestamp == '2020-09-25 20:00:33'
+          SORT dkimScan._key ASC LIMIT 1
           RETURN dkimScan
       `
       const expectedDkim = await expectedCursor.next()
