@@ -14,11 +14,14 @@ const {
   connectionDefinitions,
   connectionArgs,
 } = require('graphql-relay')
-const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
+const {
+  GraphQLDateTime,
+  GraphQLEmailAddress,
+} = require('graphql-scalars')
 const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
-const { emailScanConnection, webScanConnection } = require('./scan')
+const { emailScanType, webScanType } = require('./scan')
 const { periodType } = require('./dmarc-report')
 
 const domainType = new GraphQLObjectType({
@@ -58,13 +61,12 @@ const domainType = new GraphQLObjectType({
       },
     },
     email: {
-      type: emailScanConnection.connectionType,
+      type: emailScanType,
       description: 'DKIM, DMARC, and SPF scan results.',
-      args: connectionArgs,
       resolve: async () => {},
     },
     web: {
-      type: webScanConnection.connectionType,
+      type: webScanType,
       description: 'HTTPS, and SSL scan results.',
       args: connectionArgs,
       resolve: async () => {},

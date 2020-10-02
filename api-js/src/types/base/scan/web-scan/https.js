@@ -1,5 +1,5 @@
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql')
-const { globalIdField } = require('graphql-relay')
+const { globalIdField, connectionDefinitions } = require('graphql-relay')
 const { GraphQLDateTime } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
 const { Domain } = require('../../../../scalars')
@@ -53,6 +53,12 @@ const httpsType = new GraphQLObjectType({
   description: `Hyper Text Transfer Protocol Secure scan results.`,
 })
 
+const httpsConnection = connectionDefinitions({
+  name: 'HTTPS',
+  nodeType: httpsType,
+})
+
 module.exports = {
-  httpsType,
+httpsType,
+httpsConnection,
 }

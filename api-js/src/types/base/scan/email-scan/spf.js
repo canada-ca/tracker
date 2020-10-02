@@ -4,8 +4,8 @@ const {
   GraphQLString,
   GraphQLList,
 } = require('graphql')
-const { globalIdField } = require('graphql-relay')
-const { GraphQLDateTime } = require('graphql-scalars')
+const { globalIdField, connectionDefinitions } = require('graphql-relay')
+const { GraphQLDate } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
 const { Domain } = require('../../../../scalars')
 
@@ -16,32 +16,32 @@ const spfType = new GraphQLObjectType({
     domain: {
       type: Domain,
       description: `The domain the scan was ran on.`,
-      resolve: async () => {},
+      resolve: async ({ domain }) => domain,
     },
     timestamp: {
-      type: GraphQLDateTime,
+      type: GraphQLDate,
       description: `The time the scan was initiated.`,
-      resolve: async () => {},
+      resolve: async ({ timestamp }) => timestamp,
     },
     lookups: {
       type: GraphQLInt,
       description: `The amount of DNS lookups.`,
-      resolve: async () => {},
+      resolve: async ({ lookups }) => lookups,
     },
     record: {
       type: GraphQLString,
       description: `SPF record retrieved during the scan of the given domain.`,
-      resolve: async () => {},
+      resolve: async ({ record }) => record,
     },
     spfDefault: {
       type: GraphQLString,
       description: `Instruction of what a recipient should do if there is not a match to your SPF record.`,
-      resolve: async () => {},
+      resolve: async ({ spfDefault }) => spfDefault,
     },
     spfGuidanceTags: {
       type: GraphQLList(GraphQLString),
       description: `Key tags found during scan.`,
-      resolve: async () => {},
+      resolve: async ({ spfGuidanceTags }) => spfGuidanceTags,
     },
   }),
   interfaces: [nodeInterface],
@@ -54,6 +54,12 @@ const spfType = new GraphQLObjectType({
   receiving host can check such authorization.`,
 })
 
+const spfConnection = connectionDefinitions({
+  name: 'SPF',
+  nodeType: spfType,
+})
+
 module.exports = {
-  spfType,
+spfType,
+spfConnection,
 }

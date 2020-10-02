@@ -1,6 +1,6 @@
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql')
-const { globalIdField } = require('graphql-relay')
-const { GraphQLDateTime } = require('graphql-scalars')
+const { globalIdField, connectionDefinitions } = require('graphql-relay')
+const { GraphQLDate } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
 const { Domain } = require('../../../../scalars')
 
@@ -11,27 +11,27 @@ const dkimType = new GraphQLObjectType({
     domain: {
       type: Domain,
       description: `The domain the scan was ran on.`,
-      resolve: async () => {},
+      resolve: async ({ domain }) => domain,
     },
     timestamp: {
-      type: GraphQLDateTime,
+      type: GraphQLDate,
       description: `The time when the scan was initiated.`,
-      resolve: async () => {},
+      resolve: async ({ timestamp }) => timestamp,
     },
     record: {
       type: GraphQLString,
       description: `DKIM record retrieved during the scan of the domain.`,
-      resolve: async () => {},
+      resolve: async ({ record }) => record,
     },
     keyLength: {
       type: GraphQLString,
       description: `Length of DKIM public key.`,
-      resolve: async () => {},
+      resolve: async ({ keyLength }) => keyLength,
     },
     dkimGuidanceTags: {
       type: GraphQLList(GraphQLString),
       description: `Key tags found during scan.`,
-      resolve: async () => {},
+      resolve: async ({ dkimGuidanceTags }) => dkimGuidanceTags,
     },
   }),
   interfaces: [nodeInterface],
@@ -42,6 +42,12 @@ const dkimType = new GraphQLObjectType({
     or one of their agents.`,
 })
 
+const dkimConnection = connectionDefinitions({
+  name: 'DKIM',
+  nodeType: dkimType,
+})
+
 module.exports = {
   dkimType,
+  dkimConnection,
 }

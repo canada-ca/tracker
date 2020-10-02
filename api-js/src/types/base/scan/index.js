@@ -1,9 +1,7 @@
-const { emailScanType, emailScanConnection } = require('./email-scan')
-const { webScanType, webScanConnection } = require('./web-scan')
+const { emailScanType } = require('./email-scan')
+const { webScanType } = require('./web-scan')
 
 module.exports = {
   emailScanType,
-  emailScanConnection,
   webScanType,
-  webScanConnection,
 }

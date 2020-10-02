@@ -1,5 +1,5 @@
 const { GraphQLObjectType, GraphQLList, GraphQLString } = require('graphql')
-const { globalIdField } = require('graphql-relay')
+const { globalIdField, connectionDefinitions } = require('graphql-relay')
 const { GraphQLDateTime } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
 const { Domain } = require('../../../../scalars')
@@ -28,6 +28,12 @@ const sslType = new GraphQLObjectType({
   description: `Secure Socket Layer scan results.`,
 })
 
+const sslConnection = connectionDefinitions({
+  name: 'SSL',
+  nodeType: sslType,
+})
+
 module.exports = {
-  sslType,
+sslType,
+sslConnection,
 }
