@@ -2,7 +2,7 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { graphql, GraphQLSchema } = require('graphql')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
@@ -10,11 +10,9 @@ const { toGlobalId } = require('graphql-relay')
 const bcrypt = require('bcrypt')
 
 const { cleanseInput } = require('../validators')
-const { tokenize, userRequired } = require('../auth')
+const { tokenize } = require('../auth')
 const {
   domainLoaderConnectionsByUserId,
-  domainLoaderByKey,
-  userLoaderByKey,
   userLoaderByUserName,
 } = require('../loaders')
 const { DB_PASS: rootPass, DB_URL: url } = process.env
@@ -129,13 +127,11 @@ describe('given findMyDomainsQuery', () => {
       })
       domainOne = await collections.domains.save({
         domain: 'test1.gc.ca',
-        slug: 'test1-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
-        slug: 'test2-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
@@ -180,7 +176,6 @@ describe('given findMyDomainsQuery', () => {
                   node {
                     id
                     domain
-                    slug
                     lastRan
                     selectors
                   }
@@ -197,21 +192,12 @@ describe('given findMyDomainsQuery', () => {
           null,
           {
             userId: user._key,
-            query: query,
-            auth: {
-              userRequired,
-            },
-            validators: {
-              cleanseInput,
-            },
             loaders: {
-              domainLoaderByKey: domainLoaderByKey(query),
               domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
                 query,
                 user._key,
                 cleanseInput,
               ),
-              userLoaderByKey: userLoaderByKey(query),
             },
           },
         )
@@ -225,7 +211,6 @@ describe('given findMyDomainsQuery', () => {
                   node: {
                     id: toGlobalId('domains', domainOne._key),
                     domain: 'test1.gc.ca',
-                    slug: 'test1-gc-ca',
                     lastRan: null,
                     selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   },
@@ -235,7 +220,6 @@ describe('given findMyDomainsQuery', () => {
                   node: {
                     id: toGlobalId('domains', domainTwo._key),
                     domain: 'test2.gc.ca',
-                    slug: 'test2-gc-ca',
                     lastRan: null,
                     selectors: ['selector1._domainkey', 'selector2._domainkey'],
                   },
@@ -254,129 +238,6 @@ describe('given findMyDomainsQuery', () => {
         expect(consoleOutput).toEqual([
           `User ${user._key} successfully retrieved their domains.`,
         ])
-      })
-    })
-  })
-  describe('given unsuccessful retrieval of domains', () => {
-    let user, domainOne, domainTwo
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'user',
-      })
-      domainOne = await collections.domains.save({
-        domain: 'test1.gc.ca',
-        slug: 'test1-gc-ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-      })
-      domainTwo = await collections.domains.save({
-        domain: 'test2.gc.ca',
-        slug: 'test2-gc-ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-      })
-      await collections.claims.save({
-        _to: domainOne._id,
-        _from: org._id,
-      })
-      await collections.claims.save({
-        _to: domainTwo._id,
-        _from: org._id,
-      })
-    })
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
-      await query`
-        LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-        LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-        RETURN true
-      `
-      await query`
-        FOR claim IN claims
-          REMOVE claim IN claims
-      `
-    })
-    describe('database error occurs', () => {
-      describe('while gathering domain connections', () => {
-        it('throws an error', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(
-              new Error('Unable to load domains. Please try again.'),
-            )
-
-          try {
-            await graphql(
-              schema,
-              `
-                query {
-                  findMyDomains {
-                    edges {
-                      cursor
-                      node {
-                        id
-                        domain
-                        slug
-                        lastRan
-                        selectors
-                      }
-                    }
-                    pageInfo {
-                      hasNextPage
-                      hasPreviousPage
-                      startCursor
-                      endCursor
-                    }
-                  }
-                }
-              `,
-              null,
-              {
-                userId: user._key,
-                query: query,
-                auth: {
-                  userRequired,
-                },
-                validators: {
-                  cleanseInput,
-                },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
-                    query,
-                    user._key,
-                    cleanseInput,
-                  ),
-                  userLoaderByKey: userLoaderByKey(query),
-                },
-              },
-            )
-          } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load domains. Please try again.'),
-            )
-          }
-          expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to query affiliated organizations in loadDomainsByUser.`,
-            `Database error occurred while user: ${user._key} was trying to gather domain connections in findMyDomains.`,
-          ])
-        })
       })
     })
   })

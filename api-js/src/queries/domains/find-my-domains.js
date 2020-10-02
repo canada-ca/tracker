@@ -11,21 +11,16 @@ const findMyDomains = {
     _,
     args,
     {
-      userId: userId,
-      query,
-      auth: { userRequired },
+      userId,
       loaders: {
-        domainLoaderByKey,
         domainLoaderConnectionsByUserId,
-        userLoaderByKey,
       },
-      validators: { cleanseInput },
     },
   ) => {
     let domainConnections
 
     try {
-      domainConnections = await domainLoaderConnectionsByUserId({})
+      domainConnections = await domainLoaderConnectionsByUserId({args})
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userId} was trying to gather domain connections in findMyDomains.`,

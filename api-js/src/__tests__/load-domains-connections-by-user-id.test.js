@@ -12,7 +12,7 @@ const {
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load domain connections by user id function', () => {
-  let query, drop, truncate, migrate, collections, user, org
+  let query, drop, truncate, migrate, collections, org
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -28,7 +28,7 @@ describe('given the load domain connections by user id function', () => {
 
   beforeEach(async () => {
     await truncate()
-    user = await collections.users.save({
+    await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
       preferredLang: 'french',
@@ -82,13 +82,11 @@ describe('given the load domain connections by user id function', () => {
         })
         domainOne = await collections.domains.save({
           domain: 'test1.gc.ca',
-          slug: 'test1-gc-ca',
           lastRan: null,
           selectors: ['selector1._domainkey', 'selector2._domainkey'],
         })
         domainTwo = await collections.domains.save({
           domain: 'test2.gc.ca',
-          slug: 'test2-gc-ca',
           lastRan: null,
           selectors: ['selector1._domainkey', 'selector2._domainkey'],
         })
@@ -123,7 +121,6 @@ describe('given the load domain connections by user id function', () => {
       })
       describe('using no cursor and no limit', () => {
         it('returns an organization', async () => {
-          let domains
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -131,7 +128,7 @@ describe('given the load domain connections by user id function', () => {
           )
 
           const connectionArgs = {}
-          domains = await connectionLoader({ ...connectionArgs })
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const domainLoader = domainLoaderByKey(query)
           const expectedDomains = await domainLoader.loadMany([
@@ -170,7 +167,6 @@ describe('given the load domain connections by user id function', () => {
       })
       describe('using after cursor', () => {
         it('returns an organization', async () => {
-          let domains
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -189,7 +185,7 @@ describe('given the load domain connections by user id function', () => {
           const connectionArgs = {
             after: toGlobalId('domains', expectedDomains[0].id),
           }
-          domains = await connectionLoader({ ...connectionArgs })
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
@@ -213,7 +209,6 @@ describe('given the load domain connections by user id function', () => {
       })
       describe('using before cursor', () => {
         it('returns an organization', async () => {
-          let domains
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -232,7 +227,7 @@ describe('given the load domain connections by user id function', () => {
           const connectionArgs = {
             before: toGlobalId('domains', expectedDomains[1].id),
           }
-          domains = await connectionLoader({ ...connectionArgs })
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
@@ -256,7 +251,6 @@ describe('given the load domain connections by user id function', () => {
       })
       describe('using first limit', () => {
         it('returns an organization', async () => {
-          let domains
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -275,7 +269,7 @@ describe('given the load domain connections by user id function', () => {
           const connectionArgs = {
             first: 1,
           }
-          domains = await connectionLoader({ ...connectionArgs })
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
@@ -299,7 +293,6 @@ describe('given the load domain connections by user id function', () => {
       })
       describe('using last limit', () => {
         it('returns an organization', async () => {
-          let domains
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -318,7 +311,7 @@ describe('given the load domain connections by user id function', () => {
           const connectionArgs = {
             last: 1,
           }
-          domains = await connectionLoader({ ...connectionArgs })
+          const domains = await connectionLoader({ ...connectionArgs })
 
           const expectedStructure = {
             edges: [
@@ -368,7 +361,6 @@ describe('given the load domain connections by user id function', () => {
         `
       })
       it('returns no domain connections', async () => {
-        let domains
         const connectionLoader = domainLoaderConnectionsByUserId(
           query,
           user._key,
@@ -376,7 +368,7 @@ describe('given the load domain connections by user id function', () => {
         )
 
         const connectionArgs = {}
-        domains = await connectionLoader({ ...connectionArgs })
+        const domains = await connectionLoader({ ...connectionArgs })
 
         const expectedStructure = {
           edges: [],
@@ -408,13 +400,11 @@ describe('given the load domain connections by user id function', () => {
       })
       domainOne = await collections.domains.save({
         domain: 'test1.gc.ca',
-        slug: 'test1-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
-        slug: 'test2-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
@@ -493,13 +483,11 @@ describe('given the load domain connections by user id function', () => {
       })
       domainOne = await collections.domains.save({
         domain: 'test1.gc.ca',
-        slug: 'test1-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
-        slug: 'test2-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
@@ -654,13 +642,11 @@ describe('given the load domain connections by user id function', () => {
       })
       domainOne = await collections.domains.save({
         domain: 'test1.gc.ca',
-        slug: 'test1-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })
       domainTwo = await collections.domains.save({
         domain: 'test2.gc.ca',
-        slug: 'test2-gc-ca',
         lastRan: null,
         selectors: ['selector1._domainkey', 'selector2._domainkey'],
       })

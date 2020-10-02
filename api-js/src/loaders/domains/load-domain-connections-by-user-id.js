@@ -59,7 +59,7 @@ const domainLoaderConnectionsByUserId = (
   }
 
   let claimedDomainsCursor, claimedDomains, orgId
-  let orgDomains = []
+  const orgDomains = []
 
   for (let i = 0; i < affiliatedOrgs.length; i++) {
     orgId = affiliatedOrgs[i]
@@ -103,7 +103,7 @@ const domainLoaderConnectionsByUserId = (
   }
 
   let filteredDomains
-  let domains = []
+  const domains = []
 
   try {
     filteredDomains = await filteredDomainCursor.all()
