@@ -36,7 +36,7 @@
     "psl": "^1.8.0",
     "subscriptions-transport-ws": "^0.9.18",
     "url-slug": "^2.3.2",
-    "validator": "^13.1.1"
+    "validator": "^13.1.17"
   },
   "devDependencies": {
     "eslint": "^7.7.0",
