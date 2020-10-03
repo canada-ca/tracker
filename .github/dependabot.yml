@@ -1,0 +1,140 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/services/scanners/ssl"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/services/scanners/ssl"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: pip
+  directory: "/services/scanners/https"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: pip
+  directory: "/services/scanners/results"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/services/scanners/https"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/services/scanners/results"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: pip
+  directory: "/services/scanners/dns"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/services/scanners/dns"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: pip
+  directory: "/services/scan-queue"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/services/scan-queue"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: pip
+  directory: "/services/result-queue"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/services/result-queue"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: pip
+  directory: "/services/db-migration"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/services/db-migration"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/services/auto-scan"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: pip
+  directory: "/services/auto-scan"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/api-js"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: npm
+  directory: "/api-js"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/frontend"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/api"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: docker
+  directory: "/ci"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: npm
+  directory: "/frontend"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
+- package-ecosystem: pip
+  directory: "/api"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 99
