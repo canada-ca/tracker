@@ -12,11 +12,11 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  Text,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { useUserState } from './UserState'
 import { useParams, useHistory } from 'react-router-dom'
-import DomainsPage from './DomainsPage'
 import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
 
@@ -90,7 +90,7 @@ export default function OrganizationDetails() {
             <OrganizationSummary />
           </TabPanel>
           <TabPanel>
-            <DomainsPage />
+            <Text>Domains</Text>
           </TabPanel>
           <TabPanel>
             <UserList
