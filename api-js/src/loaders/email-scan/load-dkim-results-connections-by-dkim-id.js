@@ -25,7 +25,7 @@ const dkimResultsLoaderConnectionByDkimId = (
     limitTemplate = aql`SORT dkimResult._key DESC LIMIT TO_NUMBER(${last + 1})`
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `First and last arguments set when trying to gather dkim results for dkimScan: ${dkimId}`,
+      `User: ${userId} had first and last arguments set when trying to gather dkim results for dkimScan: ${dkimId}`,
     )
     throw new Error(
       'Unable to have both first, and last arguments set at the same time.',

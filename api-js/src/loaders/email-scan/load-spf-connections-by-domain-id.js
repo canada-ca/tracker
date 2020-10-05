@@ -39,7 +39,7 @@ const spfLoaderConnectionsByDomainId = (query, userId, cleanseInput) => async ({
     limitTemplate = aql`SORT spfScan._key DESC LIMIT TO_NUMBER(${last + 1})`
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `First and last arguments set when trying to gather spf scans for domain: ${domainId}`,
+      `User: ${userId} had first and last arguments set when trying to gather spf scans for domain: ${domainId}`,
     )
     throw new Error(
       'Unable to have both first, and last arguments set at the same time.',

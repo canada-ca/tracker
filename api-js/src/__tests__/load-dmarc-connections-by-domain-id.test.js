@@ -597,6 +597,9 @@ describe('when given the load dmarc connection function', () => {
             ),
           )
         }
+        expect(consoleWarnOutput).toEqual([
+          `User: ${user._key} had first and last arguments set when trying to gather dmarc scans for domain: ${domain._id}`,
+        ])
       })
     })
   })

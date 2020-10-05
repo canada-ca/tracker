@@ -592,6 +592,9 @@ describe('when given the load spf connection function', () => {
             ),
           )
         }
+        expect(consoleWarnOutput).toEqual([
+          `User: ${user._key} had first and last arguments set when trying to gather spf scans for domain: ${domain._id}`,
+        ])
       })
     })
   })

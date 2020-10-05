@@ -592,36 +592,40 @@ describe('when given the load dkim connection function', () => {
             ),
           )
         }
+
+        expect(consoleWarnOutput).toEqual([
+          `User: ${user._key} had first and last arguments set when trying to gather dkim scans for domain: ${domain._id}`,
+        ])
       })
     })
   })
   describe('database error occurs', () => {
     it('throws an error', async () => {
       const query = jest
-      .fn()
-      .mockRejectedValue(new Error('Database Error Occurred.'))
+        .fn()
+        .mockRejectedValue(new Error('Database Error Occurred.'))
 
-    const connectionLoader = dkimLoaderConnectionsByDomainId(
-      query,
-      user._key,
-      cleanseInput,
-    )
-
-    const connectionArgs = {}
-    try {
-      await connectionLoader({
-        domainId: domain._id,
-        ...connectionArgs,
-      })
-    } catch (err) {
-      expect(err).toEqual(
-        new Error('Unable to load dkim scans. Please try again.'),
+      const connectionLoader = dkimLoaderConnectionsByDomainId(
+        query,
+        user._key,
+        cleanseInput,
       )
-    }
 
-    expect(consoleErrorOutput).toEqual([
-      `Database error occurred while user: ${user._key} was trying to get dkim information for ${domain._id}, error: Error: Database Error Occurred.`,
-    ])
+      const connectionArgs = {}
+      try {
+        await connectionLoader({
+          domainId: domain._id,
+          ...connectionArgs,
+        })
+      } catch (err) {
+        expect(err).toEqual(
+          new Error('Unable to load dkim scans. Please try again.'),
+        )
+      }
+
+      expect(consoleErrorOutput).toEqual([
+        `Database error occurred while user: ${user._key} was trying to get dkim information for ${domain._id}, error: Error: Database Error Occurred.`,
+      ])
     })
   })
   describe('cursor error occurs', () => {

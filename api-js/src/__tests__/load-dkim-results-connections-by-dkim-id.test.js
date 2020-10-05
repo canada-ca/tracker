@@ -426,6 +426,9 @@ describe('when given the load dkim results connection function', () => {
             ),
           )
         }
+        expect(consoleWarnOutput).toEqual([
+          `User: ${user._key} had first and last arguments set when trying to gather dkim results for dkimScan: ${dkimScan._id}`,
+        ])
       })
     })
   })
