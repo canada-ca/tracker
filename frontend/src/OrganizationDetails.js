@@ -22,7 +22,7 @@ import { OrganizationSummary } from './OrganizationSummary'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
-  const { currentUser } = useUserState()
+  const { currentUser, isLoggedIn } = useUserState()
   const toast = useToast()
   const history = useHistory()
   const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
@@ -80,9 +80,11 @@ export default function OrganizationDetails() {
           <Tab>
             <Trans>Domains</Trans>
           </Tab>
-          <Tab>
-            <Trans>Users</Trans>
-          </Tab>
+          {isLoggedIn() && (
+            <Tab>
+              <Trans>Users</Trans>
+            </Tab>
+          )}
         </TabList>
 
         <TabPanels>
@@ -92,13 +94,15 @@ export default function OrganizationDetails() {
           <TabPanel>
             <Text>Domains</Text>
           </TabPanel>
-          <TabPanel>
-            <UserList
-              userListData={data.userList}
-              orgName={orgName}
-              orgSlug={orgSlug}
-            />
-          </TabPanel>
+          {isLoggedIn() && (
+            <TabPanel>
+              <UserList
+                userListData={data.userList}
+                orgName={orgName}
+                orgSlug={orgSlug}
+              />
+            </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
     </Layout>

@@ -129,8 +129,8 @@ export default function App() {
                 component={ResetPasswordPage}
               />
 
-              <RouteIf
-                condition={isLoggedIn()}
+              <Route
+                // condition={isLoggedIn()}
                 alternate="/sign-in"
                 path="/organizations"
                 render={({ match: { url } }) => (
