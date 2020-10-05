@@ -20,7 +20,7 @@ const findMyDomains = {
     let domainConnections
 
     try {
-      domainConnections = await domainLoaderConnectionsByUserId({args})
+      domainConnections = await domainLoaderConnectionsByUserId(args)
     } catch (err) {
       console.error(
         `Database error occurred while user: ${userId} was trying to gather domain connections in findMyDomains.`,
