@@ -60,8 +60,7 @@ export const Doughnut = ({
             key={`legend:${index}`}
             backgroundColor="primary"
             px="2"
-            pb="2"
-            pt={index === 0 ? '2' : '0'}
+            py={arcs.length > 2 ? '2' : '5'}
             mx="auto"
             overflow="hidden"
           >

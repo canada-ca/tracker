@@ -6,12 +6,12 @@ import { Doughnut, Segment } from './Doughnut'
 function SummaryCard({ title, categoryDisplay, description, data }) {
   return (
     <Box
-      bg="white"
+      bg="primary"
       rounded="lg"
       overflow="hidden"
       boxShadow="medium"
       width="min-content"
-      height="min-content"
+      height="auto"
     >
       <Box bg="primary" px="8">
         <Text
@@ -32,7 +32,7 @@ function SummaryCard({ title, categoryDisplay, description, data }) {
         </Text>
       </Box>
 
-      <Box width="boxes.2">
+      <Box width="boxes.2" bg="white">
         <Doughnut
           title={title}
           data={data.categories.map(({ name, count, percentage }) => ({

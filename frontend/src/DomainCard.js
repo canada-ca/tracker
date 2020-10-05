@@ -8,6 +8,7 @@ import {
   Icon,
   Stack,
   Divider,
+  Tooltip,
 } from '@chakra-ui/core'
 import { useLingui } from '@lingui/react'
 import { useHistory } from 'react-router-dom'
@@ -64,12 +65,14 @@ export function DomainCard({ url, lastRan, ...rest }) {
         p="8"
         tabIndex={0}
       >
-        <Box flexShrink="0" minW="12%">
-          <Text fontWeight="semibold">
-            <Trans>Domain:</Trans>
-          </Text>
-          {url}
-        </Box>
+        <Tooltip label={url} placement="left">
+          <Box flexShrink="0" minW="13%" maxW={['100%', '13%']}>
+            <Text fontWeight="semibold">
+              <Trans>Domain:</Trans>
+            </Text>
+            <Text isTruncated>{url}</Text>
+          </Box>
+        </Tooltip>
         <Divider orientation={['horizontal', 'vertical']} />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           {lastRan ? (

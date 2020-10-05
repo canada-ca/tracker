@@ -7,6 +7,7 @@ import {
   Box,
   Stack,
   Divider,
+  Tooltip,
 } from '@chakra-ui/core'
 import { useRouteMatch, useHistory } from 'react-router-dom'
 import { string, number } from 'prop-types'
@@ -38,16 +39,24 @@ export function OrganizationCard({
         mx="auto"
         tabIndex={0}
       >
-        <Box flexShrink="0" minW="50%" mb={['2', '0']}>
-          <Stack isInline align="center">
-            <Text mt="1" fontSize={['lg', 'md']} fontWeight="semibold" as="u">
-              {name}
-            </Text>
-            <Text mt="1" fontSize="md" fontWeight="semibold">
-              ({acronym})
-            </Text>
-          </Stack>
-        </Box>
+        <Tooltip label={name} placement="left">
+          <Box flexShrink="0" minW="50%" maxW={['100%', '50%']} mb={['2', '0']}>
+            <Stack isInline align="center">
+              <Text
+                mt="1"
+                fontSize={['lg', 'md']}
+                fontWeight="semibold"
+                as="u"
+                isTruncated
+              >
+                {name}
+              </Text>
+              <Text mt="1" fontSize={['lg', 'md']} fontWeight="semibold">
+                ({acronym})
+              </Text>
+            </Stack>
+          </Box>
+        </Tooltip>
         <Divider orientation="vertical" />
         <Box
           flexShrink="0"
@@ -71,7 +80,7 @@ export function OrganizationCard({
           mb={['2', '0']}
         >
           <Text fontWeight="bold">
-            <Trans>Web Configuration</Trans>
+            <Trans>Web Configuration:</Trans>
           </Text>
           <Text>{webValue}%</Text>
           <Progress value={webValue} bg="gray.300" w={['50%', '100%']} />
@@ -79,7 +88,7 @@ export function OrganizationCard({
         <Divider orientation="vertical" />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Text fontWeight="bold">
-            <Trans>Email Configuration</Trans>
+            <Trans>Email Configuration:</Trans>
           </Text>
           <Text>{emailValue}%</Text>
           <Progress value={emailValue} bg="gray.300" w={['50%', '100%']} />

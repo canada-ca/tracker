@@ -54,17 +54,19 @@ export default function App() {
             <Trans>Home</Trans>
           </Link>
 
-          <Link to="/dmarc-summaries">
-            <Trans>DMARC Report</Trans>
+          <Link to="/organizations">
+            <Trans>Organizations</Trans>
           </Link>
 
           {/* <Link to="/domains">
             <Trans>Domains</Trans>
           </Link> */}
 
-          <Link to="/organizations">
-            <Trans>Organizations</Trans>
-          </Link>
+          {isLoggedIn() && (
+            <Link to="/dmarc-summaries">
+              <Trans>DMARC Report</Trans>
+            </Link>
+          )}
 
           {isLoggedIn() && (
             <Link to="/user">
