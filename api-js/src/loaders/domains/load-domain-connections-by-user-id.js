@@ -35,65 +35,17 @@ const domainLoaderConnectionsByUserId = (
     )
   }
 
-  let affiliatedOrgsCursor
-  try {
-    affiliatedOrgsCursor = await query`
-      LET userAffiliations = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
-      RETURN userAffiliations
-    `
-  } catch (err) {
-    console.error(
-      `Database error occurred while user: ${userId} was trying to query affiliated organizations in loadDomainsByUser.`,
-    )
-    throw new Error('Unable to query organizations. Please try again.')
-  }
-
-  let affiliatedOrgs
-  try {
-    affiliatedOrgs = await affiliatedOrgsCursor.next()
-  } catch (err) {
-    console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather affiliated organizations in loadDomainsByUser.`,
-    )
-    throw new Error('Unable to load organizations. Please try again.')
-  }
-
-  let claimedDomainsCursor, claimedDomains, orgId
-  const orgDomains = []
-
-  for (let i = 0; i < affiliatedOrgs.length; i++) {
-    orgId = affiliatedOrgs[i]
-    try {
-      claimedDomainsCursor = await query`
-        LET orgClaims= (FOR v, e IN 1..1 ANY ${orgId} claims RETURN e._to)
-        RETURN orgClaims
-      `
-    } catch (err) {
-      console.error(
-        `Database error occurred while user: ${userId} was trying to query affiliated organization claims in loadDomainsByUser.`,
-      )
-      throw new Error('Unable to query claims. Please try again.')
-    }
-    try {
-      claimedDomains = await claimedDomainsCursor.all()
-      claimedDomains.forEach((domain) => orgDomains.push(domain))
-    } catch (err) {
-      console.error(
-        `Cursor error occurred while user: ${userId} was trying to gather claimed domains in loadDomainsByUser.`,
-      )
-      throw new Error('Unable to load domains. Please try again.')
-    }
-  }
-
   let filteredDomainCursor
   try {
     filteredDomainCursor = await query`
-    FOR domain IN domains
-      FILTER ${orgDomains}[** FILTER CURRENT == domain._id]
-      ${afterTemplate}
-      ${beforeTemplate}
-      ${limitTemplate}
-      RETURN domain
+    FOR userAffiliation IN (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
+      LET orgClaims = (FOR v, e IN 1..1 ANY userAffiliation claims RETURN e._to)
+      FOR domain IN domains
+        FILTER orgClaims[** FILTER CURRENT == domain._id]
+        ${afterTemplate}
+        ${beforeTemplate}
+        ${limitTemplate}
+        RETURN domain
     `
   } catch (err) {
     console.error(

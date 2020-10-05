@@ -520,86 +520,10 @@ describe('given the load domain connections by user id function', () => {
           REMOVE claim IN claims
       `
     })
-    describe('while querying affiliated organizations', () => {
-      it('returns an error message', async () => {
-        const query = jest
-          .fn()
-          .mockRejectedValue(
-            new Error('Unable to query organizations. Please try again.'),
-          )
-
-        const connectionLoader = domainLoaderConnectionsByUserId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to query organizations. Please try again.'),
-          )
-        }
-
-        expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to query affiliated organizations in loadDomainsByUser.`,
-        ])
-      })
-    })
-    describe('while querying affiliated organization claims', () => {
-      it('returns an error message', async () => {
-        const query = jest
-          .fn()
-          .mockReturnValueOnce({
-            next() {
-              return [org._id]
-            },
-          })
-          .mockRejectedValue(
-            new Error('Unable to query claims. Please try again.'),
-          )
-
-        const connectionLoader = domainLoaderConnectionsByUserId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to query claims. Please try again.'),
-          )
-        }
-
-        expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to query affiliated organization claims in loadDomainsByUser.`,
-        ])
-      })
-    })
     describe('while querying domains', () => {
       it('returns an error message', async () => {
         const query = jest
-          .fn()
-          .mockReturnValueOnce({
-            next() {
-              return [org._id]
-            },
-          })
-          .mockReturnValueOnce({
-            all() {
-              return [domainOne._id, domainTwo._id]
-            },
-          })
-          .mockRejectedValue(
+          .fn().mockRejectedValue(
             new Error('Unable to query domains. Please try again.'),
           )
 
@@ -679,75 +603,6 @@ describe('given the load domain connections by user id function', () => {
           REMOVE claim IN claims
       `
     })
-    describe('while gathering affiliated organizations', () => {
-      it('returns an error message', async () => {
-        const cursor = {
-          next() {
-            throw new Error('Unable to load organizations. Please try again.')
-          },
-        }
-        const query = jest.fn().mockReturnValueOnce(cursor)
-
-        const connectionLoader = domainLoaderConnectionsByUserId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load organizations. Please try again.'),
-          )
-        }
-
-        expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather affiliated organizations in loadDomainsByUser.`,
-        ])
-      })
-    })
-    describe('while gathering affiliated organization claims', () => {
-      it('returns an error message', async () => {
-        const cursor = {
-          next() {
-            throw new Error('Unable to load domains. Please try again.')
-          },
-        }
-        const query = jest
-          .fn()
-          .mockReturnValueOnce({
-            next() {
-              return [org._id]
-            },
-          })
-          .mockReturnValueOnce(cursor)
-
-        const connectionLoader = domainLoaderConnectionsByUserId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load domains. Please try again.'),
-          )
-        }
-
-        expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather claimed domains in loadDomainsByUser.`,
-        ])
-      })
-    })
     describe('while gathering domains', () => {
       it('returns an error message', async () => {
         const cursor = {
@@ -757,17 +612,7 @@ describe('given the load domain connections by user id function', () => {
         }
         const query = jest
           .fn()
-          .mockReturnValueOnce({
-            next() {
-              return [org._id]
-            },
-          })
-          .mockReturnValueOnce({
-            all() {
-              return [domainOne._id, domainTwo._id]
-            },
-          })
-          .mockReturnValueOnce(cursor)
+          .mockReturnValueOnce([domainOne._id, domainTwo._id]).mockReturnValueOnce(cursor)
 
         const connectionLoader = domainLoaderConnectionsByUserId(
           query,
