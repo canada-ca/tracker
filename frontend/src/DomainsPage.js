@@ -62,7 +62,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
         <Trans>Loading...</Trans>
       </p>
     )
-
+  console.log(nodes)
   return (
     <Layout>
       <Heading as="h1" mb="4" textAlign={['center', 'left']}>
@@ -97,7 +97,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
             >
               {({ id, url, slug, lastRan }, index) => (
                 <Box key={`${slug}:${id}:${index}`}>
-                  <DomainCard key={url} url={url} lastRan={lastRan} />
+                  <DomainCard url={url} lastRan={lastRan} />
                   <Divider borderColor="gray.900" />
                 </Box>
               )}

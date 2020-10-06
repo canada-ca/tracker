@@ -12,13 +12,16 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Text,
+  Box,
+  Divider,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { useUserState } from './UserState'
 import { useParams, useHistory } from 'react-router-dom'
 import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
+import { DomainCard } from './DomainCard'
+import { ListOf } from './ListOf'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
@@ -49,6 +52,12 @@ export default function OrganizationDetails() {
   if (data?.organization) {
     orgName = data.organization.name
   }
+
+  let domains = []
+  if (data?.organization?.domains?.edges) {
+    domains = data.organization.domains.edges.map((e) => e.node)
+  }
+  console.log(domains)
 
   if (loading) {
     return (
@@ -92,7 +101,18 @@ export default function OrganizationDetails() {
             <OrganizationSummary />
           </TabPanel>
           <TabPanel>
-            <Text>Domains</Text>
+            <ListOf
+              elements={domains}
+              ifEmpty={() => <Trans>No Domains</Trans>}
+              mb="4"
+            >
+              {({ id, url, lastRan }, index) => (
+                <Box key={`${id}:${index}`}>
+                  <DomainCard url={url} lastRan={lastRan} />
+                  <Divider borderColor="gray.900" />
+                </Box>
+              )}
+            </ListOf>
           </TabPanel>
           {isLoggedIn() && (
             <TabPanel>
