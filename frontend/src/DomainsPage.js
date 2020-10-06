@@ -82,7 +82,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
         <TabPanels>
           <TabPanel>
             <Text fontSize="2xl" mb="2">
-              Search for any GoC-owned domain:
+              <Trans>Search for any Government of Canada tracked domain:</Trans>
             </Text>
             <InputGroup width="100%" mb="8px">
               <InputLeftElement>
@@ -125,7 +125,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
           </TabPanel>
           <TabPanel>
             <Text fontSize="2xl" mb="2">
-              Perform a one-off scan on a domain:
+              <Trans>Perform a one-time scan on a domain:</Trans>
             </Text>
             <Stack flexDirection={['column', 'row']} align="center">
               <InputGroup width={['100%', '70%']} mb="8px">

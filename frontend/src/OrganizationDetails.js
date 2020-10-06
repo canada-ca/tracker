@@ -113,6 +113,9 @@ export default function OrganizationDetails() {
                 </Box>
               )}
             </ListOf>
+            <Trans>
+              *All data represented is mocked for demonstration purposes
+            </Trans>
           </TabPanel>
           {isLoggedIn() && (
             <TabPanel>

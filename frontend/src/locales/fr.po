@@ -2072,3 +2072,31 @@ msgstr "{count} enregistrements..."
 #: src/OrganizationDetails.js:72
 msgid "{orgName}"
 msgstr ""
+
+#: src/Organizations.js:69
+msgid "Search for an organization"
+msgstr "Rechercher une organisation"
+
+#: src/DomainsPage.js:75
+msgid "Search"
+msgstr "Recherchez"
+
+#: src/DomainsPage.js:78
+msgid "Scan"
+msgstr "Scanner"
+
+#: src/DomainsPage.js:85
+msgid "Search for any Government of Canada tracked domain:"
+msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
+
+#: src/DomainsPage.js:128
+msgid "Perform a one-time scan on a domain:"
+msgstr "Effectuer un balayage unique sur un domaine:"
+
+#: src/DomainsPage.js:132
+msgid "Enter a domain"
+msgstr "Entrez un domaine"
+
+#: src/DomainsPage.js:141
+msgid "Scan Domain"
+msgstr "Domaine de balayage"

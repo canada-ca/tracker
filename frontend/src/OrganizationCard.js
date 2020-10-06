@@ -80,7 +80,7 @@ export function OrganizationCard({
           mb={['2', '0']}
         >
           <Text fontWeight="bold">
-            <Trans>Web Configuration:</Trans>
+            <Trans>Web Configuration</Trans>
           </Text>
           <Text>{webValue}%</Text>
           <Progress value={webValue} bg="gray.300" w={['50%', '100%']} />
@@ -88,7 +88,7 @@ export function OrganizationCard({
         <Divider orientation="vertical" />
         <Box flexShrink="0" ml={{ md: 2 }} mr={{ md: 2 }}>
           <Text fontWeight="bold">
-            <Trans>Email Configuration:</Trans>
+            <Trans>Email Configuration</Trans>
           </Text>
           <Text>{emailValue}%</Text>
           <Progress value={emailValue} bg="gray.300" w={['50%', '100%']} />

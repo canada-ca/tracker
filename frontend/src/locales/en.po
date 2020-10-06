@@ -2103,3 +2103,31 @@ msgstr "{count} records..."
 #: src/OrganizationDetails.js:72
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/Organizations.js:69
+msgid "Search for an organization"
+msgstr "Search for an organization"
+
+#: src/DomainsPage.js:75
+msgid "Search"
+msgstr "Search"
+
+#: src/DomainsPage.js:78
+msgid "Scan"
+msgstr "Scan"
+
+#: src/DomainsPage.js:85
+msgid "Search for any Government of Canada tracked domain:"
+msgstr "Search for any Government of Canada tracked domain:"
+
+#: src/DomainsPage.js:128
+msgid "Perform a one-off scan on a domain:"
+msgstr "Perform a one-off scan on a domain:"
+
+#: src/DomainsPage.js:132
+msgid "Enter a domain"
+msgstr "Entrez un domaine"
+
+#: src/DomainsPage.js:141
+msgid "Scan Domain"
+msgstr "Scan Domain"
