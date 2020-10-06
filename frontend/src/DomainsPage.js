@@ -62,7 +62,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
         <Trans>Loading...</Trans>
       </p>
     )
-  console.log(nodes)
+
   return (
     <Layout>
       <Heading as="h1" mb="4" textAlign={['center', 'left']}>

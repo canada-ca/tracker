@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -22,6 +22,7 @@ import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
 import { DomainCard } from './DomainCard'
 import { ListOf } from './ListOf'
+import { PaginationButtons } from './PaginationButtons'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
@@ -57,7 +58,17 @@ export default function OrganizationDetails() {
   if (data?.organization?.domains?.edges) {
     domains = data.organization.domains.edges.map((e) => e.node)
   }
-  console.log(domains)
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [domainsPerPage] = useState(10)
+
+  // Get current domains
+  const indexOfLastDomain = currentPage * domainsPerPage
+  const indexOfFirstDomain = indexOfLastDomain - domainsPerPage
+  const currentDomains = domains.slice(indexOfFirstDomain, indexOfLastDomain)
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   if (loading) {
     return (
@@ -102,7 +113,7 @@ export default function OrganizationDetails() {
           </TabPanel>
           <TabPanel>
             <ListOf
-              elements={domains}
+              elements={currentDomains}
               ifEmpty={() => <Trans>No Domains</Trans>}
               mb="4"
             >
@@ -113,6 +124,14 @@ export default function OrganizationDetails() {
                 </Box>
               )}
             </ListOf>
+            {domains.length > 0 && (
+              <PaginationButtons
+                perPage={domainsPerPage}
+                total={domains.length}
+                paginate={paginate}
+                currentPage={currentPage}
+              />
+            )}
             <Trans>
               *All data represented is mocked for demonstration purposes
             </Trans>
