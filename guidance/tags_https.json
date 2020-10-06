@@ -1,0 +1,157 @@
+{
+    "https1": {
+        "tag_name": "HTTPS-GC",
+        "guidance": "Government of Canada domains subject to TBS guidelines",
+        "ref_links_guide": [
+            {
+                "description": "ITPIN 2018-01",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https2": {
+        "tag_name": "HTTPS-missing",
+        "guidance": "Follow implementation guide",
+        "ref_links_guide": [
+            {
+                "description": "6.1 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https3": {
+        "tag_name": "HTTPS-downgraded",
+        "guidance": "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance.",
+        "ref_links_guide": [
+            {
+                "description": "6.1.1 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https4": {
+        "tag_name": "HTTPS-bad-chain",
+        "guidance": "HTTPS certificate chain is invalid",
+        "ref_links_guide": [
+            {
+                "description": "6.1.3 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https5": {
+        "tag_name": "HTTPS-bad-hostname",
+        "guidance": "HTTPS endpoint failed hostname validation",
+        "ref_links_guide": [
+            {
+                "description": "6.1.1 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https6": {
+        "tag_name": "HTTPS-not-enforced",
+        "guidance": "Domain does not enforce HTTPS",
+        "ref_links_guide": [
+            {
+                "description": "6.1.1/6.2 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https7": {
+        "tag_name": "HTTPS-weakly-enforced",
+        "guidance": "Domain does not default to HTTPS",
+        "ref_links_guide": [
+            {
+                "description": "6.1.1/6.2 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https8": {
+        "tag_name": "HTTPS-moderately-enforced",
+        "guidance": "Domain defaults to HTTPS, but eventually redirects to HTTP",
+        "ref_links_guide": [
+            {
+                "description": "6.1.1 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https9": {
+        "tag_name": "HSTS-missing",
+        "guidance": "HTTP Strict Transport Security (HSTS) not implemented",
+        "ref_links_guide": [
+            {
+                "description": "6.1.2 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https10": {
+        "tag_name": "HSTS-short-age",
+        "guidance": "HTTP Strict Transport Security (HSTS) policy maximum age is shorter than one year",
+        "ref_links_guide": [
+            {
+                "description": "6.1.2 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https11": {
+        "tag_name": "HSTS-preload-ready",
+        "guidance": "Domain not pre-loaded by HSTS, but is pre-load ready",
+        "ref_links_guide": [
+            {
+                "description": "6.1.2 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https12": {
+        "tag_name": "HSTS-not-preloaded",
+        "guidance": "Domain not pre-loaded by HSTS",
+        "ref_links_guide": [
+            {
+                "description": "6.1.2 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https13": {
+        "tag_name": "HTTPS-certificate-expired",
+        "guidance": "HTTPS certificate is expired",
+        "ref_links_guide": [
+            {
+                "description": "6.1.3 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    },
+    "https14": {
+        "tag_name": "HTTPS-certificate-self-signed",
+        "guidance": "HTTPS certificate is self-signed",
+        "ref_links_guide": [
+            {
+                "description": "6.1.3 Direction",
+                "ref_link": "https://www.canada.ca/en/government/system/digital-government/modern-emerging-technologies/policy-implementation-notices/implementing-https-secure-web-connections-itpin.html#toc6"
+            }
+        ],
+        "ref_links_technical": [""]
+    }
+    
+}
