@@ -38,7 +38,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-swipe": "^6.0.4",
-    "react-table": "^7.5.0",
+    "react-table": "^7.5.2",
     "react-test-renderer": "^16.13.1",
     "recharts": "^2.0.0-beta.6",
     "yup": "^0.29.3"
