@@ -67,7 +67,7 @@ const makeMigrations = ({ databaseName, rootPass }) => [
   {
     type: 'edgecollection',
     databaseName,
-    name: 'DKIMtoDKIMResults',
+    name: 'dkimToDkimResults',
   },
   {
     type: 'edgecollection',
