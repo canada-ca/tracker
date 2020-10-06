@@ -23,6 +23,14 @@ const {
   domainLoaderByKey,
   domainLoaderByDomain,
   domainLoaderConnectionsByUserId,
+  dkimLoaderByKey,
+  dkimResultLoaderByKey,
+  dmarcLoaderByKey,
+  spfLoaderByKey,
+  dkimLoaderConnectionsByDomainId,
+  dkimResultsLoaderConnectionByDkimId,
+  dmarcLoaderConnectionsByDomainId,
+  spfLoaderConnectionsByDomainId,
   orgLoaderByKey,
   orgLoaderBySlug,
   orgLoaderByConnectionArgs,
@@ -104,7 +112,30 @@ const Server = (context = {}) => {
           }),
           domainLoaderByKey: domainLoaderByKey(query),
           domainLoaderByDomain: domainLoaderByDomain(query),
+<<<<<<< HEAD
           domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
+=======
+          dkimLoaderByKey: dkimLoaderByKey(query),
+          dkimResultLoaderByKey: dkimResultLoaderByKey(query),
+          dmarcLoaderByKey: dmarcLoaderByKey(query),
+          spfLoaderByKey: spfLoaderByKey(query),
+          dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          dkimResultsLoaderConnectionByDkimId: dkimResultsLoaderConnectionByDkimId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
+>>>>>>> add new email loaders to context
             query,
             userId,
             cleanseInput,
