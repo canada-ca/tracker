@@ -19,6 +19,7 @@ import {
   InputGroup,
   InputLeftElement,
   Icon,
+  Text,
 } from '@chakra-ui/core'
 import {
   REVERSE_PAGINATED_DOMAINS as BACKWARD,
@@ -27,6 +28,7 @@ import {
 import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
+import { TrackerButton } from './TrackerButton'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -70,15 +72,18 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
       <Tabs isFitted>
         <TabList mb="4">
           <Tab>
-            <Trans>Universal Search</Trans>
+            <Trans>Search</Trans>
           </Tab>
           <Tab>
-            <Trans>One-off Scan</Trans>
+            <Trans>Scan</Trans>
           </Tab>
         </TabList>
 
         <TabPanels>
           <TabPanel>
+            <Text fontSize="2xl" mb="2">
+              Search for any GoC-owned domain:
+            </Text>
             <InputGroup width="100%" mb="8px">
               <InputLeftElement>
                 <Icon name="search" color="gray.300" />
@@ -118,7 +123,25 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
               *All data represented is mocked for demonstration purposes
             </Trans>
           </TabPanel>
-          <TabPanel>tab2</TabPanel>
+          <TabPanel>
+            <Text fontSize="2xl" mb="2">
+              Perform a one-off scan on a domain:
+            </Text>
+            <Stack flexDirection={['column', 'row']} align="center">
+              <InputGroup width={['100%', '70%']} mb="8px">
+                <Input type="text" placeholder={i18n._(t`Enter a domain`)} />
+              </InputGroup>
+              <TrackerButton
+                w={['100%', '25%']}
+                variant="primary"
+                onClick={() => {
+                  window.alert('SCAN')
+                }}
+              >
+                <Trans>Scan Domain</Trans>
+              </TrackerButton>
+            </Stack>
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </Layout>
