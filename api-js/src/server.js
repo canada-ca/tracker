@@ -112,9 +112,11 @@ const Server = (context = {}) => {
           }),
           domainLoaderByKey: domainLoaderByKey(query),
           domainLoaderByDomain: domainLoaderByDomain(query),
-<<<<<<< HEAD
           domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
-=======
+            query,
+            userId,
+            cleanseInput,
+          ),
           dkimLoaderByKey: dkimLoaderByKey(query),
           dkimResultLoaderByKey: dkimResultLoaderByKey(query),
           dmarcLoaderByKey: dmarcLoaderByKey(query),
@@ -135,7 +137,6 @@ const Server = (context = {}) => {
             cleanseInput,
           ),
           spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
->>>>>>> add new email loaders to context
             query,
             userId,
             cleanseInput,
