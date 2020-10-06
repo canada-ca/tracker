@@ -17,7 +17,6 @@ const {
 const {
   GraphQLDateTime,
   GraphQLEmailAddress,
-  GraphQLDate,
 } = require('graphql-scalars')
 const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
@@ -269,13 +268,12 @@ const dkimType = new GraphQLObjectType({
       description: `The domain the scan was ran on.`,
       resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
         const domainKey = domainId.split('/')[1]
-        console.debug(domainKey)
         const domain = await domainLoaderByKey.load(domainKey)
         return domain
       },
     },
     timestamp: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
       resolve: async ({ timestamp }) => timestamp,
     },
@@ -319,7 +317,9 @@ const dkimResultsType = new GraphQLObjectType({
       type: dkimType,
       description: 'The dkim scan information that this result belongs to.',
       resolve: async ({ dkimId }, _, { loaders: { dkimLoaderByKey } }) => {
-        const dkim = await dkimLoaderByKey.load(dkimId)
+        const dkimKey = dkimId.split('/')[1]
+        const dkim = await dkimLoaderByKey.load(dkimKey)
+        dkim.id = dkim._key
         return dkim
       },
     },
@@ -330,17 +330,17 @@ const dkimResultsType = new GraphQLObjectType({
     },
     record: {
       type: GraphQLString,
-      description: `DKIM record retrieved during the scan of the domain.`,
+      description: 'DKIM record retrieved during the scan of the domain.',
       resolve: async ({ record }) => record,
     },
     keyLength: {
       type: GraphQLString,
-      description: `Length of DKIM public key.`,
+      description: 'Size of the Public Key in bits',
       resolve: async ({ keyLength }) => keyLength,
     },
     dkimGuidanceTags: {
       type: new GraphQLList(GraphQLString),
-      description: `Key tags found during scan.`,
+      description: 'Key tags found during scan.',
       resolve: async ({ dkimGuidanceTags }) => dkimGuidanceTags,
     },
   }),
@@ -358,7 +358,7 @@ const dmarcType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('dmarc'),
     domain: {
-      type: Domain,
+      type: domainType,
       description: `The domain the scan was ran on.`,
       resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
         const domainKey = domainId.split('/')[1]
@@ -367,7 +367,7 @@ const dmarcType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: `The time when the scan was initiated.`,
       resolve: async ({ timestamp }) => timestamp,
     },
@@ -422,7 +422,7 @@ const spfType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('spf'),
     domain: {
-      type: Domain,
+      type: domainType,
       description: `The domain the scan was ran on.`,
       resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
         const domainKey = domainId.split('/')[1]
@@ -431,7 +431,7 @@ const spfType = new GraphQLObjectType({
       },
     },
     timestamp: {
-      type: GraphQLDate,
+      type: GraphQLDateTime,
       description: `The time the scan was initiated.`,
       resolve: async ({ timestamp }) => timestamp,
     },
@@ -470,6 +470,7 @@ const spfConnection = connectionDefinitions({
   name: 'SPF',
   nodeType: spfType,
 })
+
 
 /* End domain related objects */
 
