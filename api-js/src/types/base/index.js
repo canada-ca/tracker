@@ -14,10 +14,7 @@ const {
   connectionDefinitions,
   connectionArgs,
 } = require('graphql-relay')
-const {
-  GraphQLDateTime,
-  GraphQLEmailAddress,
-} = require('graphql-scalars')
+const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
 const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
@@ -470,7 +467,6 @@ const spfConnection = connectionDefinitions({
   name: 'SPF',
   nodeType: spfType,
 })
-
 
 /* End domain related objects */
 

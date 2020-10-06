@@ -523,7 +523,8 @@ describe('given the load domain connections by user id function', () => {
     describe('while querying domains', () => {
       it('returns an error message', async () => {
         const query = jest
-          .fn().mockRejectedValue(
+          .fn()
+          .mockRejectedValue(
             new Error('Unable to query domains. Please try again.'),
           )
 
@@ -612,7 +613,8 @@ describe('given the load domain connections by user id function', () => {
         }
         const query = jest
           .fn()
-          .mockReturnValueOnce([domainOne._id, domainTwo._id]).mockReturnValueOnce(cursor)
+          .mockReturnValueOnce([domainOne._id, domainTwo._id])
+          .mockReturnValueOnce(cursor)
 
         const connectionLoader = domainLoaderConnectionsByUserId(
           query,

@@ -59,7 +59,7 @@ describe('given the dkimResultLoaderByKey function', () => {
           RETURN dkimResult
       `
 
-      while(expectedCursor.hasNext()) {
+      while (expectedCursor.hasNext()) {
         const tempDkimResult = await expectedCursor.next()
         dkimResultKeys.push(tempDkimResult._key)
         expectedDkimResults.push(tempDkimResult)

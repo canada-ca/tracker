@@ -193,7 +193,11 @@ describe('given the dkimType object', () => {
             cleanseInput,
           },
           loaders: {
-            dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(query, user._key, cleanseInput),
+            dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+            ),
             dkimLoaderByKey: dkimLoaderByKey(query),
             domainLoaderByDomain: domainLoaderByDomain(query),
             domainLoaderByKey: domainLoaderByKey(query),

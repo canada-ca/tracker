@@ -10,12 +10,7 @@ const findMyDomains = {
   resolve: async (
     _,
     args,
-    {
-      userId,
-      loaders: {
-        domainLoaderConnectionsByUserId,
-      },
-    },
+    { userId, loaders: { domainLoaderConnectionsByUserId } },
   ) => {
     let domainConnections
 

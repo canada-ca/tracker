@@ -206,7 +206,11 @@ describe('given the dmarcType object', () => {
             cleanseInput,
           },
           loaders: {
-            dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(query, user._key, cleanseInput),
+            dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+            ),
             dmarcLoaderByKey: dmarcLoaderByKey(query),
             domainLoaderByDomain: domainLoaderByDomain(query),
             domainLoaderByKey: domainLoaderByKey(query),

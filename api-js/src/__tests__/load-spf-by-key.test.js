@@ -41,12 +41,12 @@ describe('given the spfLoaderByKey function', () => {
         SORT spfScan._key ASC LIMIT 1
         RETURN spfScan
     `
-    const expectedSpf = await expectedCursor.next()
+      const expectedSpf = await expectedCursor.next()
 
-    const loader = spfLoaderByKey(query)
-    const spf = await loader.load(expectedSpf._key)
+      const loader = spfLoaderByKey(query)
+      const spf = await loader.load(expectedSpf._key)
 
-    expect(spf).toEqual(expectedSpf)
+      expect(spf).toEqual(expectedSpf)
     })
   })
   describe('given multiple ids', () => {
