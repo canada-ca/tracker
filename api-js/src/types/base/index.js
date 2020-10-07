@@ -171,6 +171,7 @@ const emailScanType = new GraphQLObjectType({
       description: `The domain the scan was ran on.`,
       resolve: async ({ _key }, _, { loaders: { domainLoaderByKey } }) => {
         const domain = await domainLoaderByKey.load(_key)
+        domain.id = domain._key
         return domain
       },
     },
@@ -266,6 +267,7 @@ const dkimType = new GraphQLObjectType({
       resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
         const domainKey = domainId.split('/')[1]
         const domain = await domainLoaderByKey.load(domainKey)
+        domain.id = domain._key
         return domain
       },
     },
@@ -360,6 +362,7 @@ const dmarcType = new GraphQLObjectType({
       resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
         const domainKey = domainId.split('/')[1]
         const domain = await domainLoaderByKey.load(domainKey)
+        domain.id = domain._key
         return domain
       },
     },
@@ -424,6 +427,7 @@ const spfType = new GraphQLObjectType({
       resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
         const domainKey = domainId.split('/')[1]
         const domain = await domainLoaderByKey.load(domainKey)
+        domain.id = domain._key
         return domain
       },
     },

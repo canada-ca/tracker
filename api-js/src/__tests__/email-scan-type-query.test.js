@@ -14,24 +14,13 @@ const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
 const { checkDomainPermission, userRequired } = require('../auth')
 const {
-  dmarcLoaderConnectionsByDomainId,
-  dmarcLoaderByKey,
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
 } = require('../loaders')
 
-describe('given the dmarcType object', () => {
-  let query,
-    drop,
-    truncate,
-    migrate,
-    collections,
-    user,
-    domain,
-    schema,
-    org,
-    dmarc
+describe('given the email gql object', () => {
+  let query, drop, truncate, migrate, collections, user, domain, schema, org
 
   const consoleInfoOutput = []
   const mockedInfo = (output) => consoleInfoOutput.push(output)
@@ -58,6 +47,7 @@ describe('given the dmarcType object', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
     consoleInfoOutput.length = 0
@@ -69,6 +59,7 @@ describe('given the dmarcType object', () => {
       tfaValidated: false,
       emailValidated: false,
     })
+
     org = await collections.organizations.save({
       orgDetails: {
         en: {
@@ -106,19 +97,6 @@ describe('given the dmarcType object', () => {
       _from: org._id,
       _to: domain._id,
     })
-    dmarc = await collections.dmarc.save({
-      timestamp: '2020-10-02T12:43:39Z',
-      dmarcPhase: 1,
-      record: 'txtRecord',
-      pPolicy: 'pPolicy',
-      spPolicy: 'spPolicy',
-      pct: 100,
-      dmarcGuidanceTags: ['dmarc1', 'dmarc2'],
-    })
-    await collections.domainsDMARC.save({
-      _from: domain._id,
-      _to: dmarc._id,
-    })
   })
 
   afterAll(async () => {
@@ -135,22 +113,8 @@ describe('given the dmarcType object', () => {
               id
               domain
               email {
-                dmarc {
-                  edges {
-                    node {
-                      id
-                      domain {
-                        domain
-                      }
-                      timestamp
-                      dmarcPhase
-                      record
-                      pPolicy
-                      spPolicy
-                      pct
-                      dmarcGuidanceTags
-                    }
-                  }
+                domain {
+                  id
                 }
               }
             }
@@ -168,12 +132,6 @@ describe('given the dmarcType object', () => {
             cleanseInput,
           },
           loaders: {
-            dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(
-              query,
-              user._key,
-              cleanseInput,
-            ),
-            dmarcLoaderByKey: dmarcLoaderByKey(query),
             domainLoaderByDomain: domainLoaderByDomain(query),
             domainLoaderByKey: domainLoaderByKey(query),
             userLoaderByKey: userLoaderByKey(query),
@@ -187,29 +145,14 @@ describe('given the dmarcType object', () => {
             id: toGlobalId('domains', domain._key),
             domain: 'test.domain.gc.ca',
             email: {
-              dmarc: {
-                edges: [
-                  {
-                    node: {
-                      id: toGlobalId('dmarc', dmarc._key),
-                      domain: {
-                        domain: 'test.domain.gc.ca',
-                      },
-                      timestamp: new Date('2020-10-02T12:43:39Z'),
-                      dmarcPhase: 1,
-                      record: 'txtRecord',
-                      pPolicy: 'pPolicy',
-                      spPolicy: 'spPolicy',
-                      pct: 100,
-                      dmarcGuidanceTags: ['dmarc1', 'dmarc2'],
-                    },
-                  },
-                ],
+              domain: {
+                id: toGlobalId('domains', domain._key),
               },
             },
           },
         },
       }
+
       expect(response).toEqual(expectedResponse)
       expect(consoleInfoOutput).toEqual([
         `User ${user._key} successfully retrieved domain ${domain._key}.`,
