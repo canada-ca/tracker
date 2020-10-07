@@ -37,6 +37,10 @@ const {
   orgLoaderConnectionArgsByDomainId,
   userLoaderByUserName,
   userLoaderByKey,
+  httpsLoaderByKey,
+  httpsLoaderConnectionsByDomainId,
+  sslLoaderByKey,
+  sslLoaderConnectionsByDomainId,
 } = require('./loaders')
 
 // internationalization.load({
@@ -137,6 +141,18 @@ const Server = (context = {}) => {
             cleanseInput,
           ),
           spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          httpsLoaderByKey: httpsLoaderByKey(query),
+          httpsLoaderConnectionsByDomainId: httpsLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          sslLoaderByKey: sslLoaderByKey(query),
+          sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
             query,
             userId,
             cleanseInput,

@@ -18,7 +18,6 @@ const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
 const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
 const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
-const { webScanConnection } = require('./scan')
 const { periodType } = require('./dmarc-report')
 
 /* Domain related objects */
@@ -66,10 +65,11 @@ const domainType = new GraphQLObjectType({
       },
     },
     web: {
-      type: webScanConnection.connectionType,
+      type: webScanType,
       description: 'HTTPS, and SSL scan results.',
-      args: connectionArgs,
-      resolve: async () => {},
+      resolve: async ({ _id, _key }) => {
+        return { _id, _key }
+      },
     },
     dmarcSummaryByPeriod: {
       description: 'Summarized DMARC aggregate reports.',
@@ -466,6 +466,169 @@ const spfType = new GraphQLObjectType({
 const spfConnection = connectionDefinitions({
   name: 'SPF',
   nodeType: spfType,
+})
+
+const webScanType = new GraphQLObjectType({
+  name: 'WebScan',
+  fields: () => ({
+    id: globalIdField('web-scan'),
+    domain: {
+      type: domainType,
+      description: `The domain the scan was ran on.`,
+      resolve: async ({ _key }, _, { loaders: { domainLoaderByKey } }) => {
+        const domain = await domainLoaderByKey.load(_key)
+        domain.id = domain._key
+        return domain
+      },
+    },
+    https: {
+      type: httpsConnection.connectionType,
+      args: {
+        starDate: {
+          type: GraphQLDateTime,
+          description: 'Start date for date filter.',
+        },
+        endDate: {
+          type: GraphQLDateTime,
+          description: 'End date for date filter.',
+        },
+        ...connectionArgs,
+      },
+      description: `Hyper Text Transfer Protocol Secure scan results.`,
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { httpsLoaderConnectionsByDomainId } },
+      ) => {
+        const https = await httpsLoaderConnectionsByDomainId({
+          domainId: _id,
+          ...args,
+        })
+        return https
+      },
+    },
+    ssl: {
+      type: sslConnection.connectionType,
+      args: {
+        starDate: {
+          type: GraphQLDateTime,
+          description: 'Start date for date filter.',
+        },
+        endDate: {
+          type: GraphQLDateTime,
+          description: 'End date for date filter.',
+        },
+        ...connectionArgs,
+      },
+      description: `Secure Socket Layer scan results.`,
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { sslLoaderConnectionsByDomainId } },
+      ) => {
+        const ssl = await sslLoaderConnectionsByDomainId({
+          domainId: _id,
+          ...args,
+        })
+        return ssl
+      },
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: `Results of HTTPS, and SSL scan on the given domain.`,
+})
+
+const httpsType = new GraphQLObjectType({
+  name: 'HTTPS',
+  fields: () => ({
+    id: globalIdField('https'),
+    domain: {
+      type: domainType,
+      description: `The domain the scan was ran on.`,
+      resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
+        const domainKey = domainId.split('/')[1]
+        const domain = await domainLoaderByKey.load(domainKey)
+        domain.id = domain._key
+        return domain
+      },
+    },
+    timestamp: {
+      type: GraphQLDateTime,
+      description: `The time the scan was initiated.`,
+      resolve: async ({ timestamp }) => timestamp,
+    },
+    implementation: {
+      type: GraphQLString,
+      description: `State of the HTTPS implementation on the server and any issues therein.`,
+      resolve: async ({ implementation }) => implementation,
+    },
+    enforced: {
+      type: GraphQLString,
+      description: `Degree to which HTTPS is enforced on the server based on behaviour.`,
+      resolve: async ({ enforced }) => enforced,
+    },
+    hsts: {
+      type: GraphQLString,
+      description: `Presence and completeness of HSTS implementation.`,
+      resolve: async ({ hsts }) => hsts,
+    },
+    hstsAge: {
+      type: GraphQLString,
+      description: `Denotes how long the domain should only be accessed using HTTPS`,
+      resolve: async ({ hstsAge }) => hstsAge,
+    },
+    preloaded: {
+      type: GraphQLString,
+      description: `Denotes whether the domain has been submitted and included within HSTS preload list.`,
+      resolve: async ({ preloaded }) => preloaded,
+    },
+    httpsGuidanceTags: {
+      type: GraphQLList(GraphQLString),
+      description: `Key tags found during scan.`,
+      resolve: async ({ httpsGuidanceTags }) => httpsGuidanceTags,
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: `Hyper Text Transfer Protocol Secure scan results.`,
+})
+
+const httpsConnection = connectionDefinitions({
+  name: 'HTTPS',
+  nodeType: httpsType,
+})
+
+const sslType = new GraphQLObjectType({
+  name: 'SSL',
+  fields: () => ({
+    id: globalIdField('ssl'),
+    domain: {
+      type: domainType,
+      description: `The domain the scan was ran on.`,
+      resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
+        const domainKey = domainId.split('/')[1]
+        const domain = await domainLoaderByKey.load(domainKey)
+        domain.id = domain._key
+        return domain
+      },
+    },
+    timestamp: {
+      type: GraphQLDateTime,
+      description: `The time when the scan was initiated.`,
+      resolve: async ({ timestamp }) => timestamp,
+    },
+    sslGuidanceTags: {
+      type: GraphQLList(GraphQLString),
+      description: `Key tags found during scan.`,
+      resolve: async ({ sslGuidanceTags }) => sslGuidanceTags,
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: `Secure Socket Layer scan results.`,
+})
+
+const sslConnection = connectionDefinitions({
+  name: 'SSL',
+  nodeType: sslType,
 })
 
 /* End domain related objects */
