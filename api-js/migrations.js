@@ -27,6 +27,11 @@ const makeMigrations = ({ databaseName, rootPass }) => [
   {
     type: 'documentcollection',
     databaseName,
+    name: 'dkimResults',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
     name: 'dmarc',
   },
   {
@@ -58,6 +63,11 @@ const makeMigrations = ({ databaseName, rootPass }) => [
     type: 'edgecollection',
     databaseName,
     name: 'domainsDKIM',
+  },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'dkimToDkimResults',
   },
   {
     type: 'edgecollection',
