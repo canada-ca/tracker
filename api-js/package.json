@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "build": "npm run clean && babel ./src --out-dir dist",
-    "start": "node ./dist/server.js",
+    "start": "node ./server.js",
     "dev": "nodemon --exec babel-node index.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "test": "jest",

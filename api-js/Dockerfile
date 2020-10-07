@@ -12,7 +12,7 @@ FROM node:14-alpine
 
 ENV NODE_ENV production
 
-COPY --from=build-env /app /app
+COPY --from=build-env /app /app/dist
 
 WORKDIR /app
 
