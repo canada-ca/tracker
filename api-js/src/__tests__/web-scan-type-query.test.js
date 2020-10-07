@@ -19,7 +19,7 @@ const {
   userLoaderByKey,
 } = require('../loaders')
 
-describe('given the https gql object', () => {
+describe('given the web scan gql object', () => {
   let query, drop, truncate, migrate, collections, user, domain, schema, org
 
   const consoleInfoOutput = []
