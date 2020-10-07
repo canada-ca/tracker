@@ -10,7 +10,9 @@ module.exports.httpsLoaderByKey = (query) =>
           RETURN httpsScan
       `
     } catch (err) {
-      console.error(`Database error occurred when running httpsLoaderByKey: ${err}`)
+      console.error(
+        `Database error occurred when running httpsLoaderByKey: ${err}`,
+      )
       throw new Error('Unable to find https scan. Please try again.')
     }
 
@@ -20,7 +22,9 @@ module.exports.httpsLoaderByKey = (query) =>
         httpsMap[httpsScan._key] = httpsScan
       })
     } catch (err) {
-      console.error(`Cursor error occurred when running httpsLoaderByKey: ${err}`)
+      console.error(
+        `Cursor error occurred when running httpsLoaderByKey: ${err}`,
+      )
       throw new Error('Unable to find https scan. Please try again.')
     }
 

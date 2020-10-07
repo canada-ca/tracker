@@ -41,10 +41,10 @@ describe('given the httpsLoaderByKey function', () => {
         RETURN httpsScan
       `
       const expectedHttps = await expectedCursor.next()
-      
+
       const loader = httpsLoaderByKey(query)
       const https = await loader.load(expectedHttps._key)
-      
+
       expect(https).toEqual(expectedHttps)
     })
   })
@@ -52,7 +52,7 @@ describe('given the httpsLoaderByKey function', () => {
     it('returns multiple https scans', async () => {
       const httpsKeys = []
       const expectedHttpsScans = []
-      
+
       const expectedCursor = await query`
       FOR httpsScan IN https
         RETURN httpsScan

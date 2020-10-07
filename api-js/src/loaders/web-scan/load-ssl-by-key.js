@@ -10,7 +10,9 @@ module.exports.sslLoaderByKey = (query) =>
           RETURN sslScan
       `
     } catch (err) {
-      console.error(`Database error occurred when running sslLoaderByKey: ${err}`)
+      console.error(
+        `Database error occurred when running sslLoaderByKey: ${err}`,
+      )
       throw new Error('Unable to find ssl scan. Please try again.')
     }
 
