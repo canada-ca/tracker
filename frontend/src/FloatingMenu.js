@@ -50,8 +50,9 @@ export const FloatingMenu = ({ children, ...props }) => {
 
   return (
     <Box
+      // position="fixed" as "sticky" doesn't play nice with firefox for android
       position="fixed"
-      bottom={-1}
+      bottom={-1} // this gets rid of a small gap in firefox for android
       zIndex={2}
       height="min-content"
       width="100%"
@@ -112,7 +113,7 @@ export const FloatingMenu = ({ children, ...props }) => {
           placement="bottom"
           onClose={drawerOnClose}
           finalFocusRef={drawerBtnRef}
-          blockScrollOnMount={false}
+          blockScrollOnMount={false}  // blocking scroll causes bad behaviour in firefox for android
         >
           <DrawerOverlay />
           <DrawerContent backgroundColor="primary" ml="auto" width="75%">
@@ -246,8 +247,12 @@ export const FloatingMenu = ({ children, ...props }) => {
               </DrawerFooter>
             </Stack>
           </DrawerContent>
-          {setTimeout(() => window.scrollBy(0, 1), 1000) &&
-            console.log(document.activeElement)}
+
+          {
+            // Firefox for android makes the bar disappear when exiting the menu if the address bar is hidden initially,
+            // this brings the bar back
+            setTimeout(() => window.scrollBy(0, 1), 1)
+          }
         </Drawer>
       </Stack>
     </Box>
