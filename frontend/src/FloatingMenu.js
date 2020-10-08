@@ -1,5 +1,6 @@
+import { FloatingMenuLink } from './FloatingMenuLink'
 import React, { useRef } from 'react'
-import { Link as RouteLink, Link as ReactRouterLink } from 'react-router-dom'
+import { Link as RouteLink } from 'react-router-dom'
 import {
   Flex,
   Stack,
@@ -113,7 +114,7 @@ export const FloatingMenu = ({ children, ...props }) => {
           placement="bottom"
           onClose={drawerOnClose}
           finalFocusRef={drawerBtnRef}
-          blockScrollOnMount={false}  // blocking scroll causes bad behaviour in firefox for android
+          blockScrollOnMount={false} // blocking scroll causes bad behaviour in firefox for android
         >
           <DrawerOverlay />
           <DrawerContent backgroundColor="primary" ml="auto" width="75%">
@@ -133,16 +134,23 @@ export const FloatingMenu = ({ children, ...props }) => {
 
               <DrawerBody px="24px" py="16px">
                 <Stack spacing="16px">
-                  <Link as={RouteLink} to="/" ml="auto" px="4px">
+                  <FloatingMenuLink to="/" text={i18n._(t`Home`)} />
+                  {/* <Link as={RouteLink} to="/" ml="auto" px="4px">
                     <Text fontWeight="bold" color="white" fontSize="lg">
                       Home
                     </Text>
-                  </Link>
-                  <Link as={RouteLink} to="/admin" ml="auto" px="4px">
+                  </Link> */}
+
+                  <FloatingMenuLink
+                    to="/admin"
+                    text={i18n._(t`Admin Portal`)}
+                  />
+                  {/* <Link as={RouteLink} to="/admin" ml="auto" px="4px">
                     <Text fontWeight="bold" color="white" fontSize="lg">
                       Admin Portal
                     </Text>
-                  </Link>
+                  </Link> */}
+
                   <Divider
                     borderWidth="2px"
                     borderColor="accent"
@@ -150,9 +158,11 @@ export const FloatingMenu = ({ children, ...props }) => {
                     opacity="50%"
                     mt="0px"
                   />
+
                   {isLoggedIn() ? (
-                    <Link
+                    <FloatingMenuLink
                       to="/"
+                      text={i18n._(t`Sign Out`)}
                       onClick={() => {
                         logout()
                         toast({
@@ -166,20 +176,11 @@ export const FloatingMenu = ({ children, ...props }) => {
                           position: 'top-left',
                         })
                       }}
-                      ml="auto"
-                      px="4px"
-                    >
-                      <Text fontWeight="bold" color="white" fontSize="lg">
-                        <Trans>Sign Out</Trans>
-                      </Text>
-                    </Link>
+                    />
                   ) : (
-                    <Link as={RouteLink} to="/sign-in" ml="auto" px="4px">
-                      <Text fontWeight="bold" color="white" fontSize="lg">
-                        <Trans>Sign In</Trans>
-                      </Text>
-                    </Link>
+                    <FloatingMenuLink to="/sign-in" text={i18n._(t`Sign In`)} />
                   )}
+
                   <Divider
                     borderWidth="2px"
                     borderColor="accent"
@@ -187,34 +188,26 @@ export const FloatingMenu = ({ children, ...props }) => {
                     opacity="50%"
                     mt="0px"
                   />
-                  <Link
-                    isExternal
-                    href={
+
+                  <FloatingMenuLink
+                    to={
                       i18n.locale === 'en'
                         ? 'https://www.canada.ca/en/transparency/privacy.html'
                         : 'https://www.canada.ca/fr/transparence/confidentialite.html'
                     }
-                    ml="auto"
-                    px="4px"
-                  >
-                    <Text fontWeight="bold" color="white" fontSize="lg">
-                      Privacy
-                    </Text>
-                  </Link>
-                  <Link
+                    text={i18n._(t`Privacy`)}
                     isExternal
-                    href={
+                  />
+
+                  <FloatingMenuLink
+                    to={
                       i18n.locale === 'en'
                         ? 'https://www.canada.ca/en/transparency/terms.html'
                         : 'https://www.canada.ca/fr/transparence/avis.html'
                     }
-                    ml="auto"
-                    px="4px"
-                  >
-                    <Text fontWeight="bold" color="white" fontSize="lg">
-                      Terms & Conditions
-                    </Text>
-                  </Link>
+                    text={i18n._(t`Terms & Conditions`)}
+                    isExternal
+                  />
                 </Stack>
               </DrawerBody>
 
