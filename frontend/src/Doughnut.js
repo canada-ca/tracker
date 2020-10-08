@@ -40,8 +40,8 @@ export const Doughnut = ({
         <title>{title}</title>
         <defs>
           <ZigZag width={0.4} background="#F16D22" color="#fff" />
-          <Dots size={1} background="#B83B25" color="#fff" />
-          <Stripes angle={45} background="#F47E21" color="#fff" />
+          <Dots size={1} background="#B93B26" color="#fff" />
+          <Stripes angle={45} background="#F8991F" color="#fff" />
           <CrossHatch width={0.8} background="#F16D22" color="#fff" />
         </defs>
         <g transform={`translate(${width / 2},${height / 2})`}>
