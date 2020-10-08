@@ -2,8 +2,8 @@
   "name": "tracker-api",
   "version": "0.1.0",
   "scripts": {
-    "build": "npm run clean && babel ./src --out-dir dist",
-    "start": "node ./server.js",
+    "build": "npm run clean && babel ./src --out-dir dist/src && cp ./index.js dist/ && cp ./migrations.js dist/",
+    "start": "node ./dist/index.js",
     "dev": "nodemon --exec babel-node index.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "test": "jest",
