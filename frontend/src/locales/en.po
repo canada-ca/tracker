@@ -2126,7 +2126,7 @@ msgstr "Perform a one-off scan on a domain:"
 
 #: src/DomainsPage.js:132
 msgid "Enter a domain"
-msgstr "Entrez un domaine"
+msgstr "Enter a domain"
 
 #: src/DomainsPage.js:141
 msgid "Scan Domain"

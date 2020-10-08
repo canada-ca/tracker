@@ -29,11 +29,11 @@ import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { TrackerButton } from './TrackerButton'
+import { Formik } from 'formik'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
   const { i18n } = useLingui()
-
   const {
     loading,
     error,
@@ -124,23 +124,51 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
             </Trans>
           </TabPanel>
           <TabPanel>
-            <Text fontSize="2xl" mb="2">
-              <Trans>Perform a one-time scan on a domain:</Trans>
-            </Text>
-            <Stack flexDirection={['column', 'row']} align="center">
-              <InputGroup width={['100%', '70%']} mb="8px">
-                <Input type="text" placeholder={i18n._(t`Enter a domain`)} />
-              </InputGroup>
-              <TrackerButton
-                w={['100%', '25%']}
-                variant="primary"
-                onClick={() => {
-                  window.alert('SCAN')
+            <Box px="8" mx="auto" overflow="hidden">
+              <Formik
+                initialValues={{ domain: '' }}
+                onSubmit={async (values) => {
+                  window.alert(`Scanning ${values.domain}. . . `)
                 }}
               >
-                <Trans>Scan Domain</Trans>
-              </TrackerButton>
-            </Stack>
+                {({ handleSubmit, handleChange, values, isSubmitting }) => (
+                  <form
+                    onSubmit={handleSubmit}
+                    role="form"
+                    aria-label="form"
+                    name="form"
+                  >
+                    <Text fontSize="2xl" mb="2">
+                      <Trans>Perform a one-time scan on a domain:</Trans>
+                    </Text>
+                    <Stack
+                      flexDirection={['column', 'row']}
+                      alignContent="center"
+                    >
+                      <Input
+                        width={['100%', '70%']}
+                        mb="8px"
+                        mr="4"
+                        type="text"
+                        onChange={handleChange}
+                        placeholder={i18n._(t`Enter a domain`)}
+                        value={values.domain}
+                        name="domain"
+                      />
+                      <TrackerButton
+                        w={['100%', '25%']}
+                        variant="primary"
+                        isLoading={isSubmitting}
+                        type="submit"
+                        id="submitBtn"
+                      >
+                        <Trans>Scan Domain</Trans>
+                      </TrackerButton>
+                    </Stack>
+                  </form>
+                )}
+              </Formik>
+            </Box>
           </TabPanel>
         </TabPanels>
       </Tabs>
