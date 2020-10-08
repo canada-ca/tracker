@@ -1,43 +1,30 @@
 import { FloatingMenuLink } from './FloatingMenuLink'
-import React, { useRef } from 'react'
+import React from 'react'
 import { Link as RouteLink } from 'react-router-dom'
 import {
-  Flex,
   Stack,
-  Menu,
-  MenuButton,
   Button,
-  MenuList,
-  MenuItem,
   Drawer,
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
   useDisclosure,
   Box,
-  Input,
-  SimpleGrid,
-  IconButton,
-  Icon,
   Link,
   Divider,
   Image,
-  Text,
   useToast,
   Heading,
 } from '@chakra-ui/core'
-import { node } from 'prop-types'
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'
 import { useLingui } from '@lingui/react'
 import { useUserState } from './UserState'
-import { ref } from 'yup'
 
-export const FloatingMenu = ({ children, ...props }) => {
+export const FloatingMenu = () => {
   const { i18n } = useLingui()
   const { _currentUser, isLoggedIn, logout } = useUserState()
   const toast = useToast()
@@ -252,6 +239,4 @@ export const FloatingMenu = ({ children, ...props }) => {
   )
 }
 
-FloatingMenu.propTypes = {
-  children: node,
-}
+FloatingMenu.propTypes = {}

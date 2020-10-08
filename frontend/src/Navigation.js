@@ -1,61 +1,9 @@
-import React, { useRef } from 'react'
-import { Link as RouteLink, Link as ReactRouterLink } from 'react-router-dom'
-import {
-  Flex,
-  Stack,
-  Menu,
-  MenuButton,
-  Button,
-  MenuList,
-  MenuItem,
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  useDisclosure,
-  Box,
-  Input,
-  SimpleGrid,
-  IconButton,
-  Icon,
-  Link,
-  Divider,
-  Image,
-  Text,
-} from '@chakra-ui/core'
+import React from 'react'
+import { Link as ReactRouterLink } from 'react-router-dom'
+import { Flex, Stack } from '@chakra-ui/core'
 import { node } from 'prop-types'
-import { TrackerButton } from './TrackerButton'
-import { Trans } from '@lingui/macro'
-import wordmark from './images/canada-wordmark.svg'
-import { useLingui } from '@lingui/react'
 
 export const Navigation = ({ children, ...props }) => {
-  // // This block grabs the sign in link so it can be used in the navbar or menu
-  // const signInLink = () => {
-  //   for (const child of children) {
-  //     // There are some children which aren't links, next line deals with those
-  //     const linkTo = (child.props || {}).to
-  //
-  //     if (linkTo === '/sign-in') {
-  //       return child
-  //     }
-  //   }
-  // }
-  //
-  // console.log(signInLink())
-
-  const { i18n } = useLingui()
-
-  const {
-    isOpen: drawerIsOpen,
-    onOpen: drawerOnOpen,
-    onClose: drawerOnClose,
-  } = useDisclosure()
-  const drawerBtnRef = React.useRef()
-
   return (
     <Flex
       as="nav"

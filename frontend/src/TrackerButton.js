@@ -3,7 +3,6 @@ import { PseudoBox, Stack } from '@chakra-ui/core'
 import { string, any } from 'prop-types'
 
 export const TrackerButton = React.forwardRef(
-  // ({ variant, children, ref, ...props }) => {
   ({ variant, children, ...props }, ref) => {
     let color = 'black'
     let bg = 'gray.100'
@@ -57,6 +56,8 @@ export const TrackerButton = React.forwardRef(
     )
   },
 )
+
+TrackerButton.displayName = 'TrackerButton'
 
 TrackerButton.propTypes = {
   variant: string,
