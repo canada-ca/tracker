@@ -7,7 +7,31 @@ const findMyOrganizations = {
   args: {
     ...connectionArgs,
   },
-  resolve: async () => {},
+  resolve: async (
+    _,
+    args,
+    {
+      userId,
+      loaders: {
+        orgLoaderConnectionsByUserId,
+      },
+    },
+  ) => {
+    let orgConnections
+
+    try {
+      orgConnections = await orgLoaderConnectionsByUserId(args)
+    } catch (err) {
+      console.error(
+        `Database error occurred while user: ${userId} was trying to gather organization connections in findMyDomains.`,
+      )
+      throw new Error('Unable to load organizations. Please try again.')
+    }
+
+    console.info(`User ${userId} successfully retrieved their organizations.`)
+
+    return orgConnections
+  },
 }
 
 module.exports = {

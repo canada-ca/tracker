@@ -27,6 +27,7 @@ const {
   orgLoaderBySlug,
   orgLoaderByConnectionArgs,
   orgLoaderConnectionArgsByDomainId,
+  orgLoaderConnectionsByUserId,
   userLoaderByUserName,
   userLoaderByKey,
 } = require('./loaders')
@@ -105,6 +106,11 @@ const Server = (context = {}) => {
           domainLoaderByKey: domainLoaderByKey(query),
           domainLoaderByDomain: domainLoaderByDomain(query),
           domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
             query,
             userId,
             cleanseInput,
