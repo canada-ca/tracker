@@ -8,11 +8,12 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Flex, Link, CSSReset, useToast } from '@chakra-ui/core'
+import { Flex, Link, CSSReset, useToast, Box } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
+import { FloatingMenu } from './FloatingMenu'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -49,6 +50,62 @@ export default function App() {
           </PhaseBanner>
           <TopBanner />
         </header>
+
+        <Navigation>
+          <Link to="/">
+            <Trans>Home</Trans>
+          </Link>
+
+          <Link to="/dmarc-summaries">
+            <Trans>DMARC Report</Trans>
+          </Link>
+
+          {/* <Link to="/domains">
+            <Trans>Domains</Trans>
+          </Link> */}
+
+          <Link to="/organizations">
+            <Trans>Organizations</Trans>
+          </Link>
+
+          {isLoggedIn() && (
+            <Link to="/user">
+              <Trans>User Profile</Trans>
+            </Link>
+          )}
+
+          {isLoggedIn() && (
+            <Link to="/admin">
+              <Trans>Admin Profile</Trans>
+            </Link>
+          )}
+
+          {isLoggedIn() ? (
+            <Link
+              to="/"
+              onClick={() => {
+                logout()
+                toast({
+                  title: i18n._(t`Sign Out.`),
+                  description: i18n._(
+                    t`You have successfully been signed out.`,
+                  ),
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                  position: 'top-left',
+                })
+              }}
+              ml={[null, 'auto']}
+            >
+              <Trans>Sign Out</Trans>
+            </Link>
+          ) : (
+            <Link to="/sign-in" ml={[null, 'auto']}>
+              <Trans>Sign In</Trans>
+            </Link>
+          )}
+        </Navigation>
 
         {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
         <Main>
@@ -187,61 +244,8 @@ export default function App() {
             <Trans>Terms & conditions</Trans>
           </Link>
         </Footer>
-        <Navigation>
-          <Link to="/">
-            <Trans>Home</Trans>
-          </Link>
-
-          <Link to="/dmarc-summaries">
-            <Trans>DMARC Report</Trans>
-          </Link>
-
-          {/* <Link to="/domains">
-            <Trans>Domains</Trans>
-          </Link> */}
-
-          <Link to="/organizations">
-            <Trans>Organizations</Trans>
-          </Link>
-
-          {isLoggedIn() && (
-            <Link to="/user">
-              <Trans>User Profile</Trans>
-            </Link>
-          )}
-
-          {isLoggedIn() && (
-            <Link to="/admin">
-              <Trans>Admin Profile</Trans>
-            </Link>
-          )}
-
-          {isLoggedIn() ? (
-            <Link
-              to="/"
-              onClick={() => {
-                logout()
-                toast({
-                  title: i18n._(t`Sign Out.`),
-                  description: i18n._(
-                    t`You have successfully been signed out.`,
-                  ),
-                  status: 'success',
-                  duration: 9000,
-                  isClosable: true,
-                  position: 'bottom-left',
-                })
-              }}
-              ml={[null, 'auto']}
-            >
-              <Trans>Sign Out</Trans>
-            </Link>
-          ) : (
-            <Link to="/sign-in" ml={[null, 'auto']}>
-              <Trans>Sign In</Trans>
-            </Link>
-          )}
-        </Navigation>
+        <FloatingMenu />
+        <Box h="40px" />
       </Flex>
     </>
   )

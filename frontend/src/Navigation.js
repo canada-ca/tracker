@@ -68,9 +68,7 @@ export const Navigation = ({ children, ...props }) => {
       color="primary"
       borderBottom="2px solid"
       borderBottomColor="gray.300"
-      position="sticky"
-      bottom={0}
-      zIndex={2}
+      display={{ base: 'none', md: 'flex' }}
       {...props}
     >
       <Flex
@@ -87,7 +85,6 @@ export const Navigation = ({ children, ...props }) => {
           flexWrap="wrap"
           spacing="6"
           w="100%"
-          display={{ base: 'none', md: 'flex' }}
         >
           {React.Children.map(children, (child) => {
             if (child !== null) {
@@ -96,171 +93,6 @@ export const Navigation = ({ children, ...props }) => {
               })
             }
           })}
-        </Stack>
-
-        <Stack isInline width="100%" rounded="md" spacing={0}>
-          <Link as={RouteLink} to="/user" flex="1 1 0">
-            <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-              <Icon name="person" />
-            </TrackerButton>
-          </Link>
-          <Divider
-            orientation="vertical"
-            borderColor="accent"
-            borderWidth="2px"
-            ml={0}
-          />
-          <Link as={RouteLink} to="/dmarc-summaries" flex="1 1 0">
-            <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-              <Icon name="report" />
-            </TrackerButton>
-          </Link>
-          <Divider
-            orientation="vertical"
-            borderColor="accent"
-            borderWidth="2px"
-            ml={0}
-          />
-          <Link as={RouteLink} to="/organizations" flex="1 1 0">
-            <TrackerButton variant="primary" rounded={0} w="100%" h="100%">
-              <Icon name="building" />
-            </TrackerButton>
-          </Link>
-          <Divider
-            orientation="vertical"
-            borderColor="accent"
-            borderWidth="2px"
-            ml={0}
-          />
-
-          <Box flex="1 1 0">
-            <TrackerButton
-              ref={drawerBtnRef}
-              variant="primary"
-              onClick={drawerOnOpen}
-              rounded={0}
-              w="100%"
-              h="100%"
-            >
-              <Trans>Menu</Trans>
-            </TrackerButton>
-          </Box>
-
-          <Drawer
-            isOpen={drawerIsOpen}
-            placement="right"
-            onClose={drawerOnClose}
-            finalFocusRef={drawerBtnRef}
-          >
-            <DrawerOverlay />
-            <DrawerContent backgroundColor="primary">
-              <DrawerCloseButton color="white" />
-              <Stack mt="auto">
-                <DrawerHeader
-                  mt="auto"
-                  borderBottomWidth="1px"
-                  borderBottomColor="accent"
-                >
-                  <Text textAlign="right" color="white">
-                    <Trans>Menu</Trans>
-                  </Text>
-                </DrawerHeader>
-
-                <DrawerBody>
-                  <Stack spacing="16px">
-                    <Link as={RouteLink} to="/">
-                      <Text
-                        fontWeight="bold"
-                        textAlign="right"
-                        color="white"
-                        fontSize="lg"
-                      >
-                        Home
-                      </Text>
-                    </Link>
-                    <Link as={RouteLink} to="/admin">
-                      <Text
-                        fontWeight="bold"
-                        textAlign="right"
-                        color="white"
-                        fontSize="lg"
-                      >
-                        Admin Portal
-                      </Text>
-                    </Link>
-                    <Divider
-                      borderWidth="2px"
-                      borderColor="accent"
-                      width="100%"
-                      opacity="50%"
-                    />
-                    <Link
-                      isExternal
-                      href={
-                        i18n.locale === 'en'
-                          ? 'https://www.canada.ca/en/transparency/privacy.html'
-                          : 'https://www.canada.ca/fr/transparence/confidentialite.html'
-                      }
-                    >
-                      <Text
-                        fontWeight="bold"
-                        textAlign="right"
-                        color="white"
-                        fontSize="lg"
-                      >
-                        Privacy
-                      </Text>
-                    </Link>
-                    <Link
-                      isExternal
-                      href={
-                        i18n.locale === 'en'
-                          ? 'https://www.canada.ca/en/transparency/terms.html'
-                          : 'https://www.canada.ca/fr/transparence/avis.html'
-                      }
-                    >
-                      <Text
-                        fontWeight="bold"
-                        textAlign="right"
-                        color="white"
-                        fontSize="lg"
-                      >
-                        Terms & Conditions
-                      </Text>
-                    </Link>
-                  </Stack>
-                </DrawerBody>
-
-                <DrawerFooter
-                  borderTopWidth="1px"
-                  borderTopColor="accent"
-                  backgroundColor="gray.300"
-                >
-                  <Stack isInline width="100%" justify="space-between">
-                    <Image
-                      src={wordmark}
-                      width="147.2px"
-                      alt={
-                        i18n.locale === 'en'
-                          ? 'Symbol of the Government of Canada'
-                          : 'Symbole du gouvernement du Canada'
-                      }
-                      color="white"
-                    />
-                    <Button
-                      color="primary"
-                      bg="transparent"
-                      borderColor="primary"
-                      borderWidth="1px"
-                      onClick={drawerOnClose}
-                    >
-                      <Trans>Close</Trans>
-                    </Button>
-                  </Stack>
-                </DrawerFooter>
-              </Stack>
-            </DrawerContent>
-          </Drawer>
         </Stack>
       </Flex>
     </Flex>
