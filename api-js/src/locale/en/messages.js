@@ -20,9 +20,15 @@
   messages: {
     'Unable to create domain. Please try again.':
       'Unable to create domain. Please try again.',
+    'Unable to create organization. Please try again.':
+      'Unable to create organization. Please try again.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
+    'Unable to remove organization. Please try again.':
+      'Unable to remove organization. Please try again.',
     'Unable to update domain. Please try again.':
       'Unable to update domain. Please try again.',
+    'Unable to update organization. Please try again.':
+      'Unable to update organization. Please try again.',
   },
 }

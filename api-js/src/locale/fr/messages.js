@@ -7,7 +7,10 @@
   },
   messages: {
     'Unable to create domain. Please try again.': 'todo',
+    'Unable to create organization. Please try again.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
+    'Unable to remove organization. Please try again.': 'todo',
     'Unable to update domain. Please try again.': 'todo',
+    'Unable to update organization. Please try again.': 'todo',
   },
 }
