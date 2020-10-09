@@ -3,9 +3,13 @@ dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { setupI18n } = require('@lingui/core')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 
 const bcrypt = require('bcrypt')
 const { cleanseInput, slugify } = require('../validators')
@@ -2373,167 +2377,20 @@ describe('updating an organization', () => {
     })
   })
   describe('given an unsuccessful organization update', () => {
-    describe('user is located in the database', () => {
-      beforeEach(async () => {
-        await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
+    let i18n
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'en',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
           },
         })
       })
-      describe('user does not have the proper permissions', () => {
-        let user, org, b64OrgId
-        beforeEach(async () => {
-          const userCursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-          const orgCursor = await query`
-              FOR org IN organizations
-                FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-                RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-            `
-          user = await userCursor.next()
-          org = await orgCursor.next()
-
-          b64OrgId = Buffer.from(org._id).toString('base64')
-        })
-        describe('user has user level permission', () => {
-          beforeEach(async () => {
-            await query`
-              INSERT {
-                _from: ${org._id},
-                _to: ${user._id},
-                permission: "user"
-              } INTO affiliations
-            `
-          })
-          it('returns an error', async () => {
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                updateOrganization (
-                  input: {
-                    id: "${b64OrgId}"
-                    cityEN: "A New City"
-                  }
-                ) {
-                  organization {
-                    city
-                  }
-                }
-              }
-              `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: {
-                  checkPermission,
-                  userRequired,
-                },
-                validators: {
-                  cleanseInput,
-                  slugify,
-                },
-                loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                'Unable to update organization. Please try again.',
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: user`,
-            ])
-          })
-        })
-        describe('user does not belong to that organization', () => {
-          it('returns an error message', async () => {
-            const response = await graphql(
-              schema,
-              `
-              mutation {
-                updateOrganization (
-                  input: {
-                    id: "${b64OrgId}"
-                    cityEN: "A New City"
-                  }
-                ) {
-                  organization {
-                    city
-                  }
-                }
-              }
-              `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: {
-                  checkPermission,
-                  userRequired,
-                },
-                validators: {
-                  cleanseInput,
-                  slugify,
-                },
-                loaders: {
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
-                },
-              },
-            )
-
-            const error = [
-              new GraphQLError(
-                'Unable to update organization. Please try again.',
-              ),
-            ]
-
-            expect(response.errors).toEqual(error)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: undefined`,
-            ])
-          })
-        })
-      })
-    })
-    describe('organization cannot be found', () => {
-      describe('organization does not exist in database', () => {
-        let user
+      describe('user is located in the database', () => {
         beforeEach(async () => {
           await collections.organizations.save({
             orgDetails: {
@@ -2559,267 +2416,348 @@ describe('updating an organization', () => {
               },
             },
           })
-          const userCursor = await query`
-              FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-            `
-          user = await userCursor.next()
         })
-        it('returns an error', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateOrganization(
-                  input: { id: "b3JnYW5pemF0aW9ucy8x", cityEN: "A New City" }
-                ) {
-                  organization {
-                    city
+        describe('user does not have the proper permissions', () => {
+          let user, org, b64OrgId
+          beforeEach(async () => {
+            const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            const orgCursor = await query`
+                FOR org IN organizations
+                  FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
+                  RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+              `
+            user = await userCursor.next()
+            org = await orgCursor.next()
+
+            b64OrgId = Buffer.from(org._id).toString('base64')
+          })
+          describe('user has user level permission', () => {
+            beforeEach(async () => {
+              await query`
+                INSERT {
+                  _from: ${org._id},
+                  _to: ${user._id},
+                  permission: "user"
+                } INTO affiliations
+              `
+            })
+            it('returns an error', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  updateOrganization (
+                    input: {
+                      id: "${b64OrgId}"
+                      cityEN: "A New City"
+                    }
+                  ) {
+                    organization {
+                      city
+                    }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              query,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: {
-                checkPermission,
-                userRequired,
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              'Unable to update organization. Please try again.',
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to update organization: 1, however no organizations is associated with that id.`,
-          ])
-        })
-      })
-    })
-    describe('database error occurs', () => {
-      let user, org, b64OrgId
-      beforeEach(async () => {
-        await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        const orgCursor = await query`
-          FOR org IN organizations
-            FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
-        `
-        user = await userCursor.next()
-        org = await orgCursor.next()
-        b64OrgId = Buffer.from(org._id).toString('base64')
-
-        await query`
-          INSERT {
-            _from: ${org._id},
-            _to: ${user._id},
-            permission: "admin"
-          } INTO affiliations
-        `
-      })
-      describe('when gathering all the org details', () => {
-        it('returns an error', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
-          const mockQuery = jest
-            .fn()
-            .mockReturnValueOnce({
-              next() {
-                return 'super_admin'
-              },
-            })
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateOrganization(
-                  input: { id: "${b64OrgId}", cityEN: "A New City" }
-                ) {
-                  organization {
-                    city
-                  }
-                }
-              }
-            `,
-            null,
-            {
-              query: mockQuery,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: {
-                checkPermission,
-                userRequired,
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              'Unable to update organization. Please try again.',
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Database error occurred while retrieving org: ${org._key} for update, err: Error: Database error occurred.`,
-          ])
-        })
-      })
-      describe('when updating/inserting new org details', () => {
-        it('returns an error', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
-          const mockQuery = jest
-            .fn()
-            .mockReturnValueOnce({
-              next() {
-                return 'super_admin'
-              },
-            })
-            .mockReturnValueOnce({
-              next() {
-                return {
-                  orgDetails: {
-                    en: {
-                      slug: 'treasury-board-secretariat',
-                      acronym: 'TBS',
-                      name: 'Treasury Board of Canada Secretariat',
-                      zone: 'FED',
-                      sector: 'TBS',
-                      country: 'Canada',
-                      province: 'Ontario',
-                      city: 'Ottawa',
-                    },
-                    fr: {
-                      slug: 'secretariat-conseil-tresor',
-                      acronym: 'SCT',
-                      name: 'Secrétariat du Conseil Trésor du Canada',
-                      zone: 'FED',
-                      sector: 'TBS',
-                      country: 'Canada',
-                      province: 'Ontario',
-                      city: 'Ottawa',
-                    },
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: {
+                    checkPermission,
+                    userRequired,
                   },
-                }
-              },
-            })
-            .mockRejectedValue(new Error('Database error occurred.'))
+                  validators: {
+                    cleanseInput,
+                    slugify,
+                  },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
 
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateOrganization(
-                  input: { id: "${b64OrgId}", cityEN: "A New City" }
-                ) {
-                  organization {
-                    city
+              const error = [
+                new GraphQLError(
+                  'Unable to update organization. Please try again.',
+                ),
+              ]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: user`,
+              ])
+            })
+          })
+          describe('user does not belong to that organization', () => {
+            it('returns an error message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  updateOrganization (
+                    input: {
+                      id: "${b64OrgId}"
+                      cityEN: "A New City"
+                    }
+                  ) {
+                    organization {
+                      city
+                    }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              query: mockQuery,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: {
-                checkPermission,
-                userRequired,
-              },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
-              },
-            },
-          )
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: {
+                    checkPermission,
+                    userRequired,
+                  },
+                  validators: {
+                    cleanseInput,
+                    slugify,
+                  },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
 
-          const error = [
-            new GraphQLError(
-              'Unable to update organization. Please try again.',
-            ),
-          ]
+              const error = [
+                new GraphQLError(
+                  'Unable to update organization. Please try again.',
+                ),
+              ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction error occurred while upserting org: ${org._key}, err: Error: Database error occurred.`,
-          ])
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: undefined`,
+              ])
+            })
+          })
         })
       })
-      describe('when committing transaction', () => {
-        it('returns an error', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
+      describe('organization cannot be found', () => {
+        describe('organization does not exist in database', () => {
+          let user
+          beforeEach(async () => {
+            await collections.organizations.save({
+              orgDetails: {
+                en: {
+                  slug: 'treasury-board-secretariat',
+                  acronym: 'TBS',
+                  name: 'Treasury Board of Canada Secretariat',
+                  zone: 'FED',
+                  sector: 'TBS',
+                  country: 'Canada',
+                  province: 'Ontario',
+                  city: 'Ottawa',
+                },
+                fr: {
+                  slug: 'secretariat-conseil-tresor',
+                  acronym: 'SCT',
+                  name: 'Secrétariat du Conseil Trésor du Canada',
+                  zone: 'FED',
+                  sector: 'TBS',
+                  country: 'Canada',
+                  province: 'Ontario',
+                  city: 'Ottawa',
+                },
+              },
+            })
+            const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            user = await userCursor.next()
+          })
+          it('returns an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateOrganization(
+                    input: { id: "b3JnYW5pemF0aW9ucy8x", cityEN: "A New City" }
+                  ) {
+                    organization {
+                      city
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: {
+                  checkPermission,
+                  userRequired,
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
 
-          transaction = jest.fn().mockReturnValue({
-            run() {
-              return {
+            const error = [
+              new GraphQLError(
+                'Unable to update organization. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to update organization: 1, however no organizations is associated with that id.`,
+            ])
+          })
+        })
+      })
+      describe('database error occurs', () => {
+        let user, org, b64OrgId
+        beforeEach(async () => {
+          await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const orgCursor = await query`
+            FOR org IN organizations
+              FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
+              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+          `
+          user = await userCursor.next()
+          org = await orgCursor.next()
+          b64OrgId = Buffer.from(org._id).toString('base64')
+
+          await query`
+            INSERT {
+              _from: ${org._id},
+              _to: ${user._id},
+              permission: "admin"
+            } INTO affiliations
+          `
+        })
+        describe('when gathering all the org details', () => {
+          it('returns an error', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            const mockQuery = jest
+              .fn()
+              .mockReturnValueOnce({
+                next() {
+                  return 'super_admin'
+                },
+              })
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateOrganization(
+                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                  ) {
+                    organization {
+                      city
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query: mockQuery,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: {
+                  checkPermission,
+                  userRequired,
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to update organization. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while retrieving org: ${org._key} for update, err: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when updating/inserting new org details', () => {
+          it('returns an error', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            const mockQuery = jest
+              .fn()
+              .mockReturnValueOnce({
+                next() {
+                  return 'super_admin'
+                },
+              })
+              .mockReturnValueOnce({
                 next() {
                   return {
                     orgDetails: {
@@ -2846,57 +2784,689 @@ describe('updating an organization', () => {
                     },
                   }
                 },
-              }
+              })
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateOrganization(
+                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                  ) {
+                    organization {
+                      city
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query: mockQuery,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: {
+                  checkPermission,
+                  userRequired,
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to update organization. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while upserting org: ${org._key}, err: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when committing transaction', () => {
+          it('returns an error', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            transaction = jest.fn().mockReturnValue({
+              run() {
+                return {
+                  next() {
+                    return {
+                      orgDetails: {
+                        en: {
+                          slug: 'treasury-board-secretariat',
+                          acronym: 'TBS',
+                          name: 'Treasury Board of Canada Secretariat',
+                          zone: 'FED',
+                          sector: 'TBS',
+                          country: 'Canada',
+                          province: 'Ontario',
+                          city: 'Ottawa',
+                        },
+                        fr: {
+                          slug: 'secretariat-conseil-tresor',
+                          acronym: 'SCT',
+                          name: 'Secrétariat du Conseil Trésor du Canada',
+                          zone: 'FED',
+                          sector: 'TBS',
+                          country: 'Canada',
+                          province: 'Ontario',
+                          city: 'Ottawa',
+                        },
+                      },
+                    }
+                  },
+                }
+              },
+              commit() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateOrganization(
+                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                  ) {
+                    organization {
+                      city
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query: query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: {
+                  checkPermission,
+                  userRequired,
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to update organization. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while committing org: ${org._key}, err: Error: Database error occurred.`,
+            ])
+          })
+        })
+      })
+    })
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'fr',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
+        })
+      })
+      describe('user is located in the database', () => {
+        beforeEach(async () => {
+          await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
             },
-            commit() {
-              throw new Error('Database error occurred.')
+          })
+        })
+        describe('user does not have the proper permissions', () => {
+          let user, org, b64OrgId
+          beforeEach(async () => {
+            const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            const orgCursor = await query`
+                FOR org IN organizations
+                  FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
+                  RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+              `
+            user = await userCursor.next()
+            org = await orgCursor.next()
+
+            b64OrgId = Buffer.from(org._id).toString('base64')
+          })
+          describe('user has user level permission', () => {
+            beforeEach(async () => {
+              await query`
+                INSERT {
+                  _from: ${org._id},
+                  _to: ${user._id},
+                  permission: "user"
+                } INTO affiliations
+              `
+            })
+            it('returns an error', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  updateOrganization (
+                    input: {
+                      id: "${b64OrgId}"
+                      cityEN: "A New City"
+                    }
+                  ) {
+                    organization {
+                      city
+                    }
+                  }
+                }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: {
+                    checkPermission,
+                    userRequired,
+                  },
+                  validators: {
+                    cleanseInput,
+                    slugify,
+                  },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const error = [
+                new GraphQLError(
+                  'todo',
+                ),
+              ]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: user`,
+              ])
+            })
+          })
+          describe('user does not belong to that organization', () => {
+            it('returns an error message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  updateOrganization (
+                    input: {
+                      id: "${b64OrgId}"
+                      cityEN: "A New City"
+                    }
+                  ) {
+                    organization {
+                      city
+                    }
+                  }
+                }
+                `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: {
+                    checkPermission,
+                    userRequired,
+                  },
+                  validators: {
+                    cleanseInput,
+                    slugify,
+                  },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const error = [
+                new GraphQLError(
+                  'todo',
+                ),
+              ]
+
+              expect(response.errors).toEqual(error)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} attempted to update organization ${org._key}, however they do not have the correct permission level. Permission: undefined`,
+              ])
+            })
+          })
+        })
+      })
+      describe('organization cannot be found', () => {
+        describe('organization does not exist in database', () => {
+          let user
+          beforeEach(async () => {
+            await collections.organizations.save({
+              orgDetails: {
+                en: {
+                  slug: 'treasury-board-secretariat',
+                  acronym: 'TBS',
+                  name: 'Treasury Board of Canada Secretariat',
+                  zone: 'FED',
+                  sector: 'TBS',
+                  country: 'Canada',
+                  province: 'Ontario',
+                  city: 'Ottawa',
+                },
+                fr: {
+                  slug: 'secretariat-conseil-tresor',
+                  acronym: 'SCT',
+                  name: 'Secrétariat du Conseil Trésor du Canada',
+                  zone: 'FED',
+                  sector: 'TBS',
+                  country: 'Canada',
+                  province: 'Ontario',
+                  city: 'Ottawa',
+                },
+              },
+            })
+            const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+              `
+            user = await userCursor.next()
+          })
+          it('returns an error', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateOrganization(
+                    input: { id: "b3JnYW5pemF0aW9ucy8x", cityEN: "A New City" }
+                  ) {
+                    organization {
+                      city
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: {
+                  checkPermission,
+                  userRequired,
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'todo',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to update organization: 1, however no organizations is associated with that id.`,
+            ])
+          })
+        })
+      })
+      describe('database error occurs', () => {
+        let user, org, b64OrgId
+        beforeEach(async () => {
+          await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
             },
           })
 
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                updateOrganization(
-                  input: { id: "${b64OrgId}", cityEN: "A New City" }
-                ) {
-                  organization {
-                    city
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          const orgCursor = await query`
+            FOR org IN organizations
+              FILTER (LOWER("treasury-board-secretariat") == LOWER(TRANSLATE("en", org.orgDetails).slug))
+              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev }, TRANSLATE("en", org.orgDetails))
+          `
+          user = await userCursor.next()
+          org = await orgCursor.next()
+          b64OrgId = Buffer.from(org._id).toString('base64')
+
+          await query`
+            INSERT {
+              _from: ${org._id},
+              _to: ${user._id},
+              permission: "admin"
+            } INTO affiliations
+          `
+        })
+        describe('when gathering all the org details', () => {
+          it('returns an error', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            const mockQuery = jest
+              .fn()
+              .mockReturnValueOnce({
+                next() {
+                  return 'super_admin'
+                },
+              })
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateOrganization(
+                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                  ) {
+                    organization {
+                      city
+                    }
                   }
                 }
-              }
-            `,
-            null,
-            {
-              query: query,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: {
-                checkPermission,
-                userRequired,
+              `,
+              null,
+              {
+                i18n,
+                query: mockQuery,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: {
+                  checkPermission,
+                  userRequired,
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
               },
-              validators: {
-                cleanseInput,
-                slugify,
-              },
-              loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
-              },
-            },
-          )
+            )
 
-          const error = [
-            new GraphQLError(
-              'Unable to update organization. Please try again.',
-            ),
-          ]
+            const error = [
+              new GraphQLError(
+                'todo',
+              ),
+            ]
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction error occurred while committing org: ${org._key}, err: Error: Database error occurred.`,
-          ])
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while retrieving org: ${org._key} for update, err: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when updating/inserting new org details', () => {
+          it('returns an error', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            const mockQuery = jest
+              .fn()
+              .mockReturnValueOnce({
+                next() {
+                  return 'super_admin'
+                },
+              })
+              .mockReturnValueOnce({
+                next() {
+                  return {
+                    orgDetails: {
+                      en: {
+                        slug: 'treasury-board-secretariat',
+                        acronym: 'TBS',
+                        name: 'Treasury Board of Canada Secretariat',
+                        zone: 'FED',
+                        sector: 'TBS',
+                        country: 'Canada',
+                        province: 'Ontario',
+                        city: 'Ottawa',
+                      },
+                      fr: {
+                        slug: 'secretariat-conseil-tresor',
+                        acronym: 'SCT',
+                        name: 'Secrétariat du Conseil Trésor du Canada',
+                        zone: 'FED',
+                        sector: 'TBS',
+                        country: 'Canada',
+                        province: 'Ontario',
+                        city: 'Ottawa',
+                      },
+                    },
+                  }
+                },
+              })
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateOrganization(
+                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                  ) {
+                    organization {
+                      city
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query: mockQuery,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: {
+                  checkPermission,
+                  userRequired,
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'todo',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while upserting org: ${org._key}, err: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when committing transaction', () => {
+          it('returns an error', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            transaction = jest.fn().mockReturnValue({
+              run() {
+                return {
+                  next() {
+                    return {
+                      orgDetails: {
+                        en: {
+                          slug: 'treasury-board-secretariat',
+                          acronym: 'TBS',
+                          name: 'Treasury Board of Canada Secretariat',
+                          zone: 'FED',
+                          sector: 'TBS',
+                          country: 'Canada',
+                          province: 'Ontario',
+                          city: 'Ottawa',
+                        },
+                        fr: {
+                          slug: 'secretariat-conseil-tresor',
+                          acronym: 'SCT',
+                          name: 'Secrétariat du Conseil Trésor du Canada',
+                          zone: 'FED',
+                          sector: 'TBS',
+                          country: 'Canada',
+                          province: 'Ontario',
+                          city: 'Ottawa',
+                        },
+                      },
+                    }
+                  },
+                }
+              },
+              commit() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  updateOrganization(
+                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                  ) {
+                    organization {
+                      city
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query: query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: {
+                  checkPermission,
+                  userRequired,
+                },
+                validators: {
+                  cleanseInput,
+                  slugify,
+                },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'todo',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while committing org: ${org._key}, err: Error: Database error occurred.`,
+            ])
+          })
         })
       })
     })
