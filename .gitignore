@@ -46,4 +46,5 @@ api/.ipynb
 **/dist
 
 #API lingui ignores
-api-js/locale/_build
+api-js/src/locale/_build
+api-js/src/locale/**/*.js
