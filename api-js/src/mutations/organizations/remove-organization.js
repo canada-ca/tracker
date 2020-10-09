@@ -1,5 +1,6 @@
 const { GraphQLNonNull, GraphQLID, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId, fromGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
 const removeOrganization = new mutationWithClientMutationId({
   name: 'RemoveOrganization',
@@ -23,6 +24,7 @@ const removeOrganization = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       collections,
       transaction,
@@ -46,7 +48,9 @@ const removeOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to remove org: ${orgId}, but there is no org associated with that id.`,
       )
-      throw new Error('Unable to remove organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to remove organization. Please try again.`),
+      )
     }
 
     // Get users permission
@@ -57,14 +61,18 @@ const removeOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to remove ${organization._key}, however the user is not a super admin.`,
       )
-      throw new Error('Unable to remove organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to remove organization. Please try again.`),
+      )
     }
 
     if (permission !== 'super_admin' && permission !== 'admin') {
       console.warn(
         `User: ${userId} attempted to remove ${organization._key}, however the user does not have permission to this organization.`,
       )
-      throw new Error('Unable to remove organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to remove organization. Please try again.`),
+      )
     }
 
     // Generate list of collections names
@@ -133,7 +141,9 @@ const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred while attempting to remove scan results for org: ${organization._key}, error: ${err}`,
       )
-      throw new Error('Unable to remove organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to remove organization. Please try again.`),
+      )
     }
 
     try {
@@ -163,7 +173,9 @@ const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred while attempting to remove domain, affiliations, and the org for org: ${organization._key}, error: ${err}`,
       )
-      throw new Error('Unable to remove organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to remove organization. Please try again.`),
+      )
     }
 
     try {
@@ -172,7 +184,9 @@ const removeOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred while attempting to commit removal of org: ${organization._key}, error: ${err}`,
       )
-      throw new Error('Unable to remove organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to remove organization. Please try again.`),
+      )
     }
 
     console.info(

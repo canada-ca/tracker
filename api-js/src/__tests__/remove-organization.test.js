@@ -3,9 +3,13 @@ dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { setupI18n } = require('@lingui/core')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 
 const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
@@ -497,127 +501,472 @@ describe('removing an organization', () => {
     })
   })
   describe('given an unsuccessful org removal', () => {
-    describe('organization does not exist', () => {
-      it('returns an error message', async () => {
-        const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-        const user = await userCursor.next()
-
-        const response = await graphql(
-          schema,
+    let i18n
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'en',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
+        })
+      })
+      describe('organization does not exist', () => {
+        it('returns an error message', async () => {
+          const userCursor = await query`
+            FOR user IN users
+              RETURN user
           `
-            mutation {
-              removeOrganization(
-                input: {
-                  orgId: "${toGlobalId('organizations', 1)}"
+          const user = await userCursor.next()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                removeOrganization(
+                  input: {
+                    orgId: "${toGlobalId('organizations', 1)}"
+                  }
+                ) {
+                  status
                 }
-              ) {
-                status
               }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              validators: { cleanseInput },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Unable to remove organization. Please try again.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to remove org: 1, but there is no org associated with that id.`,
+          ])
+        })
+      })
+      describe('user does not have permission', () => {
+        let org, user, secondOrg
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            blueCheck: true,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          secondOrg = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'communications-security-establishment',
+                acronym: 'CSE',
+                name: 'Communications Security Establishment',
+                zone: 'FED',
+                sector: 'DND',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'centre-de-la-securite-des-telecommunications',
+                acronym: 'CST',
+                name: 'Centre de la Securite des Telecommunications',
+                zone: 'FED',
+                sector: 'DND',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
+        describe('org to be removed is blue check', () => {
+          beforeEach(async () => {
+            const userCursor = await query`
+              FOR user IN users
+                RETURN user
+            `
+            user = await userCursor.next()
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to remove organization. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to remove ${org._key}, however the user is not a super admin.`,
+            ])
+          })
+        })
+        describe('user is an admin in a different organization', () => {
+          beforeEach(async () => {
+            const userCursor = await query`
+              FOR user IN users
+                RETURN user
+            `
+            user = await userCursor.next()
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to remove organization. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to remove ${secondOrg._key}, however the user does not have permission to this organization.`,
+            ])
+          })
+        })
+      })
+      describe('transaction error occurs', () => {
+        let user, org
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+
+          const userCursor = await query`
+            FOR user IN users
+              RETURN user
+          `
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'super_admin',
+          })
+        })
+        describe('when running scan transactions', () => {
+          it('returns an error message', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            transaction = jest.fn().mockReturnValue({
+              run() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to remove organization. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while attempting to remove scan results for org: ${org._key}, error: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when running domain, affiliations, org transactions', () => {
+          it('returns an error message', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            const cursor = {
+              next() {
+                return 'admin'
+              },
             }
-          `,
-          null,
-          {
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, userRequired },
-            validators: { cleanseInput },
-            loaders: {
-              orgLoaderByKey: orgLoaderByKey(query, 'en'),
-              userLoaderByKey: userLoaderByKey(query),
-            },
-          },
-        )
 
-        const error = [
-          new GraphQLError('Unable to remove organization. Please try again.'),
-        ]
+            query = jest
+              .fn()
+              .mockReturnValueOnce(cursor)
+              .mockReturnValueOnce(cursor)
+              .mockReturnValueOnce(undefined)
+              .mockReturnValueOnce(undefined)
+              .mockReturnValueOnce(undefined)
+              .mockReturnValueOnce(undefined)
+              .mockReturnValueOnce(undefined)
+              .mockRejectedValue(new Error('Database error occurred.'))
 
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to remove org: 1, but there is no org associated with that id.`,
-        ])
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to remove organization. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while attempting to remove domain, affiliations, and the org for org: ${org._key}, error: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when committing transaction', () => {
+          it('returns an error message', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            transaction = jest.fn().mockReturnValue({
+              run() {
+                return undefined
+              },
+              commit() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
+
+            const error = [
+              new GraphQLError(
+                'Unable to remove organization. Please try again.',
+              ),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while attempting to commit removal of org: ${org._key}, error: Error: Database error occurred.`,
+            ])
+          })
+        })
       })
     })
-    describe('user does not have permission', () => {
-      let org, user, secondOrg
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          blueCheck: true,
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-        secondOrg = await collections.organizations.save({
-          blueCheck: false,
-          orgDetails: {
-            en: {
-              slug: 'communications-security-establishment',
-              acronym: 'CSE',
-              name: 'Communications Security Establishment',
-              zone: 'FED',
-              sector: 'DND',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'centre-de-la-securite-des-telecommunications',
-              acronym: 'CST',
-              name: 'Centre de la Securite des Telecommunications',
-              zone: 'FED',
-              sector: 'DND',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'fr',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
           },
         })
       })
-      describe('org to be removed is blue check', () => {
-        beforeEach(async () => {
+      describe('organization does not exist', () => {
+        it('returns an error message', async () => {
           const userCursor = await query`
             FOR user IN users
               RETURN user
           `
-          user = await userCursor.next()
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'admin',
-          })
-        })
-        it('returns an error message', async () => {
+          const user = await userCursor.next()
+
           const response = await graphql(
             schema,
             `
               mutation {
                 removeOrganization(
                   input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
+                    orgId: "${toGlobalId('organizations', 1)}"
                   }
                 ) {
                   status
@@ -626,6 +975,7 @@ describe('removing an organization', () => {
             `,
             null,
             {
+              i18n,
               query,
               collections,
               transaction,
@@ -639,20 +989,200 @@ describe('removing an organization', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove organization. Please try again.',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to remove ${org._key}, however the user is not a super admin.`,
+            `User: ${user._key} attempted to remove org: 1, but there is no org associated with that id.`,
           ])
         })
       })
-      describe('user is an admin in a different organization', () => {
+      describe('user does not have permission', () => {
+        let org, user, secondOrg
         beforeEach(async () => {
+          org = await collections.organizations.save({
+            blueCheck: true,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          secondOrg = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'communications-security-establishment',
+                acronym: 'CSE',
+                name: 'Communications Security Establishment',
+                zone: 'FED',
+                sector: 'DND',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'centre-de-la-securite-des-telecommunications',
+                acronym: 'CST',
+                name: 'Centre de la Securite des Telecommunications',
+                zone: 'FED',
+                sector: 'DND',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+        })
+        describe('org to be removed is blue check', () => {
+          beforeEach(async () => {
+            const userCursor = await query`
+              FOR user IN users
+                RETURN user
+            `
+            user = await userCursor.next()
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to remove ${org._key}, however the user is not a super admin.`,
+            ])
+          })
+        })
+        describe('user is an admin in a different organization', () => {
+          beforeEach(async () => {
+            const userCursor = await query`
+              FOR user IN users
+                RETURN user
+            `
+            user = await userCursor.next()
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'admin',
+            })
+          })
+          it('returns an error message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to remove ${secondOrg._key}, however the user does not have permission to this organization.`,
+            ])
+          })
+        })
+      })
+      describe('transaction error occurs', () => {
+        let user, org
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+
           const userCursor = await query`
             FOR user IN users
               RETURN user
@@ -661,256 +1191,166 @@ describe('removing an organization', () => {
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
-            permission: 'admin',
+            permission: 'super_admin',
           })
         })
-        it('returns an error message', async () => {
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organizations', secondOrg._key)}"
-                  }
-                ) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              query,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: { checkPermission, userRequired },
-              validators: { cleanseInput },
-              loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+        describe('when running scan transactions', () => {
+          it('returns an error message', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
+
+            transaction = jest.fn().mockReturnValue({
+              run() {
+                throw new Error('Database error occurred.')
               },
-            },
-          )
+            })
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove organization. Please try again.',
-            ),
-          ]
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} attempted to remove ${secondOrg._key}, however the user does not have permission to this organization.`,
-          ])
-        })
-      })
-    })
-    describe('transaction error occurs', () => {
-      let user, org
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          blueCheck: false,
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
+            const error = [new GraphQLError('todo')]
 
-        const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'super_admin',
-        })
-      })
-      describe('when running scan transactions', () => {
-        it('returns an error message', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
-
-          transaction = jest.fn().mockReturnValue({
-            run() {
-              throw new Error('Database error occurred.')
-            },
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while attempting to remove scan results for org: ${org._key}, error: Error: Database error occurred.`,
+            ])
           })
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              query,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: { checkPermission, userRequired },
-              validators: { cleanseInput },
-              loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
-              },
-            },
-          )
-
-          const error = [
-            new GraphQLError(
-              'Unable to remove organization. Please try again.',
-            ),
-          ]
-
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction error occurred while attempting to remove scan results for org: ${org._key}, error: Error: Database error occurred.`,
-          ])
         })
-      })
-      describe('when running domain, affiliations, org transactions', () => {
-        it('returns an error message', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
+        describe('when running domain, affiliations, org transactions', () => {
+          it('returns an error message', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
 
-          const cursor = {
-            next() {
-              return 'admin'
-            },
-          }
-
-          query = jest
-            .fn()
-            .mockReturnValueOnce(cursor)
-            .mockReturnValueOnce(cursor)
-            .mockReturnValueOnce(undefined)
-            .mockReturnValueOnce(undefined)
-            .mockReturnValueOnce(undefined)
-            .mockReturnValueOnce(undefined)
-            .mockReturnValueOnce(undefined)
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              query,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: { checkPermission, userRequired },
-              validators: { cleanseInput },
-              loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+            const cursor = {
+              next() {
+                return 'admin'
               },
-            },
-          )
+            }
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove organization. Please try again.',
-            ),
-          ]
+            query = jest
+              .fn()
+              .mockReturnValueOnce(cursor)
+              .mockReturnValueOnce(cursor)
+              .mockReturnValueOnce(undefined)
+              .mockReturnValueOnce(undefined)
+              .mockReturnValueOnce(undefined)
+              .mockReturnValueOnce(undefined)
+              .mockReturnValueOnce(undefined)
+              .mockRejectedValue(new Error('Database error occurred.'))
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction error occurred while attempting to remove domain, affiliations, and the org for org: ${org._key}, error: Error: Database error occurred.`,
-          ])
-        })
-      })
-      describe('when committing transaction', () => {
-        it('returns an error message', async () => {
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const userLoader = userLoaderByKey(query)
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
 
-          transaction = jest.fn().mockReturnValue({
-            run() {
-              return undefined
-            },
-            commit() {
-              throw new Error('Database error occurred.')
-            },
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while attempting to remove domain, affiliations, and the org for org: ${org._key}, error: Error: Database error occurred.`,
+            ])
           })
+        })
+        describe('when committing transaction', () => {
+          it('returns an error message', async () => {
+            const orgLoader = orgLoaderByKey(query, 'en')
+            const userLoader = userLoaderByKey(query)
 
-          const response = await graphql(
-            schema,
-            `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
-                  }
-                ) {
-                  status
-                }
-              }
-            `,
-            null,
-            {
-              query,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: { checkPermission, userRequired },
-              validators: { cleanseInput },
-              loaders: {
-                orgLoaderByKey: orgLoader,
-                userLoaderByKey: userLoader,
+            transaction = jest.fn().mockReturnValue({
+              run() {
+                return undefined
               },
-            },
-          )
+              commit() {
+                throw new Error('Database error occurred.')
+              },
+            })
 
-          const error = [
-            new GraphQLError(
-              'Unable to remove organization. Please try again.',
-            ),
-          ]
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoader,
+                  userLoaderByKey: userLoader,
+                },
+              },
+            )
 
-          expect(response.errors).toEqual(error)
-          expect(consoleOutput).toEqual([
-            `Transaction error occurred while attempting to commit removal of org: ${org._key}, error: Error: Database error occurred.`,
-          ])
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Transaction error occurred while attempting to commit removal of org: ${org._key}, error: Error: Database error occurred.`,
+            ])
+          })
         })
       })
     })
