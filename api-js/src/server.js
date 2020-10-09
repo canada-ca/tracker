@@ -114,6 +114,7 @@ const Server = (context = {}) => {
             query,
             userId,
             cleanseInput,
+            request.language,
           ),
           orgLoaderByKey: orgLoaderByKey(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),
