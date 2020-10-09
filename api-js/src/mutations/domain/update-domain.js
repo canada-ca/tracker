@@ -1,5 +1,6 @@
 const { GraphQLID, GraphQLNonNull, GraphQLList } = require('graphql')
 const { mutationWithClientMutationId, fromGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 const { Domain, Selectors } = require('../../scalars')
 const { domainType } = require('../../types')
 
@@ -39,6 +40,7 @@ const updateDomain = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       collections,
       transaction,
@@ -69,7 +71,7 @@ const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update domain: ${domainId}, however there is no domain associated with that id.`,
       )
-      throw new Error('Unable to update domain. Please try again.')
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
     // Check to see if org exists
@@ -79,7 +81,7 @@ const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update domain: ${domainId} for org: ${orgId}, however there is no org associated with that id.`,
       )
-      throw new Error('Unable to update domain. Please try again.')
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
     // Check permission
@@ -93,7 +95,7 @@ const updateDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update domain: ${domainId} for org: ${orgId}, however they do not have permission in that org.`,
       )
-      throw new Error('Unable to update domain. Please try again.')
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
     // Check to see if org has a claim to this domain
@@ -108,14 +110,14 @@ const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Database error occurred while user: ${userId} attempted to update domain: ${domainId}, error: ${err}`,
       )
-      throw new Error('Unable to update domain. Please try again.')
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
     if (countCursor.count < 1) {
       console.warn(
         `User: ${userId} attempted to update domain: ${domainId} for org: ${orgId}, however that org has no claims to that domain.`,
       )
-      throw new Error('Unable to update domain. Please try again.')
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
     // Generate list of collections names
@@ -148,7 +150,7 @@ const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction run error occurred when user: ${userId} attempted to update domain: ${domainId}, error: ${err}`,
       )
-      throw new Error('Unable to update domain. Please try again.')
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
     // Commit transaction
@@ -158,7 +160,7 @@ const updateDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction commit error occurred when user: ${userId} attempted to update domain: ${domainId}, error: ${err}`,
       )
-      throw new Error('Unable to update domain. Please try again.')
+      throw new Error(i18n._(t`Unable to update domain. Please try again.`))
     }
 
     // Clear dataloader and load updated domain

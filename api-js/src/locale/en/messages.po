@@ -32,3 +32,13 @@ msgstr "Unable to create domain. Please try again."
 #: src/mutations/domain/remove-domain.js:220
 msgid "Unable to remove domain. Please try again."
 msgstr "Unable to remove domain. Please try again."
+
+#: src/mutations/domain/update-domain.js:74
+#: src/mutations/domain/update-domain.js:84
+#: src/mutations/domain/update-domain.js:98
+#: src/mutations/domain/update-domain.js:113
+#: src/mutations/domain/update-domain.js:120
+#: src/mutations/domain/update-domain.js:153
+#: src/mutations/domain/update-domain.js:163
+msgid "Unable to update domain. Please try again."
+msgstr "Unable to update domain. Please try again."
