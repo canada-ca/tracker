@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/mutations/organizations/remove-organization.js:197
+msgid "Successfully removed organization: {0}."
+msgstr "todo"
+
 #: src/mutations/domain/create-domain.js:69
 #: src/mutations/domain/create-domain.js:83
 #: src/mutations/domain/create-domain.js:108

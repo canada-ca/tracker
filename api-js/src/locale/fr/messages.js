@@ -6,6 +6,7 @@
     },
   },
   messages: {
+    'Successfully removed organization: {0}.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
