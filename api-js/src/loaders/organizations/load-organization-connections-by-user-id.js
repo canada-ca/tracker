@@ -5,6 +5,7 @@ const orgLoaderConnectionsByUserId = (
   query,
   userId,
   cleanseInput,
+  language,
 ) => async ({ after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
@@ -38,11 +39,13 @@ const orgLoaderConnectionsByUserId = (
   let filteredOrgCursor
   try {
     filteredOrgCursor = await query`
-    FOR org IN (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
+    LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
+    FOR org IN organizations
+        FILTER org._id IN orgIds 
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}
-        RETURN org
+        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
     `
   } catch (err) {
     console.error(
@@ -52,11 +55,8 @@ const orgLoaderConnectionsByUserId = (
   }
 
   let filteredOrgs
-  const orgs = []
-
   try {
     filteredOrgs = await filteredOrgCursor.all()
-    filteredOrgs.forEach((org) => orgs.push(org))
   } catch (err) {
     console.error(
       `Cursor error occurred while user: ${userId} was trying to gather organizations in loadOrganizationsByUser.`,
@@ -64,22 +64,21 @@ const orgLoaderConnectionsByUserId = (
     throw new Error('Unable to load organizations. Please try again.')
   }
 
-  const hasNextPage = !!(typeof first !== 'undefined' && orgs.length > first)
+  const hasNextPage = !!(typeof first !== 'undefined' && filteredOrgs.length > first)
   const hasPreviousPage = !!(
-    typeof last !== 'undefined' && orgs.length > last
+    typeof last !== 'undefined' && filteredOrgs.length > last
   )
 
-  if (orgs.length > last || orgs.length > first) {
-    orgs.pop()
+  if (filteredOrgs.length > last || filteredOrgs.length > first) {
+    filteredOrgs.pop()
   }
 
-  const edges = []
-  orgs.forEach(async (org) => {
+  const edges = filteredOrgs.map((org) => {
     org.id = org._key
-    edges.push({
+    return {
       cursor: toGlobalId('organizations', org._key),
       node: org,
-    })
+    }
   })
 
   if (edges.length === 0) {
@@ -94,8 +93,8 @@ const orgLoaderConnectionsByUserId = (
     }
   }
 
-  const startCursor = toGlobalId('organizations', orgs[0]._key)
-  const endCursor = toGlobalId('organizations', orgs[orgs.length - 1]._key)
+  const startCursor = toGlobalId('organizations', filteredOrgs[0]._key)
+  const endCursor = toGlobalId('organizations', filteredOrgs[filteredOrgs.length - 1]._key)
 
   return {
     edges,
