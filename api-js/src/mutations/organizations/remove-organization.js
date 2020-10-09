@@ -194,7 +194,7 @@ const removeOrganization = new mutationWithClientMutationId({
     )
 
     return {
-      status: `Successfully removed organization: ${organization.slug}.`,
+      status: i18n._(t`Successfully removed organization: ${organization.slug}.`),
     }
   },
 })

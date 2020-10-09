@@ -92,7 +92,7 @@ describe('removing an organization', () => {
   })
 
   describe('given a successful org removal', () => {
-    let org, domain, user
+    let org, domain, user, i18n
     beforeEach(async () => {
       org = await collections.organizations.save({
         blueCheck: false,
@@ -159,130 +159,261 @@ describe('removing an organization', () => {
         _to: ssl._id,
       })
     })
-    describe('super admin can remove any org', () => {
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'super_admin',
+    describe('users language is set to english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'en',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
         })
       })
-      describe('org is a blue check', () => {
+      describe('super admin can remove any org', () => {
         beforeEach(async () => {
-          await query`
-            UPSERT { _key: ${org._key} }
-              INSERT { blueCheck: true }
-              UPDATE { blueCheck: true }
-              IN organizations
+          const userCursor = await query`
+            FOR user IN users
+              RETURN user
           `
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'super_admin',
+          })
         })
-        it('returns status message', async () => {
-          const response = await graphql(
-            schema,
+        describe('org is a blue check', () => {
+          beforeEach(async () => {
+            await query`
+              UPSERT { _key: ${org._key} }
+                INSERT { blueCheck: true }
+                UPDATE { blueCheck: true }
+                IN organizations
             `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
+          })
+          it('returns status message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
                   }
-                ) {
-                  status
                 }
-              }
-            `,
-            null,
-            {
-              query,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: { checkPermission, userRequired },
-              validators: { cleanseInput },
-              loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
               },
-            },
-          )
+            )
 
-          const expectedResponse = {
-            data: {
-              removeOrganization: {
-                status:
-                  'Successfully removed organization: treasury-board-secretariat.',
+            const expectedResponse = {
+              data: {
+                removeOrganization: {
+                  status:
+                    'Successfully removed organization: treasury-board-secretariat.',
+                },
               },
-            },
-          }
+            }
 
-          expect(response).toEqual(expectedResponse)
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} successfully removed org: ${org._key}.`,
-          ])
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully removed org: ${org._key}.`,
+            ])
+          })
+          it('removes all data from db', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const testOrgCursor = await query`FOR org IN organizations RETURN org`
+            const testOrg = await testOrgCursor.next()
+            expect(testOrg).toEqual(undefined)
+
+            const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+            const testDomain = await testDomainCursor.next()
+            expect(testDomain).toEqual(undefined)
+
+            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+            const testDkim = await testDkimCursor.next()
+            expect(testDkim).toEqual(undefined)
+
+            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+            const testDmarc = await testDmarcCursor.next()
+            expect(testDmarc).toEqual(undefined)
+
+            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+            const testSpf = await testSpfCursor.next()
+            expect(testSpf).toEqual(undefined)
+
+            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+            const testHttps = await testHttpsCursor.next()
+            expect(testHttps).toEqual(undefined)
+
+            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+            const testSsl = await testSslCursor.next()
+            expect(testSsl).toEqual(undefined)
+          })
         })
-        it('removes all data from db', async () => {
-          await graphql(
-            schema,
-            `
-              mutation {
-                removeOrganization(
-                  input: {
-                    orgId: "${toGlobalId('organizations', org._key)}"
+        describe('org is just a regular org', () => {
+          it('returns status message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
                   }
-                ) {
-                  status
                 }
-              }
-            `,
-            null,
-            {
-              query,
-              collections,
-              transaction,
-              userId: user._key,
-              auth: { checkPermission, userRequired },
-              validators: { cleanseInput },
-              loaders: {
-                orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                userLoaderByKey: userLoaderByKey(query),
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
               },
-            },
-          )
+            )
 
-          const testOrgCursor = await query`FOR org IN organizations RETURN org`
-          const testOrg = await testOrgCursor.next()
-          expect(testOrg).toEqual(undefined)
+            const expectedResponse = {
+              data: {
+                removeOrganization: {
+                  status:
+                    'Successfully removed organization: treasury-board-secretariat.',
+                },
+              },
+            }
 
-          const testDomainCursor = await query`FOR domain IN domains RETURN domain`
-          const testDomain = await testDomainCursor.next()
-          expect(testDomain).toEqual(undefined)
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully removed org: ${org._key}.`,
+            ])
+          })
+          it('removes all data from db', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
 
-          const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
-          const testDkim = await testDkimCursor.next()
-          expect(testDkim).toEqual(undefined)
+            const testOrgCursor = await query`FOR org IN organizations RETURN org`
+            const testOrg = await testOrgCursor.next()
+            expect(testOrg).toEqual(undefined)
 
-          const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
-          const testDmarc = await testDmarcCursor.next()
-          expect(testDmarc).toEqual(undefined)
+            const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+            const testDomain = await testDomainCursor.next()
+            expect(testDomain).toEqual(undefined)
 
-          const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
-          const testSpf = await testSpfCursor.next()
-          expect(testSpf).toEqual(undefined)
+            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+            const testDkim = await testDkimCursor.next()
+            expect(testDkim).toEqual(undefined)
 
-          const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
-          const testHttps = await testHttpsCursor.next()
-          expect(testHttps).toEqual(undefined)
+            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+            const testDmarc = await testDmarcCursor.next()
+            expect(testDmarc).toEqual(undefined)
 
-          const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
-          const testSsl = await testSslCursor.next()
-          expect(testSsl).toEqual(undefined)
+            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+            const testSpf = await testSpfCursor.next()
+            expect(testSpf).toEqual(undefined)
+
+            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+            const testHttps = await testHttpsCursor.next()
+            expect(testHttps).toEqual(undefined)
+
+            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+            const testSsl = await testSslCursor.next()
+            expect(testSsl).toEqual(undefined)
+          })
         })
       })
-      describe('org is just a regular org', () => {
+      describe('admin can remove a regular org', () => {
+        beforeEach(async () => {
+          const userCursor = await query`
+            FOR user IN users
+              RETURN user
+          `
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
         it('returns status message', async () => {
           const response = await graphql(
             schema,
@@ -299,6 +430,7 @@ describe('removing an organization', () => {
             `,
             null,
             {
+              i18n,
               query,
               collections,
               transaction,
@@ -342,6 +474,7 @@ describe('removing an organization', () => {
             `,
             null,
             {
+              i18n,
               query,
               collections,
               transaction,
@@ -385,118 +518,363 @@ describe('removing an organization', () => {
         })
       })
     })
-    describe('admin can remove a regular org', () => {
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
+    describe('users language is set to french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'fr',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
         })
       })
-      it('returns status message', async () => {
-        const response = await graphql(
-          schema,
+      describe('super admin can remove any org', () => {
+        beforeEach(async () => {
+          const userCursor = await query`
+            FOR user IN users
+              RETURN user
           `
-            mutation {
-              removeOrganization(
-                input: {
-                  orgId: "${toGlobalId('organizations', org._key)}"
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'super_admin',
+          })
+        })
+        describe('org is a blue check', () => {
+          beforeEach(async () => {
+            await query`
+              UPSERT { _key: ${org._key} }
+                INSERT { blueCheck: true }
+                UPDATE { blueCheck: true }
+                IN organizations
+            `
+          })
+          it('returns status message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
                 }
-              ) {
-                status
-              }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const expectedResponse = {
+              data: {
+                removeOrganization: {
+                  status:
+                    'todo',
+                },
+              },
             }
-          `,
-          null,
-          {
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, userRequired },
-            validators: { cleanseInput },
-            loaders: {
-              orgLoaderByKey: orgLoaderByKey(query, 'en'),
-              userLoaderByKey: userLoaderByKey(query),
-            },
-          },
-        )
 
-        const expectedResponse = {
-          data: {
-            removeOrganization: {
-              status:
-                'Successfully removed organization: treasury-board-secretariat.',
-            },
-          },
-        }
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully removed org: ${org._key}.`,
+            ])
+          })
+          it('removes all data from db', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
 
-        expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully removed org: ${org._key}.`,
-        ])
+            const testOrgCursor = await query`FOR org IN organizations RETURN org`
+            const testOrg = await testOrgCursor.next()
+            expect(testOrg).toEqual(undefined)
+
+            const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+            const testDomain = await testDomainCursor.next()
+            expect(testDomain).toEqual(undefined)
+
+            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+            const testDkim = await testDkimCursor.next()
+            expect(testDkim).toEqual(undefined)
+
+            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+            const testDmarc = await testDmarcCursor.next()
+            expect(testDmarc).toEqual(undefined)
+
+            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+            const testSpf = await testSpfCursor.next()
+            expect(testSpf).toEqual(undefined)
+
+            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+            const testHttps = await testHttpsCursor.next()
+            expect(testHttps).toEqual(undefined)
+
+            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+            const testSsl = await testSslCursor.next()
+            expect(testSsl).toEqual(undefined)
+          })
+        })
+        describe('org is just a regular org', () => {
+          it('returns status message', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const expectedResponse = {
+              data: {
+                removeOrganization: {
+                  status:
+                    'todo',
+                },
+              },
+            }
+
+            expect(response).toEqual(expectedResponse)
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} successfully removed org: ${org._key}.`,
+            ])
+          })
+          it('removes all data from db', async () => {
+            await graphql(
+              schema,
+              `
+                mutation {
+                  removeOrganization(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                validators: { cleanseInput },
+                loaders: {
+                  orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                  userLoaderByKey: userLoaderByKey(query),
+                },
+              },
+            )
+
+            const testOrgCursor = await query`FOR org IN organizations RETURN org`
+            const testOrg = await testOrgCursor.next()
+            expect(testOrg).toEqual(undefined)
+
+            const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+            const testDomain = await testDomainCursor.next()
+            expect(testDomain).toEqual(undefined)
+
+            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+            const testDkim = await testDkimCursor.next()
+            expect(testDkim).toEqual(undefined)
+
+            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+            const testDmarc = await testDmarcCursor.next()
+            expect(testDmarc).toEqual(undefined)
+
+            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+            const testSpf = await testSpfCursor.next()
+            expect(testSpf).toEqual(undefined)
+
+            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+            const testHttps = await testHttpsCursor.next()
+            expect(testHttps).toEqual(undefined)
+
+            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+            const testSsl = await testSslCursor.next()
+            expect(testSsl).toEqual(undefined)
+          })
+        })
       })
-      it('removes all data from db', async () => {
-        await graphql(
-          schema,
+      describe('admin can remove a regular org', () => {
+        beforeEach(async () => {
+          const userCursor = await query`
+            FOR user IN users
+              RETURN user
           `
-            mutation {
-              removeOrganization(
-                input: {
-                  orgId: "${toGlobalId('organizations', org._key)}"
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
+        it('returns status message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                removeOrganization(
+                  input: {
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                  }
+                ) {
+                  status
                 }
-              ) {
-                status
               }
-            }
-          `,
-          null,
-          {
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, userRequired },
-            validators: { cleanseInput },
-            loaders: {
-              orgLoaderByKey: orgLoaderByKey(query, 'en'),
-              userLoaderByKey: userLoaderByKey(query),
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              validators: { cleanseInput },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+              },
             },
-          },
-        )
+          )
 
-        const testOrgCursor = await query`FOR org IN organizations RETURN org`
-        const testOrg = await testOrgCursor.next()
-        expect(testOrg).toEqual(undefined)
+          const expectedResponse = {
+            data: {
+              removeOrganization: {
+                status:
+                  'todo',
+              },
+            },
+          }
 
-        const testDomainCursor = await query`FOR domain IN domains RETURN domain`
-        const testDomain = await testDomainCursor.next()
-        expect(testDomain).toEqual(undefined)
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully removed org: ${org._key}.`,
+          ])
+        })
+        it('removes all data from db', async () => {
+          await graphql(
+            schema,
+            `
+              mutation {
+                removeOrganization(
+                  input: {
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              validators: { cleanseInput },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
 
-        const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
-        const testDkim = await testDkimCursor.next()
-        expect(testDkim).toEqual(undefined)
+          const testOrgCursor = await query`FOR org IN organizations RETURN org`
+          const testOrg = await testOrgCursor.next()
+          expect(testOrg).toEqual(undefined)
 
-        const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
-        const testDmarc = await testDmarcCursor.next()
-        expect(testDmarc).toEqual(undefined)
+          const testDomainCursor = await query`FOR domain IN domains RETURN domain`
+          const testDomain = await testDomainCursor.next()
+          expect(testDomain).toEqual(undefined)
 
-        const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
-        const testSpf = await testSpfCursor.next()
-        expect(testSpf).toEqual(undefined)
+          const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+          const testDkim = await testDkimCursor.next()
+          expect(testDkim).toEqual(undefined)
 
-        const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
-        const testHttps = await testHttpsCursor.next()
-        expect(testHttps).toEqual(undefined)
+          const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+          const testDmarc = await testDmarcCursor.next()
+          expect(testDmarc).toEqual(undefined)
 
-        const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
-        const testSsl = await testSslCursor.next()
-        expect(testSsl).toEqual(undefined)
+          const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+          const testSpf = await testSpfCursor.next()
+          expect(testSpf).toEqual(undefined)
+
+          const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+          const testHttps = await testHttpsCursor.next()
+          expect(testHttps).toEqual(undefined)
+
+          const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+          const testSsl = await testSslCursor.next()
+          expect(testSsl).toEqual(undefined)
+        })
       })
     })
   })
