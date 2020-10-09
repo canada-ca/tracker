@@ -10,8 +10,9 @@
     "test-coverage": "jest --coverage",
     "lint": "eslint src",
     "prettier": "prettier --write \"**/*.js\"",
-    "extract": "lingui extract",
-    "compile": "lingui compile"
+    "add-locale": "npx lingui add-locale",
+    "extract": "npx lingui extract",
+    "compile": "npx lingui compile"
   },
   "author": "",
   "license": "ISC",
