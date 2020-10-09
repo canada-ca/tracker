@@ -86,7 +86,7 @@ const Server = (context = {}) => {
       const i18n = setupI18n({
         language: request.language,
         locales: ['en', 'fr'],
-        missing: 'Translation Missing',
+        missing: 'Traduction manquante',
         catalogs: {
           // en: englishMessages,
           // fr: frenchMessages,
