@@ -4,10 +4,7 @@ module.exports = {
   fallbackLocale: 'en',
   sourceLocale: 'en',
   localeDir: 'src/locale',
-  srcPathDirs: [
-    'index.js',
-    "src",
-  ],
+  srcPathDirs: ['src'],
   srcPathIgnorePatterns: ['/node_modules/'],
   format: 'po',
 }
