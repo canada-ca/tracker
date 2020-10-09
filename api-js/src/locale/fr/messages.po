@@ -12,3 +12,33 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
+
+#: src/mutations/domain/create-domain.js:69
+#: src/mutations/domain/create-domain.js:83
+#: src/mutations/domain/create-domain.js:108
+#: src/mutations/domain/create-domain.js:117
+#: src/mutations/domain/create-domain.js:168
+msgid "Unable to create domain. Please try again."
+msgstr "todo"
+
+#: src/mutations/domain/remove-domain.js:58
+#: src/mutations/domain/remove-domain.js:69
+#: src/mutations/domain/remove-domain.js:80
+#: src/mutations/domain/remove-domain.js:87
+#: src/mutations/domain/remove-domain.js:100
+#: src/mutations/domain/remove-domain.js:171
+#: src/mutations/domain/remove-domain.js:188
+#: src/mutations/domain/remove-domain.js:209
+#: src/mutations/domain/remove-domain.js:220
+msgid "Unable to remove domain. Please try again."
+msgstr "todo"
+
+#: src/mutations/domain/update-domain.js:74
+#: src/mutations/domain/update-domain.js:84
+#: src/mutations/domain/update-domain.js:98
+#: src/mutations/domain/update-domain.js:113
+#: src/mutations/domain/update-domain.js:120
+#: src/mutations/domain/update-domain.js:153
+#: src/mutations/domain/update-domain.js:163
+msgid "Unable to update domain. Please try again."
+msgstr "todo"
