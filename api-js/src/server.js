@@ -116,6 +116,42 @@ const Server = (context = {}) => {
             cleanseInput,
             request.language,
           ),
+          dkimLoaderByKey: dkimLoaderByKey(query),
+          dkimResultLoaderByKey: dkimResultLoaderByKey(query),
+          dmarcLoaderByKey: dmarcLoaderByKey(query),
+          spfLoaderByKey: spfLoaderByKey(query),
+          dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          dkimResultsLoaderConnectionByDkimId: dkimResultsLoaderConnectionByDkimId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          httpsLoaderByKey: httpsLoaderByKey(query),
+          httpsLoaderConnectionsByDomainId: httpsLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          sslLoaderByKey: sslLoaderByKey(query),
+          sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
           orgLoaderByKey: orgLoaderByKey(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),
           orgLoaderByConnectionArgs: orgLoaderByConnectionArgs(
