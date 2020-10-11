@@ -2215,9 +2215,7 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2287,9 +2285,7 @@ describe('updating a domain', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
