@@ -46,7 +46,6 @@ const {
   sslLoaderConnectionsByDomainId,
 } = require('./loaders')
 
-
 const Server = (context = {}) => {
   const app = express()
 
@@ -65,7 +64,6 @@ const Server = (context = {}) => {
   app.get('/ready', (_req, res) => {
     res.json({ ok: 'yes' })
   })
-
 
   const server = new ApolloServer({
     schema: new GraphQLSchema({
