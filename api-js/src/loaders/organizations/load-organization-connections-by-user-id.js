@@ -11,7 +11,7 @@ const orgLoaderConnectionsByUserId = (
   let beforeTemplate = aql``
 
   const userDBId = `users/${userId}`
-
+  
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
     afterTemplate = aql`FILTER TO_NUMBER(org._key) > TO_NUMBER(${afterId})`
@@ -41,7 +41,7 @@ const orgLoaderConnectionsByUserId = (
     filteredOrgCursor = await query`
     LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
     FOR org IN organizations
-        FILTER org._id IN orgIds 
+        FILTER org._id IN orgIds
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}

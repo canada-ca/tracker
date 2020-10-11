@@ -10,12 +10,7 @@ const findMyOrganizations = {
   resolve: async (
     _,
     args,
-    {
-      userId,
-      loaders: {
-        orgLoaderConnectionsByUserId,
-      },
-    },
+    { userId, loaders: { orgLoaderConnectionsByUserId } },
   ) => {
     let orgConnections
 
@@ -23,7 +18,7 @@ const findMyOrganizations = {
       orgConnections = await orgLoaderConnectionsByUserId(args)
     } catch (err) {
       console.error(
-        `Database error occurred while user: ${userId} was trying to gather organization connections in findMyDomains.`,
+        `Database error occurred while user: ${userId} was trying to gather organization connections in findMyOrganizations.`,
       )
       throw new Error('Unable to load organizations. Please try again.')
     }
