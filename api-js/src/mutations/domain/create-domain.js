@@ -1,5 +1,6 @@
 const { GraphQLNonNull, GraphQLList, GraphQLID } = require('graphql')
 const { mutationWithClientMutationId, fromGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 const { Domain, Selectors } = require('../../scalars')
 const { domainType } = require('../../types')
 
@@ -33,6 +34,7 @@ const createDomain = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       request,
       query,
       collections,
@@ -64,7 +66,7 @@ const createDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to create a domain to an organization: ${orgId} that does not exist.`,
       )
-      throw new Error('Unable to create domain. Please try again.')
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
     // Check to see if user belongs to org
@@ -78,7 +80,7 @@ const createDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to create a domain in: ${org.slug}, however they do not have permission to do so.`,
       )
-      throw new Error('Unable to create domain. Please try again.')
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
     const insertDomain = {
@@ -103,7 +105,7 @@ const createDomain = new mutationWithClientMutationId({
       console.error(
         `Database error occurred while running check to see if domain already exists in an org: ${err}`,
       )
-      throw new Error('Unable to create domain. Please try again.')
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
     const checkOrgDomain = await checkDomainCursor.next()
@@ -112,7 +114,7 @@ const createDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to create a domain for: ${org.slug}, however that org already has that domain claimed.`,
       )
-      throw new Error('Unable to create domain. Please try again.')
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
     // Check to see if domain already exists in db
@@ -163,7 +165,7 @@ const createDomain = new mutationWithClientMutationId({
       console.error(
         `Database error occurred while committing create domain transaction: ${err}`,
       )
-      throw new Error('Unable to create domain. Please try again.')
+      throw new Error(i18n._(t`Unable to create domain. Please try again.`))
     }
 
     // Clear dataloader incase anything was updated or inserted into domain

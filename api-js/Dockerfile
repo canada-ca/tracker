@@ -1,14 +1,38 @@
-FROM node:14-alpine
+# To build image: docker build --tag tracker-api:1.0 .
+# To run image: docker run --network=host --env-file ./.env  tracker-api:1.0
+# Build image
+FROM node:14-alpine AS base
+
+WORKDIR /app
+
+FROM base AS builder
+
+COPY package*.json .babelrc ./
+
+RUN npm install
+
+COPY ./src ./src
+COPY ./index.js .
+COPY ./migrations.js .
+COPY ./.env.example .
+
+RUN npm run build
+
+RUN npm prune --production
+
+# Prod image
+FROM base AS release
 
 ENV NODE_ENV production
 
-WORKDIR /app
-COPY src ./src
-COPY index.js ./index.js
-COPY package* ./
-COPY migrations.js ./
-RUN npm ci
+COPY --from=builder /app/package.json .
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.env.example .
+COPY --from=builder /app/index.js .
+COPY --from=builder /app/migrations.js .
+COPY --from=builder /app/dist ./dist
 
 USER node
 EXPOSE 4000
+
 CMD ["npm", "start"]

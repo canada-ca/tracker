@@ -41,3 +41,9 @@ scanner/logs
 
 # jupyter File
 api/.ipynb
+
+#JS api dist
+**/dist
+
+#API lingui ignores
+api-js/src/locale/_build

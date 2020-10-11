@@ -3,8 +3,8 @@ const express = require('express')
 const requestLanguage = require('express-request-language')
 const { GraphQLSchema } = require('graphql')
 const { createServer } = require('http')
-// const { i18n: internationalization, unpackCatalog } = require('lingui-i18n')
 const { ApolloServer } = require('apollo-server-express')
+const { setupI18n } = require('@lingui/core')
 
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
@@ -16,6 +16,9 @@ const authFunctions = require('./auth')
 const { cleanseInput, slugify } = require('./validators')
 const notifyFunctions = require('./notify')
 
+// const englishMessages = require('./locale/en/messages')
+// const frenchMessages = require('./locale/fr/messages')
+
 const {
   generateDetailTableFields,
   generateGqlQuery,
@@ -23,6 +26,14 @@ const {
   domainLoaderByKey,
   domainLoaderByDomain,
   domainLoaderConnectionsByUserId,
+  dkimLoaderByKey,
+  dkimResultLoaderByKey,
+  dmarcLoaderByKey,
+  spfLoaderByKey,
+  dkimLoaderConnectionsByDomainId,
+  dkimResultsLoaderConnectionByDkimId,
+  dmarcLoaderConnectionsByDomainId,
+  spfLoaderConnectionsByDomainId,
   orgLoaderByKey,
   orgLoaderBySlug,
   orgLoaderByConnectionArgs,
@@ -30,12 +41,12 @@ const {
   orgLoaderConnectionsByUserId,
   userLoaderByUserName,
   userLoaderByKey,
+  httpsLoaderByKey,
+  httpsLoaderConnectionsByDomainId,
+  sslLoaderByKey,
+  sslLoaderConnectionsByDomainId,
 } = require('./loaders')
 
-// internationalization.load({
-//   fr: unpackCatalog(require('./locale/fr/messages.js')),
-//   en: unpackCatalog(require('./locale/en/messages.js')),
-// })
 
 const Server = (context = {}) => {
   const app = express()
@@ -56,11 +67,6 @@ const Server = (context = {}) => {
     res.json({ ok: 'yes' })
   })
 
-  // internationalization.activate(req.language)
-  // const schema = new GraphQLSchema({
-  //   query: createQuerySchema(internationalization),
-  //   mutation: createMutationSchema(internationalization)
-  // })
 
   const server = new ApolloServer({
     schema: new GraphQLSchema({
@@ -78,7 +84,18 @@ const Server = (context = {}) => {
         userId = verifyToken({ token }).userId
       }
 
+      const i18n = setupI18n({
+        language: request.language,
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          // en: englishMessages,
+          // fr: frenchMessages,
+        },
+      })
+
       return {
+        i18n,
         query,
         collections,
         transaction,
