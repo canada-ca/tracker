@@ -1,6 +1,7 @@
 const { GraphQLString, GraphQLNonNull } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
+const { t } = require('@lingui/macro')
 
 const sendEmailVerification = new mutationWithClientMutationId({
   name: 'SendEmailVerification',
@@ -25,6 +26,7 @@ const sendEmailVerification = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       request,
       auth: { tokenize },
       validators: { cleanseInput },
@@ -65,8 +67,9 @@ const sendEmailVerification = new mutationWithClientMutationId({
     }
 
     return {
-      status:
-        'If an account with this username is found, an email verification link will be found in your inbox.',
+      status: i18n._(
+        t`If an account with this username is found, an email verification link will be found in your inbox.`,
+      ),
     }
   },
 })
