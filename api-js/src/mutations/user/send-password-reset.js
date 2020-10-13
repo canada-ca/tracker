@@ -1,6 +1,7 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
+const { t } = require('@lingui/macro')
 
 const sendPasswordResetLink = new mutationWithClientMutationId({
   name: 'SendPasswordResetLink',
@@ -26,6 +27,7 @@ const sendPasswordResetLink = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       request,
       auth: { tokenize },
       validators: { cleanseInput },
@@ -66,8 +68,9 @@ const sendPasswordResetLink = new mutationWithClientMutationId({
     }
 
     return {
-      status:
-        'If an account with this username is found, a password reset link will be found in your inbox.',
+      status: i18n._(
+        t`If an account with this username is found, a password reset link will be found in your inbox.`,
+      ),
     }
   },
 })
