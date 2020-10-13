@@ -17,7 +17,7 @@
     "@chakra-ui/core": "^0.8.0",
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
-    "@lingui/react": "^3.0.0-13",
+    "@lingui/react": "^3.0.0-18",
     "babel-plugin-macros": "^2.8.0",
     "body-parser": "^1.19.0",
     "d3": "^6.1.1",
