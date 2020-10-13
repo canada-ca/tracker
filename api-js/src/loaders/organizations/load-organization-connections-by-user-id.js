@@ -11,7 +11,7 @@ const orgLoaderConnectionsByUserId = (
   let beforeTemplate = aql``
 
   const userDBId = `users/${userId}`
-  
+
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
     afterTemplate = aql`FILTER TO_NUMBER(org._key) > TO_NUMBER(${afterId})`
@@ -64,7 +64,9 @@ const orgLoaderConnectionsByUserId = (
     throw new Error('Unable to load organizations. Please try again.')
   }
 
-  const hasNextPage = !!(typeof first !== 'undefined' && filteredOrgs.length > first)
+  const hasNextPage = !!(
+    typeof first !== 'undefined' && filteredOrgs.length > first
+  )
   const hasPreviousPage = !!(
     typeof last !== 'undefined' && filteredOrgs.length > last
   )
@@ -94,7 +96,10 @@ const orgLoaderConnectionsByUserId = (
   }
 
   const startCursor = toGlobalId('organizations', filteredOrgs[0]._key)
-  const endCursor = toGlobalId('organizations', filteredOrgs[filteredOrgs.length - 1]._key)
+  const endCursor = toGlobalId(
+    'organizations',
+    filteredOrgs[filteredOrgs.length - 1]._key,
+  )
 
   return {
     edges,
