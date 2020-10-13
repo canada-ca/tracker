@@ -91,7 +91,9 @@ const resetPassword = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} attempted to reset their password, however the submitted password is not long enough.`,
       )
-      throw new Error(i18n._(t`Password is not strong enough. Please try again.`))
+      throw new Error(
+        i18n._(t`Password is not strong enough. Please try again.`),
+      )
     }
 
     // Update users password in db
@@ -110,6 +112,7 @@ const resetPassword = new mutationWithClientMutationId({
     }
 
     console.info(`User: ${user._key} successfully reset their password.`)
+
     return {
       status: i18n._(t`Password was successfully reset.`),
     }
