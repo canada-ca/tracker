@@ -1,6 +1,7 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLPhoneNumber } = require('graphql-scalars')
+const { t } = require('@lingui/macro')
 
 const sendPhoneCode = new mutationWithClientMutationId({
   name: 'sendPhoneCode',
@@ -25,6 +26,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       userId,
       loaders: { userLoaderByKey },
@@ -40,7 +42,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
       console.warn(
         `User attempted to send TFA text message, however the userId does not exist.`,
       )
-      throw new Error('Authentication error, please sign in again.')
+      throw new Error(i18n._(t`Authentication error, please sign in again.`))
     }
 
     // Get User From Db
@@ -50,7 +52,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
       console.warn(
         `User attempted to send TFA text message, however no account is associated with ${userId}.`,
       )
-      throw new Error('Unable to send TFA code, please try again.')
+      throw new Error(i18n._(t`Unable to send TFA code, please try again.`))
     }
 
     // Generate TFA code
@@ -68,7 +70,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
       console.error(
         `Database error occurred when inserting ${user._key} TFA code: ${err}`,
       )
-      throw new Error('Unable to send TFA code, please try again.')
+      throw new Error(i18n._(t`Unable to send TFA code, please try again.`))
     }
 
     try {
@@ -82,7 +84,7 @@ const sendPhoneCode = new mutationWithClientMutationId({
       console.error(
         `Database error occurred when inserting ${user._key} phone number: ${err}`,
       )
-      throw new Error('Unable to send TFA code, please try again.')
+      throw new Error(i18n._(t`Unable to send TFA code, please try again.`))
     }
 
     // Get newly updated user
@@ -100,8 +102,9 @@ const sendPhoneCode = new mutationWithClientMutationId({
 
     console.info(`User: ${user._key} successfully sent tfa code.`)
     return {
-      status:
-        'Two factor code has been successfully sent, you will receive a text message shortly.',
+      status: i18n._(
+        t`Two factor code has been successfully sent, you will receive a text message shortly.`,
+      ),
     }
   },
 })
