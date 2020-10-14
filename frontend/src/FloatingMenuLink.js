@@ -19,6 +19,8 @@ export const FloatingMenuLink = ({ to, text, isExternal, ...props }) => {
       href={to}
       ml="auto"
       isExternal={isExternal}
+      _active={{ bg: 'accent' }}
+      _focus={{ outline: 'none' }}
       {...props}
     >
       <Text fontWeight="bold" color="white" fontSize="lg">

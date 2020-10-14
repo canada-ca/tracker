@@ -122,21 +122,11 @@ export const FloatingMenu = () => {
               <DrawerBody px="24px" py="16px">
                 <Stack spacing="16px">
                   <FloatingMenuLink to="/" text={i18n._(t`Home`)} />
-                  {/* <Link as={RouteLink} to="/" ml="auto" px="4px">
-                    <Text fontWeight="bold" color="white" fontSize="lg">
-                      Home
-                    </Text>
-                  </Link> */}
 
                   <FloatingMenuLink
                     to="/admin"
                     text={i18n._(t`Admin Portal`)}
                   />
-                  {/* <Link as={RouteLink} to="/admin" ml="auto" px="4px">
-                    <Text fontWeight="bold" color="white" fontSize="lg">
-                      Admin Portal
-                    </Text>
-                  </Link> */}
 
                   <Divider
                     borderWidth="2px"
