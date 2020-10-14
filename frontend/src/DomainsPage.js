@@ -154,6 +154,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                         placeholder={i18n._(t`Enter a domain`)}
                         value={values.domain}
                         name="domain"
+                        id="domain"
                       />
                       <TrackerButton
                         w={['100%', '25%']}
@@ -161,6 +162,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                         isLoading={isSubmitting}
                         type="submit"
                         id="submitBtn"
+                        fontSize="lg"
                       >
                         <Trans>Scan Domain</Trans>
                       </TrackerButton>

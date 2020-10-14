@@ -7,7 +7,6 @@ import {
   Box,
   Stack,
   Divider,
-  Tooltip,
 } from '@chakra-ui/core'
 import { useRouteMatch, useHistory } from 'react-router-dom'
 import { string, number } from 'prop-types'
@@ -39,24 +38,22 @@ export function OrganizationCard({
         mx="auto"
         tabIndex={0}
       >
-        <Tooltip label={name} placement="left">
-          <Box flexShrink="0" minW="50%" maxW={['100%', '50%']} mb={['2', '0']}>
-            <Stack isInline align="center">
-              <Text
-                mt="1"
-                fontSize={['lg', 'md']}
-                fontWeight="semibold"
-                as="u"
-                isTruncated
-              >
-                {name}
-              </Text>
-              <Text mt="1" fontSize={['lg', 'md']} fontWeight="semibold">
-                ({acronym})
-              </Text>
-            </Stack>
-          </Box>
-        </Tooltip>
+        <Box flexShrink="0" minW="50%" maxW={['100%', '50%']} mb={['2', '0']}>
+          <Stack isInline align="center">
+            <Text
+              mt="1"
+              fontSize={['lg', 'md']}
+              fontWeight="semibold"
+              as="u"
+              isTruncated
+            >
+              {name}
+            </Text>
+            <Text mt="1" fontSize={['lg', 'md']} fontWeight="semibold">
+              ({acronym})
+            </Text>
+          </Stack>
+        </Box>
         <Divider orientation="vertical" />
         <Box
           flexShrink="0"
