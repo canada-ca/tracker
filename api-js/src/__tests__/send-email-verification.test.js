@@ -4,12 +4,15 @@ dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema } = require('graphql')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-
-const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
 const { userLoaderByUserName } = require('../loaders')
@@ -20,7 +23,7 @@ describe('user send password reset email', () => {
   const originalInfo = console.info
   afterEach(() => (console.info = originalInfo))
 
-  let query, drop, truncate, migrate, collections, schema, request
+  let query, drop, truncate, migrate, collections, schema, request, i18n
 
   beforeAll(async () => {
     ;({ migrate } = await ArangoTools({ rootPass, url }))
@@ -56,6 +59,17 @@ describe('user send password reset email', () => {
 
   describe('successfully sends verification email', () => {
     describe('users preferred language is french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'fr',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
+        })
+      })
       beforeEach(async () => {
         await collections.users.save({
           userName: 'test.account@istio.actually.exists',
@@ -79,6 +93,7 @@ describe('user send password reset email', () => {
           `,
           null,
           {
+            i18n,
             request,
             query,
             auth: {
@@ -100,8 +115,7 @@ describe('user send password reset email', () => {
         const expectedResult = {
           data: {
             sendEmailVerification: {
-              status:
-                'If an account with this username is found, an email verification link will be found in your inbox.',
+              status: 'todo',
             },
           },
         }
@@ -130,8 +144,71 @@ describe('user send password reset email', () => {
           `User: ${user._key} successfully sent a verification email.`,
         ])
       })
+      describe('unsuccessful verification email send', () => {
+        describe('no user associated with account', () => {
+          it('returns status text', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  sendEmailVerification(
+                    input: {
+                      userName: "test.account@istio.does.not.actually.exists"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request,
+                query,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                },
+                notify: {
+                  sendVerificationEmail: mockNotify,
+                },
+              },
+            )
+
+            const expectedResult = {
+              data: {
+                sendEmailVerification: {
+                  status: 'todo',
+                },
+              },
+            }
+
+            expect(response).toEqual(expectedResult)
+            expect(consoleOutput).toEqual([
+              `A user attempted to send a verification email for test.account@istio.does.not.actually.exists but no account is affiliated with this user name.`,
+            ])
+          })
+        })
+      })
     })
     describe('users preferred language is english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'en',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
+        })
+      })
       beforeEach(async () => {
         await collections.users.save({
           userName: 'test.account@istio.actually.exists',
@@ -155,6 +232,7 @@ describe('user send password reset email', () => {
           `,
           null,
           {
+            i18n,
             request,
             query,
             auth: {
@@ -206,57 +284,58 @@ describe('user send password reset email', () => {
           `User: ${user._key} successfully sent a verification email.`,
         ])
       })
-    })
-  })
-  describe('unsuccessful verification email send', () => {
-    describe('no user associated with account', () => {
-      it('returns status text', async () => {
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              sendEmailVerification(
-                input: {
-                  userName: "test.account@istio.does.not.actually.exists"
+      describe('unsuccessful verification email send', () => {
+        describe('no user associated with account', () => {
+          it('returns status text', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  sendEmailVerification(
+                    input: {
+                      userName: "test.account@istio.does.not.actually.exists"
+                    }
+                  ) {
+                    status
+                  }
                 }
-              ) {
-                status
-              }
+              `,
+              null,
+              {
+                i18n,
+                request,
+                query,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                },
+                notify: {
+                  sendVerificationEmail: mockNotify,
+                },
+              },
+            )
+
+            const expectedResult = {
+              data: {
+                sendEmailVerification: {
+                  status:
+                    'If an account with this username is found, an email verification link will be found in your inbox.',
+                },
+              },
             }
-          `,
-          null,
-          {
-            request,
-            query,
-            auth: {
-              bcrypt,
-              tokenize,
-            },
-            validators: {
-              cleanseInput,
-            },
-            loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-            notify: {
-              sendVerificationEmail: mockNotify,
-            },
-          },
-        )
 
-        const expectedResult = {
-          data: {
-            sendEmailVerification: {
-              status:
-                'If an account with this username is found, an email verification link will be found in your inbox.',
-            },
-          },
-        }
-
-        expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `A user attempted to send a verification email for test.account@istio.does.not.actually.exists but no account is affiliated with this user name.`,
-        ])
+            expect(response).toEqual(expectedResult)
+            expect(consoleOutput).toEqual([
+              `A user attempted to send a verification email for test.account@istio.does.not.actually.exists but no account is affiliated with this user name.`,
+            ])
+          })
+        })
       })
     })
   })

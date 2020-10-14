@@ -1,6 +1,7 @@
 const { GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
+const { t } = require('@lingui/macro')
 const { LanguageEnums } = require('../../enums')
 
 const updateUserProfile = new mutationWithClientMutationId({
@@ -34,6 +35,7 @@ const updateUserProfile = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       userId,
       loaders: { userLoaderByKey },
@@ -50,7 +52,7 @@ const updateUserProfile = new mutationWithClientMutationId({
       console.warn(
         `User attempted to update their profile, but the user id is undefined.`,
       )
-      throw new Error('Authentication error, please sign in again.')
+      throw new Error(i18n._(t`Authentication error, please sign in again.`))
     }
 
     // Get user info from DB
@@ -60,7 +62,7 @@ const updateUserProfile = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update their profile, but no account is associated with that id.`,
       )
-      throw new Error('Unable to update profile. Please try again.')
+      throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
 
     // Create object containing updated data
@@ -81,12 +83,12 @@ const updateUserProfile = new mutationWithClientMutationId({
       console.error(
         `Database error ocurred when user: ${user._key} attempted to update their profile: ${err}`,
       )
-      throw new Error('Unable to update profile. Please try again.')
+      throw new Error(i18n._(t`Unable to update profile. Please try again.`))
     }
 
     console.info(`User: ${user._key} successfully updated their profile.`)
     return {
-      status: 'Profile successfully updated.',
+      status: i18n._(t`Profile successfully updated.`),
     }
   },
 })

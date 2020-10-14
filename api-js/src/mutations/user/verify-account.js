@@ -1,5 +1,6 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
 const verifyAccount = new mutationWithClientMutationId({
   name: 'VerifyAccount',
@@ -23,6 +24,7 @@ const verifyAccount = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       userId,
       auth: { verifyToken },
@@ -37,7 +39,7 @@ const verifyAccount = new mutationWithClientMutationId({
       console.warn(
         `User attempted to verify their account, but the userId is undefined.`,
       )
-      throw new Error('Unable to verify account. Please try again.')
+      throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 
     // Check if user exists
@@ -47,7 +49,7 @@ const verifyAccount = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to verify account, however no account is associated with this id.`,
       )
-      throw new Error('Unable to verify account. Please try again.')
+      throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 
     // Get info from token
@@ -61,7 +63,9 @@ const verifyAccount = new mutationWithClientMutationId({
       console.warn(
         `When validating account user: ${user._key} attempted to verify account, but userId is not located in the token parameters.`,
       )
-      throw new Error('Unable to verify account. Please request a new email.')
+      throw new Error(
+        i18n._(t`Unable to verify account. Please request a new email.`),
+      )
     }
 
     // Make sure user ids match
@@ -69,7 +73,9 @@ const verifyAccount = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} attempted to verify their account, but the user id's do not match.`,
       )
-      throw new Error('Unable to verify account. Please request a new email.')
+      throw new Error(
+        i18n._(t`Unable to verify account. Please request a new email.`),
+      )
     }
 
     // Verify users account
@@ -84,7 +90,7 @@ const verifyAccount = new mutationWithClientMutationId({
       console.error(
         `Database error occurred when upserting email validation for user: ${user._key}: ${err}`,
       )
-      throw new Error('Unable to verify account. Please try again.')
+      throw new Error(i18n._(t`Unable to verify account. Please try again.`))
     }
 
     console.info(
@@ -92,7 +98,7 @@ const verifyAccount = new mutationWithClientMutationId({
     )
 
     return {
-      status: 'Successfully verified account.',
+      status: i18n._(t`Successfully verified account.`),
     }
   },
 })
