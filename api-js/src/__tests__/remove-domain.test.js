@@ -24,7 +24,7 @@ const {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('removing a domain', () => {
-  let query, drop, truncate, migrate, schema, collections, transaction
+  let query, drop, truncate, migrate, schema, collections, transaction, i18n
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -91,137 +91,149 @@ describe('removing a domain', () => {
     await drop()
   })
 
-  describe('given a successful domain removal', () => {
-    describe('users permission is super admin', () => {
-      let org, domain, user, secondOrg, superAdminOrg
-      beforeEach(async () => {
-        superAdminOrg = await collections.organizations.save({
-          blueCheck: false,
-          orgDetails: {
-            en: {
-              slug: 'super-admin',
-              acronym: 'SA',
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given a successful domain removal', () => {
+      describe('users permission is super admin', () => {
+        let org, domain, user, secondOrg, superAdminOrg
+        beforeEach(async () => {
+          superAdminOrg = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'super-admin',
+                acronym: 'SA',
+              },
+              fr: {
+                slug: 'super-admin',
+                acronym: 'SA',
+              },
             },
-            fr: {
-              slug: 'super-admin',
-              acronym: 'SA',
+          })
+          org = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
             },
-          },
-        })
-        org = await collections.organizations.save({
-          blueCheck: false,
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
+          })
 
-        domain = await collections.domains.save({
-          domain: 'test.gc.ca',
-          slug: 'test-gc-ca',
-        })
-        await collections.claims.save({
-          _from: org._id,
-          _to: domain._id,
-        })
+          domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            slug: 'test-gc-ca',
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
 
-        const dkim = await collections.dkim.save({ dkim: true })
-        await collections.domainsDKIM.save({
-          _from: domain._id,
-          _to: dkim._id,
-        })
+          const dkim = await collections.dkim.save({ dkim: true })
+          await collections.domainsDKIM.save({
+            _from: domain._id,
+            _to: dkim._id,
+          })
 
-        const dmarc = await collections.dmarc.save({ dmarc: true })
-        await collections.domainsDMARC.save({
-          _from: domain._id,
-          _to: dmarc._id,
-        })
+          const dmarc = await collections.dmarc.save({ dmarc: true })
+          await collections.domainsDMARC.save({
+            _from: domain._id,
+            _to: dmarc._id,
+          })
 
-        const spf = await collections.spf.save({ spf: true })
-        await collections.domainsSPF.save({
-          _from: domain._id,
-          _to: spf._id,
-        })
+          const spf = await collections.spf.save({ spf: true })
+          await collections.domainsSPF.save({
+            _from: domain._id,
+            _to: spf._id,
+          })
 
-        const https = await collections.https.save({ https: true })
-        await collections.domainsHTTPS.save({
-          _from: domain._id,
-          _to: https._id,
-        })
+          const https = await collections.https.save({ https: true })
+          await collections.domainsHTTPS.save({
+            _from: domain._id,
+            _to: https._id,
+          })
 
-        const ssl = await collections.ssl.save({ ssl: true })
-        await collections.domainsSSL.save({
-          _from: domain._id,
-          _to: ssl._id,
-        })
+          const ssl = await collections.ssl.save({ ssl: true })
+          await collections.domainsSSL.save({
+            _from: domain._id,
+            _to: ssl._id,
+          })
 
-        const userCursor = await query`
+          const userCursor = await query`
           FOR user IN users
             RETURN user
         `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: superAdminOrg._id,
-          _to: user._id,
-          permission: 'super_admin',
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: superAdminOrg._id,
+            _to: user._id,
+            permission: 'super_admin',
+          })
         })
-      })
-      describe('domain belongs to multiple orgs', () => {
-        describe('domain belongs to a blue check org', () => {
-          beforeEach(async () => {
-            secondOrg = await collections.organizations.save({
-              blueCheck: true,
-              orgDetails: {
-                en: {
-                  slug: 'communications-security-establishment',
-                  acronym: 'CSE',
-                  name: 'Communications Security Establishment',
-                  zone: 'FED',
-                  sector: 'DND',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
+        describe('domain belongs to multiple orgs', () => {
+          describe('domain belongs to a blue check org', () => {
+            beforeEach(async () => {
+              secondOrg = await collections.organizations.save({
+                blueCheck: true,
+                orgDetails: {
+                  en: {
+                    slug: 'communications-security-establishment',
+                    acronym: 'CSE',
+                    name: 'Communications Security Establishment',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                  fr: {
+                    slug: 'centre-de-la-securite-des-telecommunications',
+                    acronym: 'CST',
+                    name: 'Centre de la Securite des Telecommunications',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
                 },
-                fr: {
-                  slug: 'centre-de-la-securite-des-telecommunications',
-                  acronym: 'CST',
-                  name: 'Centre de la Securite des Telecommunications',
-                  zone: 'FED',
-                  sector: 'DND',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
+              })
 
-            await collections.claims.save({
-              _from: secondOrg._id,
-              _to: domain._id,
+              await collections.claims.save({
+                _from: secondOrg._id,
+                _to: domain._id,
+              })
             })
-          })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -233,39 +245,40 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const expectedResponse = {
-              data: {
-                removeDomain: {
-                  status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                  },
                 },
-              },
-            }
+              }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
-            ])
-          })
-          it('does not remove domain', async () => {
-            await graphql(
-              schema,
-              `
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -277,34 +290,35 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const domainCursor = await query`
+              const domainCursor = await query`
               FOR domain IN domains
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
-            const domainCheck = await domainCursor.next()
-            expect(domainCheck._key).toEqual(domain._key)
-          })
-          it('does not remove all scan data', async () => {
-            await graphql(
-              schema,
-              `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck._key).toEqual(domain._key)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -316,80 +330,81 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(true)
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(true)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(true)
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(true)
 
-            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(true)
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(true)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(true)
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(true)
 
-            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(true)
-          })
-        })
-        describe('domain does not belong to a blue check org', () => {
-          beforeEach(async () => {
-            secondOrg = await collections.organizations.save({
-              blueCheck: false,
-              orgDetails: {
-                en: {
-                  slug: 'communications-security-establishment',
-                  acronym: 'CSE',
-                  name: 'Communications Security Establishment',
-                  zone: 'FED',
-                  sector: 'DND',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-                fr: {
-                  slug: 'centre-de-la-securite-des-telecommunications',
-                  acronym: 'CST',
-                  name: 'Centre de la Securite des Telecommunications',
-                  zone: 'FED',
-                  sector: 'DND',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
-
-            await collections.claims.save({
-              _from: secondOrg._id,
-              _to: domain._id,
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(true)
             })
           })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
+          describe('domain does not belong to a blue check org', () => {
+            beforeEach(async () => {
+              secondOrg = await collections.organizations.save({
+                blueCheck: false,
+                orgDetails: {
+                  en: {
+                    slug: 'communications-security-establishment',
+                    acronym: 'CSE',
+                    name: 'Communications Security Establishment',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                  fr: {
+                    slug: 'centre-de-la-securite-des-telecommunications',
+                    acronym: 'CST',
+                    name: 'Centre de la Securite des Telecommunications',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                },
+              })
+
+              await collections.claims.save({
+                _from: secondOrg._id,
+                _to: domain._id,
+              })
+            })
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -401,39 +416,40 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const expectedResponse = {
-              data: {
-                removeDomain: {
-                  status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `Successfully removed domain: test-gc-ca from communications-security-establishment.`,
+                  },
                 },
-              },
-            }
+              }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
-            ])
-          })
-          it('does not remove domain', async () => {
-            await graphql(
-              schema,
-              `
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -445,34 +461,35 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const domainCursor = await query`
+              const domainCursor = await query`
               FOR domain IN domains
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
-            const domainCheck = await domainCursor.next()
-            expect(domainCheck._key).toEqual(domain._key)
-          })
-          it('does not remove all scan data', async () => {
-            await graphql(
-              schema,
-              `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck._key).toEqual(domain._key)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -484,56 +501,57 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(true)
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(true)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(true)
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(true)
 
-            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(true)
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(true)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(true)
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(true)
 
-            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(true)
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(true)
+            })
           })
         })
-      })
-      describe('domain only belongs to one org', () => {
-        describe('domain belongs to a blue check org', () => {
-          beforeEach(async () => {
-            await query`
+        describe('domain only belongs to one org', () => {
+          describe('domain belongs to a blue check org', () => {
+            beforeEach(async () => {
+              await query`
               FOR org IN organizations
                 UPDATE ${org._key} WITH { blueCheck: true } IN organizations
             `
-          })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
+            })
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -545,39 +563,40 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const expectedResponse = {
-              data: {
-                removeDomain: {
-                  status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                  },
                 },
-              },
-            }
+              }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
-            ])
-          })
-          it('removes domain', async () => {
-            await graphql(
-              schema,
-              `
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+              ])
+            })
+            it('removes domain', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -589,34 +608,35 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const domainCursor = await query`
+              const domainCursor = await query`
               FOR domain IN domains
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
-            const domainCheck = await domainCursor.next()
-            expect(domainCheck).toEqual(undefined)
-          })
-          it('removes all scan data', async () => {
-            await graphql(
-              schema,
-              `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck).toEqual(undefined)
+            })
+            it('removes all scan data', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -628,48 +648,49 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(undefined)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(undefined)
 
-            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(undefined)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(undefined)
 
-            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(undefined)
+            })
           })
-        })
-        describe('domain does not belong to a blue check org', () => {
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
+          describe('domain does not belong to a blue check org', () => {
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -681,39 +702,40 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const expectedResponse = {
-              data: {
-                removeDomain: {
-                  status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                  },
                 },
-              },
-            }
+              }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
-            ])
-          })
-          it('does not remove domain', async () => {
-            await graphql(
-              schema,
-              `
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -725,34 +747,35 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const domainCursor = await query`
+              const domainCursor = await query`
               FOR domain IN domains
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
-            const domainCheck = await domainCursor.next()
-            expect(domainCheck).toEqual(undefined)
-          })
-          it('does not remove all scan data', async () => {
-            await graphql(
-              schema,
-              `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck).toEqual(undefined)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -764,162 +787,163 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(undefined)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(undefined)
 
-            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(undefined)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(undefined)
 
-            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(undefined)
+            })
           })
         })
       })
-    })
-    describe('users permission is admin', () => {
-      let org, domain, user, secondOrg
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          blueCheck: false,
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
+      describe('users permission is admin', () => {
+        let org, domain, user, secondOrg
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
             },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
+          })
 
-        domain = await collections.domains.save({
-          domain: 'test.gc.ca',
-          slug: 'test-gc-ca',
-        })
-        await collections.claims.save({
-          _from: org._id,
-          _to: domain._id,
-        })
+          domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            slug: 'test-gc-ca',
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
 
-        const dkim = await collections.dkim.save({ dkim: true })
-        await collections.domainsDKIM.save({
-          _from: domain._id,
-          _to: dkim._id,
-        })
+          const dkim = await collections.dkim.save({ dkim: true })
+          await collections.domainsDKIM.save({
+            _from: domain._id,
+            _to: dkim._id,
+          })
 
-        const dmarc = await collections.dmarc.save({ dmarc: true })
-        await collections.domainsDMARC.save({
-          _from: domain._id,
-          _to: dmarc._id,
-        })
+          const dmarc = await collections.dmarc.save({ dmarc: true })
+          await collections.domainsDMARC.save({
+            _from: domain._id,
+            _to: dmarc._id,
+          })
 
-        const spf = await collections.spf.save({ spf: true })
-        await collections.domainsSPF.save({
-          _from: domain._id,
-          _to: spf._id,
-        })
+          const spf = await collections.spf.save({ spf: true })
+          await collections.domainsSPF.save({
+            _from: domain._id,
+            _to: spf._id,
+          })
 
-        const https = await collections.https.save({ https: true })
-        await collections.domainsHTTPS.save({
-          _from: domain._id,
-          _to: https._id,
-        })
+          const https = await collections.https.save({ https: true })
+          await collections.domainsHTTPS.save({
+            _from: domain._id,
+            _to: https._id,
+          })
 
-        const ssl = await collections.ssl.save({ ssl: true })
-        await collections.domainsSSL.save({
-          _from: domain._id,
-          _to: ssl._id,
-        })
+          const ssl = await collections.ssl.save({ ssl: true })
+          await collections.domainsSSL.save({
+            _from: domain._id,
+            _to: ssl._id,
+          })
 
-        const userCursor = await query`
+          const userCursor = await query`
           FOR user IN users
             RETURN user
         `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
         })
-      })
-      describe('domain belongs to multiple orgs', () => {
-        describe('domain does not belong to a blue check org', () => {
-          beforeEach(async () => {
-            secondOrg = await collections.organizations.save({
-              blueCheck: false,
-              orgDetails: {
-                en: {
-                  slug: 'communications-security-establishment',
-                  acronym: 'CSE',
-                  name: 'Communications Security Establishment',
-                  zone: 'FED',
-                  sector: 'DND',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
+        describe('domain belongs to multiple orgs', () => {
+          describe('domain does not belong to a blue check org', () => {
+            beforeEach(async () => {
+              secondOrg = await collections.organizations.save({
+                blueCheck: false,
+                orgDetails: {
+                  en: {
+                    slug: 'communications-security-establishment',
+                    acronym: 'CSE',
+                    name: 'Communications Security Establishment',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                  fr: {
+                    slug: 'centre-de-la-securite-des-telecommunications',
+                    acronym: 'CST',
+                    name: 'Centre de la Securite des Telecommunications',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
                 },
-                fr: {
-                  slug: 'centre-de-la-securite-des-telecommunications',
-                  acronym: 'CST',
-                  name: 'Centre de la Securite des Telecommunications',
-                  zone: 'FED',
-                  sector: 'DND',
-                  country: 'Canada',
-                  province: 'Ontario',
-                  city: 'Ottawa',
-                },
-              },
-            })
+              })
 
-            await collections.claims.save({
-              _from: secondOrg._id,
-              _to: domain._id,
+              await collections.claims.save({
+                _from: secondOrg._id,
+                _to: domain._id,
+              })
             })
-          })
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -931,39 +955,40 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const expectedResponse = {
-              data: {
-                removeDomain: {
-                  status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                  },
                 },
-              },
-            }
+              }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
-            ])
-          })
-          it('does not remove domain', async () => {
-            await graphql(
-              schema,
-              `
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -975,34 +1000,35 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const domainCursor = await query`
+              const domainCursor = await query`
               FOR domain IN domains
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
-            const domainCheck = await domainCursor.next()
-            expect(domainCheck._key).toEqual(domain._key)
-          })
-          it('does not remove all scan data', async () => {
-            await graphql(
-              schema,
-              `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck._key).toEqual(domain._key)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -1014,50 +1040,51 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(true)
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(true)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(true)
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(true)
 
-            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(true)
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(true)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(true)
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(true)
 
-            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(true)
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(true)
+            })
           })
         })
-      })
-      describe('domain only belongs to one org', () => {
-        describe('domain does not belong to a blue check org', () => {
-          it('returns a status message', async () => {
-            const response = await graphql(
-              schema,
-              `
+        describe('domain only belongs to one org', () => {
+          describe('domain does not belong to a blue check org', () => {
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -1069,39 +1096,40 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const expectedResponse = {
-              data: {
-                removeDomain: {
-                  status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `Successfully removed domain: test-gc-ca from treasury-board-secretariat.`,
+                  },
                 },
-              },
-            }
+              }
 
-            expect(response).toEqual(expectedResponse)
-            expect(consoleOutput).toEqual([
-              `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
-            ])
-          })
-          it('does not remove domain', async () => {
-            await graphql(
-              schema,
-              `
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -1113,34 +1141,35 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const domainCursor = await query`
+              const domainCursor = await query`
               FOR domain IN domains
                 FILTER domain._key == ${domain._key}
                 RETURN domain
             `
-            const domainCheck = await domainCursor.next()
-            expect(domainCheck).toEqual(undefined)
-          })
-          it('does not remove all scan data', async () => {
-            await graphql(
-              schema,
-              `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck).toEqual(undefined)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
                 mutation {
                   removeDomain(
                     input: {
@@ -1152,67 +1181,57 @@ describe('removing a domain', () => {
                   }
                 }
               `,
-              null,
-              {
-                query,
-                collections,
-                transaction,
-                userId: user._key,
-                auth: { checkPermission, userRequired },
-                validators: { cleanseInput },
-                loaders: {
-                  domainLoaderByKey: domainLoaderByKey(query),
-                  orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                  userLoaderByKey: userLoaderByKey(query),
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
                 },
-              },
-            )
+              )
 
-            const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
-            const testDkim = await testDkimCursor.next()
-            expect(testDkim).toEqual(undefined)
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(undefined)
 
-            const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
-            const testDmarc = await testDmarcCursor.next()
-            expect(testDmarc).toEqual(undefined)
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(undefined)
 
-            const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
-            const testSpf = await testSpfCursor.next()
-            expect(testSpf).toEqual(undefined)
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(undefined)
 
-            const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
-            const testHttps = await testHttpsCursor.next()
-            expect(testHttps).toEqual(undefined)
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(undefined)
 
-            const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
-            const testSsl = await testSslCursor.next()
-            expect(testSsl).toEqual(undefined)
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(undefined)
+            })
           })
         })
       })
     })
-  })
-  describe('given an unsuccessful domain removal', () => {
-    let user, i18n
-    beforeEach(async () => {
-      const userCursor = await query`
+    describe('given an unsuccessful domain removal', () => {
+      let user
+      beforeEach(async () => {
+        const userCursor = await query`
         FOR user IN users
           RETURN user
       `
-      user = await userCursor.next()
-    })
-    describe('users language is set to english', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          language: 'en',
-          locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
-          catalogs: {
-            en: englishMessages,
-            fr: frenchMessages,
-          },
-        })
+        user = await userCursor.next()
       })
+
       describe('domain does not exist', () => {
         it('returns an error', async () => {
           const response = await graphql(
@@ -2016,17 +2035,1146 @@ describe('removing a domain', () => {
         })
       })
     })
-    describe('users language is set to french', () => {
-      beforeAll(() => {
-        i18n = setupI18n({
-          language: 'fr',
-          locales: ['en', 'fr'],
-          missing: 'Traduction manquante',
-          catalogs: {
-            en: englishMessages,
-            fr: frenchMessages,
-          },
+  })
+  describe('users language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given a successful domain removal', () => {
+      describe('users permission is super admin', () => {
+        let org, domain, user, secondOrg, superAdminOrg
+        beforeEach(async () => {
+          superAdminOrg = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'super-admin',
+                acronym: 'SA',
+              },
+              fr: {
+                slug: 'super-admin',
+                acronym: 'SA',
+              },
+            },
+          })
+          org = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+
+          domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            slug: 'test-gc-ca',
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+
+          const dkim = await collections.dkim.save({ dkim: true })
+          await collections.domainsDKIM.save({
+            _from: domain._id,
+            _to: dkim._id,
+          })
+
+          const dmarc = await collections.dmarc.save({ dmarc: true })
+          await collections.domainsDMARC.save({
+            _from: domain._id,
+            _to: dmarc._id,
+          })
+
+          const spf = await collections.spf.save({ spf: true })
+          await collections.domainsSPF.save({
+            _from: domain._id,
+            _to: spf._id,
+          })
+
+          const https = await collections.https.save({ https: true })
+          await collections.domainsHTTPS.save({
+            _from: domain._id,
+            _to: https._id,
+          })
+
+          const ssl = await collections.ssl.save({ ssl: true })
+          await collections.domainsSSL.save({
+            _from: domain._id,
+            _to: ssl._id,
+          })
+
+          const userCursor = await query`
+          FOR user IN users
+            RETURN user
+        `
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: superAdminOrg._id,
+            _to: user._id,
+            permission: 'super_admin',
+          })
         })
+        describe('domain belongs to multiple orgs', () => {
+          describe('domain belongs to a blue check org', () => {
+            beforeEach(async () => {
+              secondOrg = await collections.organizations.save({
+                blueCheck: true,
+                orgDetails: {
+                  en: {
+                    slug: 'communications-security-establishment',
+                    acronym: 'CSE',
+                    name: 'Communications Security Establishment',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                  fr: {
+                    slug: 'centre-de-la-securite-des-telecommunications',
+                    acronym: 'CST',
+                    name: 'Centre de la Securite des Telecommunications',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                },
+              })
+
+              await collections.claims.save({
+                _from: secondOrg._id,
+                _to: domain._id,
+              })
+            })
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `todo`,
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const domainCursor = await query`
+              FOR domain IN domains
+                FILTER domain._key == ${domain._key}
+                RETURN domain
+            `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck._key).toEqual(domain._key)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(true)
+
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(true)
+
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(true)
+
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(true)
+
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(true)
+            })
+          })
+          describe('domain does not belong to a blue check org', () => {
+            beforeEach(async () => {
+              secondOrg = await collections.organizations.save({
+                blueCheck: false,
+                orgDetails: {
+                  en: {
+                    slug: 'communications-security-establishment',
+                    acronym: 'CSE',
+                    name: 'Communications Security Establishment',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                  fr: {
+                    slug: 'centre-de-la-securite-des-telecommunications',
+                    acronym: 'CST',
+                    name: 'Centre de la Securite des Telecommunications',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                },
+              })
+
+              await collections.claims.save({
+                _from: secondOrg._id,
+                _to: domain._id,
+              })
+            })
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `todo`,
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: communications-security-establishment.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const domainCursor = await query`
+              FOR domain IN domains
+                FILTER domain._key == ${domain._key}
+                RETURN domain
+            `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck._key).toEqual(domain._key)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', secondOrg._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(true)
+
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(true)
+
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(true)
+
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(true)
+
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(true)
+            })
+          })
+        })
+        describe('domain only belongs to one org', () => {
+          describe('domain belongs to a blue check org', () => {
+            beforeEach(async () => {
+              await query`
+              FOR org IN organizations
+                UPDATE ${org._key} WITH { blueCheck: true } IN organizations
+            `
+            })
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `todo`,
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+              ])
+            })
+            it('removes domain', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const domainCursor = await query`
+              FOR domain IN domains
+                FILTER domain._key == ${domain._key}
+                RETURN domain
+            `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck).toEqual(undefined)
+            })
+            it('removes all scan data', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(undefined)
+
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(undefined)
+
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(undefined)
+
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(undefined)
+
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(undefined)
+            })
+          })
+          describe('domain does not belong to a blue check org', () => {
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `todo`,
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const domainCursor = await query`
+              FOR domain IN domains
+                FILTER domain._key == ${domain._key}
+                RETURN domain
+            `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck).toEqual(undefined)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(undefined)
+
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(undefined)
+
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(undefined)
+
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(undefined)
+
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(undefined)
+            })
+          })
+        })
+      })
+      describe('users permission is admin', () => {
+        let org, domain, user, secondOrg
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            blueCheck: false,
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+
+          domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+            slug: 'test-gc-ca',
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+
+          const dkim = await collections.dkim.save({ dkim: true })
+          await collections.domainsDKIM.save({
+            _from: domain._id,
+            _to: dkim._id,
+          })
+
+          const dmarc = await collections.dmarc.save({ dmarc: true })
+          await collections.domainsDMARC.save({
+            _from: domain._id,
+            _to: dmarc._id,
+          })
+
+          const spf = await collections.spf.save({ spf: true })
+          await collections.domainsSPF.save({
+            _from: domain._id,
+            _to: spf._id,
+          })
+
+          const https = await collections.https.save({ https: true })
+          await collections.domainsHTTPS.save({
+            _from: domain._id,
+            _to: https._id,
+          })
+
+          const ssl = await collections.ssl.save({ ssl: true })
+          await collections.domainsSSL.save({
+            _from: domain._id,
+            _to: ssl._id,
+          })
+
+          const userCursor = await query`
+          FOR user IN users
+            RETURN user
+        `
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
+        describe('domain belongs to multiple orgs', () => {
+          describe('domain does not belong to a blue check org', () => {
+            beforeEach(async () => {
+              secondOrg = await collections.organizations.save({
+                blueCheck: false,
+                orgDetails: {
+                  en: {
+                    slug: 'communications-security-establishment',
+                    acronym: 'CSE',
+                    name: 'Communications Security Establishment',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                  fr: {
+                    slug: 'centre-de-la-securite-des-telecommunications',
+                    acronym: 'CST',
+                    name: 'Centre de la Securite des Telecommunications',
+                    zone: 'FED',
+                    sector: 'DND',
+                    country: 'Canada',
+                    province: 'Ontario',
+                    city: 'Ottawa',
+                  },
+                },
+              })
+
+              await collections.claims.save({
+                _from: secondOrg._id,
+                _to: domain._id,
+              })
+            })
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `todo`,
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const domainCursor = await query`
+              FOR domain IN domains
+                FILTER domain._key == ${domain._key}
+                RETURN domain
+            `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck._key).toEqual(domain._key)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan.dkim`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(true)
+
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan.dmarc`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(true)
+
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan.spf`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(true)
+
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan.https`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(true)
+
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan.ssl`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(true)
+            })
+          })
+        })
+        describe('domain only belongs to one org', () => {
+          describe('domain does not belong to a blue check org', () => {
+            it('returns a status message', async () => {
+              const response = await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  removeDomain: {
+                    status: `todo`,
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully removed domain: test-gc-ca from org: treasury-board-secretariat.`,
+              ])
+            })
+            it('does not remove domain', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const domainCursor = await query`
+              FOR domain IN domains
+                FILTER domain._key == ${domain._key}
+                RETURN domain
+            `
+              const domainCheck = await domainCursor.next()
+              expect(domainCheck).toEqual(undefined)
+            })
+            it('does not remove all scan data', async () => {
+              await graphql(
+                schema,
+                `
+                mutation {
+                  removeDomain(
+                    input: {
+                      domainId: "${toGlobalId('domains', domain._key)}"
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+                null,
+                {
+                  i18n,
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, userRequired },
+                  validators: { cleanseInput },
+                  loaders: {
+                    domainLoaderByKey: domainLoaderByKey(query),
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                  },
+                },
+              )
+
+              const testDkimCursor = await query`FOR dkimScan IN dkim RETURN dkimScan`
+              const testDkim = await testDkimCursor.next()
+              expect(testDkim).toEqual(undefined)
+
+              const testDmarcCursor = await query`FOR dmarcScan IN dmarc RETURN dmarcScan`
+              const testDmarc = await testDmarcCursor.next()
+              expect(testDmarc).toEqual(undefined)
+
+              const testSpfCursor = await query`FOR spfScan IN spf RETURN spfScan`
+              const testSpf = await testSpfCursor.next()
+              expect(testSpf).toEqual(undefined)
+
+              const testHttpsCursor = await query`FOR httpsScan IN https RETURN httpsScan`
+              const testHttps = await testHttpsCursor.next()
+              expect(testHttps).toEqual(undefined)
+
+              const testSslCursor = await query`FOR sslScan IN ssl RETURN sslScan`
+              const testSsl = await testSslCursor.next()
+              expect(testSsl).toEqual(undefined)
+            })
+          })
+        })
+      })
+    })
+    describe('given an unsuccessful domain removal', () => {
+      let user
+      beforeEach(async () => {
+        const userCursor = await query`
+        FOR user IN users
+          RETURN user
+      `
+        user = await userCursor.next()
       })
       describe('domain does not exist', () => {
         it('returns an error', async () => {
