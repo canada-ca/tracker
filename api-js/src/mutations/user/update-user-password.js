@@ -1,5 +1,6 @@
 const { GraphQLString, GraphQLNonNull } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
 const updateUserPassword = new mutationWithClientMutationId({
   name: 'UpdateUserPassword',
@@ -32,6 +33,7 @@ const updateUserPassword = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       userId,
       auth: { bcrypt },
@@ -49,7 +51,7 @@ const updateUserPassword = new mutationWithClientMutationId({
       console.warn(
         `User attempted to update password, but the user id is undefined.`,
       )
-      throw new Error('Authentication error, please sign in again.')
+      throw new Error(i18n._(t`Authentication error, please sign in again.`))
     }
 
     // Get user from db
@@ -59,7 +61,7 @@ const updateUserPassword = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update their password, but no account is associated with that id.`,
       )
-      throw new Error('Unable to update password. Please try again.')
+      throw new Error(i18n._(t`Unable to update password. Please try again.`))
     }
 
     // Check to see if current passwords match
@@ -68,7 +70,9 @@ const updateUserPassword = new mutationWithClientMutationId({
         `User: ${user._key} attempted to update their password, however they did not enter the current password correctly.`,
       )
       throw new Error(
-        'Unable to update password, current password does not match. Please try again.',
+        i18n._(
+          t`Unable to update password, current password does not match. Please try again.`,
+        ),
       )
     }
 
@@ -78,7 +82,9 @@ const updateUserPassword = new mutationWithClientMutationId({
         `User: ${user._key} attempted to update their password, however the new passwords do not match.`,
       )
       throw new Error(
-        'Unable to update password, new passwords do not match. Please try again.',
+        i18n._(
+          t`Unable to update password, new passwords do not match. Please try again.`,
+        ),
       )
     }
 
@@ -88,7 +94,9 @@ const updateUserPassword = new mutationWithClientMutationId({
         `User: ${user._key} attempted to update their password, however the new password does not meet GoC requirements.`,
       )
       throw new Error(
-        'Unable to update password, passwords are required to be 12 characters or longer. Please try again.',
+        i18n._(
+          t`Unable to update password, passwords are required to be 12 characters or longer. Please try again.`,
+        ),
       )
     }
 
@@ -104,12 +112,12 @@ const updateUserPassword = new mutationWithClientMutationId({
       console.error(
         `Database error ocurred when user: ${user._key} attempted to update their password: ${err}`,
       )
-      throw new Error('Unable to update password. Please try again.')
+      throw new Error(i18n._(t`Unable to update password. Please try again.`))
     }
 
     console.info(`User: ${user._key} successfully updated their password.`)
     return {
-      status: 'Password was successfully updated.',
+      status: i18n._(t`Password was successfully updated.`),
     }
   },
 })
