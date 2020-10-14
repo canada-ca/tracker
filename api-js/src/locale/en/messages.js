@@ -33,6 +33,9 @@
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
     'Profile successfully updated.': 'Profile successfully updated.',
+    'Successfully removed domain: {0} from {1}.': function (a) {
+      return ['Successfully removed domain: ', a('0'), ' from ', a('1'), '.']
+    },
     'Successfully removed organization: {0}.': function (a) {
       return ['Successfully removed organization: ', a('0'), '.']
     },

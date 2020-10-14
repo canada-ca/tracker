@@ -56,6 +56,10 @@ msgstr "todo"
 msgid "Profile successfully updated."
 msgstr "todo"
 
+#: src/mutations/domain/remove-domain.js:227
+msgid "Successfully removed domain: {0} from {1}."
+msgstr "todo"
+
 #: src/mutations/organizations/remove-organization.js:197
 msgid "Successfully removed organization: {0}."
 msgstr "todo"
