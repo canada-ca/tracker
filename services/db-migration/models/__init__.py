@@ -181,16 +181,10 @@ Guidance = sqlalchemy.Table(
     "guidance",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("tag_id", sqlalchemy.String),
     sqlalchemy.Column("tag_name", sqlalchemy.String),
     sqlalchemy.Column("guidance", sqlalchemy.String),
-    sqlalchemy.Column("ref_links", sqlalchemy.String),
-)
-
-Classification = sqlalchemy.Table(
-    "classification",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("UNCLASSIFIED", sqlalchemy.String),
+    sqlalchemy.Column("ref_links", ARRAY(sqlalchemy.String)),
 )
 
 Summaries = sqlalchemy.Table(

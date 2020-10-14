@@ -1,14 +1,15 @@
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql')
 const { globalIdField } = require('graphql-relay')
-const { GraphQLDateTime, GraphQLURL } = require('graphql-scalars')
+const { GraphQLDateTime } = require('graphql-scalars')
 const { nodeInterface } = require('../../../node')
+const { Domain } = require('../../../../scalars')
 
 const httpsType = new GraphQLObjectType({
   name: 'HTTPS',
   fields: () => ({
     id: globalIdField('https'),
     domain: {
-      type: GraphQLURL,
+      type: Domain,
       description: `The domain the scan was ran on.`,
       resolve: async () => {},
     },

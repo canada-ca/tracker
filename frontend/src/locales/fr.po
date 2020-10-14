@@ -646,6 +646,7 @@ msgstr "Résumé des paramètres de sécurité du courriel"
 
 #: src/EditableUserEmail.js:82
 #: src/EmailField.js:26
+#: src/EmailField.js:32
 msgid "Email:"
 msgstr "Courrier électronique :"
 
@@ -1403,6 +1404,7 @@ msgstr "Précédent"
 
 #: src/App.js:234
 #: src/FloatingMenu.js:175
+#: src/App.js:231
 msgid "Privacy"
 msgstr "Confidentialité"
 
@@ -1661,6 +1663,7 @@ msgstr "Affichage des données pour la période :"
 
 #: src/App.js:105
 #: src/FloatingMenu.js:158
+#: src/App.js:103
 #: src/SignInPage.js:118
 msgid "Sign In"
 msgstr "Se connecter"
@@ -1671,6 +1674,7 @@ msgstr "Se connecter."
 
 #: src/App.js:101
 #: src/FloatingMenu.js:142
+#: src/App.js:99
 msgid "Sign Out"
 msgstr "Déconnexion"
 
@@ -1736,6 +1740,7 @@ msgstr ""
 
 #: src/App.js:244
 #: src/FloatingMenu.js:185
+#: src/App.js:241
 msgid "Terms & conditions"
 msgstr "Avis"
 
@@ -1816,6 +1821,10 @@ msgstr "Total des messages"
 #: src/WelcomeMessage.js:18
 msgid "Track Web Security Compliance"
 msgstr "Suivre la conformité de la sécurité du Web"
+
+#: src/TopBanner.js:36
+msgid "Tracker Logo"
+msgstr "Logo du Tracker"
 
 #: src/UserCard.js:35
 #~ msgid "TwoFactor"

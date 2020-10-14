@@ -9,14 +9,28 @@ const { ApolloServer } = require('apollo-server-express')
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
 
+const fetch = require('isomorphic-fetch')
 const bcrypt = require('bcrypt')
+const moment = require('moment')
 const authFunctions = require('./auth')
 const { cleanseInput, slugify } = require('./validators')
 const notifyFunctions = require('./notify')
 
 const {
+  generateDetailTableFields,
+  generateGqlQuery,
+  dmarcReportLoader,
   domainLoaderByKey,
-  domainLoaderBySlug,
+  domainLoaderByDomain,
+  domainLoaderConnectionsByUserId,
+  dkimLoaderByKey,
+  dkimResultLoaderByKey,
+  dmarcLoaderByKey,
+  spfLoaderByKey,
+  dkimLoaderConnectionsByDomainId,
+  dkimResultsLoaderConnectionByDkimId,
+  dmarcLoaderConnectionsByDomainId,
+  spfLoaderConnectionsByDomainId,
   orgLoaderByKey,
   orgLoaderBySlug,
   orgLoaderByConnectionArgs,
@@ -78,6 +92,7 @@ const Server = (context = {}) => {
         request,
         response,
         userId,
+        moment,
         auth: {
           bcrypt,
           ...authFunctions,
@@ -90,8 +105,42 @@ const Server = (context = {}) => {
           ...notifyFunctions,
         },
         loaders: {
+          dmarcReportLoader: dmarcReportLoader({
+            generateGqlQuery,
+            generateDetailTableFields,
+            fetch,
+          }),
           domainLoaderByKey: domainLoaderByKey(query),
-          domainLoaderBySlug: domainLoaderBySlug(query),
+          domainLoaderByDomain: domainLoaderByDomain(query),
+          domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          dkimLoaderByKey: dkimLoaderByKey(query),
+          dkimResultLoaderByKey: dkimResultLoaderByKey(query),
+          dmarcLoaderByKey: dmarcLoaderByKey(query),
+          spfLoaderByKey: spfLoaderByKey(query),
+          dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          dkimResultsLoaderConnectionByDkimId: dkimResultsLoaderConnectionByDkimId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
           orgLoaderByKey: orgLoaderByKey(query, request.language),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language),
           orgLoaderByConnectionArgs: orgLoaderByConnectionArgs(

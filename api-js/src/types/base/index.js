@@ -1,3 +1,5 @@
+const { DMARC_REPORT_API_TOKEN, DMARC_REPORT_API_SECRET } = process.env
+
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -5,6 +7,7 @@ const {
   GraphQLInt,
   GraphQLID,
   GraphQLList,
+  GraphQLNonNull,
 } = require('graphql')
 const {
   globalIdField,
@@ -12,11 +15,13 @@ const {
   connectionArgs,
 } = require('graphql-relay')
 const { GraphQLDateTime, GraphQLEmailAddress } = require('graphql-scalars')
-const { RoleEnums, LanguageEnums } = require('../../enums')
-const { Acronym, Domain, Slug, Selectors } = require('../../scalars')
+const { RoleEnums, LanguageEnums, PeriodEnums } = require('../../enums')
+const { Acronym, Domain, Slug, Selectors, Year } = require('../../scalars')
 const { nodeInterface } = require('../node')
-const { emailScanConnection, webScanConnection } = require('./scan')
+const { webScanConnection } = require('./scan')
+const { periodType } = require('./dmarc-report')
 
+/* Domain related objects */
 const domainType = new GraphQLObjectType({
   name: 'Domain',
   fields: () => ({
@@ -24,31 +29,18 @@ const domainType = new GraphQLObjectType({
     domain: {
       type: Domain,
       description: 'Domain that scans will be ran on.',
-      resolve: async ({ domain }) => {
-        return domain
-      },
-    },
-    slug: {
-      type: Slug,
-      description: 'Slugified Url',
-      resolve: async ({ slug }) => {
-        return slug
-      },
+      resolve: async ({ domain }) => domain,
     },
     lastRan: {
       type: GraphQLDateTime,
       description: 'The last time that a scan was ran on this domain.',
-      resolve: async ({ lastRan }) => {
-        return lastRan
-      },
+      resolve: async ({ lastRan }) => lastRan,
     },
     selectors: {
       type: new GraphQLList(Selectors),
       description:
         'Domain Keys Identified Mail (DKIM) selector strings associated with domain.',
-      resolve: async ({ selectors }) => {
-        return selectors
-      },
+      resolve: async ({ selectors }) => selectors,
     },
     organizations: {
       type: organizationConnection.connectionType,
@@ -67,16 +59,99 @@ const domainType = new GraphQLObjectType({
       },
     },
     email: {
-      type: emailScanConnection.connectionType,
+      type: emailScanType,
       description: 'DKIM, DMARC, and SPF scan results.',
-      args: connectionArgs,
-      resolve: async () => {},
+      resolve: async ({ _id, _key }) => {
+        return { _id, _key }
+      },
     },
     web: {
       type: webScanConnection.connectionType,
       description: 'HTTPS, and SSL scan results.',
       args: connectionArgs,
       resolve: async () => {},
+    },
+    dmarcSummaryByPeriod: {
+      description: 'Summarized DMARC aggregate reports.',
+      args: {
+        month: {
+          type: GraphQLNonNull(PeriodEnums),
+          description: 'The month in which the returned data is relevant to.',
+        },
+        year: {
+          type: GraphQLNonNull(Year),
+          description: 'The year in which the returned data is relevant to.',
+        },
+      },
+      type: periodType,
+      resolve: async (
+        { _id, _key, domain },
+        __,
+        {
+          query,
+          userId,
+          loaders: { dmarcReportLoader, userLoaderByKey },
+          auth: { checkDomainOwnership, userRequired, tokenize },
+        },
+        info,
+      ) => {
+        const user = await userRequired(userId, userLoaderByKey)
+        const permitted = await checkDomainOwnership({
+          userId: user._id,
+          domainId: _id,
+          query,
+        })
+
+        if (!permitted) {
+          console.warn(
+            `User: ${userId} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
+          )
+          throw new Error(
+            `Unable to retrieve dmarc report information for: ${domain}`,
+          )
+        }
+
+        const {
+          data: { dmarcSummaryByPeriod },
+        } = await dmarcReportLoader({ info, domain, userId, tokenize })
+        return dmarcSummaryByPeriod
+      },
+    },
+    yearlyDmarcSummaries: {
+      description: 'Yearly summarized DMARC aggregate reports.',
+      type: new GraphQLList(periodType),
+      resolve: async (
+        { _id, _key, domain },
+        __,
+        {
+          query,
+          userId,
+          loaders: { dmarcReportLoader, userLoaderByKey },
+          auth: { checkDomainOwnership, userRequired, tokenize },
+        },
+        info,
+      ) => {
+        const user = await userRequired(userId, userLoaderByKey)
+        const permitted = await checkDomainOwnership({
+          userId: user._id,
+          domainId: _id,
+          query,
+        })
+
+        if (!permitted) {
+          console.warn(
+            `User: ${userId} attempted to access dmarc report period data for ${_key}, but does not belong to an org with ownership.`,
+          )
+          throw new Error(
+            `Unable to retrieve dmarc report information for: ${domain}`,
+          )
+        }
+
+        const {
+          data: { yearlyDmarcSummaries },
+        } = await dmarcReportLoader({ info, domain, userId, tokenize })
+        return yearlyDmarcSummaries
+      },
     },
   }),
   interfaces: [nodeInterface],
@@ -87,6 +162,313 @@ const domainConnection = connectionDefinitions({
   name: 'Domain',
   nodeType: domainType,
 })
+
+const emailScanType = new GraphQLObjectType({
+  name: 'EmailScan',
+  fields: () => ({
+    domain: {
+      type: domainType,
+      description: `The domain the scan was ran on.`,
+      resolve: async ({ _key }, _, { loaders: { domainLoaderByKey } }) => {
+        const domain = await domainLoaderByKey.load(_key)
+        return domain
+      },
+    },
+    dkim: {
+      type: dkimConnection.connectionType,
+      args: {
+        starDate: {
+          type: GraphQLDateTime,
+          description: 'Start date for date filter.',
+        },
+        endDate: {
+          type: GraphQLDateTime,
+          description: 'End date for date filter.',
+        },
+        ...connectionArgs,
+      },
+      description: `DomainKeys Identified Mail (DKIM) Signatures scan results.`,
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { dkimLoaderConnectionsByDomainId } },
+      ) => {
+        const dkim = await dkimLoaderConnectionsByDomainId({
+          domainId: _id,
+          ...args,
+        })
+        return dkim
+      },
+    },
+    dmarc: {
+      type: dmarcConnection.connectionType,
+      args: {
+        starDate: {
+          type: GraphQLDateTime,
+          description: 'Start date for date filter.',
+        },
+        endDate: {
+          type: GraphQLDateTime,
+          description: 'End date for date filter.',
+        },
+        ...connectionArgs,
+      },
+      description: `Domain-based Message Authentication, Reporting, and Conformance (DMARC) scan results.`,
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { dmarcLoaderConnectionsByDomainId } },
+      ) => {
+        const dmarc = await dmarcLoaderConnectionsByDomainId({
+          domainId: _id,
+          ...args,
+        })
+        return dmarc
+      },
+    },
+    spf: {
+      type: spfConnection.connectionType,
+      args: {
+        starDate: {
+          type: GraphQLDateTime,
+          description: 'Start date for date filter.',
+        },
+        endDate: {
+          type: GraphQLDateTime,
+          description: 'End date for date filter.',
+        },
+        ...connectionArgs,
+      },
+      description: `Sender Policy Framework (SPF) scan results.`,
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { spfLoaderConnectionsByDomainId } },
+      ) => {
+        const spf = await spfLoaderConnectionsByDomainId({
+          domainId: _id,
+          ...args,
+        })
+        return spf
+      },
+    },
+  }),
+  description: `Results of DKIM, DMARC, and SPF scans on the given domain.`,
+})
+
+const dkimType = new GraphQLObjectType({
+  name: 'DKIM',
+  fields: () => ({
+    id: globalIdField('dkim'),
+    domain: {
+      type: domainType,
+      description: `The domain the scan was ran on.`,
+      resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
+        const domainKey = domainId.split('/')[1]
+        const domain = await domainLoaderByKey.load(domainKey)
+        return domain
+      },
+    },
+    timestamp: {
+      type: GraphQLDateTime,
+      description: `The time when the scan was initiated.`,
+      resolve: async ({ timestamp }) => timestamp,
+    },
+    results: {
+      type: dkimResultsConnection.connectionType,
+      args: {
+        ...connectionArgs,
+      },
+      description: 'Individual scans results for each dkim selector.',
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { dkimResultsLoaderConnectionByDkimId } },
+      ) => {
+        const dkimResults = await dkimResultsLoaderConnectionByDkimId({
+          dkimId: _id,
+          ...args,
+        })
+        return dkimResults
+      },
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: `DomainKeys Identified Mail (DKIM) permits a person, role, or
+    organization that owns the signing domain to claim some
+    responsibility for a message by associating the domain with the
+    message.  This can be an author's organization, an operational relay,
+    or one of their agents.`,
+})
+
+const dkimConnection = connectionDefinitions({
+  name: 'DKIM',
+  nodeType: dkimType,
+})
+
+const dkimResultsType = new GraphQLObjectType({
+  name: 'DKIMResult',
+  fields: () => ({
+    id: globalIdField('dkimResult'),
+    dkim: {
+      type: dkimType,
+      description: 'The dkim scan information that this result belongs to.',
+      resolve: async ({ dkimId }, _, { loaders: { dkimLoaderByKey } }) => {
+        const dkimKey = dkimId.split('/')[1]
+        const dkim = await dkimLoaderByKey.load(dkimKey)
+        dkim.id = dkim._key
+        return dkim
+      },
+    },
+    selector: {
+      type: GraphQLString,
+      description: 'The selector the scan was ran on.',
+      resolve: async ({ selector }) => selector,
+    },
+    record: {
+      type: GraphQLString,
+      description: 'DKIM record retrieved during the scan of the domain.',
+      resolve: async ({ record }) => record,
+    },
+    keyLength: {
+      type: GraphQLString,
+      description: 'Size of the Public Key in bits',
+      resolve: async ({ keyLength }) => keyLength,
+    },
+    dkimGuidanceTags: {
+      type: new GraphQLList(GraphQLString),
+      description: 'Key tags found during scan.',
+      resolve: async ({ dkimGuidanceTags }) => dkimGuidanceTags,
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: 'Individual scans results for the given dkim selector.',
+})
+
+const dkimResultsConnection = connectionDefinitions({
+  name: 'DKIMResult',
+  nodeType: dkimResultsType,
+})
+
+const dmarcType = new GraphQLObjectType({
+  name: 'DMARC',
+  fields: () => ({
+    id: globalIdField('dmarc'),
+    domain: {
+      type: domainType,
+      description: `The domain the scan was ran on.`,
+      resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
+        const domainKey = domainId.split('/')[1]
+        const domain = await domainLoaderByKey.load(domainKey)
+        return domain
+      },
+    },
+    timestamp: {
+      type: GraphQLDateTime,
+      description: `The time when the scan was initiated.`,
+      resolve: async ({ timestamp }) => timestamp,
+    },
+    dmarcPhase: {
+      type: GraphQLInt,
+      description: `DMARC phase found during scan.`,
+      resolve: async ({ dmarcPhase }) => dmarcPhase,
+    },
+    record: {
+      type: GraphQLString,
+      description: `DMARC record retrieved during scan.`,
+      resolve: async ({ record }) => record,
+    },
+    pPolicy: {
+      type: GraphQLString,
+      description: `The requested policy you wish mailbox providers to apply
+            when your email fails DMARC authentication and alignment checks. `,
+      resolve: async ({ pPolicy }) => pPolicy,
+    },
+    spPolicy: {
+      type: GraphQLString,
+      description: `This tag is used to indicate a requested policy for all
+            subdomains where mail is failing the DMARC authentication and alignment checks.`,
+      resolve: async ({ spPolicy }) => spPolicy,
+    },
+    pct: {
+      type: GraphQLInt,
+      description: `The percentage of messages to which the DMARC policy is to be applied.`,
+      resolve: async ({ pct }) => pct,
+    },
+    dmarcGuidanceTags: {
+      type: GraphQLList(GraphQLString),
+      description: `Key tags found during DMARC Scan.`,
+      resolve: async ({ dmarcGuidanceTags }) => dmarcGuidanceTags,
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: `Domain-based Message Authentication, Reporting, and Conformance
+    (DMARC) is a scalable mechanism by which a mail-originating
+    organization can express domain-level policies and preferences for
+    message validation, disposition, and reporting, that a mail-receiving
+    organization can use to improve mail handling.`,
+})
+
+const dmarcConnection = connectionDefinitions({
+  name: 'DMARC',
+  nodeType: dmarcType,
+})
+
+const spfType = new GraphQLObjectType({
+  name: 'SPF',
+  fields: () => ({
+    id: globalIdField('spf'),
+    domain: {
+      type: domainType,
+      description: `The domain the scan was ran on.`,
+      resolve: async ({ domainId }, _, { loaders: { domainLoaderByKey } }) => {
+        const domainKey = domainId.split('/')[1]
+        const domain = await domainLoaderByKey.load(domainKey)
+        return domain
+      },
+    },
+    timestamp: {
+      type: GraphQLDateTime,
+      description: `The time the scan was initiated.`,
+      resolve: async ({ timestamp }) => timestamp,
+    },
+    lookups: {
+      type: GraphQLInt,
+      description: `The amount of DNS lookups.`,
+      resolve: async ({ lookups }) => lookups,
+    },
+    record: {
+      type: GraphQLString,
+      description: `SPF record retrieved during the scan of the given domain.`,
+      resolve: async ({ record }) => record,
+    },
+    spfDefault: {
+      type: GraphQLString,
+      description: `Instruction of what a recipient should do if there is not a match to your SPF record.`,
+      resolve: async ({ spfDefault }) => spfDefault,
+    },
+    spfGuidanceTags: {
+      type: GraphQLList(GraphQLString),
+      description: `Key tags found during scan.`,
+      resolve: async ({ spfGuidanceTags }) => spfGuidanceTags,
+    },
+  }),
+  interfaces: [nodeInterface],
+  description: `Email on the Internet can be forged in a number of ways.  In
+  particular, existing protocols place no restriction on what a sending
+  host can use as the "MAIL FROM" of a message or the domain given on
+  the SMTP HELO/EHLO commands.  Version 1 of the Sender Policy Framework (SPF)
+  protocol is where ADministrative Management Domains (ADMDs) can explicitly
+  authorize the hosts that are allowed to use their domain names, and a
+  receiving host can check such authorization.`,
+})
+
+const spfConnection = connectionDefinitions({
+  name: 'SPF',
+  nodeType: spfType,
+})
+
+/* End domain related objects */
 
 const organizationType = new GraphQLObjectType({
   name: 'Organization',

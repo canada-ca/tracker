@@ -44,8 +44,8 @@ def test_august_enum():
 
 
 def test_september_enum():
-    assert PeriodEnums.SEPTEMBER == "Sept"
-    assert PeriodEnums.SEPTEMBER == PeriodEnums.get("Sept")
+    assert PeriodEnums.SEPTEMBER == "Sep"
+    assert PeriodEnums.SEPTEMBER == PeriodEnums.get("Sep")
 
 
 def test_october_enum():

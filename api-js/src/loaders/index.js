@@ -1,27 +1,18 @@
-const {
-  domainLoaderByKey,
-  domainLoaderBySlug,
-  domainLoaderConnectionsByOrgId,
-} = require('./domains')
-const {
-  orgLoaderByKey,
-  orgLoaderBySlug,
-  orgLoaderByConnectionArgs,
-  orgLoaderConnectionArgsByDomainId,
-} = require('./organizations')
-const { userLoaderByUserName, userLoaderByKey } = require('./user')
+const dmarcReportLoaders = require('./dmarc-report')
+const domainLoaders = require('./domains')
+const emailScanLoaders = require('./email-scan')
+const orgLoaders = require('./organizations')
+const userLoaders = require('./user')
 
 module.exports = {
-  // Domain Loaders
-  domainLoaderByKey,
-  domainLoaderBySlug,
-  domainLoaderConnectionsByOrgId,
+  // Dmarc Report Loaders
+  ...dmarcReportLoaders,
+  // Domain loaders
+  ...domainLoaders,
+  // Email Scan Loaders
+  ...emailScanLoaders,
   // Org Loaders
-  orgLoaderByKey,
-  orgLoaderBySlug,
-  orgLoaderByConnectionArgs,
-  orgLoaderConnectionArgsByDomainId,
+  ...orgLoaders,
   // User Loaders
-  userLoaderByUserName,
-  userLoaderByKey,
+  ...userLoaders,
 }
