@@ -182,7 +182,7 @@ export const FloatingMenu = () => {
                         ? 'https://www.canada.ca/en/transparency/terms.html'
                         : 'https://www.canada.ca/fr/transparence/avis.html'
                     }
-                    text={i18n._(t`Terms & Conditions`)}
+                    text={i18n._(t`Terms & conditions`)}
                     isExternal
                   />
                 </Stack>
@@ -219,9 +219,9 @@ export const FloatingMenu = () => {
           </DrawerContent>
 
           {
-            // Firefox for android makes the bar disappear when exiting the menu if the address bar is hidden initially,
-            // this brings the bar back
-            setTimeout(() => window.scrollBy(0, 1), 1)
+            // Firefox for android makes the menu bar disappear when exiting the menu if the address bar is hidden initially,
+            // this brings the menu bar back
+            setTimeout(() => window.scrollBy(0, -1), 1)
           }
         </Drawer>
       </Stack>
