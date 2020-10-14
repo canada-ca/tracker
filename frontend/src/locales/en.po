@@ -467,8 +467,8 @@ msgstr "DKIM-value-invalid"
 msgid "DMARC Failures by IP Address"
 msgstr "DMARC Failures by IP Address"
 
-#: src/DmarcByDomainPage.js:77
-#: src/DmarcByDomainPage.js:160
+#: src/DmarcByDomainPage.js:96
+#: src/DmarcByDomainPage.js:179
 msgid "DMARC Messages"
 msgstr "DMARC Messages"
 
@@ -526,7 +526,7 @@ msgstr "Dmarc partial"
 msgid "Dmarc pass"
 msgstr "Dmarc pass"
 
-#: src/DmarcByDomainPage.js:58
+#: src/DmarcByDomainPage.js:59
 msgid "Domain"
 msgstr "Domain"
 
@@ -661,7 +661,6 @@ msgstr "Email security settings summary"
 
 #: src/EditableUserEmail.js:82
 #: src/EmailField.js:26
-#: src/EmailField.js:32
 msgid "Email:"
 msgstr "Email:"
 
@@ -714,11 +713,11 @@ msgstr "Error while querying for summary tables"
 msgid "Fail"
 msgstr "Fail"
 
-#: src/DmarcByDomainPage.js:65
+#: src/DmarcByDomainPage.js:75
 msgid "Fail DKIM %"
 msgstr "Fail DKIM %"
 
-#: src/DmarcByDomainPage.js:69
+#: src/DmarcByDomainPage.js:81
 msgid "Fail SPF %"
 msgstr "Fail SPF %"
 
@@ -762,11 +761,11 @@ msgstr "Forgot your password?"
 #~ msgid "Forwarding by an intermediate server."
 #~ msgstr "Forwarding by an intermediate server."
 
-#: src/DmarcByDomainPage.js:72
+#: src/DmarcByDomainPage.js:87
 msgid "Full Fail %"
 msgstr "Full Fail %"
 
-#: src/DmarcByDomainPage.js:61
+#: src/DmarcByDomainPage.js:69
 msgid "Full Pass %"
 msgstr "Full Pass %"
 
@@ -775,7 +774,7 @@ msgstr "Full Pass %"
 msgid "Fully Aligned by IP Address"
 msgstr "Fully Aligned by IP Address"
 
-#: src/DmarcReportTable.js:345
+#: src/DmarcReportTable.js:341
 #: src/SummaryTable.js:178
 msgid "Go to page:"
 msgstr "Go to page:"
@@ -959,7 +958,7 @@ msgstr "L-30-D"
 msgid "Language:"
 msgstr "Language:"
 
-#: src/DmarcByDomainPage.js:95
+#: src/DmarcByDomainPage.js:114
 #: src/DmarcReportPage.js:73
 msgid "Last 30 Days"
 msgstr "Last 30 Days"
@@ -970,7 +969,7 @@ msgid "Last scanned:"
 msgstr "Last scanned:"
 
 #: src/CreateUserPage.js:88
-#: src/DmarcByDomainPage.js:141
+#: src/DmarcByDomainPage.js:160
 #: src/DmarcReportPage.js:64
 #: src/DmarcReportPage.js:168
 #: src/DmarcReportPage.js:372
@@ -1275,7 +1274,7 @@ msgstr "Page"
 msgid "Page not found"
 msgstr "Page not found"
 
-#: src/DmarcReportTable.js:338
+#: src/DmarcReportTable.js:354
 msgid "Page {0} of {1}"
 msgstr "Page {0} of {1}"
 
@@ -1311,7 +1310,7 @@ msgstr "Pass Only SPF"
 #~ msgid "Pass SPF Only"
 #~ msgstr "Pass SPF Only"
 
-#: src/DmarcByDomainPage.js:147
+#: src/DmarcByDomainPage.js:166
 msgid "Pass/Fail Ratios by Domain"
 msgstr "Pass/Fail Ratios by Domain"
 
@@ -1419,7 +1418,6 @@ msgstr "Previous"
 
 #: src/App.js:234
 #: src/FloatingMenu.js:175
-#: src/App.js:231
 msgid "Privacy"
 msgstr "Privacy"
 
@@ -1679,18 +1677,17 @@ msgstr "Services: {domainCount}"
 #~ msgid "Show Guidance"
 #~ msgstr "Show Guidance"
 
-#: src/DmarcReportTable.js:364
+#: src/DmarcReportTable.js:370
 msgid "Show {pageSize}"
 msgstr "Show {pageSize}"
 
-#: src/DmarcByDomainPage.js:165
+#: src/DmarcByDomainPage.js:184
 #: src/DmarcReportPage.js:401
 msgid "Showing data for period:"
 msgstr "Showing data for period:"
 
 #: src/App.js:105
 #: src/FloatingMenu.js:158
-#: src/App.js:103
 #: src/SignInPage.js:118
 msgid "Sign In"
 msgstr "Sign In"
@@ -1701,7 +1698,6 @@ msgstr "Sign In."
 
 #: src/App.js:101
 #: src/FloatingMenu.js:142
-#: src/App.js:99
 msgid "Sign Out"
 msgstr "Sign Out"
 
@@ -1767,7 +1763,6 @@ msgstr "TXT-DMARC-missing"
 
 #: src/App.js:244
 #: src/FloatingMenu.js:185
-#: src/App.js:241
 msgid "Terms & conditions"
 msgstr "Terms & conditions"
 
@@ -1840,7 +1835,7 @@ msgstr "The user's role has been successfully updated"
 msgid "This service is being developed in the open"
 msgstr "This service is being developed in the open"
 
-#: src/DmarcByDomainPage.js:59
+#: src/DmarcByDomainPage.js:63
 #: src/DmarcReportPage.js:212
 msgid "Total Messages"
 msgstr "Total Messages"

@@ -459,8 +459,8 @@ msgstr "DKIM-value-invalid"
 msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
 
-#: src/DmarcByDomainPage.js:77
-#: src/DmarcByDomainPage.js:160
+#: src/DmarcByDomainPage.js:96
+#: src/DmarcByDomainPage.js:179
 msgid "DMARC Messages"
 msgstr "Messages de la DMARC"
 
@@ -518,7 +518,7 @@ msgstr "Dmarc partiel"
 msgid "Dmarc pass"
 msgstr "Passe Dmarc"
 
-#: src/DmarcByDomainPage.js:58
+#: src/DmarcByDomainPage.js:59
 msgid "Domain"
 msgstr "Domaine"
 
@@ -646,7 +646,6 @@ msgstr "Résumé des paramètres de sécurité du courriel"
 
 #: src/EditableUserEmail.js:82
 #: src/EmailField.js:26
-#: src/EmailField.js:32
 msgid "Email:"
 msgstr "Courrier électronique :"
 
@@ -699,11 +698,11 @@ msgstr "Erreur lors de la recherche de tableaux récapitulatifs"
 msgid "Fail"
 msgstr "Échec"
 
-#: src/DmarcByDomainPage.js:65
+#: src/DmarcByDomainPage.js:75
 msgid "Fail DKIM %"
 msgstr "Échec DKIM %"
 
-#: src/DmarcByDomainPage.js:69
+#: src/DmarcByDomainPage.js:81
 msgid "Fail SPF %"
 msgstr "Échec du SPF %"
 
@@ -747,11 +746,11 @@ msgstr "Oublié votre mot de passe?"
 #~ msgid "Forwarding by an intermediate server."
 #~ msgstr "Redirection par un serveur intermédiaire."
 
-#: src/DmarcByDomainPage.js:72
+#: src/DmarcByDomainPage.js:87
 msgid "Full Fail %"
 msgstr "Échec total %"
 
-#: src/DmarcByDomainPage.js:61
+#: src/DmarcByDomainPage.js:69
 msgid "Full Pass %"
 msgstr "Passage complet %"
 
@@ -760,7 +759,7 @@ msgstr "Passage complet %"
 msgid "Fully Aligned by IP Address"
 msgstr "Entièrement aligné par adresse IP"
 
-#: src/DmarcReportTable.js:345
+#: src/DmarcReportTable.js:341
 #: src/SummaryTable.js:178
 msgid "Go to page:"
 msgstr "Aller à la page"
@@ -944,7 +943,7 @@ msgstr ""
 msgid "Language:"
 msgstr "La langue:"
 
-#: src/DmarcByDomainPage.js:95
+#: src/DmarcByDomainPage.js:114
 #: src/DmarcReportPage.js:73
 msgid "Last 30 Days"
 msgstr "Les 30 derniers jours"
@@ -955,7 +954,7 @@ msgid "Last scanned:"
 msgstr "Dernier scan:"
 
 #: src/CreateUserPage.js:88
-#: src/DmarcByDomainPage.js:141
+#: src/DmarcByDomainPage.js:160
 #: src/DmarcReportPage.js:64
 #: src/DmarcReportPage.js:168
 #: src/DmarcReportPage.js:372
@@ -1260,7 +1259,7 @@ msgstr "Page"
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: src/DmarcReportTable.js:338
+#: src/DmarcReportTable.js:354
 msgid "Page {0} of {1}"
 msgstr "Page {0} de {1}"
 
@@ -1296,7 +1295,7 @@ msgstr "Passez seulement SPF"
 #~ msgid "Pass SPF Only"
 #~ msgstr "Passez le SPF uniquement"
 
-#: src/DmarcByDomainPage.js:147
+#: src/DmarcByDomainPage.js:166
 msgid "Pass/Fail Ratios by Domain"
 msgstr "Ratios succès/échec par domaine"
 
@@ -1404,7 +1403,6 @@ msgstr "Précédent"
 
 #: src/App.js:234
 #: src/FloatingMenu.js:175
-#: src/App.js:231
 msgid "Privacy"
 msgstr "Confidentialité"
 
@@ -1646,24 +1644,23 @@ msgstr "Septembre"
 
 #: src/OrganizationCard.js:61
 msgid "Services: {domainCount}"
-msgstr ""
+msgstr "Services"
 
 #: src/DmarcReportGuidance.js:554
 #~ msgid "Show Guidance"
 #~ msgstr "Afficher les conseils"
 
-#: src/DmarcReportTable.js:364
+#: src/DmarcReportTable.js:370
 msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
-#: src/DmarcByDomainPage.js:165
+#: src/DmarcByDomainPage.js:184
 #: src/DmarcReportPage.js:401
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période :"
 
 #: src/App.js:105
 #: src/FloatingMenu.js:158
-#: src/App.js:103
 #: src/SignInPage.js:118
 msgid "Sign In"
 msgstr "Se connecter"
@@ -1674,7 +1671,6 @@ msgstr "Se connecter."
 
 #: src/App.js:101
 #: src/FloatingMenu.js:142
-#: src/App.js:99
 msgid "Sign Out"
 msgstr "Déconnexion"
 
@@ -1740,7 +1736,6 @@ msgstr ""
 
 #: src/App.js:244
 #: src/FloatingMenu.js:185
-#: src/App.js:241
 msgid "Terms & conditions"
 msgstr "Avis"
 
@@ -1813,7 +1808,7 @@ msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
-#: src/DmarcByDomainPage.js:59
+#: src/DmarcByDomainPage.js:63
 #: src/DmarcReportPage.js:212
 msgid "Total Messages"
 msgstr "Total des messages"
