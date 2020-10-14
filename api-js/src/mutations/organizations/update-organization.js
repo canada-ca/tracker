@@ -1,5 +1,6 @@
 const { GraphQLString, GraphQLNonNull, GraphQLID } = require('graphql')
 const { mutationWithClientMutationId, fromGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 const { Acronym } = require('../../scalars')
 const { organizationType } = require('../../types')
 
@@ -91,6 +92,7 @@ const updateOrganization = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       collections,
       transaction,
@@ -133,7 +135,9 @@ const updateOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update organization: ${orgKey}, however no organizations is associated with that id.`,
       )
-      throw new Error('Unable to update organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to update organization. Please try again.`),
+      )
     }
 
     // Check to see if user has permission
@@ -143,7 +147,9 @@ const updateOrganization = new mutationWithClientMutationId({
       console.error(
         `User: ${userId} attempted to update organization ${orgKey}, however they do not have the correct permission level. Permission: ${permission}`,
       )
-      throw new Error('Unable to update organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to update organization. Please try again.`),
+      )
     }
 
     // Get all org details
@@ -158,7 +164,9 @@ const updateOrganization = new mutationWithClientMutationId({
       console.error(
         `Database error occurred while retrieving org: ${orgKey} for update, err: ${err}`,
       )
-      throw new Error('Unable to update organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to update organization. Please try again.`),
+      )
     }
 
     const compareOrg = await orgCursor.next()
@@ -212,7 +220,9 @@ const updateOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred while upserting org: ${orgKey}, err: ${err}`,
       )
-      throw new Error('Unable to update organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to update organization. Please try again.`),
+      )
     }
 
     try {
@@ -221,7 +231,9 @@ const updateOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred while committing org: ${orgKey}, err: ${err}`,
       )
-      throw new Error('Unable to update organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to update organization. Please try again.`),
+      )
     }
 
     await orgLoaderByKey.clear(orgKey)

@@ -1,5 +1,6 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 const { Acronym } = require('../../scalars')
 const { organizationType } = require('../../types')
 
@@ -87,6 +88,7 @@ const createOrganization = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       request,
       collections,
       transaction,
@@ -127,7 +129,9 @@ const createOrganization = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to create an organization that already exists: ${slugEN}`,
       )
-      throw new Error('Unable to create organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to create organization. Please try again.`),
+      )
     }
 
     // Create new organization
@@ -179,7 +183,9 @@ const createOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred when user: ${userId} was creating new organization ${slugEN}: ${err}`,
       )
-      throw new Error('Unable to create organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to create organization. Please try again.`),
+      )
     }
     const organization = await cursor.next()
 
@@ -198,7 +204,9 @@ const createOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred when inserting edge definition for user: ${userId} to ${slugEN}: ${err}`,
       )
-      throw new Error('Unable to create new organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to create organization. Please try again.`),
+      )
     }
 
     try {
@@ -207,7 +215,9 @@ const createOrganization = new mutationWithClientMutationId({
       console.error(
         `Transaction error occurred when committing new organization: ${slugEN} for user: ${userId} to db: ${err}`,
       )
-      throw new Error('Unable to create new organization. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to create organization. Please try again.`),
+      )
     }
 
     console.info(
