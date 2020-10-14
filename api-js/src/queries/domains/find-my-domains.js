@@ -1,4 +1,5 @@
 const { connectionArgs } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 const { domainConnection } = require('../../types')
 
 const findMyDomains = {
@@ -6,11 +7,12 @@ const findMyDomains = {
   description: 'Select domains a user has access to.',
   args: {
     ...connectionArgs,
+    
   },
   resolve: async (
     _,
     args,
-    { userId, loaders: { domainLoaderConnectionsByUserId } },
+    { i18n, userId, loaders: { domainLoaderConnectionsByUserId } },
   ) => {
     let domainConnections
 
@@ -20,7 +22,7 @@ const findMyDomains = {
       console.error(
         `Database error occurred while user: ${userId} was trying to gather domain connections in findMyDomains.`,
       )
-      throw new Error('Unable to load domains. Please try again.')
+      throw new Error(i18n._(t`Unable to load domains. Please try again.`))
     }
 
     console.info(`User ${userId} successfully retrieved their domains.`)
