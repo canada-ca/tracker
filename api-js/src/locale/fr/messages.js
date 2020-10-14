@@ -18,6 +18,7 @@
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
     'Profile successfully updated.': 'todo',
+    'Successfully removed domain: {0} from {1}.': 'todo',
     'Successfully removed organization: {0}.': 'todo',
     'Successfully two factor authenticated.': 'todo',
     'Successfully verified account.': 'todo',

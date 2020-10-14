@@ -56,6 +56,10 @@ msgstr "Passwords do not match."
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
 
+#: src/mutations/domain/remove-domain.js:227
+msgid "Successfully removed domain: {0} from {1}."
+msgstr "Successfully removed domain: {0} from {1}."
+
 #: src/mutations/organizations/remove-organization.js:197
 msgid "Successfully removed organization: {0}."
 msgstr "Successfully removed organization: {0}."
