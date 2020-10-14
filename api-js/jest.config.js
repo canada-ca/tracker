@@ -8,4 +8,5 @@ module.exports = {
     '.module.js',
     'locale',
   ],
+  testTimeout: 10000,
 }
