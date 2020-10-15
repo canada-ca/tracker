@@ -323,7 +323,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       />
     ) : (
       <Heading as="h3" size="lg">
-        * <Trans>No data for Fully Aligned by IP Address table</Trans> *
+        * <Trans>No data for the Fully Aligned by IP Address table</Trans> *
       </Heading>
     )
     const spfFailureTable = spfFailureData.length ? (
@@ -335,7 +335,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       />
     ) : (
       <Heading as="h3" size="lg">
-        * <Trans>No data for SPF Failures by IP Address table</Trans> *
+        * <Trans>No data for the SPF Failures by IP Address table</Trans> *
       </Heading>
     )
     const spfMisalignedTable = spfMisalignedData.length ? (
@@ -347,7 +347,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       />
     ) : (
       <Heading as="h3" size="lg">
-        * <Trans>No data for SPF Misalignment by IP Address table</Trans> *
+        * <Trans>No data for the SPF Misalignment by IP Address table</Trans> *
       </Heading>
     )
     const dkimFailureTable = dkimFailureData.length ? (
@@ -359,7 +359,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       />
     ) : (
       <Heading as="h3" size="lg">
-        * <Trans>No data for DKIM Failures by IP Address table</Trans> *
+        * <Trans>No data for the DKIM Failures by IP Address table</Trans> *
       </Heading>
     )
     const dkimMisalignmentTable = dkimMisalignedData.length ? (
@@ -371,7 +371,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       />
     ) : (
       <Heading as="h3" size="lg">
-        * <Trans>No data for DKIM Misalignment by IP Address table</Trans> *
+        * <Trans>No data for the DKIM Misalignment by IP Address table</Trans> *
       </Heading>
     )
     const dmarcFailureTable = dkimFailureData.length ? (
@@ -383,7 +383,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       />
     ) : (
       <Heading as="h3" size="lg">
-        * <Trans>No data for DMARC Failures by IP Address table</Trans> *
+        * <Trans>No data for the DMARC Failures by IP Address table</Trans> *
       </Heading>
     )
 
@@ -398,7 +398,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       </Stack>
     )
   }
-  // handle errors / loading 
+  // handle errors / loading
   else
     tableDisplay = (
       <Heading as="h3" size="lg" textAlign="center">
