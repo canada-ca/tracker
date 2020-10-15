@@ -77,7 +77,7 @@
     'Unable to update domain. Please try again.':
       'Unable to update domain. Please try again.',
     'Unable to update organization. Please try again.':
-      'Unable to update organization. Please try again.<<<<<<< HEAD',
+      'Unable to update organization. Please try again.',
     'Unable to update password, current password does not match. Please try again.':
       'Unable to update password, current password does not match. Please try again.',
     'Unable to update password, new passwords do not match. Please try again.':
@@ -99,11 +99,11 @@
     'Unable to verify account. Please try again.':
       'Unable to verify account. Please try again.',
     'User role was updated successfully.':
-      'User role was updated successfully.>>>>>>> user affiliations translations',
+      'User role was updated successfully.',
     'Username already in use.': 'Username already in use.',
     "We've sent you a text message with an authentication code to sign into Pulse.":
       "We've sent you a text message with an authentication code to sign into Pulse.",
     "We've sent you an email with an authentication code to sign into Pulse.":
-      "We've sent you an email with an authentication code to sign into Pulse.=======",
+      "We've sent you an email with an authentication code to sign into Pulse.",
   },
 }
