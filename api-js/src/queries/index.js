@@ -2,6 +2,7 @@ const { GraphQLObjectType } = require('graphql')
 const { nodeField } = require('../types')
 // const { i18n: internationalization } = require('lingui-i18n')
 const domainQueries = require('./domains')
+const userQueries = require('./user')
 const organizationQueries = require('./organizations')
 const summaryQueries = require('./summaries')
 
@@ -18,6 +19,8 @@ const createQuerySchema = () => {
       ...organizationQueries,
       // Summary Queries
       ...summaryQueries,
+      // User Queries
+      ...userQueries,
     }),
   })
 }
