@@ -177,11 +177,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
 
   // Create report tables if no errors and message data exist
   let tableDisplay
-  if (
-    !tableError &&
-    !tableLoading &&
-    tableData.dmarcReportDetailTables.detailTables.fullPass.length > 0
-  ) {
+  if (!tableError && !tableLoading) {
     const detailTablesData = tableData.dmarcReportDetailTables.detailTables
 
     const fullPassData = detailTablesData.fullPass
@@ -317,54 +313,92 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
         ],
       },
     ]
+    const fullyAlignedTable = fullPassData.length ? (
+      <DmarcReportTable
+        data={fullPassData}
+        columns={fullPassColumns}
+        title={i18n._(t`Fully Aligned by IP Address`)}
+        initialSort={initialSort}
+        mb="8"
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for Fully Aligned by IP Address table</Trans> *
+      </Heading>
+    )
+    const spfFailureTable = spfFailureData.length ? (
+      <DmarcReportTable
+        data={spfFailureData}
+        columns={spfFailureColumns}
+        title={i18n._(t`SPF Failures by IP Address`)}
+        initialSort={initialSort}
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for SPF Failures by IP Address table</Trans> *
+      </Heading>
+    )
+    const spfMisalignedTable = spfMisalignedData.length ? (
+      <DmarcReportTable
+        data={spfMisalignedData}
+        columns={spfMisalignedColumns}
+        title={i18n._(t`SPF Misalignment by IP Address`)}
+        initialSort={initialSort}
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for SPF Misalignment by IP Address table</Trans> *
+      </Heading>
+    )
+    const dkimFailureTable = dkimFailureData.length ? (
+      <DmarcReportTable
+        data={dkimFailureData}
+        columns={dkimFailureColumns}
+        title={i18n._(t`DKIM Failures by IP Address`)}
+        initialSort={initialSort}
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for DKIM Failures by IP Address table</Trans> *
+      </Heading>
+    )
+    const dkimMisalignmentTable = dkimMisalignedData.length ? (
+      <DmarcReportTable
+        data={dkimMisalignedData}
+        columns={dkimMisalignedColumns}
+        title={i18n._(t`DKIM Misalignment by IP Address`)}
+        initialSort={initialSort}
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for DKIM Misalignment by IP Address table</Trans> *
+      </Heading>
+    )
+    const dmarcFailureTable = dkimFailureData.length ? (
+      <DmarcReportTable
+        data={dmarcFailureData}
+        columns={dmarcFailureColumns}
+        title={i18n._(t`DMARC Failures by IP Address`)}
+        initialSort={initialSort}
+      />
+    ) : (
+      <Heading as="h3" size="lg">
+        * <Trans>No data for DMARC Failures by IP Address table</Trans> *
+      </Heading>
+    )
+
     tableDisplay = (
-      <>
-        <DmarcReportTable
-          data={fullPassData}
-          columns={fullPassColumns}
-          title={i18n._(t`Fully Aligned by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-        <DmarcReportTable
-          data={spfFailureData}
-          columns={spfFailureColumns}
-          title={i18n._(t`SPF Failures by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-        <DmarcReportTable
-          data={spfMisalignedData}
-          columns={spfMisalignedColumns}
-          title={i18n._(t`SPF Misalignment by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-        <DmarcReportTable
-          data={dkimFailureData}
-          columns={dkimFailureColumns}
-          title={i18n._(t`DKIM Failures by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-        <DmarcReportTable
-          data={dkimMisalignedData}
-          columns={dkimMisalignedColumns}
-          title={i18n._(t`DKIM Misalignment by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-        <DmarcReportTable
-          data={dmarcFailureData}
-          columns={dmarcFailureColumns}
-          title={i18n._(t`DMARC Failures by IP Address`)}
-          initialSort={initialSort}
-          mb="8"
-        />
-      </>
+      <Stack spacing="30px">
+        {fullyAlignedTable}
+        {spfFailureTable}
+        {spfMisalignedTable}
+        {dkimFailureTable}
+        {dkimMisalignmentTable}
+        {dmarcFailureTable}
+      </Stack>
     )
   }
-  // handle errors / loading / no data
+  // handle errors / loading 
   else
     tableDisplay = (
       <Heading as="h3" size="lg" textAlign="center">
