@@ -30,6 +30,9 @@ msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:37
 #: src/loaders/domains/load-domain-connections-by-user-id.js:36
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:37
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:37
+#: src/loaders/organizations/load-organizations-connection-args.js:37
 msgid "Error, unable to have first, and last set at the same time."
 msgstr "todo"
 
@@ -138,6 +141,13 @@ msgstr "todo"
 msgid "Unable to find domain. Please try again."
 msgstr "todo"
 
+#: src/loaders/organizations/load-organization-by-key.js:16
+#: src/loaders/organizations/load-organization-by-key.js:26
+#: src/loaders/organizations/load-organization-by-slug.js:16
+#: src/loaders/organizations/load-organization-by-slug.js:26
+msgid "Unable to find organization. Please try again."
+msgstr "todo"
+
 #: src/mutations/user-affiliations/invite-user-to-org.js:78
 #: src/mutations/user-affiliations/invite-user-to-org.js:91
 #: src/mutations/user-affiliations/invite-user-to-org.js:153
@@ -158,12 +168,25 @@ msgstr "todo"
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:56
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:66
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:83
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:93
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:66
+#: src/loaders/organizations/load-organizations-connection-args.js:54
+#: src/loaders/organizations/load-organizations-connection-args.js:64
+#: src/loaders/organizations/load-organizations-connection-args.js:81
+#: src/loaders/organizations/load-organizations-connection-args.js:91
 #: src/queries/organizations/find-my-organizations.js:24
 msgid "Unable to load organizations. Please try again."
 msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-user-id.js:56
 msgid "Unable to query domains. Please try again."
+msgstr "todo"
+
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:56
+msgid "Unable to query organizations. Please try again."
 msgstr "todo"
 
 #: src/mutations/domain/remove-domain.js:58

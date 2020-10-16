@@ -68,6 +68,8 @@
       'Unable to create organization. Please try again.',
     'Unable to find domain. Please try again.':
       'Unable to find domain. Please try again.',
+    'Unable to find organization. Please try again.':
+      'Unable to find organization. Please try again.',
     'Unable to invite user. Please try again.':
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org. Please try again.':
@@ -78,6 +80,8 @@
       'Unable to load organizations. Please try again.',
     'Unable to query domains. Please try again.':
       'Unable to query domains. Please try again.',
+    'Unable to query organizations. Please try again.':
+      'Unable to query organizations. Please try again.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
     'Unable to remove organization. Please try again.':
