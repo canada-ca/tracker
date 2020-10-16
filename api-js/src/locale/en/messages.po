@@ -118,7 +118,18 @@ msgstr "Unable to create domain. Please try again."
 msgid "Unable to create organization. Please try again."
 msgstr "Unable to create organization. Please try again."
 
-#: src/queries/domains/find-my-domains.js:24
+#: src/mutations/user-affiliations/invite-user-to-org.js:78
+#: src/mutations/user-affiliations/invite-user-to-org.js:91
+#: src/mutations/user-affiliations/invite-user-to-org.js:153
+#: src/mutations/user-affiliations/invite-user-to-org.js:175
+msgid "Unable to invite user. Please try again."
+msgstr "Unable to invite user. Please try again."
+
+#: src/mutations/user-affiliations/invite-user-to-org.js:68
+msgid "Unable to invite yourself to an org. Please try again."
+msgstr "Unable to invite yourself to an org. Please try again."
+
+#: src/queries/domains/find-my-domains.js:25
 msgid "Unable to load domains. Please try again."
 msgstr "Unable to load domains. Please try again."
 
