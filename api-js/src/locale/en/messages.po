@@ -24,6 +24,10 @@ msgstr "Authentication error, please sign in again."
 msgid "Could not retrieve specified domain."
 msgstr "Could not retrieve specified domain."
 
+#: src/queries/organizations/find-organization-by-slug.js:50
+#~ msgid "Could not retrieve specified organization."
+#~ msgstr "Could not retrieve specified organization."
+
 #: src/mutations/user/send-password-reset.js:72
 msgid "If an account with this username is found, a password reset link will be found in your inbox."
 msgstr "If an account with this username is found, a password reset link will be found in your inbox."
@@ -39,6 +43,10 @@ msgstr "New passwords do not match. Please try again."
 #: src/queries/domains/find-domain-by-domain.js:39
 msgid "No domain with the provided domain could be found."
 msgstr "No domain with the provided domain could be found."
+
+#: src/queries/organizations/find-organization-by-slug.js:41
+#~ msgid "No organization with the provided slug could be found."
+#~ msgstr "No organization with the provided slug could be found."
 
 #: src/mutations/user/reset-password.js:95
 msgid "Password is not strong enough. Please try again."
@@ -132,6 +140,10 @@ msgstr "Unable to invite yourself to an org. Please try again."
 #: src/queries/domains/find-my-domains.js:25
 msgid "Unable to load domains. Please try again."
 msgstr "Unable to load domains. Please try again."
+
+#: src/queries/organizations/find-my-organizations.js:24
+#~ msgid "Unable to load organizations. Please try again."
+#~ msgstr "Unable to load organizations. Please try again."
 
 #: src/mutations/domain/remove-domain.js:58
 #: src/mutations/domain/remove-domain.js:69

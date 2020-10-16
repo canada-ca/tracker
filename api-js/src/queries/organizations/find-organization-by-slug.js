@@ -1,4 +1,5 @@
 const { GraphQLNonNull } = require('graphql')
+const { t } = require('@lingui/macro')
 const { Slug } = require('../../scalars')
 const { organizationType } = require('../../types')
 
@@ -17,6 +18,7 @@ const findOrganizationBySlug = {
     _,
     args,
     {
+      i18n,
       userKey,
       query,
       auth: { checkPermission, userRequired },
@@ -35,7 +37,9 @@ const findOrganizationBySlug = {
 
     if (typeof org === 'undefined') {
       console.warn(`User ${user._key} could not retrieve organization.`)
-      throw new Error(`No organization with the provided slug could be found.`)
+      throw new Error(
+        i18n._(t`No organization with the provided slug could be found.`),
+      )
     }
 
     // Check user permission for organization access
@@ -43,7 +47,7 @@ const findOrganizationBySlug = {
 
     if (!['super_admin', 'admin', 'user'].includes(permission)) {
       console.warn(`User ${user._key} could not retrieve organization.`)
-      throw new Error(`Could not retrieve specified organization.`)
+      throw new Error(i18n._(t`Could not retrieve specified organization.`))
     }
 
     console.info(
