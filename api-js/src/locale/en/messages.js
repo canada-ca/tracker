@@ -33,12 +33,16 @@
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
     'Profile successfully updated.': 'Profile successfully updated.',
+    'Successfully invited user to organization, and sent notification email.':
+      'Successfully invited user to organization, and sent notification email.',
     'Successfully removed domain: {0} from {1}.': function (a) {
       return ['Successfully removed domain: ', a('0'), ' from ', a('1'), '.']
     },
     'Successfully removed organization: {0}.': function (a) {
       return ['Successfully removed organization: ', a('0'), '.']
     },
+    'Successfully sent invitation to service, and organization email.':
+      'Successfully sent invitation to service, and organization email.',
     'Successfully two factor authenticated.':
       'Successfully two factor authenticated.',
     'Successfully verified account.': 'Successfully verified account.',
@@ -52,6 +56,10 @@
       'Unable to create domain. Please try again.',
     'Unable to create organization. Please try again.':
       'Unable to create organization. Please try again.',
+    'Unable to invite user. Please try again.':
+      'Unable to invite user. Please try again.',
+    'Unable to invite yourself to an org. Please try again.':
+      'Unable to invite yourself to an org. Please try again.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
     'Unable to remove organization. Please try again.':
@@ -80,10 +88,18 @@
       'Unable to update password. Please try again.',
     'Unable to update profile. Please try again.':
       'Unable to update profile. Please try again.',
+    'Unable to update users role. Please invite user to the organization.':
+      'Unable to update users role. Please invite user to the organization.',
+    'Unable to update users role. Please try again.':
+      'Unable to update users role. Please try again.',
+    'Unable to update your own role. Please try again.':
+      'Unable to update your own role. Please try again.',
     'Unable to verify account. Please request a new email.':
       'Unable to verify account. Please request a new email.',
     'Unable to verify account. Please try again.':
       'Unable to verify account. Please try again.',
+    'User role was updated successfully.':
+      'User role was updated successfully.',
     'Username already in use.': 'Username already in use.',
     "We've sent you a text message with an authentication code to sign into Pulse.":
       "We've sent you a text message with an authentication code to sign into Pulse.",

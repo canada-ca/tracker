@@ -1,6 +1,7 @@
 const { GraphQLNonNull, GraphQLString, GraphQLID } = require('graphql')
 const { mutationWithClientMutationId, fromGlobalId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
+const { t } = require('@lingui/macro')
 const { LanguageEnums, RoleEnums } = require('../../enums')
 
 const inviteUserToOrg = new mutationWithClientMutationId({
@@ -39,6 +40,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       request,
       query,
       collections,
@@ -63,7 +65,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to invite themselves to ${orgId}.`,
       )
-      throw new Error('Unable to invite yourself to an org. Please try again.')
+      throw new Error(i18n._(t`Unable to invite yourself to an org. Please try again.`))
     }
 
     // Check to see if requested org exists
@@ -73,7 +75,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to invite user: ${userName} to ${orgId} however there is no org associated with that id.`,
       )
-      throw new Error('Unable to invite user. Please try again.')
+      throw new Error(i18n._(t`Unable to invite user. Please try again.`))
     }
 
     // Check to see requesting users permission to the org is
@@ -86,7 +88,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to invite user: ${userName} to org: ${org.slug} with role: ${requestedRole} but does not have permission to do so.`,
       )
-      throw new Error('Unable to invite user. Please try again.')
+      throw new Error(i18n._(t`Unable to invite user. Please try again.`))
     }
 
     // Check to see if requested user exists
@@ -121,7 +123,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
 
       return {
         status:
-          'Successfully sent invitation to service, and organization email.',
+          i18n._(t`Successfully sent invitation to service, and organization email.`),
       }
     }
     // If account is found add just add affiliation
@@ -148,7 +150,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
         console.error(
           `Transaction run error occurred while user: ${userId} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
         )
-        throw new Error('Unable to invite user. Please try again.')
+        throw new Error(i18n._(t`Unable to invite user. Please try again.`))
       }
 
       let templateId
@@ -170,7 +172,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
         console.error(
           `Transaction commit error occurred while user: ${userId} attempted to invite user: ${requestedUser._key} to org: ${org.slug}, error: ${err}`,
         )
-        throw new Error('Unable to invite user. Please try again.')
+        throw new Error(i18n._(t`Unable to invite user. Please try again.`))
       }
 
       console.info(
@@ -179,7 +181,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
 
       return {
         status:
-          'Successfully invited user to organization, and sent notification email.',
+          i18n._(t`Successfully invited user to organization, and sent notification email.`),
       }
     }
   },

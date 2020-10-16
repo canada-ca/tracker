@@ -18,8 +18,11 @@
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
     'Profile successfully updated.': 'todo',
+    'Successfully invited user to organization, and sent notification email.':
+      'todo',
     'Successfully removed domain: {0} from {1}.': 'todo',
     'Successfully removed organization: {0}.': 'todo',
+    'Successfully sent invitation to service, and organization email.': 'todo',
     'Successfully two factor authenticated.': 'todo',
     'Successfully verified account.': 'todo',
     'Too many failed login attempts, please reset your password, and try again.':
@@ -29,6 +32,8 @@
     'Unable to authenticate. Please try again.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
+    'Unable to invite user. Please try again.': 'todo',
+    'Unable to invite yourself to an org. Please try again.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
     'Unable to remove organization. Please try again.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
@@ -46,8 +51,13 @@
       'todo',
     'Unable to update password. Please try again.': 'todo',
     'Unable to update profile. Please try again.': 'todo',
+    'Unable to update users role. Please invite user to the organization.':
+      'todo',
+    'Unable to update users role. Please try again.': 'todo',
+    'Unable to update your own role. Please try again.': 'todo',
     'Unable to verify account. Please request a new email.': 'todo',
     'Unable to verify account. Please try again.': 'todo',
+    'User role was updated successfully.': 'todo',
     'Username already in use.': 'todo',
     "We've sent you a text message with an authentication code to sign into Pulse.":
       'todo',
