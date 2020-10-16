@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   creationTimestamp: null
-  name: api
+  name: helloworld
   labels:
     istio-injection: enabled
 spec: {}

@@ -1,0 +1,19 @@
+apiversion: apps/v1
+kind: deployment
+metadata:
+  labels:
+    app: helloworld
+  name: helloworld
+spec:
+  replicas: 1
+  selector:
+    matchlabels:
+      app: helloworld
+  template:
+    metadata:
+      labels:
+        app: helloworld
+    spec:
+      containers:
+      - image: mikewilliamson/helloworld
+        name: helloworld

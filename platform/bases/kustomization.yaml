@@ -1,8 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- api-namespace.yaml
-- frontend-namespace.yaml
 - tracker-api-deployment.yaml
 - tracker-api-service.yaml
 - tracker-api-virtual-service.yaml
@@ -12,3 +10,6 @@ resources:
 - istio.yaml
 - envoy-filter.yaml
 - publicgateway.yaml
+- postgres-deployment.yaml
+- postgres-pvc.yaml
+- postgres-service.yaml
