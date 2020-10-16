@@ -84,6 +84,9 @@
       'Unable to remove organization. Please try again.',
     'Unable to reset password. Please try again.':
       'Unable to reset password. Please try again.',
+    'Unable to retrieve {0} for domain: {domain}.': function (a) {
+      return ['Unable to retrieve ', a('0'), ' for domain: ', a('domain'), '.']
+    },
     'Unable to send TFA code, please try again.':
       'Unable to send TFA code, please try again.',
     'Unable to sign in, please try again.':

@@ -1,5 +1,9 @@
 require('jest-fetch-mock').enableFetchMocks()
 
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const {
   dmarcReportLoader,
   generateDetailTableFields,
@@ -9,6 +13,7 @@ const {
 describe('given the domainLoaderDmarcReport function', () => {
   const fetch = fetchMock
 
+  let i18n
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   beforeEach(async () => {
@@ -54,51 +59,122 @@ describe('given the domainLoaderDmarcReport function', () => {
       expect(data).toEqual({ data: '12345' })
     })
   })
-  describe('given an unsuccessful fetch call', () => {
-    it('raises an error', async () => {
-      fetch.mockReject(Error('Fetch Error occurred.'))
-
-      const loader = dmarcReportLoader({
-        generateGqlQuery,
-        generateDetailTableFields,
-        fetch,
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
       })
+    })
+    describe('given an unsuccessful fetch call', () => {
+      it('raises an error', async () => {
+        fetch.mockReject(Error('Fetch Error occurred.'))
 
-      const info = {
-        fieldName: 'testQuery',
-        fieldNodes: [
-          {
-            selectionSet: {
-              selections: [
-                {
-                  name: {
-                    value: 'month',
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      }
-
-      try {
-        await loader({
-          info,
-          domain: 'test.domain.gc.ca',
-          userId: '53521',
-          tokenize: jest.fn(),
+        const loader = dmarcReportLoader({
+          generateGqlQuery,
+          generateDetailTableFields,
+          fetch,
+          i18n,
         })
-      } catch (err) {
-        expect(err).toEqual(
-          new Error(
-            'Unable to retrieve testQuery for domain: test.domain.gc.ca.',
-          ),
-        )
-      }
 
-      expect(consoleOutput).toEqual([
-        `Fetch error occurred well User: 53521 was trying to retrieve testQuery from the dmarc-report-api, error: Error: Fetch Error occurred.`,
-      ])
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        }
+
+        try {
+          await loader({
+            info,
+            domain: 'test.domain.gc.ca',
+            userId: '53521',
+            tokenize: jest.fn(),
+          })
+        } catch (err) {
+          expect(err).toEqual(
+            new Error(
+              'Unable to retrieve testQuery for domain: test.domain.gc.ca.',
+            ),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `Fetch error occurred well User: 53521 was trying to retrieve testQuery from the dmarc-report-api, error: Error: Fetch Error occurred.`,
+        ])
+      })
+    })
+  })
+  describe('users language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given an unsuccessful fetch call', () => {
+      it('raises an error', async () => {
+        fetch.mockReject(Error('Fetch Error occurred.'))
+
+        const loader = dmarcReportLoader({
+          generateGqlQuery,
+          generateDetailTableFields,
+          fetch,
+          i18n,
+        })
+
+        const info = {
+          fieldName: 'testQuery',
+          fieldNodes: [
+            {
+              selectionSet: {
+                selections: [
+                  {
+                    name: {
+                      value: 'month',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        }
+
+        try {
+          await loader({
+            info,
+            domain: 'test.domain.gc.ca',
+            userId: '53521',
+            tokenize: jest.fn(),
+          })
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
+
+        expect(consoleOutput).toEqual([
+          `Fetch error occurred well User: 53521 was trying to retrieve testQuery from the dmarc-report-api, error: Error: Fetch Error occurred.`,
+        ])
+      })
     })
   })
 })

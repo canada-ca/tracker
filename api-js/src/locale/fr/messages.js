@@ -46,6 +46,7 @@
     'Unable to remove domain. Please try again.': 'todo',
     'Unable to remove organization. Please try again.': 'todo',
     'Unable to reset password. Please try again.': 'todo',
+    'Unable to retrieve {0} for domain: {domain}.': 'todo',
     'Unable to send TFA code, please try again.': 'todo',
     'Unable to sign in, please try again.': 'todo',
     'Unable to sign up. Please try again.': 'todo',
