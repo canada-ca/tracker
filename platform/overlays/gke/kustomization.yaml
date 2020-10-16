@@ -6,18 +6,20 @@ resources:
 - certificate.yaml
 - letsencrypt-issuer.yaml
 - knative/config/domain-config.yaml
+- knative/config/queues.yaml
 - knative/config/config.yaml
 - knative/config/autoscan.yaml
 - knative/monitoring/prometheus.yaml
+- knative/monitoring/loki-stack.yaml
 - knative/monitoring/grafana/grafana.yaml
 - http-01-challenge-destination-rule.yaml
 - postgres-endpoint.yaml
 - postgres-service.yaml
 images:
 - name: gcr.io/track-compliance/api
-  newTag: master-9d2e21e
+  newTag: master-eb7d789
 - name: gcr.io/track-compliance/frontend
-  newTag: master-ff30cab
+  newTag: master-030aabe
 patchesStrategicMerge:
 - tracker-api-deployment.yaml
 - tracker-frontend-deployment.yaml

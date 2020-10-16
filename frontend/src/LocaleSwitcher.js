@@ -1,9 +1,10 @@
 import React from 'react'
 import { useLingui } from '@lingui/react'
 import { locales, activate } from './i18n.config'
-import { Box, PseudoBox, VisuallyHidden } from '@chakra-ui/core'
+import svgGlobe from './images/vector-globe.svg'
+import { Box, PseudoBox, VisuallyHidden, Image } from '@chakra-ui/core'
 
-const Toggler = (props) => {
+const Toggler = props => {
   const { locale } = props // eslint-disable-line
   return (
     <PseudoBox
@@ -12,25 +13,34 @@ const Toggler = (props) => {
       padding={0}
       onClick={() => activate(locale)}
       _focus={{
-        outline: `3px solid #ffbf47`,
+        outline: `3px solid accent`,
       }}
-      color="blue.600"
+      bg="primary"
+      color="#fff"
     >
       <VisuallyHidden>{locales[locale]}</VisuallyHidden>
       <PseudoBox
         aria-hidden
-        fontSize="lg"
+        fontSize="sm"
+        pl={2}
+        py={1}
+        textTransform="uppercase"
         d={{ base: 'none', md: 'flex' }}
         alignItems="center"
         justifyContent="center"
+        _hover={{ color: 'accent', border: '1px solid', borderColor: 'accent' }}
       >
         {locales[locale]}
+        <Image src={svgGlobe} px={2} alt={'SVG Globe'} />
       </PseudoBox>
       <PseudoBox
         aria-hidden
         d={{ base: 'flex', md: 'none' }}
         bg="gray.100"
+        color="primary"
         textTransform="uppercase"
+        fontWeight="bold"
+        fontSize="lg"
         size={10}
         alignItems="center"
         justifyContent="center"

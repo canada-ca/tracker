@@ -1,7 +1,13 @@
 import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
-import { useTable, usePagination, useSortBy } from 'react-table'
-import { array, string } from 'prop-types'
+import {
+  useTable,
+  usePagination,
+  useSortBy,
+  useFilters,
+  useGlobalFilter,
+} from 'react-table'
+import { array, bool, string } from 'prop-types'
 import {
   Box,
   Button,
@@ -9,14 +15,18 @@ import {
   Icon,
   IconButton,
   Input,
+  Link,
   Select,
   Stack,
   Text,
 } from '@chakra-ui/core'
+import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 import WithPseudoBox from './withPseudoBox'
+import { slugify } from './slugify'
+import ReactTableGlobalFilter from './ReactTableGlobalFilter'
 
 const Table = styled.table`
 width: calc(100% - 2px);
@@ -104,7 +114,16 @@ td, th {
 `
 
 function DmarcReportTable({ ...props }) {
-  const { data, columns, title, initialSort } = props
+  const {
+    data,
+    columns,
+    title,
+    initialSort,
+    hideTitleButton,
+    linkColumns,
+    prependLink,
+    appendLink,
+  } = props
   const [show, setShow] = React.useState(true)
   const { i18n } = useLingui()
 
@@ -131,6 +150,9 @@ function DmarcReportTable({ ...props }) {
     setPageSize,
     flatHeaders,
     state: { pageIndex, pageSize },
+    preGlobalFilteredRows,
+    setGlobalFilter,
+    state,
   } = useTable(
     {
       columns,
@@ -140,6 +162,8 @@ function DmarcReportTable({ ...props }) {
         pageSize: defaultPageSize,
       },
     },
+    useFilters,
+    useGlobalFilter,
     useSortBy,
     usePagination,
   )
@@ -156,12 +180,55 @@ function DmarcReportTable({ ...props }) {
 
   const wrapperRef = useRef(null)
 
+  const titleButtonElement = !hideTitleButton ? (
+    <Button bg="primary" color="white" onClick={handleShow} width="100%">
+      {title}
+    </Button>
+  ) : (
+    ''
+  )
+
+  // Render cell with link when required (external or internal)
+  // Using ternary to get rid of unnecessary checks to linkColumns if
+  // linkColumns is empty
+  const renderLinkableCell = linkColumns
+    ? (cell) => {
+        for (let i = 0; i < linkColumns.length; i++) {
+          if (linkColumns[i].column === cell.column.id) {
+            if (linkColumns[i].isExternal) {
+              return (
+                // TODO: Check for http[s]? and www before prepending
+                <Link href={`https://www.${cell.value}`} isExternal={true}>
+                  {cell.render('Cell')}
+                </Link>
+              )
+            } else {
+              return (
+                <Link
+                  as={RouteLink}
+                  to={`${prependLink}${slugify(cell.value)}${appendLink}`}
+                >
+                  {cell.render('Cell')}
+                </Link>
+              )
+            }
+          }
+        }
+        return cell.render('Cell')
+      }
+    : (cell) => cell.render('Cell')
+
   return (
     <Box ref={wrapperRef}>
-      <Button bg="gray.700" color="white" onClick={handleShow} width="100%">
-        {title}
-      </Button>
+      {titleButtonElement}
       <Collapse isOpen={show}>
+        <ReactTableGlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={state.globalFilter}
+          setGlobalFilter={setGlobalFilter}
+          mt="4px"
+          mb="4px"
+        />
         <Box width="100%" overflowX="auto">
           <Table {...getTableProps()} flatHeaders={flatHeaders}>
             <thead>
@@ -181,6 +248,7 @@ function DmarcReportTable({ ...props }) {
                           {...column.getHeaderProps(
                             column.getSortByToggleProps(),
                           )}
+                          style={{ textAlign: 'center' }}
                         >
                           {column.render('Header')}
                           <span>
@@ -211,8 +279,9 @@ function DmarcReportTable({ ...props }) {
                         <td
                           key={`${title}:${rowIndex}:${cellIndex}`}
                           {...cell.getCellProps()}
+                          style={cell.column.style}
                         >
-                          {cell.render('Cell')}
+                          {renderLinkableCell(cell)}
                         </td>
                       )
                     })}
@@ -266,6 +335,21 @@ function DmarcReportTable({ ...props }) {
                 icon="arrow-right"
                 aria-label="Go to last page"
               />
+              <Stack isInline align="center" spacing="4px">
+                <Box>
+                  <label htmlFor="goTo">
+                    <Trans>Go to page:</Trans>
+                  </label>
+                </Box>
+                <Input
+                  id="goTo"
+                  width="6rem"
+                  value={goToPageValue}
+                  onChange={(event) => {
+                    handleGoToPageChange(event)
+                  }}
+                />
+              </Stack>
               <Text>
                 <Trans>
                   Page {pageIndex + 1} of {pageOptions.length}
@@ -273,16 +357,6 @@ function DmarcReportTable({ ...props }) {
               </Text>
             </Stack>
             <Stack spacing="1em" isInline align="center" flexWrap="wrap">
-              <Text>
-                <Trans>Go to page:</Trans>
-              </Text>
-              <Input
-                width="6rem"
-                value={goToPageValue}
-                onChange={(event) => {
-                  handleGoToPageChange(event)
-                }}
-              />
               <Select
                 value={pageSize}
                 onChange={(e) => {
@@ -291,7 +365,7 @@ function DmarcReportTable({ ...props }) {
                 }}
                 width="fit-content"
               >
-                {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                {[5, 10, 20].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
                     {i18n._(t`Show ${pageSize}`)}
                   </option>
@@ -310,6 +384,10 @@ DmarcReportTable.propTypes = {
   columns: array.isRequired,
   title: string.isRequired,
   initialSort: array.isRequired,
+  hideTitleButton: bool,
+  linkColumns: array,
+  prependLink: string,
+  appendLink: string,
 }
 
 export default WithPseudoBox(DmarcReportTable)

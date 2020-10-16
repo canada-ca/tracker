@@ -10,10 +10,10 @@ import {
   InputGroup,
   Icon,
   Spinner,
-  Button,
   Box,
   Stack,
   FormLabel,
+  IconButton,
 } from '@chakra-ui/core'
 import WithPseudoBox from './withPseudoBox'
 import { useField } from 'formik'
@@ -87,7 +87,6 @@ function PasswordConfirmation({
                 <Spinner size="sm" color="gray.300" />
               ) : (
                 <Icon
-                  role="passwordIcon"
                   name={icon}
                   color={
                     icon === 'lock'
@@ -105,15 +104,14 @@ function PasswordConfirmation({
               placeholder={i18n._(t`Password`)}
               type={passwordShow ? 'text' : 'password'}
             />
-            <InputRightElement width="4.5rem">
-              <Button
-                id="passShowButton"
-                h="1.75rem"
-                size="sm"
+            <InputRightElement width="width.4">
+              <IconButton
+                id="showPassword"
+                aria-label={passwordShow ? 'hide password' : 'show password'}
+                h="buttons.lg"
                 onClick={handlePasswordShow}
-              >
-                <Icon name={passwordShow ? 'view-off' : 'view'} />
-              </Button>
+                icon={passwordShow ? 'view-off' : 'view'}
+              />
             </InputRightElement>
           </InputGroup>
           <FormErrorMessage>{passwordMeta.error}</FormErrorMessage>
@@ -151,15 +149,14 @@ function PasswordConfirmation({
               placeholder={i18n._(t`Confirm password`)}
               type={confirmShow ? 'text' : 'password'}
             />
-            <InputRightElement width="4.5rem">
-              <Button
-                id="confShowButton"
-                h="1.75rem"
-                size="sm"
+            <InputRightElement width="width.4">
+              <IconButton
+                id="showPasswordConfirm"
+                aria-label={confirmShow ? 'hide password' : 'show password'}
+                h="buttons.lg"
                 onClick={handleConfirmShow}
-              >
-                <Icon name={confirmShow ? 'view-off' : 'view'} />
-              </Button>
+                icon={confirmShow ? 'view-off' : 'view'}
+              />
             </InputRightElement>
           </InputGroup>
 

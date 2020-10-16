@@ -13,19 +13,20 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/DmarcReportPage.js:254
-#: src/LandingPage.js:24
-#: src/OrganizationDetails.js:133
+#: src/DomainsPage.js:69
+#: src/LandingPage.js:25
+#: src/OrganizationSummary.js:26
+#: src/Organizations.js:81
 msgid "*All data represented is mocked for demonstration purposes"
 msgstr "*Toutes les données représentées sont simulées à des fins de démonstration"
 
-#: src/AdminPage.js:106
+#: src/AdminPage.js:108
 msgid "*search bars do not actively search databases currently. They are used to demonstrate the 'add' button feature"
 msgstr "*Les barres de recherche ne recherchent pas activement les bases de données actuellement. Elles sont utilisées pour démontrer la fonction du bouton 'Ajouter'"
 
-#: src/UserCard.js:41
+#: src/UserCard.js:44
 msgid "2FA"
-msgstr "2FA"
+msgstr ""
 
 #: src/guidanceTagConstants.js:5
 msgid "3.2.2 Third Parties and DKIM"
@@ -71,7 +72,8 @@ msgstr "A.5 Tenir les éléments à jour"
 msgid "A.5.3 Rotate DKIM Keys"
 msgstr "A.5.3 Assurer la rotation des clés DKIM"
 
-#: src/UserList.js:230
+#: src/UserList.js:221
+#: src/UserList.js:290
 msgid "ADMIN"
 msgstr "ADMIN"
 
@@ -107,15 +109,19 @@ msgstr "La liste de chiffrement acceptée contient le chiffrement 3DES à blocs 
 msgid "Accepted cipher list contains RC4 stream cipher, as prohibited by BOD 18-01"
 msgstr "La liste de chiffrement acceptée contient le chiffrement de flux RC4, tel qu'interdit par le BOD 18-01"
 
-#: src/UserPage.js:74
+#: src/UserPage.js:87
+msgid "Account Active"
+msgstr "Compte Actif"
+
+#: src/UserPage.js:73
 msgid "Account Details"
 msgstr "Détails du compte"
 
-#: src/CreateUserPage.js:71
+#: src/CreateUserPage.js:73
 msgid "Account created."
 msgstr "Compte créé"
 
-#: src/AdminDomains.js:126
+#: src/AdminDomains.js:235
 msgid "Add Domain"
 msgstr "Ajouter un domaine"
 
@@ -143,39 +149,57 @@ msgstr "Ajouter un domaine"
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
-#: src/ForgotPasswordPage.js:40
+#: src/UserPage.js:84
+msgid "Administrative Account"
+msgstr "Compte Administratif"
+
+#: src/ForgotPasswordPage.js:42
 msgid "An email was sent with a link to reset your password"
 msgstr "Un courriel a été envoyé avec un lien pour réinitialiser votre mot de passe"
 
-#: src/EditableUserDisplayName.js:48
+#: src/EditableUserDisplayName.js:49
 msgid "An error occurred while updating your display name."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre nom d'affichage."
 
-#: src/EditableUserEmail.js:48
+#: src/EditableUserEmail.js:50
 msgid "An error occurred while updating your email address."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre adresse électronique."
 
-#: src/EditableUserLanguage.js:29
+#: src/EditableUserLanguage.js:30
 msgid "An error occurred while updating your language."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre langue."
 
-#: src/EditableUserPassword.js:48
+#: src/EditableUserPassword.js:49
 msgid "An error occurred while updating your password."
 msgstr "Une erreur s'est produite lors de la mise à jour de votre mot de passe."
 
-#: src/CreateUserPage.js:52
-#: src/SignInPage.js:39
+#: src/AdminDomains.js:102
+#: src/AdminDomains.js:134
+#: src/AdminDomains.js:165
+#: src/AdminDomains.js:215
+#: src/CreateUserPage.js:53
+#: src/SignInPage.js:40
 #: src/TwoFactorAuthenticatePage.js:30
+#: src/UserList.js:90
+#: src/UserList.js:162
 msgid "An error occurred."
 msgstr "Une erreur s'est produite."
 
-#: src/UserList.js:237
+#: src/UserList.js:298
 msgid "Apply"
 msgstr "Appliquer"
+
+#: src/months.js:7
+msgid "April"
+msgstr "Avril"
 
 #: src/guidanceTagConstants.js:420
 msgid "As per RFC section 3.6.1, Testing flag t=y means Verifiers MUST treat messages as unsigned (i.e. DKIM is not enabled), so this flag should not be enabled."
 msgstr "Conformément à la section 3.6.1 du RFC, l'indicateur de test t=y signifie que les vérificateurs DOIVENT traiter les messages comme non signés (c'est-à-dire que DKIM n'est pas activé), donc cet indicateur ne doit pas être activé."
+
+#: src/months.js:11
+msgid "August"
+msgstr "Août"
 
 #: src/guidanceTagConstants.js:37
 msgid "B.1.1 SPF Records"
@@ -197,8 +221,9 @@ msgstr "B.2.2 Considérations cryptographiques"
 msgid "B.3.1 DMARC Records"
 msgstr "B.3.1 Enregistrements DMARC"
 
-#: src/CreateUserPage.js:159
-#: src/ForgotPasswordPage.js:105
+#: src/CreateUserPage.js:163
+#: src/ForgotPasswordPage.js:106
+#: src/QRcodePage.js:61
 msgid "Back"
 msgstr "Retour"
 
@@ -214,7 +239,7 @@ msgstr "Le CCCS ajouté à la liste des expéditeurs de la police scientifique"
 msgid "CNAME-DMARC"
 msgstr "CNAME-DMARC"
 
-#: src/LandingPage.js:14
+#: src/WelcomeMessage.js:22
 msgid "Canadians rely on the Government of Canada to provide secure digital services. A new policy notice guides government websites to adopt good web security practices. Track how government sites are becoming more secure."
 msgstr "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre des services en ligne sécurisés. Un nouvel avis de politique vise à assurer que les sites gouvernementaux soient conformes aux bonnes pratiques en matière de sécurité Web. Voyez comment les sites gouvernementaux deviennent plus sécuritaires."
 
@@ -222,7 +247,7 @@ msgstr "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre
 msgid "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
 msgstr "Le CCCS ajouté à la liste des expéditeurs de la police scientifique"
 
-#: src/OrganizationDetails.js:84
+#: src/DomainCard.js:26
 msgid "Certificate Use"
 msgstr "Utilisation des Certificats"
 
@@ -230,8 +255,8 @@ msgstr "Utilisation des Certificats"
 msgid "Certificate chain signed using SHA-256/SHA-384/AEAD"
 msgstr "Chaîne de certificats signée au moyen de SHA-256/SHA-384/AEAD"
 
-#: src/EditableUserPassword.js:136
-#: src/ResetPasswordPage.js:101
+#: src/EditableUserPassword.js:145
+#: src/ResetPasswordPage.js:100
 msgid "Change Password"
 msgstr "Changer le mot de passe"
 
@@ -239,25 +264,27 @@ msgstr "Changer le mot de passe"
 #~ msgid "Change your password below by entering and confirming a new password."
 #~ msgstr "Modifiez votre mot de passe ci-dessous en entrant et en confirmant un nouveau mot de passe."
 
-#: src/EditableUserDisplayName.js:57
+#: src/EditableUserDisplayName.js:59
 msgid "Changed User Display Name"
 msgstr "Changement du nom d'affichage de l'utilisateur"
 
-#: src/EditableUserEmail.js:57
+#: src/EditableUserEmail.js:61
 msgid "Changed User Email"
 msgstr "Changement d'adresse électronique de l'utilisateur"
 
-#: src/EditableUserLanguage.js:38
+#: src/EditableUserLanguage.js:40
 msgid "Changed User Language"
 msgstr "Changement de la langue de l'utilisateur"
 
-#: src/EditableUserPassword.js:57
+#: src/EditableUserPassword.js:59
 msgid "Changed User Password"
 msgstr "Modification du mot de passe de l'utilisateur"
 
-#: src/EditableUserDisplayName.js:153
-#: src/EditableUserEmail.js:153
-#: src/EditableUserPassword.js:176
+#: src/AdminDomains.js:380
+#: src/AdminDomains.js:430
+#: src/EditableUserDisplayName.js:164
+#: src/EditableUserEmail.js:166
+#: src/EditableUserPassword.js:185
 msgid "Close"
 msgstr "Fermer"
 
@@ -285,9 +312,11 @@ msgstr "Le champ de code ne doit pas être vide"
 #~ msgid "Configure the server to use the same domain for the DKIM header as for the \"header from\" address."
 #~ msgstr "Configurez le serveur pour qu'il utilise le même domaine pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/EditableUserDisplayName.js:146
-#: src/EditableUserEmail.js:146
-#: src/EditableUserPassword.js:169
+#: src/AdminDomains.js:370
+#: src/AdminDomains.js:420
+#: src/EditableUserDisplayName.js:155
+#: src/EditableUserEmail.js:157
+#: src/EditableUserPassword.js:176
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -295,7 +324,7 @@ msgstr "Confirmer"
 #~ msgid "Confirm Current Password"
 #~ msgstr "Confirmer le mot de passe actuel"
 
-#: src/EditableUserPassword.js:156
+#: src/EditableUserPassword.js:164
 msgid "Confirm New Password:"
 msgstr "Confirmer le nouveau mot de passe :"
 
@@ -308,36 +337,44 @@ msgstr "Confirmer le nouveau mot de passe :"
 msgid "Confirm Password:"
 msgstr "Confirmez le mot de passe :"
 
-#: src/PasswordConfirmation.js:151
+#: src/PasswordConfirmation.js:149
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
+
+#: src/AdminDomains.js:403
+msgid "Confirm removal of domain:"
+msgstr "Confirmer la suppression du domaine :"
 
 #: src/guidanceTagConstants.js:204
 msgid "Contact 3rd party"
 msgstr "Contacter une tierce partie"
 
-#: src/DmarcReportPage.js:128
+#: src/DmarcReportPage.js:213
 msgid "Country Code"
 msgstr "Code pays"
 
-#: src/CreateUserPage.js:150
-#: src/SignInPage.js:110
+#: src/CreateUserPage.js:152
+#: src/SignInPage.js:116
 msgid "Create Account"
 msgstr "Créer un compte"
 
-#: src/CreateUserPage.js:128
+#: src/CreateUserPage.js:130
 msgid "Create an account by entering an email and password."
 msgstr "Créez un compte en entrant un courriel et un mot de passe."
 
-#: src/EditableUserDisplayName.js:126
+#: src/EditableUserDisplayName.js:135
 msgid "Current Display Name:"
 msgstr "Nom de l'affichage actuel :"
 
-#: src/EditableUserEmail.js:126
+#: src/AdminDomains.js:328
+msgid "Current Domain URL:"
+msgstr "URL du domaine actuel :"
+
+#: src/EditableUserEmail.js:137
 msgid "Current Email:"
 msgstr "Courriel actuel :"
 
-#: src/EditableUserPassword.js:144
+#: src/EditableUserPassword.js:152
 msgid "Current Password:"
 msgstr "Mot de passe actuel :"
 
@@ -359,12 +396,12 @@ msgstr "Les CNAME DKIM n'existent pas, mais MX pointe vers *.onmicrosoft.com et 
 #~ msgid "DKIM Domain Alignment Failed"
 #~ msgstr "Échec de l'alignement du domaine DKIM"
 
-#: src/DmarcReportPage.js:125
+#: src/DmarcReportPage.js:210
 msgid "DKIM Domains"
 msgstr "Domaines DKIM"
 
-#: src/DmarcReportPage.js:186
-#: src/DmarcReportPage.js:311
+#: src/DmarcReportPage.js:271
+#: src/DmarcReportPage.js:346
 msgid "DKIM Failures by IP Address"
 msgstr "Défaillances DKIM par adresse IP"
 
@@ -372,12 +409,12 @@ msgstr "Défaillances DKIM par adresse IP"
 msgid "DKIM Flag t"
 msgstr "DKIM Flag t"
 
-#: src/DmarcReportPage.js:203
-#: src/DmarcReportPage.js:318
+#: src/DmarcReportPage.js:288
+#: src/DmarcReportPage.js:353
 msgid "DKIM Misalignment by IP Address"
 msgstr "Désalignement DKIM par adresse IP"
 
-#: src/DmarcReportPage.js:126
+#: src/DmarcReportPage.js:211
 msgid "DKIM Selectors"
 msgstr "Sélecteurs DKIM"
 
@@ -417,17 +454,22 @@ msgstr "DKIM-missing-mx-O365"
 msgid "DKIM-value-invalid"
 msgstr "DKIM-value-invalid"
 
-#: src/DmarcReportPage.js:220
-#: src/DmarcReportPage.js:325
+#: src/DmarcReportPage.js:305
+#: src/DmarcReportPage.js:360
 msgid "DMARC Failures by IP Address"
 msgstr "Défaillances du DMARC par adresse IP"
+
+#: src/DmarcByDomainPage.js:96
+#: src/DmarcByDomainPage.js:179
+msgid "DMARC Messages"
+msgstr "Messages de la DMARC"
 
 #: src/DmarcReportGuidance.js:422
 #: src/DmarcReportGuidance.js:443
 #~ msgid "DMARC Policy Applied"
 #~ msgstr "Politique de la DMARC appliquée"
 
-#: src/DmarcReportPage.js:260
+#: src/App.js:61
 msgid "DMARC Report"
 msgstr "Rapport de la DMARC"
 
@@ -439,20 +481,24 @@ msgstr "DMARC-GC"
 msgid "DMARC-missing"
 msgstr "DMARC-missing"
 
-#: src/DmarcReportPage.js:130
+#: src/DmarcReportPage.js:215
 msgid "DNS Host"
 msgstr "Hôte DNS"
 
+#: src/months.js:15
+msgid "December"
+msgstr "Décembre"
+
 #: src/DmarcReportPage.js:261
-msgid "Description of DMARC report"
-msgstr "Description du rapport de la DMARC"
+#~ msgid "Description of DMARC report"
+#~ msgstr "Description du rapport de la DMARC"
 
 #: src/DisplayNameField.js:48
 msgid "Display Name"
 msgstr "Nom d'affichage"
 
 #: src/DisplayNameField.js:32
-#: src/EditableUserDisplayName.js:77
+#: src/EditableUserDisplayName.js:80
 msgid "Display Name:"
 msgstr "Nom d'affichage :"
 
@@ -460,25 +506,29 @@ msgstr "Nom d'affichage :"
 msgid "Display name cannot be empty"
 msgstr "Le nom d'affichage ne peut pas être vide"
 
-#: src/SummaryGroup.js:78
+#: src/SummaryGroup.js:83
 msgid "Dmarc fail"
 msgstr "Dmarc échoue"
 
-#: src/SummaryGroup.js:74
+#: src/SummaryGroup.js:79
 msgid "Dmarc partial"
 msgstr "Dmarc partiel"
 
-#: src/SummaryGroup.js:70
+#: src/SummaryGroup.js:75
 msgid "Dmarc pass"
 msgstr "Passe Dmarc"
 
-#: src/OrganizationDetails.js:60
+#: src/DmarcByDomainPage.js:59
 msgid "Domain"
 msgstr "Domaine"
 
-#: src/AdminDomains.js:102
+#: src/AdminDomains.js:195
 msgid "Domain List"
 msgstr "Liste des domaines"
+
+#: src/AdminDomains.js:112
+msgid "Domain added"
+msgstr "Domaine ajouté"
 
 #: src/guidanceTagConstants.js:523
 msgid "Domain defaults to HTTPS, but eventually redirects to HTTP"
@@ -492,6 +542,10 @@ msgstr "Le domaine ne passe pas par défaut en HTTPS"
 msgid "Domain does not enforce HTTPS"
 msgstr "Le domaine n'applique pas le HTTPS"
 
+#: src/AdminDomains.js:176
+msgid "Domain from {orgName} successfully updated"
+msgstr "Le domaine de {orgName} a été mis à jour avec succès"
+
 #: src/guidanceTagConstants.js:547
 msgid "Domain not pre-loaded by HSTS"
 msgstr "Domaine non préchargé par le HSTS"
@@ -500,30 +554,54 @@ msgstr "Domaine non préchargé par le HSTS"
 msgid "Domain not pre-loaded by HSTS, but is pre-load ready"
 msgstr "Le domaine n'est pas préchargé par le HSTS, mais est prêt à être préchargé"
 
+#: src/AdminDomains.js:145
+msgid "Domain removed"
+msgstr "Domaine supprimé"
+
+#: src/AdminDomains.js:146
+msgid "Domain removed from {orgName}"
+msgstr "Domaine supprimé de {orgName}."
+
+#: src/AdminDomains.js:175
+msgid "Domain updated"
+msgstr "Domaine mis à jour"
+
+#: src/fieldRequirements.js:30
+msgid "Domain url field must not be empty"
+msgstr "Le champ de l'url du domaine ne doit pas être vide"
+
 #: src/guidanceTagConstants.js:254
 msgid "Domain uses potentially-outsourced DMARC service"
 msgstr "Le domaine utilise un service DMARC potentiellement externalisé"
 
+#: src/AdminDomains.js:113
+msgid "Domain was added to {orgName}"
+msgstr "Le domaine a été ajouté à {orgName}"
+
 #: src/Domain.js:23
+#: src/DomainCard.js:69
 msgid "Domain:"
 msgstr "Domaine:"
 
-#: src/App.js:58
-#: src/DomainsPage.js:69
+#: src/OrganizationDetails.js:81
 msgid "Domains"
 msgstr "Domaines"
 
-#: src/EditableUserDisplayName.js:84
-#: src/EditableUserEmail.js:84
-#: src/EditableUserPassword.js:96
+#: src/EditableUserDisplayName.js:93
+#: src/EditableUserEmail.js:95
+#: src/EditableUserPassword.js:105
 msgid "Edit"
 msgstr "Edit"
 
-#: src/EditableUserDisplayName.js:120
+#: src/EditableUserDisplayName.js:129
 msgid "Edit Display Name"
 msgstr "Modifier le nom d'affichage"
 
-#: src/EditableUserEmail.js:120
+#: src/AdminDomains.js:322
+msgid "Edit Domain Details"
+msgstr "Modifier les détails d'un domaine"
+
+#: src/EditableUserEmail.js:131
 msgid "Edit Email"
 msgstr "Modifier l'e-mail"
 
@@ -540,33 +618,38 @@ msgstr "Courriel"
 #~ msgid "Email Address:"
 #~ msgstr "Adresse électronique :"
 
-#: src/SummaryGroup.js:66
+#: src/OrganizationCard.js:82
+#: src/SummaryGroup.js:71
 msgid "Email Configuration"
 msgstr "Configuration du courriel"
 
-#: src/ScanCard.js:15
+#: src/ScanCard.js:16
 msgid "Email Scan Results"
 msgstr "Résultats de l'analyse des courriels"
 
-#: src/ForgotPasswordPage.js:38
+#: src/ForgotPasswordPage.js:40
 msgid "Email Sent"
 msgstr "Courriel envoyé"
 
-#: src/ForgotPasswordPage.js:18
+#: src/ForgotPasswordPage.js:19
 #: src/fieldRequirements.js:6
 msgid "Email cannot be empty"
 msgstr "Le courriel ne peut être vide"
 
-#: src/SummaryGroup.js:67
+#: src/UserList.js:101
+msgid "Email invitation sent to {addedUserName}"
+msgstr "Invitation par courrier électronique envoyée à jim@hotmail.com"
+
+#: src/SummaryGroup.js:72
 msgid "Email security settings summary"
 msgstr "Résumé des paramètres de sécurité du courriel"
 
-#: src/EditableUserEmail.js:77
+#: src/EditableUserEmail.js:82
 #: src/EmailField.js:26
 msgid "Email:"
 msgstr "Courrier électronique :"
 
-#: src/UserPage.js:97
+#: src/UserPage.js:100
 msgid "Enable 2FA"
 msgstr "Activer la 2FA"
 
@@ -578,11 +661,11 @@ msgstr "Activer la 2FA"
 #~ msgid "Ensure the SPF record is present and valid."
 #~ msgstr "Assurez-vous que le dossier du SPF est présent et valide."
 
-#: src/EditableUserPassword.js:149
+#: src/EditableUserPassword.js:157
 msgid "Enter and confirm your new password below:"
 msgstr "Entrez et confirmez votre nouveau mot de passe ci-dessous :"
 
-#: src/ResetPasswordPage.js:86
+#: src/ResetPasswordPage.js:88
 msgid "Enter and confirm your new password."
 msgstr "Entrez et confirmez votre nouveau mot de passe."
 
@@ -590,18 +673,46 @@ msgstr "Entrez et confirmez votre nouveau mot de passe."
 msgid "Enter two factor code"
 msgstr "Entrez le code à deux facteurs"
 
-#: src/ForgotPasswordPage.js:78
+#: src/ForgotPasswordPage.js:80
 msgid "Enter your user account's verified email address and we will send you a password reset link."
 msgstr "Saisissez l'adresse électronique vérifiée de votre compte d'utilisateur et nous vous enverrons un lien pour réinitialiser votre mot de passe."
 
-#: src/DmarcReportPage.js:124
+#: src/DmarcReportPage.js:209
 msgid "Envelope From"
 msgstr "Enveloppe De"
 
-#: src/DmarcReportPage.js:89
-#: src/DmarcReportPage.js:272
+#: src/DmarcByDomainPage.js:43
+msgid "Error while querying for DMARC report summary table"
+msgstr "Erreur lors de la recherche du tableau récapitulatif du rapport DMARC"
+
+#: src/DmarcReportPage.js:170
+msgid "Error while querying for summary bar graph"
+msgstr "Erreur lors de la recherche d'un graphique à barres récapitulatif"
+
+#: src/DmarcReportPage.js:234
+#~ msgid "Error while querying for summary card"
+#~ msgstr "Erreur lors de la recherche de la fiche récapitulative"
+
+#: src/DmarcReportPage.js:374
+msgid "Error while querying for summary tables"
+msgstr "Erreur lors de la recherche de tableaux récapitulatifs"
+
+#: src/DmarcReportPage.js:143
+#: src/fixtures/summaryListData.js:171
 msgid "Fail"
 msgstr "Échec"
+
+#: src/DmarcByDomainPage.js:75
+msgid "Fail DKIM %"
+msgstr "Échec DKIM %"
+
+#: src/DmarcByDomainPage.js:81
+msgid "Fail SPF %"
+msgstr "Échec du SPF %"
+
+#: src/months.js:5
+msgid "February"
+msgstr "Février"
 
 #: src/guidanceTagConstants.js:102
 #: src/guidanceTagConstants.js:109
@@ -629,7 +740,7 @@ msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS :"
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique :"
 
-#: src/SignInPage.js:91
+#: src/SignInPage.js:94
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -639,12 +750,20 @@ msgstr "Oublié votre mot de passe?"
 #~ msgid "Forwarding by an intermediate server."
 #~ msgstr "Redirection par un serveur intermédiaire."
 
-#: src/DmarcReportPage.js:136
-#: src/DmarcReportPage.js:290
+#: src/DmarcByDomainPage.js:87
+msgid "Full Fail %"
+msgstr "Échec total %"
+
+#: src/DmarcByDomainPage.js:69
+msgid "Full Pass %"
+msgstr "Passage complet %"
+
+#: src/DmarcReportPage.js:221
+#: src/DmarcReportPage.js:325
 msgid "Fully Aligned by IP Address"
 msgstr "Entièrement aligné par adresse IP"
 
-#: src/DmarcReportTable.js:277
+#: src/DmarcReportTable.js:341
 #: src/SummaryTable.js:178
 msgid "Go to page:"
 msgstr "Aller à la page"
@@ -670,7 +789,7 @@ msgstr "Les domaines du gouvernement du Canada sont soumis aux directives du SCT
 msgid "Guidance:"
 msgstr "Orientation :"
 
-#: src/OrganizationDetails.js:72
+#: src/DomainCard.js:23
 msgid "HSTS Preloaded"
 msgstr "HSTS Préchargé"
 
@@ -758,8 +877,7 @@ msgstr ""
 #~ msgid "Hide Guidance"
 #~ msgstr "Masquer les conseils"
 
-#: src/App.js:55
-#: src/QRcodePage.js:67
+#: src/App.js:57
 msgid "Home"
 msgstr "Accueil"
 
@@ -778,11 +896,15 @@ msgstr ""
 msgid "IT PIN. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac ante eu sem tincidunt dictum. In hendrerit consectetur tellus, ac."
 msgstr ""
 
+#: src/OrganizationSummary.js:13
+msgid "Internet facing services:"
+msgstr "Services d'accès à Internet:"
+
 #: src/Organization.js:19
 msgid "Internet facing services: {domainCount}"
 msgstr "Services d'accès à Internet: {domainCount}"
 
-#: src/ForgotPasswordPage.js:19
+#: src/ForgotPasswordPage.js:20
 #: src/fieldRequirements.js:7
 msgid "Invalid email"
 msgstr "Courriel non valide"
@@ -795,33 +917,61 @@ msgstr "Pourcentage non valable"
 msgid "Invalid public key"
 msgstr "Clé publique invalide"
 
-#: src/UserList.js:178
+#: src/UserList.js:235
 msgid "Invite User"
 msgstr "Inviter l'utilisateur"
 
+#: src/months.js:4
+msgid "January"
+msgstr "Janvier"
+
+#: src/months.js:10
+msgid "July"
+msgstr "Juillet"
+
+#: src/months.js:9
+msgid "June"
+msgstr "Juin"
+
 #: src/DmarcReportSummaryGraph.js:66
-msgid "LAST30DAYS"
-msgstr "30DERNIERSJOURS"
+msgid "L-30-D"
+msgstr ""
 
 #: src/EditableUserLanguage.js:57
+#: src/DmarcReportSummaryGraph.js:66
+#~ msgid "LAST30DAYS"
+#~ msgstr "30DERNIERSJOURS"
+
+#: src/EditableUserLanguage.js:60
+#: src/LanguageSelect.js:21
 msgid "Language:"
-msgstr "La langue :"
+msgstr "La langue:"
+
+#: src/DmarcByDomainPage.js:114
+#: src/DmarcReportPage.js:73
+msgid "Last 30 Days"
+msgstr "Les 30 derniers jours"
 
 #: src/Domain.js:40
+#: src/DomainCard.js:78
 msgid "Last scanned:"
 msgstr "Dernier scan:"
 
-#: src/CreateUserPage.js:85
-#: src/DomainsPage.js:53
-#: src/ForgotPasswordPage.js:53
-#: src/OrganizationDetails.js:53
-#: src/Organizations.js:51
-#: src/QRcodePage.js:21
-#: src/ResetPasswordPage.js:52
-#: src/SignInPage.js:57
-#: src/SummaryGroup.js:36
+#: src/CreateUserPage.js:88
+#: src/DmarcByDomainPage.js:160
+#: src/DmarcReportPage.js:64
+#: src/DmarcReportPage.js:168
+#: src/DmarcReportPage.js:372
+#: src/DomainsPage.js:42
+#: src/ForgotPasswordPage.js:56
+#: src/OrganizationDetails.js:56
+#: src/Organizations.js:42
+#: src/QRcodePage.js:22
+#: src/ResetPasswordPage.js:55
+#: src/SignInPage.js:59
+#: src/SummaryGroup.js:37
 #: src/TwoFactorAuthenticatePage.js:61
-#: src/UserList.js:73
+#: src/UserList.js:114
 msgid "Loading..."
 msgstr "Chargement..."
 
@@ -891,9 +1041,17 @@ msgstr ""
 msgid "Maintain deployment"
 msgstr "Maintenir le déploiement"
 
-#: src/UserPage.js:106
+#: src/UserPage.js:110
 msgid "Manage API keys"
 msgstr "Gérer les clés API"
+
+#: src/months.js:6
+msgid "March"
+msgstr "Mars"
+
+#: src/months.js:8
+msgid "May"
+msgstr "Mai"
 
 #: src/DmarcReportGuidance.js:488
 #: src/DmarcReportGuidance.js:510
@@ -912,27 +1070,41 @@ msgstr "Absent du guide - besoin v1.1"
 msgid "More than 10 lookups - Follow implementation guide"
 msgstr "Plus de 10 consultations - Suivez le guide de mise en œuvre"
 
-#: src/EditableUserDisplayName.js:133
+#: src/EditableUserDisplayName.js:142
 msgid "New Display Name:"
 msgstr "Nouveau nom d'affichage :"
 
-#: src/EditableUserEmail.js:133
+#: src/AdminDomains.js:351
+msgid "New Domain Url"
+msgstr "Nouvel Url de domaine"
+
+#: src/AdminDomains.js:345
+msgid "New Domain Url:"
+msgstr "Nouvelle URL de domaine :"
+
+#: src/EditableUserEmail.js:144
 msgid "New Email Address:"
 msgstr "Nouvelle adresse électronique :"
 
-#: src/EditableUserPassword.js:155
+#: src/EditableUserPassword.js:163
 msgid "New Password:"
 msgstr "Nouveau mot de passe :"
 
-#: src/Organizations.js:108
+#: src/AdminDomains.js:216
+msgid "New domain name cannot be empty"
+msgstr "Un nouveau nom de domaine ne peut pas être vide"
+
+#: src/DomainsPage.js:66
+#: src/Organizations.js:78
 msgid "Next"
 msgstr "Suivant"
 
-#: src/AdminDomains.js:138
+#: src/AdminDomains.js:245
+#: src/DomainsPage.js:48
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/Organizations.js:65
+#: src/Organizations.js:53
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
@@ -948,36 +1120,49 @@ msgstr "Pas de RUF définis"
 #~ msgid "No TLS"
 #~ msgstr "Pas de TLS"
 
+#: src/DmarcReportPage.js:236
+#~ msgid "No data for the current period"
+#~ msgstr "Pas de données pour la période actuelle"
+
 #: src/DomainList.js:12
 msgid "No domains scanned yet."
 msgstr "Aucun domaine n'a encore été scanné."
 
-#: src/OrganizationDetails.js:126
-msgid "No domains yet."
-msgstr "Aucun domaine pour l'instant."
+#: src/OrganizationDetails.js:118
+#~ msgid "No domains yet."
+#~ msgstr "Aucun domaine pour l'instant."
 
-#: src/UserList.js:185
+#: src/UserList.js:243
 msgid "No users in this organization"
 msgstr "Aucun utilisateur dans cette organisation"
 
-#: src/SummaryGroup.js:55
+#: src/SummaryGroup.js:56
 msgid "Non-compliant TLS"
 msgstr "TLS non conforme"
 
 #: src/Domain.js:51
+#: src/DomainCard.js:84
 msgid "Not scanned yet."
 msgstr "Pas encore scanné."
+
+#: src/months.js:14
+msgid "November"
+msgstr "Novembre"
+
+#: src/months.js:13
+msgid "October"
+msgstr "Octobre"
 
 #: src/guidanceTagConstants.js:460
 msgid "One or more ciphers in use are not compliant with guidelines"
 msgstr "Un ou plusieurs chiffres utilisés ne sont pas conformes aux lignes directrices"
 
-#: src/AdminPage.js:86
+#: src/AdminPage.js:87
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/App.js:62
-#: src/Organizations.js:59
+#: src/App.js:69
+#: src/Organizations.js:49
 msgid "Organizations"
 msgstr "Organisations"
 
@@ -1074,51 +1259,77 @@ msgstr "Page"
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: src/DmarcReportTable.js:270
+#: src/DmarcReportTable.js:354
 msgid "Page {0} of {1}"
 msgstr "Page {0} de {1}"
 
 #: src/DmarcReportPage.js:85
 #: src/DmarcReportPage.js:268
-msgid "Partial Pass"
-msgstr "Passage partiel"
+#~ msgid "Partial Pass"
+#~ msgstr "Passage partiel"
 
-#: src/DmarcReportPage.js:81
-#: src/DmarcReportPage.js:264
+#: src/SummaryGroup.js:60
+msgid "Partially-compliant TLS"
+msgstr ""
+
+#: src/DmarcReportPage.js:125
+#: src/fixtures/summaryListData.js:155
 msgid "Pass"
 msgstr "Passez"
 
-#: src/PasswordConfirmation.js:105
+#: src/DmarcReportPage.js:209
+#~ msgid "Pass DKIM Only"
+#~ msgstr "Passez DKIM uniquement"
+
+#: src/DmarcReportPage.js:137
+#: src/fixtures/summaryListData.js:165
+msgid "Pass Only DKIM"
+msgstr "Passez seulement DKIM"
+
+#: src/DmarcReportPage.js:131
+#: src/fixtures/summaryListData.js:161
+msgid "Pass Only SPF"
+msgstr "Passez seulement SPF"
+
+#: src/DmarcReportPage.js:205
+#~ msgid "Pass SPF Only"
+#~ msgstr "Passez le SPF uniquement"
+
+#: src/DmarcByDomainPage.js:166
+msgid "Pass/Fail Ratios by Domain"
+msgstr "Ratios succès/échec par domaine"
+
+#: src/PasswordConfirmation.js:104
 #: src/PasswordField.js:45
 msgid "Password"
 msgstr "Mot de passe"
 
-#: src/ResetPasswordPage.js:40
+#: src/ResetPasswordPage.js:42
 msgid "Password Updated"
 msgstr "Mot de passe mis à jour"
 
-#: src/ResetPasswordPage.js:20
+#: src/ResetPasswordPage.js:21
 #: src/fieldRequirements.js:11
 msgid "Password cannot be empty"
 msgstr "Le mot de passe ne peut pas être vide"
 
-#: src/ResetPasswordPage.js:23
+#: src/ResetPasswordPage.js:24
 #: src/fieldRequirements.js:18
 msgid "Password confirmation cannot be empty"
 msgstr "La confirmation du mot de passe ne peut pas être vide"
 
-#: src/ResetPasswordPage.js:21
+#: src/ResetPasswordPage.js:22
 #: src/fieldRequirements.js:14
 msgid "Password must be at least 12 characters long"
 msgstr "Le mot de passe doit comporter au moins 12 caractères"
 
-#: src/EditableUserPassword.js:89
+#: src/EditableUserPassword.js:92
 #: src/PasswordConfirmation.js:69
 #: src/PasswordField.js:30
 msgid "Password:"
 msgstr "Mot de passe :"
 
-#: src/ResetPasswordPage.js:24
+#: src/ResetPasswordPage.js:25
 #: src/fieldRequirements.js:19
 msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
@@ -1131,7 +1342,7 @@ msgstr "Veuillez choisir votre langue préférée"
 #~ msgid "Please enter your current password for verification."
 #~ msgstr "Veuillez entrer votre mot de passe actuel pour vérification."
 
-#: src/EditableUserPassword.js:82
+#: src/EditableUserPassword.js:85
 msgid "Please enter your current password."
 msgstr "Veuillez entrer votre mot de passe actuel."
 
@@ -1159,7 +1370,7 @@ msgstr "La politique ne s'applique à aucune partie du flux de courrier - config
 msgid "Policy applies to percentage of mailflow"
 msgstr "La politique s'applique au pourcentage du flux de courrier"
 
-#: src/SummaryGroup.js:59
+#: src/SummaryGroup.js:64
 msgid "Policy compliant TLS"
 msgstr ""
 
@@ -1181,19 +1392,20 @@ msgstr ""
 #~ msgid "Possible Resolutions"
 #~ msgstr "Résolutions possibles"
 
-#: src/App.js:48
+#: src/App.js:50
 msgid "Pre-Alpha"
 msgstr "préalpha"
 
-#: src/DmarcReportPage.js:129
+#: src/DmarcReportPage.js:214
 msgid "Prefix Org"
 msgstr "Préfixe Org"
 
-#: src/Organizations.js:93
+#: src/DomainsPage.js:62
+#: src/Organizations.js:74
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/App.js:188
+#: src/App.js:239
 msgid "Privacy"
 msgstr "Confidentialité"
 
@@ -1201,7 +1413,7 @@ msgstr "Confidentialité"
 msgid "Properly configured!"
 msgstr "Bien configuré !"
 
-#: src/OrganizationDetails.js:80
+#: src/DomainCard.js:25
 msgid "Protocols & Ciphers"
 msgstr "Protocoles et Codes"
 
@@ -1225,7 +1437,8 @@ msgstr "RSA à clé publique et longueur de clé <1024"
 msgid "Public key in use for longer than 1 year"
 msgstr "Clé publique en usage depuis plus d'un an"
 
-#: src/UserList.js:228
+#: src/UserList.js:219
+#: src/UserList.js:288
 msgid "READ"
 msgstr "LIRE"
 
@@ -1273,31 +1486,35 @@ msgstr ""
 #~ msgid "Received messages failed both SPF and DKIM, and therefore failed DMARC. The DMARC policy specified for the domain was applied to these messages."
 #~ msgstr "Les messages reçus ont échoué à la fois au SPF et au DKIM, et donc à la DMARC. La politique du DMARC spécifiée pour le domaine a été appliquée à ces messages."
 
+#: src/AdminDomains.js:397
+msgid "Remove Domain"
+msgstr "Supprimer un domaine"
+
 #: src/DmarcReportGuidance.js:146
 #~ msgid "Remove redundant SPF records."
 #~ msgstr "Supprimer les enregistrements SPF redondants."
 
-#: src/App.js:75
-msgid "Report"
-msgstr "Rapport"
+#: src/App.js:72
+#~ msgid "Report"
+#~ msgstr "Rapport"
 
 #: src/GuidanceTagDetails.js:90
 msgid "Result:"
 msgstr "Résultat"
 
-#: src/ScanCard.js:20
+#: src/ScanCard.js:22
 msgid "Results for scans of email technologies (DMARC, SPF, DKIM)."
 msgstr "Résultats des analyses des technologies du courrier électronique (DMARC, SPF, DKIM)."
 
-#: src/ScanCard.js:18
+#: src/ScanCard.js:20
 msgid "Results for scans of web technologies (SSL, HTTPS)."
 msgstr "Résultats des analyses des technologies du web (SSL, HTTPS)."
 
-#: src/UserList.js:61
+#: src/UserList.js:70
 msgid "Role updated"
 msgstr "Rôle mis à jour"
 
-#: src/UserList.js:219
+#: src/UserList.js:278
 msgid "Role:"
 msgstr "Fonction:"
 
@@ -1333,17 +1550,17 @@ msgstr ""
 #~ msgid "SPF Domain Alignment Failed"
 #~ msgstr "Échec de l'alignement des domaines du SPF"
 
-#: src/DmarcReportPage.js:131
+#: src/DmarcReportPage.js:216
 msgid "SPF Domains"
 msgstr "Domaine SPF"
 
-#: src/DmarcReportPage.js:154
-#: src/DmarcReportPage.js:297
+#: src/DmarcReportPage.js:239
+#: src/DmarcReportPage.js:332
 msgid "SPF Failures by IP Address"
 msgstr "Défaillances du SPF par adresse IP"
 
-#: src/DmarcReportPage.js:170
-#: src/DmarcReportPage.js:304
+#: src/DmarcReportPage.js:255
+#: src/DmarcReportPage.js:339
 msgid "SPF Misalignment by IP Address"
 msgstr "Désalignement du SPF par adresse IP"
 
@@ -1387,21 +1604,25 @@ msgstr ""
 msgid "SSL-rc4"
 msgstr ""
 
-#: src/EditableUserLanguage.js:89
+#: src/EditableUserLanguage.js:95
 msgid "Save Language"
 msgstr "Sauvegarder la langue"
 
-#: src/QRcodePage.js:30
+#: src/QRcodePage.js:31
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
-#: src/AdminDomains.js:111
+#: src/AdminDomains.js:203
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
-#: src/UserList.js:164
+#: src/UserList.js:207
 msgid "Search for a user"
 msgstr "Rechercher un utilisateur"
+
+#: src/ReactTableGlobalFilter.js:31
+msgid "Search:"
+msgstr "Recherche :"
 
 #: src/LanguageSelect.js:25
 msgid "Select Preferred Language"
@@ -1413,28 +1634,40 @@ msgstr "Sélectionnez votre langue préférée"
 #~ msgstr "Sélectionnez votre langue préférée"
 
 #: src/LanguageSelect.js:21
-msgid "Select Your Preferred Language:"
-msgstr "Sélectionnez votre langue préférée :"
+#~ msgid "Select Your Preferred Language:"
+#~ msgstr "Sélectionnez votre langue préférée :"
 
-#: src/AdminPage.js:65
+#: src/AdminPage.js:66
 msgid "Select an organization"
 msgstr "Sélectionnez une organisation"
 
-#: src/AdminPage.js:113
+#: src/AdminPage.js:115
 msgid "Select an organization to view admin options"
 msgstr "Sélectionnez une organisation pour voir les options d'administration"
+
+#: src/months.js:12
+msgid "September"
+msgstr "Septembre"
+
+#: src/OrganizationCard.js:61
+msgid "Services: {domainCount}"
+msgstr ""
 
 #: src/DmarcReportGuidance.js:554
 #~ msgid "Show Guidance"
 #~ msgstr "Afficher les conseils"
 
-#: src/DmarcReportTable.js:296
+#: src/DmarcReportTable.js:370
 msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
-#: src/App.js:70
-#: src/QRcodePage.js:58
-#: src/SignInPage.js:101
+#: src/DmarcByDomainPage.js:184
+#: src/DmarcReportPage.js:401
+msgid "Showing data for period:"
+msgstr "Affichage des données pour la période :"
+
+#: src/App.js:106
+#: src/SignInPage.js:105
 msgid "Sign In"
 msgstr "Se connecter"
 
@@ -1442,15 +1675,19 @@ msgstr "Se connecter"
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/UserPage.js:127
+#: src/App.js:102
 msgid "Sign Out"
 msgstr "Déconnexion"
 
-#: src/SignInPage.js:82
+#: src/App.js:90
+msgid "Sign Out."
+msgstr "Déconnexion."
+
+#: src/SignInPage.js:84
 msgid "Sign in with your username and password."
 msgstr "Connectez-vous avec votre nom d'utilisateur et votre mot de passe."
 
-#: src/App.js:46
+#: src/App.js:48
 msgid "Skip to main content"
 msgstr "Passer au contenu principal"
 
@@ -1458,14 +1695,18 @@ msgstr "Passer au contenu principal"
 msgid "Sorry, the page you were trying to view does not exist."
 msgstr "Désolé, la page que vous essayiez de consulter n'existe pas."
 
-#: src/DmarcReportPage.js:123
+#: src/DmarcReportPage.js:208
 msgid "Source IP Address"
 msgstr "Adresse IP source"
 
-#: src/ForgotPasswordPage.js:96
+#: src/ForgotPasswordPage.js:95
 #: src/TwoFactorAuthenticatePage.js:97
 msgid "Submit"
 msgstr "Soumettre"
+
+#: src/OrganizationDetails.js:78
+msgid "Summary"
+msgstr "Résumé"
 
 #: src/GuidanceTagDetails.js:106
 msgid "Summary:"
@@ -1494,7 +1735,7 @@ msgstr ""
 #~ msgid "Tag, Tag Name:"
 #~ msgstr "Le jour, le nom du jour :"
 
-#: src/App.js:198
+#: src/App.js:249
 msgid "Terms & conditions"
 msgstr "Avis"
 
@@ -1546,7 +1787,7 @@ msgstr "Représentation textuelle"
 #~ msgid "The server is configured to use a different domain for the DKIM header than for the \"header from\" address."
 #~ msgstr "Le serveur est configuré pour utiliser un domaine différent pour l'en-tête DKIM que pour l'adresse \"header from\"."
 
-#: src/UserList.js:62
+#: src/UserList.js:71
 msgid "The user's role has been successfully updated"
 msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 
@@ -1563,17 +1804,22 @@ msgstr "Le rôle de l'utilisateur a été mis à jour avec succès"
 #~ msgid "These guidance notes were designed to help you trouble shoot your failed DMARC scans. Please read through each note and determine what has caused a failed DMARC scan on your domain."
 #~ msgstr "Ces notes d'orientation ont été conçues pour vous aider à résoudre les problèmes liés à l'échec de vos scanners DMARC. Veuillez lire chaque note et déterminer ce qui a provoqué l'échec d'un scan DMARC sur votre domaine."
 
-#: src/App.js:49
+#: src/App.js:51
 msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
-#: src/DmarcReportPage.js:127
+#: src/DmarcByDomainPage.js:63
+#: src/DmarcReportPage.js:212
 msgid "Total Messages"
 msgstr "Total des messages"
 
-#: src/LandingPage.js:11
+#: src/WelcomeMessage.js:18
 msgid "Track Web Security Compliance"
 msgstr "Suivre la conformité de la sécurité du Web"
+
+#: src/TopBanner.js:36
+msgid "Tracker Logo"
+msgstr "Logo du Tracker"
 
 #: src/TwoFactorAuthenticatePage.js:91
 msgid "Two Factor Authentication."
@@ -1583,24 +1829,24 @@ msgstr "Authentification à deux facteurs."
 #~ msgid "TwoFactor"
 #~ msgstr "Deux facteurs"
 
-#: src/UserList.js:52
+#: src/UserList.js:61
 msgid "Unable to change user role, please try again."
 msgstr "Impossible de modifier le rôle de l'utilisateur, veuillez réessayer."
 
-#: src/CreateUserPage.js:54
+#: src/CreateUserPage.js:55
 msgid "Unable to create your account, please try again."
 msgstr "Impossible de créer votre compte, veuillez réessayer"
 
-#: src/ForgotPasswordPage.js:28
+#: src/ForgotPasswordPage.js:29
 msgid "Unable to send password reset link to email."
 msgstr "Impossible d'envoyer le lien de réinitialisation du mot de passe par courriel."
 
-#: src/SignInPage.js:41
+#: src/SignInPage.js:42
 #: src/TwoFactorAuthenticatePage.js:32
 msgid "Unable to sign in to your account, please try again."
 msgstr "Impossible de vous connecter à votre compte, veuillez réessayer."
 
-#: src/ResetPasswordPage.js:31
+#: src/ResetPasswordPage.js:32
 msgid "Unable to update password"
 msgstr "Impossible de mettre à jour le mot de passe"
 
@@ -1624,13 +1870,25 @@ msgstr "Impossible de mettre à jour le mot de passe"
 msgid "Use DKIM to validate outbound email sent from your custom domain"
 msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé depuis votre domaine personnalisé"
 
-#: src/UserList.js:155
+#: src/UserList.js:173
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
-#: src/App.js:66
+#: src/App.js:74
 msgid "User Profile"
 msgstr "Profil de l'utilisateur"
+
+#: src/UserList.js:100
+msgid "User invited"
+msgstr "Utilisateur invité"
+
+#: src/OrganizationDetails.js:84
+msgid "Users"
+msgstr "Utilisateurs"
+
+#: src/OrganizationSummary.js:20
+msgid "Users joined:"
+msgstr "Les utilisateurs se sont inscrits :"
 
 #: src/guidanceTagConstants.js:320
 msgid "Uses redirect tag with All"
@@ -1664,11 +1922,13 @@ msgstr "Vulnérable à la maladie du cœur"
 msgid "Vulnerable to OpenSSL CCS Injection"
 msgstr "Vulnérable à l'injection de CCS OpenSSL"
 
-#: src/UserList.js:229
+#: src/UserList.js:220
+#: src/UserList.js:289
 msgid "WRITE"
 msgstr "ÉCRIRE"
 
-#: src/SummaryGroup.js:51
+#: src/OrganizationCard.js:74
+#: src/SummaryGroup.js:52
 msgid "Web Configuration"
 msgstr "Configuration Web"
 
@@ -1676,15 +1936,15 @@ msgstr "Configuration Web"
 msgid "Web Scan Results"
 msgstr "Résultats de l'analyse du Web"
 
-#: src/SummaryGroup.js:52
+#: src/SummaryGroup.js:53
 msgid "Web encryption settings summary"
 msgstr "Résumé des paramètres de cryptage du Web"
 
-#: src/AdminPage.js:82
+#: src/AdminPage.js:83
 msgid "Welcome, Admin"
 msgstr "Bienvenue à l'administration"
 
-#: src/CreateUserPage.js:73
+#: src/CreateUserPage.js:75
 msgid "Welcome, you are successfully signed in to your new account!"
 msgstr "Veuillez choisir votre langue préférée"
 
@@ -1692,7 +1952,7 @@ msgstr "Veuillez choisir votre langue préférée"
 msgid "Welcome, you are successfully signed in!"
 msgstr "Bienvenue, vous êtes connecté avec succès!"
 
-#: src/AdminPage.js:122
+#: src/AdminPage.js:124
 msgid "You do not have admin permissions in any organization"
 msgstr "Vous n'avez pas d'autorisations administratives dans une organisation"
 
@@ -1700,32 +1960,40 @@ msgstr "Vous n'avez pas d'autorisations administratives dans une organisation"
 msgid "You have not enabled Two Factor Authentication. To maximize your account's security, <0>please enable 2FA</0>."
 msgstr "Vous n'avez pas activé l'authentification à deux facteurs. Pour maximiser la sécurité de votre compte, <0>veuillez activer l'authentification à deux facteurs</0>."
 
-#: src/EditableUserDisplayName.js:58
+#: src/App.js:92
+msgid "You have successfully been signed out."
+msgstr "Vous avez été déconnecté avec succès."
+
+#: src/EditableUserDisplayName.js:60
 msgid "You have successfully updated your display name."
 msgstr "Vous avez réussi à mettre à jour votre nom d'affichage."
 
-#: src/EditableUserEmail.js:58
+#: src/EditableUserEmail.js:62
 msgid "You have successfully updated your email."
 msgstr "Vous avez mis à jour votre courriel avec succès."
 
-#: src/EditableUserLanguage.js:39
-#: src/EditableUserPassword.js:58
+#: src/EditableUserPassword.js:60
 msgid "You have successfully updated your password."
 msgstr "Vous avez mis à jour votre mot de passe avec succès."
 
-#: src/ResetPasswordPage.js:41
+#: src/EditableUserLanguage.js:41
+msgid "You have successfully updated your preferred language."
+msgstr "Vous avez réussi à mettre à jour votre langue préférée."
+
+#: src/ResetPasswordPage.js:43
 msgid "You may now sign in with your new password"
 msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe"
 
-#: src/QRcodePage.js:45
+#: src/QRcodePage.js:46
 msgid "Your 2FA app will then have a valid code that you can use when you sign in."
 msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez utiliser lorsque vous vous connecterez."
 
 #: src/OrganizationDetails.js:108
-msgid "back to organizations"
-msgstr "retour aux organisations"
+#~ msgid "back to organizations"
+#~ msgstr "retour aux organisations"
 
-#: src/Organizations.js:44
+#: src/DomainsPage.js:35
+#: src/Organizations.js:35
 msgid "error {0}"
 msgstr "erreur {0}"
 
@@ -1821,10 +2089,15 @@ msgstr ""
 #~ msgid "{0}"
 #~ msgstr ""
 
-#: src/OrganizationDetails.js:115
-msgid "{domainName}"
-msgstr ""
+#: src/ReactTableGlobalFilter.js:44
+msgid "{count} records..."
+msgstr "{count} enregistrements..."
 
-#: src/DmarcGuidancePage.js:42
+#: src/OrganizationDetails.js:107
+#~ msgid "{domainName}"
+#~ msgstr ""
+
+#: src/DmarcGuidancePage.js:46
+#: src/OrganizationDetails.js:72
 msgid "{orgName}"
 msgstr ""

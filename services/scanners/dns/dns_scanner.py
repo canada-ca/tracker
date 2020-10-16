@@ -1,12 +1,20 @@
 import sys
+import os
+import time
 import requests
 import logging
 import json
 import emoji
 import dkim
+import asyncio
 import nacl
 import base64
+import signal
+import tldextract
+import traceback
+import datetime as dt
 from checkdmarc import *
+from dns import resolver
 from dkim import dnsplug, crypto, KeyFormatError
 from dkim.crypto import *
 from dkim.util import InvalidTagValueList
@@ -16,35 +24,80 @@ from starlette.responses import PlainTextResponse, JSONResponse
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-
-def startup():
-    logging.info(emoji.emojize("ASGI server started :rocket:"))
+QUEUE_URL = "http://result-queue.scanners.svc.cluster.local/dns"
 
 
 def dispatch_results(payload, client):
-    # Post results to result-handling service
-    client.post(
-        url="http://result-processor.tracker.svc.cluster.local/process", json=payload
-    )
+    client.post(QUEUE_URL, json=payload)
+    logging.info("Scan results dispatched to result-processor")
 
 
 async def scan_dmarc(domain):
 
-    # Single-item list to pass off to check_domains function
+    logging.info("Initiating DMARC scan")
+
+    # Single-item list to pass off to check_domains function.
     domain_list = list()
     domain_list.append(domain)
 
     try:
-        # Perform "checkdmarc" scan on provided domain
+        # Perform "checkdmarc" scan on provided domain.
         scan_result = json.loads(json.dumps(check_domains(domain_list, skip_tls=True)))
     except (DNSException, SPFError, DMARCError) as e:
         logging.error(
-            "Failed to check the given domains for DMARC/SPF records: %s" % str(e)
+            "Failed to check the given domains for DMARC/SPF records. (%s)" % str(e)
         )
         return None
 
+    # Retrieve 'rua' tag address.
+    try:
+        rua_addr = scan_result["dmarc"]["tags"]["rua"]["value"][0]["address"]
+    except KeyError as e:
+        logging.error(
+            "Failed to retrieve RUA address from tag value. Report acceptance check will not be performed. (KeyError: %s)"
+            % str(e)
+        )
+        rua_addr = None
+
+    if rua_addr is not None:
+        # Extract the domain from the address string (e.g. 'dmarc@cyber.gc.ca' -> 'cyber.gc.ca').
+        rua_domain = rua_addr.split("@", 1)[1]
+
+        # Extract organizational domain from original domain (e.g. 'tracker.cyber.gc.ca' -> 'cyber.gc.ca')
+        extract = tldextract.TLDExtract(include_psl_private_domains=True)
+        extract.update()
+        parsed_domain = extract(domain)
+        org_domain = ".".join([parsed_domain.domain, parsed_domain.suffix])
+
+        # Extract organizational domain from 'rua' domain
+        parsed_rua_domain = extract(rua_domain)
+        rua_org_domain = ".".join([parsed_rua_domain.domain, parsed_rua_domain.suffix])
+
+        # If the report destination's organizational does not differ from the provided domain's organizational domain, assert reports are being accepted.
+        if rua_org_domain == org_domain:
+            scan_result["dmarc"]["tags"]["rua"]["accepting"] = True
+        else:
+            try:
+                # Request txt record to ensure that "rua" domain accepts DMARC reports.
+                rua_scan_result = dns.resolver.query(
+                    f"{domain}._report._dmarc.{rua_domain}", "TXT"
+                )
+                rua_txt_value = (
+                    rua_scan_result.response.answer[0][0].strings[0].decode("UTF-8")
+                )
+                # Assert external reporting arrangement has been authorized if TXT containing version tag with value "DMARC1" is found.
+                scan_result["dmarc"]["tags"]["rua"]["accepting"] = (
+                    rua_txt_value == "v=DMARC1"
+                )
+                logging.info("External reporting arrangement verified.")
+            except (DNSException, SPFError, DMARCError) as e:
+                logging.error("Failed to validate rua address: %s" % str(e))
+                scan_result["dmarc"]["tags"]["rua"]["accepting"] = "undetermined"
+
+    logging.info("DMARC scan completed")
+
     if scan_result["dmarc"].get("record", "null") == "null":
-        return None
+        return {"dmarc": {"missing": True}}
     else:
         return scan_result
 
@@ -94,27 +147,30 @@ def load_pk(name, s=None):
 
 async def scan_dkim(domain, selectors):
 
+    logging.info("Initiating DKIM scan")
+
     record = {}
 
     for selector in selectors:
         record[selector] = {}
         try:
             # Retrieve public key from DNS
-            pk_txt = dnsplug.get_txt_dnspython(f"{selector}.{domain}")
+            pk_txt = dnsplug.get_txt_dnspython(f"{selector}._domainkey.{domain}")
+            logging.info("Public key (TXT) retrieved from DNS")
 
-            pk, keysize, ktag = load_pk(f"{selector}.{domain}", pk_txt)
+            pk, keysize, ktag = load_pk(f"{selector}._domainkey.{domain}", pk_txt)
 
             # Parse values and convert to dictionary
             pub = dkim.util.parse_tag_value(pk_txt)
-            key_val = pub[b"p"].decode("ascii")
+            logging.info("DKIM tag values parsed")
 
-            record[selector]["t_value"] = None
+            txt_record = {}
+
+            key_val = pub[b"p"].decode("ascii")
 
             for key in pub:
                 if key.decode("ascii") == "t":
                     record[selector]["t_value"] = pub[key]
-
-            txt_record = {}
 
             for key, val in pub.items():
                 txt_record[key.decode("ascii")] = val.decode("ascii")
@@ -128,56 +184,125 @@ async def scan_dkim(domain, selectors):
 
         except Exception as e:
             logging.error(
-                "Failed to perform DomainKeys Identified Mail scan on given domain (selector: %s): %s"
-                % (selector, str(e))
+                f"Failed to perform DomainKeys Identified Mail scan on given domain: {domain}, (selector: {selector}): {str(e)}"
             )
             record[selector] = {"missing": True}
+
+    logging.info("DKIM scan completed")
 
     return record
 
 
-def Server(default_client=requests):
-    async def scan(request):
+def process_results(results):
+    logging.info("Processing DNS scan results...")
+
+    if results is not None and results != {}:
+        report = {
+            "dmarc": results["dmarc"],
+            "spf": results["spf"],
+            "mx": results["mx"],
+            "dkim": results["dkim"],
+        }
+    else:
+        report = {
+            "dmarc": {"missing": True},
+            "spf": {"missing": True},
+            "mx": {"missing": True},
+            "dkim": {"missing": True},
+        }
+
+    logging.info(f"Processed DNS scan results: {str(report)}")
+    return report
+
+
+def Server(server_client=requests):
+    async def scan(scan_request):
+
+        logging.info("Scan request received")
+        inbound_payload = await scan_request.json()
+
+        def timeout_handler(signum, frame):
+            msg = "Timeout while performing scan"
+            logging.error(msg)
+            dispatch_results(
+                {"scan_type": "dns", "scan_id": scan_id, "results": {}}, server_client
+            )
+            return PlainTextResponse(msg)
+
         try:
-            client = request.app.state.client
+            start_time = dt.datetime.now()
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(60)
+            try:
+                domain = inbound_payload["domain"]
+                scan_id = inbound_payload["scan_id"]
+                selectors = inbound_payload["selectors"]
+            except KeyError:
+                msg = f"Invalid scan request format received: {str(inbound_payload)}"
+                logging.error(msg)
+                return PlainTextResponse(msg)
 
-            logging.info("Scan request received")
-            inbound_payload = await request.json()
-            domain = inbound_payload["domain"]
-            scan_id = inbound_payload["scan_id"]
-            selectors = inbound_payload["selectors"]
-
-            logging.info("Performing scan...")
+            logging.info(f"(ID={scan_id}) Performing scan...")
             dmarc_results = scan_dmarc(domain)
-            dkim_results = scan_dkim(domain, selectors)
+
+            try:
+                iter(selectors)
+                dkim_results = await scan_dkim(domain, selectors)
+            except TypeError:
+                logging.info("(ID={scan_id}) No DKIM selector strings provided")
+                dkim_results = {}
+                pass
 
             scan_results = await dmarc_results
-            scan_results["dkim"] = await dkim_results
+            scan_results["dkim"] = dkim_results
 
-            if scan_results is not None:
+            if scan_results["dmarc"] != {"missing": True}:
+
+                processed_results = process_results(scan_results)
+
                 outbound_payload = json.dumps(
-                    {"results": scan_results, "scan_type": "dns", "scan_id": scan_id}
+                    {
+                        "results": processed_results,
+                        "scan_type": "dns",
+                        "scan_id": scan_id,
+                    }
                 )
-                logging.info(f"Scan results: {str(scan_results)}")
+                logging.info(f"(ID={scan_id}) Scan results: {str(scan_results)}")
             else:
                 raise Exception("DNS scan not completed")
-            dispatch_results(outbound_payload, client)
-        except Exception as e:
-            return PlainTextResponse(
-                f"An error occurred while attempting to process DNS scan request: {str(e)}"
-            )
 
-        return PlainTextResponse(
-            "DNS scan completed. Scan results dispatched to result-processor"
-        )
+        except Exception as e:
+            signal.alarm(0)
+            msg = f"(ID={scan_id}) An unexpected error occurred while attempting to process DNS scan request: ({type(e).__name__}: {str(e)})"
+            logging.error(msg)
+            logging.error(f"Full traceback: {traceback.format_exc()}")
+            dispatch_results(
+                {"scan_type": "dns", "scan_id": scan_id, "results": {}}, server_client
+            )
+            return PlainTextResponse(msg)
+
+        signal.alarm(0)
+        end_time = dt.datetime.now()
+        elapsed_time = end_time - start_time
+        dispatch_results(outbound_payload, server_client)
+        msg = f"(ID={scan_id}) DNS scan completed in {elapsed_time.total_seconds()} seconds."
+        logging.info(msg)
+
+        return PlainTextResponse(msg)
+
+    async def startup():
+        logging.info(emoji.emojize("ASGI server started :rocket:"))
+
+    async def shutdown():
+        logging.info(emoji.emojize("ASGI server shutting down..."))
 
     routes = [
-        Route("/scan", scan, methods=["POST"]),
+        Route("/", scan, methods=["POST"]),
     ]
 
-    starlette_app = Starlette(debug=True, routes=routes, on_startup=[startup])
-
-    starlette_app.state.client = default_client
+    starlette_app = Starlette(
+        debug=True, routes=routes, on_startup=[startup], on_shutdown=[shutdown]
+    )
 
     return starlette_app
 

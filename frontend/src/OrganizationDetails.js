@@ -1,36 +1,38 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
 import {
-  Link,
-  Icon,
+  IconButton,
   Heading,
   Stack,
   useToast,
-  Divider,
-  Text,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
 } from '@chakra-ui/core'
-import { ORGANIZATION_BY_SLUG } from './graphql/queries'
-import { useLingui } from '@lingui/react'
+import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { useUserState } from './UserState'
-import { Link as ReactRouterLink, useParams } from 'react-router-dom'
-import SummaryTable from './SummaryTable'
-import makeSummaryTableData from './makeSummaryTableData'
+import { useParams, useHistory } from 'react-router-dom'
+import DomainsPage from './DomainsPage'
+import UserList from './UserList'
+import { OrganizationSummary } from './OrganizationSummary'
 
 export default function OrganizationDetails() {
-  const { i18n } = useLingui()
   const { orgSlug } = useParams()
   const { currentUser } = useUserState()
   const toast = useToast()
-  const { loading, _error, data } = useQuery(ORGANIZATION_BY_SLUG, {
+  const history = useHistory()
+  const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
     variables: { slug: orgSlug },
     context: {
       headers: {
         authorization: currentUser.jwt,
       },
     },
-    onError: error => {
+    onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({
         title: 'Error',
@@ -38,13 +40,14 @@ export default function OrganizationDetails() {
         status: 'failure',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     },
   })
 
-  let domainName = ''
-  if (data && data.organization.domains.edges) {
-    domainName = data.organization.name
+  let orgName = ''
+  if (data?.organization) {
+    orgName = data.organization.name
   }
 
   if (loading) {
@@ -55,82 +58,49 @@ export default function OrganizationDetails() {
     )
   }
 
-  const columns = [
-    {
-      Header: i18n._(t`Domain`),
-      accessor: 'host_domain',
-    },
-    {
-      Header: 'HTTPS',
-      accessor: 'https_result',
-    },
-    {
-      Header: 'HSTS',
-      accessor: 'hsts_result',
-    },
-    {
-      Header: i18n._(t`HSTS Preloaded`),
-      accessor: 'preloaded_result',
-    },
-    {
-      Header: 'SSL',
-      accessor: 'ssl_result',
-    },
-    {
-      Header: i18n._(t`Protocols & Ciphers`),
-      accessor: 'protocol_cipher_result',
-    },
-    {
-      Header: i18n._(t`Certificate Use`),
-      accessor: 'cert_use_result',
-    },
-    {
-      Header: 'SPF',
-      accessor: 'spf_result',
-    },
-    {
-      Header: 'DKIM',
-      accessor: 'dkim_result',
-    },
-    {
-      Header: 'DMARC',
-      accessor: 'dmarc_result',
-    },
-  ]
-
-  const tableEntries = Math.floor(Math.random() * 20)
   return (
     <Layout>
-      <Stack spacing={10} shouldWrapChildren>
-        <Stack isInline align="center">
-          <Link as={ReactRouterLink} to={'/organizations'}>
-            <Icon
-              alt={i18n._(t`back to organizations`)}
-              color="gray.900"
-              name="arrow-left"
-              fontSize="2xl"
-            />
-          </Link>
-          <Heading as="h1">
-            <Trans>{domainName}</Trans>
-          </Heading>
-        </Stack>
-        <Stack>
-          {tableEntries > 0 ? (
-            <SummaryTable
-              data={makeSummaryTableData(tableEntries)}
-              columns={columns}
-            />
-          ) : (
-            <Text fontSize="2xl" fontWeight="bold">
-              <Trans>No domains yet.</Trans>
-            </Text>
-          )}
-
-          <Divider />
-        </Stack>
+      <Stack isInline align="center" mb="4">
+        <IconButton
+          icon="arrow-left"
+          onClick={history.goBack}
+          color="gray.900"
+          fontSize="2xl"
+          aria-label="back to organizations"
+        />
+        <Heading as="h1" textAlign={['center', 'left']}>
+          <Trans>{orgName}</Trans>
+        </Heading>
       </Stack>
-      <Trans>*All data represented is mocked for demonstration purposes</Trans>
+      <Tabs isFitted>
+        <TabList mb="4">
+          <Tab>
+            <Trans>Summary</Trans>
+          </Tab>
+          <Tab>
+            <Trans>Domains</Trans>
+          </Tab>
+          <Tab>
+            <Trans>Users</Trans>
+          </Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <OrganizationSummary />
+          </TabPanel>
+          <TabPanel>
+            <DomainsPage />
+          </TabPanel>
+          <TabPanel>
+            <UserList
+              userListData={data.userList}
+              orgName={orgName}
+              orgSlug={orgSlug}
+            />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Layout>
   )
 }

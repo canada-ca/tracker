@@ -32,7 +32,7 @@ class SignUpInput(graphene.InputObjectType):
     )
     sign_up_token = graphene.String(
         description="A token sent by email, that will assign a user to an organization with a pre-determined role.",
-        required=False,
+        required=True,
     )
 
 

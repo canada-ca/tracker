@@ -13,7 +13,7 @@ export default function AdminPanel({ orgName, permission }) {
   const toast = useToast()
 
   // TODO: combine these queries into a single request
-  const { loading, error, data } = useQuery(ADMIN_PANEL, {
+  const { loading, error, data, refetch } = useQuery(ADMIN_PANEL, {
     variables: { slug: slugify(orgName) },
     context: {
       headers: {
@@ -28,6 +28,7 @@ export default function AdminPanel({ orgName, permission }) {
         status: 'failure',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     },
   })
@@ -35,14 +36,20 @@ export default function AdminPanel({ orgName, permission }) {
   if (loading) {
     return <p>Loading...</p>
   }
-  if (error) {
+  // Current api returns an error if no domains found
+  // TODO: Remove includes check when api is ready
+  if (error && !error.includes('Error, unable to find domains')) {
     return <p>{String(error)}</p>
   }
 
   return (
     <Stack spacing={10}>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
-        <AdminDomains domainsData={data.domains} orgName={orgName} />
+        <AdminDomains
+          domainsData={data.domains}
+          orgName={orgName}
+          refetchFunc={refetch}
+        />
         <UserList
           permission={permission}
           userListData={data.userList}

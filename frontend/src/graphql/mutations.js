@@ -7,7 +7,7 @@ export const SIGN_UP = gql`
     $password: String!
     $confirmPassword: String!
     $preferredLang: LanguageEnums!
-    $signUpToken: String
+    $signUpToken: String!
   ) {
     signUp(
       input: {
@@ -101,6 +101,62 @@ export const UPDATE_USER_PROFILE = gql`
         confirmPassword: $confirmPassword
         preferredLang: $preferredLang
         currentPassword: $currentPassword
+      }
+    ) {
+      status
+    }
+  }
+`
+
+export const CREATE_DOMAIN = gql`
+  mutation CreateDomain($orgSlug: Slug!, $url: URL!, $selectors: Selectors) {
+    createDomain(
+      input: { orgSlug: $orgSlug, url: $url, selectors: $selectors }
+    ) {
+      status
+    }
+  }
+`
+
+export const REMOVE_DOMAIN = gql`
+  mutation RemoveDomain($url: URL!) {
+    removeDomain(input: { url: $url }) {
+      status
+    }
+  }
+`
+
+export const UPDATE_DOMAIN = gql`
+  mutation UpdateDomain(
+    $currentUrl: URL!
+    $updatedUrl: URL!
+    $updatedSelectors: Selectors
+  ) {
+    updateDomain(
+      input: {
+        currentUrl: $currentUrl
+        updatedUrl: $updatedUrl
+        updatedSelectors: $updatedSelectors
+      }
+    ) {
+      status
+    }
+  }
+`
+
+export const INVITE_USER_TO_ORG = gql`
+  mutation InviteUserToOrg(
+    $userName: EmailAddress!
+    $requestedRole: RoleEnums!
+    $orgSlug: Slug!
+    $preferredLanguage: LanguageEnums!
+  ) {
+    inviteUserToOrg(
+      input: {
+        userName: $userName
+        requestedRole: $requestedRole
+        orgSlug: $orgSlug
+        preferredLanguage: $preferredLanguage
       }
     ) {
       status

@@ -1,13 +1,14 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { Text, Stack, Button, Box, useToast } from '@chakra-ui/core'
+import { Stack, Button, Box, useToast, Heading } from '@chakra-ui/core'
 import EmailField from './EmailField'
 import { object, string } from 'yup'
 import { Formik } from 'formik'
 import { Link as RouteLink, useHistory } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { SEND_PASSWORD_RESET_LINK } from './graphql/mutations'
+import { TrackerButton } from './TrackerButton'
 
 export default function ForgotPasswordPage() {
   const { i18n } = useLingui()
@@ -29,6 +30,7 @@ export default function ForgotPasswordPage() {
           status: 'error',
           duration: 9000,
           isClosable: true,
+          position: 'bottom-left',
         })
       },
       onCompleted() {
@@ -42,6 +44,7 @@ export default function ForgotPasswordPage() {
           status: 'success',
           duration: 9000,
           isClosable: true,
+          position: 'bottom-left',
         })
       },
     },
@@ -56,7 +59,7 @@ export default function ForgotPasswordPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Box mx="auto">
+    <Box px="8" mx="auto" overflow="hidden" w={['100%', '60%']}>
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '' }}
@@ -73,38 +76,35 @@ export default function ForgotPasswordPage() {
             aria-label="form"
             name="form"
           >
-            <Stack align="center">
-              <Text fontSize="2xl" mb="4" textAlign={['center']}>
-                <Trans>
-                  Enter your user account's verified email address and we will
-                  send you a password reset link.
-                </Trans>
-              </Text>{' '}
-              <br />
-            </Stack>
+            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
+              <Trans>
+                Enter your user account's verified email address and we will
+                send you a password reset link.
+              </Trans>
+            </Heading>
 
-            <Stack>
-              <EmailField name="email" mb="4" width="75%" />
+            <EmailField name="email" mb="4" />
 
-              <Stack spacing={4} isInline>
-                <Button
-                  variantColor="teal"
-                  type="submit"
-                  id="submitBtn"
-                  isLoading={isSubmitting}
-                >
-                  <Trans>Submit</Trans>
-                </Button>
+            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
+              <TrackerButton
+                type="submit"
+                id="submitBtn"
+                isLoading={isSubmitting}
+                variant="primary"
+              >
+                <Trans>Submit</Trans>
+              </TrackerButton>
 
-                <Button
-                  as={RouteLink}
-                  to="/sign-in"
-                  variantColor="teal"
-                  variant="outline"
-                >
-                  <Trans>Back</Trans>
-                </Button>
-              </Stack>
+              <Button
+                as={RouteLink}
+                to="/sign-in"
+                color="primary"
+                bg="transparent"
+                borderColor="primary"
+                borderWidth="1px"
+              >
+                <Trans>Back</Trans>
+              </Button>
             </Stack>
           </form>
         )}

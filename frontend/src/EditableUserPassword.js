@@ -27,6 +27,7 @@ import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import PasswordField from './PasswordField'
 import PasswordConfirmation from './PasswordConfirmation'
+import { TrackerButton } from './TrackerButton'
 
 function EditableUserPassword() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -50,6 +51,7 @@ function EditableUserPassword() {
           status: 'error',
           duration: 9000,
           isClosable: true,
+          position: 'bottom-left',
         })
       },
       onCompleted() {
@@ -59,6 +61,7 @@ function EditableUserPassword() {
           status: 'success',
           duration: 9000,
           isClosable: true,
+          position: 'bottom-left',
         })
         onClose()
       },
@@ -91,14 +94,20 @@ function EditableUserPassword() {
 
       <Stack isInline align="center">
         <Icon name="lock" color="gray.300" />
-        <Text fontSize="0.7rem">∗∗∗∗∗∗∗∗∗∗∗</Text>
-        <Button ml="auto" onClick={onOpen} size="sm" variantColor="teal">
+        <Text fontSize="xs">∗∗∗∗∗∗∗∗∗∗∗</Text>
+        <TrackerButton
+          ml="auto"
+          onClick={onOpen}
+          variant="primary"
+          fontSize="sm"
+          px="3"
+        >
           <Trans>Edit</Trans>
-        </Button>
+        </TrackerButton>
       </Stack>
 
       <SlideIn in={isOpen}>
-        {styles => (
+        {(styles) => (
           <Modal
             isOpen={true}
             onClose={onClose}
@@ -117,7 +126,7 @@ function EditableUserPassword() {
                   currentPassword: true,
                 }}
                 validationSchema={validationSchema}
-                onSubmit={async values => {
+                onSubmit={async (values) => {
                   // Submit update detail mutation
                   await updateUserProfile({
                     variables: {
@@ -137,40 +146,40 @@ function EditableUserPassword() {
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                      <Stack spacing={4} p={25}>
-                        <Stack spacing={4} align="center">
-                          <PasswordField
-                            name="currentPassword"
-                            label={t`Current Password:`}
-                            width="100%"
-                            ref={initialFocusRef}
-                          />
-                          <Text textAlign="center">
-                            <Trans>
-                              Enter and confirm your new password below:
-                            </Trans>
-                          </Text>
-                          <PasswordConfirmation
-                            width="100%"
-                            passwordLabel={t`New Password:`}
-                            confirmPasswordLabel={t`Confirm New Password:`}
-                          />
-                        </Stack>
+                      <Stack spacing={4} p="6" align="center">
+                        <PasswordField
+                          name="currentPassword"
+                          label={t`Current Password:`}
+                          width="100%"
+                          ref={initialFocusRef}
+                        />
+                        <Text textAlign="center">
+                          <Trans>
+                            Enter and confirm your new password below:
+                          </Trans>
+                        </Text>
+                        <PasswordConfirmation
+                          width="100%"
+                          passwordLabel={t`New Password:`}
+                          confirmPasswordLabel={t`Confirm New Password:`}
+                        />
                       </Stack>
                     </ModalBody>
 
                     <ModalFooter>
-                      <Button
-                        variantColor="teal"
+                      <TrackerButton
                         isLoading={isSubmitting}
                         type="submit"
-                        mr={4}
+                        mr="4"
+                        variant="primary"
                       >
                         <Trans>Confirm</Trans>
-                      </Button>
+                      </TrackerButton>
                       <Button
-                        variantColor="teal"
-                        variant="outline"
+                        color="primary"
+                        bg="transparent"
+                        borderColor="primary"
+                        borderWidth="1px"
                         onClick={onClose}
                       >
                         <Trans>Close</Trans>

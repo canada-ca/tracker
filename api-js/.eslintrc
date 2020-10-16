@@ -1,0 +1,51 @@
+{
+  "extends": [
+    "standard",
+    "prettier"
+  ],
+  "plugins": ["jest"],
+  "env": {
+    "browser": false,
+    "node": true,
+    "jest/globals": true
+  },
+  "globals": {
+    "fetch": true,
+    "fetchMock": true
+  },
+  "rules": {
+    "no-control-regex": "off",
+    "semi": ["error", "never"],
+    "comma-dangle": ["error", "always-multiline"],
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "all",
+        "varsIgnorePattern": "_",
+        "argsIgnorePattern": "_"
+      }
+    ],
+    "camelcase": [
+      "error",
+      {
+        "ignoreDestructuring": true,
+        "properties": "never"
+      }
+    ],
+    "new-cap": [
+      "error",
+      {
+        "newIsCapExceptions": [
+          "mutationWithClientMutationId"
+        ],
+        "capIsNewExceptions": [
+          "Server",
+          "GraphQLNonNull",
+          "GraphQLList",
+          "ArangoTools"
+        ]
+      }
+    ]
+  }
+}

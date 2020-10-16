@@ -5,6 +5,7 @@ import asyncio
 import logging
 import databases
 import sqlalchemy
+from slugify import slugify
 from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -209,18 +210,21 @@ Guidance = sqlalchemy.Table(
     "guidance",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("tag_id", sqlalchemy.String),
     sqlalchemy.Column("tag_name", sqlalchemy.String),
     sqlalchemy.Column("guidance", sqlalchemy.String),
-    sqlalchemy.Column("ref_links", sqlalchemy.String),
+    sqlalchemy.Column("ref_links", ARRAY(sqlalchemy.String)),
 )
 
-Classification = sqlalchemy.Table(
-    "classification",
+Summaries = sqlalchemy.Table(
+    "summaries",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("UNCLASSIFIED", sqlalchemy.String),
+    sqlalchemy.Column("name", sqlalchemy.String),
+    sqlalchemy.Column("count", sqlalchemy.Integer),
+    sqlalchemy.Column("percentage", sqlalchemy.Float),
+    sqlalchemy.Column("type", sqlalchemy.String),
 )
-
 
 async def insert():
 
@@ -240,7 +244,7 @@ async def insert():
     # Iterate through all .csv files
     for i in files:
         file = open(os.path.join(path, i), "rU")
-        reader = csv.reader(file, delimiter=',')
+        reader = csv.reader(file, delimiter=",")
         first_row = True
         for row in reader:
             # Skip first row (header)
@@ -257,16 +261,18 @@ async def insert():
             org_query = select([Organizations]).where(Organizations.c.name == org)
             org_result = await database.fetch_one(org_query)
 
-            org_exists = (org_result is not None)
+            org_exists = org_result is not None
 
             # If not, create the org
             if org_exists is False:
-                org_slug = org.replace('.', '-').replace(' ', '-')
-                org_acronym = org.upper().replace('.', '-').replace(' ', '-')
+                org_slug = slugify(org)
+                org_acronym = org.upper().replace(".", "-").replace(" ", "-")
                 logging.info(f"Org Name: {org}")
                 logging.info(f"Org Slug: {org_slug}")
                 logging.info(f"Org Acronym: {org_acronym}")
-                org_insert = Organizations.insert().values(name=org, slug=org_slug, acronym=org_acronym)
+                org_insert = Organizations.insert().values(
+                    name=org, slug=org_slug, acronym=org_acronym
+                )
                 await database.execute(org_insert)
                 org_query = select([Organizations]).where(Organizations.c.name == org)
                 org_result = await database.fetch_one(org_query)
@@ -275,14 +281,16 @@ async def insert():
             domain_query = select([Domains]).where(Domains.c.domain == url)
             domain_result = await database.fetch_one(domain_query)
 
-            domain_exists = (domain_result is not None)
+            domain_exists = domain_result is not None
 
             # If not, create the domain
             if domain_exists is False:
-                domain_slug = url.replace(".", "-").replace(' ', '-')
+                domain_slug = slugify(url)
                 logging.info(f"Domain Name: {url}")
                 logging.info(f"Domain Slug: {domain_slug}")
-                domain_insert = Domains.insert().values(domain=url, slug=domain_slug, organization_id=org_result.get("id"))
+                domain_insert = Domains.insert().values(
+                    domain=url, slug=domain_slug, organization_id=org_result.get("id")
+                )
                 await database.execute(domain_insert)
 
     await database.disconnect()

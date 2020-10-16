@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations($after: String, $first: Int) {
-    organizations: findMyOrganizations(after: $after, first: $first) {
+    pagination: findMyOrganizations(after: $after, first: $first) {
       edges {
         cursor
         node {
@@ -25,7 +25,7 @@ export const PAGINATED_ORGANIZATIONS = gql`
 
 export const REVERSE_PAGINATED_ORGANIZATIONS = gql`
   query PaginatedOrganizations($before: String, $last: Int) {
-    organizations: findMyOrganizations(before: $before, last: $last) {
+    pagination: findMyOrganizations(before: $before, last: $last) {
       edges {
         cursor
         node {
@@ -183,6 +183,94 @@ export const ADMIN_PANEL = gql`
   }
 `
 
+export const ORG_DETAILS_PAGE = gql`
+  query OrgDetails($slug: Slug!) {
+    organization: findOrganizationDetailBySlug(slug: $slug) {
+      id
+      name
+      acronym
+      province
+      domains {
+        edges {
+          node {
+            id
+            url
+            lastRan
+          }
+        }
+      }
+    }
+    userList(orgSlug: $slug) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        node {
+          id
+          userName
+          role
+          tfa
+          displayName
+        }
+      }
+    }
+  }
+`
+
+export const PAGINATED_DOMAINS = gql`
+  query Domains($first: Int, $after: String) {
+    pagination: findMyDomains(first: $first, after: $after) {
+      edges {
+        cursor
+        node {
+          id
+          url
+          slug
+          lastRan
+          __typename
+        }
+        __typename
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+        __typename
+      }
+      __typename
+    }
+  }
+`
+
+export const REVERSE_PAGINATED_DOMAINS = gql`
+  query PaginatedDomains($last: Int, $before: String) {
+    pagination: findMyDomains(last: $last, before: $before) {
+      edges {
+        cursor
+        node {
+          id
+          url
+          slug
+          lastRan
+          __typename
+        }
+        __typename
+      }
+      pageInfo {
+        hasNextPage
+        hasNextPage
+        endCursor
+        hasPreviousPage
+        startCursor
+        __typename
+      }
+      __typename
+    }
+  }
+`
+
 export const DOMAINS = gql`
   query Domains($number: Int, $cursor: String) {
     domains: findMyDomains(first: $number, after: $cursor) {
@@ -249,7 +337,8 @@ export const DMARC_REPORT_SUMMARY_LIST = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -264,7 +353,8 @@ export const DEMO_DMARC_REPORT_SUMMARY_LIST = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -283,7 +373,8 @@ export const DMARC_REPORT_SUMMARY = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -306,7 +397,8 @@ export const DEMO_DMARC_REPORT_SUMMARY = gql`
       year
       categoryTotals {
         fullPass
-        partialPass
+        passSpfOnly
+        passDkimOnly
         fail
         total
       }
@@ -467,6 +559,23 @@ export const DEMO_DMARC_REPORT_DETAIL_TABLES = gql`
           dkimDomains
           dkimSelectors
         }
+      }
+    }
+  }
+`
+
+export const DMARC_REPORT_SUMMARY_TABLE = gql`
+  query DmarcReportSummaryTable($period: PeriodEnums!, $year: Year!) {
+    dmarcReportSummaryTable(period: $period, year: $year) {
+      month
+      year
+      domains {
+        domain
+        fullPassPercentage
+        passSpfOnlyPercentage
+        passDkimOnlyPercentage
+        failPercentage
+        totalMessages
       }
     }
   }

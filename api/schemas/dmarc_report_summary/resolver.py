@@ -19,9 +19,6 @@ from schemas.dmarc_report_summary.dmarc_report_summary import DmarcReportSummary
 # Only for demo purposes
 from tests.testdata.dmarc_report_summary import api_return_data
 
-DMARC_REPORT_API_URL = os.getenv("DMARC_REPORT_API_URL")
-DMARC_REPORT_API_TOKEN = os.getenv("DMARC_REPORT_API_TOKEN")
-
 
 @require_token
 def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
@@ -94,7 +91,8 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
                             endDate
                             categoryTotals {
                                 fullPass
-                                partialPass
+                                passSpfOnly
+                                passDkimOnly
                                 fail
                             }
                         }
@@ -104,12 +102,7 @@ def resolve_dmarc_report_summary(self, info, **kwargs) -> DmarcReportSummary:
             )
 
             # Send request
-            data = send_request(
-                api_domain=DMARC_REPORT_API_URL,
-                auth_token=DMARC_REPORT_API_TOKEN,
-                query=query,
-                variables=variables,
-            )
+            data = send_request(query=query, variables=variables,)
 
             data = data.get("getDmarcSummaryByPeriod").get("period")
 

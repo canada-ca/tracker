@@ -6,7 +6,7 @@ import requests
 import datetime
 import databases
 import sqlalchemy
-import bcrypt
+import traceback
 from sqlalchemy.sql import select
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -19,7 +19,7 @@ DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
 
 DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-DISPATCHER_URL = "http://dispatcher.tracker.svc.cluster.local"
+QUEUE_URL = "http://scan-queue.scanners.svc.cluster.local"
 
 metadata = sqlalchemy.MetaData()
 
@@ -214,52 +214,50 @@ Guidance = sqlalchemy.Table(
     "guidance",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("tag_id", sqlalchemy.String),
     sqlalchemy.Column("tag_name", sqlalchemy.String),
     sqlalchemy.Column("guidance", sqlalchemy.String),
-    sqlalchemy.Column("ref_links", sqlalchemy.String),
+    sqlalchemy.Column("ref_links", ARRAY(sqlalchemy.String)),
 )
 
-Classification = sqlalchemy.Table(
-    "classification",
+Summaries = sqlalchemy.Table(
+    "summaries",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("UNCLASSIFIED", sqlalchemy.String),
+    sqlalchemy.Column("name", sqlalchemy.String),
+    sqlalchemy.Column("count", sqlalchemy.Integer),
+    sqlalchemy.Column("percentage", sqlalchemy.Float),
+    sqlalchemy.Column("type", sqlalchemy.String),
 )
 
 
-def Service(database=databases.Database(DATABASE_URI), client=requests):
+def Dispatch(database=databases.Database(DATABASE_URI), client=requests):
+    async def dispatch_https(domain, scan_id):
 
-    async def dispatch_web(domain, scan_id):
+        payload = {
+            "scan_id": scan_id,
+            "domain": domain.get("domain"),
+        }
+        client.post(QUEUE_URL + "/https", json=payload)
+
+    async def dispatch_ssl(domain, scan_id):
+
+        payload = {
+            "scan_id": scan_id,
+            "domain": domain.get("domain"),
+        }
+        client.post(QUEUE_URL + "/ssl", json=payload)
+
+    async def dispatch_dns(domain, scan_id):
 
         payload = {
             "scan_id": scan_id,
             "domain": domain.get("domain"),
             "selectors": domain.get("selectors"),
-            "user_init": False,
         }
-        headers = {
-            "Content-Type": "application/json",
-            "Data": str(payload),
-            "Scan-Type": "web",
-        }
-        client.post(DISPATCHER_URL + "/receive", headers=headers)
+        client.post(QUEUE_URL + "/dns", json=payload)
 
-    async def dispatch_mail(domain, scan_id):
-
-        payload = {
-            "scan_id": scan_id,
-            "domain": domain.get("domain"),
-            "selectors": domain.get("selectors"),
-            "user_init": False,
-        }
-        headers = {
-            "Content-Type": "application/json",
-            "Data": str(payload),
-            "Scan-Type": "mail",
-        }
-        client.post(DISPATCHER_URL + "/receive", headers=headers)
-
-    async def main():
+    async def scan():
         logging.info("Retrieving domains for scheduled scan...")
         try:
             await database.connect()
@@ -273,8 +271,14 @@ def Service(database=databases.Database(DATABASE_URI), client=requests):
             system = await database.fetch_one(system_user_query)
 
             scan_time = datetime.datetime.utcnow()
+            count = 0
 
             for domain in domains:
+                count = count + 1
+                dispatched.append(domain.get("domain"))
+                logging.info(f"Dispatching scan number {count} of {len(domains)}")
+                logging.info(f"Requesting scan for {domain.get('domain')}")
+
                 web_insert = Web_scans.insert().values(
                     domain_id=domain.get("id"),
                     scan_date=scan_time,
@@ -287,7 +291,11 @@ def Service(database=databases.Database(DATABASE_URI), client=requests):
                     initiated_by=system.get("id"),
                 )
 
-                update_domain = Domains.update().values(last_run=scan_time).where(Domains.c.id == domain.get("id"))
+                update_domain = (
+                    Domains.update()
+                    .values(last_run=scan_time)
+                    .where(Domains.c.id == domain.get("id"))
+                )
 
                 for insertion in [web_insert, mail_insert, update_domain]:
                     await database.execute(insertion)
@@ -297,25 +305,26 @@ def Service(database=databases.Database(DATABASE_URI), client=requests):
                 web_scan_query = select([Web_scans]).order_by(Web_scans.c.id.desc())
                 web_scan = await database.fetch_one(web_scan_query)
 
-                dispatched.append(dispatch_web(domain, web_scan.get("id")))
-                dispatched.append(dispatch_mail(domain, mail_scan.get("id")))
-
-            for domain in dispatched:
-                await domain
+                await dispatch_https(domain, web_scan.get("id"))
+                await dispatch_ssl(domain, web_scan.get("id"))
+                await dispatch_dns(domain, mail_scan.get("id"))
 
             await database.disconnect()
-            return {"Dispatched": [domain.get('domain') for domain in domains]}
+            return [domain for domain in dispatched]
 
         except Exception as e:
             try:
                 await database.disconnect()
             except:
                 pass
-            logging.error(e)
-            return {"Dispatched": []}
+            logging.error(
+                f"An unexpected error occurred while initiating scheduled scan: {str(e)}\n\nFull traceback: {traceback.format_exc()}"
+            )
+            return [domain for domain in dispatched]
 
-    return asyncio.run(main())
+    return asyncio.run(scan())
 
 
 if __name__ == "__main__":
-    logging.info(Service())
+    dispatched_domains = Dispatch()
+    logging.info(f"Dispatched scans for: {str(dispatched_domains)}")

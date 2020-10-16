@@ -18,6 +18,7 @@ import { Formik } from 'formik'
 import { SIGN_IN } from './graphql/mutations'
 import EmailField from './EmailField'
 import { fieldRequirements } from './fieldRequirements'
+import { TrackerButton } from './TrackerButton'
 
 export default function SignInPage() {
   const history = useHistory()
@@ -43,6 +44,7 @@ export default function SignInPage() {
         status: 'error',
         duration: 9000,
         isClosable: true,
+        position: 'bottom-left',
       })
     },
     onCompleted({ signIn }) {
@@ -60,7 +62,7 @@ export default function SignInPage() {
   if (error) return <p>{String(error)}</p>
 
   return (
-    <Box px="2em" mx="auto" overflow="hidden">
+    <Box px="8" mx="auto" overflow="hidden">
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}
@@ -78,7 +80,7 @@ export default function SignInPage() {
             name="form"
             autoComplete="on"
           >
-            <Heading as="h1" fontSize="2xl" mb="12">
+            <Heading as="h1" fontSize="2xl" mb="6" textAlign="center">
               <Trans>Sign in with your username and password.</Trans>
             </Heading>
 
@@ -86,26 +88,30 @@ export default function SignInPage() {
 
             <PasswordField name="password" mb="1" />
 
-            <Link as={RouteLink} to="/forgot-password" color="teal.500">
-              <Text mb="4">
-                <Trans>Forgot your password?</Trans>
-              </Text>
-            </Link>
+            <Box width="fit-content">
+              <Link as={RouteLink} to="/forgot-password" color="primary">
+                <Text mb="4">
+                  <Trans>Forgot your password?</Trans>
+                </Text>
+              </Link>
+            </Box>
 
-            <Stack spacing={4} isInline>
-              <Button
-                variantColor="teal"
+            <Stack spacing={4} isInline justifyContent="space-between" mb="4">
+              <TrackerButton
+                variant="primary"
                 isLoading={isSubmitting}
                 type="submit"
               >
                 <Trans>Sign In</Trans>
-              </Button>
+              </TrackerButton>
 
               <Button
                 as={RouteLink}
                 to="/create-user"
-                variantColor="teal"
-                variant="outline"
+                color="primary"
+                bg="transparent"
+                borderColor="primary"
+                borderWidth="1px"
               >
                 <Trans>Create Account</Trans>
               </Button>

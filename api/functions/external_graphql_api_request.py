@@ -1,4 +1,5 @@
 import json
+import os
 
 from gql import Client
 from gql.transport.requests import RequestsHTTPTransport
@@ -37,7 +38,13 @@ def create_client(api_domain, auth_token) -> Client:
     return client
 
 
-def send_request(api_domain, auth_token, variables: dict, query) -> dict:
+def send_request(
+    variables: dict,
+    query,
+    summary_table=False,
+    api_domain=os.getenv("DMARC_REPORT_API_URL"),
+    auth_token=os.getenv("DMARC_REPORT_API_TOKEN"),
+) -> dict:
     """
     This function sends the request to the external API, with a pre-determined
     query
@@ -58,20 +65,8 @@ def send_request(api_domain, auth_token, variables: dict, query) -> dict:
         return data
 
     except Exception as e:
-        # Make sure the below stays like so
-        # error_str = e.__str__().replace("\'", '\"')
-        # Black will try and change it and it will break !!!
-        error_str = e.__str__().replace("'", '"')
-        try:
-            error_dict = json.loads(error_str)
-            if error_dict.get("message", None):
-                logger.error(
-                    f"Error occurred on the dmarc-report-api side: {str(error_dict.get('message'))}"
-                )
-                raise GraphQLError("Error when querying dmarc-report-api.")
-
-        except ValueError as ve:
-            logger.error(
-                f"Value Error occurred when receiving data from dmarc-report-api: {str(ve)}"
-            )
-            raise GraphQLError("Error, when querying dmarc-report-api.")
+        logger.error(f"Error occurred on the dmarc-report-api side: {str(e)}")
+        if summary_table:
+            return {}
+        else:
+            raise GraphQLError("Error when querying dmarc-report-api.")

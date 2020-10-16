@@ -2,17 +2,21 @@ import { theme as chakraTheme } from '@chakra-ui/core'
 import React from 'react'
 
 const shadows = {
-  outline: '0 0 0 4px #F6C95E',
-  medium: `0.4em 0.4em 0.3em #D5D5D5`,
+  outline: '0 0 0 4px #FEC04F',
+  medium: ' 0 0 0.4em 0.2em #D5D5D5',
   outlineHover: '0 0 0 6px #D5D5D5',
   outlineLeft: '-2px 0 0 0 #D5D5D5, 2px 0 0 0 inset #D5D5D5',
 }
 
 const colors = {
-  darkgray: '#444444',
-  strong: '#5CB95B',
-  moderate: '#ffbf47',
-  weak: '#e53e3e',
+  primary: '#2e2e40',
+  primary2: '#E75124',
+  accent: '#FEC04F',
+  strong: '#278400',
+  moderate: '#FF9900',
+  moderateAlt: '#e65c00',
+  weak: '#D3080C',
+  info: '#269ABC',
   unknown: '#B0B0B0',
   green: {
     50: '#F2FFF0',
@@ -43,6 +47,7 @@ const colors = {
     50: '#FFFDF0',
     100: '#FEF1BF',
     200: '#FADE89',
+    250: '#FEC04F',
     300: '#F6C95E',
     400: '#ECB64B',
     500: '#D6962E',
@@ -50,6 +55,18 @@ const colors = {
     700: '#975A16',
     800: '#744210',
     900: '#5F370E',
+  },
+  blue: {
+    50: '#EBF8FF',
+    100: '#CEEDFF',
+    200: '#90CDF4',
+    300: '#63B3ED',
+    400: '#4299E1',
+    500: '#3182CE',
+    600: '#2A69AC',
+    700: '#1E4E8C',
+    800: '#153E75',
+    900: '#0D467D',
   },
 }
 
@@ -73,20 +90,49 @@ const fontSizes = {
   '6xl': '4rem',
 }
 
+const sizes = {
+  icons: {
+    sm: '1rem',
+    md: '1.25rem',
+    lg: '1.5rem',
+  },
+  buttons: {
+    sm: '1rem',
+    md: '1.25rem',
+    lg: '1.5rem',
+  },
+  boxes: {
+    2: '20rem',
+  },
+  width: {
+    4: '4rem',
+    60: '60rem',
+  },
+}
+
 const borders = {
   '3px': '3px solid',
 }
 
 const borderWidths = {
-  '0': '0',
-  '1': '0.25rem',
-  '2': '0.5rem',
-  '3': '0.75rem',
-  '4': '1rem',
+  0: '0',
+  1: '0.25rem',
+  2: '0.5rem',
+  3: '0.75rem',
+  4: '1rem',
 }
 
 const space = {
-  '7': '1.75rem',
+  0: '0',
+  1: '0.25rem',
+  2: '0.5rem',
+  2.5: '0.625rem',
+  3: '0.75rem',
+  4: '1rem',
+  5: '1.25rem',
+  6: '1.5rem',
+  7: '1.75rem',
+  8: '2rem',
 }
 
 const customIcons = {
@@ -165,6 +211,10 @@ const canada = {
   icons: {
     ...chakraTheme.icons,
     ...customIcons,
+  },
+  sizes: {
+    ...chakraTheme.sizes,
+    ...sizes,
   },
 }
 

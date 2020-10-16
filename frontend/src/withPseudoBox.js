@@ -14,6 +14,7 @@ const WithPseudoBox = (WrappedComponent) => {
       h: oneOfType([string, number]),
       height: oneOfType([string, number]),
       mx: oneOfType([string, number]),
+      my: oneOfType([string, number]),
     }
     const {
       mb,

@@ -1,51 +1,40 @@
-import React, { useEffect, useState } from 'react'
-import { useQuery } from '@apollo/client'
+import React from 'react'
+import { number } from 'prop-types'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
-import { Heading, Stack, useToast, Divider } from '@chakra-ui/core'
-import { DOMAINS } from './graphql/queries'
+import { ListOf } from './ListOf'
+import { Stack, Button, Box, Divider } from '@chakra-ui/core'
+import {
+  REVERSE_PAGINATED_DOMAINS as BACKWARD,
+  PAGINATED_DOMAINS as FORWARD,
+} from './graphql/queries'
 import { useUserState } from './UserState'
-import { Domain } from './Domain'
-import { DomainList } from './DomainList'
-import { PaginationButtons } from './PaginationButtons'
+import { DomainCard } from './DomainCard'
+import { usePaginatedCollection } from './usePaginatedCollection'
 
-export default function DomainsPage() {
+export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
-  const [domains, setDomains] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [domainsPerPage, setDomainsPerPage] = useState(10)
-  const toast = useToast()
-  const { loading, _error, data } = useQuery(DOMAINS, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    onError: ({ message }) => {
-      toast({
-        title: 'Error',
-        description: message,
-        status: 'failure',
-        duration: 9000,
-        isClosable: true,
-      })
-    },
+  const {
+    loading,
+    error,
+    nodes,
+    next,
+    previous,
+    hasNextPage,
+    hasPreviousPage,
+  } = usePaginatedCollection({
+    fetchForward: FORWARD,
+    fetchBackward: BACKWARD,
+    fetchHeaders: { authorization: currentUser.jwt },
+    recordsPerPage: domainsPerPage,
   })
 
-  // TODO: refactor without useEffect
-  useEffect(
-    () => {
-      const fetchDomains = async () => {
-        let domainsData = []
-        if (data && data.domains.edges) {
-          domainsData = data.domains.edges.map(e => e.node)
-          setDomains(domainsData)
-        }
-      }
-      fetchDomains()
-    },
-    [data],
-  )
+  if (error)
+    return (
+      <p>
+        <Trans>error {error.message}</Trans>
+      </p>
+    )
 
   if (loading)
     return (
@@ -54,45 +43,32 @@ export default function DomainsPage() {
       </p>
     )
 
-  // Get current domains
-  const indexOfLastDomain = currentPage * domainsPerPage
-  const indexOfFirstDomain = indexOfLastDomain - domainsPerPage
-  const currentDomains = domains.slice(indexOfFirstDomain, indexOfLastDomain)
-
-  // Change page
-  const paginate = pageNumber => setCurrentPage(pageNumber)
-
   return (
     <Layout>
-      <Stack spacing={10} shouldWrapChildren>
-        <Heading as="h1">
-          <Trans>Domains</Trans>
-        </Heading>
-        {data &&
-          data.domains && (
-            <Stack spacing={4}>
-              <Stack spacing={4} direction="row" flexWrap="wrap">
-                <DomainList domains={currentDomains}>
-                  {domain => (
-                    <Domain
-                      key={domain.url}
-                      url={domain.url}
-                      lastRan={domain.lastRan}
-                    />
-                  )}
-                </DomainList>
-              </Stack>
-              <PaginationButtons
-                perPage={domainsPerPage}
-                total={domains.length}
-                paginate={paginate}
-                currentPage={currentPage}
-                setPerPage={setDomainsPerPage}
-              />
-            </Stack>
-          )}
-        <Divider />
+      <ListOf elements={nodes} ifEmpty={() => <Trans>No Domains</Trans>} mb="4">
+        {({ id, url, slug, lastRan }, index) => (
+          <Box key={`${slug}:${id}:${index}`}>
+            <DomainCard key={url} url={url} lastRan={lastRan} />
+            <Divider borderColor="gray.900" />
+          </Box>
+        )}
+      </ListOf>
+      <Stack isInline align="center" mb="4">
+        <Button
+          onClick={previous}
+          disable={!!hasPreviousPage}
+          aria-label="Previous page"
+        >
+          <Trans>Previous</Trans>
+        </Button>
+
+        <Button onClick={next} disable={!!hasNextPage} aria-label="Next page">
+          <Trans>Next</Trans>
+        </Button>
       </Stack>
+      <Trans>*All data represented is mocked for demonstration purposes</Trans>
     </Layout>
   )
 }
+
+DomainsPage.propTypes = { domainsPerPage: number }

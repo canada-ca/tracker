@@ -26,4 +26,7 @@ export const fieldRequirements = {
     typeError: { message: t`Verification code must only contains numbers` },
     required: { message: t`Code field must not be empty` },
   },
+  domainUrl: {
+    required: { message: t`Domain url field must not be empty` },
+  },
 }

@@ -6,7 +6,7 @@
 import React from 'react'
 import { Icon } from '@chakra-ui/core'
 
-const range = (len) => {
+const range = len => {
   const arr = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
@@ -18,9 +18,9 @@ const generateWebStatusIcon = () => {
   const randNum = Math.floor(Math.random() * 100 + 1)
   let statusIcon
   if (randNum < 70) {
-    statusIcon = <Icon name="check" color="green.300" />
+    statusIcon = <Icon name="check" color="strong" />
   } else {
-    statusIcon = <Icon name="warning" color="red.500" />
+    statusIcon = <Icon name="warning" color="weak" />
   }
   return statusIcon
 }
@@ -29,16 +29,16 @@ const generateEmailStatusIcon = () => {
   const randNum = Math.floor(Math.random() * 100 + 1)
   let statusIcon
   if (randNum < 33) {
-    statusIcon = <Icon name="check" color="green.300" />
+    statusIcon = <Icon name="check" color="strong" />
   } else if (randNum >= 33 && randNum < 66) {
-    statusIcon = <Icon name="warning-2" color="yellow.400" />
+    statusIcon = <Icon name="warning-2" color="moderate" />
   } else {
-    statusIcon = <Icon name="warning" color="red.500" />
+    statusIcon = <Icon name="warning" color="weak" />
   }
   return statusIcon
 }
 
-const newDomain = (names) => {
+const newDomain = names => {
   const ind = Math.floor(Math.random() * 13)
   return {
     host_domain: names[ind],

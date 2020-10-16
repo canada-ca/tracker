@@ -2,12 +2,12 @@ import React from 'react'
 import { useUserState } from './UserState'
 import { useQuery } from '@apollo/client'
 import { GET_GUIDANCE_TAGS_OF_DOMAIN } from './graphql/queries'
-import { Button, Heading, Icon, Stack } from '@chakra-ui/core'
+import { IconButton, Heading, Stack } from '@chakra-ui/core'
 import { useParams, useHistory } from 'react-router-dom'
 import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
 
-export function DmarcGuidancePage() {
+export default function DmarcGuidancePage() {
   const { currentUser } = useUserState()
   const { domainSlug } = useParams()
   const history = useHistory()
@@ -33,11 +33,15 @@ export function DmarcGuidancePage() {
   const emailScan = data.findDomainBySlug.email.edges[0].node
 
   return (
-    <Stack spacing="25px" mb="25px">
+    <Stack spacing="25px" mb="6">
       <Stack isInline align="center">
-        <Button onClick={history.goBack}>
-          <Icon color="gray.900" name="arrow-left" fontSize="2xl" />
-        </Button>
+        <IconButton
+          icon="arrow-left"
+          onClick={history.goBack}
+          color="gray.900"
+          fontSize="2xl"
+          aria-label="back to domains"
+        />
         <Heading>
           <Trans>{orgName}</Trans>
         </Heading>

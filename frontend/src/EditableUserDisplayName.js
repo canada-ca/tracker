@@ -27,6 +27,7 @@ import { useUserState } from './UserState'
 import { useLingui } from '@lingui/react'
 import { fieldRequirements } from './fieldRequirements'
 import { object, string as yupString } from 'yup'
+import { TrackerButton } from './TrackerButton'
 
 function EditableUserDisplayName({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -50,6 +51,7 @@ function EditableUserDisplayName({ detailValue }) {
           status: 'error',
           duration: 9000,
           isClosable: true,
+          position: 'bottom-left',
         })
       },
       onCompleted() {
@@ -59,6 +61,7 @@ function EditableUserDisplayName({ detailValue }) {
           status: 'success',
           duration: 9000,
           isClosable: true,
+          position: 'bottom-left',
         })
         onClose()
       },
@@ -78,22 +81,28 @@ function EditableUserDisplayName({ detailValue }) {
       </Heading>
 
       <Stack isInline align="center">
-        <Icon name="person" size="1.5rem" color="gray.300" />
+        <Icon name="person" size="icons.lg" color="gray.300" />
         <Text>{detailValue}</Text>
-        <Button ml="auto" onClick={onOpen} size="sm" variantColor="teal">
+        <TrackerButton
+          ml="auto"
+          onClick={onOpen}
+          variant="primary"
+          fontSize="sm"
+          px="3"
+        >
           <Trans>Edit</Trans>
-        </Button>
+        </TrackerButton>
       </Stack>
 
       <SlideIn in={isOpen}>
-        {styles => (
+        {(styles) => (
           <Modal
             isOpen={true}
             onClose={onClose}
             initialFocusRef={initialFocusRef}
           >
             <ModalOverlay opacity={styles.opacity} />
-            <ModalContent pb={4} {...styles}>
+            <ModalContent pb="4" {...styles}>
               <Formik
                 validateOnBlur={false}
                 initialValues={{
@@ -103,7 +112,7 @@ function EditableUserDisplayName({ detailValue }) {
                   displayName: true,
                 }}
                 validationSchema={validationSchema}
-                onSubmit={async values => {
+                onSubmit={async (values) => {
                   // Submit update detail mutation
                   await updateUserProfile({
                     variables: {
@@ -121,7 +130,7 @@ function EditableUserDisplayName({ detailValue }) {
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                      <Stack spacing={4} p={25}>
+                      <Stack spacing="4" p="6">
                         <Heading as="h3" size="sm">
                           <Trans>Current Display Name:</Trans>
                         </Heading>
@@ -137,17 +146,19 @@ function EditableUserDisplayName({ detailValue }) {
                     </ModalBody>
 
                     <ModalFooter>
-                      <Button
-                        variantColor="teal"
+                      <TrackerButton
                         isLoading={isSubmitting}
                         type="submit"
-                        mr={4}
+                        mr="4"
+                        variant="primary"
                       >
                         <Trans>Confirm</Trans>
-                      </Button>
+                      </TrackerButton>
                       <Button
-                        variantColor="teal"
-                        variant="outline"
+                        color="primary"
+                        bg="transparent"
+                        borderColor="primary"
+                        borderWidth="1px"
                         onClick={onClose}
                       >
                         <Trans>Close</Trans>
