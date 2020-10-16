@@ -1,10 +1,12 @@
 const { aql } = require('arangojs')
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
 const dkimResultsLoaderConnectionByDkimId = (
   query,
   userId,
   cleanseInput,
+  i18n,
 ) => async ({ dkimId, after, before, first, last }) => {
   let afterTemplate = aql``
   if (typeof after !== 'undefined') {
@@ -28,7 +30,9 @@ const dkimResultsLoaderConnectionByDkimId = (
       `User: ${userId} had first and last arguments set when trying to gather dkim results for dkimScan: ${dkimId}`,
     )
     throw new Error(
-      'Unable to have both first, and last arguments set at the same time.',
+      i18n._(
+        t`Unable to have both first, and last arguments set at the same time.`,
+      ),
     )
   }
 
@@ -47,7 +51,7 @@ const dkimResultsLoaderConnectionByDkimId = (
     console.error(
       `Database error occurred while user: ${userId} was trying to get dkim result information for ${dkimId}, error: ${err}`,
     )
-    throw new Error('Unable to load dkim results. Please try again.')
+    throw new Error(i18n._(t`Unable to load dkim results. Please try again.`))
   }
 
   let dkimResults
@@ -57,7 +61,7 @@ const dkimResultsLoaderConnectionByDkimId = (
     console.error(
       `Cursor error occurred while user: ${userId} was trying to get dkim result information for ${dkimId}, error: ${err}`,
     )
-    throw new Error('Unable to load dkim results. Please try again.')
+    throw new Error(i18n._(t`Unable to load dkim results. Please try again.`))
   }
 
   const hasNextPage = !!(
