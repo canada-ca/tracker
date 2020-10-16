@@ -6,6 +6,10 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
 const {
@@ -14,7 +18,7 @@ const {
 } = require('../loaders')
 
 describe('when given the load dkim results connection function', () => {
-  let query, drop, truncate, migrate, collections, user, dkimScan
+  let query, drop, truncate, migrate, collections, user, dkimScan, i18n
 
   const consoleWarnOutput = []
   const mockedWarn = (output) => consoleWarnOutput.push(output)
@@ -29,6 +33,15 @@ describe('when given the load dkim results connection function', () => {
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
+    i18n = setupI18n({
+      language: 'en',
+      locales: ['en', 'fr'],
+      missing: 'Traduction manquante',
+      catalogs: {
+        en: englishMessages,
+        fr: frenchMessages,
+      },
+    })
   })
 
   beforeEach(async () => {
@@ -74,6 +87,7 @@ describe('when given the load dkim results connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const connectionArgs = {}
@@ -127,6 +141,7 @@ describe('when given the load dkim results connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const dkimResultLoader = dkimResultLoaderByKey(query)
@@ -176,6 +191,7 @@ describe('when given the load dkim results connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const dkimResultLoader = dkimResultLoaderByKey(query)
@@ -225,6 +241,7 @@ describe('when given the load dkim results connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const connectionArgs = {}
@@ -278,6 +295,7 @@ describe('when given the load dkim results connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const dkimResultLoader = dkimResultLoaderByKey(query)
@@ -327,6 +345,7 @@ describe('when given the load dkim results connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const dkimResultLoader = dkimResultLoaderByKey(query)
@@ -377,6 +396,7 @@ describe('when given the load dkim results connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const connectionArgs = {}
@@ -400,20 +420,65 @@ describe('when given the load dkim results connection function', () => {
       })
     })
   })
-  describe('given a unsuccessful load', () => {
-    describe('first and last arguments are set', () => {
+  describe('language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given a unsuccessful load', () => {
+      describe('first and last arguments are set', () => {
+        it('throws an error', async () => {
+          const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {
+            first: 1,
+            last: 5,
+          }
+
+          try {
+            await connectionLoader({
+              dkimId: dkimScan._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Unable to have both first, and last arguments set at the same time.',
+              ),
+            )
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} had first and last arguments set when trying to gather dkim results for dkimScan: ${dkimScan._id}`,
+          ])
+        })
+      })
+    })
+    describe('database error occurs', () => {
       it('throws an error', async () => {
+        const query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database Error Occurred.'))
+
         const connectionLoader = dkimResultsLoaderConnectionByDkimId(
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
-        const connectionArgs = {
-          first: 1,
-          last: 5,
-        }
-
+        const connectionArgs = {}
         try {
           await connectionLoader({
             dkimId: dkimScan._id,
@@ -421,76 +486,148 @@ describe('when given the load dkim results connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error(
-              'Unable to have both first, and last arguments set at the same time.',
-            ),
+            new Error('Unable to load dkim results. Please try again.'),
           )
         }
-        expect(consoleWarnOutput).toEqual([
-          `User: ${user._key} had first and last arguments set when trying to gather dkim results for dkimScan: ${dkimScan._id}`,
+
+        expect(consoleErrorOutput).toEqual([
+          `Database error occurred while user: ${user._key} was trying to get dkim result information for ${dkimScan._id}, error: Error: Database Error Occurred.`,
+        ])
+      })
+    })
+    describe('cursor error occurs', () => {
+      it('throws an error', async () => {
+        const cursor = {
+          all() {
+            throw new Error('Cursor Error Occurred.')
+          },
+        }
+        const query = jest.fn().mockReturnValueOnce(cursor)
+
+        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+          query,
+          user._key,
+          cleanseInput,
+          i18n,
+        )
+
+        const connectionArgs = {}
+        try {
+          await connectionLoader({
+            dkimId: dkimScan._id,
+            ...connectionArgs,
+          })
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to load dkim results. Please try again.'),
+          )
+        }
+
+        expect(consoleErrorOutput).toEqual([
+          `Cursor error occurred while user: ${user._key} was trying to get dkim result information for ${dkimScan._id}, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
   })
-  describe('database error occurs', () => {
-    it('throws an error', async () => {
-      const query = jest
-        .fn()
-        .mockRejectedValue(new Error('Database Error Occurred.'))
-
-      const connectionLoader = dkimResultsLoaderConnectionByDkimId(
-        query,
-        user._key,
-        cleanseInput,
-      )
-
-      const connectionArgs = {}
-      try {
-        await connectionLoader({
-          dkimId: dkimScan._id,
-          ...connectionArgs,
-        })
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to load dkim results. Please try again.'),
-        )
-      }
-
-      expect(consoleErrorOutput).toEqual([
-        `Database error occurred while user: ${user._key} was trying to get dkim result information for ${dkimScan._id}, error: Error: Database Error Occurred.`,
-      ])
-    })
-  })
-  describe('cursor error occurs', () => {
-    it('throws an error', async () => {
-      const cursor = {
-        all() {
-          throw new Error('Cursor Error Occurred.')
+  describe('language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
         },
-      }
-      const query = jest.fn().mockReturnValueOnce(cursor)
+      })
+    })
+    describe('given a unsuccessful load', () => {
+      describe('first and last arguments are set', () => {
+        it('throws an error', async () => {
+          const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
 
-      const connectionLoader = dkimResultsLoaderConnectionByDkimId(
-        query,
-        user._key,
-        cleanseInput,
-      )
+          const connectionArgs = {
+            first: 1,
+            last: 5,
+          }
 
-      const connectionArgs = {}
-      try {
-        await connectionLoader({
-          dkimId: dkimScan._id,
-          ...connectionArgs,
+          try {
+            await connectionLoader({
+              dkimId: dkimScan._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} had first and last arguments set when trying to gather dkim results for dkimScan: ${dkimScan._id}`,
+          ])
         })
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to load dkim results. Please try again.'),
-        )
-      }
+      })
+    })
+    describe('database error occurs', () => {
+      it('throws an error', async () => {
+        const query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database Error Occurred.'))
 
-      expect(consoleErrorOutput).toEqual([
-        `Cursor error occurred while user: ${user._key} was trying to get dkim result information for ${dkimScan._id}, error: Error: Cursor Error Occurred.`,
-      ])
+        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+          query,
+          user._key,
+          cleanseInput,
+          i18n,
+        )
+
+        const connectionArgs = {}
+        try {
+          await connectionLoader({
+            dkimId: dkimScan._id,
+            ...connectionArgs,
+          })
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
+
+        expect(consoleErrorOutput).toEqual([
+          `Database error occurred while user: ${user._key} was trying to get dkim result information for ${dkimScan._id}, error: Error: Database Error Occurred.`,
+        ])
+      })
+    })
+    describe('cursor error occurs', () => {
+      it('throws an error', async () => {
+        const cursor = {
+          all() {
+            throw new Error('Cursor Error Occurred.')
+          },
+        }
+        const query = jest.fn().mockReturnValueOnce(cursor)
+
+        const connectionLoader = dkimResultsLoaderConnectionByDkimId(
+          query,
+          user._key,
+          cleanseInput,
+          i18n,
+        )
+
+        const connectionArgs = {}
+        try {
+          await connectionLoader({
+            dkimId: dkimScan._id,
+            ...connectionArgs,
+          })
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
+
+        expect(consoleErrorOutput).toEqual([
+          `Cursor error occurred while user: ${user._key} was trying to get dkim result information for ${dkimScan._id}, error: Error: Cursor Error Occurred.`,
+        ])
+      })
     })
   })
 })
