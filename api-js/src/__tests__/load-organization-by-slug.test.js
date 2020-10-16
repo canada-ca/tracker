@@ -3,11 +3,15 @@ dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { orgLoaderBySlug } = require('../loaders')
 
 describe('given a orgLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections
+  let query, drop, truncate, migrate, collections, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -78,8 +82,19 @@ describe('given a orgLoaderByKey dataloader', () => {
     await drop()
   })
 
-  describe('provided a single slug', () => {
-    describe('slug is in english', () => {
+  describe('language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('provided a single slug', () => {
       it('returns a single org', async () => {
         // Get Org From db
         const expectedCursor = await query`
@@ -89,31 +104,13 @@ describe('given a orgLoaderByKey dataloader', () => {
         `
         const expectedOrg = await expectedCursor.next()
 
-        const loader = orgLoaderBySlug(query, 'en')
+        const loader = orgLoaderBySlug(query, 'en', i18n)
         const org = await loader.load(expectedOrg.slug)
 
         expect(org).toEqual(expectedOrg)
       })
     })
-    describe('slug is in french', () => {
-      it('returns a single org', async () => {
-        // Get Org From db
-        const expectedCursor = await query`
-          FOR org IN organizations
-            FILTER org.orgDetails.fr.slug == "centre-de-la-securite-des-telecommunications"
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
-        `
-        const expectedOrg = await expectedCursor.next()
-
-        const loader = orgLoaderBySlug(query, 'fr')
-        const org = await loader.load(expectedOrg.slug)
-
-        expect(org).toEqual(expectedOrg)
-      })
-    })
-  })
-  describe('provided a list of ids', () => {
-    describe('slugs are in english', () => {
+    describe('provided a list of slugs', () => {
       it('returns a list of orgs', async () => {
         const orgSlugs = []
         const expectedOrgs = []
@@ -128,12 +125,82 @@ describe('given a orgLoaderByKey dataloader', () => {
           expectedOrgs.push(tempOrg)
         }
 
-        const loader = orgLoaderBySlug(query, 'en')
+        const loader = orgLoaderBySlug(query, 'en', i18n)
         const orgs = await loader.loadMany(orgSlugs)
         expect(orgs).toEqual(expectedOrgs)
       })
     })
-    describe('slugs are in french', () => {
+    describe('database error is raised', () => {
+      it('returns an error', async () => {
+        const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+        const loader = orgLoaderBySlug(mockedQuery, 'en', i18n)
+  
+        try {
+          await loader.load('slug')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to find organization. Please try again.'),
+          )
+        }
+  
+        expect(consoleOutput).toEqual([
+          `Database error when running orgLoaderBySlug: Error: Database error occurred.`,
+        ])
+      })
+    })
+    describe('cursor error is raised', () => {
+      it('returns an error', async () => {
+        const cursor = {
+          each() {
+            throw new Error('Cursor error occurred.')
+          },
+        }
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = orgLoaderBySlug(mockedQuery, 'fr', i18n)
+  
+        try {
+          await loader.load('slug')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to find organization. Please try again.'),
+          )
+        }
+  
+        expect(consoleOutput).toEqual([
+          `Cursor error during orgLoaderBySlug: Error: Cursor error occurred.`,
+        ])
+      })
+    })
+  })
+  describe('language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('provided a single slug', () => {
+      it('returns a single org', async () => {
+        // Get Org From db
+        const expectedCursor = await query`
+          FOR org IN organizations
+            FILTER org.orgDetails.fr.slug == "centre-de-la-securite-des-telecommunications"
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
+        `
+        const expectedOrg = await expectedCursor.next()
+
+        const loader = orgLoaderBySlug(query, 'fr', i18n)
+        const org = await loader.load(expectedOrg.slug)
+
+        expect(org).toEqual(expectedOrg)
+      })
+    })
+    describe('provided a list of slugs', () => {
       it('returns a list of orgs', async () => {
         const orgSlugs = []
         const expectedOrgs = []
@@ -148,51 +215,51 @@ describe('given a orgLoaderByKey dataloader', () => {
           expectedOrgs.push(tempOrg)
         }
 
-        const loader = orgLoaderBySlug(query, 'fr')
+        const loader = orgLoaderBySlug(query, 'fr', i18n)
         const orgs = await loader.loadMany(orgSlugs)
         expect(orgs).toEqual(expectedOrgs)
       })
     })
-  })
-  describe('database error is raised', () => {
-    it('returns an error', async () => {
-      query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-      const loader = orgLoaderBySlug(query, 'en')
-
-      try {
-        await loader.load('slug')
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to find organization. Please try again.'),
-        )
-      }
-
-      expect(consoleOutput).toEqual([
-        `Database error when running orgLoaderBySlug: Error: Database error occurred.`,
-      ])
+    describe('database error is raised', () => {
+      it('returns an error', async () => {
+        const mockedQuery = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+        const loader = orgLoaderBySlug(mockedQuery, 'en', i18n)
+  
+        try {
+          await loader.load('slug')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('todo'),
+          )
+        }
+  
+        expect(consoleOutput).toEqual([
+          `Database error when running orgLoaderBySlug: Error: Database error occurred.`,
+        ])
+      })
     })
-  })
-  describe('cursor error is raised', () => {
-    it('returns an error', async () => {
-      const cursor = {
-        each() {
-          throw new Error('Cursor error occurred.')
-        },
-      }
-      query = jest.fn().mockReturnValue(cursor)
-      const loader = orgLoaderBySlug(query, 'fr')
-
-      try {
-        await loader.load('slug')
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to find organization. Please try again.'),
-        )
-      }
-
-      expect(consoleOutput).toEqual([
-        `Cursor error during orgLoaderBySlug: Error: Cursor error occurred.`,
-      ])
+    describe('cursor error is raised', () => {
+      it('returns an error', async () => {
+        const cursor = {
+          each() {
+            throw new Error('Cursor error occurred.')
+          },
+        }
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = orgLoaderBySlug(mockedQuery, 'fr', i18n)
+  
+        try {
+          await loader.load('slug')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('todo'),
+          )
+        }
+  
+        expect(consoleOutput).toEqual([
+          `Cursor error during orgLoaderBySlug: Error: Cursor error occurred.`,
+        ])
+      })
     })
   })
 })
