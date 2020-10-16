@@ -1,6 +1,7 @@
 const DataLoader = require('dataloader')
+const { t } = require('@lingui/macro')
 
-module.exports.orgLoaderByKey = (query, language) =>
+module.exports.orgLoaderByKey = (query, language, i18n) =>
   new DataLoader(async (ids) => {
     let cursor
 
@@ -12,7 +13,7 @@ module.exports.orgLoaderByKey = (query, language) =>
       `
     } catch (err) {
       console.error(`Database error when running orgLoaderByKey: ${err}`)
-      throw new Error('Unable to find organization. Please try again.')
+      throw new Error(i18n._(t`Unable to find organization. Please try again.`))
     }
 
     const orgMap = {}
@@ -22,7 +23,7 @@ module.exports.orgLoaderByKey = (query, language) =>
       })
     } catch (err) {
       console.error(`Cursor error occurred during orgLoaderByKey: ${err}`)
-      throw new Error('Unable to find organization. Please try again.')
+      throw new Error(i18n._(t`Unable to find organization. Please try again.`))
     }
 
     return ids.map((id) => orgMap[id])
