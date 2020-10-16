@@ -6,6 +6,10 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
 const {
@@ -14,7 +18,7 @@ const {
 } = require('../loaders')
 
 describe('when given the load dmarc connection function', () => {
-  let query, drop, truncate, migrate, collections, user, domain
+  let query, drop, truncate, migrate, collections, user, domain, i18n
 
   const consoleWarnOutput = []
   const mockedWarn = (output) => consoleWarnOutput.push(output)
@@ -29,6 +33,15 @@ describe('when given the load dmarc connection function', () => {
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
+    i18n = setupI18n({
+      language: 'en',
+      locales: ['en', 'fr'],
+      missing: 'Traduction manquante',
+      catalogs: {
+        en: englishMessages,
+        fr: frenchMessages,
+      },
+    })
   })
 
   beforeEach(async () => {
@@ -77,6 +90,7 @@ describe('when given the load dmarc connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const connectionArgs = {}
@@ -130,6 +144,7 @@ describe('when given the load dmarc connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const dkimLoader = dmarcLoaderByKey(query)
@@ -179,6 +194,7 @@ describe('when given the load dmarc connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const dkimLoader = dmarcLoaderByKey(query)
@@ -228,6 +244,7 @@ describe('when given the load dmarc connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const connectionArgs = {}
@@ -281,6 +298,7 @@ describe('when given the load dmarc connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const dkimLoader = dmarcLoaderByKey(query)
@@ -330,6 +348,7 @@ describe('when given the load dmarc connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const dkimLoader = dmarcLoaderByKey(query)
@@ -390,6 +409,7 @@ describe('when given the load dmarc connection function', () => {
             query,
             user._key,
             cleanseInput,
+            i18n,
           )
 
           const dmarcLoader = dmarcLoaderByKey(query)
@@ -445,6 +465,7 @@ describe('when given the load dmarc connection function', () => {
             query,
             user._key,
             cleanseInput,
+            i18n,
           )
 
           const dmarcLoader = dmarcLoaderByKey(query)
@@ -500,6 +521,7 @@ describe('when given the load dmarc connection function', () => {
             query,
             user._key,
             cleanseInput,
+            i18n,
           )
 
           const dmarcLoader = dmarcLoaderByKey(query)
@@ -548,6 +570,7 @@ describe('when given the load dmarc connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const connectionArgs = {}
@@ -571,19 +594,65 @@ describe('when given the load dmarc connection function', () => {
       })
     })
   })
-  describe('given a unsuccessful load', () => {
-    describe('first and last arguments are set', () => {
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given a unsuccessful load', () => {
+      describe('first and last arguments are set', () => {
+        it('throws an error', async () => {
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {
+            first: 1,
+            last: 2,
+          }
+
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Unable to have both first, and last arguments set at the same time.',
+              ),
+            )
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} had first and last arguments set when trying to gather dmarc scans for domain: ${domain._id}`,
+          ])
+        })
+      })
+    })
+    describe('database error occurs', () => {
       it('throws an error', async () => {
+        const query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database Error Occurred.'))
+
         const connectionLoader = dmarcLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
-        const connectionArgs = {
-          first: 1,
-          last: 2,
-        }
+        const connectionArgs = {}
 
         try {
           await connectionLoader({
@@ -592,78 +661,151 @@ describe('when given the load dmarc connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error(
-              'Unable to have both first, and last arguments set at the same time.',
-            ),
+            new Error('Unable to load dmarc scans. Please try again.'),
           )
         }
-        expect(consoleWarnOutput).toEqual([
-          `User: ${user._key} had first and last arguments set when trying to gather dmarc scans for domain: ${domain._id}`,
+
+        expect(consoleErrorOutput).toEqual([
+          `Database error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Database Error Occurred.`,
+        ])
+      })
+    })
+    describe('cursor error occurs', () => {
+      it('throws an error', async () => {
+        const cursor = {
+          all() {
+            throw new Error('Cursor Error Occurred.')
+          },
+        }
+        const query = jest.fn().mockReturnValueOnce(cursor)
+
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          query,
+          user._key,
+          cleanseInput,
+          i18n,
+        )
+
+        const connectionArgs = {}
+
+        try {
+          await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to load dmarc scans. Please try again.'),
+          )
+        }
+
+        expect(consoleErrorOutput).toEqual([
+          `Cursor error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
   })
-  describe('database error occurs', () => {
-    it('throws an error', async () => {
-      const query = jest
-        .fn()
-        .mockRejectedValue(new Error('Database Error Occurred.'))
-
-      const connectionLoader = dmarcLoaderConnectionsByDomainId(
-        query,
-        user._key,
-        cleanseInput,
-      )
-
-      const connectionArgs = {}
-
-      try {
-        await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to load dmarc scans. Please try again.'),
-        )
-      }
-
-      expect(consoleErrorOutput).toEqual([
-        `Database error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Database Error Occurred.`,
-      ])
-    })
-  })
-  describe('cursor error occurs', () => {
-    it('throws an error', async () => {
-      const cursor = {
-        all() {
-          throw new Error('Cursor Error Occurred.')
+  describe('users language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
         },
-      }
-      const query = jest.fn().mockReturnValueOnce(cursor)
+      })
+    })
+    describe('given a unsuccessful load', () => {
+      describe('first and last arguments are set', () => {
+        it('throws an error', async () => {
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
 
-      const connectionLoader = dmarcLoaderConnectionsByDomainId(
-        query,
-        user._key,
-        cleanseInput,
-      )
+          const connectionArgs = {
+            first: 1,
+            last: 2,
+          }
 
-      const connectionArgs = {}
-
-      try {
-        await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} had first and last arguments set when trying to gather dmarc scans for domain: ${domain._id}`,
+          ])
         })
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to load dmarc scans. Please try again.'),
-        )
-      }
+      })
+    })
+    describe('database error occurs', () => {
+      it('throws an error', async () => {
+        const query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database Error Occurred.'))
 
-      expect(consoleErrorOutput).toEqual([
-        `Cursor error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Cursor Error Occurred.`,
-      ])
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          query,
+          user._key,
+          cleanseInput,
+          i18n,
+        )
+
+        const connectionArgs = {}
+
+        try {
+          await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
+
+        expect(consoleErrorOutput).toEqual([
+          `Database error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Database Error Occurred.`,
+        ])
+      })
+    })
+    describe('cursor error occurs', () => {
+      it('throws an error', async () => {
+        const cursor = {
+          all() {
+            throw new Error('Cursor Error Occurred.')
+          },
+        }
+        const query = jest.fn().mockReturnValueOnce(cursor)
+
+        const connectionLoader = dmarcLoaderConnectionsByDomainId(
+          query,
+          user._key,
+          cleanseInput,
+          i18n,
+        )
+
+        const connectionArgs = {}
+
+        try {
+          await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
+
+        expect(consoleErrorOutput).toEqual([
+          `Cursor error occurred while user: ${user._key} was trying to get dmarc information for ${domain._id}, error: Error: Cursor Error Occurred.`,
+        ])
+      })
     })
   })
 })
