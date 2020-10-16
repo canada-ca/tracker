@@ -707,13 +707,31 @@ const organizationType = new GraphQLObjectType({
     domainCount: {
       type: GraphQLInt,
       description: 'The number of domains associated with this organization.',
-      resolve: async () => {},
+      resolve: async (
+        { _id },
+        { loaders: { domainLoaderCountByOrgId } },
+      ) => {
+        const count = await domainLoaderCountByOrgId({
+          orgId: _id,
+        })
+        return count
+      },
     },
     domains: {
       type: domainConnection.connectionType,
       description: 'The domains which are associated with this organization.',
       args: connectionArgs,
-      resolve: async () => {},
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { domainLoaderConnectionsByOrgId } },
+      ) => {
+        const connections = await domainLoaderConnectionsByOrgId({
+          orgId: _id,
+          ...args,
+        })
+        return connections
+      },
     },
   }),
   interfaces: [nodeInterface],

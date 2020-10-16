@@ -6,10 +6,12 @@ const {
 const {
   domainLoaderConnectionsByUserId,
 } = require('./load-domain-connections-by-user-id')
+const { domainLoaderCountByOrgId } = require('./load-domain-count-by-org-id')
 
 module.exports = {
   domainLoaderByKey,
   domainLoaderByDomain,
   domainLoaderConnectionsByOrgId,
   domainLoaderConnectionsByUserId,
+  domainLoaderCountByOrgId,
 }
