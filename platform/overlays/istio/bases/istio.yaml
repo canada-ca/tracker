@@ -8439,7 +8439,7 @@ data:
     deployment:
       accessible_namespaces: ['**']
     login_token:
-      signing_key: "vyODi9eIRu"
+      signing_key: "wCSXNgV2g0"
     server:
       port: 20001
       web_root: /kiali
