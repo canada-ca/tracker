@@ -4,10 +4,13 @@ const {
   DMARC_REPORT_API_URL = 'http://localhost:4001/graphql',
 } = process.env
 
+const { t } = require('@lingui/macro')
+
 const dmarcReportLoader = ({
   generateGqlQuery,
   generateDetailTableFields,
   fetch,
+  i18n,
 }) => async ({ info, domain, userId, tokenize }) => {
   const genGqlQuery = generateGqlQuery({ generateDetailTableFields })
   let data
@@ -33,7 +36,7 @@ const dmarcReportLoader = ({
       `Fetch error occurred well User: ${userId} was trying to retrieve ${info.fieldName} from the dmarc-report-api, error: ${err}`,
     )
     throw new Error(
-      `Unable to retrieve ${info.fieldName} for domain: ${domain}.`,
+      i18n._(t`Unable to retrieve ${info.fieldName} for domain: ${domain}.`),
     )
   }
 
