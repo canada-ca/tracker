@@ -25,6 +25,7 @@ const {
   dmarcReportLoader,
   domainLoaderByKey,
   domainLoaderByDomain,
+  domainLoaderConnectionsByOrgId,
   domainLoaderConnectionsByUserId,
   dkimLoaderByKey,
   dkimResultLoaderByKey,
@@ -119,11 +120,18 @@ const Server = (context = {}) => {
             fetch,
           }),
           domainLoaderByDomain: domainLoaderByDomain(query, i18n),
-          domainLoaderByKey: domainLoaderByKey(query),
+          domainLoaderByKey: domainLoaderByKey(query, i18n),
+          domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
+            query,
+            userId,
+            cleanseInput,
+            i18n,
+          ),
           domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
             query,
             userId,
             cleanseInput,
+            i18n,
           ),
           orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
             query,
