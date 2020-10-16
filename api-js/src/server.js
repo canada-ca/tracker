@@ -118,8 +118,8 @@ const Server = (context = {}) => {
             generateDetailTableFields,
             fetch,
           }),
+          domainLoaderByDomain: domainLoaderByDomain(query, i18n),
           domainLoaderByKey: domainLoaderByKey(query),
-          domainLoaderByDomain: domainLoaderByDomain(query),
           domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
             query,
             userId,

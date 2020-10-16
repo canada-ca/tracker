@@ -64,6 +64,8 @@
       'Unable to create domain. Please try again.',
     'Unable to create organization. Please try again.':
       'Unable to create organization. Please try again.',
+    'Unable to find domain. Please try again.':
+      'Unable to find domain. Please try again.',
     'Unable to invite user. Please try again.':
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org. Please try again.':

@@ -36,6 +36,7 @@
     'Unable to authenticate. Please try again.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
+    'Unable to find domain. Please try again.': 'todo',
     'Unable to invite user. Please try again.': 'todo',
     'Unable to invite yourself to an org. Please try again.': 'todo',
     'Unable to load domains. Please try again.': 'todo',
