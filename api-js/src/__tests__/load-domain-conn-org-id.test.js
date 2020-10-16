@@ -3,6 +3,10 @@ dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
 const {
@@ -12,7 +16,7 @@ const {
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load domain connection using org id function', () => {
-  let query, drop, truncate, migrate, collections, user, org, domain, domainTwo
+  let query, drop, truncate, migrate, collections, user, org, domain, domainTwo, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -394,173 +398,379 @@ describe('given the load domain connection using org id function', () => {
       })
     })
   })
-  describe('given an unsuccessful load', () => {
-    describe('first and last arguments are set', () => {
-      it('returns an error message', async () => {
-        const connectionLoader = domainLoaderConnectionsByOrgId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {
-          first: 1,
-          last: 5,
-        }
-        try {
-          await connectionLoader({
-            orgId: org._id,
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Error, unable to have first, and last set at the same time.',
-            ),
-          )
-        }
-
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} tried to have first and last set in domain connection query`,
-        ])
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
       })
     })
-  })
-  describe('given a database error', () => {
-    describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
-      it('returns an error message', async () => {
-        const query = jest
-          .fn()
-          .mockRejectedValue(new Error('Database Error Occurred.'))
-
-        const connectionLoader = domainLoaderConnectionsByOrgId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            orgId: org._id,
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load domains. Please try again.'),
+    describe('given an unsuccessful load', () => {
+      describe('first and last arguments are set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
           )
-        }
-
-        expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
-        ])
+  
+          const connectionArgs = {
+            first: 1,
+            last: 5,
+          }
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Error, unable to have first, and last set at the same time.',
+              ),
+            )
+          }
+  
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} tried to have first and last set in domain connection query`,
+          ])
+        })
       })
     })
-    describe('when gathering domains', () => {
-      it('returns an error message', async () => {
-        const query = jest
-          .fn()
-          .mockReturnValueOnce({
-            next() {
-              return ['domain1']
-            },
-          })
-          .mockRejectedValue(new Error('Database Error Occurred.'))
+    describe('given a database error', () => {
+      describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockRejectedValue(new Error('Database Error Occurred.'))
 
-        const connectionLoader = domainLoaderConnectionsByOrgId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            orgId: org._id,
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load domains. Please try again.'),
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
           )
-        }
 
-        expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
-        ])
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load domains. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+          ])
+        })
+      })
+      describe('when gathering domains', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockReturnValueOnce({
+              next() {
+                return ['domain1']
+              },
+            })
+            .mockRejectedValue(new Error('Database Error Occurred.'))
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load domains. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+          ])
+        })
       })
     })
-  })
-  describe('given a cursor error', () => {
-    describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
-      it('returns an error message', async () => {
-        const cursor = {
-          next() {
-            throw new Error('Cursor error occurred.')
-          },
-        }
-        const query = jest.fn().mockReturnValueOnce(cursor)
-
-        const connectionLoader = domainLoaderConnectionsByOrgId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            orgId: org._id,
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load domains. Please try again.'),
-          )
-        }
-
-        expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
-        ])
-      })
-    })
-    describe('when gathering domains', () => {
-      it('returns an error message', async () => {
-        const cursor = {
-          next() {
-            return ['domain1']
-          },
-        }
-        const query = jest
-          .fn()
-          .mockReturnValueOnce(cursor)
-          .mockReturnValue({
+    describe('given a cursor error', () => {
+      describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
+        it('returns an error message', async () => {
+          const cursor = {
             next() {
               throw new Error('Cursor error occurred.')
             },
-          })
+          }
+          const query = jest.fn().mockReturnValueOnce(cursor)
 
-        const connectionLoader = domainLoaderConnectionsByOrgId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            orgId: org._id,
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load domains. Please try again.'),
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
           )
-        }
 
-        expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
-        ])
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load domains. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Cursor error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+          ])
+        })
+      })
+      describe('when gathering domains', () => {
+        it('returns an error message', async () => {
+          const cursor = {
+            next() {
+              return ['domain1']
+            },
+          }
+          const query = jest
+            .fn()
+            .mockReturnValueOnce(cursor)
+            .mockReturnValue({
+              next() {
+                throw new Error('Cursor error occurred.')
+              },
+            })
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load domains. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+          ])
+        })
+      })
+    })
+  })
+  describe('users language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given an unsuccessful load', () => {
+      describe('first and last arguments are set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+  
+          const connectionArgs = {
+            first: 1,
+            last: 5,
+          }
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+          }
+  
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} tried to have first and last set in domain connection query`,
+          ])
+        })
+      })
+    })
+    describe('given a database error', () => {
+      describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockRejectedValue(new Error('Database Error Occurred.'))
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('todo'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+          ])
+        })
+      })
+      describe('when gathering domains', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockReturnValueOnce({
+              next() {
+                return ['domain1']
+              },
+            })
+            .mockRejectedValue(new Error('Database Error Occurred.'))
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('todo'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+          ])
+        })
+      })
+    })
+    describe('given a cursor error', () => {
+      describe('when gathering domain keys that are claimed by orgs that the user has affiliations to', () => {
+        it('returns an error message', async () => {
+          const cursor = {
+            next() {
+              throw new Error('Cursor error occurred.')
+            },
+          }
+          const query = jest.fn().mockReturnValueOnce(cursor)
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('todo'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Cursor error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+          ])
+        })
+      })
+      describe('when gathering domains', () => {
+        it('returns an error message', async () => {
+          const cursor = {
+            next() {
+              return ['domain1']
+            },
+          }
+          const query = jest
+            .fn()
+            .mockReturnValueOnce(cursor)
+            .mockReturnValue({
+              next() {
+                throw new Error('Cursor error occurred.')
+              },
+            })
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('todo'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+          ])
+        })
       })
     })
   })

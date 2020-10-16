@@ -1,7 +1,8 @@
 const { aql } = require('arangojs')
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
-const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
+const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput, i18n) => async ({
   orgId,
   after,
   before,
@@ -33,7 +34,7 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
       `User: ${userId} tried to have first and last set in domain connection query`,
     )
     throw new Error(
-      'Error, unable to have first, and last set at the same time.',
+      i18n._(t`Error, unable to have first, and last set at the same time.`),
     )
   }
 
@@ -52,7 +53,7 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
     console.error(
       `Database error occurred while user: ${userId} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
     )
-    throw new Error('Unable to load domains. Please try again.')
+    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
 
   let acceptedDomains
@@ -62,7 +63,7 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
     console.error(
       `Cursor error occurred while user: ${userId} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
     )
-    throw new Error('Unable to load domains. Please try again.')
+    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
 
   let domainCursor
@@ -79,7 +80,7 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
     console.error(
       `Database error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId.`,
     )
-    throw new Error('Unable to load domains. Please try again.')
+    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
 
   let domains
@@ -89,7 +90,7 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput) => async ({
     console.error(
       `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId.`,
     )
-    throw new Error('Unable to load domains. Please try again.')
+    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
 
   const hasNextPage = !!(typeof first !== 'undefined' && domains.length > first)
