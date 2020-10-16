@@ -43,7 +43,7 @@
   "devDependencies": {
     "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",
-    "@babel/node": "^7.10.5",
+    "@babel/node": "^7.12.1",
     "@babel/preset-env": "^7.11.5",
     "@lingui/cli": "^2.9.2",
     "@lingui/loader": "^2.9.2",
