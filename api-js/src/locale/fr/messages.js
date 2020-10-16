@@ -7,11 +7,13 @@
   },
   messages: {
     'Authentication error, please sign in again.': 'todo',
+    'Could not retrieve specified domain.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'todo',
     'New passwords do not match. Please try again.': 'todo',
+    'No domain with the provided domain could be found.': 'todo',
     'Password is not strong enough. Please try again.': 'todo',
     'Password is too short.': 'todo',
     'Password was successfully reset.': 'todo',
@@ -34,6 +36,7 @@
     'Unable to create organization. Please try again.': 'todo',
     'Unable to invite user. Please try again.': 'todo',
     'Unable to invite yourself to an org. Please try again.': 'todo',
+    'Unable to load domains. Please try again.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
     'Unable to remove organization. Please try again.': 'todo',
     'Unable to reset password. Please try again.': 'todo',

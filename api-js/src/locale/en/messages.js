@@ -20,12 +20,16 @@
   messages: {
     'Authentication error, please sign in again.':
       'Authentication error, please sign in again.',
+    'Could not retrieve specified domain.':
+      'Could not retrieve specified domain.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'If an account with this username is found, a password reset link will be found in your inbox.',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'If an account with this username is found, an email verification link will be found in your inbox.',
     'New passwords do not match. Please try again.':
       'New passwords do not match. Please try again.',
+    'No domain with the provided domain could be found.':
+      'No domain with the provided domain could be found.',
     'Password is not strong enough. Please try again.':
       'Password is not strong enough. Please try again.',
     'Password is too short.': 'Password is too short.',
@@ -60,6 +64,8 @@
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org. Please try again.':
       'Unable to invite yourself to an org. Please try again.',
+    'Unable to load domains. Please try again.':
+      'Unable to load domains. Please try again.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
     'Unable to remove organization. Please try again.':

@@ -20,6 +20,10 @@ msgstr ""
 msgid "Authentication error, please sign in again."
 msgstr "todo"
 
+#: src/queries/domains/find-domain-by-domain.js:48
+msgid "Could not retrieve specified domain."
+msgstr "todo"
+
 #: src/mutations/user/send-password-reset.js:72
 msgid "If an account with this username is found, a password reset link will be found in your inbox."
 msgstr "todo"
@@ -30,6 +34,10 @@ msgstr "todo"
 
 #: src/mutations/user/reset-password.js:86
 msgid "New passwords do not match. Please try again."
+msgstr "todo"
+
+#: src/queries/domains/find-domain-by-domain.js:39
+msgid "No domain with the provided domain could be found."
 msgstr "todo"
 
 #: src/mutations/user/reset-password.js:95
@@ -119,6 +127,10 @@ msgstr "todo"
 
 #: src/mutations/user-affiliations/invite-user-to-org.js:68
 msgid "Unable to invite yourself to an org. Please try again."
+msgstr "todo"
+
+#: src/queries/domains/find-my-domains.js:25
+msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
 #: src/mutations/domain/remove-domain.js:58
