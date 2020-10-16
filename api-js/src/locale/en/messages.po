@@ -194,6 +194,10 @@ msgstr "Unable to remove organization. Please try again."
 msgid "Unable to reset password. Please try again."
 msgstr "Unable to reset password. Please try again."
 
+#: src/loaders/dmarc-report/load-dmarc-report.js:39
+msgid "Unable to retrieve {0} for domain: {domain}."
+msgstr "Unable to retrieve {0} for domain: {domain}."
+
 #: src/mutations/user/send-phone-code.js:55
 #: src/mutations/user/send-phone-code.js:73
 #: src/mutations/user/send-phone-code.js:87
