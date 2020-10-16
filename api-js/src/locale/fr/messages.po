@@ -28,6 +28,11 @@ msgstr "todo"
 msgid "Could not retrieve specified organization."
 msgstr "todo"
 
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:37
+#: src/loaders/domains/load-domain-connections-by-user-id.js:36
+msgid "Error, unable to have first, and last set at the same time."
+msgstr "todo"
+
 #: src/mutations/user/send-password-reset.js:72
 msgid "If an account with this username is found, a password reset link will be found in your inbox."
 msgstr "todo"
@@ -128,6 +133,8 @@ msgstr "todo"
 
 #: src/loaders/domains/load-domain-by-domain.js:18
 #: src/loaders/domains/load-domain-by-domain.js:28
+#: src/loaders/domains/load-domain-by-key.js:18
+#: src/loaders/domains/load-domain-by-key.js:28
 msgid "Unable to find domain. Please try again."
 msgstr "todo"
 
@@ -142,12 +149,21 @@ msgstr "todo"
 msgid "Unable to invite yourself to an org. Please try again."
 msgstr "todo"
 
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:56
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:66
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:83
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:93
+#: src/loaders/domains/load-domain-connections-by-user-id.js:69
 #: src/queries/domains/find-my-domains.js:25
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
 #: src/queries/organizations/find-my-organizations.js:24
 msgid "Unable to load organizations. Please try again."
+msgstr "todo"
+
+#: src/loaders/domains/load-domain-connections-by-user-id.js:56
+msgid "Unable to query domains. Please try again."
 msgstr "todo"
 
 #: src/mutations/domain/remove-domain.js:58

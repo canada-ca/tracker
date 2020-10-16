@@ -9,6 +9,7 @@
     'Authentication error, please sign in again.': 'todo',
     'Could not retrieve specified domain.': 'todo',
     'Could not retrieve specified organization.': 'todo',
+    'Error, unable to have first, and last set at the same time.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
     'If an account with this username is found, an email verification link will be found in your inbox.':
@@ -41,6 +42,7 @@
     'Unable to invite yourself to an org. Please try again.': 'todo',
     'Unable to load domains. Please try again.': 'todo',
     'Unable to load organizations. Please try again.': 'todo',
+    'Unable to query domains. Please try again.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
     'Unable to remove organization. Please try again.': 'todo',
     'Unable to reset password. Please try again.': 'todo',

@@ -24,6 +24,8 @@
       'Could not retrieve specified domain.',
     'Could not retrieve specified organization.':
       'Could not retrieve specified organization.',
+    'Error, unable to have first, and last set at the same time.':
+      'Error, unable to have first, and last set at the same time.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'If an account with this username is found, a password reset link will be found in your inbox.',
     'If an account with this username is found, an email verification link will be found in your inbox.':
@@ -74,6 +76,8 @@
       'Unable to load domains. Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
+    'Unable to query domains. Please try again.':
+      'Unable to query domains. Please try again.',
     'Unable to remove domain. Please try again.':
       'Unable to remove domain. Please try again.',
     'Unable to remove organization. Please try again.':
