@@ -1,5 +1,3 @@
-const { aql } = require('arangojs')
-
 const domainLoaderCountByOrgId = (query, userId) => async ({
   orgId,
 }) => {
@@ -9,7 +7,10 @@ const domainLoaderCountByOrgId = (query, userId) => async ({
   let domainsCursor
   try {
     domainsCursor = await query`
-    FOR v, e IN 1..1 OUTBOUND ${orgId} claims RETURN True
+    LET superAdmin = (True IN (FOR v, e IN 1 INBOUND ${userDBId} affiliations FILTER e.permission == "super_admin" RETURN True) ? True : False)
+    LET affiliated = (True IN (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations FILTER v._id == ${orgId} RETURN True) ? True : False)
+    LET domainCounter = (superAdmin || affiliated ? (FOR v, e IN 1..1 OUTBOUND ${orgId} claims RETURN True) : null)
+    FOR domain in domainCounter return domain
     `
   } catch (err) {
     console.error(
