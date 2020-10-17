@@ -100,7 +100,8 @@ describe('given a orgLoaderByKey dataloader', () => {
         const expectedCursor = await query`
           FOR org IN organizations
             FILTER org.orgDetails.en.slug == "communications-security-establishment"
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
+            LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE("en", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
 
@@ -116,7 +117,8 @@ describe('given a orgLoaderByKey dataloader', () => {
         const expectedOrgs = []
         const expectedCursor = await query`
           FOR org IN organizations
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
+            LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE("en", org.orgDetails))
         `
 
         while (expectedCursor.hasNext()) {
@@ -190,7 +192,8 @@ describe('given a orgLoaderByKey dataloader', () => {
         const expectedCursor = await query`
           FOR org IN organizations
             FILTER org.orgDetails.fr.slug == "centre-de-la-securite-des-telecommunications"
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
+            LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE("fr", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
 
@@ -206,7 +209,8 @@ describe('given a orgLoaderByKey dataloader', () => {
         const expectedOrgs = []
         const expectedCursor = await query`
           FOR org IN organizations
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
+            LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE("fr", org.orgDetails))
         `
 
         while (expectedCursor.hasNext()) {
