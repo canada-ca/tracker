@@ -27,7 +27,6 @@ const {
   domainLoaderByDomain,
   domainLoaderConnectionsByOrgId,
   domainLoaderConnectionsByUserId,
-  domainLoaderCountByOrgId,
   dkimLoaderByKey,
   dkimResultLoaderByKey,
   dmarcLoaderByKey,
@@ -134,10 +133,6 @@ const Server = (context = {}) => {
             userId,
             cleanseInput,
             i18n,
-          ),
-          domainLoaderCountByOrgId: domainLoaderCountByOrgId(
-            query,
-            userId,
           ),
           orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
             query,
