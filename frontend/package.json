@@ -52,7 +52,7 @@
     "@babel/runtime": "^7.11.2",
     "@hot-loader/react-dom": "^16.13.0",
     "@lingui/cli": "^3.0.0-13",
-    "@lingui/loader": "^3.0.0-13",
+    "@lingui/loader": "^3.0.0-18",
     "@lingui/macro": "^3.0.0-13",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.4",
