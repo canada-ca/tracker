@@ -74,10 +74,14 @@
       'Unable to find dmarc scan. Please try again.',
     'Unable to find domain. Please try again.':
       'Unable to find domain. Please try again.',
+    'Unable to find https scan. Please try again.':
+      'Unable to find https scan. Please try again.',
     'Unable to find organization. Please try again.':
       'Unable to find organization. Please try again.',
     'Unable to find spf scan. Please try again.':
       'Unable to find spf scan. Please try again.',
+    'Unable to find ssl scan. Please try again.':
+      'Unable to find ssl scan. Please try again.',
     'Unable to find user. Please try again.':
       'Unable to find user. Please try again.',
     'Unable to have both first, and last arguments set at the same time.':
@@ -94,10 +98,14 @@
       'Unable to load dmarc scans. Please try again.',
     'Unable to load domains. Please try again.':
       'Unable to load domains. Please try again.',
+    'Unable to load https scans. Please try again.':
+      'Unable to load https scans. Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
     'Unable to load spf scans. Please try again.':
       'Unable to load spf scans. Please try again.',
+    'Unable to load ssl scans. Please try again.':
+      'Unable to load ssl scans. Please try again.',
     'Unable to query domains. Please try again.':
       'Unable to query domains. Please try again.',
     'Unable to query organizations. Please try again.':
