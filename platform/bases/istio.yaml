@@ -52,7 +52,7 @@ rules:
       - get
       - list
       - watch
-  - apiGroups: 
+  - apiGroups:
     - config.istio.io
     - networking.istio.io
     - authentication.istio.io
@@ -121,7 +121,7 @@ rules:
       - get
       - list
       - watch
-  - apiGroups: 
+  - apiGroups:
     - config.istio.io
     - networking.istio.io
     - authentication.istio.io
@@ -188,10 +188,10 @@ data:
       istio:
         url_service_version: http://istiod.istio-system:15014/version
       tracing:
-        url: 
+        url:
         in_cluster_url: http://tracing/jaeger
       grafana:
-        url: 
+        url:
         in_cluster_url: http://grafana:3000
       prometheus:
         url: http://prometheus.istio-system:9090
@@ -940,7 +940,7 @@ spec:
           - name: MEMORY_MAX_TRACES
             value: "50000"
           - name: QUERY_BASE_PATH
-            value:  /jaeger 
+            value:  /jaeger
           livenessProbe:
             httpGet:
               path: /
@@ -955,7 +955,7 @@ spec:
           resources:
             requests:
               cpu: 10m
-      affinity:      
+      affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
@@ -987,7 +987,7 @@ spec:
               - key: beta.kubernetes.io/arch
                 operator: In
                 values:
-                - "s390x"      
+                - "s390x"
       volumes:
       - name: data
         emptyDir: {}
@@ -6710,18 +6710,12 @@ metadata:
   namespace: istio-system
 spec:
   ports:
-  - name: status-port
-    port: 15021
-    targetPort: 15021
   - name: http2
     port: 80
     targetPort: 8080
   - name: https
     port: 443
     targetPort: 8443
-  - name: tls
-    port: 15443
-    targetPort: 15443
   selector:
     app: istio-ingressgateway
     istio: ingressgateway
