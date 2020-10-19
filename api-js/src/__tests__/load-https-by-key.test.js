@@ -5,11 +5,15 @@ require('dotenv-safe').config({
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { httpsLoaderByKey } = require('../loaders')
 
 describe('given the httpsLoaderByKey function', () => {
-  let query, drop, truncate, migrate, collections
+  let query, drop, truncate, migrate, collections, i18n
 
   const consoleErrorOutput = []
   const mockedError = (output) => consoleErrorOutput.push(output)
@@ -20,6 +24,15 @@ describe('given the httpsLoaderByKey function', () => {
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
     console.error = mockedError
+    i18n = setupI18n({
+      language: 'en',
+      locales: ['en', 'fr'],
+      missing: 'Traduction manquante',
+      catalogs: {
+        en: englishMessages,
+        fr: frenchMessages,
+      },
+    })
   })
 
   beforeEach(async () => {
@@ -70,43 +83,112 @@ describe('given the httpsLoaderByKey function', () => {
       expect(httpsScans).toEqual(expectedHttpsScans)
     })
   })
-  describe('given a database error', () => {
-    it('raises an error', async () => {
-      query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-      const loader = httpsLoaderByKey(query)
+  describe('language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given a database error', () => {
+      it('raises an error', async () => {
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+        const loader = httpsLoaderByKey(query, i18n)
 
-      try {
-        await loader.load('1')
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to find https scan. Please try again.'),
-        )
-      }
-      expect(consoleErrorOutput).toEqual([
-        `Database error occurred when running httpsLoaderByKey: Error: Database error occurred.`,
-      ])
+        try {
+          await loader.load('1')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to find https scan. Please try again.'),
+          )
+        }
+        expect(consoleErrorOutput).toEqual([
+          `Database error occurred when running httpsLoaderByKey: Error: Database error occurred.`,
+        ])
+      })
+    })
+    describe('given a cursor error', () => {
+      it('raises an error', async () => {
+        const cursor = {
+          each() {
+            throw new Error('Cursor error occurred.')
+          },
+        }
+        query = jest.fn().mockReturnValue(cursor)
+        const loader = httpsLoaderByKey(query, i18n)
+
+        try {
+          await loader.load('1')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to find https scan. Please try again.'),
+          )
+        }
+        expect(consoleErrorOutput).toEqual([
+          `Cursor error occurred when running httpsLoaderByKey: Error: Cursor error occurred.`,
+        ])
+      })
     })
   })
-  describe('given a cursor error', () => {
-    it('raises an error', async () => {
-      const cursor = {
-        each() {
-          throw new Error('Cursor error occurred.')
+  describe('language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
         },
-      }
-      query = jest.fn().mockReturnValue(cursor)
-      const loader = httpsLoaderByKey(query)
+      })
+    })
+    describe('given a database error', () => {
+      it('raises an error', async () => {
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+        const loader = httpsLoaderByKey(query, i18n)
 
-      try {
-        await loader.load('1')
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to find https scan. Please try again.'),
-        )
-      }
-      expect(consoleErrorOutput).toEqual([
-        `Cursor error occurred when running httpsLoaderByKey: Error: Cursor error occurred.`,
-      ])
+        try {
+          await loader.load('1')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('todo'),
+          )
+        }
+        expect(consoleErrorOutput).toEqual([
+          `Database error occurred when running httpsLoaderByKey: Error: Database error occurred.`,
+        ])
+      })
+    })
+    describe('given a cursor error', () => {
+      it('raises an error', async () => {
+        const cursor = {
+          each() {
+            throw new Error('Cursor error occurred.')
+          },
+        }
+        query = jest.fn().mockReturnValue(cursor)
+        const loader = httpsLoaderByKey(query, i18n)
+
+        try {
+          await loader.load('1')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('todo'),
+          )
+        }
+        expect(consoleErrorOutput).toEqual([
+          `Cursor error occurred when running httpsLoaderByKey: Error: Cursor error occurred.`,
+        ])
+      })
     })
   })
 })

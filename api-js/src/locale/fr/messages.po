@@ -156,6 +156,11 @@ msgstr "todo"
 msgid "Unable to find domain. Please try again."
 msgstr "todo"
 
+#: src/loaders/web-scan/load-https-by-key.js:17
+#: src/loaders/web-scan/load-https-by-key.js:29
+msgid "Unable to find https scan. Please try again."
+msgstr "todo"
+
 #: src/loaders/organizations/load-organization-by-key.js:17
 #: src/loaders/organizations/load-organization-by-key.js:27
 #: src/loaders/organizations/load-organization-by-slug.js:17
@@ -166,6 +171,11 @@ msgstr "todo"
 #: src/loaders/email-scan/load-spf-by-key.js:18
 #: src/loaders/email-scan/load-spf-by-key.js:28
 msgid "Unable to find spf scan. Please try again."
+msgstr "todo"
+
+#: src/loaders/web-scan/load-ssl-by-key.js:17
+#: src/loaders/web-scan/load-ssl-by-key.js:27
+msgid "Unable to find ssl scan. Please try again."
 msgstr "todo"
 
 #: src/loaders/user/load-user-by-key.js:18
@@ -179,6 +189,8 @@ msgstr "todo"
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:34
 #: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:44
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:44
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:45
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:45
 msgid "Unable to have both first, and last arguments set at the same time."
 msgstr "todo"
 
@@ -217,6 +229,11 @@ msgstr "todo"
 msgid "Unable to load domains. Please try again."
 msgstr "todo"
 
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:67
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:77
+msgid "Unable to load https scans. Please try again."
+msgstr "todo"
+
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:56
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:66
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:84
@@ -233,6 +250,11 @@ msgstr "todo"
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:66
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:76
 msgid "Unable to load spf scans. Please try again."
+msgstr "todo"
+
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:67
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:77
+msgid "Unable to load ssl scans. Please try again."
 msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-user-id.js:56
