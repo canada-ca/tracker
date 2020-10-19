@@ -78,6 +78,8 @@
       'Unable to find organization. Please try again.',
     'Unable to find spf scan. Please try again.':
       'Unable to find spf scan. Please try again.',
+    'Unable to find user. Please try again.':
+      'Unable to find user. Please try again.',
     'Unable to have both first, and last arguments set at the same time.':
       'Unable to have both first, and last arguments set at the same time.',
     'Unable to invite user. Please try again.':

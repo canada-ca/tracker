@@ -1,6 +1,7 @@
 const DataLoader = require('dataloader')
+const { t } = require('@lingui/macro')
 
-module.exports.userLoaderByKey = (query) =>
+module.exports.userLoaderByKey = (query, i18n) =>
   new DataLoader(async (ids) => {
     let cursor
 
@@ -14,7 +15,7 @@ module.exports.userLoaderByKey = (query) =>
       console.error(
         `Database error occurred when running userLoaderByKey: ${err}`,
       )
-      throw new Error('Unable to find user. Please try again.')
+      throw new Error(i18n._(t`Unable to find user. Please try again.`))
     }
 
     const userMap = {}
@@ -24,7 +25,7 @@ module.exports.userLoaderByKey = (query) =>
       })
     } catch (err) {
       console.error(`Cursor error occurred during userLoaderByKey: ${err}`)
-      throw new Error('Unable to find user. Please try again.')
+      throw new Error(i18n._(t`Unable to find user. Please try again.`))
     }
 
     return ids.map((id) => userMap[id])
