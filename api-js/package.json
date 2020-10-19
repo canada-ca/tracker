@@ -20,7 +20,7 @@
     "@lingui/core": "^2.9.2",
     "apollo-server-express": "^2.18.2",
     "arango-tools": "0.0.9",
-    "arangojs": "^7.0.2",
+    "arangojs": "^7.1.0",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dataloader": "^2.0.0",
