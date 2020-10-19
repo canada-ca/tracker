@@ -1,6 +1,7 @@
+const { t } = require('@lingui/macro')
 const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendOrgInviteCreateAccount = async ({
+const sendOrgInviteCreateAccount = (i18n) => async ({
   templateId,
   user,
   orgName,
@@ -19,7 +20,9 @@ const sendOrgInviteCreateAccount = async ({
     console.error(
       `Error ocurred when sending org create account invite email for ${user._key}: ${err}`,
     )
-    throw new Error('Unable to send org invite email. Please try again.')
+    throw new Error(
+      i18n._(t`Unable to send org invite email. Please try again.`),
+    )
   }
 }
 
