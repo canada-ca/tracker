@@ -303,6 +303,23 @@ msgstr "Unable to retrieve {0} for domain: {domain}."
 msgid "Unable to send TFA code, please try again."
 msgstr "Unable to send TFA code, please try again."
 
+#: src/notify/notify-send-org-invite-create-account.js:24
+#: src/notify/notify-send-org-invite-email.js:22
+#~ msgid "Unable to send org invite email. Please try again."
+#~ msgstr "Unable to send org invite email. Please try again."
+
+#: src/notify/notify-send-password-reset-email.js:23
+#~ msgid "Unable to send password reset email. Please try again."
+#~ msgstr "Unable to send password reset email. Please try again."
+
+#: src/notify/notify-send-tfa-text-msg.js:23
+#~ msgid "Unable to send two factor authentication message. Please try again."
+#~ msgstr "Unable to send two factor authentication message. Please try again."
+
+#: src/notify/notify-send-verification-email.js:23
+#~ msgid "Unable to send verification email. Please try again."
+#~ msgstr "Unable to send verification email. Please try again."
+
 #: src/mutations/user/sign-in.js:61
 #: src/mutations/user/sign-in.js:92
 #: src/mutations/user/sign-in.js:110

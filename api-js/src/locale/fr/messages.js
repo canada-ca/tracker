@@ -65,6 +65,11 @@
     'Unable to reset password. Please try again.': 'todo',
     'Unable to retrieve {0} for domain: {domain}.': 'todo',
     'Unable to send TFA code, please try again.': 'todo',
+    'Unable to send org invite email. Please try again.': 'todo',
+    'Unable to send password reset email. Please try again.': 'todo',
+    'Unable to send two factor authentication message. Please try again.':
+      'todo',
+    'Unable to send verification email. Please try again.': 'todo',
     'Unable to sign in, please try again.': 'todo',
     'Unable to sign up. Please try again.': 'todo',
     'Unable to two factor authenticate. Please try again.': 'todo',

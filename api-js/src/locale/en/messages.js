@@ -121,6 +121,14 @@
     },
     'Unable to send TFA code, please try again.':
       'Unable to send TFA code, please try again.',
+    'Unable to send org invite email. Please try again.':
+      'Unable to send org invite email. Please try again.',
+    'Unable to send password reset email. Please try again.':
+      'Unable to send password reset email. Please try again.',
+    'Unable to send two factor authentication message. Please try again.':
+      'Unable to send two factor authentication message. Please try again.',
+    'Unable to send verification email. Please try again.':
+      'Unable to send verification email. Please try again.',
     'Unable to sign in, please try again.':
       'Unable to sign in, please try again.',
     'Unable to sign up. Please try again.':
