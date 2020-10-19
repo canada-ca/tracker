@@ -538,7 +538,6 @@ const webScanType = new GraphQLObjectType({
       },
     },
   }),
-  interfaces: [nodeInterface],
   description: `Results of HTTPS, and SSL scan on the given domain.`,
 })
 
