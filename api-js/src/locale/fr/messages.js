@@ -43,6 +43,7 @@
     'Unable to find domain. Please try again.': 'todo',
     'Unable to find organization. Please try again.': 'todo',
     'Unable to find spf scan. Please try again.': 'todo',
+    'Unable to find user. Please try again.': 'todo',
     'Unable to have both first, and last arguments set at the same time.':
       'todo',
     'Unable to invite user. Please try again.': 'todo',
