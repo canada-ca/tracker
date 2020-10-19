@@ -190,9 +190,7 @@ describe('given a userLoaderByKey dataloader', () => {
         try {
           await loader.load(expectedUser._key)
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
@@ -220,9 +218,7 @@ describe('given a userLoaderByKey dataloader', () => {
         try {
           await loader.load(expectedUser._key)
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([

@@ -197,8 +197,8 @@ const Server = (context = {}) => {
             cleanseInput,
             i18n,
           ),
-          userLoaderByUserName: userLoaderByUserName(query),
-          userLoaderByKey: userLoaderByKey(query),
+          userLoaderByUserName: userLoaderByUserName(query, i18n),
+          userLoaderByKey: userLoaderByKey(query, i18n),
         },
       }
     },
