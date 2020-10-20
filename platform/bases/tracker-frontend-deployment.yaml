@@ -14,17 +14,12 @@ spec:
   strategy: {}
   template:
     metadata:
-      annotations:
-        sidecar.istio.io/inject: "true"
-      creationTimestamp: null
       labels:
         app: tracker-frontend
     spec:
       containers:
       - image: gcr.io/track-compliance/frontend
         name: frontend
-        ports:
-        - containerPort: 3000
         resources:
           limits:
             cpu: 200m
