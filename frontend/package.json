@@ -55,7 +55,7 @@
     "@lingui/loader": "^3.0.0-13",
     "@lingui/macro": "^3.0.0-13",
     "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.0.4",
+    "@testing-library/react": "^11.1.0",
     "@testing-library/react-hooks": "^3.4.2",
     "acorn": "^8.0.4",
     "babel-core": "^7.0.0-bridge.0",
