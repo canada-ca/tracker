@@ -1,6 +1,7 @@
+const { t } = require('@lingui/macro')
 const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendPasswordResetEmail = async ({
+const sendPasswordResetEmail = (i18n) => async ({
   templateId,
   user,
   resetUrl,
@@ -18,7 +19,9 @@ const sendPasswordResetEmail = async ({
     console.error(
       `Error ocurred when sending password reset email for ${user._key}: ${err}`,
     )
-    throw new Error('Unable to send password reset email. Please try again.')
+    throw new Error(
+      i18n._(t`Unable to send password reset email. Please try again.`),
+    )
   }
 }
 

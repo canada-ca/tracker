@@ -1,20 +1,18 @@
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: tracker-api-virtual-service
-  namespace: istio-system
+  namespace: api
 spec:
   hosts:
-    - '*'
+  - "*"
   gateways:
-    - publicgateway.istio-system.svc.cluster.local
+  - istio-system/publicgateway
   http:
-    - match:
-        - uri:
-            prefix: /graphql
-      route:
-        - destination:
-            host: tracker-api.api.svc.cluster.local
-            port:
-              number: 5000
-
+  - name: gateway-to-api
+    match:
+    - uri:
+        prefix: /graphql
+    route:
+    - destination:
+        host: tracker-api.api.svc.cluster.local

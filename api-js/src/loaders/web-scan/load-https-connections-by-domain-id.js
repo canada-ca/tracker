@@ -1,10 +1,12 @@
 const { aql } = require('arangojs')
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
 const httpsLoaderConnectionsByDomainId = (
   query,
   userId,
   cleanseInput,
+  i18n,
 ) => async ({ domainId, startDate, endDate, after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
@@ -39,7 +41,9 @@ const httpsLoaderConnectionsByDomainId = (
       `User: ${userId} had first and last arguments set when trying to gather https scans for domain: ${domainId}`,
     )
     throw new Error(
-      'Unable to have both first, and last arguments set at the same time.',
+      i18n._(
+        t`Unable to have both first, and last arguments set at the same time.`,
+      ),
     )
   }
 
@@ -60,7 +64,7 @@ const httpsLoaderConnectionsByDomainId = (
     console.error(
       `Database error occurred while user: ${userId} was trying to get https information for ${domainId}, error: ${err}`,
     )
-    throw new Error('Unable to load https scans. Please try again.')
+    throw new Error(i18n._(t`Unable to load https scans. Please try again.`))
   }
 
   let httpsScans
@@ -70,7 +74,7 @@ const httpsLoaderConnectionsByDomainId = (
     console.error(
       `Cursor error occurred while user: ${userId} was trying to get https information for ${domainId}, error: ${err}`,
     )
-    throw new Error('Unable to load https scans. Please try again.')
+    throw new Error(i18n._(t`Unable to load https scans. Please try again.`))
   }
 
   const hasNextPage = !!(

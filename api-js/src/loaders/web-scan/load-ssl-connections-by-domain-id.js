@@ -1,15 +1,13 @@
 const { aql } = require('arangojs')
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
-const sslLoaderConnectionsByDomainId = (query, userId, cleanseInput) => async ({
-  domainId,
-  startDate,
-  endDate,
-  after,
-  before,
-  first,
-  last,
-}) => {
+const sslLoaderConnectionsByDomainId = (
+  query,
+  userId,
+  cleanseInput,
+  i18n,
+) => async ({ domainId, startDate, endDate, after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
   let startDateTemplate = aql``
@@ -43,7 +41,9 @@ const sslLoaderConnectionsByDomainId = (query, userId, cleanseInput) => async ({
       `User: ${userId} had first and last arguments set when trying to gather ssl scans for domain: ${domainId}`,
     )
     throw new Error(
-      'Unable to have both first, and last arguments set at the same time.',
+      i18n._(
+        t`Unable to have both first, and last arguments set at the same time.`,
+      ),
     )
   }
 
@@ -64,7 +64,7 @@ const sslLoaderConnectionsByDomainId = (query, userId, cleanseInput) => async ({
     console.error(
       `Database error occurred while user: ${userId} was trying to get ssl information for ${domainId}, error: ${err}`,
     )
-    throw new Error('Unable to load ssl scans. Please try again.')
+    throw new Error(i18n._(t`Unable to load ssl scans. Please try again.`))
   }
 
   let sslScans
@@ -74,7 +74,7 @@ const sslLoaderConnectionsByDomainId = (query, userId, cleanseInput) => async ({
     console.error(
       `Cursor error occurred while user: ${userId} was trying to get ssl information for ${domainId}, error: ${err}`,
     )
-    throw new Error('Unable to load ssl scans. Please try again.')
+    throw new Error(i18n._(t`Unable to load ssl scans. Please try again.`))
   }
 
   const hasNextPage = !!(

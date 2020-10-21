@@ -14,7 +14,15 @@ const bcrypt = require('bcrypt')
 const moment = require('moment')
 const authFunctions = require('./auth')
 const { cleanseInput, slugify } = require('./validators')
-const notifyFunctions = require('./notify')
+const {
+  sendAuthEmail,
+  sendAuthTextMsg,
+  sendOrgInviteCreateAccount,
+  sendOrgInviteEmail,
+  sendPasswordResetEmail,
+  sendTfaTextMsg,
+  sendVerificationEmail,
+} = require('./notify')
 
 // const englishMessages = require('./locale/en/messages')
 // const frenchMessages = require('./locale/fr/messages')
@@ -113,7 +121,13 @@ const Server = (context = {}) => {
           slugify,
         },
         notify: {
-          ...notifyFunctions,
+          sendAuthEmail: sendAuthEmail(i18n),
+          sendAuthTextMsg: sendAuthTextMsg(i18n),
+          sendOrgInviteCreateAccount: sendOrgInviteCreateAccount(i18n),
+          sendOrgInviteEmail: sendOrgInviteEmail(i18n),
+          sendPasswordResetEmail: sendPasswordResetEmail(i18n),
+          sendTfaTextMsg: sendTfaTextMsg(i18n),
+          sendVerificationEmail: sendVerificationEmail(i18n),
         },
         loaders: {
           dmarcReportLoader: dmarcReportLoader({
@@ -211,6 +225,8 @@ const Server = (context = {}) => {
             cleanseInput,
             i18n,
           ),
+          userLoaderByUserName: userLoaderByUserName(query, i18n),
+          userLoaderByKey: userLoaderByKey(query, i18n),
         },
       }
     },

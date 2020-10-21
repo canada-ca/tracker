@@ -6,12 +6,16 @@ const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
 const { sslLoaderByKey, sslLoaderConnectionsByDomainId } = require('../loaders')
 
 describe('given the load ssl connection function', () => {
-  let query, drop, truncate, migrate, collections, user, domain
+  let query, drop, truncate, migrate, collections, user, domain, i18n
 
   const consoleWarnOutput = []
   const mockedWarn = (output) => consoleWarnOutput.push(output)
@@ -26,6 +30,15 @@ describe('given the load ssl connection function', () => {
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
     ))
+    i18n = setupI18n({
+      language: 'en',
+      locales: ['en', 'fr'],
+      missing: 'Traduction manquante',
+      catalogs: {
+        en: englishMessages,
+        fr: frenchMessages,
+      },
+    })
   })
 
   beforeEach(async () => {
@@ -68,16 +81,16 @@ describe('given the load ssl connection function', () => {
         _from: domain._id,
       })
     })
-
     describe('using no cursor', () => {
       it('returns multiple ssl scans', async () => {
         const connectionLoader = sslLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
-        const sslLoader = await sslLoaderByKey(query)
+        const sslLoader = sslLoaderByKey(query, i18n)
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -128,9 +141,10 @@ describe('given the load ssl connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
-        const sslLoader = await sslLoaderByKey(query)
+        const sslLoader = sslLoaderByKey(query, i18n)
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -177,9 +191,10 @@ describe('given the load ssl connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
-        const sslLoader = await sslLoaderByKey(query)
+        const sslLoader = sslLoaderByKey(query, i18n)
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -226,9 +241,10 @@ describe('given the load ssl connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
-        const sslLoader = await sslLoaderByKey(query)
+        const sslLoader = sslLoaderByKey(query, i18n)
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -279,9 +295,10 @@ describe('given the load ssl connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
-        const sslLoader = await sslLoaderByKey(query)
+        const sslLoader = sslLoaderByKey(query, i18n)
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -328,9 +345,10 @@ describe('given the load ssl connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
-        const sslLoader = await sslLoaderByKey(query)
+        const sslLoader = sslLoaderByKey(query, i18n)
         const expectedSslScans = await sslLoader.loadMany([
           sslScan1._key,
           sslScan2._key,
@@ -388,9 +406,10 @@ describe('given the load ssl connection function', () => {
             query,
             user._key,
             cleanseInput,
+            i18n,
           )
 
-          const sslLoader = await sslLoaderByKey(query)
+          const sslLoader = sslLoaderByKey(query)
           const expectedSslScans = await sslLoader.loadMany([
             sslScan2._key,
             sslScan3._key,
@@ -443,9 +462,10 @@ describe('given the load ssl connection function', () => {
             query,
             user._key,
             cleanseInput,
+            i18n,
           )
 
-          const sslLoader = await sslLoaderByKey(query)
+          const sslLoader = sslLoaderByKey(query, i18n)
           const expectedSslScans = await sslLoader.loadMany([
             sslScan1._key,
             sslScan2._key,
@@ -498,9 +518,10 @@ describe('given the load ssl connection function', () => {
             query,
             user._key,
             cleanseInput,
+            i18n,
           )
 
-          const sslLoader = await sslLoaderByKey(query)
+          const sslLoader = sslLoaderByKey(query, i18n)
           const expectedSslScans = await sslLoader.loadMany([sslScan2._key])
 
           expectedSslScans[0].id = expectedSslScans[0]._key
@@ -545,6 +566,7 @@ describe('given the load ssl connection function', () => {
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
 
         const connectionArgs = {}
@@ -568,20 +590,67 @@ describe('given the load ssl connection function', () => {
       })
     })
   })
-  describe('given an unsuccessful load', () => {
-    describe('first and last arguments are set', () => {
-      it('throws and error', async () => {
+  describe('language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given an unsuccessful load', () => {
+      describe('first and last arguments are set', () => {
+        it('throws and error', async () => {
+          const connectionLoader = sslLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+  
+          const connectionArgs = {
+            first: 1,
+            last: 5,
+          }
+  
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Unable to have both first, and last arguments set at the same time.',
+              ),
+            )
+          }
+  
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} had first and last arguments set when trying to gather ssl scans for domain: ${domain._id}`,
+          ])
+        })
+      })
+    })
+    describe('database error occurs', () => {
+      it('throws an error', async () => {
+        const query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database Error Occurred.'))
+  
         const connectionLoader = sslLoaderConnectionsByDomainId(
           query,
           user._key,
           cleanseInput,
+          i18n,
         )
-
-        const connectionArgs = {
-          first: 1,
-          last: 5,
-        }
-
+  
+        const connectionArgs = {}
+  
         try {
           await connectionLoader({
             domainId: domain._id,
@@ -589,79 +658,160 @@ describe('given the load ssl connection function', () => {
           })
         } catch (err) {
           expect(err).toEqual(
-            new Error(
-              'Unable to have both first, and last arguments set at the same time.',
-            ),
+            new Error('Unable to load ssl scans. Please try again.'),
           )
         }
-
-        expect(consoleWarnOutput).toEqual([
-          `User: ${user._key} had first and last arguments set when trying to gather ssl scans for domain: ${domain._id}`,
+  
+        expect(consoleErrorOutput).toEqual([
+          `Database error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Database Error Occurred.`,
+        ])
+      })
+    })
+    describe('cursor error occurs', () => {
+      it('throws an error', async () => {
+        const cursor = {
+          all() {
+            throw new Error('Cursor Error Occurred.')
+          },
+        }
+        const query = jest.fn().mockReturnValueOnce(cursor)
+  
+        const connectionLoader = sslLoaderConnectionsByDomainId(
+          query,
+          user._key,
+          cleanseInput,
+          i18n,
+        )
+  
+        const connectionArgs = {}
+  
+        try {
+          await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to load ssl scans. Please try again.'),
+          )
+        }
+  
+        expect(consoleErrorOutput).toEqual([
+          `Cursor error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Cursor Error Occurred.`,
         ])
       })
     })
   })
-  describe('database error occurs', () => {
-    it('throws an error', async () => {
-      const query = jest
-        .fn()
-        .mockRejectedValue(new Error('Database Error Occurred.'))
-
-      const connectionLoader = sslLoaderConnectionsByDomainId(
-        query,
-        user._key,
-        cleanseInput,
-      )
-
-      const connectionArgs = {}
-
-      try {
-        await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to load ssl scans. Please try again.'),
-        )
-      }
-
-      expect(consoleErrorOutput).toEqual([
-        `Database error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Database Error Occurred.`,
-      ])
-    })
-  })
-  describe('cursor error occurs', () => {
-    it('throws an error', async () => {
-      const cursor = {
-        all() {
-          throw new Error('Cursor Error Occurred.')
+  describe('language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
         },
-      }
-      const query = jest.fn().mockReturnValueOnce(cursor)
-
-      const connectionLoader = sslLoaderConnectionsByDomainId(
-        query,
-        user._key,
-        cleanseInput,
-      )
-
-      const connectionArgs = {}
-
-      try {
-        await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
+      })
+    })
+    describe('given an unsuccessful load', () => {
+      describe('first and last arguments are set', () => {
+        it('throws and error', async () => {
+          const connectionLoader = sslLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+  
+          const connectionArgs = {
+            first: 1,
+            last: 5,
+          }
+  
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+          }
+  
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} had first and last arguments set when trying to gather ssl scans for domain: ${domain._id}`,
+          ])
         })
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to load ssl scans. Please try again.'),
+      })
+    })
+    describe('database error occurs', () => {
+      it('throws an error', async () => {
+        const query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database Error Occurred.'))
+  
+        const connectionLoader = sslLoaderConnectionsByDomainId(
+          query,
+          user._key,
+          cleanseInput,
+          i18n,
         )
-      }
-
-      expect(consoleErrorOutput).toEqual([
-        `Cursor error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Cursor Error Occurred.`,
-      ])
+  
+        const connectionArgs = {}
+  
+        try {
+          await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('todo'),
+          )
+        }
+  
+        expect(consoleErrorOutput).toEqual([
+          `Database error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Database Error Occurred.`,
+        ])
+      })
+    })
+    describe('cursor error occurs', () => {
+      it('throws an error', async () => {
+        const cursor = {
+          all() {
+            throw new Error('Cursor Error Occurred.')
+          },
+        }
+        const query = jest.fn().mockReturnValueOnce(cursor)
+  
+        const connectionLoader = sslLoaderConnectionsByDomainId(
+          query,
+          user._key,
+          cleanseInput,
+          i18n,
+        )
+  
+        const connectionArgs = {}
+  
+        try {
+          await connectionLoader({
+            domainId: domain._id,
+            ...connectionArgs,
+          })
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('todo'),
+          )
+        }
+  
+        expect(consoleErrorOutput).toEqual([
+          `Cursor error occurred while user: ${user._key} was trying to get ssl information for ${domain._id}, error: Error: Cursor Error Occurred.`,
+        ])
+      })
     })
   })
 })

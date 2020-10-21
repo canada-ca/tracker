@@ -74,12 +74,18 @@
       'Unable to find dmarc scan. Please try again.',
     'Unable to find domain. Please try again.':
       'Unable to find domain. Please try again.',
+    'Unable to find https scan. Please try again.':
+      'Unable to find https scan. Please try again.',
     'Unable to find organization. Please try again.':
       'Unable to find organization. Please try again.',
     'Unable to find spf scan. Please try again.':
       'Unable to find spf scan. Please try again.',
     'Unable to find user affiliation(s). Please try again.':
       'Unable to find user affiliation(s). Please try again.',
+    'Unable to find ssl scan. Please try again.':
+      'Unable to find ssl scan. Please try again.',
+    'Unable to find user. Please try again.':
+      'Unable to find user. Please try again.',
     'Unable to have both first, and last arguments set at the same time.':
       'Unable to have both first, and last arguments set at the same time.',
     'Unable to invite user. Please try again.':
@@ -96,12 +102,16 @@
       'Unable to load dmarc scans. Please try again.',
     'Unable to load domains. Please try again.':
       'Unable to load domains. Please try again.',
+    'Unable to load https scans. Please try again.':
+      'Unable to load https scans. Please try again.',
     'Unable to load organizations. Please try again.':
       'Unable to load organizations. Please try again.',
     'Unable to load spf scans. Please try again.':
       'Unable to load spf scans. Please try again.',
     'Unable to query affiliations. Please try again.':
       'Unable to query affiliations. Please try again.',
+    'Unable to load ssl scans. Please try again.':
+      'Unable to load ssl scans. Please try again.',
     'Unable to query domains. Please try again.':
       'Unable to query domains. Please try again.',
     'Unable to query organizations. Please try again.':
@@ -117,6 +127,14 @@
     },
     'Unable to send TFA code, please try again.':
       'Unable to send TFA code, please try again.',
+    'Unable to send org invite email. Please try again.':
+      'Unable to send org invite email. Please try again.',
+    'Unable to send password reset email. Please try again.':
+      'Unable to send password reset email. Please try again.',
+    'Unable to send two factor authentication message. Please try again.':
+      'Unable to send two factor authentication message. Please try again.',
+    'Unable to send verification email. Please try again.':
+      'Unable to send verification email. Please try again.',
     'Unable to sign in, please try again.':
       'Unable to sign in, please try again.',
     'Unable to sign up. Please try again.':

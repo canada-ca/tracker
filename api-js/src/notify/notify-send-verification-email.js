@@ -1,6 +1,7 @@
+const { t } = require('@lingui/macro')
 const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendVerificationEmail = async ({
+const sendVerificationEmail = (i18n) => async ({
   templateId,
   user,
   verifyUrl,
@@ -18,7 +19,9 @@ const sendVerificationEmail = async ({
     console.error(
       `Error ocurred when sending verification email for ${user._key}: ${err}`,
     )
-    throw new Error('Unable to send verification email. Please try again.')
+    throw new Error(
+      i18n._(t`Unable to send verification email. Please try again.`),
+    )
   }
 }
 

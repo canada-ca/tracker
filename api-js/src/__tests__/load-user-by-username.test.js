@@ -8,15 +8,19 @@ const { setupI18n } = require('@lingui/core')
 const englishMessages = require('../locale/en/messages')
 const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
-const { userLoaderByKey } = require('../loaders')
+const { userLoaderByUserName } = require('../loaders')
 
-describe('given a userLoaderByKey dataloader', () => {
+describe('given a userLoaderByUserName dataloader', () => {
   let query, drop, truncate, migrate, collections, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
   beforeAll(async () => {
     console.error = mockedError
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate, collections } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
     i18n = setupI18n({
       language: 'en',
       locales: ['en', 'fr'],
@@ -29,10 +33,6 @@ describe('given a userLoaderByKey dataloader', () => {
   })
 
   beforeEach(async () => {
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
     await truncate()
     await collections.users.save({
       userName: 'test.account@istio.actually.exists',
@@ -51,47 +51,61 @@ describe('given a userLoaderByKey dataloader', () => {
     consoleOutput = []
   })
 
-  afterEach(async () => {
+  afterAll(async () => {
     await drop()
   })
 
-  describe('provided a single id', () => {
+  describe('provided a single username', () => {
     it('returns a single user', async () => {
-      // Get User From db
-      const expectedCursor = await query`
+      const userName = 'random@email.ca'
+      const loader = userLoaderByUserName(query, i18n)
+
+      // Get Query User
+      const cursor = await query`
         FOR user IN users
-          FILTER user.userName == "random@email.ca"
+          FILTER user.userName == ${userName}
           RETURN user
       `
-      const expectedUser = await expectedCursor.next()
+      const expectedUser = await cursor.next()
 
-      const loader = userLoaderByKey(query)
-      const user = await loader.load(expectedUser._key)
-
+      /* 
+        doing the following causes errors because database connection closes before promise is resolved
+        expect(loader.load(userName)).resolves.toEqual(expectedUser)
+        so as a work around until more testing can be done is the way it has to be done
+      */
+      const user = await loader.load(userName)
       expect(user).toEqual(expectedUser)
     })
   })
-  describe('provided a list of ids', () => {
+  describe('provided a list of usernames', () => {
     it('returns a list of users', async () => {
-      const userIds = []
       const expectedUsers = []
-      const expectedCursor = await query`
-        FOR user IN users
-          RETURN user
-      `
+      const userNames = [
+        'random@email.ca',
+        'test.account@istio.actually.exists',
+      ]
+      const loader = userLoaderByUserName(query, i18n)
 
-      while (expectedCursor.hasNext()) {
-        const tempUser = await expectedCursor.next()
-        userIds.push(tempUser._key)
-        expectedUsers.push(tempUser)
+      for (const i in userNames) {
+        // Get Query User
+        const cursor = await query`
+          FOR user IN users
+            FILTER user.userName == ${userNames[i]}
+            RETURN user
+        `
+        expectedUsers.push(await cursor.next())
       }
 
-      const loader = userLoaderByKey(query)
-      const users = await loader.loadMany(userIds)
+      /* 
+        doing the following causes errors because database connection closes before promise is resolved
+        expect(loader.loadMany(userNames)).resolves.toEqual(expectedUsers)
+        so as a work around until more testing can be done is the way it has to be done
+      */
+      const users = await loader.loadMany(userNames)
       expect(users).toEqual(expectedUsers)
     })
   })
-  describe('users language is set to english', () => {
+  describe('language is set to english', () => {
     beforeAll(() => {
       i18n = setupI18n({
         language: 'en',
@@ -103,22 +117,17 @@ describe('given a userLoaderByKey dataloader', () => {
         },
       })
     })
-    describe('database error is raised', () => {
-      it('returns an error', async () => {
-        const expectedCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "random@email.ca"
-          RETURN user
-      `
-        const expectedUser = await expectedCursor.next()
+    describe('database issue is raise', () => {
+      it('throws an error', async () => {
+        const userName = 'random@email.ca'
 
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByKey(query, i18n)
+        const loader = userLoaderByUserName(query, i18n)
 
         try {
-          await loader.load(expectedUser._key)
+          await loader.load(userName)
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to find user. Please try again.'),
@@ -126,18 +135,13 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running userLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when running userLoaderByUserName: Error: Database error occurred.`,
         ])
       })
     })
-    describe('cursor error is raised', () => {
+    describe('cursor issue is raised', () => {
       it('throws an error', async () => {
-        const expectedCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "random@email.ca"
-          RETURN user
-      `
-        const expectedUser = await expectedCursor.next()
+        const userName = 'random@email.ca'
 
         const cursor = {
           each() {
@@ -145,10 +149,10 @@ describe('given a userLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByKey(query, i18n)
+        const loader = userLoaderByUserName(query, i18n)
 
         try {
-          await loader.load(expectedUser._key)
+          await loader.load(userName)
         } catch (err) {
           expect(err).toEqual(
             new Error('Unable to find user. Please try again.'),
@@ -156,12 +160,12 @@ describe('given a userLoaderByKey dataloader', () => {
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during userLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred during userLoaderByUserName: Error: Cursor error occurred.`,
         ])
       })
     })
   })
-  describe('users language is set to french', () => {
+  describe('language is set to french', () => {
     beforeAll(() => {
       i18n = setupI18n({
         language: 'fr',
@@ -173,39 +177,29 @@ describe('given a userLoaderByKey dataloader', () => {
         },
       })
     })
-    describe('database error is raised', () => {
-      it('returns an error', async () => {
-        const expectedCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "random@email.ca"
-          RETURN user
-      `
-        const expectedUser = await expectedCursor.next()
+    describe('database issue is raise', () => {
+      it('throws an error', async () => {
+        const userName = 'random@email.ca'
 
         query = jest
           .fn()
           .mockRejectedValue(new Error('Database error occurred.'))
-        const loader = userLoaderByKey(query, i18n)
+        const loader = userLoaderByUserName(query, i18n)
 
         try {
-          await loader.load(expectedUser._key)
+          await loader.load(userName)
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
-          `Database error occurred when running userLoaderByKey: Error: Database error occurred.`,
+          `Database error occurred when running userLoaderByUserName: Error: Database error occurred.`,
         ])
       })
     })
-    describe('cursor error is raised', () => {
+    describe('cursor issue is raised', () => {
       it('throws an error', async () => {
-        const expectedCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "random@email.ca"
-          RETURN user
-      `
-        const expectedUser = await expectedCursor.next()
+        const userName = 'random@email.ca'
 
         const cursor = {
           each() {
@@ -213,16 +207,16 @@ describe('given a userLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = userLoaderByKey(query, i18n)
+        const loader = userLoaderByUserName(query, i18n)
 
         try {
-          await loader.load(expectedUser._key)
+          await loader.load(userName)
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([
-          `Cursor error occurred during userLoaderByKey: Error: Cursor error occurred.`,
+          `Cursor error occurred during userLoaderByUserName: Error: Cursor error occurred.`,
         ])
       })
     })
