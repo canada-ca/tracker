@@ -7,7 +7,6 @@ const findMyDomains = {
   description: 'Select domains a user has access to.',
   args: {
     ...connectionArgs,
-    
   },
   resolve: async (
     _,

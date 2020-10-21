@@ -742,11 +742,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -829,9 +825,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -918,9 +912,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([

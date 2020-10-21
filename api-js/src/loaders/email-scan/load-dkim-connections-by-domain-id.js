@@ -41,7 +41,9 @@ const dkimLoaderConnectionsByDomainId = (
       `User: ${userId} had first and last arguments set when trying to gather dkim scans for domain: ${domainId}`,
     )
     throw new Error(
-      i18n._(t`Unable to have both first, and last arguments set at the same time.`),
+      i18n._(
+        t`Unable to have both first, and last arguments set at the same time.`,
+      ),
     )
   }
 

@@ -11,7 +11,16 @@ const englishMessages = require('../locale/en/messages')
 const frenchMessages = require('../locale/fr/messages')
 
 describe('given a affiliationLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections, orgOne, orgTwo, affOne, affTwo, user, i18n
+  let query,
+    drop,
+    truncate,
+    migrate,
+    collections,
+    orgOne,
+    orgTwo,
+    affOne,
+    user,
+    i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -85,7 +94,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
       _to: user._id,
       permission: 'user',
     })
-    affTwo = await collections.affiliations.save({
+    await collections.affiliations.save({
       _from: orgTwo._id,
       _to: user._id,
       permission: 'user',
@@ -119,7 +128,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         `
         const expectedAffiliation = await expectedCursor.next()
 
-        const loader = affiliationLoaderByKey(query, 'en', i18n)
+        const loader = affiliationLoaderByKey(query, i18n)
         const affiliation = await loader.load(expectedAffiliation._key)
 
         expect(affiliation).toEqual(expectedAffiliation)
@@ -140,7 +149,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           expectedAffiliations.push(tempAff)
         }
 
-        const loader = affiliationLoaderByKey(query, 'en', i18n)
+        const loader = affiliationLoaderByKey(query, i18n)
         const affiliations = await loader.loadMany(affiliationIds)
         expect(affiliations).toEqual(expectedAffiliations)
       })
@@ -154,13 +163,17 @@ describe('given a affiliationLoaderByKey dataloader', () => {
       `
         const expectedAffiliation = await expectedCursor.next()
 
-        query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-        const loader = affiliationLoaderByKey(query, 'en', i18n)
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+        const loader = affiliationLoaderByKey(query, i18n)
 
         try {
           await loader.load(expectedAffiliation._key)
         } catch (err) {
-          expect(err).toEqual(new Error('Unable to find user affiliation(s). Please try again.'))
+          expect(err).toEqual(
+            new Error('Unable to find user affiliation(s). Please try again.'),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -183,12 +196,14 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = affiliationLoaderByKey(query, 'en', i18n)
+        const loader = affiliationLoaderByKey(query, i18n)
 
         try {
           await loader.load(expectedAffiliation._key)
         } catch (err) {
-          expect(err).toEqual(new Error('Unable to find user affiliation(s). Please try again.'))
+          expect(err).toEqual(
+            new Error('Unable to find user affiliation(s). Please try again.'),
+          )
         }
 
         expect(consoleOutput).toEqual([
@@ -219,7 +234,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
         `
         const expectedAffiliation = await expectedCursor.next()
 
-        const loader = affiliationLoaderByKey(query, 'fr', i18n)
+        const loader = affiliationLoaderByKey(query, i18n)
         const affiliation = await loader.load(expectedAffiliation._key)
 
         expect(affiliation).toEqual(expectedAffiliation)
@@ -240,7 +255,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           expectedAffiliations.push(tempAff)
         }
 
-        const loader = affiliationLoaderByKey(query, 'fr', i18n)
+        const loader = affiliationLoaderByKey(query, i18n)
         const affiliations = await loader.loadMany(affiliationIds)
         expect(affiliations).toEqual(expectedAffiliations)
       })
@@ -254,8 +269,10 @@ describe('given a affiliationLoaderByKey dataloader', () => {
       `
         const expectedAffiliation = await expectedCursor.next()
 
-        query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-        const loader = affiliationLoaderByKey(query, 'fr', i18n)
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+        const loader = affiliationLoaderByKey(query, i18n)
 
         try {
           await loader.load(expectedAffiliation._key)
@@ -283,7 +300,7 @@ describe('given a affiliationLoaderByKey dataloader', () => {
           },
         }
         query = jest.fn().mockReturnValue(cursor)
-        const loader = affiliationLoaderByKey(query, 'fr', i18n)
+        const loader = affiliationLoaderByKey(query, i18n)
 
         try {
           await loader.load(expectedAffiliation._key)

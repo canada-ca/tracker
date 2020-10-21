@@ -2,13 +2,12 @@ const { aql } = require('arangojs')
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
 const { t } = require('@lingui/macro')
 
-const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput, i18n) => async ({
-  orgId,
-  after,
-  before,
-  first,
-  last,
-}) => {
+const domainLoaderConnectionsByOrgId = (
+  query,
+  userId,
+  cleanseInput,
+  i18n,
+) => async ({ orgId, after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 

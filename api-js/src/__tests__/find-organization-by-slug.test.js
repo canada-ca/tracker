@@ -481,9 +481,7 @@ describe('given findOrganizationBySlugQuery', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(`todo`),
-          ]
+          const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -531,11 +529,7 @@ describe('given findOrganizationBySlugQuery', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              `todo`,
-            ),
-          ]
+          const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

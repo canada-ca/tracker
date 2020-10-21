@@ -488,11 +488,7 @@ describe('given findDomainByDomain query', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              `todo`,
-            ),
-          ]
+          const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -576,9 +572,7 @@ describe('given findDomainByDomain query', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(`todo`),
-          ]
+          const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

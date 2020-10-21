@@ -43,16 +43,19 @@
     'Unable to find domain. Please try again.': 'todo',
     'Unable to find organization. Please try again.': 'todo',
     'Unable to find spf scan. Please try again.': 'todo',
+    'Unable to find user affiliation(s). Please try again.': 'todo',
     'Unable to have both first, and last arguments set at the same time.':
       'todo',
     'Unable to invite user. Please try again.': 'todo',
     'Unable to invite yourself to an org. Please try again.': 'todo',
+    'Unable to load affiliations. Please try again.': 'todo',
     'Unable to load dkim results. Please try again.': 'todo',
     'Unable to load dkim scans. Please try again.': 'todo',
     'Unable to load dmarc scans. Please try again.': 'todo',
     'Unable to load domains. Please try again.': 'todo',
     'Unable to load organizations. Please try again.': 'todo',
     'Unable to load spf scans. Please try again.': 'todo',
+    'Unable to query affiliations. Please try again.': 'todo',
     'Unable to query domains. Please try again.': 'todo',
     'Unable to query organizations. Please try again.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
@@ -85,13 +88,5 @@
       'todo',
     "We've sent you an email with an authentication code to sign into Pulse.":
       'todo',
-    "Unable to find user affiliation(s). Please try again.":
-      "todo",
-    "Error, unable to have first, and last set at the same time.":
-      "todo",
-    "Unable to query affiliations. Please try again.":
-      "todo",
-    "Unable to load affiliations. Please try again.":
-      "todo",
   },
 }

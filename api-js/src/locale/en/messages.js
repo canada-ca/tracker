@@ -78,12 +78,16 @@
       'Unable to find organization. Please try again.',
     'Unable to find spf scan. Please try again.':
       'Unable to find spf scan. Please try again.',
+    'Unable to find user affiliation(s). Please try again.':
+      'Unable to find user affiliation(s). Please try again.',
     'Unable to have both first, and last arguments set at the same time.':
       'Unable to have both first, and last arguments set at the same time.',
     'Unable to invite user. Please try again.':
       'Unable to invite user. Please try again.',
     'Unable to invite yourself to an org. Please try again.':
       'Unable to invite yourself to an org. Please try again.',
+    'Unable to load affiliations. Please try again.':
+      'Unable to load affiliations. Please try again.',
     'Unable to load dkim results. Please try again.':
       'Unable to load dkim results. Please try again.',
     'Unable to load dkim scans. Please try again.':
@@ -96,6 +100,8 @@
       'Unable to load organizations. Please try again.',
     'Unable to load spf scans. Please try again.':
       'Unable to load spf scans. Please try again.',
+    'Unable to query affiliations. Please try again.':
+      'Unable to query affiliations. Please try again.',
     'Unable to query domains. Please try again.':
       'Unable to query domains. Please try again.',
     'Unable to query organizations. Please try again.':
@@ -148,13 +154,5 @@
       "We've sent you a text message with an authentication code to sign into Pulse.",
     "We've sent you an email with an authentication code to sign into Pulse.":
       "We've sent you an email with an authentication code to sign into Pulse.",
-    "Unable to find user affiliation(s). Please try again.":
-      "Unable to find user affiliation(s). Please try again.",
-    "Error, unable to have first, and last set at the same time.":
-      "Error, unable to have first, and last set at the same time.",
-    "Unable to query affiliations. Please try again.":
-      "Unable to query affiliations. Please try again.",
-    "Unable to load affiliations. Please try again.":
-      "Unable to load affiliations. Please try again.",
   },
 }

@@ -33,6 +33,7 @@ msgstr "todo"
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:37
 #: src/loaders/organizations/load-organization-connections-by-user-id.js:37
 #: src/loaders/organizations/load-organizations-connection-args.js:37
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:37
 msgid "Error, unable to have first, and last set at the same time."
 msgstr "todo"
 
@@ -84,11 +85,11 @@ msgstr "todo"
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "todo"
 
-#: src/mutations/domain/remove-domain.js:227
+#: src/mutations/domain/remove-domain.js:228
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "todo"
 
-#: src/mutations/organizations/remove-organization.js:197
+#: src/mutations/organizations/remove-organization.js:198
 msgid "Successfully removed organization: {0}."
 msgstr "todo"
 
@@ -156,16 +157,21 @@ msgstr "todo"
 msgid "Unable to find domain. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-by-key.js:16
-#: src/loaders/organizations/load-organization-by-key.js:26
-#: src/loaders/organizations/load-organization-by-slug.js:16
-#: src/loaders/organizations/load-organization-by-slug.js:26
+#: src/loaders/organizations/load-organization-by-key.js:17
+#: src/loaders/organizations/load-organization-by-key.js:27
+#: src/loaders/organizations/load-organization-by-slug.js:17
+#: src/loaders/organizations/load-organization-by-slug.js:27
 msgid "Unable to find organization. Please try again."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-spf-by-key.js:18
 #: src/loaders/email-scan/load-spf-by-key.js:28
 msgid "Unable to find spf scan. Please try again."
+msgstr "todo"
+
+#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:18
+#: src/loaders/user-affiliations/load-user-affiliations-by-key.js:28
+msgid "Unable to find user affiliation(s). Please try again."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:44
@@ -184,6 +190,10 @@ msgstr "todo"
 
 #: src/mutations/user-affiliations/invite-user-to-org.js:68
 msgid "Unable to invite yourself to an org. Please try again."
+msgstr "todo"
+
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:66
+msgid "Unable to load affiliations. Please try again."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:54
@@ -212,13 +222,13 @@ msgstr "todo"
 
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:56
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:66
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:83
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:93
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:66
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:84
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:94
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:67
 #: src/loaders/organizations/load-organizations-connection-args.js:54
 #: src/loaders/organizations/load-organizations-connection-args.js:64
-#: src/loaders/organizations/load-organizations-connection-args.js:81
-#: src/loaders/organizations/load-organizations-connection-args.js:91
+#: src/loaders/organizations/load-organizations-connection-args.js:82
+#: src/loaders/organizations/load-organizations-connection-args.js:92
 #: src/queries/organizations/find-my-organizations.js:24
 msgid "Unable to load organizations. Please try again."
 msgstr "todo"
@@ -228,11 +238,15 @@ msgstr "todo"
 msgid "Unable to load spf scans. Please try again."
 msgstr "todo"
 
+#: src/loaders/user-affiliations/load-user-affiliations-by-user-id.js:56
+msgid "Unable to query affiliations. Please try again."
+msgstr "todo"
+
 #: src/loaders/domains/load-domain-connections-by-user-id.js:56
 msgid "Unable to query domains. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:56
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:57
 msgid "Unable to query organizations. Please try again."
 msgstr "todo"
 

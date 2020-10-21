@@ -1876,11 +1876,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1927,9 +1923,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1976,9 +1970,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2032,9 +2024,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2114,9 +2104,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2170,11 +2158,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2235,11 +2219,7 @@ describe('update a users role', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'todo',
-                ),
-              ]
+              const error = [new GraphQLError('todo')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -2300,11 +2280,7 @@ describe('update a users role', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'todo',
-                ),
-              ]
+              const error = [new GraphQLError('todo')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -2366,11 +2342,7 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'todo',
-              ),
-            ]
+            const error = [new GraphQLError('todo')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2429,11 +2401,7 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'todo',
-              ),
-            ]
+            const error = [new GraphQLError('todo')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2558,9 +2526,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2676,9 +2642,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2738,9 +2702,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

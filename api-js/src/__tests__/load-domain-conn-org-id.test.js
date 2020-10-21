@@ -16,7 +16,16 @@ const {
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load domain connection using org id function', () => {
-  let query, drop, truncate, migrate, collections, user, org, domain, domainTwo, i18n
+  let query,
+    drop,
+    truncate,
+    migrate,
+    collections,
+    user,
+    org,
+    domain,
+    domainTwo,
+    i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -419,7 +428,7 @@ describe('given the load domain connection using org id function', () => {
             cleanseInput,
             i18n,
           )
-  
+
           const connectionArgs = {
             first: 1,
             last: 5,
@@ -436,7 +445,7 @@ describe('given the load domain connection using org id function', () => {
               ),
             )
           }
-  
+
           expect(consoleOutput).toEqual([
             `User: ${user._key} tried to have first and last set in domain connection query`,
           ])
@@ -607,7 +616,7 @@ describe('given the load domain connection using org id function', () => {
             cleanseInput,
             i18n,
           )
-  
+
           const connectionArgs = {
             first: 1,
             last: 5,
@@ -618,13 +627,9 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
-  
+
           expect(consoleOutput).toEqual([
             `User: ${user._key} tried to have first and last set in domain connection query`,
           ])
@@ -652,9 +657,7 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -687,9 +690,7 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -722,9 +723,7 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -762,9 +761,7 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([

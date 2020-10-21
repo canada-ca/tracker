@@ -6,7 +6,6 @@ const affiliationLoaderByUserId = (
   query,
   userId,
   cleanseInput,
-  language,
   i18n,
 ) => async ({ after, before, first, last }) => {
   let afterTemplate = aql``
@@ -73,7 +72,10 @@ const affiliationLoaderByUserId = (
     typeof last !== 'undefined' && filteredAffiliations.length > last
   )
 
-  if (filteredAffiliations.length > last || filteredAffiliations.length > first) {
+  if (
+    filteredAffiliations.length > last ||
+    filteredAffiliations.length > first
+  ) {
     filteredAffiliations.pop()
   }
 

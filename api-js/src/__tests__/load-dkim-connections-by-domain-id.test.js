@@ -732,11 +732,7 @@ describe('when given the load dkim connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleWarnOutput).toEqual([
@@ -765,9 +761,7 @@ describe('when given the load dkim connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -798,9 +792,7 @@ describe('when given the load dkim connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([

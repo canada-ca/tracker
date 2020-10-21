@@ -161,9 +161,7 @@ describe('given the dkimLoaderByKey function', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -184,9 +182,7 @@ describe('given the dkimLoaderByKey function', () => {
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([

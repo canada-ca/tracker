@@ -10,7 +10,10 @@ const englishMessages = require('../locale/en/messages')
 const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
-const { affiliationLoaderByUserId, affiliationLoaderByKey } = require('../loaders')
+const {
+  affiliationLoaderByUserId,
+  affiliationLoaderByKey,
+} = require('../loaders')
 
 describe('given the load user affiliations by user id function', () => {
   let query, drop, truncate, migrate, collections, user, orgOne, orgTwo, i18n
@@ -141,7 +144,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'en',
               i18n,
             )
 
@@ -160,13 +162,19 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[0],
                   },
                 },
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[1],
                   },
@@ -175,8 +183,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
               },
             }
 
@@ -189,7 +203,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'en',
               i18n,
             )
 
@@ -210,7 +223,10 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[1],
                   },
@@ -219,8 +235,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
               },
             }
 
@@ -233,7 +255,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'en',
               i18n,
             )
 
@@ -254,7 +275,10 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[0],
                   },
@@ -263,8 +287,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
               },
             }
 
@@ -277,7 +307,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'en',
               i18n,
             )
 
@@ -298,7 +327,10 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[0],
                   },
@@ -307,8 +339,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
               },
             }
 
@@ -321,7 +359,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'en',
               i18n,
             )
 
@@ -342,7 +379,10 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[1],
                   },
@@ -351,8 +391,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
               },
             }
 
@@ -366,7 +412,6 @@ describe('given the load user affiliations by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'en',
             i18n,
           )
 
@@ -394,7 +439,6 @@ describe('given the load user affiliations by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'en',
             i18n,
           )
 
@@ -433,7 +477,6 @@ describe('given the load user affiliations by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'en',
             i18n,
           )
 
@@ -471,7 +514,6 @@ describe('given the load user affiliations by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'en',
             i18n,
           )
 
@@ -542,7 +584,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'fr',
               i18n,
             )
 
@@ -561,13 +602,19 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[0],
                   },
                 },
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[1],
                   },
@@ -576,8 +623,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
               },
             }
 
@@ -590,7 +643,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'fr',
               i18n,
             )
 
@@ -611,7 +663,10 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[1],
                   },
@@ -620,8 +675,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
               },
             }
 
@@ -634,7 +695,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'fr',
               i18n,
             )
 
@@ -655,7 +715,10 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[0],
                   },
@@ -664,8 +727,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
               },
             }
 
@@ -678,7 +747,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'fr',
               i18n,
             )
 
@@ -699,7 +767,10 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[0]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[0],
                   },
@@ -708,8 +779,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: true,
                 hasPreviousPage: false,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[0]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[0]._key,
+                ),
               },
             }
 
@@ -722,7 +799,6 @@ describe('given the load user affiliations by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'fr',
               i18n,
             )
 
@@ -743,7 +819,10 @@ describe('given the load user affiliations by user id function', () => {
             const expectedStructure = {
               edges: [
                 {
-                  cursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                  cursor: toGlobalId(
+                    'affiliations',
+                    expectedAffiliations[1]._key,
+                  ),
                   node: {
                     ...expectedAffiliations[1],
                   },
@@ -752,8 +831,14 @@ describe('given the load user affiliations by user id function', () => {
               pageInfo: {
                 hasNextPage: false,
                 hasPreviousPage: true,
-                startCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
-                endCursor: toGlobalId('affiliations', expectedAffiliations[1]._key),
+                startCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
+                endCursor: toGlobalId(
+                  'affiliations',
+                  expectedAffiliations[1]._key,
+                ),
               },
             }
 
@@ -767,7 +852,6 @@ describe('given the load user affiliations by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'fr',
             i18n,
           )
 
@@ -795,7 +879,6 @@ describe('given the load user affiliations by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'fr',
             i18n,
           )
 
@@ -808,11 +891,7 @@ describe('given the load user affiliations by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -834,7 +913,6 @@ describe('given the load user affiliations by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'fr',
             i18n,
           )
 
@@ -844,9 +922,7 @@ describe('given the load user affiliations by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -872,7 +948,6 @@ describe('given the load user affiliations by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'fr',
             i18n,
           )
 
@@ -882,9 +957,7 @@ describe('given the load user affiliations by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
