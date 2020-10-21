@@ -29,7 +29,7 @@
     "express-request-language": "^1.1.15",
     "graphql": "^15.3.0",
     "graphql-relay": "^0.6.0",
-    "graphql-scalars": "^1.4.0",
+    "graphql-scalars": "^1.4.1",
     "graphql-subscriptions": "^1.1.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
