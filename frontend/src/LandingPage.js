@@ -7,7 +7,7 @@ import trackerLogo from './images/tracker_v-03.png'
 import { WelcomeMessage } from './WelcomeMessage'
 import { useLingui } from '@lingui/react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackPage } from './ErrorFallbackPage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export function LandingPage() {
   const { i18n } = useLingui()
@@ -22,7 +22,7 @@ export function LandingPage() {
         />
         <WelcomeMessage />
       </Stack>
-      <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <SummaryGroup name="dashboard" />
         <Text>
           <Trans>

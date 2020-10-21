@@ -20,7 +20,7 @@ import DomainsPage from './DomainsPage'
 import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackPage } from './ErrorFallbackPage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
@@ -90,20 +90,20 @@ export default function OrganizationDetails() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary
-              FallbackComponent={ErrorFallbackPage}
+              FallbackComponent={ErrorFallbackMessage}
               name="summaryGroup"
             >
               <OrganizationSummary />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <DomainsPage />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
             <ErrorBoundary
-              FallbackComponent={ErrorFallbackPage}
+              FallbackComponent={ErrorFallbackMessage}
               name="userList"
             >
               <UserList

@@ -14,7 +14,7 @@ import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
 import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackPage } from './ErrorFallbackPage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -147,7 +147,7 @@ export default function App() {
                 alternate="/sign-in"
                 path="/admin"
               >
-                <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+                <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                   <AdminPage />
                 </ErrorBoundary>
               </RouteIf>

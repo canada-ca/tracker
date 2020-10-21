@@ -1,8 +1,9 @@
 import React from 'react'
 import { Box, Divider, SimpleGrid, Stack, Text } from '@chakra-ui/core'
 import { func, object } from 'prop-types'
+import { Trans } from '@lingui/react'
 
-export function ErrorFallbackPage({ error }) {
+export function ErrorFallbackMessage({ error }) {
   return (
     <Box
       bg="primary"
@@ -14,16 +15,18 @@ export function ErrorFallbackPage({ error }) {
       <SimpleGrid columns={[1, 2]}>
         <Stack role="alert" my="5" mx="10">
           <Text fontSize="2xl" fontWeight="bold">
-            An error has occured.
+            <Trans>An error has occured.</Trans>
           </Text>
           <Divider borderColor="accent" borderWidth="1" w="20%" />
           <Text as="cite" fontSize="xl">
-            {error.message}
+            <Trans>{error.message}</Trans>
           </Text>
         </Stack>
         <Stack my="5" mx="10">
           <Text fontWeight="bold" fontSize="2xl">
-            This component is currently unavailable. Try reloading the page.
+            <Trans>
+              This component is currently unavailable. Try reloading the page.
+            </Trans>
           </Text>
         </Stack>
       </SimpleGrid>
@@ -31,7 +34,7 @@ export function ErrorFallbackPage({ error }) {
   )
 }
 
-ErrorFallbackPage.propTypes = {
+ErrorFallbackMessage.propTypes = {
   error: object,
   resetErrorBoundary: func,
 }

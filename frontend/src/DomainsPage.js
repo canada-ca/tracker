@@ -12,7 +12,7 @@ import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackPage } from './ErrorFallbackPage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -47,7 +47,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
 
   return (
     <Layout>
-      <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <ListOf
           elements={nodes}
           ifEmpty={() => <Trans>No Domains</Trans>}

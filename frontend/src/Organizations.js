@@ -12,7 +12,7 @@ import { useUserState } from './UserState'
 import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackPage } from './ErrorFallbackPage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function Organisations({ orgsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -31,7 +31,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
     recordsPerPage: orgsPerPage,
   })
 
-  if (error) return <ErrorFallbackPage error={error} />
+  if (error) return <ErrorFallbackMessage error={error} />
 
   if (loading)
     return (
@@ -45,7 +45,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
       <Heading as="h1" mb="4" textAlign={['center', 'left']}>
         <Trans>Organizations</Trans>
       </Heading>
-      <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         <ListOf
           elements={nodes}
           ifEmpty={() => <Trans>No Organizations</Trans>}

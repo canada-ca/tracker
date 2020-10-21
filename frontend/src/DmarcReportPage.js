@@ -14,7 +14,7 @@ import { useLingui } from '@lingui/react'
 import { useParams, useHistory } from 'react-router-dom'
 import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackPage } from './ErrorFallbackPage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -395,7 +395,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {domainSlug.toUpperCase()}
         </Heading>
       </Stack>
-      <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {barDisplay}
       </ErrorBoundary>
       <Stack isInline align="center" mb="16px">
@@ -410,7 +410,7 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {options}
         </Select>
       </Stack>
-      <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
       </ErrorBoundary>
     </Box>

@@ -8,7 +8,7 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackPage } from './ErrorFallbackPage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -193,7 +193,7 @@ export default function DmarcByDomainPage() {
           {options}
         </Select>
       </Stack>
-      <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+      <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
         {tableDisplay}
       </ErrorBoundary>
     </Box>

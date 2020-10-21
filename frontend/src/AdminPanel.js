@@ -8,7 +8,7 @@ import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { AdminDomains } from './AdminDomains'
 import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallbackPage } from './ErrorFallbackPage'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 
 export default function AdminPanel({ orgName, permission }) {
   const { currentUser } = useUserState()
@@ -47,14 +47,14 @@ export default function AdminPanel({ orgName, permission }) {
   return (
     <Stack spacing={10}>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
-        <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
           <AdminDomains
             domainsData={data.domains}
             orgName={orgName}
             refetchFunc={refetch}
           />
         </ErrorBoundary>
-        <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+        <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
           <UserList
             permission={permission}
             userListData={data.userList}
