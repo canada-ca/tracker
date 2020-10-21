@@ -148,5 +148,13 @@
       "We've sent you a text message with an authentication code to sign into Pulse.",
     "We've sent you an email with an authentication code to sign into Pulse.":
       "We've sent you an email with an authentication code to sign into Pulse.",
+    "Unable to find user affiliation(s). Please try again.":
+      "Unable to find user affiliation(s). Please try again.",
+    "Error, unable to have first, and last set at the same time.":
+      "Error, unable to have first, and last set at the same time.",
+    "Unable to query affiliations. Please try again.":
+      "Unable to query affiliations. Please try again.",
+    "Unable to load affiliations. Please try again.":
+      "Unable to load affiliations. Please try again.",
   },
 }

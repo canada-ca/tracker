@@ -85,5 +85,13 @@
       'todo',
     "We've sent you an email with an authentication code to sign into Pulse.":
       'todo',
+    "Unable to find user affiliation(s). Please try again.":
+      "todo",
+    "Error, unable to have first, and last set at the same time.":
+      "todo",
+    "Unable to query affiliations. Please try again.":
+      "todo",
+    "Unable to load affiliations. Please try again.":
+      "todo",
   },
 }
