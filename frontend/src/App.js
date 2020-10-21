@@ -13,13 +13,14 @@ import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackPage } from './ErrorFallbackPage'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
 const QRcodePage = lazy(() => import('./QRcodePage'))
 // const DomainsPage = lazy(() => import('./DomainsPage'))
 const UserPage = lazy(() => import('./UserPage'))
-const UserList = lazy(() => import('./UserList'))
 const SignInPage = lazy(() => import('./SignInPage'))
 const DmarcReportPage = lazy(() => import('./DmarcReportPage'))
 const Organizations = lazy(() => import('./Organizations'))
@@ -146,15 +147,9 @@ export default function App() {
                 alternate="/sign-in"
                 path="/admin"
               >
-                <AdminPage />
-              </RouteIf>
-
-              <RouteIf
-                condition={isLoggedIn()}
-                alternate="/sign-in"
-                path="/user-list"
-              >
-                <UserList />
+                <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+                  <AdminPage />
+                </ErrorBoundary>
               </RouteIf>
 
               <RouteIf

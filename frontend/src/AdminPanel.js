@@ -7,6 +7,8 @@ import { ADMIN_PANEL } from './graphql/queries'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
 import { AdminDomains } from './AdminDomains'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackPage } from './ErrorFallbackPage'
 
 export default function AdminPanel({ orgName, permission }) {
   const { currentUser } = useUserState()
@@ -20,7 +22,7 @@ export default function AdminPanel({ orgName, permission }) {
         authorization: currentUser.jwt,
       },
     },
-    onError: error => {
+    onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({
         title: 'Error',
@@ -45,17 +47,21 @@ export default function AdminPanel({ orgName, permission }) {
   return (
     <Stack spacing={10}>
       <SimpleGrid columns={{ lg: 2 }} spacing="60px" width="100%">
-        <AdminDomains
-          domainsData={data.domains}
-          orgName={orgName}
-          refetchFunc={refetch}
-        />
-        <UserList
-          permission={permission}
-          userListData={data.userList}
-          orgName={orgName}
-          orgSlug={slugify(orgName)}
-        />
+        <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+          <AdminDomains
+            domainsData={data.domains}
+            orgName={orgName}
+            refetchFunc={refetch}
+          />
+        </ErrorBoundary>
+        <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+          <UserList
+            permission={permission}
+            userListData={data.userList}
+            orgName={orgName}
+            orgSlug={slugify(orgName)}
+          />
+        </ErrorBoundary>
       </SimpleGrid>
     </Stack>
   )

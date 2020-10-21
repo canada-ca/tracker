@@ -19,6 +19,8 @@ import { useParams, useHistory } from 'react-router-dom'
 import DomainsPage from './DomainsPage'
 import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackPage } from './ErrorFallbackPage'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
@@ -87,17 +89,29 @@ export default function OrganizationDetails() {
 
         <TabPanels>
           <TabPanel>
-            <OrganizationSummary />
+            <ErrorBoundary
+              FallbackComponent={ErrorFallbackPage}
+              name="summaryGroup"
+            >
+              <OrganizationSummary />
+            </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <DomainsPage />
+            <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+              <DomainsPage />
+            </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <UserList
-              userListData={data.userList}
-              orgName={orgName}
-              orgSlug={orgSlug}
-            />
+            <ErrorBoundary
+              FallbackComponent={ErrorFallbackPage}
+              name="userList"
+            >
+              <UserList
+                userListData={data.userList}
+                orgName={orgName}
+                orgSlug={orgSlug}
+              />
+            </ErrorBoundary>
           </TabPanel>
         </TabPanels>
       </Tabs>

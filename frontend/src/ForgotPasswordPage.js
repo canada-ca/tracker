@@ -20,7 +20,7 @@ export default function ForgotPasswordPage() {
       .email(i18n._(t`Invalid email`)),
   })
 
-  const [sendPasswordResetLink, { loading, error }] = useMutation(
+  const [sendPasswordResetLink, { loading }] = useMutation(
     SEND_PASSWORD_RESET_LINK,
     {
       onError(error) {
@@ -35,7 +35,6 @@ export default function ForgotPasswordPage() {
       },
       onCompleted() {
         history.push('/')
-        // Display a welcome message
         toast({
           title: i18n._(t`Email Sent`),
           description: i18n._(
@@ -56,14 +55,13 @@ export default function ForgotPasswordPage() {
         <Trans>Loading...</Trans>
       </p>
     )
-  if (error) return <p>{String(error)}</p>
 
   return (
     <Box px="8" mx="auto" overflow="hidden" w={['100%', '60%']}>
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '' }}
-        onSubmit={async values => {
+        onSubmit={async (values) => {
           sendPasswordResetLink({
             variables: { userName: values.email },
           })

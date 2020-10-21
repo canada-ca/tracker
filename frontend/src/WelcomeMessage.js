@@ -10,7 +10,7 @@ export function WelcomeMessage() {
   return (
     <Box bg="primary" color="gray.50" align="center">
       <SimpleGrid columns={[1, 2]}>
-        <Stack align="center" mx="10" my="10">
+        <Stack align="center" m="10">
           <Text
             fontSize={['3xl', '3xl', '3xl', '4xl', '5xl']}
             fontWeight="semibold"

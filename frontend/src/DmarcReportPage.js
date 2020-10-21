@@ -13,6 +13,8 @@ import { number } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { useParams, useHistory } from 'react-router-dom'
 import { months } from './months'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackPage } from './ErrorFallbackPage'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
@@ -393,9 +395,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {domainSlug.toUpperCase()}
         </Heading>
       </Stack>
-
-      {barDisplay}
-
+      <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+        {barDisplay}
+      </ErrorBoundary>
       <Stack isInline align="center" mb="16px">
         <Text fontWeight="bold" textAlign="center">
           <Trans>Showing data for period: </Trans>
@@ -408,8 +410,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
           {options}
         </Select>
       </Stack>
-
-      {tableDisplay}
+      <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+        {tableDisplay}
+      </ErrorBoundary>
     </Box>
   )
 }

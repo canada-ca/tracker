@@ -11,6 +11,8 @@ import {
 import { useUserState } from './UserState'
 import { DomainCard } from './DomainCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallbackPage } from './ErrorFallbackPage'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -45,14 +47,20 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
 
   return (
     <Layout>
-      <ListOf elements={nodes} ifEmpty={() => <Trans>No Domains</Trans>} mb="4">
-        {({ id, url, slug, lastRan }, index) => (
-          <Box key={`${slug}:${id}:${index}`}>
-            <DomainCard key={url} url={url} lastRan={lastRan} />
-            <Divider borderColor="gray.900" />
-          </Box>
-        )}
-      </ListOf>
+      <ErrorBoundary FallbackComponent={ErrorFallbackPage}>
+        <ListOf
+          elements={nodes}
+          ifEmpty={() => <Trans>No Domains</Trans>}
+          mb="4"
+        >
+          {({ id, url, slug, lastRan }, index) => (
+            <Box key={`${slug}:${id}:${index}`}>
+              <DomainCard key={url} url={url} lastRan={lastRan} />
+              <Divider borderColor="gray.900" />
+            </Box>
+          )}
+        </ListOf>
+      </ErrorBoundary>
       <Stack isInline align="center" mb="4">
         <Button
           onClick={previous}

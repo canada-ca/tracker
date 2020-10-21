@@ -25,7 +25,7 @@ export default function ResetPasswordPage() {
       .oneOf([ref('password')], i18n._(t`Passwords must match`)),
   })
 
-  const [updatePassword, { loading, error }] = useMutation(UPDATE_PASSWORD, {
+  const [updatePassword, { loading }] = useMutation(UPDATE_PASSWORD, {
     onError(error) {
       toast({
         title: error.message,
@@ -55,7 +55,6 @@ export default function ResetPasswordPage() {
         <Trans>Loading...</Trans>
       </p>
     )
-  if (error) return <p>{String(error)}</p>
 
   return (
     <Box px="8" mx="auto" overflow="hidden">
@@ -65,7 +64,7 @@ export default function ResetPasswordPage() {
           password: '',
           confirmPassword: '',
         }}
-        onSubmit={async values => {
+        onSubmit={async (values) => {
           updatePassword({
             variables: {
               input: {

@@ -46,11 +46,11 @@ export default function CreateUserPage() {
       .oneOf(fieldRequirements.lang.oneOf.types),
   })
 
-  const [signUp, { loading, error }] = useMutation(SIGN_UP, {
-    onError() {
-      console.log(error)
+  const [signUp, { loading }] = useMutation(SIGN_UP, {
+    onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        // title: i18n._(t`An error occurred.`),
+        title: error.message,
         description: i18n._(
           t`Unable to create your account, please try again.`,
         ),
@@ -88,7 +88,7 @@ export default function CreateUserPage() {
         <Trans>Loading...</Trans>
       </p>
     )
-  if (error) return <p>{String(error)}</p>
+  // if (error) return <p>{String(error)}</p>
 
   const addUserToOrgText =
     userOrgToken !== undefined ? (

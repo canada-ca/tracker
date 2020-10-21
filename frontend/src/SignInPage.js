@@ -36,10 +36,11 @@ export default function SignInPage() {
       .email(i18n._(fieldRequirements.email.email.message)),
   })
 
-  const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
-    onError() {
+  const [authenticate, { loading }] = useMutation(AUTHENTICATE, {
+    onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        // title: i18n._(t`An error occurred.`),
+        title: error.message,
         description: i18n._(
           t`Unable to sign in to your account, please try again.`,
         ),
@@ -75,7 +76,6 @@ export default function SignInPage() {
         <Trans>Loading...</Trans>
       </p>
     )
-  if (error) return <p>{String(error)}</p>
 
   return (
     <Box px="8" mx="auto" overflow="hidden">
