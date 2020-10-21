@@ -79,11 +79,11 @@ export default function AdminPage() {
     return (
       <Layout>
         <Stack spacing={10}>
-          <Text fontSize="3xl" fontWeight="bold">
+          <Text fontSize="4xl" fontWeight="bold">
             <Trans>Welcome, Admin</Trans>
           </Text>
           <Stack isInline align="center">
-            <Text fontWeight="bold" fontSize="xl">
+            <Text fontWeight="bold" fontSize="2xl">
               <Trans>Organization: </Trans>
             </Text>
             <Select
