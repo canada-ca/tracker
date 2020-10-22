@@ -2,40 +2,52 @@ const { aql } = require('arangojs')
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
 const { t } = require('@lingui/macro')
 
-const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput, i18n) => async ({
-  orgId,
-  after,
-  before,
-  first,
-  last,
-}) => {
+const domainLoaderConnectionsByOrgId = (
+  query,
+  userId,
+  cleanseInput,
+  i18n,
+) => async ({ orgId, after, before, first = 20, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
   const userDBId = `users/${userId}`
 
+  let afterId
   if (typeof after !== 'undefined') {
-    const { id: afterId } = fromGlobalId(cleanseInput(after))
+    afterId = fromGlobalId(cleanseInput(after)).id
     afterTemplate = aql`FILTER TO_NUMBER(domain._key) > TO_NUMBER(${afterId})`
   }
 
+  let beforeId
   if (typeof before !== 'undefined') {
-    const { id: beforeId } = fromGlobalId(cleanseInput(before))
+    beforeId = fromGlobalId(cleanseInput(before)).id
     beforeTemplate = aql`FILTER TO_NUMBER(domain._key) < TO_NUMBER(${beforeId})`
   }
 
+  if (typeof last !== 'undefined') {
+    first = undefined
+  }
+
   let limitTemplate = aql``
-  if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT domain._key ASC LIMIT TO_NUMBER(${first + 1})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT domain._key DESC LIMIT TO_NUMBER(${last + 1})`
-  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
-    console.warn(
-      `User: ${userId} tried to have first and last set in domain connection query`,
-    )
+  if (first < 0 || last < 0) {
+    console.warn(`User: ${userId} tried to have first or last set below 0`)
     throw new Error(
-      i18n._(t`Error, unable to have first, and last set at the same time.`),
+      i18n._(
+        t`Error, minimum record request for first, and last arguments is 0.`,
+      ),
     )
+  } else if (first > 100 || last > 100) {
+    console.warn(`User: ${userId} tried to have first or last set above 100`)
+    throw new Error(
+      i18n._(
+        t`Error, maximum record request for first, and last arguments is 100.`,
+      ),
+    )
+  } else if (typeof last !== 'undefined') {
+    limitTemplate = aql`SORT domain._key DESC LIMIT TO_NUMBER(${last})`
+  } else {
+    limitTemplate = aql`SORT domain._key ASC LIMIT TO_NUMBER(${first})`
   }
 
   let acceptedDomainsCursor
@@ -51,7 +63,7 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput, i18n) => as
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+      `Database error occurred while user: ${userId} was trying to gather affiliated domains in loadDomainConnectionsByOrgId: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
@@ -61,7 +73,7 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput, i18n) => as
     acceptedDomains = await acceptedDomainsCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+      `Cursor error occurred while user: ${userId} was trying to gather affiliated domains in loadDomainConnectionsByOrgId: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
@@ -71,14 +83,14 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput, i18n) => as
     domainCursor = await query`
     FOR domain IN domains
       FILTER domain._key IN ${acceptedDomains}
+      ${limitTemplate}
       ${afterTemplate} 
       ${beforeTemplate} 
-      ${limitTemplate}
       RETURN domain
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+      `Database error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
@@ -88,30 +100,12 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput, i18n) => as
     domains = await domainCursor.all()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+      `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainConnectionsByOrgId: ${err}`,
     )
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
 
-  const hasNextPage = !!(typeof first !== 'undefined' && domains.length > first)
-  const hasPreviousPage = !!(
-    typeof last !== 'undefined' && domains.length > last
-  )
-
-  if (domains.length > last || domains.length > first) {
-    domains.pop()
-  }
-
-  const edges = []
-  domains.forEach(async (domains) => {
-    domains.id = domains._key
-    edges.push({
-      cursor: toGlobalId('domains', domains._key),
-      node: domains,
-    })
-  })
-
-  if (edges.length === 0) {
+  if (domains.length === 0) {
     return {
       edges: [],
       pageInfo: {
@@ -122,6 +116,58 @@ const domainLoaderConnectionsByOrgId = (query, userId, cleanseInput, i18n) => as
       },
     }
   }
+
+  let sortString
+  if (typeof last !== 'undefined') {
+    sortString = aql`DESC`
+  } else {
+    sortString = aql`ASC`
+  }
+
+  let hasNextPage = false
+  try {
+    const counterCursor = await query`
+      FOR domain IN domains
+        FILTER domain._key IN ${acceptedDomains}
+        FILTER TO_NUMBER(domain._key) > TO_NUMBER(${
+          domains[domains.length - 1]._key
+        })
+        SORT domain._key ${sortString} LIMIT 1
+        RETURN domain
+    `
+    hasNextPage = counterCursor.count > 0
+  } catch (err) {
+    console.error(
+      `Database error occurred while user: ${userId} was trying to see if there is a next page in loadDomainConnectionsByOrgId: ${err}`,
+    )
+    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
+  }
+
+  let hasPreviousPage = false
+  try {
+    const counterCursor = await query`
+      FOR domain IN domains
+        FILTER domain._key IN ${acceptedDomains}
+        FILTER TO_NUMBER(domain._key) < TO_NUMBER(${domains[0]._key})
+        SORT domain._key ${sortString} LIMIT 1
+        RETURN domain
+    `
+    hasPreviousPage = counterCursor.count > 0
+  } catch (err) {
+    console.error(
+      `Database error occurred while user: ${userId} was trying to see if there is a previous page in loadDomainConnectionsByOrgId: ${err}`,
+    )
+    throw new Error(i18n._(t`Unable to load domains. Please try again.`))
+  }
+
+  const edges = []
+  domains.forEach(async (domains) => {
+    domains.id = domains._key
+    edges.push({
+      cursor: toGlobalId('domains', domains._key),
+      node: domains,
+    })
+  })
 
   const startCursor = toGlobalId('domains', domains[0]._key)
   const endCursor = toGlobalId('domains', domains[domains.length - 1]._key)

@@ -16,7 +16,16 @@ const {
 const { toGlobalId } = require('graphql-relay')
 
 describe('given the load domain connection using org id function', () => {
-  let query, drop, truncate, migrate, collections, user, org, domain, domainTwo, i18n
+  let query,
+    drop,
+    truncate,
+    migrate,
+    collections,
+    user,
+    org,
+    domain,
+    domainTwo,
+    i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -70,7 +79,6 @@ describe('given the load domain connection using org id function', () => {
     })
     domain = await collections.domains.save({
       domain: 'test.domain.gc.ca',
-      slug: 'test-domain-gc-ca',
     })
     await collections.claims.save({
       _from: org._id,
@@ -78,7 +86,6 @@ describe('given the load domain connection using org id function', () => {
     })
     domainTwo = await collections.domains.save({
       domain: 'test.domain.canada.ca',
-      slug: 'test-domain-canada-ca',
     })
     await collections.claims.save({
       _from: org._id,
@@ -176,7 +183,7 @@ describe('given the load domain connection using org id function', () => {
           ],
           pageInfo: {
             hasNextPage: false,
-            hasPreviousPage: false,
+            hasPreviousPage: true,
             startCursor: toGlobalId('domains', expectedDomains[1]._key),
             endCursor: toGlobalId('domains', expectedDomains[1]._key),
           },
@@ -220,7 +227,7 @@ describe('given the load domain connection using org id function', () => {
             },
           ],
           pageInfo: {
-            hasNextPage: false,
+            hasNextPage: true,
             hasPreviousPage: false,
             startCursor: toGlobalId('domains', expectedDomains[0]._key),
             endCursor: toGlobalId('domains', expectedDomains[0]._key),
@@ -411,35 +418,129 @@ describe('given the load domain connection using org id function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
-      describe('first and last arguments are set', () => {
-        it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByOrgId(
-            query,
-            user._key,
-            cleanseInput,
-            i18n,
-          )
-  
-          const connectionArgs = {
-            first: 1,
-            last: 5,
-          }
-          try {
-            await connectionLoader({
-              orgId: org._id,
-              ...connectionArgs,
-            })
-          } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'Error, unable to have first, and last set at the same time.',
-              ),
+
+      describe('limits are set below minimum', () => {
+        describe('first limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
             )
-          }
-  
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} tried to have first and last set in domain connection query`,
-          ])
+
+            const connectionArgs = {
+              first: -5,
+            }
+            try {
+              await connectionLoader({
+                orgId: org._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Error, minimum record request for first, and last arguments is 0.',
+                ),
+              )
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} tried to have first or last set below 0`,
+            ])
+          })
+        })
+        describe('last limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: -5,
+            }
+            try {
+              await connectionLoader({
+                orgId: org._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Error, minimum record request for first, and last arguments is 0.',
+                ),
+              )
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} tried to have first or last set below 0`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+            try {
+              await connectionLoader({
+                orgId: org._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Error, maximum record request for first, and last arguments is 100.',
+                ),
+              )
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} tried to have first or last set above 100`,
+            ])
+          })
+        })
+        describe('last limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 1000,
+            }
+            try {
+              await connectionLoader({
+                orgId: org._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Error, maximum record request for first, and last arguments is 100.',
+                ),
+              )
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} tried to have first or last set above 100`,
+            ])
+          })
         })
       })
     })
@@ -470,7 +571,7 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+            `Database error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId: Error: Database Error Occurred.`,
           ])
         })
       })
@@ -505,7 +606,90 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId: Error: Database Error Occurred.`,
+          ])
+        })
+      })
+      describe('when gathering hasNextPage', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockReturnValueOnce({
+              next() {
+                return ['domain1']
+              },
+            })
+            .mockReturnValueOnce({
+              all() {
+                return ['domain1']
+              },
+            })
+            .mockRejectedValue(new Error('Database Error Occurred.'))
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load domains. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to see if there is a next page in loadDomainConnectionsByOrgId: Error: Database Error Occurred.`,
+          ])
+        })
+      })
+      describe('when gathering hasPreviousPage', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockReturnValueOnce({
+              next() {
+                return ['domain1']
+              },
+            })
+            .mockReturnValueOnce({
+              all() {
+                return ['domain1']
+              },
+            })
+            .mockReturnValueOnce({
+              count: 1,
+            })
+            .mockRejectedValue(new Error('Cursor Error Occurred.'))
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load domains. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to see if there is a previous page in loadDomainConnectionsByOrgId: Error: Cursor Error Occurred.`,
           ])
         })
       })
@@ -540,7 +724,7 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId: Error: Cursor error occurred.`,
           ])
         })
       })
@@ -555,7 +739,7 @@ describe('given the load domain connection using org id function', () => {
             .fn()
             .mockReturnValueOnce(cursor)
             .mockReturnValue({
-              next() {
+              all() {
                 throw new Error('Cursor error occurred.')
               },
             })
@@ -580,7 +764,7 @@ describe('given the load domain connection using org id function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId: Error: Cursor error occurred.`,
           ])
         })
       })
@@ -599,35 +783,112 @@ describe('given the load domain connection using org id function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
-      describe('first and last arguments are set', () => {
-        it('returns an error message', async () => {
-          const connectionLoader = domainLoaderConnectionsByOrgId(
-            query,
-            user._key,
-            cleanseInput,
-            i18n,
-          )
-  
-          const connectionArgs = {
-            first: 1,
-            last: 5,
-          }
-          try {
-            await connectionLoader({
-              orgId: org._id,
-              ...connectionArgs,
-            })
-          } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
+      describe('limits are set below minimum', () => {
+        describe('first limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
             )
-          }
-  
-          expect(consoleOutput).toEqual([
-            `User: ${user._key} tried to have first and last set in domain connection query`,
-          ])
+
+            const connectionArgs = {
+              first: -5,
+            }
+            try {
+              await connectionLoader({
+                orgId: org._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} tried to have first or last set below 0`,
+            ])
+          })
+        })
+        describe('last limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: -5,
+            }
+            try {
+              await connectionLoader({
+                orgId: org._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} tried to have first or last set below 0`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+            try {
+              await connectionLoader({
+                orgId: org._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} tried to have first or last set above 100`,
+            ])
+          })
+        })
+        describe('last limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByOrgId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 1000,
+            }
+            try {
+              await connectionLoader({
+                orgId: org._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error('todo'))
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} tried to have first or last set above 100`,
+            ])
+          })
         })
       })
     })
@@ -652,13 +913,11 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+            `Database error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId: Error: Database Error Occurred.`,
           ])
         })
       })
@@ -687,13 +946,94 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
+            expect(err).toEqual(new Error('todo'))
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId: Error: Database Error Occurred.`,
+          ])
+        })
+      })
+      describe('when gathering hasNextPage', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockReturnValueOnce({
+              next() {
+                return ['domain1']
+              },
+            })
+            .mockReturnValueOnce({
+              all() {
+                return ['domain1']
+              },
+            })
+            .mockRejectedValue(new Error('Database Error Occurred.'))
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
             expect(err).toEqual(
               new Error('todo'),
             )
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+            `Database error occurred while user: ${user._key} was trying to see if there is a next page in loadDomainConnectionsByOrgId: Error: Database Error Occurred.`,
+          ])
+        })
+      })
+      describe('when gathering hasPreviousPage', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockReturnValueOnce({
+              next() {
+                return ['domain1']
+              },
+            })
+            .mockReturnValueOnce({
+              all() {
+                return ['domain1']
+              },
+            })
+            .mockReturnValueOnce({
+              count: 1,
+            })
+            .mockRejectedValue(new Error('Cursor Error Occurred.'))
+
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('todo'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to see if there is a previous page in loadDomainConnectionsByOrgId: Error: Cursor Error Occurred.`,
           ])
         })
       })
@@ -722,13 +1062,11 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather affiliated domains in loadDomainConnectionsByOrgId: Error: Cursor error occurred.`,
           ])
         })
       })
@@ -762,13 +1100,11 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
-            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId.`,
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainConnectionsByOrgId: TypeError: domainCursor.all is not a function`,
           ])
         })
       })
