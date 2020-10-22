@@ -1260,8 +1260,8 @@ msgid "Page"
 msgstr "Page"
 
 #: src/PageNotFound.js:9
-msgid "Page not found"
-msgstr "Page not found"
+msgid "404 - Page Not Found"
+msgstr "404 - Page Not Found"
 
 #: src/DmarcReportTable.js:338
 msgid "Page {0} of {1}"
@@ -1700,8 +1700,8 @@ msgid "Skip to main content"
 msgstr "Skip to main content"
 
 #: src/PageNotFound.js:12
-msgid "Sorry, the page you were trying to view does not exist."
-msgstr "Sorry, the page you were trying to view does not exist."
+msgid "The page you are looking for has moved or does not exist."
+msgstr "The page you are looking for has moved or does not exist."
 
 #: src/DmarcReportPage.js:208
 msgid "Source IP Address"
