@@ -32,7 +32,6 @@ module.exports = ({ mode }) => {
     plugins: [
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
-        publicPath: 'public',
         template: './src/html.js',
       }),
     ],
