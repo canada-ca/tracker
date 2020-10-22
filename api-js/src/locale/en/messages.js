@@ -24,6 +24,10 @@
       'Could not retrieve specified domain.',
     'Could not retrieve specified organization.':
       'Could not retrieve specified organization.',
+    'Error, maximum record request for first, and last arguments is 100.':
+      'Error, maximum record request for first, and last arguments is 100.',
+    'Error, minimum record request for first, and last arguments is 0.':
+      'Error, minimum record request for first, and last arguments is 0.',
     'Error, unable to have first, and last set at the same time.':
       'Error, unable to have first, and last set at the same time.',
     'If an account with this username is found, a password reset link will be found in your inbox.':

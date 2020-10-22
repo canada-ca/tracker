@@ -9,6 +9,9 @@
     'Authentication error, please sign in again.': 'todo',
     'Could not retrieve specified domain.': 'todo',
     'Could not retrieve specified organization.': 'todo',
+    'Error, maximum record request for first, and last arguments is 100.':
+      'todo',
+    'Error, minimum record request for first, and last arguments is 0.': 'todo',
     'Error, unable to have first, and last set at the same time.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
