@@ -20,7 +20,7 @@ export default function CreateUserPage() {
   const history = useHistory()
   const toast = useToast()
   const { i18n } = useLingui()
-  const { userOrgToken } = useParams()
+  const userOrgToken = useParams().userOrgToken || ''
 
   const validationSchema = object().shape({
     email: string()
@@ -72,7 +72,7 @@ export default function CreateUserPage() {
       toast({
         title: i18n._(t`Account created.`),
         description: i18n._(
-          t`Welcome, you are successfully signed in to your new account!`,
+          t`Welcome, you have successfully signed in to your new account!`,
         ),
         status: 'success',
         duration: 9000,
