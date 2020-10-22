@@ -3,9 +3,6 @@ kind: Kustomization
 resources:
 - ../../bases
 - letsencrypt-issuer.yaml
-- cert-manager.yaml
-- certificate.yaml
-- http-01-challenge-destination-rule.yaml
 images:
 - name: gcr.io/track-compliance/api
   newTag: master-4003aac
@@ -16,3 +13,4 @@ patchesStrategicMerge:
 - tracker-frontend-deployment.yaml
 - istio-ingressgateway-service.yaml
 - publicgateway.yaml
+- certificate.yaml
