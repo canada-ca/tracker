@@ -52,15 +52,17 @@ export default function Organisations({ orgsPerPage = 10 }) {
           mb="4"
         >
           {({ name, slug, acronym, domainCount }, index) => (
-            <Box key={`${slug}:${index}`}>
-              <OrganizationCard
-                slug={slug}
-                name={name}
-                acronym={acronym}
-                domainCount={domainCount}
-              />
-              <Divider borderColor="gray.900" />
-            </Box>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <Box key={`${slug}:${index}`}>
+                <OrganizationCard
+                  slug={slug}
+                  name={name}
+                  acronym={acronym}
+                  domainCount={domainCount}
+                />
+                <Divider borderColor="gray.900" />
+              </Box>
+            </ErrorBoundary>
           )}
         </ListOf>
 

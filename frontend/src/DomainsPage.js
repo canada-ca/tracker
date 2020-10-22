@@ -54,10 +54,12 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
           mb="4"
         >
           {({ id, url, slug, lastRan }, index) => (
-            <Box key={`${slug}:${id}:${index}`}>
-              <DomainCard key={url} url={url} lastRan={lastRan} />
-              <Divider borderColor="gray.900" />
-            </Box>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <Box key={`${slug}:${id}:${index}`}>
+                <DomainCard key={url} url={url} lastRan={lastRan} />
+                <Divider borderColor="gray.900" />
+              </Box>
+            </ErrorBoundary>
           )}
         </ListOf>
       </ErrorBoundary>
