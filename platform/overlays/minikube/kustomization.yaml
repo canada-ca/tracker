@@ -4,6 +4,7 @@ resources:
 - ../../bases
 - knative-istio-networking.yaml
 - knative-serving-core.yaml
+- selfsigned-issuer.yaml
 images:
 - name: gcr.io/track-compliance/api
   newTag: master-eb7d789

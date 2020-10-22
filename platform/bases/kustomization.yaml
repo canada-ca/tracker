@@ -20,3 +20,7 @@ resources:
 - postgres-deployment.yaml
 - postgres-pvc.yaml
 - postgres-service.yaml
+- certificate.yaml
+- cert-manager.yaml
+- cluster-admin-rolebinding.yaml
+- http-01-challenge-destination-rule.yaml
