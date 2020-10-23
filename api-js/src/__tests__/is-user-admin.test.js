@@ -20,6 +20,11 @@ describe('given the isUserAdmin query', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
+    // Generate DB Items
+    ;({ migrate } = await ArangoTools({ rootPass, url }))
+    ;({ query, drop, truncate, collections } = await migrate(
+      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
+    ))
   })
 
   let consoleOutput = []
@@ -31,12 +36,6 @@ describe('given the isUserAdmin query', () => {
     console.info = mockedInfo
     console.warn = mockedWarn
     console.error = mockedError
-    // Generate DB Items
-    ;({ migrate } = await ArangoTools({ rootPass, url }))
-    ;({ query, drop, truncate, collections } = await migrate(
-      makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-    ))
-    await truncate()
     await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -69,6 +68,10 @@ describe('given the isUserAdmin query', () => {
       },
     })
     consoleOutput = []
+  })
+
+  afterEach(async () => {
+    await truncate()
   })
 
   afterAll(async () => {
