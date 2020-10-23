@@ -25,9 +25,9 @@ const domainLoaderConnectionsByUserId = (
 
   let limitTemplate = aql``
   if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT domain._key ASC LIMIT TO_NUMBER(${first + 1})`
+    limitTemplate = aql`SORT domain._key ASC LIMIT TO_NUMBER(${first})`
   } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT domain._key DESC LIMIT TO_NUMBER(${last + 1})`
+    limitTemplate = aql`SORT domain._key DESC LIMIT TO_NUMBER(${last})`
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
       `User: ${userId} tried to have first and last set in domain connection query`,
@@ -37,17 +37,55 @@ const domainLoaderConnectionsByUserId = (
     )
   }
 
-  let filteredDomainCursor
+  let sortString
+  if (typeof last !== 'undefined') {
+    sortString = aql`DESC`
+  } else {
+    sortString = aql`ASC`
+  }
+
+  let requestedDomainInfo
   try {
-    filteredDomainCursor = await query`
-    FOR userAffiliation IN (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
-      LET orgClaims = (FOR v, e IN 1..1 ANY userAffiliation claims RETURN e._to)
+    requestedDomainInfo = await query`
+    LET domainIds = UNIQUE(FLATTEN(
+      LET ids = []
+      FOR userAffiliation IN (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
+          LET orgClaims = (FOR v, e IN 1..1 ANY userAffiliation claims RETURN e._to)
+          RETURN APPEND(ids, orgClaims)
+    ))
+    
+    LET retrievedDomains = (
       FOR domain IN domains
-        FILTER orgClaims[** FILTER CURRENT == domain._id]
+        FILTER domain._id IN domainIds
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}
         RETURN domain
+    )
+    
+    LET hasNextPage = (LENGTH(
+      FOR domain IN domains
+        FILTER domain._key IN domainIds
+        FILTER TO_NUMBER(domain._key) > TO_NUMBER(LAST(retrievedDomains)._key)
+        SORT domain._key ${sortString} LIMIT 1
+        RETURN domain
+    ) > 0 ? true : false)
+    
+    LET hasPreviousPage = (LENGTH(
+      FOR domain IN domains
+        FILTER domain._key IN domainIds
+        FILTER TO_NUMBER(domain._key) < TO_NUMBER(FIRST(retrievedDomains)._key)
+        SORT domain._key ${sortString} LIMIT 1
+        RETURN domain
+    ) > 0 ? true : false)
+    
+    RETURN { 
+      "domains": domains, 
+      "hasNextPage": hasNextPage, 
+      "hasPreviousPage": hasPreviousPage, 
+      "startKey": FIRST(retrievedDomains)._key, 
+      "endKey": LAST(retrievedDomains)._key 
+    }
     `
   } catch (err) {
     console.error(
@@ -56,12 +94,9 @@ const domainLoaderConnectionsByUserId = (
     throw new Error(i18n._(t`Unable to query domains. Please try again.`))
   }
 
-  let filteredDomains
-  const domains = []
-
+  let domainsInfo
   try {
-    filteredDomains = await filteredDomainCursor.all()
-    filteredDomains.forEach((domain) => domains.push(domain))
+    domainsInfo = await requestedDomainInfo.next()
   } catch (err) {
     console.error(
       `Cursor error occurred while user: ${userId} was trying to gather domains in loadDomainsByUser.`,
@@ -69,25 +104,9 @@ const domainLoaderConnectionsByUserId = (
     throw new Error(i18n._(t`Unable to load domains. Please try again.`))
   }
 
-  const hasNextPage = !!(typeof first !== 'undefined' && domains.length > first)
-  const hasPreviousPage = !!(
-    typeof last !== 'undefined' && domains.length > last
-  )
+  console.debug(domainsInfo)
 
-  if (domains.length > last || domains.length > first) {
-    domains.pop()
-  }
-
-  const edges = []
-  domains.forEach(async (domains) => {
-    domains.id = domains._key
-    edges.push({
-      cursor: toGlobalId('domains', domains._key),
-      node: domains,
-    })
-  })
-
-  if (edges.length === 0) {
+  if (domainsInfo.domains.length === 0) {
     return {
       edges: [],
       pageInfo: {
@@ -99,16 +118,21 @@ const domainLoaderConnectionsByUserId = (
     }
   }
 
-  const startCursor = toGlobalId('domains', domains[0]._key)
-  const endCursor = toGlobalId('domains', domains[domains.length - 1]._key)
+  const edges = domainsInfo.domains.map((domain) => {
+    domain.id = domain._key
+    return {
+      cursor: toGlobalId('domains', domain._key),
+      node: domain,
+    }
+  })
 
   return {
     edges,
     pageInfo: {
-      hasNextPage,
-      hasPreviousPage,
-      startCursor,
-      endCursor,
+      hasNextPage: domainsInfo.hasNextPage,
+      hasPreviousPage: domainsInfo.hasPreviousPage,
+      startCursor: toGlobalId('domains', domainsInfo.startKey),
+      endCursor: toGlobalId('domains', domainsInfo.endKey),
     },
   }
 }
