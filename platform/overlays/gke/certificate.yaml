@@ -9,9 +9,9 @@ spec:
   keyEncoding: pkcs8
   secretName: tracker-credential
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-staging
     kind: Issuer
-  commonName: pulse.alpha.canada.ca
+  commonName: tracker.alpha.canada.ca
   dnsNames:
-  - pulse.alpha.canada.ca
-  - pouls.alpha.canada.ca
+  - tracker.alpha.canada.ca
+  - suivi.alpha.canada.ca
