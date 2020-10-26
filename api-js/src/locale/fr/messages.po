@@ -52,6 +52,10 @@ msgstr "todo"
 msgid "No organization with the provided slug could be found."
 msgstr "todo"
 
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:40
+msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
+msgstr "todo"
+
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:35
 #: src/loaders/domains/load-domain-connections-by-user-id.js:33
 msgid "Passing both `first` and `last` to paginate the `domains` connection is not supported."
@@ -83,6 +87,10 @@ msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:56
 msgid "Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:61
+msgid "Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-user-id.js:54
@@ -196,7 +204,6 @@ msgstr "todo"
 msgid "Unable to find user. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:44
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:34
 #: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:44
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:44
@@ -221,8 +228,8 @@ msgstr "todo"
 msgid "Unable to load dkim results. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:66
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:76
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:130
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:140
 msgid "Unable to load dkim scans. Please try again."
 msgstr "todo"
 
@@ -436,9 +443,17 @@ msgstr "todo"
 msgid "We've sent you an email with an authentication code to sign into Pulse."
 msgstr "todo"
 
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:74
+msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
+msgstr "todo"
+
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:69
 #: src/loaders/domains/load-domain-connections-by-user-id.js:67
 msgid "You must provide a `first` or `last` value to properly paginate the `domains` connection."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:50
+msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
 msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:45

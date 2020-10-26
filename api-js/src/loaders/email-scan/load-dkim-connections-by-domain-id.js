@@ -9,55 +9,119 @@ const dkimLoaderConnectionsByDomainId = (
   i18n,
 ) => async ({ domainId, startDate, endDate, after, before, first, last }) => {
   let afterTemplate = aql``
-  let beforeTemplate = aql``
-  let startDateTemplate = aql``
-  let endDateTemplate = aql``
-  let limitTemplate = aql``
-
   if (typeof after !== 'undefined') {
     const { id: afterId } = fromGlobalId(cleanseInput(after))
     afterTemplate = aql`FILTER TO_NUMBER(dkimScan._key) > TO_NUMBER(${afterId})`
   }
 
+  let beforeTemplate = aql``
   if (typeof before !== 'undefined') {
     const { id: beforeId } = fromGlobalId(cleanseInput(before))
     beforeTemplate = aql`FILTER TO_NUMBER(dkimScan._key) < TO_NUMBER(${beforeId})`
   }
 
+  let startDateTemplate = aql``
   if (typeof startDate !== 'undefined') {
     startDateTemplate = aql`FILTER dkimScan.timestamp >= ${startDate}`
   }
 
+  let endDateTemplate = aql``
   if (typeof endDate !== 'undefined') {
     endDateTemplate = aql`FILTER dkimScan.timestamp <= ${endDate}`
   }
 
-  if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT dkimScan._key ASC LIMIT TO_NUMBER(${first + 1})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT dkimScan._key DESC LIMIT TO_NUMBER(${last + 1})`
-  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
+  let limitTemplate = aql``
+  if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} had first and last arguments set when trying to gather dkim scans for domain: ${domainId}`,
+      `User: ${userId} tried to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
     )
     throw new Error(
-      i18n._(t`Unable to have both first, and last arguments set at the same time.`),
+      i18n._(
+        t`Passing both \`first\` and \`last\` to paginate the \`dkim\` connection is not supported.`,
+      ),
+    )
+  } else if (first < 0 || last < 0) {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set below zero for: dkimLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`\`${argSet}\` on the \`dkim\` connection cannot be less than zero.`,
+      ),
+    )
+  } else if (first > 100 || last > 100) {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const amount = typeof first !== 'undefined' ? first : last
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: dkimLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`Requesting ${amount} records on the \`dkim\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+      ),
+    )
+  } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+    limitTemplate = aql`SORT dkimScan._key ASC LIMIT TO_NUMBER(${first})`
+  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
+    limitTemplate = aql`SORT dkimScan._key DESC LIMIT TO_NUMBER(${last})`
+  } else {
+    console.warn(
+      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`dkim\` connection.`,
+      ),
     )
   }
 
-  let dkimScansCursor
+  let sortString
+  if (typeof last !== 'undefined') {
+    sortString = aql`DESC`
+  } else {
+    sortString = aql`ASC`
+  }
+
+  let requestedDkimInfo
   try {
-    dkimScansCursor = await query`
-    LET dkimIds = (FOR v, e IN 1 ANY ${domainId} domainsDKIM RETURN e._to)
-    FOR dkimScan IN dkim
-      FILTER dkimScan._id IN dkimIds
-      ${afterTemplate}
-      ${beforeTemplate}
-      ${startDateTemplate}
-      ${endDateTemplate}
-      ${limitTemplate}
-      RETURN dkimScan
+    requestedDkimInfo = await query`
+    LET dkimKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsDKIM RETURN v._key)
     
+    LET retrievedDkim = (
+      FOR dkimScan IN dkim
+        FILTER dkimScan._key IN dkimKeys
+        ${afterTemplate}
+        ${beforeTemplate}
+        ${startDateTemplate}
+        ${endDateTemplate}
+        ${limitTemplate}
+        RETURN dkimScan
+    )
+
+    LET hasNextPage = (LENGTH(
+      FOR dkimScan IN dkim
+        FILTER dkimScan._key IN dkimKeys
+        FILTER TO_NUMBER(dkimScan._key) > TO_NUMBER(LAST(retrievedDkim)._key)
+        SORT dkimScan._key ${sortString} LIMIT 1
+        RETURN dkimScan
+    ) > 0 ? true : false)
+    
+    LET hasPreviousPage = (LENGTH(
+      FOR dkimScan IN dkim
+        FILTER dkimScan._key IN dkimKeys
+        FILTER TO_NUMBER(dkimScan._key) < TO_NUMBER(FIRST(retrievedDkim)._key)
+        SORT dkimScan._key ${sortString} LIMIT 1
+        RETURN dkimScan
+    ) > 0 ? true : false)
+
+    RETURN { 
+      "dkimScans": retrievedDkim, 
+      "hasNextPage": hasNextPage, 
+      "hasPreviousPage": hasPreviousPage, 
+      "startKey": FIRST(retrievedDkim)._key, 
+      "endKey": LAST(retrievedDkim)._key 
+    }
     `
   } catch (err) {
     console.error(
@@ -66,9 +130,9 @@ const dkimLoaderConnectionsByDomainId = (
     throw new Error(i18n._(t`Unable to load dkim scans. Please try again.`))
   }
 
-  let dkimScans
+  let dkimScanInfo
   try {
-    dkimScans = await dkimScansCursor.all()
+    dkimScanInfo = await requestedDkimInfo.next()
   } catch (err) {
     console.error(
       `Cursor error occurred while user: ${userId} was trying to get dkim information for ${domainId}, error: ${err}`,
@@ -76,27 +140,7 @@ const dkimLoaderConnectionsByDomainId = (
     throw new Error(i18n._(t`Unable to load dkim scans. Please try again.`))
   }
 
-  const hasNextPage = !!(
-    typeof first !== 'undefined' && dkimScans.length > first
-  )
-  const hasPreviousPage = !!(
-    typeof last !== 'undefined' && dkimScans.length > last
-  )
-
-  if (dkimScans.length > first || dkimScans.length > last) {
-    dkimScans.pop()
-  }
-
-  const edges = dkimScans.map((dkimScan) => {
-    dkimScan.id = dkimScan._key
-    dkimScan.domainId = domainId
-    return {
-      cursor: toGlobalId('dkim', dkimScan._key),
-      node: dkimScan,
-    }
-  })
-
-  if (edges.length === 0) {
+  if (dkimScanInfo.dkimScans.length === 0) {
     return {
       edges: [],
       pageInfo: {
@@ -108,16 +152,22 @@ const dkimLoaderConnectionsByDomainId = (
     }
   }
 
-  const startCursor = toGlobalId('dkim', dkimScans[0]._key)
-  const endCursor = toGlobalId('dkim', dkimScans[dkimScans.length - 1]._key)
+  const edges = dkimScanInfo.dkimScans.map((dkimScan) => {
+    dkimScan.id = dkimScan._key
+    dkimScan.domainId = domainId
+    return {
+      cursor: toGlobalId('dkim', dkimScan._key),
+      node: dkimScan,
+    }
+  })
 
   return {
     edges,
     pageInfo: {
-      hasNextPage,
-      hasPreviousPage,
-      startCursor,
-      endCursor,
+      hasNextPage: dkimScanInfo.hasNextPage,
+      hasPreviousPage: dkimScanInfo.hasPreviousPage,
+      startCursor: toGlobalId('dkim', dkimScanInfo.startKey),
+      endCursor: toGlobalId('dkim', dkimScanInfo.endKey),
     },
   }
 }

@@ -17,6 +17,8 @@
     'New passwords do not match. Please try again.': 'todo',
     'No domain with the provided domain could be found.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
+    'Passing both `first` and `last` to paginate the `dkim` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
       'todo',
     'Password is not strong enough. Please try again.': 'todo',
@@ -26,6 +28,8 @@
     'Passwords do not match.': 'todo',
     'Profile successfully updated.': 'todo',
     'Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -101,10 +105,11 @@
       'todo',
     "We've sent you an email with an authentication code to sign into Pulse.":
       'todo',
-    "You must provide a `first` or 'last` value to properly paginate the `domains` connection.":
+    'You must provide a `first` or `last` value to properly paginate the `dkim` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
       'todo',
+    '`{argSet}` on the `dkim` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `domains` connection cannot be less than zero.': 'todo',
   },
 }
