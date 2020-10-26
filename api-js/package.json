@@ -12,7 +12,8 @@
     "prettier": "prettier --write \"**/*.js\"",
     "add-locale": "npx lingui add-locale",
     "extract": "npx lingui extract",
-    "compile": "npx lingui compile"
+    "compile": "npx lingui compile",
+    "lin-clean": "npx lingui extract --clean"
   },
   "author": "",
   "license": "ISC",
