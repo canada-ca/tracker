@@ -4,13 +4,16 @@ dotenv.config()
 const { SIGN_IN_KEY } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { toGlobalId } = require('graphql-relay')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-
-const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize, checkPermission, userRequired } = require('../auth')
 const {
@@ -22,7 +25,7 @@ const {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('invite user to org', () => {
-  let query, drop, truncate, migrate, schema, collections, transaction
+  let query, drop, truncate, migrate, schema, collections, transaction, i18n
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -89,2020 +92,2572 @@ describe('invite user to org', () => {
     await drop()
   })
 
-  describe('given a successful invitation', () => {
-    let org, user
-    beforeEach(async () => {
-      org = await collections.organizations.save({
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
         },
       })
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
     })
-    describe('users role is super admin', () => {
+    describe('given a successful invitation', () => {
+      let org, user
       beforeEach(async () => {
+        org = await collections.organizations.save({
+          orgDetails: {
+            en: {
+              slug: 'treasury-board-secretariat',
+              acronym: 'TBS',
+              name: 'Treasury Board of Canada Secretariat',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+            fr: {
+              slug: 'secretariat-conseil-tresor',
+              acronym: 'SCT',
+              name: 'Secrétariat du Conseil Trésor du Canada',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+          },
+        })
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await userCursor.next()
+      })
+      describe('users role is super admin', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'super_admin',
+          })
+        })
+        describe('inviting an existing account', () => {
+          describe('requested role is super_admin', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'english',
+              })
+              const userCursor = await query`
+                  FOR user IN users
+                    FILTER user.userName == "test@email.gc.ca"
+                    RETURN user
+                `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                    mutation {
+                      inviteUserToOrg(
+                        input: {
+                          userName: "test@email.gc.ca"
+                          requestedRole: SUPER_ADMIN
+                          orgId: "${toGlobalId('organizations', org._key)}"
+                          preferredLang: ENGLISH
+                        }
+                      ) {
+                        status
+                      }
+                    }
+                  `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully invited user to organization, and sent notification email.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
+                user: secondaryUser,
+                orgName: 'Treasury Board of Canada Secretariat',
+              })
+            })
+          })
+          describe('requested role is admin', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'english',
+              })
+              const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test@email.gc.ca"
+                  RETURN user
+              `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: ENGLISH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully invited user to organization, and sent notification email.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
+                user: secondaryUser,
+                orgName: 'Treasury Board of Canada Secretariat',
+              })
+            })
+          })
+          describe('requested role is user', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'english',
+              })
+              const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test@email.gc.ca"
+                  RETURN user
+              `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: USER
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: ENGLISH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully invited user to organization, and sent notification email.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
+                user: secondaryUser,
+                orgName: 'Treasury Board of Canada Secretariat',
+              })
+            })
+          })
+        })
+        describe('inviting a non-existing account', () => {
+          describe('requested role is super_admin', () => {
+            it('returns status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: SUPER_ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: ENGLISH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully sent invitation to service, and organization email.',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'super_admin',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Treasury Board of Canada Secretariat',
+                createAccountLink,
+              })
+            })
+          })
+          describe('requested role is admin', () => {
+            it('returns status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: ENGLISH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully sent invitation to service, and organization email.',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'admin',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Treasury Board of Canada Secretariat',
+                createAccountLink,
+              })
+            })
+          })
+          describe('requested role is user', () => {
+            it('returns status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: USER
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: ENGLISH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully sent invitation to service, and organization email.',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'user',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Treasury Board of Canada Secretariat',
+                createAccountLink,
+              })
+            })
+          })
+        })
+      })
+      describe('users role is admin', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
+        describe('inviting an existing account', () => {
+          describe('requested role is admin', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'english',
+              })
+              const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test@email.gc.ca"
+                  RETURN user
+              `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: ENGLISH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully invited user to organization, and sent notification email.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
+                user: secondaryUser,
+                orgName: 'Treasury Board of Canada Secretariat',
+              })
+            })
+          })
+          describe('requested role is user', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'english',
+              })
+              const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test@email.gc.ca"
+                  RETURN user
+              `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: USER
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: ENGLISH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully invited user to organization, and sent notification email.',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
+                user: secondaryUser,
+                orgName: 'Treasury Board of Canada Secretariat',
+              })
+            })
+          })
+        })
+        describe('inviting a non-existing account', () => {
+          describe('requested role is admin', () => {
+            it('returns status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: ENGLISH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully sent invitation to service, and organization email.',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'admin',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Treasury Board of Canada Secretariat',
+                createAccountLink,
+              })
+            })
+          })
+          describe('requested role is user', () => {
+            it('returns status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: USER
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: ENGLISH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'en',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status:
+                      'Successfully sent invitation to service, and organization email.',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'user',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Treasury Board of Canada Secretariat',
+                createAccountLink,
+              })
+            })
+          })
+        })
+      })
+    })
+    describe('given an unsuccessful invitation', () => {
+      describe('user attempts to invite themselves', () => {
+        let user
+        beforeEach(async () => {
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+        })
+        it('returns an error message', async () => {
+          const sendOrgInviteCreateAccount = jest.fn()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', 1)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteCreateAccount },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              'Unable to invite yourself to an org. Please try again.',
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to invite themselves to 1.`,
+          ])
+        })
+      })
+      describe('user attempts to invite to an org that does not exist', () => {
+        let user
+        beforeEach(async () => {
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+        })
+        it('returns an error message', async () => {
+          const sendOrgInviteCreateAccount = jest.fn()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', 1)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteCreateAccount },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to invite user. Please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to 1 however there is no org associated with that id.`,
+          ])
+        })
+      })
+      describe('user with user level permission attempts to invite a user', () => {
+        let org, user
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+        })
+        it('returns an error message', async () => {
+          const sendOrgInviteCreateAccount = jest.fn()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteCreateAccount },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to invite user. Please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: user but does not have permission to do so.`,
+          ])
+        })
+      })
+      describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
+        let org, user
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
+        it('returns an error message', async () => {
+          const sendOrgInviteCreateAccount = jest.fn()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: SUPER_ADMIN
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteCreateAccount },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [
+            new GraphQLError('Unable to invite user. Please try again.'),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: super_admin but does not have permission to do so.`,
+          ])
+        })
+      })
+    })
+    describe('transaction error occurs', () => {
+      let org, user, secondaryUser
+      beforeEach(async () => {
+        org = await collections.organizations.save({
+          orgDetails: {
+            en: {
+              slug: 'treasury-board-secretariat',
+              acronym: 'TBS',
+              name: 'Treasury Board of Canada Secretariat',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+            fr: {
+              slug: 'secretariat-conseil-tresor',
+              acronym: 'SCT',
+              name: 'Secrétariat du Conseil Trésor du Canada',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+          },
+        })
+        let userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+        user = await userCursor.next()
         await collections.affiliations.save({
           _from: org._id,
           _to: user._id,
           permission: 'super_admin',
         })
+
+        await collections.users.save({
+          displayName: 'Test Account',
+          userName: 'test@email.gc.ca',
+          preferredLang: 'french',
+        })
+        userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test@email.gc.ca"
+            RETURN user
+        `
+        secondaryUser = await userCursor.next()
       })
-      describe('inviting an existing account', () => {
-        describe('requested role is super_admin', () => {
-          describe('requested users language is set to english', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'english',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
+      describe('when creating affiliation', () => {
+        it('returns an error message', async () => {
+          const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: SUPER_ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
-              }
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
-                user: secondaryUser,
-                orgName: 'Treasury Board of Canada Secretariat',
-              })
-            })
+          transaction = jest.fn().mockReturnValue({
+            run() {
+              throw new Error('Transaction error occurred.')
+            },
           })
-          describe('language is set to french', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'french',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns a status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
 
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: SUPER_ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    preferredLang: FRENCH
                   }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
+                ) {
+                  status
+                }
               }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteEmail },
+              validators: { cleanseInput },
+            },
+          )
 
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
-                user: secondaryUser,
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-              })
-            })
-          })
-        })
-        describe('requested role is admin', () => {
-          describe('requested users language is set to english', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'english',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
+          const error = [
+            new GraphQLError('Unable to invite user. Please try again.'),
+          ]
 
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
-              }
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
-                user: secondaryUser,
-                orgName: 'Treasury Board of Canada Secretariat',
-              })
-            })
-          })
-          describe('language is set to french', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'french',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns a status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
-              }
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
-                user: secondaryUser,
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-              })
-            })
-          })
-        })
-        describe('requested role is user', () => {
-          describe('requested users language is set to english', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'english',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
-              }
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
-                user: secondaryUser,
-                orgName: 'Treasury Board of Canada Secretariat',
-              })
-            })
-          })
-          describe('language is set to french', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'french',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns a status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
-              }
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
-                user: secondaryUser,
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-              })
-            })
-          })
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Transaction run error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
+          ])
         })
       })
-      describe('inviting a non-existing account', () => {
-        describe('requested role is super_admin', () => {
-          describe('requested users language is set to english', () => {
-            it('returns status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: SUPER_ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
+      describe('when committing transaction', () => {
+        it('returns an error message', async () => {
+          const sendOrgInviteEmail = jest.fn()
 
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
-              }
-
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'super_admin',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Treasury Board of Canada Secretariat',
-                createAccountLink,
-              })
-            })
+          transaction = jest.fn().mockReturnValue({
+            run() {
+              return undefined
+            },
+            commit() {
+              throw new Error('Transaction error occurred.')
+            },
           })
-          describe('language is set to french', () => {
-            it('returns a status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
 
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: SUPER_ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    preferredLang: FRENCH
                   }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
+                ) {
+                  status
+                }
               }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteEmail },
+              validators: { cleanseInput },
+            },
+          )
 
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'super_admin',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
+          const error = [
+            new GraphQLError('Unable to invite user. Please try again.'),
+          ]
 
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-                createAccountLink,
-              })
-            })
-          })
-        })
-        describe('requested role is admin', () => {
-          describe('requested users language is set to english', () => {
-            it('returns status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
-              }
-
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'admin',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Treasury Board of Canada Secretariat',
-                createAccountLink,
-              })
-            })
-          })
-          describe('language is set to french', () => {
-            it('returns a status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
-              }
-
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'admin',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-                createAccountLink,
-              })
-            })
-          })
-        })
-        describe('requested role is user', () => {
-          describe('requested users language is set to english', () => {
-            it('returns status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
-              }
-
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'user',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Treasury Board of Canada Secretariat',
-                createAccountLink,
-              })
-            })
-          })
-          describe('language is set to french', () => {
-            it('returns a status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
-              }
-
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'user',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-                createAccountLink,
-              })
-            })
-          })
-        })
-      })
-    })
-    describe('users role is admin', () => {
-      beforeEach(async () => {
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
-        })
-      })
-      describe('inviting an existing account', () => {
-        describe('requested role is admin', () => {
-          describe('requested users language is set to english', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'english',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
-              }
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
-                user: secondaryUser,
-                orgName: 'Treasury Board of Canada Secretariat',
-              })
-            })
-          })
-          describe('language is set to french', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'french',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns a status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
-              }
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
-                user: secondaryUser,
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-              })
-            })
-          })
-        })
-        describe('requested role is user', () => {
-          describe('requested users language is set to english', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'english',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
-              }
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'eccc6a60-44e8-40ff-8b15-ed82155b769f',
-                user: secondaryUser,
-                orgName: 'Treasury Board of Canada Secretariat',
-              })
-            })
-          })
-          describe('language is set to french', () => {
-            let secondaryUser
-            beforeEach(async () => {
-              await collections.users.save({
-                displayName: 'Test Account',
-                userName: 'test@email.gc.ca',
-                preferredLang: 'french',
-              })
-              const userCursor = await query`
-                FOR user IN users
-                  FILTER user.userName == "test@email.gc.ca"
-                  RETURN user
-              `
-              secondaryUser = await userCursor.next()
-            })
-            it('returns a status message', async () => {
-              const sendOrgInviteEmail = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully invited user to organization, and sent notification email.',
-                  },
-                },
-              }
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
-                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
-                user: secondaryUser,
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-              })
-            })
-          })
-        })
-      })
-      describe('inviting a non-existing account', () => {
-        describe('requested role is admin', () => {
-          describe('requested users language is set to english', () => {
-            it('returns status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
-              }
-
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'admin',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Treasury Board of Canada Secretariat',
-                createAccountLink,
-              })
-            })
-          })
-          describe('language is set to french', () => {
-            it('returns a status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: ADMIN
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
-              }
-
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'admin',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-                createAccountLink,
-              })
-            })
-          })
-        })
-        describe('requested role is user', () => {
-          describe('requested users language is set to english', () => {
-            it('returns status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: ENGLISH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'en',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'en'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
-              }
-
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'user',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: treasury-board-secretariat.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: 'e66e1a68-8041-40be-af0e-83d064965431',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Treasury Board of Canada Secretariat',
-                createAccountLink,
-              })
-            })
-          })
-          describe('language is set to french', () => {
-            it('returns a status message', async () => {
-              const sendOrgInviteCreateAccount = jest.fn()
-
-              const response = await graphql(
-                schema,
-                `
-                  mutation {
-                    inviteUserToOrg(
-                      input: {
-                        userName: "test@email.gc.ca"
-                        requestedRole: USER
-                        orgId: "${toGlobalId('organizations', org._key)}"
-                        preferredLang: FRENCH
-                      }
-                    ) {
-                      status
-                    }
-                  }
-                `,
-                null,
-                {
-                  request: {
-                    language: 'fr',
-                    protocol: 'http',
-                    get: (text) => text,
-                  },
-                  query,
-                  collections,
-                  transaction,
-                  userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
-                  loaders: {
-                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-                    userLoaderByKey: userLoaderByKey(query),
-                    userLoaderByUserName: userLoaderByUserName(query),
-                  },
-                  notify: { sendOrgInviteCreateAccount },
-                  validators: { cleanseInput },
-                },
-              )
-
-              const expectedResponse = {
-                data: {
-                  inviteUserToOrg: {
-                    status:
-                      'Successfully sent invitation to service, and organization email.',
-                  },
-                },
-              }
-
-              const token = tokenize({
-                parameters: {
-                  userName: 'test@email.gc.ca',
-                  orgId: org._id,
-                  requestedRole: 'user',
-                },
-              })
-              const createAccountLink = `http://host/create-account/${token}`
-
-              expect(response).toEqual(expectedResponse)
-              expect(consoleOutput).toEqual([
-                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
-              ])
-              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
-                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
-                user: { userName: 'test@email.gc.ca' },
-                orgName: 'Secrétariat du Conseil Trésor du Canada',
-                createAccountLink,
-              })
-            })
-          })
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Transaction commit error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
+          ])
         })
       })
     })
   })
-  describe('given an unsuccessful invitation', () => {
-    describe('user attempts to invite themselves', () => {
-      let user
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-      })
-      it('returns an error message', async () => {
-        const sendOrgInviteCreateAccount = jest.fn()
-
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              inviteUserToOrg(
-                input: {
-                  userName: "test.account@istio.actually.exists"
-                  requestedRole: USER
-                  orgId: "${toGlobalId('organizations', 1)}"
-                  preferredLang: FRENCH
-                }
-              ) {
-                status
-              }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'fr',
-              protocol: 'http',
-              get: (text) => text,
-            },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, tokenize, userRequired },
-            loaders: {
-              orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-              userLoaderByKey: userLoaderByKey(query),
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-            notify: { sendOrgInviteCreateAccount },
-            validators: { cleanseInput },
-          },
-        )
-
-        const error = [
-          new GraphQLError(
-            'Unable to invite yourself to an org. Please try again.',
-          ),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to invite themselves to 1.`,
-        ])
-      })
-    })
-    describe('user attempts to invite to an org that does not exist', () => {
-      let user
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-      })
-      it('returns an error message', async () => {
-        const sendOrgInviteCreateAccount = jest.fn()
-
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              inviteUserToOrg(
-                input: {
-                  userName: "test@email.gc.ca"
-                  requestedRole: USER
-                  orgId: "${toGlobalId('organizations', 1)}"
-                  preferredLang: FRENCH
-                }
-              ) {
-                status
-              }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'fr',
-              protocol: 'http',
-              get: (text) => text,
-            },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, tokenize, userRequired },
-            loaders: {
-              orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-              userLoaderByKey: userLoaderByKey(query),
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-            notify: { sendOrgInviteCreateAccount },
-            validators: { cleanseInput },
-          },
-        )
-
-        const error = [
-          new GraphQLError('Unable to invite user. Please try again.'),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to invite user: test@email.gc.ca to 1 however there is no org associated with that id.`,
-        ])
-      })
-    })
-    describe('user with user level permission attempts to invite a user', () => {
-      let org, user
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
-        })
-      })
-      it('returns an error message', async () => {
-        const sendOrgInviteCreateAccount = jest.fn()
-
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              inviteUserToOrg(
-                input: {
-                  userName: "test@email.gc.ca"
-                  requestedRole: USER
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  preferredLang: FRENCH
-                }
-              ) {
-                status
-              }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'fr',
-              protocol: 'http',
-              get: (text) => text,
-            },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, tokenize, userRequired },
-            loaders: {
-              orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-              userLoaderByKey: userLoaderByKey(query),
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-            notify: { sendOrgInviteCreateAccount },
-            validators: { cleanseInput },
-          },
-        )
-
-        const error = [
-          new GraphQLError('Unable to invite user. Please try again.'),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: user but does not have permission to do so.`,
-        ])
-      })
-    })
-    describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
-      let org, user
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'treasury-board-secretariat',
-              acronym: 'TBS',
-              name: 'Treasury Board of Canada Secretariat',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'secretariat-conseil-tresor',
-              acronym: 'SCT',
-              name: 'Secrétariat du Conseil Trésor du Canada',
-              zone: 'FED',
-              sector: 'TBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'admin',
-        })
-      })
-      it('returns an error message', async () => {
-        const sendOrgInviteCreateAccount = jest.fn()
-
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              inviteUserToOrg(
-                input: {
-                  userName: "test@email.gc.ca"
-                  requestedRole: SUPER_ADMIN
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  preferredLang: FRENCH
-                }
-              ) {
-                status
-              }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'fr',
-              protocol: 'http',
-              get: (text) => text,
-            },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, tokenize, userRequired },
-            loaders: {
-              orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-              userLoaderByKey: userLoaderByKey(query),
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-            notify: { sendOrgInviteCreateAccount },
-            validators: { cleanseInput },
-          },
-        )
-
-        const error = [
-          new GraphQLError('Unable to invite user. Please try again.'),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: super_admin but does not have permission to do so.`,
-        ])
-      })
-    })
-  })
-  describe('transaction error occurs', () => {
-    let org, user, secondaryUser
-    beforeEach(async () => {
-      org = await collections.organizations.save({
-        orgDetails: {
-          en: {
-            slug: 'treasury-board-secretariat',
-            acronym: 'TBS',
-            name: 'Treasury Board of Canada Secretariat',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
-          fr: {
-            slug: 'secretariat-conseil-tresor',
-            acronym: 'SCT',
-            name: 'Secrétariat du Conseil Trésor du Canada',
-            zone: 'FED',
-            sector: 'TBS',
-            country: 'Canada',
-            province: 'Ontario',
-            city: 'Ottawa',
-          },
+  describe('users language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
         },
       })
-      let userCursor = await query`
+    })
+    describe('given a successful invitation', () => {
+      let org, user
+      beforeEach(async () => {
+        org = await collections.organizations.save({
+          orgDetails: {
+            en: {
+              slug: 'treasury-board-secretariat',
+              acronym: 'TBS',
+              name: 'Treasury Board of Canada Secretariat',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+            fr: {
+              slug: 'secretariat-conseil-tresor',
+              acronym: 'SCT',
+              name: 'Secrétariat du Conseil Trésor du Canada',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+          },
+        })
+        const userCursor = await query`
           FOR user IN users
             FILTER user.userName == "test.account@istio.actually.exists"
             RETURN user
         `
-      user = await userCursor.next()
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'super_admin',
+        user = await userCursor.next()
       })
+      describe('users role is super admin', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'super_admin',
+          })
+        })
+        describe('inviting an existing account', () => {
+          describe('requested role is super_admin', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'french',
+              })
+              const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test@email.gc.ca"
+                  RETURN user
+              `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns a status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
 
-      await collections.users.save({
-        displayName: 'Test Account',
-        userName: 'test@email.gc.ca',
-        preferredLang: 'french',
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: SUPER_ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
+                user: secondaryUser,
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+              })
+            })
+          })
+          describe('requested role is admin', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'french',
+              })
+              const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test@email.gc.ca"
+                  RETURN user
+              `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns a status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
+                user: secondaryUser,
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+              })
+            })
+          })
+          describe('requested role is user', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'french',
+              })
+              const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test@email.gc.ca"
+                  RETURN user
+              `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns a status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: USER
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
+                user: secondaryUser,
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+              })
+            })
+          })
+        })
+        describe('inviting a non-existing account', () => {
+          describe('requested role is super_admin', () => {
+            it('returns a status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: SUPER_ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'super_admin',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                createAccountLink,
+              })
+            })
+          })
+          describe('requested role is admin', () => {
+            it('returns a status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'admin',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                createAccountLink,
+              })
+            })
+          })
+          describe('requested role is user', () => {
+            it('returns a status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: USER
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'user',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                createAccountLink,
+              })
+            })
+          })
+        })
       })
-      userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test@email.gc.ca"
-          RETURN user
-      `
-      secondaryUser = await userCursor.next()
+      describe('users role is admin', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
+        describe('inviting an existing account', () => {
+          describe('requested role is admin', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'french',
+              })
+              const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test@email.gc.ca"
+                  RETURN user
+              `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns a status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
+                user: secondaryUser,
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+              })
+            })
+          })
+          describe('requested role is user', () => {
+            let secondaryUser
+            beforeEach(async () => {
+              await collections.users.save({
+                displayName: 'Test Account',
+                userName: 'test@email.gc.ca',
+                preferredLang: 'french',
+              })
+              const userCursor = await query`
+                FOR user IN users
+                  FILTER user.userName == "test@email.gc.ca"
+                  RETURN user
+              `
+              secondaryUser = await userCursor.next()
+            })
+            it('returns a status message', async () => {
+              const sendOrgInviteEmail = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: USER
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteEmail: sendOrgInviteEmail },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: ${secondaryUser._key} to the org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteEmail).toHaveBeenCalledWith({
+                templateId: 'a6eb3fdd-c7ab-4404-af04-316abd2fb221',
+                user: secondaryUser,
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+              })
+            })
+          })
+        })
+        describe('inviting a non-existing account', () => {
+          describe('requested role is admin', () => {
+            it('returns a status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: ADMIN
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'admin',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                createAccountLink,
+              })
+            })
+          })
+          describe('requested role is user', () => {
+            it('returns a status message', async () => {
+              const sendOrgInviteCreateAccount = jest.fn()
+
+              const response = await graphql(
+                schema,
+                `
+                  mutation {
+                    inviteUserToOrg(
+                      input: {
+                        userName: "test@email.gc.ca"
+                        requestedRole: USER
+                        orgId: "${toGlobalId('organizations', org._key)}"
+                        preferredLang: FRENCH
+                      }
+                    ) {
+                      status
+                    }
+                  }
+                `,
+                null,
+                {
+                  i18n,
+                  request: {
+                    language: 'fr',
+                    protocol: 'http',
+                    get: (text) => text,
+                  },
+                  query,
+                  collections,
+                  transaction,
+                  userId: user._key,
+                  auth: { checkPermission, tokenize, userRequired },
+                  loaders: {
+                    orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                    userLoaderByKey: userLoaderByKey(query),
+                    userLoaderByUserName: userLoaderByUserName(query),
+                  },
+                  notify: { sendOrgInviteCreateAccount },
+                  validators: { cleanseInput },
+                },
+              )
+
+              const expectedResponse = {
+                data: {
+                  inviteUserToOrg: {
+                    status: 'todo',
+                  },
+                },
+              }
+
+              const token = tokenize({
+                parameters: {
+                  userName: 'test@email.gc.ca',
+                  orgId: org._id,
+                  requestedRole: 'user',
+                },
+              })
+              const createAccountLink = `http://host/create-account/${token}`
+
+              expect(response).toEqual(expectedResponse)
+              expect(consoleOutput).toEqual([
+                `User: ${user._key} successfully invited user: test@email.gc.ca to the service, and org: secretariat-conseil-tresor.`,
+              ])
+              expect(sendOrgInviteCreateAccount).toHaveBeenCalledWith({
+                templateId: '3c10d11b-f502-439d-bca1-afa551012310',
+                user: { userName: 'test@email.gc.ca' },
+                orgName: 'Secrétariat du Conseil Trésor du Canada',
+                createAccountLink,
+              })
+            })
+          })
+        })
+      })
     })
-    describe('when creating affiliation', () => {
-      it('returns an error message', async () => {
-        const sendOrgInviteEmail = jest.fn()
+    describe('given an unsuccessful invitation', () => {
+      describe('user attempts to invite themselves', () => {
+        let user
+        beforeEach(async () => {
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+        })
+        it('returns an error message', async () => {
+          const sendOrgInviteCreateAccount = jest.fn()
 
-        transaction = jest.fn().mockReturnValue({
-          run() {
-            throw new Error('Transaction error occurred.')
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test.account@istio.actually.exists"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', 1)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteCreateAccount },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to invite themselves to 1.`,
+          ])
+        })
+      })
+      describe('user attempts to invite to an org that does not exist', () => {
+        let user
+        beforeEach(async () => {
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+        })
+        it('returns an error message', async () => {
+          const sendOrgInviteCreateAccount = jest.fn()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', 1)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteCreateAccount },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to 1 however there is no org associated with that id.`,
+          ])
+        })
+      })
+      describe('user with user level permission attempts to invite a user', () => {
+        let org, user
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+        })
+        it('returns an error message', async () => {
+          const sendOrgInviteCreateAccount = jest.fn()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteCreateAccount },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: user but does not have permission to do so.`,
+          ])
+        })
+      })
+      describe('user with admin level permission attempts to invite a user to super_admin permission', () => {
+        let org, user
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'treasury-board-secretariat',
+                acronym: 'TBS',
+                name: 'Treasury Board of Canada Secretariat',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'secretariat-conseil-tresor',
+                acronym: 'SCT',
+                name: 'Secrétariat du Conseil Trésor du Canada',
+                zone: 'FED',
+                sector: 'TBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'admin',
+          })
+        })
+        it('returns an error message', async () => {
+          const sendOrgInviteCreateAccount = jest.fn()
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: SUPER_ADMIN
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteCreateAccount },
+              validators: { cleanseInput },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to invite user: test@email.gc.ca to org: secretariat-conseil-tresor with role: super_admin but does not have permission to do so.`,
+          ])
+        })
+      })
+    })
+    describe('transaction error occurs', () => {
+      let org, user, secondaryUser
+      beforeEach(async () => {
+        org = await collections.organizations.save({
+          orgDetails: {
+            en: {
+              slug: 'treasury-board-secretariat',
+              acronym: 'TBS',
+              name: 'Treasury Board of Canada Secretariat',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
+            fr: {
+              slug: 'secretariat-conseil-tresor',
+              acronym: 'SCT',
+              name: 'Secrétariat du Conseil Trésor du Canada',
+              zone: 'FED',
+              sector: 'TBS',
+              country: 'Canada',
+              province: 'Ontario',
+              city: 'Ottawa',
+            },
           },
         })
-
-        const response = await graphql(
-          schema,
+        let userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
           `
-            mutation {
-              inviteUserToOrg(
-                input: {
-                  userName: "test@email.gc.ca"
-                  requestedRole: USER
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  preferredLang: FRENCH
-                }
-              ) {
-                status
-              }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'fr',
-              protocol: 'http',
-              get: (text) => text,
-            },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, tokenize, userRequired },
-            loaders: {
-              orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-              userLoaderByKey: userLoaderByKey(query),
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-            notify: { sendOrgInviteEmail },
-            validators: { cleanseInput },
-          },
-        )
-
-        const error = [
-          new GraphQLError('Unable to invite user. Please try again.'),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `Transaction run error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
-        ])
-      })
-    })
-    describe('when committing transaction', () => {
-      it('returns an error message', async () => {
-        const sendOrgInviteEmail = jest.fn()
-
-        transaction = jest.fn().mockReturnValue({
-          run() {
-            return undefined
-          },
-          commit() {
-            throw new Error('Transaction error occurred.')
-          },
+        user = await userCursor.next()
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'super_admin',
         })
 
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              inviteUserToOrg(
-                input: {
-                  userName: "test@email.gc.ca"
-                  requestedRole: USER
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  preferredLang: FRENCH
+        await collections.users.save({
+          displayName: 'Test Account',
+          userName: 'test@email.gc.ca',
+          preferredLang: 'french',
+        })
+        userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test@email.gc.ca"
+            RETURN user
+        `
+        secondaryUser = await userCursor.next()
+      })
+      describe('when creating affiliation', () => {
+        it('returns an error message', async () => {
+          const sendOrgInviteEmail = jest.fn()
+
+          transaction = jest.fn().mockReturnValue({
+            run() {
+              throw new Error('Transaction error occurred.')
+            },
+          })
+
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
                 }
-              ) {
-                status
               }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'fr',
-              protocol: 'http',
-              get: (text) => text,
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteEmail },
+              validators: { cleanseInput },
             },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, tokenize, userRequired },
-            loaders: {
-              orgLoaderByKey: orgLoaderByKey(query, 'fr'),
-              userLoaderByKey: userLoaderByKey(query),
-              userLoaderByUserName: userLoaderByUserName(query),
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Transaction run error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
+          ])
+        })
+      })
+      describe('when committing transaction', () => {
+        it('returns an error message', async () => {
+          const sendOrgInviteEmail = jest.fn()
+
+          transaction = jest.fn().mockReturnValue({
+            run() {
+              return undefined
             },
-            notify: { sendOrgInviteEmail },
-            validators: { cleanseInput },
-          },
-        )
+            commit() {
+              throw new Error('Transaction error occurred.')
+            },
+          })
 
-        const error = [
-          new GraphQLError('Unable to invite user. Please try again.'),
-        ]
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                inviteUserToOrg(
+                  input: {
+                    userName: "test@email.gc.ca"
+                    requestedRole: USER
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    preferredLang: FRENCH
+                  }
+                ) {
+                  status
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'fr',
+                protocol: 'http',
+                get: (text) => text,
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, tokenize, userRequired },
+              loaders: {
+                orgLoaderByKey: orgLoaderByKey(query, 'fr'),
+                userLoaderByKey: userLoaderByKey(query),
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: { sendOrgInviteEmail },
+              validators: { cleanseInput },
+            },
+          )
 
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `Transaction commit error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
-        ])
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Transaction commit error occurred while user: ${user._key} attempted to invite user: ${secondaryUser._key} to org: secretariat-conseil-tresor, error: Error: Transaction error occurred.`,
+          ])
+        })
       })
     })
   })

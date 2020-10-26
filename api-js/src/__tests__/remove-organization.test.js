@@ -585,8 +585,7 @@ describe('removing an organization', () => {
             const expectedResponse = {
               data: {
                 removeOrganization: {
-                  status:
-                    'todo',
+                  status: 'todo',
                 },
               },
             }
@@ -689,8 +688,7 @@ describe('removing an organization', () => {
             const expectedResponse = {
               data: {
                 removeOrganization: {
-                  status:
-                    'todo',
+                  status: 'todo',
                 },
               },
             }
@@ -806,8 +804,7 @@ describe('removing an organization', () => {
           const expectedResponse = {
             data: {
               removeOrganization: {
-                status:
-                  'todo',
+                status: 'todo',
               },
             },
           }

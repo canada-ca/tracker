@@ -538,7 +538,6 @@ const webScanType = new GraphQLObjectType({
       },
     },
   }),
-  interfaces: [nodeInterface],
   description: `Results of HTTPS, and SSL scan on the given domain.`,
 })
 
@@ -644,76 +643,68 @@ const organizationType = new GraphQLObjectType({
     acronym: {
       type: Acronym,
       description: 'The organizations acronym.',
-      resolve: async ({ acronym }) => {
-        return acronym
-      },
+      resolve: async ({ acronym }) => acronym,
     },
     name: {
       type: GraphQLString,
       description: 'The full name of the organization.',
-      resolve: async ({ name }) => {
-        return name
-      },
+      resolve: async ({ name }) => name,
     },
     slug: {
       type: Slug,
       description: 'Slugified name of the organization.',
-      resolve: async ({ slug }) => {
-        return slug
-      },
+      resolve: async ({ slug }) => slug,
     },
     zone: {
       type: GraphQLString,
       description: 'The zone which the organization belongs to.',
-      resolve: async ({ zone }) => {
-        return zone
-      },
+      resolve: async ({ zone }) => zone,
     },
     sector: {
       type: GraphQLString,
       description: 'The sector which the organization belongs to.',
-      resolve: async ({ sector }) => {
-        return sector
-      },
+      resolve: async ({ sector }) => sector,
     },
     country: {
       type: GraphQLString,
       description: 'The country in which the organization resides.',
-      resolve: async ({ country }) => {
-        return country
-      },
+      resolve: async ({ country }) => country,
     },
     province: {
       type: GraphQLString,
       description: 'The province in which the organization resides.',
-      resolve: async ({ province }) => {
-        return province
-      },
+      resolve: async ({ province }) => province,
     },
     city: {
       type: GraphQLString,
       description: 'The city in which the organization resides.',
-      resolve: async ({ city }) => {
-        return city
-      },
+      resolve: async ({ city }) => city,
     },
     blueCheck: {
       type: GraphQLBoolean,
       description: 'Wether the organization is a verified organization.',
-      resolve: async ({ blueCheck }) => {
-        return blueCheck
-      },
+      resolve: async ({ blueCheck }) => blueCheck,
     },
     domainCount: {
       type: GraphQLInt,
       description: 'The number of domains associated with this organization.',
-      resolve: async () => {},
+      resolve: async ({ domainCount }) => domainCount,
     },
     domains: {
       type: domainConnection.connectionType,
       description: 'The domains which are associated with this organization.',
       args: connectionArgs,
-      resolve: async () => {},
+      resolve: async (
+        { _id },
+        args,
+        { loaders: { domainLoaderConnectionsByOrgId } },
+      ) => {
+        const connections = await domainLoaderConnectionsByOrgId({
+          orgId: _id,
+          ...args,
+        })
+        return connections
+      },
     },
   }),
   interfaces: [nodeInterface],

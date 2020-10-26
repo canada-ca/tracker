@@ -1,11 +1,13 @@
-const { fromGlobalId, toGlobalId } = require('graphql-relay')
 const { aql } = require('arangojs')
+const { fromGlobalId, toGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
 const orgLoaderConnectionArgsByDomainId = (
   query,
   language,
   userId,
   cleanseInput,
+  i18n,
 ) => async ({ domainId, after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
@@ -32,7 +34,7 @@ const orgLoaderConnectionArgsByDomainId = (
       `User: ${userId} tried to have first and last set in organizations connection query`,
     )
     throw new Error(
-      'Error, unable to have first, and last set at the same time.',
+      i18n._(t`Error, unable to have first, and last set at the same time.`),
     )
   }
 
@@ -51,7 +53,7 @@ const orgLoaderConnectionArgsByDomainId = (
     console.error(
       `Database error occurred while user: ${userId} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
     )
-    throw new Error('Unable to load organizations. Please try again.')
+    throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
 
   let acceptedOrgs
@@ -61,7 +63,7 @@ const orgLoaderConnectionArgsByDomainId = (
     console.error(
       `Cursor error occurred while user: ${userId} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
     )
-    throw new Error('Unable to load organizations. Please try again.')
+    throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
 
   let orgCursor
@@ -72,13 +74,14 @@ const orgLoaderConnectionArgsByDomainId = (
       ${afterTemplate} 
       ${beforeTemplate} 
       ${limitTemplate}
-      RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
+      LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+      RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE(${language}, org.orgDetails))
     `
   } catch (err) {
     console.error(
       `Database error occurred while user: ${userId} was trying to gather orgs in loadOrganizationsConnections.`,
     )
-    throw new Error('Unable to load organizations. Please try again.')
+    throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
 
   let organizations
@@ -88,7 +91,7 @@ const orgLoaderConnectionArgsByDomainId = (
     console.error(
       `Cursor error occurred while user: ${userId} was trying to gather orgs in loadOrganizationsConnections.`,
     )
-    throw new Error('Unable to load organizations. Please try again.')
+    throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
 
   const hasNextPage = !!(

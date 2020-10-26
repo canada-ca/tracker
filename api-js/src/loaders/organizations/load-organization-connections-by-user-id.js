@@ -1,11 +1,13 @@
 const { aql } = require('arangojs')
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
 const orgLoaderConnectionsByUserId = (
   query,
   userId,
   cleanseInput,
   language,
+  i18n,
 ) => async ({ after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
@@ -32,7 +34,7 @@ const orgLoaderConnectionsByUserId = (
       `User: ${userId} tried to have first and last set in organization connection query`,
     )
     throw new Error(
-      'Error, unable to have first, and last set at the same time.',
+      i18n._(t`Error, unable to have first, and last set at the same time.`),
     )
   }
 
@@ -45,13 +47,14 @@ const orgLoaderConnectionsByUserId = (
         ${afterTemplate}
         ${beforeTemplate}
         ${limitTemplate}
-        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
+        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE(${language}, org.orgDetails))
     `
   } catch (err) {
     console.error(
       `Database error occurred while user: ${userId} was trying to query organizations in loadOrganizationsByUser.`,
     )
-    throw new Error('Unable to query organizations. Please try again.')
+    throw new Error(i18n._(t`Unable to query organizations. Please try again.`))
   }
 
   let filteredOrgs
@@ -61,7 +64,7 @@ const orgLoaderConnectionsByUserId = (
     console.error(
       `Cursor error occurred while user: ${userId} was trying to gather organizations in loadOrganizationsByUser.`,
     )
-    throw new Error('Unable to load organizations. Please try again.')
+    throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
 
   const hasNextPage = !!(

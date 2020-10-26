@@ -1,6 +1,7 @@
+const { t } = require('@lingui/macro')
 const { notifyClient: defaultClient } = require('./notify-client')
 
-const sendTfaTextMsg = async ({
+const sendTfaTextMsg = (i18n) => async ({
   templateId,
   phoneNumber,
   user,
@@ -18,7 +19,9 @@ const sendTfaTextMsg = async ({
       `Error ocurred when sending two factor authentication message for ${user._key}: ${err}`,
     )
     throw new Error(
-      'Unable to send two factor authentication message. Please try again.',
+      i18n._(
+        t`Unable to send two factor authentication message. Please try again.`,
+      ),
     )
   }
 }

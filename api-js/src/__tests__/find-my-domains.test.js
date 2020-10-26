@@ -2,13 +2,16 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
-const { graphql, GraphQLSchema } = require('graphql')
+const bcrypt = require('bcrypt')
+const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { toGlobalId } = require('graphql-relay')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-const { toGlobalId } = require('graphql-relay')
-const bcrypt = require('bcrypt')
-
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
 const {
@@ -18,7 +21,7 @@ const {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findMyDomainsQuery', () => {
-  let query, drop, truncate, migrate, schema, collections, org
+  let query, drop, truncate, migrate, schema, collections, org, i18n
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -191,6 +194,7 @@ describe('given findMyDomainsQuery', () => {
           `,
           null,
           {
+            i18n,
             userId: user._key,
             loaders: {
               domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
@@ -212,7 +216,10 @@ describe('given findMyDomainsQuery', () => {
                     id: toGlobalId('domains', domainOne._key),
                     domain: 'test1.gc.ca',
                     lastRan: null,
-                    selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                    selectors: [
+                      'selector1._domainkey',
+                      'selector2._domainkey',
+                    ],
                   },
                 },
                 {
@@ -221,7 +228,10 @@ describe('given findMyDomainsQuery', () => {
                     id: toGlobalId('domains', domainTwo._key),
                     domain: 'test2.gc.ca',
                     lastRan: null,
-                    selectors: ['selector1._domainkey', 'selector2._domainkey'],
+                    selectors: [
+                      'selector1._domainkey',
+                      'selector2._domainkey',
+                    ],
                   },
                 },
               ],
@@ -238,6 +248,134 @@ describe('given findMyDomainsQuery', () => {
         expect(consoleOutput).toEqual([
           `User ${user._key} successfully retrieved their domains.`,
         ])
+      })
+    })
+  })
+  describe('user has language set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given an error thrown during retrieving domains', () => {
+      describe('user queries for their domains', () => {
+        it('returns domains', async () => {
+          const mockedLoader = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred'))
+
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findMyDomains {
+                  edges {
+                    cursor
+                    node {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                    }
+                  }
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userId: 1,
+              loaders: {
+                domainLoaderConnectionsByUserId: mockedLoader,
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(`Unable to load domains. Please try again.`),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: 1 was trying to gather domain connections in findMyDomains.`,
+          ])
+        })
+      })
+    })
+  })
+  describe('user has language set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given an error thrown during retrieving domains', () => {
+      describe('user queries for their domains', () => {
+        it('returns domains', async () => {
+          const mockedLoader = jest
+            .fn()
+            .mockRejectedValue(new Error('Database error occurred'))
+
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findMyDomains {
+                  edges {
+                    cursor
+                    node {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                    }
+                  }
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userId: 1,
+              loaders: {
+                domainLoaderConnectionsByUserId: mockedLoader,
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(`todo`),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: 1 was trying to gather domain connections in findMyDomains.`,
+          ])
+        })
       })
     })
   })

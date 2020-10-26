@@ -54,20 +54,21 @@ needed for GKE.
 Currently we are just creating the cluster with the following command.
 
 ```sh
-gcloud beta container --project "track-compliance" clusters create "pulse-of-the-gc" \
-  --region "northamerica-northeast1" --no-enable-basic-auth \
-  --release-channel "regular" --machine-type "n1-standard-4" \
-  --image-type "COS_CONTAINERD" --disk-type "pd-standard" --disk-size "100" \
-  --metadata disable-legacy-endpoints=true \
-  --service-account "gke-node-service-account@track-compliance.iam.gserviceaccount.com"\
-  --num-nodes "1" --enable-stackdriver-kubernetes --enable-ip-alias \
-  --network "projects/track-compliance/global/networks/default"\
-  --subnetwork "projects/track-compliance/regions/northamerica-northeast1/subnetworks/default" \
-  --default-max-pods-per-node "110" --no-enable-master-authorized-networks \
-  --addons HorizontalPodAutoscaling,HttpLoadBalancing,CloudRun --enable-autoupgrade \
-  --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 \
-  --identity-namespace "track-compliance.svc.id.goog" \
-  --enable-shielded-nodes --shielded-secure-boot
+gcloud beta container --project "track-compliance" clusters create "gc-tracker" \
+ --region "northamerica-northeast1" --no-enable-basic-auth \
+ --cluster-version "1.18.9-gke.801" --release-channel "rapid" \
+ --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" \
+ --disk-type "pd-standard" --disk-size "100" \
+ --metadata disable-legacy-endpoints=true \
+ --service-account "gke-node-service-account@track-compliance.iam.gserviceaccount.com" \
+ --num-nodes "1" --enable-stackdriver-kubernetes --enable-ip-alias \
+ --network "projects/track-compliance/global/networks/default" \
+ --subnetwork "projects/track-compliance/regions/northamerica-northeast1/subnetworks/default" \
+ --default-max-pods-per-node "110" --no-enable-master-authorized-networks \
+ --addons HorizontalPodAutoscaling,HttpLoadBalancing,CloudRun --enable-autoupgrade \
+ --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 \
+--workload-pool "track-compliance.svc.id.goog" \
+ --enable-shielded-nodes --shielded-secure-boot --enable-dataplane-v2
 ```
 
 The number of options here testify to our increasingly opinionated take on

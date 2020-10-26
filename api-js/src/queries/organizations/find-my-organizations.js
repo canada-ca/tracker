@@ -1,4 +1,5 @@
 const { connectionArgs } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 const { organizationConnection } = require('../../types')
 
 const findMyOrganizations = {
@@ -10,7 +11,7 @@ const findMyOrganizations = {
   resolve: async (
     _,
     args,
-    { userId, loaders: { orgLoaderConnectionsByUserId } },
+    { i18n, userId, loaders: { orgLoaderConnectionsByUserId } },
   ) => {
     let orgConnections
 
@@ -20,7 +21,7 @@ const findMyOrganizations = {
       console.error(
         `Database error occurred while user: ${userId} was trying to gather organization connections in findMyOrganizations.`,
       )
-      throw new Error('Unable to load organizations. Please try again.')
+      throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
     }
 
     console.info(`User ${userId} successfully retrieved their organizations.`)

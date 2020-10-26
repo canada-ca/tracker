@@ -1,6 +1,7 @@
 const { GraphQLNonNull, GraphQLString, GraphQLID } = require('graphql')
 const { mutationWithClientMutationId, fromGlobalId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
+const { t } = require('@lingui/macro')
 const { RoleEnums } = require('../../enums')
 
 const updateUserRole = new mutationWithClientMutationId({
@@ -36,6 +37,7 @@ const updateUserRole = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       collections,
       transaction,
@@ -58,7 +60,9 @@ const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update their own role in org: ${orgId}.`,
       )
-      throw new Error('Unable to update your own role. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to update your own role. Please try again.`),
+      )
     }
 
     // Check to see if requested user exists
@@ -68,7 +72,7 @@ const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update a user: ${userName} role in org: ${orgId}, however there is no user associated with that user name.`,
       )
-      throw new Error('Unable to update users role. Please try again.')
+      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
 
     // Check to see if org exists
@@ -78,7 +82,7 @@ const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update a user: ${requestedUser._key} role in org: ${orgId}, however there is no org associated with that id.`,
       )
-      throw new Error('Unable to update users role. Please try again.')
+      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
 
     // Check requesting users permission
@@ -88,7 +92,7 @@ const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however they do not have permission to do so.`,
       )
-      throw new Error('Unable to update users role. Please try again.')
+      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
 
     // Get users current permission level
@@ -103,7 +107,7 @@ const updateUserRole = new mutationWithClientMutationId({
       console.error(
         `Database error occurred when user: ${userId} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error('Unable to update users role. Please try again.')
+      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
 
     if (affiliationCursor.count < 1) {
@@ -111,7 +115,9 @@ const updateUserRole = new mutationWithClientMutationId({
         `User: ${userId} attempted to update a user: ${requestedUser._key} role in org: ${org.slug}, however that user does not have an affiliation with that organization.`,
       )
       throw new Error(
-        'Unable to update users role. Please invite user to the organization.',
+        i18n._(
+          t`Unable to update users role. Please invite user to the organization.`,
+        ),
       )
     }
 
@@ -143,7 +149,9 @@ const updateUserRole = new mutationWithClientMutationId({
         console.warn(
           `User: ${userId} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: admin.`,
         )
-        throw new Error('Unable to update users role. Please try again.')
+        throw new Error(
+          i18n._(t`Unable to update users role. Please try again.`),
+        )
       }
 
       edge = {
@@ -160,7 +168,9 @@ const updateUserRole = new mutationWithClientMutationId({
         console.warn(
           `User: ${userId} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: user.`,
         )
-        throw new Error('Unable to update users role. Please try again.')
+        throw new Error(
+          i18n._(t`Unable to update users role. Please try again.`),
+        )
       }
 
       edge = {
@@ -172,7 +182,7 @@ const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to lower user: ${requestedUser._key} from ${affiliation.permission} to: ${role}.`,
       )
-      throw new Error('Unable to update users role. Please try again.')
+      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
 
     try {
@@ -188,7 +198,7 @@ const updateUserRole = new mutationWithClientMutationId({
       console.error(
         `Transaction run error occurred when user: ${userId} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error('Unable to update users role. Please try again.')
+      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
 
     try {
@@ -197,7 +207,7 @@ const updateUserRole = new mutationWithClientMutationId({
       console.warn(
         `Transaction commit error occurred when user: ${userId} attempted to update a users: ${requestedUser._key} role, error: ${err}`,
       )
-      throw new Error('Unable to update users role. Please try again.')
+      throw new Error(i18n._(t`Unable to update users role. Please try again.`))
     }
 
     console.info(
@@ -205,7 +215,7 @@ const updateUserRole = new mutationWithClientMutationId({
     )
 
     return {
-      status: 'User role was updated successfully.',
+      status: i18n._(t`User role was updated successfully.`),
     }
   },
 })

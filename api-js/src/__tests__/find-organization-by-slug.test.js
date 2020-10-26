@@ -2,13 +2,16 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { toGlobalId } = require('graphql-relay')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-const { toGlobalId } = require('graphql-relay')
-const bcrypt = require('bcrypt')
-
 const { cleanseInput } = require('../validators')
 const { checkPermission, tokenize, userRequired } = require('../auth')
 const {
@@ -19,7 +22,7 @@ const {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findOrganizationBySlugQuery', () => {
-  let query, drop, truncate, migrate, schema, collections, org
+  let query, drop, truncate, migrate, schema, collections, org, i18n, user
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -112,9 +115,19 @@ describe('given findOrganizationBySlugQuery', () => {
     await drop()
   })
 
-  describe('in english', () => {
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
     describe('given successful organization retrieval', () => {
-      let user
       beforeEach(async () => {
         const userCursor = await query`
           FOR user IN users
@@ -160,6 +173,7 @@ describe('given findOrganizationBySlugQuery', () => {
             `,
             null,
             {
+              i18n,
               userKey: user._key,
               query: query,
               auth: {
@@ -230,6 +244,7 @@ describe('given findOrganizationBySlugQuery', () => {
             `,
             null,
             {
+              i18n,
               userKey: user._key,
               query: query,
               auth: {
@@ -279,6 +294,7 @@ describe('given findOrganizationBySlugQuery', () => {
             `,
             null,
             {
+              i18n,
               userKey: user._key,
               query: query,
               auth: {
@@ -309,9 +325,19 @@ describe('given findOrganizationBySlugQuery', () => {
       })
     })
   })
-  describe('in french', () => {
+  describe('users language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
     describe('given successful organization retrieval', () => {
-      let user
       beforeEach(async () => {
         const userCursor = await query`
           FOR user IN users
@@ -357,6 +383,7 @@ describe('given findOrganizationBySlugQuery', () => {
             `,
             null,
             {
+              i18n,
               userKey: user._key,
               query: query,
               auth: {
@@ -397,7 +424,17 @@ describe('given findOrganizationBySlugQuery', () => {
     })
 
     describe('given unsuccessful organization retrieval', () => {
-      let user
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'fr',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
+        })
+      })
       beforeEach(async () => {
         const userCursor = await query`
           FOR user IN users
@@ -427,6 +464,7 @@ describe('given findOrganizationBySlugQuery', () => {
             `,
             null,
             {
+              i18n,
               userKey: user._key,
               query: query,
               auth: {
@@ -444,7 +482,7 @@ describe('given findOrganizationBySlugQuery', () => {
           )
 
           const error = [
-            new GraphQLError(`Could not retrieve specified organization.`),
+            new GraphQLError(`todo`),
           ]
 
           expect(response.errors).toEqual(error)
@@ -476,6 +514,7 @@ describe('given findOrganizationBySlugQuery', () => {
             `,
             null,
             {
+              i18n,
               userKey: user._key,
               query: query,
               auth: {
@@ -494,7 +533,7 @@ describe('given findOrganizationBySlugQuery', () => {
 
           const error = [
             new GraphQLError(
-              `No organization with the provided slug could be found.`,
+              `todo`,
             ),
           ]
 

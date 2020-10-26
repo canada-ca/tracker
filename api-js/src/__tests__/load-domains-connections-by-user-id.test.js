@@ -3,16 +3,20 @@ dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { toGlobalId } = require('graphql-relay')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
 const {
   domainLoaderConnectionsByUserId,
   domainLoaderByKey,
 } = require('../loaders')
-const { toGlobalId } = require('graphql-relay')
 
 describe('given the load domain connections by user id function', () => {
-  let query, drop, truncate, migrate, collections, org
+  let query, drop, truncate, migrate, collections, org, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -384,258 +388,545 @@ describe('given the load domain connections by user id function', () => {
       })
     })
   })
-  describe('given an unsuccessful load', () => {
-    let user, domainOne, domainTwo
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'user',
-      })
-      domainOne = await collections.domains.save({
-        domain: 'test1.gc.ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-      })
-      domainTwo = await collections.domains.save({
-        domain: 'test2.gc.ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-      })
-      await collections.claims.save({
-        _to: domainOne._id,
-        _from: org._id,
-      })
-      await collections.claims.save({
-        _to: domainTwo._id,
-        _from: org._id,
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
       })
     })
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
-      await query`
-        LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-        LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-        RETURN true
-      `
-      await query`
-        FOR claim IN claims
-          REMOVE claim IN claims
-      `
-    })
-    describe('first and last arguments are set', () => {
-      it('returns an error message', async () => {
-        const connectionLoader = domainLoaderConnectionsByUserId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {
-          first: 1,
-          last: 1,
-        }
-        try {
-          await connectionLoader({
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'Error, unable to have first, and last set at the same time.',
-            ),
+    describe('given an unsuccessful load', () => {
+      let user, domainOne, domainTwo
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await userCursor.next()
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'user',
+        })
+        domainOne = await collections.domains.save({
+          domain: 'test1.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        domainTwo = await collections.domains.save({
+          domain: 'test2.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        await collections.claims.save({
+          _to: domainOne._id,
+          _from: org._id,
+        })
+        await collections.claims.save({
+          _to: domainTwo._id,
+          _from: org._id,
+        })
+      })
+      afterEach(async () => {
+        await query`
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+          RETURN true
+        `
+        await query`
+          FOR affiliation IN affiliations
+            REMOVE affiliation IN affiliations
+        `
+        await query`
+          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
+          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
+          RETURN true
+        `
+        await query`
+          FOR claim IN claims
+            REMOVE claim IN claims
+        `
+      })
+      describe('first and last arguments are set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
           )
-        }
 
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} tried to have first and last set in domain connection query`,
-        ])
+          const connectionArgs = {
+            first: 1,
+            last: 1,
+          }
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'Error, unable to have first, and last set at the same time.',
+              ),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} tried to have first and last set in domain connection query`,
+          ])
+        })
+      })
+    })
+    describe('given a database error', () => {
+      let user, domainOne, domainTwo
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await userCursor.next()
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'user',
+        })
+        domainOne = await collections.domains.save({
+          domain: 'test1.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        domainTwo = await collections.domains.save({
+          domain: 'test2.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        await collections.claims.save({
+          _to: domainOne._id,
+          _from: org._id,
+        })
+        await collections.claims.save({
+          _to: domainTwo._id,
+          _from: org._id,
+        })
+      })
+      afterEach(async () => {
+        await query`
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+          RETURN true
+        `
+        await query`
+          FOR affiliation IN affiliations
+            REMOVE affiliation IN affiliations
+        `
+        await query`
+          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
+          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
+          RETURN true
+        `
+        await query`
+          FOR claim IN claims
+            REMOVE claim IN claims
+        `
+      })
+      describe('while querying domains', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockRejectedValue(
+              new Error('Unable to query domains. Please try again.'),
+            )
+
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to query domains. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser.`,
+          ])
+        })
+      })
+    })
+    describe('given a cursor error', () => {
+      let user, domainOne, domainTwo
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await userCursor.next()
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'user',
+        })
+        domainOne = await collections.domains.save({
+          domain: 'test1.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        domainTwo = await collections.domains.save({
+          domain: 'test2.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        await collections.claims.save({
+          _to: domainOne._id,
+          _from: org._id,
+        })
+        await collections.claims.save({
+          _to: domainTwo._id,
+          _from: org._id,
+        })
+      })
+      afterEach(async () => {
+        await query`
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+          RETURN true
+        `
+        await query`
+          FOR affiliation IN affiliations
+            REMOVE affiliation IN affiliations
+        `
+        await query`
+          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
+          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
+          RETURN true
+        `
+        await query`
+          FOR claim IN claims
+            REMOVE claim IN claims
+        `
+      })
+      describe('while gathering domains', () => {
+        it('returns an error message', async () => {
+          const cursor = {
+            next() {
+              throw new Error('Unable to load domains. Please try again.')
+            },
+          }
+          const query = jest
+            .fn()
+            .mockReturnValueOnce([domainOne._id, domainTwo._id])
+            .mockReturnValueOnce(cursor)
+
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('Unable to load domains. Please try again.'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainsByUser.`,
+          ])
+        })
       })
     })
   })
-  describe('given a database error', () => {
-    let user, domainOne, domainTwo
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'user',
-      })
-      domainOne = await collections.domains.save({
-        domain: 'test1.gc.ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-      })
-      domainTwo = await collections.domains.save({
-        domain: 'test2.gc.ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-      })
-      await collections.claims.save({
-        _to: domainOne._id,
-        _from: org._id,
-      })
-      await collections.claims.save({
-        _to: domainTwo._id,
-        _from: org._id,
+  describe('users language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
       })
     })
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
-      await query`
-        LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-        LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-        RETURN true
-      `
-      await query`
-        FOR claim IN claims
-          REMOVE claim IN claims
-      `
-    })
-    describe('while querying domains', () => {
-      it('returns an error message', async () => {
-        const query = jest
-          .fn()
-          .mockRejectedValue(
-            new Error('Unable to query domains. Please try again.'),
+    describe('given an unsuccessful load', () => {
+      let user, domainOne, domainTwo
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await userCursor.next()
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'user',
+        })
+        domainOne = await collections.domains.save({
+          domain: 'test1.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        domainTwo = await collections.domains.save({
+          domain: 'test2.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        await collections.claims.save({
+          _to: domainOne._id,
+          _from: org._id,
+        })
+        await collections.claims.save({
+          _to: domainTwo._id,
+          _from: org._id,
+        })
+      })
+      afterEach(async () => {
+        await query`
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+          RETURN true
+        `
+        await query`
+          FOR affiliation IN affiliations
+            REMOVE affiliation IN affiliations
+        `
+        await query`
+          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
+          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
+          RETURN true
+        `
+        await query`
+          FOR claim IN claims
+            REMOVE claim IN claims
+        `
+      })
+      describe('first and last arguments are set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
           )
 
-        const connectionLoader = domainLoaderConnectionsByUserId(
-          query,
-          user._key,
-          cleanseInput,
-        )
+          const connectionArgs = {
+            first: 1,
+            last: 1,
+          }
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+          }
 
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to query domains. Please try again.'),
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} tried to have first and last set in domain connection query`,
+          ])
+        })
+      })
+    })
+    describe('given a database error', () => {
+      let user, domainOne, domainTwo
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await userCursor.next()
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'user',
+        })
+        domainOne = await collections.domains.save({
+          domain: 'test1.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        domainTwo = await collections.domains.save({
+          domain: 'test2.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        await collections.claims.save({
+          _to: domainOne._id,
+          _from: org._id,
+        })
+        await collections.claims.save({
+          _to: domainTwo._id,
+          _from: org._id,
+        })
+      })
+      afterEach(async () => {
+        await query`
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+          RETURN true
+        `
+        await query`
+          FOR affiliation IN affiliations
+            REMOVE affiliation IN affiliations
+        `
+        await query`
+          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
+          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
+          RETURN true
+        `
+        await query`
+          FOR claim IN claims
+            REMOVE claim IN claims
+        `
+      })
+      describe('while querying domains', () => {
+        it('returns an error message', async () => {
+          const query = jest
+            .fn()
+            .mockRejectedValue(
+              new Error('Unable to query domains. Please try again.'),
+            )
+
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
           )
-        }
 
-        expect(consoleOutput).toEqual([
-          `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser.`,
-        ])
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('todo'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Database error occurred while user: ${user._key} was trying to query domains in loadDomainsByUser.`,
+          ])
+        })
       })
     })
-  })
-  describe('given a cursor error', () => {
-    let user, domainOne, domainTwo
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'user',
+    describe('given a cursor error', () => {
+      let user, domainOne, domainTwo
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await userCursor.next()
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'user',
+        })
+        domainOne = await collections.domains.save({
+          domain: 'test1.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        domainTwo = await collections.domains.save({
+          domain: 'test2.gc.ca',
+          lastRan: null,
+          selectors: ['selector1._domainkey', 'selector2._domainkey'],
+        })
+        await collections.claims.save({
+          _to: domainOne._id,
+          _from: org._id,
+        })
+        await collections.claims.save({
+          _to: domainTwo._id,
+          _from: org._id,
+        })
       })
-      domainOne = await collections.domains.save({
-        domain: 'test1.gc.ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
+      afterEach(async () => {
+        await query`
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+          RETURN true
+        `
+        await query`
+          FOR affiliation IN affiliations
+            REMOVE affiliation IN affiliations
+        `
+        await query`
+          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
+          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
+          RETURN true
+        `
+        await query`
+          FOR claim IN claims
+            REMOVE claim IN claims
+        `
       })
-      domainTwo = await collections.domains.save({
-        domain: 'test2.gc.ca',
-        lastRan: null,
-        selectors: ['selector1._domainkey', 'selector2._domainkey'],
-      })
-      await collections.claims.save({
-        _to: domainOne._id,
-        _from: org._id,
-      })
-      await collections.claims.save({
-        _to: domainTwo._id,
-        _from: org._id,
-      })
-    })
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
-      await query`
-        LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-        LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-        RETURN true
-      `
-      await query`
-        FOR claim IN claims
-          REMOVE claim IN claims
-      `
-    })
-    describe('while gathering domains', () => {
-      it('returns an error message', async () => {
-        const cursor = {
-          next() {
-            throw new Error('Unable to load domains. Please try again.')
-          },
-        }
-        const query = jest
-          .fn()
-          .mockReturnValueOnce([domainOne._id, domainTwo._id])
-          .mockReturnValueOnce(cursor)
+      describe('while gathering domains', () => {
+        it('returns an error message', async () => {
+          const cursor = {
+            next() {
+              throw new Error('Unable to load domains. Please try again.')
+            },
+          }
+          const query = jest
+            .fn()
+            .mockReturnValueOnce([domainOne._id, domainTwo._id])
+            .mockReturnValueOnce(cursor)
 
-        const connectionLoader = domainLoaderConnectionsByUserId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        try {
-          await connectionLoader({
-            ...connectionArgs,
-          })
-        } catch (err) {
-          expect(err).toEqual(
-            new Error('Unable to load domains. Please try again.'),
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
           )
-        }
 
-        expect(consoleOutput).toEqual([
-          `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainsByUser.`,
-        ])
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error('todo'),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `Cursor error occurred while user: ${user._key} was trying to gather domains in loadDomainsByUser.`,
+          ])
+        })
       })
     })
   })

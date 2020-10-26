@@ -20,6 +20,22 @@ msgstr ""
 msgid "Authentication error, please sign in again."
 msgstr "todo"
 
+#: src/queries/domains/find-domain-by-domain.js:48
+msgid "Could not retrieve specified domain."
+msgstr "todo"
+
+#: src/queries/organizations/find-organization-by-slug.js:50
+msgid "Could not retrieve specified organization."
+msgstr "todo"
+
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:37
+#: src/loaders/domains/load-domain-connections-by-user-id.js:36
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:37
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:37
+#: src/loaders/organizations/load-organizations-connection-args.js:37
+msgid "Error, unable to have first, and last set at the same time."
+msgstr "todo"
+
 #: src/mutations/user/send-password-reset.js:72
 msgid "If an account with this username is found, a password reset link will be found in your inbox."
 msgstr "todo"
@@ -30,6 +46,14 @@ msgstr "todo"
 
 #: src/mutations/user/reset-password.js:86
 msgid "New passwords do not match. Please try again."
+msgstr "todo"
+
+#: src/queries/domains/find-domain-by-domain.js:39
+msgid "No domain with the provided domain could be found."
+msgstr "todo"
+
+#: src/queries/organizations/find-organization-by-slug.js:41
+msgid "No organization with the provided slug could be found."
 msgstr "todo"
 
 #: src/mutations/user/reset-password.js:95
@@ -56,12 +80,20 @@ msgstr "todo"
 msgid "Profile successfully updated."
 msgstr "todo"
 
-#: src/mutations/domain/remove-domain.js:227
+#: src/mutations/user-affiliations/invite-user-to-org.js:184
+msgid "Successfully invited user to organization, and sent notification email."
+msgstr "todo"
+
+#: src/mutations/domain/remove-domain.js:228
 msgid "Successfully removed domain: {0} from {1}."
 msgstr "todo"
 
-#: src/mutations/organizations/remove-organization.js:197
+#: src/mutations/organizations/remove-organization.js:198
 msgid "Successfully removed organization: {0}."
+msgstr "todo"
+
+#: src/mutations/user-affiliations/invite-user-to-org.js:126
+msgid "Successfully sent invitation to service, and organization email."
 msgstr "todo"
 
 #: src/mutations/user/verify-phone-number.js:90
@@ -102,6 +134,137 @@ msgstr "todo"
 msgid "Unable to create organization. Please try again."
 msgstr "todo"
 
+#: src/loaders/email-scan/load-dkim-result-by-key.js:18
+#: src/loaders/email-scan/load-dkim-result-by-key.js:30
+msgid "Unable to find dkim result. Please try again."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dkim-by-key.js:18
+#: src/loaders/email-scan/load-dkim-by-key.js:30
+msgid "Unable to find dkim scan. Please try again."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dmarc-by-key.js:18
+#: src/loaders/email-scan/load-dmarc-by-key.js:30
+msgid "Unable to find dmarc scan. Please try again."
+msgstr "todo"
+
+#: src/loaders/domains/load-domain-by-domain.js:18
+#: src/loaders/domains/load-domain-by-domain.js:28
+#: src/loaders/domains/load-domain-by-key.js:18
+#: src/loaders/domains/load-domain-by-key.js:28
+msgid "Unable to find domain. Please try again."
+msgstr "todo"
+
+#: src/loaders/web-scan/load-https-by-key.js:17
+#: src/loaders/web-scan/load-https-by-key.js:29
+msgid "Unable to find https scan. Please try again."
+msgstr "todo"
+
+#: src/loaders/organizations/load-organization-by-key.js:17
+#: src/loaders/organizations/load-organization-by-key.js:27
+#: src/loaders/organizations/load-organization-by-slug.js:17
+#: src/loaders/organizations/load-organization-by-slug.js:27
+msgid "Unable to find organization. Please try again."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-spf-by-key.js:18
+#: src/loaders/email-scan/load-spf-by-key.js:28
+msgid "Unable to find spf scan. Please try again."
+msgstr "todo"
+
+#: src/loaders/web-scan/load-ssl-by-key.js:17
+#: src/loaders/web-scan/load-ssl-by-key.js:27
+msgid "Unable to find ssl scan. Please try again."
+msgstr "todo"
+
+#: src/loaders/user/load-user-by-key.js:18
+#: src/loaders/user/load-user-by-key.js:28
+#: src/loaders/user/load-user-by-username.js:18
+#: src/loaders/user/load-user-by-username.js:28
+msgid "Unable to find user. Please try again."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:44
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:34
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:44
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:44
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:45
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:45
+msgid "Unable to have both first, and last arguments set at the same time."
+msgstr "todo"
+
+#: src/mutations/user-affiliations/invite-user-to-org.js:78
+#: src/mutations/user-affiliations/invite-user-to-org.js:91
+#: src/mutations/user-affiliations/invite-user-to-org.js:153
+#: src/mutations/user-affiliations/invite-user-to-org.js:175
+msgid "Unable to invite user. Please try again."
+msgstr "todo"
+
+#: src/mutations/user-affiliations/invite-user-to-org.js:68
+msgid "Unable to invite yourself to an org. Please try again."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:54
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:64
+msgid "Unable to load dkim results. Please try again."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:66
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:76
+msgid "Unable to load dkim scans. Please try again."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:66
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:76
+msgid "Unable to load dmarc scans. Please try again."
+msgstr "todo"
+
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:56
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:66
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:83
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:93
+#: src/loaders/domains/load-domain-connections-by-user-id.js:69
+#: src/queries/domains/find-my-domains.js:25
+msgid "Unable to load domains. Please try again."
+msgstr "todo"
+
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:67
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:77
+msgid "Unable to load https scans. Please try again."
+msgstr "todo"
+
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:56
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:66
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:84
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:94
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:67
+#: src/loaders/organizations/load-organizations-connection-args.js:54
+#: src/loaders/organizations/load-organizations-connection-args.js:64
+#: src/loaders/organizations/load-organizations-connection-args.js:82
+#: src/loaders/organizations/load-organizations-connection-args.js:92
+#: src/queries/organizations/find-my-organizations.js:24
+msgid "Unable to load organizations. Please try again."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:66
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:76
+msgid "Unable to load spf scans. Please try again."
+msgstr "todo"
+
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:67
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:77
+msgid "Unable to load ssl scans. Please try again."
+msgstr "todo"
+
+#: src/loaders/domains/load-domain-connections-by-user-id.js:56
+msgid "Unable to query domains. Please try again."
+msgstr "todo"
+
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:57
+msgid "Unable to query organizations. Please try again."
+msgstr "todo"
+
 #: src/mutations/domain/remove-domain.js:58
 #: src/mutations/domain/remove-domain.js:69
 #: src/mutations/domain/remove-domain.js:80
@@ -130,11 +293,32 @@ msgstr "todo"
 msgid "Unable to reset password. Please try again."
 msgstr "todo"
 
+#: src/loaders/dmarc-report/load-dmarc-report.js:39
+msgid "Unable to retrieve {0} for domain: {domain}."
+msgstr "todo"
+
 #: src/mutations/user/send-phone-code.js:55
 #: src/mutations/user/send-phone-code.js:73
 #: src/mutations/user/send-phone-code.js:87
 msgid "Unable to send TFA code, please try again."
 msgstr "todo"
+
+#: src/notify/notify-send-org-invite-create-account.js:24
+#: src/notify/notify-send-org-invite-email.js:22
+#~ msgid "Unable to send org invite email. Please try again."
+#~ msgstr "todo"
+
+#: src/notify/notify-send-password-reset-email.js:23
+#~ msgid "Unable to send password reset email. Please try again."
+#~ msgstr "todo"
+
+#: src/notify/notify-send-tfa-text-msg.js:23
+#~ msgid "Unable to send two factor authentication message. Please try again."
+#~ msgstr "todo"
+
+#: src/notify/notify-send-verification-email.js:23
+#~ msgid "Unable to send verification email. Please try again."
+#~ msgstr "todo"
 
 #: src/mutations/user/sign-in.js:61
 #: src/mutations/user/sign-in.js:92
@@ -196,6 +380,26 @@ msgstr "todo"
 msgid "Unable to update profile. Please try again."
 msgstr "todo"
 
+#: src/mutations/user-affiliations/update-user-role.js:119
+msgid "Unable to update users role. Please invite user to the organization."
+msgstr "todo"
+
+#: src/mutations/user-affiliations/update-user-role.js:75
+#: src/mutations/user-affiliations/update-user-role.js:85
+#: src/mutations/user-affiliations/update-user-role.js:95
+#: src/mutations/user-affiliations/update-user-role.js:110
+#: src/mutations/user-affiliations/update-user-role.js:153
+#: src/mutations/user-affiliations/update-user-role.js:172
+#: src/mutations/user-affiliations/update-user-role.js:185
+#: src/mutations/user-affiliations/update-user-role.js:201
+#: src/mutations/user-affiliations/update-user-role.js:210
+msgid "Unable to update users role. Please try again."
+msgstr "todo"
+
+#: src/mutations/user-affiliations/update-user-role.js:64
+msgid "Unable to update your own role. Please try again."
+msgstr "todo"
+
 #: src/mutations/user/verify-account.js:67
 #: src/mutations/user/verify-account.js:77
 msgid "Unable to verify account. Please request a new email."
@@ -205,6 +409,10 @@ msgstr "todo"
 #: src/mutations/user/verify-account.js:52
 #: src/mutations/user/verify-account.js:93
 msgid "Unable to verify account. Please try again."
+msgstr "todo"
+
+#: src/mutations/user-affiliations/update-user-role.js:218
+msgid "User role was updated successfully."
 msgstr "todo"
 
 #: src/mutations/user/sign-up.js:89
