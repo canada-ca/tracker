@@ -16,7 +16,7 @@ secretGenerator:
 - envs:
   - scanners.env
   name: scanners
-  namespace: tracker
+  namespace: scanners
 generatorOptions:
   disableNameSuffixHash: true
 resources:
