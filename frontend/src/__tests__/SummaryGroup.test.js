@@ -66,7 +66,7 @@ describe('<SummaryGroup />', () => {
           </ThemeProvider>
         </I18nProvider>,
       )
-      const summaries = await waitFor(() => getAllByText(/Summary/i))
+      const summaries = await waitFor(() => getAllByText(/settings summary/i))
       expect(summaries).toHaveLength(2)
     })
   })
