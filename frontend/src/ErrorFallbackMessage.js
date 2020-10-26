@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Divider, SimpleGrid, Stack, Text } from '@chakra-ui/core'
-import { func, object } from 'prop-types'
+import { object } from 'prop-types'
 import { Trans } from '@lingui/macro'
 
 export function ErrorFallbackMessage({ error }) {
@@ -30,5 +30,4 @@ export function ErrorFallbackMessage({ error }) {
 
 ErrorFallbackMessage.propTypes = {
   error: object,
-  resetErrorBoundary: func,
 }

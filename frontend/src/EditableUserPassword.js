@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import {
   Icon,
   Heading,
-  Button,
   Stack,
   Text,
   Modal,
@@ -175,15 +174,6 @@ function EditableUserPassword() {
                       >
                         <Trans>Confirm</Trans>
                       </TrackerButton>
-                      <Button
-                        color="primary"
-                        bg="transparent"
-                        borderColor="primary"
-                        borderWidth="1px"
-                        onClick={onClose}
-                      >
-                        <Trans>Close</Trans>
-                      </Button>
                     </ModalFooter>
                   </form>
                 )}

@@ -21,7 +21,6 @@ import {
   ModalFooter,
   FormLabel,
   FormControl,
-  Button,
 } from '@chakra-ui/core'
 import { PaginationButtons } from './PaginationButtons'
 import { Domain } from './Domain'
@@ -369,16 +368,6 @@ export function AdminDomains({ domainsData, orgName }) {
                       >
                         <Trans>Confirm</Trans>
                       </TrackerButton>
-                      <Button
-                        color="primary"
-                        bg="transparent"
-                        borderColor="primary"
-                        borderWidth="1px"
-                        variant="outline"
-                        onClick={updateOnClose}
-                      >
-                        <Trans>Close</Trans>
-                      </Button>
                     </ModalFooter>
                   </form>
                 )}
@@ -419,16 +408,6 @@ export function AdminDomains({ domainsData, orgName }) {
                 >
                   <Trans>Confirm</Trans>
                 </TrackerButton>
-                <Button
-                  color="primary"
-                  bg="transparent"
-                  borderColor="primary"
-                  borderWidth="1px"
-                  variant="outline"
-                  onClick={removeOnClose}
-                >
-                  <Trans>Close</Trans>
-                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>

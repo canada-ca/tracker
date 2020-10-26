@@ -3,7 +3,6 @@ import { string } from 'prop-types'
 import {
   Icon,
   Heading,
-  Button,
   Stack,
   Text,
   Modal,
@@ -156,15 +155,6 @@ function EditableUserEmail({ detailValue }) {
                       >
                         <Trans>Confirm</Trans>
                       </TrackerButton>
-                      <Button
-                        color="primary"
-                        bg="transparent"
-                        borderColor="primary"
-                        borderWidth="1px"
-                        onClick={onClose}
-                      >
-                        <Trans>Close</Trans>
-                      </Button>
                     </ModalFooter>
                   </form>
                 )}
