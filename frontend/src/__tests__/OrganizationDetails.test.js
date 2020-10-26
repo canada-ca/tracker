@@ -88,50 +88,6 @@ describe('<OrganizationDetails />', () => {
         },
         {
           request: {
-            query: PAGINATED_DOMAINS,
-            variables: { first: 10 },
-          },
-          result: {
-            data: {
-              pagination: {
-                edges: [
-                  {
-                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                    node: {
-                      id: 'T3JnYW5pemF0aW9uczoyCg==',
-                      url: 'tbs-sct.gc.ca',
-                      slug: 'tbs-sct-gc-ca',
-                      lastRan: 'somedate',
-                      __typename: 'Domains',
-                    },
-                    __typename: 'DomainsEdge',
-                  },
-                  {
-                    cursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                    node: {
-                      id: 'T3JnYW5pemF0aW9uczoxCg==',
-                      url: 'rcmp-grc.gc.ca',
-                      slug: 'rcmp-grc-gc-ca',
-                      lastRan: 'organization-two',
-                      __typename: 'Domains',
-                    },
-                    __typename: 'DomainsEdge',
-                  },
-                ],
-                pageInfo: {
-                  hasNextPage: true,
-                  endCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                  hasPreviousPage: false,
-                  startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
-                  __typename: 'PageInfo',
-                },
-                __typename: 'DomainsConnection',
-              },
-            },
-          },
-        },
-        {
-          request: {
             query: WEB_AND_EMAIL_SUMMARIES,
           },
           result: {
