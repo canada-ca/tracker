@@ -9,9 +9,6 @@
     'Authentication error, please sign in again.': 'todo',
     'Could not retrieve specified domain.': 'todo',
     'Could not retrieve specified organization.': 'todo',
-    'Error, maximum record request for first, and last arguments is 100.':
-      'todo',
-    'Error, minimum record request for first, and last arguments is 0.': 'todo',
     'Error, unable to have first, and last set at the same time.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
@@ -20,12 +17,18 @@
     'New passwords do not match. Please try again.': 'todo',
     'No domain with the provided domain could be found.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
+    'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
+      'todo',
     'Password is not strong enough. Please try again.': 'todo',
     'Password is too short.': 'todo',
     'Password was successfully reset.': 'todo',
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
     'Profile successfully updated.': 'todo',
+    'Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Successfully invited user to organization, and sent notification email.':
       'todo',
     'Successfully removed domain: {0} from {1}.': 'todo',
@@ -98,5 +101,10 @@
       'todo',
     "We've sent you an email with an authentication code to sign into Pulse.":
       'todo',
+    "You must provide a `first` or 'last` value to properly paginate the `domains` connection.":
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
+      'todo',
+    '`{argSet}` on the `domains` connection cannot be less than zero.': 'todo',
   },
 }

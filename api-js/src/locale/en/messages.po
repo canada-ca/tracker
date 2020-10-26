@@ -1,11 +1,15 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-10-22 10:03-0300\n"
-"Mime-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language: \n"
+"Language-Team: \n"
+"Content-Type: \n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #: src/mutations/user/send-phone-code.js:45
 #: src/mutations/user/update-user-password.js:54
@@ -22,15 +26,6 @@ msgstr "Could not retrieve specified domain."
 msgid "Could not retrieve specified organization."
 msgstr "Could not retrieve specified organization."
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:44
-msgid "Error, maximum record request for first, and last arguments is 100."
-msgstr "Error, maximum record request for first, and last arguments is 100."
-
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:37
-msgid "Error, minimum record request for first, and last arguments is 0."
-msgstr "Error, minimum record request for first, and last arguments is 0."
-
-#: src/loaders/domains/load-domain-connections-by-user-id.js:36
 #: src/loaders/organizations/load-organization-connections-by-domain-id.js:37
 #: src/loaders/organizations/load-organization-connections-by-user-id.js:37
 #: src/loaders/organizations/load-organizations-connection-args.js:37
@@ -57,6 +52,11 @@ msgstr "No domain with the provided domain could be found."
 msgid "No organization with the provided slug could be found."
 msgstr "No organization with the provided slug could be found."
 
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:35
+#: src/loaders/domains/load-domain-connections-by-user-id.js:33
+msgid "Passing both `first` and `last` to paginate the `domains` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `domains` connection is not supported."
+
 #: src/mutations/user/reset-password.js:95
 msgid "Password is not strong enough. Please try again."
 msgstr "Password is not strong enough. Please try again."
@@ -80,6 +80,14 @@ msgstr "Passwords do not match."
 #: src/mutations/user/update-user-profile.js:91
 msgid "Profile successfully updated."
 msgstr "Profile successfully updated."
+
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:56
+msgid "Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
+
+#: src/loaders/domains/load-domain-connections-by-user-id.js:54
+msgid "Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/mutations/user-affiliations/invite-user-to-org.js:184
 msgid "Successfully invited user to organization, and sent notification email."
@@ -223,13 +231,9 @@ msgstr "Unable to load dkim scans. Please try again."
 msgid "Unable to load dmarc scans. Please try again."
 msgstr "Unable to load dmarc scans. Please try again."
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:68
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:78
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:95
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:105
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:143
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:160
-#: src/loaders/domains/load-domain-connections-by-user-id.js:69
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:136
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:146
+#: src/loaders/domains/load-domain-connections-by-user-id.js:136
 #: src/queries/domains/find-my-domains.js:25
 msgid "Unable to load domains. Please try again."
 msgstr "Unable to load domains. Please try again."
@@ -262,7 +266,7 @@ msgstr "Unable to load spf scans. Please try again."
 msgid "Unable to load ssl scans. Please try again."
 msgstr "Unable to load ssl scans. Please try again."
 
-#: src/loaders/domains/load-domain-connections-by-user-id.js:56
+#: src/loaders/domains/load-domain-connections-by-user-id.js:126
 msgid "Unable to query domains. Please try again."
 msgstr "Unable to query domains. Please try again."
 
@@ -431,3 +435,13 @@ msgstr "We've sent you a text message with an authentication code to sign into P
 #: src/mutations/user/sign-in.js:127
 msgid "We've sent you an email with an authentication code to sign into Pulse."
 msgstr "We've sent you an email with an authentication code to sign into Pulse."
+
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:69
+#: src/loaders/domains/load-domain-connections-by-user-id.js:67
+msgid "You must provide a `first` or `last` value to properly paginate the `domains` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `domains` connection."
+
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:45
+#: src/loaders/domains/load-domain-connections-by-user-id.js:43
+msgid "`{argSet}` on the `domains` connection cannot be less than zero."
+msgstr "`{argSet}` on the `domains` connection cannot be less than zero."

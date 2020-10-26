@@ -24,10 +24,6 @@
       'Could not retrieve specified domain.',
     'Could not retrieve specified organization.':
       'Could not retrieve specified organization.',
-    'Error, maximum record request for first, and last arguments is 100.':
-      'Error, maximum record request for first, and last arguments is 100.',
-    'Error, minimum record request for first, and last arguments is 0.':
-      'Error, minimum record request for first, and last arguments is 0.',
     'Error, unable to have first, and last set at the same time.':
       'Error, unable to have first, and last set at the same time.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
@@ -40,6 +36,8 @@
       'No domain with the provided domain could be found.',
     'No organization with the provided slug could be found.':
       'No organization with the provided slug could be found.',
+    'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `domains` connection is not supported.',
     'Password is not strong enough. Please try again.':
       'Password is not strong enough. Please try again.',
     'Password is too short.': 'Password is too short.',
@@ -47,6 +45,28 @@
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
     'Profile successfully updated.': 'Profile successfully updated.',
+    'Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records.': function (
+      a,
+    ) {
+      return [
+        'Requesting `',
+        a('amount'),
+        '` records on the `domains` connection exceeds the `',
+        a('argSet'),
+        '` limit of 100 records.',
+      ]
+    },
+    'Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records.': function (
+      a,
+    ) {
+      return [
+        'Requesting ',
+        a('amount'),
+        ' records on the `domains` connection exceeds the `',
+        a('argSet'),
+        '` limit of 100 records.',
+      ]
+    },
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
     'Successfully removed domain: {0} from {1}.': function (a) {
@@ -170,5 +190,18 @@
       "We've sent you a text message with an authentication code to sign into Pulse.",
     "We've sent you an email with an authentication code to sign into Pulse.":
       "We've sent you an email with an authentication code to sign into Pulse.",
+    "You must provide a `first` or 'last` value to properly paginate the `domains` connection.":
+      "You must provide a `first` or 'last` value to properly paginate the `domains` connection.",
+    'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `domains` connection.',
+    '`{argSet}` on the `domains` connection cannot be less than zero.': function (
+      a,
+    ) {
+      return [
+        '`',
+        a('argSet'),
+        '` on the `domains` connection cannot be less than zero.',
+      ]
+    },
   },
 }
