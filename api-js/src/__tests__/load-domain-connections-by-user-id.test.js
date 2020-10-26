@@ -525,7 +525,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 1000,
             }
@@ -540,7 +540,7 @@ describe('given the load domain connections by user id function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: domainLoaderConnectionsByUserId.`,
             ])
@@ -554,7 +554,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 1000,
             }
@@ -569,7 +569,7 @@ describe('given the load domain connections by user id function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 1000 for: domainLoaderConnectionsByUserId.`,
             ])
@@ -585,7 +585,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
@@ -600,7 +600,7 @@ describe('given the load domain connections by user id function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByUserId.`,
             ])
@@ -614,7 +614,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -1,
             }
@@ -629,7 +629,7 @@ describe('given the load domain connections by user id function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByUserId.`,
             ])
@@ -896,11 +896,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `todo`,
-              ),
-            )
+            expect(err).toEqual(new Error(`todo`))
           }
 
           expect(consoleOutput).toEqual([
@@ -926,11 +922,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `todo`,
-              ),
-            )
+            expect(err).toEqual(new Error(`todo`))
           }
 
           expect(consoleOutput).toEqual([
@@ -947,7 +939,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 1000,
             }
@@ -956,13 +948,9 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  `todo`,
-                ),
-              )
+              expect(err).toEqual(new Error(`todo`))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: domainLoaderConnectionsByUserId.`,
             ])
@@ -976,7 +964,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 1000,
             }
@@ -985,13 +973,9 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  `todo`,
-                ),
-              )
+              expect(err).toEqual(new Error(`todo`))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 1000 for: domainLoaderConnectionsByUserId.`,
             ])
@@ -1007,7 +991,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
@@ -1016,13 +1000,9 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  `todo`,
-                ),
-              )
+              expect(err).toEqual(new Error(`todo`))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByUserId.`,
             ])
@@ -1036,7 +1016,7 @@ describe('given the load domain connections by user id function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -1,
             }
@@ -1045,13 +1025,9 @@ describe('given the load domain connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  `todo`,
-                ),
-              )
+              expect(err).toEqual(new Error(`todo`))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByUserId.`,
             ])
@@ -1135,9 +1111,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -1226,9 +1200,7 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error('todo'),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([

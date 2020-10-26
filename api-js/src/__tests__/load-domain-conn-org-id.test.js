@@ -27,12 +27,12 @@ describe('given the load domain connection using org id function', () => {
     domainTwo,
     i18n
 
-    let consoleOutput = []
-    const mockedError = (output) => consoleOutput.push(output)
-    const mockedWarn = (output) => consoleOutput.push(output)
-    beforeAll(async () => {
-      console.error = mockedError
-      console.warn = mockedWarn
+  let consoleOutput = []
+  const mockedError = (output) => consoleOutput.push(output)
+  const mockedWarn = (output) => consoleOutput.push(output)
+  beforeAll(async () => {
+    console.error = mockedError
+    console.warn = mockedWarn
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
