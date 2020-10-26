@@ -9,6 +9,8 @@ import { useUserState } from './UserState'
 import { AdminDomains } from './AdminDomains'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
+import { Trans } from '@lingui/macro'
 
 export default function AdminPanel({ orgName, permission }) {
   const { currentUser } = useUserState()
@@ -36,12 +38,16 @@ export default function AdminPanel({ orgName, permission }) {
   })
 
   if (loading) {
-    return <p>Loading...</p>
+    return (
+      <LoadingMessage>
+        <Trans>Organization Info</Trans>
+      </LoadingMessage>
+    )
   }
   // Current api returns an error if no domains found
   // TODO: Remove includes check when api is ready
   if (error && !error.includes('Error, unable to find domains')) {
-    return <p>{String(error)}</p>
+    return <ErrorFallbackMessage error={error} />
   }
 
   return (

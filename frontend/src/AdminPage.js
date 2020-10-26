@@ -7,6 +7,8 @@ import AdminPanel from './AdminPanel'
 import { USER_AFFILIATIONS } from './graphql/queries'
 import { useQuery } from '@apollo/client'
 import { useUserState } from './UserState'
+import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function AdminPage() {
   const { currentUser } = useUserState()
@@ -34,11 +36,15 @@ export default function AdminPage() {
   })
 
   if (loading) {
-    return <p>Loading user affilliations...</p>
+    return (
+      <LoadingMessage>
+        <Trans>User Affiliations</Trans>
+      </LoadingMessage>
+    )
   }
 
   if (error) {
-    return <p>{String(error)}</p>
+    return <ErrorFallbackMessage error={error} />
   }
 
   const adminAffiliations = {}

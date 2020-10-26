@@ -14,6 +14,7 @@ import { useLingui } from '@lingui/react'
 import DisplayNameField from './DisplayNameField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function CreateUserPage() {
   const { login } = useUserState()
@@ -82,13 +83,7 @@ export default function CreateUserPage() {
     },
   })
 
-  if (loading)
-    return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
-    )
-  // if (error) return <p>{String(error)}</p>
+  if (loading) return <LoadingMessage />
 
   const addUserToOrgText =
     userOrgToken !== undefined ? (

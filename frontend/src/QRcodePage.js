@@ -8,6 +8,7 @@ import { GENERATE_OTP_URL } from './graphql/queries'
 import QRCode from 'qrcode.react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function QRcodePage() {
   const { currentUser } = useUserState()
@@ -20,9 +21,9 @@ export default function QRcodePage() {
 
   if (loading)
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>QR Code</Trans>
+      </LoadingMessage>
     )
   if (error) return <ErrorFallbackMessage error={error} />
 

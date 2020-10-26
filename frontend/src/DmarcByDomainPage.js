@@ -9,6 +9,7 @@ import { useLingui } from '@lingui/react'
 import { months } from './months'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function DmarcByDomainPage() {
   const { currentUser } = useUserState()
@@ -158,9 +159,9 @@ export default function DmarcByDomainPage() {
 
   // Replace table with "Loading..." if waiting for query
   const tableDisplay = tableLoading ? (
-    <Text>
-      <Trans>Loading...</Trans>
-    </Text>
+    <LoadingMessage>
+      <Trans>Domains Table</Trans>
+    </LoadingMessage>
   ) : (
     <DmarcReportTable
       data={tableData.dmarcReportSummaryTable.domains}

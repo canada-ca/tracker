@@ -13,6 +13,7 @@ import { OrganizationCard } from './OrganizationCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function Organisations({ orgsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -35,9 +36,9 @@ export default function Organisations({ orgsPerPage = 10 }) {
 
   if (loading)
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>Organizations</Trans>
+      </LoadingMessage>
     )
 
   return (

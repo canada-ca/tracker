@@ -8,6 +8,7 @@ import ScanCard from './ScanCard'
 import { Trans } from '@lingui/macro'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { ErrorBoundary } from 'react-error-boundary'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function DmarcGuidancePage() {
   const { currentUser } = useUserState()
@@ -27,7 +28,12 @@ export default function DmarcGuidancePage() {
     onError: (e) => console.log(`error! recieved: ${e}`),
   })
 
-  if (loading) return <p>Loading</p>
+  if (loading)
+    return (
+      <LoadingMessage>
+        <Trans>Guidance Tags</Trans>
+      </LoadingMessage>
+    )
   if (error) return <ErrorFallbackMessage error={error.message} /> // TODO: Handle this error
 
   const orgName = data.findDomainBySlug.organization.name

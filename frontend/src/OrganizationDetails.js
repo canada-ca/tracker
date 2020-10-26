@@ -21,6 +21,7 @@ import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
@@ -54,9 +55,9 @@ export default function OrganizationDetails() {
 
   if (loading) {
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>Organization Details</Trans>
+      </LoadingMessage>
     )
   }
 

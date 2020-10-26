@@ -9,6 +9,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { UPDATE_PASSWORD } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function ResetPasswordPage() {
   const { i18n } = useLingui()
@@ -49,12 +50,7 @@ export default function ResetPasswordPage() {
     },
   })
 
-  if (loading)
-    return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
-    )
+  if (loading) return <LoadingMessage />
 
   return (
     <Box px="8" mx="auto" overflow="hidden">

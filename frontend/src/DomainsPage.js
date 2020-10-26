@@ -13,6 +13,7 @@ import { DomainCard } from './DomainCard'
 import { usePaginatedCollection } from './usePaginatedCollection'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { LoadingMessage } from './LoadingMessage'
 
 export default function DomainsPage({ domainsPerPage = 10 }) {
   const { currentUser } = useUserState()
@@ -31,18 +32,13 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
     recordsPerPage: domainsPerPage,
   })
 
-  if (error)
-    return (
-      <p>
-        <Trans>error {error.message}</Trans>
-      </p>
-    )
+  if (error) return <ErrorFallbackMessage error={error} />
 
   if (loading)
     return (
-      <p>
-        <Trans>Loading...</Trans>
-      </p>
+      <LoadingMessage>
+        <Trans>Domains</Trans>
+      </LoadingMessage>
     )
 
   return (

@@ -473,6 +473,7 @@ msgstr "DMARC Messages"
 #~ msgstr "DMARC Policy Applied"
 
 #: src/App.js:58
+#: src/DmarcReportPage.js:67
 msgid "DMARC Report"
 msgstr "DMARC Report"
 
@@ -587,6 +588,7 @@ msgid "Domain:"
 msgstr "Domain:"
 
 #: src/OrganizationDetails.js:81
+#: src/DomainsPage.js:45
 msgid "Domains"
 msgstr "Domains"
 
@@ -1881,6 +1883,7 @@ msgid "User List"
 msgstr "User List"
 
 #: src/App.js:71
+#: src/UserPage.js:46
 msgid "User Profile"
 msgstr "User Profile"
 
@@ -2103,3 +2106,43 @@ msgstr "{count} records..."
 #: src/OrganizationDetails.js:72
 msgid "{orgName}"
 msgstr "{orgName}"
+
+#: src/LoadingMessage.js:12
+msgid "Loading {children}..."
+msgstr "Loading {children}..."
+
+#: src/ErrorFallbackMessage.js:12
+msgid "An error has occurred."
+msgstr "An error has occurred."
+
+#: src/ErrorFallbackMessage.js:22
+msgid "This component is currently unavailable. Try reloading the page."
+msgstr "This component is currently unavailable. Try reloading the page."
+
+#: src/SummaryGroup.js:39
+msgid "Summary Cards"
+msgstr "Summary Cards"
+
+#: src/AdminPage.js:41
+msgid "User Affiliations"
+msgstr "User Affiliations"
+
+#: src/AdminPanel.js:40
+msgid "Organization Info"
+msgstr "Organization Info"
+
+#: src/DmarcByDomainPage.js:163
+msgid "Domains Table"
+msgstr "Domains Table"
+
+#: src/DmarcGuidancePage.js:34
+msgid "Guidance Tags"
+msgstr "Guidance Tags"
+
+#: src/OrganizationDetails.js:59
+msgid "Organization Details"
+msgstr "Organization Details"
+
+#: src/QRcodePage.js:25
+msgid "QR Code"
+msgstr "QR Code"
