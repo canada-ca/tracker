@@ -7,7 +7,7 @@ const domainLoaderConnectionsByOrgId = (
   userId,
   cleanseInput,
   i18n,
-) => async ({ orgId, after, before, first = 20, last }) => {
+) => async ({ orgId, after, before, first, last }) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
@@ -25,29 +25,50 @@ const domainLoaderConnectionsByOrgId = (
     beforeTemplate = aql`FILTER TO_NUMBER(domain._key) < TO_NUMBER(${beforeId})`
   }
 
-  if (typeof last !== 'undefined') {
-    first = undefined
-  }
-
   let limitTemplate = aql``
-  if (first < 0 || last < 0) {
-    console.warn(`User: ${userId} tried to have first or last set below 0`)
+  if (typeof first !== 'undefined' && typeof last !== 'undefined') {
+    console.warn(
+      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+    )
     throw new Error(
       i18n._(
-        t`Error, minimum record request for first, and last arguments is 0.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`domains\` connection is not supported.`,
+      ),
+    )
+  } else if (first < 0 || last < 0) {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set below zero for: domainLoaderConnectionsByOrgId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`\`${argSet}\` on the \`domains\` connection cannot be less than zero.`,
       ),
     )
   } else if (first > 100 || last > 100) {
-    console.warn(`User: ${userId} tried to have first or last set above 100`)
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const amount = typeof first !== 'undefined' ? first : last
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: domainLoaderConnectionsByOrgId.`,
+    )
     throw new Error(
       i18n._(
-        t`Error, maximum record request for first, and last arguments is 100.`,
+        t`Requesting \`${amount}\` records on the \`domains\` connection exceeds the \`${argSet}\` limit of 100 records.`,
       ),
     )
-  } else if (typeof last !== 'undefined') {
+  } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+    limitTemplate = aql`SORT domain._key ASC LIMIT TO_NUMBER(${first})`
+  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
     limitTemplate = aql`SORT domain._key DESC LIMIT TO_NUMBER(${last})`
   } else {
-    limitTemplate = aql`SORT domain._key ASC LIMIT TO_NUMBER(${first})`
+    console.warn(
+      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`domains\` connection.`,
+      ),
+    )
   }
 
   let sortString

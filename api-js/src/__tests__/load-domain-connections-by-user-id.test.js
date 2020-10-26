@@ -123,15 +123,17 @@ describe('given the load domain connections by user id function', () => {
             REMOVE claim IN claims
         `
       })
-      describe('using no cursor and no limit', () => {
-        it('returns an organization', async () => {
+      describe('using no cursor', () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
             cleanseInput,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 10,
+          }
           const domains = await connectionLoader({ ...connectionArgs })
 
           const domainLoader = domainLoaderByKey(query)
@@ -170,7 +172,7 @@ describe('given the load domain connections by user id function', () => {
         })
       })
       describe('using after cursor', () => {
-        it('returns an organization', async () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -187,6 +189,7 @@ describe('given the load domain connections by user id function', () => {
           expectedDomains[1].id = expectedDomains[1]._key
 
           const connectionArgs = {
+            first: 10,
             after: toGlobalId('domains', expectedDomains[0].id),
           }
           const domains = await connectionLoader({ ...connectionArgs })
@@ -202,7 +205,7 @@ describe('given the load domain connections by user id function', () => {
             ],
             pageInfo: {
               hasNextPage: false,
-              hasPreviousPage: false,
+              hasPreviousPage: true,
               startCursor: toGlobalId('domains', expectedDomains[1]._key),
               endCursor: toGlobalId('domains', expectedDomains[1]._key),
             },
@@ -212,7 +215,7 @@ describe('given the load domain connections by user id function', () => {
         })
       })
       describe('using before cursor', () => {
-        it('returns an organization', async () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -229,6 +232,7 @@ describe('given the load domain connections by user id function', () => {
           expectedDomains[1].id = expectedDomains[1]._key
 
           const connectionArgs = {
+            first: 10,
             before: toGlobalId('domains', expectedDomains[1].id),
           }
           const domains = await connectionLoader({ ...connectionArgs })
@@ -243,7 +247,7 @@ describe('given the load domain connections by user id function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
+              hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId('domains', expectedDomains[0]._key),
               endCursor: toGlobalId('domains', expectedDomains[0]._key),
@@ -254,7 +258,7 @@ describe('given the load domain connections by user id function', () => {
         })
       })
       describe('using first limit', () => {
-        it('returns an organization', async () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -296,7 +300,7 @@ describe('given the load domain connections by user id function', () => {
         })
       })
       describe('using last limit', () => {
-        it('returns an organization', async () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -371,7 +375,9 @@ describe('given the load domain connections by user id function', () => {
           cleanseInput,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 10,
+        }
         const domains = await connectionLoader({ ...connectionArgs })
 
         const expectedStructure = {
@@ -453,6 +459,33 @@ describe('given the load domain connections by user id function', () => {
             REMOVE claim IN claims
         `
       })
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                `You must provide a \`first\` or \`last\` value to properly paginate the \`domains\` connection.`,
+              ),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+          ])
+        })
+      })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
@@ -473,14 +506,134 @@ describe('given the load domain connections by user id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Error, unable to have first, and last set at the same time.',
+                `Passing both \`first\` and \`last\` to paginate the \`domains\` connection is not supported.`,
               ),
             )
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} tried to have first and last set in domain connection query`,
+            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
           ])
+        })
+      })
+      describe('first or last argument exceeds maximum', () => {
+        describe('first argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: 1000,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `Requesting 1000 records on the \`domains\` connection exceeds the \`first\` limit of 100 records.`,
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+        describe('last argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: 1000,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `Requesting 1000 records on the \`domains\` connection exceeds the \`last\` limit of 100 records.`,
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 1000 for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+      })
+      describe('first or last argument exceeds minimum', () => {
+        describe('first argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: -1,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `\`first\` on the \`domains\` connection cannot be less than zero.`,
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+        describe('last argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: -1,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `\`last\` on the \`domains\` connection cannot be less than zero.`,
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
         })
       })
     })
@@ -537,7 +690,7 @@ describe('given the load domain connections by user id function', () => {
             REMOVE claim IN claims
         `
       })
-      describe('while querying domains', () => {
+      describe('while querying for domain information', () => {
         it('returns an error message', async () => {
           const query = jest
             .fn()
@@ -552,7 +705,9 @@ describe('given the load domain connections by user id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 50,
+          }
           try {
             await connectionLoader({
               ...connectionArgs,
@@ -641,7 +796,9 @@ describe('given the load domain connections by user id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 50,
+          }
           try {
             await connectionLoader({
               ...connectionArgs,
@@ -724,6 +881,33 @@ describe('given the load domain connections by user id function', () => {
             REMOVE claim IN claims
         `
       })
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                `todo`,
+              ),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+          ])
+        })
+      })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
@@ -744,14 +928,134 @@ describe('given the load domain connections by user id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'todo',
+                `todo`,
               ),
             )
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} tried to have first and last set in domain connection query`,
+            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
           ])
+        })
+      })
+      describe('first or last argument exceeds maximum', () => {
+        describe('first argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: 1000,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `todo`,
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+        describe('last argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: 1000,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `todo`,
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 1000 for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+      })
+      describe('first or last argument exceeds minimum', () => {
+        describe('first argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: -1,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `todo`,
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+        describe('last argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: -1,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `todo`,
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
         })
       })
     })
@@ -823,7 +1127,9 @@ describe('given the load domain connections by user id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 50,
+          }
           try {
             await connectionLoader({
               ...connectionArgs,
@@ -912,7 +1218,9 @@ describe('given the load domain connections by user id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 50,
+          }
           try {
             await connectionLoader({
               ...connectionArgs,

@@ -27,12 +27,12 @@ describe('given the load domain connection using org id function', () => {
     domainTwo,
     i18n
 
-  let consoleOutput = []
-  const mockedError = (output) => consoleOutput.push(output)
-  const mockedWarn = (output) => consoleOutput.push(output)
-  beforeAll(async () => {
-    console.error = mockedError
-    console.warn = mockedWarn
+    let consoleOutput = []
+    const mockedError = (output) => consoleOutput.push(output)
+    const mockedWarn = (output) => consoleOutput.push(output)
+    beforeAll(async () => {
+      console.error = mockedError
+      console.warn = mockedWarn
     ;({ migrate } = await ArangoTools({ rootPass, url }))
     ;({ query, drop, truncate, collections } = await migrate(
       makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
@@ -41,6 +41,7 @@ describe('given the load domain connection using org id function', () => {
 
   beforeEach(async () => {
     await truncate()
+    consoleOutput = []
     user = await collections.users.save({
       userName: 'test.account@istio.actually.exists',
       displayName: 'Test Account',
@@ -91,7 +92,6 @@ describe('given the load domain connection using org id function', () => {
       _from: org._id,
       _to: domainTwo._id,
     })
-    consoleOutput = []
   })
 
   afterAll(async () => {
@@ -106,7 +106,9 @@ describe('given the load domain connection using org id function', () => {
           cleanseInput,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 10,
+        }
         const domains = await connectionLoader({
           orgId: org._id,
           ...connectionArgs,
@@ -165,6 +167,7 @@ describe('given the load domain connection using org id function', () => {
         expectedDomains[1].id = expectedDomains[1]._key
 
         const connectionArgs = {
+          first: 10,
           after: toGlobalId('domains', expectedDomains[0]._key),
         }
         const domains = await connectionLoader({
@@ -210,6 +213,7 @@ describe('given the load domain connection using org id function', () => {
         expectedDomains[1].id = expectedDomains[1]._key
 
         const connectionArgs = {
+          first: 10,
           before: toGlobalId('domains', expectedDomains[1]._key),
         }
         const domains = await connectionLoader({
@@ -231,55 +235,6 @@ describe('given the load domain connection using org id function', () => {
             hasPreviousPage: false,
             startCursor: toGlobalId('domains', expectedDomains[0]._key),
             endCursor: toGlobalId('domains', expectedDomains[0]._key),
-          },
-        }
-
-        expect(domains).toEqual(expectedStructure)
-      })
-    })
-    describe('using no limit', () => {
-      it('return multiple domains', async () => {
-        const connectionLoader = domainLoaderConnectionsByOrgId(
-          query,
-          user._key,
-          cleanseInput,
-        )
-
-        const connectionArgs = {}
-        const domains = await connectionLoader({
-          orgId: org._id,
-          ...connectionArgs,
-        })
-
-        const domainLoader = domainLoaderByKey(query)
-        const expectedDomains = await domainLoader.loadMany([
-          domain._key,
-          domainTwo._key,
-        ])
-
-        expectedDomains[0].id = expectedDomains[0]._key
-        expectedDomains[1].id = expectedDomains[1]._key
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('domains', expectedDomains[0]._key),
-              node: {
-                ...expectedDomains[0],
-              },
-            },
-            {
-              cursor: toGlobalId('domains', expectedDomains[1]._key),
-              node: {
-                ...expectedDomains[1],
-              },
-            },
-          ],
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('domains', expectedDomains[0]._key),
-            endCursor: toGlobalId('domains', expectedDomains[1]._key),
           },
         }
 
@@ -385,7 +340,9 @@ describe('given the load domain connection using org id function', () => {
           cleanseInput,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 10,
+        }
         const domains = await connectionLoader({
           orgId: org._id,
           ...connectionArgs,
@@ -418,6 +375,65 @@ describe('given the load domain connection using org id function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
+      describe('limits are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                `You must provide a \`first\` or \`last\` value to properly paginate the \`domains\` connection.`,
+              ),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+          ])
+        })
+      })
+      describe('both limits are set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {
+            first: 1,
+            last: 1,
+          }
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                `Passing both \`first\` and \`last\` to paginate the \`domains\` connection is not supported.`,
+              ),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+          ])
+        })
+      })
       describe('limits are set below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
@@ -439,13 +455,13 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Error, minimum record request for first, and last arguments is 0.',
+                  `\`first\` on the \`domains\` connection cannot be less than zero.`,
                 ),
               )
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} tried to have first or last set below 0`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByOrgId.`,
             ])
           })
         })
@@ -469,13 +485,13 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Error, minimum record request for first, and last arguments is 0.',
+                  `\`last\` on the \`domains\` connection cannot be less than zero.`,
                 ),
               )
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} tried to have first or last set below 0`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByOrgId.`,
             ])
           })
         })
@@ -501,13 +517,13 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Error, maximum record request for first, and last arguments is 100.',
+                  `Requesting \`1000\` records on the \`domains\` connection exceeds the \`first\` limit of 100 records.`,
                 ),
               )
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} tried to have first or last set above 100`,
+              `User: ${user._key} attempted to have \`first\` to 1000 for: domainLoaderConnectionsByOrgId.`,
             ])
           })
         })
@@ -531,13 +547,13 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  'Error, maximum record request for first, and last arguments is 100.',
+                  `Requesting \`1000\` records on the \`domains\` connection exceeds the \`last\` limit of 100 records.`,
                 ),
               )
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} tried to have first or last set above 100`,
+              `User: ${user._key} attempted to have \`last\` to 1000 for: domainLoaderConnectionsByOrgId.`,
             ])
           })
         })
@@ -557,7 +573,9 @@ describe('given the load domain connection using org id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 5,
+          }
           try {
             await connectionLoader({
               orgId: org._id,
@@ -592,7 +610,9 @@ describe('given the load domain connection using org id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 5,
+          }
           try {
             await connectionLoader({
               orgId: org._id,
@@ -647,7 +667,7 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} tried to have first or last set below 0`,
+              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByOrgId.`,
             ])
           })
         })
@@ -673,7 +693,7 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} tried to have first or last set below 0`,
+              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByOrgId.`,
             ])
           })
         })
@@ -701,7 +721,7 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} tried to have first or last set above 100`,
+              `User: ${user._key} attempted to have \`first\` to 1000 for: domainLoaderConnectionsByOrgId.`,
             ])
           })
         })
@@ -727,7 +747,7 @@ describe('given the load domain connection using org id function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `User: ${user._key} tried to have first or last set above 100`,
+              `User: ${user._key} attempted to have \`last\` to 1000 for: domainLoaderConnectionsByOrgId.`,
             ])
           })
         })
@@ -747,7 +767,9 @@ describe('given the load domain connection using org id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 5,
+          }
           try {
             await connectionLoader({
               orgId: org._id,
@@ -780,7 +802,9 @@ describe('given the load domain connection using org id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 5,
+          }
           try {
             await connectionLoader({
               orgId: org._id,
