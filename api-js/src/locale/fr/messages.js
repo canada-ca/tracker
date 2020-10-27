@@ -17,12 +17,18 @@
     'New passwords do not match. Please try again.': 'todo',
     'No domain with the provided domain could be found.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
+    'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
+      'todo',
     'Password is not strong enough. Please try again.': 'todo',
     'Password is too short.': 'todo',
     'Password was successfully reset.': 'todo',
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
     'Profile successfully updated.': 'todo',
+    'Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Successfully invited user to organization, and sent notification email.':
       'todo',
     'Successfully removed domain: {0} from {1}.': 'todo',
@@ -41,8 +47,11 @@
     'Unable to find dkim scan. Please try again.': 'todo',
     'Unable to find dmarc scan. Please try again.': 'todo',
     'Unable to find domain. Please try again.': 'todo',
+    'Unable to find https scan. Please try again.': 'todo',
     'Unable to find organization. Please try again.': 'todo',
     'Unable to find spf scan. Please try again.': 'todo',
+    'Unable to find ssl scan. Please try again.': 'todo',
+    'Unable to find user. Please try again.': 'todo',
     'Unable to have both first, and last arguments set at the same time.':
       'todo',
     'Unable to invite user. Please try again.': 'todo',
@@ -51,8 +60,10 @@
     'Unable to load dkim scans. Please try again.': 'todo',
     'Unable to load dmarc scans. Please try again.': 'todo',
     'Unable to load domains. Please try again.': 'todo',
+    'Unable to load https scans. Please try again.': 'todo',
     'Unable to load organizations. Please try again.': 'todo',
     'Unable to load spf scans. Please try again.': 'todo',
+    'Unable to load ssl scans. Please try again.': 'todo',
     'Unable to query domains. Please try again.': 'todo',
     'Unable to query organizations. Please try again.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
@@ -60,6 +71,11 @@
     'Unable to reset password. Please try again.': 'todo',
     'Unable to retrieve {0} for domain: {domain}.': 'todo',
     'Unable to send TFA code, please try again.': 'todo',
+    'Unable to send org invite email. Please try again.': 'todo',
+    'Unable to send password reset email. Please try again.': 'todo',
+    'Unable to send two factor authentication message. Please try again.':
+      'todo',
+    'Unable to send verification email. Please try again.': 'todo',
     'Unable to sign in, please try again.': 'todo',
     'Unable to sign up. Please try again.': 'todo',
     'Unable to two factor authenticate. Please try again.': 'todo',
@@ -85,5 +101,10 @@
       'todo',
     "We've sent you an email with an authentication code to sign into Pulse.":
       'todo',
+    "You must provide a `first` or 'last` value to properly paginate the `domains` connection.":
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
+      'todo',
+    '`{argSet}` on the `domains` connection cannot be less than zero.': 'todo',
   },
 }

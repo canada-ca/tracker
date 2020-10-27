@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: postgres
   name: postgres
@@ -14,7 +13,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: postgres
     spec:
@@ -34,5 +32,14 @@ spec:
             secretKeyRef:
               name: postgres
               key: POSTGRES_PASSWORD
-        resources: {}
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data/
+            name: postgres-data
+      restartPolicy: Always
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-data
 status: {}

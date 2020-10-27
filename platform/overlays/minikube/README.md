@@ -22,6 +22,12 @@ SUPER_SECRET_KEY=anotherstring
 SUPER_SECRET_SALT=yetanotherstring
 NOTIFICATION_API_KEY=test_key-yournotify-test-key
 NOTIFICATION_API_URL=https://api.notification.alpha.canada.ca
+SA_USER_NAME=superadmin@somedomain.com
+SA_PASSWORD=averysecurepassword
+SA_DISPLAY_NAME=SuperUser
+TOKEN_KEY=test_jwt_token
+DMARC_REPORT_API_URL=https://dmarc-reports.com
+DMARC_REPORT_API_TOKEN=a.jwt.token
 ```
 
 ## kiali.env
@@ -47,9 +53,11 @@ POSTGRES_PASSWORD=somepassword
 
 ## Running it
 
-With those files created you can start minikube and the app with the following commands in this directory. Both minikube and Istio require a lot of resources... so throw everything you can at it.
+With those files created you can start minikube and the app with the following commands in root directory. Both minikube and Istio require a lot of resources... so throw everything you can at it.
 
 ```bash
 minikube start --cpus 4 --memory 20480
-kustomize build . | kubectl apply -f -
+kustomize build platform/overlays/seed | kubectl apply -f -
+kustomize build platform/overlays/minikube | kubectl apply -f -
+minikube service list
 ```

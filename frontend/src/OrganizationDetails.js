@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { Layout } from './Layout'
@@ -12,20 +12,24 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  Box,
+  Divider,
 } from '@chakra-ui/core'
 import { ORG_DETAILS_PAGE } from './graphql/queries'
 import { useUserState } from './UserState'
 import { useParams, useHistory } from 'react-router-dom'
-import DomainsPage from './DomainsPage'
 import UserList from './UserList'
 import { OrganizationSummary } from './OrganizationSummary'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
 import { LoadingMessage } from './LoadingMessage'
+import { DomainCard } from './DomainCard'
+import { ListOf } from './ListOf'
+import { PaginationButtons } from './PaginationButtons'
 
 export default function OrganizationDetails() {
   const { orgSlug } = useParams()
-  const { currentUser } = useUserState()
+  const { currentUser, isLoggedIn } = useUserState()
   const toast = useToast()
   const history = useHistory()
   const { loading, _error, data } = useQuery(ORG_DETAILS_PAGE, {
@@ -52,6 +56,22 @@ export default function OrganizationDetails() {
   if (data?.organization) {
     orgName = data.organization.name
   }
+
+  let domains = []
+  if (data?.organization?.domains?.edges) {
+    domains = data.organization.domains.edges.map((e) => e.node)
+  }
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [domainsPerPage] = useState(10)
+
+  // Get current domains
+  const indexOfLastDomain = currentPage * domainsPerPage
+  const indexOfFirstDomain = indexOfLastDomain - domainsPerPage
+  const currentDomains = domains.slice(indexOfFirstDomain, indexOfLastDomain)
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   if (loading) {
     return (
@@ -83,9 +103,11 @@ export default function OrganizationDetails() {
           <Tab>
             <Trans>Domains</Trans>
           </Tab>
-          <Tab>
-            <Trans>Users</Trans>
-          </Tab>
+          {isLoggedIn() && (
+            <Tab>
+              <Trans>Users</Trans>
+            </Tab>
+          )}
         </TabList>
 
         <TabPanels>
@@ -98,22 +120,39 @@ export default function OrganizationDetails() {
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <DomainsPage />
-            </ErrorBoundary>
-          </TabPanel>
-          <TabPanel>
-            <ErrorBoundary
-              FallbackComponent={ErrorFallbackMessage}
-              name="userList"
+            <ListOf
+              elements={currentDomains}
+              ifEmpty={() => <Trans>No Domains</Trans>}
+              mb="4"
             >
+              {({ id, url, lastRan }, index) => (
+                <Box key={`${id}:${index}`}>
+                  <DomainCard url={url} lastRan={lastRan} />
+                  <Divider borderColor="gray.900" />
+                </Box>
+              )}
+            </ListOf>
+            {domains.length > 0 && (
+              <PaginationButtons
+                perPage={domainsPerPage}
+                total={domains.length}
+                paginate={paginate}
+                currentPage={currentPage}
+              />
+            )}
+            <Trans>
+              *All data represented is mocked for demonstration purposes
+            </Trans>
+          </TabPanel>
+          {isLoggedIn() && (
+            <TabPanel>
               <UserList
                 userListData={data.userList}
                 orgName={orgName}
                 orgSlug={orgSlug}
               />
-            </ErrorBoundary>
-          </TabPanel>
+            </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
     </Layout>

@@ -224,7 +224,9 @@ const removeDomain = new mutationWithClientMutationId({
       `User: ${userId} successfully removed domain: ${domain.slug} from org: ${org.slug}.`,
     )
     return {
-      status: i18n._(t`Successfully removed domain: ${domain.slug} from ${org.slug}.`),
+      status: i18n._(
+        t`Successfully removed domain: ${domain.slug} from ${org.slug}.`,
+      ),
     }
   },
 })

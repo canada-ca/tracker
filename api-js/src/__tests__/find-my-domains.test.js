@@ -173,7 +173,7 @@ describe('given findMyDomainsQuery', () => {
           schema,
           `
             query {
-              findMyDomains {
+              findMyDomains (first: 5) {
                 edges {
                   cursor
                   node {
@@ -274,7 +274,7 @@ describe('given findMyDomainsQuery', () => {
             schema,
             `
               query {
-                findMyDomains {
+                findMyDomains (first: 5) {
                   edges {
                     cursor
                     node {
@@ -338,7 +338,7 @@ describe('given findMyDomainsQuery', () => {
             schema,
             `
               query {
-                findMyDomains {
+                findMyDomains (first: 5) {
                   edges {
                     cursor
                     node {
