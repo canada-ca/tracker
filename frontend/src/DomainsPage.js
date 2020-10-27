@@ -82,13 +82,17 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
             <Text fontSize="2xl" mb="2">
               <Trans>Search for any Government of Canada tracked domain:</Trans>
             </Text>
-            <InputGroup width="100%" mb="8px">
-              <InputLeftElement>
-                <Icon name="search" color="gray.300" />
-              </InputLeftElement>
-              <Input type="text" placeholder={i18n._(t`Search for a domain`)} />
-            </InputGroup>
             <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <InputGroup width="100%" mb="8px">
+                <InputLeftElement>
+                  <Icon name="search" color="gray.300" />
+                </InputLeftElement>
+                <Input
+                  type="text"
+                  placeholder={i18n._(t`Search for a domain`)}
+                />
+              </InputGroup>
+
               <ListOf
                 elements={nodes}
                 ifEmpty={() => <Trans>No Domains</Trans>}
@@ -126,8 +130,11 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <Box px="8" mx="auto" overflow="hidden">
+            <Box px="8" mx="auto" overflow="hidden">
+              <Text fontSize="2xl" mb="2">
+                <Trans>Perform a one-time scan on a domain:</Trans>
+              </Text>
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
                 <Formik
                   initialValues={{ domain: '' }}
                   onSubmit={async (values) => {
@@ -141,9 +148,6 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                       aria-label="form"
                       name="form"
                     >
-                      <Text fontSize="2xl" mb="2">
-                        <Trans>Perform a one-time scan on a domain:</Trans>
-                      </Text>
                       <Stack
                         flexDirection={['column', 'row']}
                         alignContent="center"
@@ -173,8 +177,8 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
                     </form>
                   )}
                 </Formik>
-              </Box>
-            </ErrorBoundary>
+              </ErrorBoundary>
+            </Box>
           </TabPanel>
         </TabPanels>
       </Tabs>
