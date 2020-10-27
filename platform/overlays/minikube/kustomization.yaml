@@ -23,5 +23,9 @@ secretGenerator:
   - kiali.env
   name: kiali
   namespace: istio-system
+- envs:
+  - scanners.env
+  name: scanners
+  namespace: scanners
 generatorOptions:
   disableNameSuffixHash: true

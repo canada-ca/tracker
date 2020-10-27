@@ -77,16 +77,17 @@ GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-clust
 This will soon be captured in real code in a proper Infrastructure as Code type
 of way.
 
-With the cluster created the next step is to seed the cluster with the
-namespaces and secrets needed. If you've followed the instructions in
-`overlays/seed` directory you should be able to run the following and have it
-succeed.
+With the cluster up and running, you will need to provide the env files as
+described in the minikube setup:
 
 ```sh
-kustomize build platform/overlays/seed | kubectl apply -f -
+api.env
+kiali.env
+kiali.yaml
+postgres.env
+scanners.env
 ```
-
-If that succeeds, all that is left is the application itself.
+With those in place, the config can now be generated.
 
 ```sh
 kustomize build platform/overlays/gke | kubectl apply -f -
