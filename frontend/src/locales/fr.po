@@ -13,10 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/DomainsPage.js:69
+#: src/DomainsPage.js:122
 #: src/LandingPage.js:25
+#: src/OrganizationDetails.js:135
 #: src/OrganizationSummary.js:26
-#: src/Organizations.js:81
+#: src/Organizations.js:102
 msgid "*All data represented is mocked for demonstration purposes"
 msgstr "*Toutes les données représentées sont simulées à des fins de démonstration"
 
@@ -149,7 +150,7 @@ msgstr "Ajouter un domaine"
 msgid "Admin Portal"
 msgstr "Portail Admin"
 
-#: src/App.js:79
+#: src/App.js:83
 msgid "Admin Profile"
 msgstr "Profil de l'administrateur"
 
@@ -224,7 +225,7 @@ msgstr "B.2.2 Considérations cryptographiques"
 msgid "B.3.1 DMARC Records"
 msgstr "B.3.1 Enregistrements DMARC"
 
-#: src/CreateUserPage.js:163
+#: src/CreateUserPage.js:162
 #: src/ForgotPasswordPage.js:106
 #: src/QRcodePage.js:61
 msgid "Back"
@@ -250,7 +251,7 @@ msgstr "Les Canadiens s'attendent à ce que le gouvernement du Canada leur offre
 msgid "Canonical HTTPS endpoint internally redirects to HTTP. Follow guidance."
 msgstr "Le CCCS ajouté à la liste des expéditeurs de la police scientifique"
 
-#: src/DomainCard.js:26
+#: src/DomainCard.js:27
 msgid "Certificate Use"
 msgstr "Utilisation des Certificats"
 
@@ -353,12 +354,12 @@ msgstr "Contacter une tierce partie"
 msgid "Country Code"
 msgstr "Code pays"
 
-#: src/CreateUserPage.js:152
-#: src/SignInPage.js:129
+#: src/CreateUserPage.js:151
+#: src/SignInPage.js:131
 msgid "Create Account"
 msgstr "Créer un compte"
 
-#: src/CreateUserPage.js:130
+#: src/CreateUserPage.js:129
 msgid "Create an account by entering an email and password."
 msgstr "Créez un compte en entrant un courriel et un mot de passe."
 
@@ -469,7 +470,7 @@ msgstr "Messages de la DMARC"
 #~ msgid "DMARC Policy Applied"
 #~ msgstr "Politique de la DMARC appliquée"
 
-#: src/App.js:60
+#: src/App.js:71
 msgid "DMARC Report"
 msgstr "Rapport de la DMARC"
 
@@ -579,11 +580,13 @@ msgid "Domain was added to {orgName}"
 msgstr "Le domaine a été ajouté à {orgName}"
 
 #: src/Domain.js:23
-#: src/DomainCard.js:69
+#: src/DomainCard.js:71
 msgid "Domain:"
 msgstr "Domaine:"
 
-#: src/OrganizationDetails.js:81
+#: src/App.js:65
+#: src/DomainsPage.js:69
+#: src/OrganizationDetails.js:101
 msgid "Domains"
 msgstr "Domaines"
 
@@ -618,7 +621,7 @@ msgstr "Courriel"
 #~ msgid "Email Address:"
 #~ msgstr "Adresse électronique :"
 
-#: src/OrganizationCard.js:82
+#: src/OrganizationCard.js:88
 #: src/SummaryGroup.js:71
 msgid "Email Configuration"
 msgstr "Configuration du courriel"
@@ -660,6 +663,10 @@ msgstr "Activer la 2FA"
 #: src/DmarcReportGuidance.js:143
 #~ msgid "Ensure the SPF record is present and valid."
 #~ msgstr "Assurez-vous que le dossier du SPF est présent et valide."
+
+#: src/DomainsPage.js:154
+msgid "Enter a domain"
+msgstr "Entrez un domaine"
 
 #: src/EditableUserPassword.js:157
 msgid "Enter and confirm your new password below:"
@@ -736,7 +743,7 @@ msgstr "Pour des conseils approfondis sur la mise en œuvre du CCCS :"
 msgid "For technical implementation guidance:"
 msgstr "Pour des conseils de mise en œuvre technique :"
 
-#: src/SignInPage.js:108
+#: src/SignInPage.js:109
 msgid "Forgot your password?"
 msgstr "Oublié votre mot de passe?"
 
@@ -785,7 +792,7 @@ msgstr "Les domaines du gouvernement du Canada sont soumis aux directives du SCT
 msgid "Guidance:"
 msgstr "Orientation :"
 
-#: src/DomainCard.js:23
+#: src/DomainCard.js:24
 msgid "HSTS Preloaded"
 msgstr "HSTS Préchargé"
 
@@ -949,7 +956,7 @@ msgid "Last 30 Days"
 msgstr "Les 30 derniers jours"
 
 #: src/Domain.js:40
-#: src/DomainCard.js:78
+#: src/DomainCard.js:81
 msgid "Last scanned:"
 msgstr "Dernier scan:"
 
@@ -958,10 +965,10 @@ msgstr "Dernier scan:"
 #: src/DmarcReportPage.js:64
 #: src/DmarcReportPage.js:168
 #: src/DmarcReportPage.js:406
-#: src/DomainsPage.js:42
+#: src/DomainsPage.js:62
 #: src/ForgotPasswordPage.js:56
-#: src/OrganizationDetails.js:56
-#: src/Organizations.js:42
+#: src/OrganizationDetails.js:76
+#: src/Organizations.js:54
 #: src/QRcodePage.js:22
 #: src/ResetPasswordPage.js:55
 #: src/SignInPage.js:75
@@ -1094,17 +1101,18 @@ msgstr "Nouveau mot de passe :"
 msgid "New domain name cannot be empty"
 msgstr "Un nouveau nom de domaine ne peut pas être vide"
 
-#: src/DomainsPage.js:66
-#: src/Organizations.js:78
+#: src/DomainsPage.js:119
+#: src/Organizations.js:99
 msgid "Next"
 msgstr "Suivant"
 
 #: src/AdminDomains.js:245
-#: src/DomainsPage.js:48
+#: src/DomainsPage.js:95
+#: src/OrganizationDetails.js:117
 msgid "No Domains"
 msgstr "Aucun domaine"
 
-#: src/Organizations.js:53
+#: src/Organizations.js:74
 msgid "No Organizations"
 msgstr "Aucune organisation"
 
@@ -1165,7 +1173,7 @@ msgid "Non-compliant TLS"
 msgstr "TLS non conforme"
 
 #: src/Domain.js:51
-#: src/DomainCard.js:84
+#: src/DomainCard.js:87
 msgid "Not scanned yet."
 msgstr "Pas encore scanné."
 
@@ -1185,8 +1193,8 @@ msgstr "Un ou plusieurs chiffres utilisés ne sont pas conformes aux lignes dire
 msgid "Organization:"
 msgstr "Organisation:"
 
-#: src/App.js:68
-#: src/Organizations.js:49
+#: src/App.js:60
+#: src/Organizations.js:61
 msgid "Organizations"
 msgstr "Organisations"
 
@@ -1293,8 +1301,12 @@ msgstr "Page {0} de {1}"
 #~ msgstr "Passage partiel"
 
 #: src/SummaryGroup.js:60
-msgid "Partially-compliant TLS"
+msgid "Partially TLS"
 msgstr ""
+
+#: src/SummaryGroup.js:60
+#~ msgid "Partially-compliant TLS"
+#~ msgstr ""
 
 #: src/DmarcReportPage.js:125
 #: src/fixtures/summaryListData.js:155
@@ -1358,6 +1370,10 @@ msgstr "Mot de passe :"
 msgid "Passwords must match"
 msgstr "Les mots de passe doivent correspondre"
 
+#: src/DomainsPage.js:142
+msgid "Perform a one-time scan on a domain:"
+msgstr "Effectuer un balayage unique sur un domaine:"
+
 #: src/fieldRequirements.js:22
 msgid "Please choose your preferred language"
 msgstr "Veuillez choisir votre langue préférée"
@@ -1420,12 +1436,12 @@ msgstr "préalpha"
 msgid "Prefix Org"
 msgstr "Préfixe Org"
 
-#: src/DomainsPage.js:62
-#: src/Organizations.js:74
+#: src/DomainsPage.js:111
+#: src/Organizations.js:95
 msgid "Previous"
 msgstr "Précédent"
 
-#: src/App.js:234
+#: src/App.js:239
 #: src/FloatingMenu.js:175
 msgid "Privacy"
 msgstr "Confidentialité"
@@ -1434,7 +1450,7 @@ msgstr "Confidentialité"
 msgid "Properly configured!"
 msgstr "Bien configuré !"
 
-#: src/DomainCard.js:25
+#: src/DomainCard.js:26
 msgid "Protocols & Ciphers"
 msgstr "Protocoles et Codes"
 
@@ -1629,17 +1645,38 @@ msgstr ""
 msgid "Save Language"
 msgstr "Sauvegarder la langue"
 
+#: src/DomainsPage.js:78
+msgid "Scan"
+msgstr "Scanner"
+
+#: src/DomainsPage.js:167
+msgid "Scan Domain"
+msgstr "Domaine de balayage"
+
 #: src/QRcodePage.js:31
 msgid "Scan this QR code with a 2FA app like Authy or Google Authenticator"
 msgstr "Scannez ce code QR avec une application 2FA comme Authy ou Google Authenticator"
 
+#: src/DomainsPage.js:75
+msgid "Search"
+msgstr "Recherchez"
+
 #: src/AdminDomains.js:203
+#: src/DomainsPage.js:91
 msgid "Search for a domain"
 msgstr "Rechercher un domaine"
 
 #: src/UserList.js:207
 msgid "Search for a user"
 msgstr "Rechercher un utilisateur"
+
+#: src/Organizations.js:69
+msgid "Search for an organization"
+msgstr "Rechercher une organisation"
+
+#: src/DomainsPage.js:85
+msgid "Search for any Government of Canada tracked domain:"
+msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
 
 #: src/ReactTableGlobalFilter.js:31
 msgid "Search:"
@@ -1666,7 +1703,7 @@ msgstr "Sélectionnez une organisation pour voir les options d'administration"
 msgid "September"
 msgstr "Septembre"
 
-#: src/OrganizationCard.js:61
+#: src/OrganizationCard.js:67
 msgid "Services: {domainCount}"
 msgstr "Services"
 
@@ -1679,13 +1716,13 @@ msgid "Show {pageSize}"
 msgstr "Voir {pageSize}"
 
 #: src/DmarcByDomainPage.js:184
-#: src/DmarcReportPage.js:401
+#: src/DmarcReportPage.js:435
 msgid "Showing data for period:"
 msgstr "Affichage des données pour la période :"
 
-#: src/App.js:105
+#: src/App.js:109
 #: src/FloatingMenu.js:158
-#: src/SignInPage.js:118
+#: src/SignInPage.js:120
 msgid "Sign In"
 msgstr "Se connecter"
 
@@ -1693,12 +1730,12 @@ msgstr "Se connecter"
 msgid "Sign In."
 msgstr "Se connecter."
 
-#: src/App.js:101
+#: src/App.js:105
 #: src/FloatingMenu.js:142
 msgid "Sign Out"
 msgstr "Déconnexion"
 
-#: src/App.js:89
+#: src/App.js:93
 #: src/FloatingMenu.js:146
 msgid "Sign Out."
 msgstr "Déconnexion."
@@ -1723,7 +1760,7 @@ msgstr "Adresse IP source"
 msgid "Submit"
 msgstr "Soumettre"
 
-#: src/OrganizationDetails.js:78
+#: src/OrganizationDetails.js:98
 msgid "Summary"
 msgstr "Résumé"
 
@@ -1758,7 +1795,7 @@ msgstr ""
 #~ msgid "Terms & Conditions"
 #~ msgstr ""
 
-#: src/App.js:244
+#: src/App.js:249
 #: src/FloatingMenu.js:185
 msgid "Terms & conditions"
 msgstr "Avis"
@@ -1833,7 +1870,7 @@ msgid "This service is being developed in the open"
 msgstr "Ce service est développé de façon ouverte"
 
 #: src/DmarcByDomainPage.js:63
-#: src/DmarcReportPage.js:212
+#: src/DmarcReportPage.js:208
 msgid "Total Messages"
 msgstr "Total des messages"
 
@@ -1893,7 +1930,7 @@ msgstr "Utilisez DKIM pour valider le courrier électronique sortant envoyé dep
 msgid "User List"
 msgstr "Liste des utilisateurs"
 
-#: src/App.js:73
+#: src/App.js:77
 msgid "User Profile"
 msgstr "Profil de l'utilisateur"
 
@@ -1901,7 +1938,7 @@ msgstr "Profil de l'utilisateur"
 msgid "User invited"
 msgstr "Utilisateur invité"
 
-#: src/OrganizationDetails.js:84
+#: src/OrganizationDetails.js:105
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -1942,7 +1979,7 @@ msgstr "Vulnérable à l'injection de CCS OpenSSL"
 msgid "WRITE"
 msgstr "ÉCRIRE"
 
-#: src/OrganizationCard.js:74
+#: src/OrganizationCard.js:80
 #: src/SummaryGroup.js:52
 msgid "Web Configuration"
 msgstr "Configuration Web"
@@ -1975,7 +2012,7 @@ msgstr "Vous n'avez pas d'autorisations administratives dans une organisation"
 msgid "You have not enabled Two Factor Authentication. To maximize your account's security, <0>please enable 2FA</0>."
 msgstr "Vous n'avez pas activé l'authentification à deux facteurs. Pour maximiser la sécurité de votre compte, <0>veuillez activer l'authentification à deux facteurs</0>."
 
-#: src/App.js:91
+#: src/App.js:95
 #: src/FloatingMenu.js:148
 msgid "You have successfully been signed out."
 msgstr "Vous avez été déconnecté avec succès."
@@ -2008,8 +2045,8 @@ msgstr "Votre application 2FA disposera alors d'un code valide que vous pourrez 
 #~ msgid "back to organizations"
 #~ msgstr "retour aux organisations"
 
-#: src/DomainsPage.js:35
-#: src/Organizations.js:35
+#: src/DomainsPage.js:55
+#: src/Organizations.js:47
 msgid "error {0}"
 msgstr "erreur {0}"
 
@@ -2114,34 +2151,6 @@ msgstr "{count} enregistrements..."
 #~ msgstr ""
 
 #: src/DmarcGuidancePage.js:46
-#: src/OrganizationDetails.js:72
+#: src/OrganizationDetails.js:92
 msgid "{orgName}"
 msgstr ""
-
-#: src/Organizations.js:69
-msgid "Search for an organization"
-msgstr "Rechercher une organisation"
-
-#: src/DomainsPage.js:75
-msgid "Search"
-msgstr "Recherchez"
-
-#: src/DomainsPage.js:78
-msgid "Scan"
-msgstr "Scanner"
-
-#: src/DomainsPage.js:85
-msgid "Search for any Government of Canada tracked domain:"
-msgstr "Recherchez n'importe quel domaine suivi par le Gouvernement du Canada:"
-
-#: src/DomainsPage.js:128
-msgid "Perform a one-time scan on a domain:"
-msgstr "Effectuer un balayage unique sur un domaine:"
-
-#: src/DomainsPage.js:132
-msgid "Enter a domain"
-msgstr "Entrez un domaine"
-
-#: src/DomainsPage.js:141
-msgid "Scan Domain"
-msgstr "Domaine de balayage"
