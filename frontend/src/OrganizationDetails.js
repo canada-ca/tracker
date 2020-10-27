@@ -112,45 +112,46 @@ export default function OrganizationDetails() {
 
         <TabPanels>
           <TabPanel>
-            <ErrorBoundary
-              FallbackComponent={ErrorFallbackMessage}
-              name="summaryGroup"
-            >
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
               <OrganizationSummary />
             </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <ListOf
-              elements={currentDomains}
-              ifEmpty={() => <Trans>No Domains</Trans>}
-              mb="4"
-            >
-              {({ id, url, lastRan }, index) => (
-                <Box key={`${id}:${index}`}>
-                  <DomainCard url={url} lastRan={lastRan} />
-                  <Divider borderColor="gray.900" />
-                </Box>
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <ListOf
+                elements={currentDomains}
+                ifEmpty={() => <Trans>No Domains</Trans>}
+                mb="4"
+              >
+                {({ id, url, lastRan }, index) => (
+                  <Box key={`${id}:${index}`}>
+                    <DomainCard url={url} lastRan={lastRan} />
+                    <Divider borderColor="gray.900" />
+                  </Box>
+                )}
+              </ListOf>
+              {domains.length > 0 && (
+                <PaginationButtons
+                  perPage={domainsPerPage}
+                  total={domains.length}
+                  paginate={paginate}
+                  currentPage={currentPage}
+                />
               )}
-            </ListOf>
-            {domains.length > 0 && (
-              <PaginationButtons
-                perPage={domainsPerPage}
-                total={domains.length}
-                paginate={paginate}
-                currentPage={currentPage}
-              />
-            )}
-            <Trans>
-              *All data represented is mocked for demonstration purposes
-            </Trans>
+              <Trans>
+                *All data represented is mocked for demonstration purposes
+              </Trans>
+            </ErrorBoundary>
           </TabPanel>
           {isLoggedIn() && (
             <TabPanel>
-              <UserList
-                userListData={data.userList}
-                orgName={orgName}
-                orgSlug={orgSlug}
-              />
+              <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                <UserList
+                  userListData={data.userList}
+                  orgName={orgName}
+                  orgSlug={orgSlug}
+                />
+              </ErrorBoundary>
             </TabPanel>
           )}
         </TabPanels>

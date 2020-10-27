@@ -60,50 +60,30 @@ export default function Organisations({ orgsPerPage = 10 }) {
       </Heading>
 
       <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-      <InputGroup width="100%" mb="8px">
-        <InputLeftElement>
-          <Icon name="search" color="gray.300" />
-        </InputLeftElement>
-        <Input
-          type="text"
-          placeholder={i18n._(t`Search for an organization`)}
-        />
-      </InputGroup>
-      <ListOf
-        elements={nodes}
-        ifEmpty={() => <Trans>No Organizations</Trans>}
-        mb="4"
-      >
-        {({ name, slug, acronym, domainCount }, index) => (
-          <Box key={`${slug}:${index}`}>
-            <OrganizationCard
-              slug={slug}
-              name={name}
-              acronym={acronym}
-              domainCount={domainCount}
-            />
-            <Divider borderColor="gray.900" />
-          </Box>
-        )}
-      </ListOf>
-      <Stack isInline align="center" mb="4">
-        <Button
-          onClick={previous}
-          disable={!!hasPreviousPage}
-          aria-label="Previous page"
+        <InputGroup width="100%" mb="8px">
+          <InputLeftElement>
+            <Icon name="search" color="gray.300" />
+          </InputLeftElement>
+          <Input
+            type="text"
+            placeholder={i18n._(t`Search for an organization`)}
+          />
+        </InputGroup>
+        <ListOf
+          elements={nodes}
+          ifEmpty={() => <Trans>No Organizations</Trans>}
+          mb="4"
         >
           {({ name, slug, acronym, domainCount }, index) => (
-            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
-              <Box key={`${slug}:${index}`}>
-                <OrganizationCard
-                  slug={slug}
-                  name={name}
-                  acronym={acronym}
-                  domainCount={domainCount}
-                />
-                <Divider borderColor="gray.900" />
-              </Box>
-            </ErrorBoundary>
+            <Box key={`${slug}:${index}`}>
+              <OrganizationCard
+                slug={slug}
+                name={name}
+                acronym={acronym}
+                domainCount={domainCount}
+              />
+              <Divider borderColor="gray.900" />
+            </Box>
           )}
         </ListOf>
 

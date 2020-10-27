@@ -88,87 +88,93 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
               </InputLeftElement>
               <Input type="text" placeholder={i18n._(t`Search for a domain`)} />
             </InputGroup>
-            <ListOf
-              elements={nodes}
-              ifEmpty={() => <Trans>No Domains</Trans>}
-              mb="4"
-            >
-              {({ id, url, slug, lastRan }, index) => (
-                <Box key={`${slug}:${id}:${index}`}>
-                  <DomainCard url={url} lastRan={lastRan} />
-                  <Divider borderColor="gray.900" />
-                </Box>
-              )}
-            </ListOf>
-            <Stack isInline align="center" mb="4">
-              <Button
-                onClick={previous}
-                disable={!!hasPreviousPage}
-                aria-label="Previous page"
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <ListOf
+                elements={nodes}
+                ifEmpty={() => <Trans>No Domains</Trans>}
+                mb="4"
               >
-                <Trans>Previous</Trans>
-              </Button>
+                {({ id, url, slug, lastRan }, index) => (
+                  <Box key={`${slug}:${id}:${index}`}>
+                    <DomainCard url={url} lastRan={lastRan} />
+                    <Divider borderColor="gray.900" />
+                  </Box>
+                )}
+              </ListOf>
 
-              <Button
-                onClick={next}
-                disable={!!hasNextPage}
-                aria-label="Next page"
-              >
-                <Trans>Next</Trans>
-              </Button>
-            </Stack>
-            <Trans>
-              *All data represented is mocked for demonstration purposes
-            </Trans>
+              <Stack isInline align="center" mb="4">
+                <Button
+                  onClick={previous}
+                  disable={!!hasPreviousPage}
+                  aria-label="Previous page"
+                >
+                  <Trans>Previous</Trans>
+                </Button>
+
+                <Button
+                  onClick={next}
+                  disable={!!hasNextPage}
+                  aria-label="Next page"
+                >
+                  <Trans>Next</Trans>
+                </Button>
+              </Stack>
+
+              <Trans>
+                *All data represented is mocked for demonstration purposes
+              </Trans>
+            </ErrorBoundary>
           </TabPanel>
           <TabPanel>
-            <Box px="8" mx="auto" overflow="hidden">
-              <Formik
-                initialValues={{ domain: '' }}
-                onSubmit={async (values) => {
-                  window.alert(`Scanning ${values.domain}. . . `)
-                }}
-              >
-                {({ handleSubmit, handleChange, values, isSubmitting }) => (
-                  <form
-                    onSubmit={handleSubmit}
-                    role="form"
-                    aria-label="form"
-                    name="form"
-                  >
-                    <Text fontSize="2xl" mb="2">
-                      <Trans>Perform a one-time scan on a domain:</Trans>
-                    </Text>
-                    <Stack
-                      flexDirection={['column', 'row']}
-                      alignContent="center"
+            <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+              <Box px="8" mx="auto" overflow="hidden">
+                <Formik
+                  initialValues={{ domain: '' }}
+                  onSubmit={async (values) => {
+                    window.alert(`Scanning ${values.domain}. . . `)
+                  }}
+                >
+                  {({ handleSubmit, handleChange, values, isSubmitting }) => (
+                    <form
+                      onSubmit={handleSubmit}
+                      role="form"
+                      aria-label="form"
+                      name="form"
                     >
-                      <Input
-                        width={['100%', '70%']}
-                        mb="8px"
-                        mr="4"
-                        type="text"
-                        onChange={handleChange}
-                        placeholder={i18n._(t`Enter a domain`)}
-                        value={values.domain}
-                        name="domain"
-                        id="domain"
-                      />
-                      <TrackerButton
-                        w={['100%', '25%']}
-                        variant="primary"
-                        isLoading={isSubmitting}
-                        type="submit"
-                        id="submitBtn"
-                        fontSize="lg"
+                      <Text fontSize="2xl" mb="2">
+                        <Trans>Perform a one-time scan on a domain:</Trans>
+                      </Text>
+                      <Stack
+                        flexDirection={['column', 'row']}
+                        alignContent="center"
                       >
-                        <Trans>Scan Domain</Trans>
-                      </TrackerButton>
-                    </Stack>
-                  </form>
-                )}
-              </Formik>
-            </Box>
+                        <Input
+                          width={['100%', '70%']}
+                          mb="8px"
+                          mr="4"
+                          type="text"
+                          onChange={handleChange}
+                          placeholder={i18n._(t`Enter a domain`)}
+                          value={values.domain}
+                          name="domain"
+                          id="domain"
+                        />
+                        <TrackerButton
+                          w={['100%', '25%']}
+                          variant="primary"
+                          isLoading={isSubmitting}
+                          type="submit"
+                          id="submitBtn"
+                          fontSize="lg"
+                        >
+                          <Trans>Scan Domain</Trans>
+                        </TrackerButton>
+                      </Stack>
+                    </form>
+                  )}
+                </Formik>
+              </Box>
+            </ErrorBoundary>
           </TabPanel>
         </TabPanels>
       </Tabs>
