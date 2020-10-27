@@ -46,7 +46,7 @@ export default function SignInPage() {
         status: 'error',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
     onCompleted({ authenticate }) {
@@ -64,7 +64,7 @@ export default function SignInPage() {
         status: 'success',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
   })

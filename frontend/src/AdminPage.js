@@ -20,7 +20,7 @@ export default function AdminPage() {
         authorization: currentUser.jwt,
       },
     },
-    onError: error => {
+    onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({
         title: 'Error',
@@ -28,7 +28,7 @@ export default function AdminPage() {
         status: 'failure',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
   })
@@ -91,7 +91,7 @@ export default function AdminPage() {
               w={['100%', '25%']}
               size="lg"
               variant="filled"
-              onChange={e => {
+              onChange={(e) => {
                 setOrgName(e.target.value)
               }}
             >

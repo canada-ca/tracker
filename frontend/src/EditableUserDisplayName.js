@@ -51,7 +51,7 @@ function EditableUserDisplayName({ detailValue }) {
           status: 'error',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
       onCompleted() {
@@ -61,7 +61,7 @@ function EditableUserDisplayName({ detailValue }) {
           status: 'success',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
         onClose()
       },

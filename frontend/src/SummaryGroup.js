@@ -22,7 +22,7 @@ export function SummaryGroup() {
         status: 'failure',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
   })
