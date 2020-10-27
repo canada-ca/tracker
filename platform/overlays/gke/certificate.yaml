@@ -9,7 +9,7 @@ spec:
   keyEncoding: pkcs8
   secretName: tracker-credential
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt
     kind: Issuer
   commonName: tracker.alpha.canada.ca
   dnsNames:
