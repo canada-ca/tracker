@@ -54,7 +54,7 @@
     "@hot-loader/react-dom": "^16.14.0",
     "@lingui/cli": "^3.0.0-13",
     "@lingui/loader": "^3.0.0-13",
-    "@lingui/macro": "^3.0.0-13",
+    "@lingui/macro": "^3.0.0-23",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/react-hooks": "^3.4.2",
