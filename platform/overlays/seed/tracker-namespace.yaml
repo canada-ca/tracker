@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: tracker
-  labels:
-    istio-injection: enabled
-spec: {}
-status: {}
