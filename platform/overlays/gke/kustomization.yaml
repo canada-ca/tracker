@@ -14,3 +14,4 @@ patchesStrategicMerge:
 - istio-ingressgateway-service.yaml
 - publicgateway.yaml
 - certificate.yaml
+- knative/config/queues.yaml
