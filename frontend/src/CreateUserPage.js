@@ -20,7 +20,7 @@ export default function CreateUserPage() {
   const history = useHistory()
   const toast = useToast()
   const { i18n } = useLingui()
-  const { userOrgToken } = useParams()
+  const userOrgToken = useParams().userOrgToken || ''
 
   const validationSchema = object().shape({
     email: string()
@@ -90,15 +90,14 @@ export default function CreateUserPage() {
     )
   if (error) return <p>{String(error)}</p>
 
-  const addUserToOrgText =
-    userOrgToken !== undefined ? (
-      <Text fontSize="md">
-        Your account will automatically be linked to the organization that
-        invited you.
-      </Text>
-    ) : (
-      ''
-    )
+  const addUserToOrgText = userOrgToken ? (
+    <Text fontSize="md">
+      Your account will automatically be linked to the organization that invited
+      you.
+    </Text>
+  ) : (
+    ''
+  )
 
   return (
     <Box px="8" mx="auto" overflow="hidden">

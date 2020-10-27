@@ -1,5 +1,6 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 const { LanguageEnums } = require('../../enums')
 const { GraphQLEmailAddress } = require('graphql-scalars')
 const { authResultType } = require('../../types')
@@ -48,6 +49,7 @@ const signUp = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       auth: { tokenize, bcrypt },
       loaders: { userLoaderByUserName },
@@ -66,7 +68,7 @@ const signUp = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} tried to sign up but did not meet requirements.`,
       )
-      throw new Error('Password is too short.')
+      throw new Error(i18n._(t`Password is too short.`))
     }
 
     // Check that password and password confirmation match
@@ -74,7 +76,7 @@ const signUp = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} tried to sign up but passwords do not match.`,
       )
-      throw new Error('Passwords do not match.')
+      throw new Error(i18n._(t`Passwords do not match.`))
     }
 
     // Check to see if user already exists
@@ -84,7 +86,7 @@ const signUp = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} tried to sign up, however there is already an account in use with that username.`,
       )
-      throw new Error('Username already in use.')
+      throw new Error(i18n._(t`Username already in use.`))
     }
 
     // Hash Users Password
@@ -110,7 +112,7 @@ const signUp = new mutationWithClientMutationId({
       console.error(
         `Database error occurred when ${userName} tried to sign up: ${err}`,
       )
-      throw new Error('Unable to sign up. Please try again.')
+      throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
     try {
@@ -119,7 +121,7 @@ const signUp = new mutationWithClientMutationId({
       console.error(
         `Cursor error occurred when trying to get new user ${userName}: ${err}`,
       )
-      throw new Error('Unable to sign up. Please try again.')
+      throw new Error(i18n._(t`Unable to sign up. Please try again.`))
     }
 
     // Assign global id

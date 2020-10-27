@@ -1982,7 +1982,7 @@ type SummaryCategory {
   """
   Percentage compared to other categories.
   """
-  percentage: Float @examples(values: [50.0, 43.5, 76.8, 23.4, 54.6])
+  percentage: Int @examples(values: [50, 43, 76, 23, 54])
 }
 
 """

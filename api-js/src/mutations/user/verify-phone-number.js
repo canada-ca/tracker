@@ -1,5 +1,6 @@
 const { GraphQLNonNull, GraphQLInt, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
 const verifyPhoneNumber = new mutationWithClientMutationId({
   name: 'verifyPhoneNumber',
@@ -21,7 +22,7 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
   }),
   mutateAndGetPayload: async (
     args,
-    { query, userId, loaders: { userLoaderByKey } },
+    { i18n, query, userId, loaders: { userLoaderByKey } },
   ) => {
     // Cleanse Input
     const twoFactorCode = args.twoFactorCode
@@ -30,7 +31,7 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
       console.warn(
         `User attempted to two factor authenticate, however the userId is undefined.`,
       )
-      throw new Error('Authentication error, please sign in again.')
+      throw new Error(i18n._(t`Authentication error, please sign in again.`))
     }
 
     // Get User From DB
@@ -40,14 +41,18 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to two factor authenticate, however no account is associated with that id.`,
       )
-      throw new Error('Unable to two factor authenticate. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to two factor authenticate. Please try again.`),
+      )
     }
 
     if (twoFactorCode.toString().length !== 6) {
       console.warn(
         `User: ${user._key} attempted to two factor authenticate, however the code they submitted does not have 6 digits.`,
       )
-      throw new Error('Unable to two factor authenticate. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to two factor authenticate. Please try again.`),
+      )
     }
 
     // Check that TFA codes match
@@ -55,7 +60,9 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
       console.warn(
         `User: ${user._key} attempted to two factor authenticate, however the tfa codes do not match.`,
       )
-      throw new Error('Unable to two factor authenticate. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to two factor authenticate. Please try again.`),
+      )
     }
 
     // Update phoneValidated to be true
@@ -70,7 +77,9 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
       console.error(
         `Database error occurred when upserting the tfaValidate field for ${user._key}: ${err}`,
       )
-      throw new Error('Unable to two factor authenticate. Please try again.')
+      throw new Error(
+        i18n._(t`Unable to two factor authenticate. Please try again.`),
+      )
     }
 
     console.info(
@@ -78,7 +87,7 @@ const verifyPhoneNumber = new mutationWithClientMutationId({
     )
 
     return {
-      status: 'Successfully two factor authenticated.',
+      status: i18n._(t`Successfully two factor authenticated.`),
     }
   },
 })

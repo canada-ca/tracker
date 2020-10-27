@@ -103,11 +103,13 @@ export default function SignInPage() {
 
             <PasswordField name="password" mb="1" />
 
-            <Link as={RouteLink} to="/forgot-password" color="primary">
-              <Text mb="4">
-                <Trans>Forgot your password?</Trans>
-              </Text>
-            </Link>
+            <Box width="fit-content">
+              <Link as={RouteLink} to="/forgot-password" color="primary">
+                <Text mb="4">
+                  <Trans>Forgot your password?</Trans>
+                </Text>
+              </Link>
+            </Box>
 
             <Stack spacing={4} isInline justifyContent="space-between" mb="4">
               <TrackerButton

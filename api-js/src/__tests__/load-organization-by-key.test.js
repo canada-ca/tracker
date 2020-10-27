@@ -3,11 +3,15 @@ dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { orgLoaderByKey } = require('../loaders')
 
 describe('given a orgLoaderByKey dataloader', () => {
-  let query, drop, truncate, migrate, collections
+  let query, drop, truncate, migrate, collections, i18n
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -78,49 +82,138 @@ describe('given a orgLoaderByKey dataloader', () => {
     await drop()
   })
 
-  describe('provided a single id', () => {
-    describe('language is set to english', () => {
+  describe('language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('provided a single id', () => {
       it('returns a single org', async () => {
         // Get User From db
         const expectedCursor = await query`
           FOR org IN organizations
             FILTER org.orgDetails.en.slug == "communications-security-establishment"
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
+            LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE("en", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
 
-        const loader = orgLoaderByKey(query, 'en')
+        const loader = orgLoaderByKey(query, 'en', i18n)
         const org = await loader.load(expectedOrg._key)
 
         expect(org).toEqual(expectedOrg)
       })
     })
-    describe('language is set to french', () => {
+    describe('given a list of ids', () => {
+      it('returns a list of orgs', async () => {
+        const orgIds = []
+        const expectedOrgs = []
+        const expectedCursor = await query`
+          FOR org IN organizations
+            LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE("en", org.orgDetails))
+        `
+
+        while (expectedCursor.hasNext()) {
+          const tempOrg = await expectedCursor.next()
+          orgIds.push(tempOrg._key)
+          expectedOrgs.push(tempOrg)
+        }
+
+        const loader = orgLoaderByKey(query, 'en', i18n)
+        const orgs = await loader.loadMany(orgIds)
+        expect(orgs).toEqual(expectedOrgs)
+      })
+    })
+    describe('database error is raised', () => {
+      it('returns an error', async () => {
+        const mockedQuery = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+        const loader = orgLoaderByKey(mockedQuery, 'en', i18n)
+
+        try {
+          await loader.load('1')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to find organization. Please try again.'),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `Database error when running orgLoaderByKey: Error: Database error occurred.`,
+        ])
+      })
+    })
+    describe('cursor error is raised', () => {
+      it('returns an error', async () => {
+        const cursor = {
+          each() {
+            throw new Error('Cursor error occurred.')
+          },
+        }
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = orgLoaderByKey(mockedQuery, 'en', i18n)
+
+        try {
+          await loader.load('1')
+        } catch (err) {
+          expect(err).toEqual(
+            new Error('Unable to find organization. Please try again.'),
+          )
+        }
+
+        expect(consoleOutput).toEqual([
+          `Cursor error occurred during orgLoaderByKey: Error: Cursor error occurred.`,
+        ])
+      })
+    })
+  })
+  describe('language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('provided a single id', () => {
       it('returns a single org', async () => {
         // Get User From db
         const expectedCursor = await query`
           FOR org IN organizations
             FILTER org.orgDetails.fr.slug == "centre-de-la-securite-des-telecommunications"
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
+            LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE("fr", org.orgDetails))
         `
         const expectedOrg = await expectedCursor.next()
 
-        const loader = orgLoaderByKey(query, 'fr')
+        const loader = orgLoaderByKey(query, 'fr', i18n)
         const org = await loader.load(expectedOrg._key)
 
         expect(org).toEqual(expectedOrg)
       })
     })
-  })
-  describe('provided a list of ids', () => {
-    describe('language is set to english', () => {
+    describe('provided a list of ids', () => {
       it('returns a list of orgs', async () => {
         const orgIds = []
         const expectedOrgs = []
         const expectedCursor = await query`
-          FOR org IN organizations
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("en", org.orgDetails))
-        `
+            FOR org IN organizations
+              LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+              RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE("fr", org.orgDetails))
+          `
 
         while (expectedCursor.hasNext()) {
           const tempOrg = await expectedCursor.next()
@@ -128,71 +221,49 @@ describe('given a orgLoaderByKey dataloader', () => {
           expectedOrgs.push(tempOrg)
         }
 
-        const loader = orgLoaderByKey(query, 'en')
+        const loader = orgLoaderByKey(query, 'fr', i18n)
         const orgs = await loader.loadMany(orgIds)
         expect(orgs).toEqual(expectedOrgs)
       })
     })
-    describe('language is set to french', () => {
-      it('returns a list of orgs', async () => {
-        const orgIds = []
-        const expectedOrgs = []
-        const expectedCursor = await query`
-          FOR org IN organizations
-            RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE("fr", org.orgDetails))
-        `
+    describe('database error is raised', () => {
+      it('returns an error', async () => {
+        const mockedQuery = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
+        const loader = orgLoaderByKey(mockedQuery, 'fr', i18n)
 
-        while (expectedCursor.hasNext()) {
-          const tempOrg = await expectedCursor.next()
-          orgIds.push(tempOrg._key)
-          expectedOrgs.push(tempOrg)
+        try {
+          await loader.load('1')
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
         }
 
-        const loader = orgLoaderByKey(query, 'fr')
-        const orgs = await loader.loadMany(orgIds)
-        expect(orgs).toEqual(expectedOrgs)
+        expect(consoleOutput).toEqual([
+          `Database error when running orgLoaderByKey: Error: Database error occurred.`,
+        ])
       })
     })
-  })
-  describe('database error is raised', () => {
-    it('returns an error', async () => {
-      query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
-      const loader = orgLoaderByKey(query)
+    describe('cursor error is raised', () => {
+      it('returns an error', async () => {
+        const cursor = {
+          each() {
+            throw new Error('Cursor error occurred.')
+          },
+        }
+        const mockedQuery = jest.fn().mockReturnValue(cursor)
+        const loader = orgLoaderByKey(mockedQuery, 'fr', i18n)
 
-      try {
-        await loader.load('1')
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to find organization. Please try again.'),
-        )
-      }
+        try {
+          await loader.load('1')
+        } catch (err) {
+          expect(err).toEqual(new Error('todo'))
+        }
 
-      expect(consoleOutput).toEqual([
-        `Database error when running orgLoaderByKey: Error: Database error occurred.`,
-      ])
-    })
-  })
-  describe('cursor error is raised', () => {
-    it('returns an error', async () => {
-      const cursor = {
-        each() {
-          throw new Error('Cursor error occurred.')
-        },
-      }
-      query = jest.fn().mockReturnValue(cursor)
-      const loader = orgLoaderByKey(query)
-
-      try {
-        await loader.load('1')
-      } catch (err) {
-        expect(err).toEqual(
-          new Error('Unable to find organization. Please try again.'),
-        )
-      }
-
-      expect(consoleOutput).toEqual([
-        `Cursor error occurred during orgLoaderByKey: Error: Cursor error occurred.`,
-      ])
+        expect(consoleOutput).toEqual([
+          `Cursor error occurred during orgLoaderByKey: Error: Cursor error occurred.`,
+        ])
+      })
     })
   })
 })

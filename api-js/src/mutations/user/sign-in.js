@@ -1,6 +1,7 @@
 const { GraphQLNonNull, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId } = require('graphql-relay')
 const { GraphQLEmailAddress } = require('graphql-scalars')
+const { t } = require('@lingui/macro')
 
 const { SIGN_IN_KEY } = process.env
 
@@ -38,6 +39,7 @@ const signIn = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       auth: { tokenize, bcrypt },
       loaders: { userLoaderByUserName },
@@ -56,7 +58,7 @@ const signIn = new mutationWithClientMutationId({
       console.warn(
         `User: ${userName} attempted to sign in, no account is associated with this email.`,
       )
-      throw new Error('Unable to sign in, please try again.')
+      throw new Error(i18n._(t`Unable to sign in, please try again.`))
     }
 
     // Check against failed attempt info
@@ -65,7 +67,9 @@ const signIn = new mutationWithClientMutationId({
         `User: ${user._key} tried to sign in, but has too many login attempts.`,
       )
       throw new Error(
-        'Too many failed login attempts, please reset your password, and try again.',
+        i18n._(
+          t`Too many failed login attempts, please reset your password, and try again.`,
+        ),
       )
     } else {
       // Check to see if passwords match
@@ -85,7 +89,7 @@ const signIn = new mutationWithClientMutationId({
           console.error(
             `Database error ocurred when resetting failed attempts for user: ${user._key} during authentication: ${err}`,
           )
-          throw new Error('Unable to sign in, please try again.')
+          throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
 
         // Generate TFA code
@@ -103,7 +107,7 @@ const signIn = new mutationWithClientMutationId({
           console.error(
             `Database error occurred when inserting ${user._key} TFA code: ${err}`,
           )
-          throw new Error('Unable to sign in, please try again.')
+          throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
 
         // Get newly updated user
@@ -114,12 +118,14 @@ const signIn = new mutationWithClientMutationId({
         let status
         if (user.phoneValidated) {
           await sendAuthTextMsg({ user })
-          status =
-            "We've sent you a text message with an authentication code to sign into Pulse."
+          status = i18n._(
+            t`We've sent you a text message with an authentication code to sign into Pulse.`,
+          )
         } else {
-          status =
-            "We've sent you an email with an authentication code to sign into Pulse."
           await sendAuthEmail({ user })
+          status = i18n._(
+            t`We've sent you an email with an authentication code to sign into Pulse.`,
+          )
         }
 
         console.info(
@@ -143,12 +149,12 @@ const signIn = new mutationWithClientMutationId({
           console.error(
             `Database error ocurred when incrementing user: ${user._key} failed login attempts: ${err}`,
           )
-          throw new Error('Unable to sign in, please try again.')
+          throw new Error(i18n._(t`Unable to sign in, please try again.`))
         }
         console.warn(
           `User attempted to authenticate: ${user._key} with invalid credentials.`,
         )
-        throw new Error('Unable to sign in, please try again.')
+        throw new Error(i18n._(t`Unable to sign in, please try again.`))
       }
     }
   },

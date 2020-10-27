@@ -3,8 +3,8 @@ const express = require('express')
 const requestLanguage = require('express-request-language')
 const { GraphQLSchema } = require('graphql')
 const { createServer } = require('http')
-// const { i18n: internationalization, unpackCatalog } = require('lingui-i18n')
 const { ApolloServer } = require('apollo-server-express')
+const { setupI18n } = require('@lingui/core')
 
 const { createQuerySchema } = require('./queries')
 const { createMutationSchema } = require('./mutations')
@@ -14,7 +14,18 @@ const bcrypt = require('bcrypt')
 const moment = require('moment')
 const authFunctions = require('./auth')
 const { cleanseInput, slugify } = require('./validators')
-const notifyFunctions = require('./notify')
+const {
+  sendAuthEmail,
+  sendAuthTextMsg,
+  sendOrgInviteCreateAccount,
+  sendOrgInviteEmail,
+  sendPasswordResetEmail,
+  sendTfaTextMsg,
+  sendVerificationEmail,
+} = require('./notify')
+
+// const englishMessages = require('./locale/en/messages')
+// const frenchMessages = require('./locale/fr/messages')
 
 const {
   generateDetailTableFields,
@@ -22,6 +33,7 @@ const {
   dmarcReportLoader,
   domainLoaderByKey,
   domainLoaderByDomain,
+  domainLoaderConnectionsByOrgId,
   domainLoaderConnectionsByUserId,
   dkimLoaderByKey,
   dkimResultLoaderByKey,
@@ -35,14 +47,14 @@ const {
   orgLoaderBySlug,
   orgLoaderByConnectionArgs,
   orgLoaderConnectionArgsByDomainId,
+  orgLoaderConnectionsByUserId,
   userLoaderByUserName,
   userLoaderByKey,
+  httpsLoaderByKey,
+  httpsLoaderConnectionsByDomainId,
+  sslLoaderByKey,
+  sslLoaderConnectionsByDomainId,
 } = require('./loaders')
-
-// internationalization.load({
-//   fr: unpackCatalog(require('./locale/fr/messages.js')),
-//   en: unpackCatalog(require('./locale/en/messages.js')),
-// })
 
 const Server = (context = {}) => {
   const app = express()
@@ -63,12 +75,6 @@ const Server = (context = {}) => {
     res.json({ ok: 'yes' })
   })
 
-  // internationalization.activate(req.language)
-  // const schema = new GraphQLSchema({
-  //   query: createQuerySchema(internationalization),
-  //   mutation: createMutationSchema(internationalization)
-  // })
-
   const server = new ApolloServer({
     schema: new GraphQLSchema({
       query: createQuerySchema(),
@@ -85,7 +91,18 @@ const Server = (context = {}) => {
         userId = verifyToken({ token }).userId
       }
 
+      const i18n = setupI18n({
+        language: request.language,
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          // en: englishMessages,
+          // fr: frenchMessages,
+        },
+      })
+
       return {
+        i18n,
         query,
         collections,
         transaction,
@@ -102,61 +119,100 @@ const Server = (context = {}) => {
           slugify,
         },
         notify: {
-          ...notifyFunctions,
+          sendAuthEmail: sendAuthEmail(i18n),
+          sendAuthTextMsg: sendAuthTextMsg(i18n),
+          sendOrgInviteCreateAccount: sendOrgInviteCreateAccount(i18n),
+          sendOrgInviteEmail: sendOrgInviteEmail(i18n),
+          sendPasswordResetEmail: sendPasswordResetEmail(i18n),
+          sendTfaTextMsg: sendTfaTextMsg(i18n),
+          sendVerificationEmail: sendVerificationEmail(i18n),
         },
         loaders: {
           dmarcReportLoader: dmarcReportLoader({
             generateGqlQuery,
             generateDetailTableFields,
             fetch,
+            i18n,
           }),
-          domainLoaderByKey: domainLoaderByKey(query),
-          domainLoaderByDomain: domainLoaderByDomain(query),
+          domainLoaderByDomain: domainLoaderByDomain(query, i18n),
+          domainLoaderByKey: domainLoaderByKey(query, i18n),
+          domainLoaderConnectionsByOrgId: domainLoaderConnectionsByOrgId(
+            query,
+            userId,
+            cleanseInput,
+            i18n,
+          ),
           domainLoaderConnectionsByUserId: domainLoaderConnectionsByUserId(
             query,
             userId,
             cleanseInput,
+            i18n,
           ),
-          dkimLoaderByKey: dkimLoaderByKey(query),
-          dkimResultLoaderByKey: dkimResultLoaderByKey(query),
-          dmarcLoaderByKey: dmarcLoaderByKey(query),
-          spfLoaderByKey: spfLoaderByKey(query),
+          orgLoaderConnectionsByUserId: orgLoaderConnectionsByUserId(
+            query,
+            userId,
+            cleanseInput,
+            request.language,
+            i18n,
+          ),
+          dkimLoaderByKey: dkimLoaderByKey(query, i18n),
+          dkimResultLoaderByKey: dkimResultLoaderByKey(query, i18n),
+          dmarcLoaderByKey: dmarcLoaderByKey(query, i18n),
+          spfLoaderByKey: spfLoaderByKey(query, i18n),
           dkimLoaderConnectionsByDomainId: dkimLoaderConnectionsByDomainId(
             query,
             userId,
             cleanseInput,
+            i18n,
           ),
           dkimResultsLoaderConnectionByDkimId: dkimResultsLoaderConnectionByDkimId(
             query,
             userId,
             cleanseInput,
+            i18n,
           ),
           dmarcLoaderConnectionsByDomainId: dmarcLoaderConnectionsByDomainId(
             query,
             userId,
             cleanseInput,
+            i18n,
           ),
           spfLoaderConnectionsByDomainId: spfLoaderConnectionsByDomainId(
             query,
             userId,
             cleanseInput,
+            i18n,
           ),
-          orgLoaderByKey: orgLoaderByKey(query, request.language),
-          orgLoaderBySlug: orgLoaderBySlug(query, request.language),
+          httpsLoaderByKey: httpsLoaderByKey(query),
+          httpsLoaderConnectionsByDomainId: httpsLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          sslLoaderByKey: sslLoaderByKey(query),
+          sslLoaderConnectionsByDomainId: sslLoaderConnectionsByDomainId(
+            query,
+            userId,
+            cleanseInput,
+          ),
+          orgLoaderByKey: orgLoaderByKey(query, request.language, i18n),
+          orgLoaderBySlug: orgLoaderBySlug(query, request.language, i18n),
           orgLoaderByConnectionArgs: orgLoaderByConnectionArgs(
             query,
             request.language,
             userId,
             cleanseInput,
+            i18n,
           ),
           orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
             query,
             request.language,
             userId,
             cleanseInput,
+            i18n,
           ),
-          userLoaderByUserName: userLoaderByUserName(query),
-          userLoaderByKey: userLoaderByKey(query),
+          userLoaderByUserName: userLoaderByUserName(query, i18n),
+          userLoaderByKey: userLoaderByKey(query, i18n),
         },
       }
     },

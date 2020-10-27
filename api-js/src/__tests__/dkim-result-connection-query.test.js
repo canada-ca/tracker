@@ -3,7 +3,6 @@ require('dotenv-safe').config({
 })
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
-const bcrypt = require('bcrypt')
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
@@ -13,14 +12,13 @@ const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
 const { makeMigrations } = require('../../migrations')
 const { cleanseInput } = require('../validators')
-const { checkDomainPermission, tokenize, userRequired } = require('../auth')
+const { checkDomainPermission, userRequired } = require('../auth')
 const {
   dkimLoaderConnectionsByDomainId,
   dkimLoaderByKey,
   domainLoaderByDomain,
   domainLoaderByKey,
   userLoaderByKey,
-  userLoaderByUserName,
   dkimResultsLoaderConnectionByDkimId,
   dkimResultLoaderByKey,
 } = require('../loaders')
@@ -63,42 +61,6 @@ describe('given the dkimType object', () => {
       query: createQuerySchema(),
       mutation: createMutationSchema(),
     })
-    await graphql(
-      schema,
-      `
-        mutation {
-          signUp(
-            input: {
-              displayName: "Test Account"
-              userName: "test.account@istio.actually.exists"
-              password: "testpassword123"
-              confirmPassword: "testpassword123"
-              preferredLang: FRENCH
-            }
-          ) {
-            authResult {
-              user {
-                id
-              }
-            }
-          }
-        }
-      `,
-      null,
-      {
-        query,
-        auth: {
-          bcrypt,
-          tokenize,
-        },
-        validators: {
-          cleanseInput,
-        },
-        loaders: {
-          userLoaderByUserName: userLoaderByUserName(query),
-        },
-      },
-    )
     consoleWarnOutput.length = 0
     consoleErrorOutput.length = 0
     consoleInfoOutput.length = 0

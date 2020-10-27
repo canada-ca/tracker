@@ -1,7 +1,15 @@
+**/__tests__
+cloudbuild.yaml
+Dockerfile
+Dockerfile.dev
+envoy-dev.yaml
+LICENCE
+__mocks__
 node_modules
 README.md
-cloudbuild.yaml
+schema.faker.graphql
+.eslintrc
+.prettierrc
 coverage
-**/*.test.js
 **/*/.env
 .git

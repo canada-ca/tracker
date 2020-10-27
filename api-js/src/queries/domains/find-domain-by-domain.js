@@ -1,4 +1,5 @@
 const { GraphQLNonNull } = require('graphql')
+const { t } = require('@lingui/macro')
 const { Domain } = require('../../scalars')
 const { domainType } = require('../../types')
 
@@ -15,6 +16,7 @@ const findDomainByDomain = {
     _,
     args,
     {
+      i18n,
       userId: userKey,
       query,
       auth: { checkDomainPermission, userRequired },
@@ -33,7 +35,9 @@ const findDomainByDomain = {
 
     if (typeof domain === 'undefined') {
       console.warn(`User ${user._key} could not retrieve domain.`)
-      throw new Error(`No domain with the provided domain could be found.`)
+      throw new Error(
+        i18n._(t`No domain with the provided domain could be found.`),
+      )
     }
 
     // Check user permission for domain access
@@ -41,7 +45,7 @@ const findDomainByDomain = {
 
     if (!permitted) {
       console.warn(`User ${user._key} could not retrieve domain.`)
-      throw new Error(`Could not retrieve specified domain.`)
+      throw new Error(i18n._(t`Could not retrieve specified domain.`))
     }
 
     console.info(

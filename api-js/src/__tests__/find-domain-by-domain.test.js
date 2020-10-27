@@ -2,13 +2,16 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
+const { toGlobalId } = require('graphql-relay')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-const { toGlobalId } = require('graphql-relay')
-const bcrypt = require('bcrypt')
-
 const { cleanseInput } = require('../validators')
 const { checkDomainPermission, tokenize, userRequired } = require('../auth')
 const {
@@ -19,7 +22,7 @@ const {
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 describe('given findDomainByDomain query', () => {
-  let query, drop, truncate, migrate, schema, collections, domain, org
+  let query, drop, truncate, migrate, schema, collections, domain, org, i18n
 
   beforeAll(async () => {
     // Create GQL Schema
@@ -121,84 +124,251 @@ describe('given findDomainByDomain query', () => {
     await drop()
   })
 
-  describe('given successful domain retrieval', () => {
-    let user
-    beforeEach(async () => {
-      const userCursor = await query`
-        FOR user IN users
-          FILTER user.userName == "test.account@istio.actually.exists"
-          RETURN user
-      `
-      user = await userCursor.next()
-      await collections.affiliations.save({
-        _from: org._id,
-        _to: user._id,
-        permission: 'user',
+  describe('users language is set to english', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'en',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
       })
     })
-    afterEach(async () => {
-      await query`
-        LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-        LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-        RETURN true
-      `
-      await query`
-        FOR affiliation IN affiliations
-          REMOVE affiliation IN affiliations
-      `
-    })
-    describe('authorized user queries domain by domain', () => {
-      it('returns domain', async () => {
-        const response = await graphql(
-          schema,
-          `
-            query {
-              findDomainByDomain(domain: "test.gc.ca") {
-                id
-                domain
-                lastRan
-                selectors
+    describe('given successful domain retrieval', () => {
+      let user
+      beforeEach(async () => {
+        const userCursor = await query`
+          FOR user IN users
+            FILTER user.userName == "test.account@istio.actually.exists"
+            RETURN user
+        `
+        user = await userCursor.next()
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'user',
+        })
+      })
+      afterEach(async () => {
+        await query`
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+          RETURN true
+        `
+        await query`
+          FOR affiliation IN affiliations
+            REMOVE affiliation IN affiliations
+        `
+      })
+      describe('authorized user queries domain by domain', () => {
+        it('returns domain', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findDomainByDomain(domain: "test.gc.ca") {
+                  id
+                  domain
+                  lastRan
+                  selectors
+                }
               }
-            }
-          `,
-          null,
-          {
-            userId: user._key,
-            query: query,
-            auth: {
-              checkDomainPermission,
-              userRequired,
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: query,
+              auth: {
+                checkDomainPermission,
+                userRequired,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
             },
-            validators: {
-              cleanseInput,
-            },
-            loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              userLoaderByKey: userLoaderByKey(query),
-            },
-          },
-        )
+          )
 
-        const expectedResponse = {
-          data: {
-            findDomainByDomain: {
-              id: toGlobalId('domains', domain._key),
-              domain: 'test.gc.ca',
-              lastRan: null,
-              selectors: ['selector1._domainkey', 'selector2._domainkey'],
+          const expectedResponse = {
+            data: {
+              findDomainByDomain: {
+                id: toGlobalId('domains', domain._key),
+                domain: 'test.gc.ca',
+                lastRan: null,
+                selectors: ['selector1._domainkey', 'selector2._domainkey'],
+              },
             },
-          },
-        }
-        expect(response).toEqual(expectedResponse)
-        expect(consoleOutput).toEqual([
-          `User ${user._key} successfully retrieved domain ${domain._key}.`,
-        ])
+          }
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User ${user._key} successfully retrieved domain ${domain._key}.`,
+          ])
+        })
+      })
+    })
+
+    describe('given unsuccessful domain retrieval', () => {
+      describe('domain cannot be found', () => {
+        let user
+        beforeEach(async () => {
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+        })
+        it('returns an appropriate error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findDomainByDomain(domain: "not-test.gc.ca") {
+                  id
+                  domain
+                  lastRan
+                  selectors
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: query,
+              auth: {
+                checkDomainPermission,
+                userRequired,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(
+              `No domain with the provided domain could be found.`,
+            ),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User ${user._key} could not retrieve domain.`,
+          ])
+        })
+      })
+
+      describe('user does not belong to an org which claims domain', () => {
+        let user
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'not-treasury-board-secretariat',
+                acronym: 'NTBS',
+                name: 'Not Treasury Board of Canada Secretariat',
+                zone: 'NFED',
+                sector: 'NTBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'ne-pas-secretariat-conseil-tresor',
+                acronym: 'NPSCT',
+                name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
+                zone: 'NPFED',
+                sector: 'NPTBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          domain = await collections.domains.save({
+            domain: 'not-test.gc.ca',
+            lastRan: null,
+            selectors: ['selector1', 'selector2'],
+          })
+          await collections.claims.save({
+            _to: domain._id,
+            _from: org._id,
+          })
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+        })
+        it('returns an appropriate error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findDomainByDomain(domain: "not-test.gc.ca") {
+                  id
+                  domain
+                  lastRan
+                  selectors
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: query,
+              auth: {
+                checkDomainPermission,
+                userRequired,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(`Could not retrieve specified domain.`),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User ${user._key} could not retrieve domain.`,
+          ])
+        })
       })
     })
   })
-
-  describe('given unsuccessful domain retrieval', () => {
-    describe('domain cannot be found', () => {
+  describe('users language is set to french', () => {
+    beforeAll(() => {
+      i18n = setupI18n({
+        language: 'fr',
+        locales: ['en', 'fr'],
+        missing: 'Traduction manquante',
+        catalogs: {
+          en: englishMessages,
+          fr: frenchMessages,
+        },
+      })
+    })
+    describe('given successful domain retrieval', () => {
       let user
       beforeEach(async () => {
         const userCursor = await query`
@@ -207,131 +377,214 @@ describe('given findDomainByDomain query', () => {
             RETURN user
         `
         user = await userCursor.next()
+        await collections.affiliations.save({
+          _from: org._id,
+          _to: user._id,
+          permission: 'user',
+        })
       })
-      it('returns an appropriate error message', async () => {
-        const response = await graphql(
-          schema,
-          `
-            query {
-              findDomainByDomain(domain: "not-test.gc.ca") {
-                id
-                domain
-                lastRan
-                selectors
+      afterEach(async () => {
+        await query`
+          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+          RETURN true
+        `
+        await query`
+          FOR affiliation IN affiliations
+            REMOVE affiliation IN affiliations
+        `
+      })
+      describe('authorized user queries domain by domain', () => {
+        it('returns domain', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findDomainByDomain(domain: "test.gc.ca") {
+                  id
+                  domain
+                  lastRan
+                  selectors
+                }
               }
-            }
-          `,
-          null,
-          {
-            userId: user._key,
-            query: query,
-            auth: {
-              checkDomainPermission,
-              userRequired,
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: query,
+              auth: {
+                checkDomainPermission,
+                userRequired,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
             },
-            validators: {
-              cleanseInput,
-            },
-            loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              userLoaderByKey: userLoaderByKey(query),
-            },
-          },
-        )
+          )
 
-        const error = [
-          new GraphQLError(
-            `No domain with the provided domain could be found.`,
-          ),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User ${user._key} could not retrieve domain.`,
-        ])
+          const expectedResponse = {
+            data: {
+              findDomainByDomain: {
+                id: toGlobalId('domains', domain._key),
+                domain: 'test.gc.ca',
+                lastRan: null,
+                selectors: ['selector1._domainkey', 'selector2._domainkey'],
+              },
+            },
+          }
+          expect(response).toEqual(expectedResponse)
+          expect(consoleOutput).toEqual([
+            `User ${user._key} successfully retrieved domain ${domain._key}.`,
+          ])
+        })
       })
     })
 
-    describe('user does not belong to an org which claims domain', () => {
-      let user
-      beforeEach(async () => {
-        org = await collections.organizations.save({
-          orgDetails: {
-            en: {
-              slug: 'not-treasury-board-secretariat',
-              acronym: 'NTBS',
-              name: 'Not Treasury Board of Canada Secretariat',
-              zone: 'NFED',
-              sector: 'NTBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-            fr: {
-              slug: 'ne-pas-secretariat-conseil-tresor',
-              acronym: 'NPSCT',
-              name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
-              zone: 'NPFED',
-              sector: 'NPTBS',
-              country: 'Canada',
-              province: 'Ontario',
-              city: 'Ottawa',
-            },
-          },
-        })
-        domain = await collections.domains.save({
-          domain: 'not-test.gc.ca',
-          lastRan: null,
-          selectors: ['selector1', 'selector2'],
-        })
-        await collections.claims.save({
-          _to: domain._id,
-          _from: org._id,
-        })
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-      })
-      it('returns an appropriate error message', async () => {
-        const response = await graphql(
-          schema,
+    describe('given unsuccessful domain retrieval', () => {
+      describe('domain cannot be found', () => {
+        let user
+        beforeEach(async () => {
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
           `
-            query {
-              findDomainByDomain(domain: "not-test.gc.ca") {
-                id
-                domain
-                lastRan
-                selectors
+          user = await userCursor.next()
+        })
+        it('returns an appropriate error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findDomainByDomain(domain: "not-test.gc.ca") {
+                  id
+                  domain
+                  lastRan
+                  selectors
+                }
               }
-            }
-          `,
-          null,
-          {
-            userId: user._key,
-            query: query,
-            auth: {
-              checkDomainPermission,
-              userRequired,
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: query,
+              auth: {
+                checkDomainPermission,
+                userRequired,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
             },
-            validators: {
-              cleanseInput,
-            },
-            loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              userLoaderByKey: userLoaderByKey(query),
-            },
-          },
-        )
+          )
 
-        const error = [new GraphQLError(`Could not retrieve specified domain.`)]
+          const error = [
+            new GraphQLError(
+              `todo`,
+            ),
+          ]
 
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User ${user._key} could not retrieve domain.`,
-        ])
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User ${user._key} could not retrieve domain.`,
+          ])
+        })
+      })
+
+      describe('user does not belong to an org which claims domain', () => {
+        let user
+        beforeEach(async () => {
+          org = await collections.organizations.save({
+            orgDetails: {
+              en: {
+                slug: 'not-treasury-board-secretariat',
+                acronym: 'NTBS',
+                name: 'Not Treasury Board of Canada Secretariat',
+                zone: 'NFED',
+                sector: 'NTBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+              fr: {
+                slug: 'ne-pas-secretariat-conseil-tresor',
+                acronym: 'NPSCT',
+                name: 'Ne Pas Secrétariat du Conseil Trésor du Canada',
+                zone: 'NPFED',
+                sector: 'NPTBS',
+                country: 'Canada',
+                province: 'Ontario',
+                city: 'Ottawa',
+              },
+            },
+          })
+          domain = await collections.domains.save({
+            domain: 'not-test.gc.ca',
+            lastRan: null,
+            selectors: ['selector1', 'selector2'],
+          })
+          await collections.claims.save({
+            _to: domain._id,
+            _from: org._id,
+          })
+          const userCursor = await query`
+            FOR user IN users
+              FILTER user.userName == "test.account@istio.actually.exists"
+              RETURN user
+          `
+          user = await userCursor.next()
+        })
+        it('returns an appropriate error message', async () => {
+          const response = await graphql(
+            schema,
+            `
+              query {
+                findDomainByDomain(domain: "not-test.gc.ca") {
+                  id
+                  domain
+                  lastRan
+                  selectors
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              userId: user._key,
+              query: query,
+              auth: {
+                checkDomainPermission,
+                userRequired,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+            },
+          )
+
+          const error = [
+            new GraphQLError(`todo`),
+          ]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User ${user._key} could not retrieve domain.`,
+          ])
+        })
       })
     })
   })

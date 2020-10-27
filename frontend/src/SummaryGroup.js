@@ -46,7 +46,7 @@ export function SummaryGroup() {
       justifyItems="center"
       maxWidth="width.60"
       mx="auto"
-      p="8"
+      p={['2', '8']}
     >
       <SummaryCard
         title={i18n._(t`Web Configuration`)}
@@ -57,7 +57,7 @@ export function SummaryGroup() {
             color: colors.weak,
           },
           'partial-pass': {
-            name: i18n._(t`Partially-compliant TLS`),
+            name: i18n._(t`Partially TLS`),
             color: colors.moderate,
           },
           'full-pass': {

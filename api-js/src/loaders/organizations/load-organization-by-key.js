@@ -1,6 +1,7 @@
 const DataLoader = require('dataloader')
+const { t } = require('@lingui/macro')
 
-module.exports.orgLoaderByKey = (query, language) =>
+module.exports.orgLoaderByKey = (query, language, i18n) =>
   new DataLoader(async (ids) => {
     let cursor
 
@@ -8,11 +9,12 @@ module.exports.orgLoaderByKey = (query, language) =>
       cursor = await query`
         FOR org IN organizations
           FILTER ${ids}[** FILTER CURRENT == org._key]
-          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck }, TRANSLATE(${language}, org.orgDetails))
+          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE(${language}, org.orgDetails))
       `
     } catch (err) {
       console.error(`Database error when running orgLoaderByKey: ${err}`)
-      throw new Error('Unable to find organization. Please try again.')
+      throw new Error(i18n._(t`Unable to find organization. Please try again.`))
     }
 
     const orgMap = {}
@@ -22,7 +24,7 @@ module.exports.orgLoaderByKey = (query, language) =>
       })
     } catch (err) {
       console.error(`Cursor error occurred during orgLoaderByKey: ${err}`)
-      throw new Error('Unable to find organization. Please try again.')
+      throw new Error(i18n._(t`Unable to find organization. Please try again.`))
     }
 
     return ids.map((id) => orgMap[id])

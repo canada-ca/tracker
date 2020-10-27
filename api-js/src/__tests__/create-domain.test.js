@@ -4,9 +4,12 @@ dotenv.config()
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { graphql, GraphQLSchema, GraphQLError } = require('graphql')
 const { toGlobalId } = require('graphql-relay')
+const { setupI18n } = require('@lingui/core')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 
 const bcrypt = require('bcrypt')
 const { cleanseInput, slugify } = require('../validators')
@@ -908,249 +911,87 @@ describe('create a domain', () => {
     })
   })
   describe('given an unsuccessful domain creation', () => {
-    describe('org does not exist', () => {
-      it('returns an error', async () => {
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              createDomain(
-                input: {
-                  orgId: "b3JnYW5pemF0aW9uOjE="
-                  domain: "test.gc.ca"
-                  selectors: ["selector1._domainkey", "selector2._domainkey"]
-                }
-              ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                  organizations {
-                    edges {
-                      node {
-                        id
-                        name
+    let i18n
+    describe('request language is english', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'en',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
+        })
+      })
+      describe('org does not exist', () => {
+        it('returns an error', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                createDomain(
+                  input: {
+                    orgId: "b3JnYW5pemF0aW9uOjE="
+                    domain: "test.gc.ca"
+                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    organizations {
+                      edges {
+                        node {
+                          id
+                          name
+                        }
                       }
                     }
                   }
                 }
               }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'en',
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+              validators: { cleanseInput, slugify },
             },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, userRequired },
-            loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              orgLoaderByKey: orgLoaderByKey(query, 'en'),
-              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
-                query,
-                'en',
-                user._key,
-                cleanseInput,
-              ),
-              userLoaderByKey: userLoaderByKey(query),
-            },
-            validators: { cleanseInput, slugify },
-          },
-        )
-
-        const error = [
-          new GraphQLError('Unable to create domain. Please try again.'),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to create a domain to an organization: 1 that does not exist.`,
-        ])
-      })
-    })
-    describe('user does not belong to organization', () => {
-      it('returns an error', async () => {
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              createDomain(
-                input: {
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  domain: "test.gc.ca"
-                  selectors: ["selector1._domainkey", "selector2._domainkey"]
-                }
-              ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                  organizations {
-                    edges{ 
-                      node {
-                        id
-                        name
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'en',
-            },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, userRequired },
-            loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              orgLoaderByKey: orgLoaderByKey(query, 'en'),
-              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
-                query,
-                'en',
-                user._key,
-                cleanseInput,
-              ),
-              userLoaderByKey: userLoaderByKey(query),
-            },
-            validators: { cleanseInput, slugify },
-          },
-        )
-
-        const error = [
-          new GraphQLError('Unable to create domain. Please try again.'),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to create a domain in: treasury-board-secretariat, however they do not have permission to do so.`,
-        ])
-      })
-    })
-    describe('the domain already exists in the given organization', () => {
-      beforeEach(async () => {
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
-        })
-        const domain = await collections.domains.save({
-          domain: 'test.gc.ca',
-        })
-        await collections.claims.save({
-          _from: org._id,
-          _to: domain._id,
-        })
-      })
-      it('returns an error', async () => {
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              createDomain(
-                input: {
-                  orgId: "${toGlobalId('organizations', org._key)}"
-                  domain: "test.gc.ca"
-                  selectors: ["selector1._domainkey", "selector2._domainkey"]
-                }
-              ) {
-                domain {
-                  id
-                  domain
-                  lastRan
-                  selectors
-                  organizations {
-                    edges{ 
-                      node {
-                        id
-                        name
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          `,
-          null,
-          {
-            request: {
-              language: 'en',
-            },
-            query,
-            collections,
-            transaction,
-            userId: user._key,
-            auth: { checkPermission, userRequired },
-            loaders: {
-              domainLoaderByDomain: domainLoaderByDomain(query),
-              orgLoaderByKey: orgLoaderByKey(query, 'en'),
-              orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
-                query,
-                'en',
-                user._key,
-                cleanseInput,
-              ),
-              userLoaderByKey: userLoaderByKey(query),
-            },
-            validators: { cleanseInput, slugify },
-          },
-        )
-
-        const error = [
-          new GraphQLError('Unable to create domain. Please try again.'),
-        ]
-
-        expect(response.errors).toEqual(error)
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} attempted to create a domain for: treasury-board-secretariat, however that org already has that domain claimed.`,
-        ])
-      })
-    })
-    describe('database error occurs', () => {
-      describe('when checking to see if org already contains domain', () => {
-        beforeEach(async () => {
-          await collections.affiliations.save({
-            _from: org._id,
-            _to: user._id,
-            permission: 'user',
-          })
-        })
-        it('returns an error message', async () => {
-          const domainLoader = domainLoaderByDomain(query)
-          const orgIdLoader = orgLoaderByKey(query, 'en')
-          const userIdLoader = userLoaderByKey(query)
-          const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
-            query,
-            'en',
-            user._key,
-            cleanseInput,
           )
 
-          query = jest
-            .fn()
-            .mockReturnValueOnce({
-              next() {
-                return 'user'
-              },
-            })
-            .mockReturnValueOnce({
-              next() {
-                return 'user'
-              },
-            })
-            .mockRejectedValue(new Error('Database error occurred.'))
+          const error = [
+            new GraphQLError('Unable to create domain. Please try again.'),
+          ]
 
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to create a domain to an organization: 1 that does not exist.`,
+          ])
+        })
+      })
+      describe('user does not belong to organization', () => {
+        it('returns an error', async () => {
           const response = await graphql(
             schema,
             `
@@ -1181,6 +1022,7 @@ describe('create a domain', () => {
             `,
             null,
             {
+              i18n,
               request: {
                 language: 'en',
               },
@@ -1190,10 +1032,15 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderByDomain: domainLoader,
-                orgLoaderByKey: orgIdLoader,
-                orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                userLoaderByKey: userIdLoader,
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
+                userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1205,38 +1052,26 @@ describe('create a domain', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while running check to see if domain already exists in an org: Error: Database error occurred.`,
+            `User: ${user._key} attempted to create a domain in: treasury-board-secretariat, however they do not have permission to do so.`,
           ])
         })
       })
-      describe('when committing transaction to database', () => {
+      describe('the domain already exists in the given organization', () => {
         beforeEach(async () => {
           await collections.affiliations.save({
             _from: org._id,
             _to: user._id,
             permission: 'user',
           })
-        })
-        it('returns an error message', async () => {
-          const domainLoader = domainLoaderByDomain(query)
-          const orgIdLoader = orgLoaderByKey(query, 'en')
-          const userIdLoader = userLoaderByKey(query)
-          const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
-            query,
-            'en',
-            user._key,
-            cleanseInput,
-          )
-
-          transaction = jest.fn().mockReturnValueOnce({
-            run() {
-              return 'user'
-            },
-            commit() {
-              throw new Error('Database error occurred.')
-            },
+          const domain = await collections.domains.save({
+            domain: 'test.gc.ca',
           })
-
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+        })
+        it('returns an error', async () => {
           const response = await graphql(
             schema,
             `
@@ -1267,6 +1102,7 @@ describe('create a domain', () => {
             `,
             null,
             {
+              i18n,
               request: {
                 language: 'en',
               },
@@ -1276,10 +1112,15 @@ describe('create a domain', () => {
               userId: user._key,
               auth: { checkPermission, userRequired },
               loaders: {
-                domainLoaderByDomain: domainLoader,
-                orgLoaderByKey: orgIdLoader,
-                orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
-                userLoaderByKey: userIdLoader,
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
+                userLoaderByKey: userLoaderByKey(query),
               },
               validators: { cleanseInput, slugify },
             },
@@ -1291,8 +1132,585 @@ describe('create a domain', () => {
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
-            `Database error occurred while committing create domain transaction: Error: Database error occurred.`,
+            `User: ${user._key} attempted to create a domain for: treasury-board-secretariat, however that org already has that domain claimed.`,
           ])
+        })
+      })
+      describe('database error occurs', () => {
+        describe('when checking to see if org already contains domain', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userIdLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            query = jest
+              .fn()
+              .mockReturnValueOnce({
+                next() {
+                  return 'user'
+                },
+              })
+              .mockReturnValueOnce({
+                next() {
+                  return 'user'
+                },
+              })
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userIdLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to create domain. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while running check to see if domain already exists in an org: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when committing transaction to database', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userIdLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            transaction = jest.fn().mockReturnValueOnce({
+              run() {
+                return 'user'
+              },
+              commit() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userIdLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [
+              new GraphQLError('Unable to create domain. Please try again.'),
+            ]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while committing create domain transaction: Error: Database error occurred.`,
+            ])
+          })
+        })
+      })
+    })
+    describe('request language is french', () => {
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'fr',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
+        })
+      })
+      describe('org does not exist', () => {
+        it('returns an error', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                createDomain(
+                  input: {
+                    orgId: "b3JnYW5pemF0aW9uOjE="
+                    domain: "test.gc.ca"
+                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    organizations {
+                      edges {
+                        node {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+              validators: { cleanseInput, slugify },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to create a domain to an organization: 1 that does not exist.`,
+          ])
+        })
+      })
+      describe('user does not belong to organization', () => {
+        it('returns an error', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                createDomain(
+                  input: {
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.gc.ca"
+                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    organizations {
+                      edges{ 
+                        node {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+              validators: { cleanseInput, slugify },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to create a domain in: treasury-board-secretariat, however they do not have permission to do so.`,
+          ])
+        })
+      })
+      describe('the domain already exists in the given organization', () => {
+        beforeEach(async () => {
+          await collections.affiliations.save({
+            _from: org._id,
+            _to: user._id,
+            permission: 'user',
+          })
+          const domain = await collections.domains.save({
+            domain: 'test.gc.ca',
+          })
+          await collections.claims.save({
+            _from: org._id,
+            _to: domain._id,
+          })
+        })
+        it('returns an error', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                createDomain(
+                  input: {
+                    orgId: "${toGlobalId('organizations', org._key)}"
+                    domain: "test.gc.ca"
+                    selectors: ["selector1._domainkey", "selector2._domainkey"]
+                  }
+                ) {
+                  domain {
+                    id
+                    domain
+                    lastRan
+                    selectors
+                    organizations {
+                      edges{ 
+                        node {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            null,
+            {
+              i18n,
+              request: {
+                language: 'en',
+              },
+              query,
+              collections,
+              transaction,
+              userId: user._key,
+              auth: { checkPermission, userRequired },
+              loaders: {
+                domainLoaderByDomain: domainLoaderByDomain(query),
+                orgLoaderByKey: orgLoaderByKey(query, 'en'),
+                orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
+                  query,
+                  'en',
+                  user._key,
+                  cleanseInput,
+                ),
+                userLoaderByKey: userLoaderByKey(query),
+              },
+              validators: { cleanseInput, slugify },
+            },
+          )
+
+          const error = [new GraphQLError('todo')]
+
+          expect(response.errors).toEqual(error)
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to create a domain for: treasury-board-secretariat, however that org already has that domain claimed.`,
+          ])
+        })
+      })
+      describe('database error occurs', () => {
+        describe('when checking to see if org already contains domain', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userIdLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            query = jest
+              .fn()
+              .mockReturnValueOnce({
+                next() {
+                  return 'user'
+                },
+              })
+              .mockReturnValueOnce({
+                next() {
+                  return 'user'
+                },
+              })
+              .mockRejectedValue(new Error('Database error occurred.'))
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userIdLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while running check to see if domain already exists in an org: Error: Database error occurred.`,
+            ])
+          })
+        })
+        describe('when committing transaction to database', () => {
+          beforeEach(async () => {
+            await collections.affiliations.save({
+              _from: org._id,
+              _to: user._id,
+              permission: 'user',
+            })
+          })
+          it('returns an error message', async () => {
+            const domainLoader = domainLoaderByDomain(query)
+            const orgIdLoader = orgLoaderByKey(query, 'en')
+            const userIdLoader = userLoaderByKey(query)
+            const orgConnectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+            )
+
+            transaction = jest.fn().mockReturnValueOnce({
+              run() {
+                return 'user'
+              },
+              commit() {
+                throw new Error('Database error occurred.')
+              },
+            })
+
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  createDomain(
+                    input: {
+                      orgId: "${toGlobalId('organizations', org._key)}"
+                      domain: "test.gc.ca"
+                      selectors: ["selector1._domainkey", "selector2._domainkey"]
+                    }
+                  ) {
+                    domain {
+                      id
+                      domain
+                      lastRan
+                      selectors
+                      organizations {
+                        edges{ 
+                          node {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request: {
+                  language: 'en',
+                },
+                query,
+                collections,
+                transaction,
+                userId: user._key,
+                auth: { checkPermission, userRequired },
+                loaders: {
+                  domainLoaderByDomain: domainLoader,
+                  orgLoaderByKey: orgIdLoader,
+                  orgLoaderConnectionArgsByDomainId: orgConnectionLoader,
+                  userLoaderByKey: userIdLoader,
+                },
+                validators: { cleanseInput, slugify },
+              },
+            )
+
+            const error = [new GraphQLError('todo')]
+
+            expect(response.errors).toEqual(error)
+            expect(consoleOutput).toEqual([
+              `Database error occurred while committing create domain transaction: Error: Database error occurred.`,
+            ])
+          })
         })
       })
     })

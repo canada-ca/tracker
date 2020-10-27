@@ -337,12 +337,12 @@ function DmarcReportTable({ ...props }) {
               />
               <Stack isInline align="center" spacing="4px">
                 <Box>
-                  <label htmlFor="goTo">
+                  <label htmlFor={`${title}-goTo`}>
                     <Trans>Go to page:</Trans>
                   </label>
                 </Box>
                 <Input
-                  id="goTo"
+                  id={`${title}-goTo`}
                   width="6rem"
                   value={goToPageValue}
                   onChange={(event) => {

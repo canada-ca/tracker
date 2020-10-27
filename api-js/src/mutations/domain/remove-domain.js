@@ -1,5 +1,6 @@
 const { GraphQLNonNull, GraphQLID, GraphQLString } = require('graphql')
 const { mutationWithClientMutationId, fromGlobalId } = require('graphql-relay')
+const { t } = require('@lingui/macro')
 
 const removeDomain = new mutationWithClientMutationId({
   name: 'RemoveDomain',
@@ -27,6 +28,7 @@ const removeDomain = new mutationWithClientMutationId({
   mutateAndGetPayload: async (
     args,
     {
+      i18n,
       query,
       collections,
       transaction,
@@ -53,7 +55,7 @@ const removeDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to remove ${domainId} however no domain is associated with that id.`,
       )
-      throw new Error('Unable to remove domain. Please try again.')
+      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
     // Get Org from db
@@ -64,7 +66,7 @@ const removeDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to remove ${domain.slug} in org: ${orgId} however there is no organization associated with that id.`,
       )
-      throw new Error('Unable to remove domain. Please try again.')
+      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
     // Get permission
@@ -75,14 +77,14 @@ const removeDomain = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to remove ${domain.slug} in ${org.slug} but does not have permission to remove a domain from a blue check org.`,
       )
-      throw new Error('Unable to remove domain. Please try again.')
+      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
     if (permission !== 'super_admin' && permission !== 'admin') {
       console.warn(
         `User: ${userId} attempted to remove ${domain.slug} in ${org.slug} however they do not have permission in that org.`,
       )
-      throw new Error('Unable to remove domain. Please try again.')
+      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
     // Check to see if more than one organization has a claim to this domain
@@ -95,7 +97,7 @@ const removeDomain = new mutationWithClientMutationId({
       console.error(
         `Database error occurred for user: ${userId}, when counting domain claims for domain: ${domain.slug}, error: ${err}`,
       )
-      throw new Error('Unable to remove domain. Please try again.')
+      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
     // Generate list of collections names
@@ -166,7 +168,7 @@ const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Transaction error occurred while user: ${userId} attempted to remove scan data for ${domain.slug} in org: ${org.slug}, error: ${err}`,
         )
-        throw new Error('Unable to remove domain. Please try again.')
+        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
 
       // Remove domain
@@ -183,7 +185,7 @@ const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Transaction error occurred while user: ${userId} attempted to remove ${domain.slug} in org: ${org.slug}, error: ${err}`,
         )
-        throw new Error('Unable to remove domain. Please try again.')
+        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
     } else {
       try {
@@ -204,7 +206,7 @@ const removeDomain = new mutationWithClientMutationId({
         console.error(
           `Transaction error occurred while user: ${userId} attempted to remove claim for ${domain.slug} in org: ${org.slug}, error: ${err}`,
         )
-        throw new Error('Unable to remove domain. Please try again.')
+        throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
       }
     }
 
@@ -215,14 +217,16 @@ const removeDomain = new mutationWithClientMutationId({
       console.error(
         `Transaction commit error occurred while user: ${userId} attempted to remove ${domain.slug} in org: ${org.slug}, error: ${err}`,
       )
-      throw new Error('Unable to remove domain. Please try again.')
+      throw new Error(i18n._(t`Unable to remove domain. Please try again.`))
     }
 
     console.info(
       `User: ${userId} successfully removed domain: ${domain.slug} from org: ${org.slug}.`,
     )
     return {
-      status: `Successfully removed domain: ${domain.slug} from ${org.slug}.`,
+      status: i18n._(
+        t`Successfully removed domain: ${domain.slug} from ${org.slug}.`,
+      ),
     }
   },
 })

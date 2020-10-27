@@ -3,18 +3,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const { getIfUtils, removeEmpty } = require('webpack-config-utils')
 
-module.exports = ({ mode }) => {
-  const { ifNotProduction } = getIfUtils(mode)
+module.exports = (env) => {
+  const { ifNotProduction } = getIfUtils(env)
 
   return {
-    mode,
+    mode: env.production ? 'production' : 'development',
     entry: {
       main: './src/index.js',
     },
     output: {
       publicPath: '/',
       path: path.resolve(__dirname, 'public'),
-      filename: '[name].[hash].js',
+      filename: '[name].[fullhash].js',
     },
     optimization: {
       runtimeChunk: {
@@ -32,7 +32,6 @@ module.exports = ({ mode }) => {
     plugins: [
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
-        publicPath: 'public',
         template: './src/html.js',
       }),
     ],

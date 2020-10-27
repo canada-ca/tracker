@@ -4,12 +4,15 @@ dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const bcrypt = require('bcrypt')
 const { graphql, GraphQLSchema } = require('graphql')
+const { setupI18n } = require('@lingui/core')
+
+const englishMessages = require('../locale/en/messages')
+const frenchMessages = require('../locale/fr/messages')
 const { makeMigrations } = require('../../migrations')
 const { createQuerySchema } = require('../queries')
 const { createMutationSchema } = require('../mutations')
-
-const bcrypt = require('bcrypt')
 const { cleanseInput } = require('../validators')
 const { tokenize } = require('../auth')
 const { userLoaderByUserName } = require('../loaders')
@@ -20,7 +23,7 @@ describe('user send password reset email', () => {
   const originalInfo = console.info
   afterEach(() => (console.info = originalInfo))
 
-  let query, drop, truncate, migrate, collections, schema, request
+  let query, drop, truncate, migrate, collections, schema, request, i18n
 
   beforeAll(async () => {
     ;({ migrate } = await ArangoTools({ rootPass, url }))
@@ -56,207 +59,287 @@ describe('user send password reset email', () => {
 
   describe('successfully sends password reset email', () => {
     describe('users preferred language is french', () => {
-      beforeEach(async () => {
-        await collections.users.save({
-          userName: 'test.account@istio.actually.exists',
-          displayName: 'Test Account',
-          preferredLang: 'french',
-          tfaValidated: false,
-          emailValidated: false,
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'fr',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
         })
       })
-      it('returns status text', async () => {
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              sendPasswordResetLink(
-                input: { userName: "test.account@istio.actually.exists" }
-              ) {
-                status
+      describe('successful password reset email send', () => {
+        beforeEach(async () => {
+          await collections.users.save({
+            userName: 'test.account@istio.actually.exists',
+            displayName: 'Test Account',
+            preferredLang: 'french',
+            tfaValidated: false,
+            emailValidated: false,
+          })
+        })
+        it('returns status text', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                sendPasswordResetLink(
+                  input: { userName: "test.account@istio.actually.exists" }
+                ) {
+                  status
+                }
               }
+            `,
+            null,
+            {
+              i18n,
+              request,
+              query,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: {
+                sendPasswordResetEmail: mockNotify,
+              },
+            },
+          )
+
+          const expectedResult = {
+            data: {
+              sendPasswordResetLink: {
+                status: 'todo',
+              },
+            },
+          }
+
+          const cursor = await query`
+              FOR user IN users
+                  FILTER user.userName == "test.account@istio.actually.exists"
+                  RETURN user
+            `
+          const user = await cursor.next()
+
+          const token = tokenize({
+            parameters: { userId: user._key, currentPassword: user.password },
+          })
+          const resetUrl = `${request.protocol}://${request.get(
+            'host',
+          )}/reset-password/${token}`
+
+          expect(response).toEqual(expectedResult)
+          expect(mockNotify).toHaveBeenCalledWith({
+            templateId: '11aef4a3-b1a3-42b9-8246-7a0aa2bfe805',
+            user,
+            resetUrl,
+          })
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully sent a password reset email.`,
+          ])
+        })
+      })
+      describe('unsuccessful password reset email send', () => {
+        describe('no user associated with account', () => {
+          it('returns status text', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  sendPasswordResetLink(
+                    input: {
+                      userName: "test.account@istio.does.not.actually.exists"
+                    }
+                  ) {
+                    status
+                  }
+                }
+              `,
+              null,
+              {
+                i18n,
+                request,
+                query,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                },
+                notify: {
+                  sendPasswordResetEmail: mockNotify,
+                },
+              },
+            )
+
+            const expectedResult = {
+              data: {
+                sendPasswordResetLink: {
+                  status: 'todo',
+                },
+              },
             }
-          `,
-          null,
-          {
-            request,
-            query,
-            auth: {
-              bcrypt,
-              tokenize,
-            },
-            validators: {
-              cleanseInput,
-            },
-            loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-            notify: {
-              sendPasswordResetEmail: mockNotify,
-            },
-          },
-        )
 
-        const expectedResult = {
-          data: {
-            sendPasswordResetLink: {
-              status:
-                'If an account with this username is found, a password reset link will be found in your inbox.',
-            },
-          },
-        }
-
-        const cursor = await query`
-            FOR user IN users
-                FILTER user.userName == "test.account@istio.actually.exists"
-                RETURN user
-          `
-        const user = await cursor.next()
-
-        const token = tokenize({
-          parameters: { userId: user._key, currentPassword: user.password },
+            expect(response).toEqual(expectedResult)
+            expect(consoleOutput).toEqual([
+              `A user attempted to send a password reset email for test.account@istio.does.not.actually.exists but no account is affiliated with this user name.`,
+            ])
+          })
         })
-        const resetUrl = `${request.protocol}://${request.get(
-          'host',
-        )}/reset-password/${token}`
-
-        expect(response).toEqual(expectedResult)
-        expect(mockNotify).toHaveBeenCalledWith({
-          templateId: '11aef4a3-b1a3-42b9-8246-7a0aa2bfe805',
-          user,
-          resetUrl,
-        })
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully sent a password reset email.`,
-        ])
       })
     })
     describe('users preferred language is english', () => {
-      beforeEach(async () => {
-        await collections.users.save({
-          userName: 'test.account@istio.actually.exists',
-          displayName: 'Test Account',
-          preferredLang: 'english',
-          tfaValidated: false,
-          emailValidated: false,
+      beforeAll(() => {
+        i18n = setupI18n({
+          language: 'en',
+          locales: ['en', 'fr'],
+          missing: 'Traduction manquante',
+          catalogs: {
+            en: englishMessages,
+            fr: frenchMessages,
+          },
         })
       })
-      it('returns status text', async () => {
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              sendPasswordResetLink(
-                input: { userName: "test.account@istio.actually.exists" }
-              ) {
-                status
+      describe('successful password reset email', () => {
+        beforeEach(async () => {
+          await collections.users.save({
+            userName: 'test.account@istio.actually.exists',
+            displayName: 'Test Account',
+            preferredLang: 'english',
+            tfaValidated: false,
+            emailValidated: false,
+          })
+        })
+        it('returns status text', async () => {
+          const response = await graphql(
+            schema,
+            `
+              mutation {
+                sendPasswordResetLink(
+                  input: { userName: "test.account@istio.actually.exists" }
+                ) {
+                  status
+                }
               }
-            }
-          `,
-          null,
-          {
-            request,
-            query,
-            auth: {
-              bcrypt,
-              tokenize,
+            `,
+            null,
+            {
+              i18n,
+              request,
+              query,
+              auth: {
+                bcrypt,
+                tokenize,
+              },
+              validators: {
+                cleanseInput,
+              },
+              loaders: {
+                userLoaderByUserName: userLoaderByUserName(query),
+              },
+              notify: {
+                sendPasswordResetEmail: mockNotify,
+              },
             },
-            validators: {
-              cleanseInput,
-            },
-            loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-            notify: {
-              sendPasswordResetEmail: mockNotify,
-            },
-          },
-        )
+          )
 
-        const expectedResult = {
-          data: {
-            sendPasswordResetLink: {
-              status:
-                'If an account with this username is found, a password reset link will be found in your inbox.',
+          const expectedResult = {
+            data: {
+              sendPasswordResetLink: {
+                status:
+                  'If an account with this username is found, a password reset link will be found in your inbox.',
+              },
             },
-          },
-        }
+          }
 
-        const cursor = await query`
+          const cursor = await query`
             FOR user IN users
                 FILTER user.userName == "test.account@istio.actually.exists"
                 RETURN user
           `
-        const user = await cursor.next()
+          const user = await cursor.next()
 
-        const token = tokenize({
-          parameters: { userId: user._key, currentPassword: user.password },
-        })
-        const resetUrl = `${request.protocol}://${request.get(
-          'host',
-        )}/reset-password/${token}`
+          const token = tokenize({
+            parameters: { userId: user._key, currentPassword: user.password },
+          })
+          const resetUrl = `${request.protocol}://${request.get(
+            'host',
+          )}/reset-password/${token}`
 
-        expect(response).toEqual(expectedResult)
-        expect(mockNotify).toHaveBeenCalledWith({
-          templateId: '8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1',
-          user,
-          resetUrl,
+          expect(response).toEqual(expectedResult)
+          expect(mockNotify).toHaveBeenCalledWith({
+            templateId: '8c3d96cc-3cbe-4043-b157-4f4a2bbb57b1',
+            user,
+            resetUrl,
+          })
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} successfully sent a password reset email.`,
+          ])
         })
-        expect(consoleOutput).toEqual([
-          `User: ${user._key} successfully sent a password reset email.`,
-        ])
       })
-    })
-  })
-  describe('unsuccessful password reset email send', () => {
-    describe('no user associated with account', () => {
-      it('returns status text', async () => {
-        const response = await graphql(
-          schema,
-          `
-            mutation {
-              sendPasswordResetLink(
-                input: {
-                  userName: "test.account@istio.does.not.actually.exists"
+      describe('unsuccessful password reset email send', () => {
+        describe('no user associated with account', () => {
+          it('returns status text', async () => {
+            const response = await graphql(
+              schema,
+              `
+                mutation {
+                  sendPasswordResetLink(
+                    input: {
+                      userName: "test.account@istio.does.not.actually.exists"
+                    }
+                  ) {
+                    status
+                  }
                 }
-              ) {
-                status
-              }
+              `,
+              null,
+              {
+                i18n,
+                request,
+                query,
+                auth: {
+                  bcrypt,
+                  tokenize,
+                },
+                validators: {
+                  cleanseInput,
+                },
+                loaders: {
+                  userLoaderByUserName: userLoaderByUserName(query),
+                },
+                notify: {
+                  sendPasswordResetEmail: mockNotify,
+                },
+              },
+            )
+
+            const expectedResult = {
+              data: {
+                sendPasswordResetLink: {
+                  status:
+                    'If an account with this username is found, a password reset link will be found in your inbox.',
+                },
+              },
             }
-          `,
-          null,
-          {
-            request,
-            query,
-            auth: {
-              bcrypt,
-              tokenize,
-            },
-            validators: {
-              cleanseInput,
-            },
-            loaders: {
-              userLoaderByUserName: userLoaderByUserName(query),
-            },
-            notify: {
-              sendPasswordResetEmail: mockNotify,
-            },
-          },
-        )
 
-        const expectedResult = {
-          data: {
-            sendPasswordResetLink: {
-              status:
-                'If an account with this username is found, a password reset link will be found in your inbox.',
-            },
-          },
-        }
-
-        expect(response).toEqual(expectedResult)
-        expect(consoleOutput).toEqual([
-          `A user attempted to send a password reset email for test.account@istio.does.not.actually.exists but no account is affiliated with this user name.`,
-        ])
+            expect(response).toEqual(expectedResult)
+            expect(consoleOutput).toEqual([
+              `A user attempted to send a password reset email for test.account@istio.does.not.actually.exists but no account is affiliated with this user name.`,
+            ])
+          })
+        })
       })
     })
   })
