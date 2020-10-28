@@ -21,6 +21,8 @@
       'todo',
     'Passing both `first` and `last` to paginate the `dkim` connection is not supported.':
       'todo',
+    'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
       'todo',
     'Password is not strong enough. Please try again.': 'todo',
@@ -34,6 +36,8 @@
     'Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -113,11 +117,14 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `dkim` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
       'todo',
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `dkim` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `dmarc` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `domains` connection cannot be less than zero.': 'todo',
   },
 }

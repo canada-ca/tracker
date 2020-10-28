@@ -60,6 +60,10 @@ msgstr "Passing both `first` and `last` to paginate the `dkimResults` connection
 msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:40
+msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
+
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:35
 #: src/loaders/domains/load-domain-connections-by-user-id.js:33
 msgid "Passing both `first` and `last` to paginate the `domains` connection is not supported."
@@ -100,6 +104,10 @@ msgstr "Requesting {amount} records on the `dkimResults` connection exceeds the 
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:61
 msgid "Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records."
+
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:62
+msgid "Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/loaders/domains/load-domain-connections-by-user-id.js:54
 msgid "Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
@@ -212,7 +220,6 @@ msgstr "Unable to find ssl scan. Please try again."
 msgid "Unable to find user. Please try again."
 msgstr "Unable to find user. Please try again."
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:44
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:44
 #: src/loaders/web-scan/load-https-connections-by-domain-id.js:45
 #: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:45
@@ -240,8 +247,8 @@ msgstr "Unable to load dkim results. Please try again."
 msgid "Unable to load dkim scans. Please try again."
 msgstr "Unable to load dkim scans. Please try again."
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:66
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:76
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:132
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:142
 msgid "Unable to load dmarc scans. Please try again."
 msgstr "Unable to load dmarc scans. Please try again."
 
@@ -458,6 +465,10 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `dki
 msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:75
+msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
+
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:69
 #: src/loaders/domains/load-domain-connections-by-user-id.js:67
 msgid "You must provide a `first` or `last` value to properly paginate the `domains` connection."
@@ -470,6 +481,10 @@ msgstr "`{argSet}` on the `dkimResults` connection cannot be less than zero."
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:50
 msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
 msgstr "`{argSet}` on the `dkim` connection cannot be less than zero."
+
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:51
+msgid "`{argSet}` on the `dmarc` connection cannot be less than zero."
+msgstr "`{argSet}` on the `dmarc` connection cannot be less than zero."
 
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:45
 #: src/loaders/domains/load-domain-connections-by-user-id.js:43

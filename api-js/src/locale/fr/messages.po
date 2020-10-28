@@ -60,6 +60,10 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 msgstr "todo"
 
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:40
+msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
+msgstr "todo"
+
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:35
 #: src/loaders/domains/load-domain-connections-by-user-id.js:33
 msgid "Passing both `first` and `last` to paginate the `domains` connection is not supported."
@@ -99,6 +103,10 @@ msgstr "todo"
 
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:61
 msgid "Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:62
+msgid "Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-user-id.js:54
@@ -212,7 +220,6 @@ msgstr "todo"
 msgid "Unable to find user. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:44
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:44
 #: src/loaders/web-scan/load-https-connections-by-domain-id.js:45
 #: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:45
@@ -240,8 +247,8 @@ msgstr "todo"
 msgid "Unable to load dkim scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:66
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:76
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:132
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:142
 msgid "Unable to load dmarc scans. Please try again."
 msgstr "todo"
 
@@ -458,6 +465,10 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 msgstr "todo"
 
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:75
+msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
+msgstr "todo"
+
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:69
 #: src/loaders/domains/load-domain-connections-by-user-id.js:67
 msgid "You must provide a `first` or `last` value to properly paginate the `domains` connection."
@@ -469,6 +480,10 @@ msgstr "todo"
 
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:50
 msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
+msgstr "todo"
+
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:51
+msgid "`{argSet}` on the `dmarc` connection cannot be less than zero."
 msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:45

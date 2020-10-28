@@ -40,6 +40,8 @@
       'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.',
     'Passing both `first` and `last` to paginate the `dkim` connection is not supported.':
       'Passing both `first` and `last` to paginate the `dkim` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.',
     'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
       'Passing both `first` and `last` to paginate the `domains` connection is not supported.',
     'Password is not strong enough. Please try again.':
@@ -78,6 +80,17 @@
         'Requesting ',
         a('amount'),
         ' records on the `dkim` connection exceeds the `',
+        a('argSet'),
+        '` limit of 100 records.',
+      ]
+    },
+    'Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records.': function (
+      a,
+    ) {
+      return [
+        'Requesting ',
+        a('amount'),
+        ' records on the `dmarc` connection exceeds the `',
         a('argSet'),
         '` limit of 100 records.',
       ]
@@ -220,6 +233,8 @@
       'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.',
     'You must provide a `first` or `last` value to properly paginate the `dkim` connection.':
       'You must provide a `first` or `last` value to properly paginate the `dkim` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.',
     'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
       'You must provide a `first` or `last` value to properly paginate the `domains` connection.',
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.': function (
@@ -238,6 +253,15 @@
         '`',
         a('argSet'),
         '` on the `dkim` connection cannot be less than zero.',
+      ]
+    },
+    '`{argSet}` on the `dmarc` connection cannot be less than zero.': function (
+      a,
+    ) {
+      return [
+        '`',
+        a('argSet'),
+        '` on the `dmarc` connection cannot be less than zero.',
       ]
     },
     '`{argSet}` on the `domains` connection cannot be less than zero.': function (
