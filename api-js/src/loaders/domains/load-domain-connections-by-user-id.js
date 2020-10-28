@@ -24,13 +24,13 @@ const domainLoaderConnectionsByUserId = (
   }
 
   let limitTemplate = aql``
-  if (typeof first !== 'undefined' && typeof last !== 'undefined') {
+  if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} tried to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`domains\` connection is not supported.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`domains\` connection.`,
       ),
     )
   } else if (first < 0 || last < 0) {
@@ -60,11 +60,11 @@ const domainLoaderConnectionsByUserId = (
     limitTemplate = aql`SORT domain._key DESC LIMIT TO_NUMBER(${last})`
   } else {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+      `User: ${userId} tried to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`domains\` connection.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`domains\` connection is not supported.`,
       ),
     )
   }
