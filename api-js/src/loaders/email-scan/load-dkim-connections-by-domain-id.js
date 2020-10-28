@@ -31,13 +31,13 @@ const dkimLoaderConnectionsByDomainId = (
   }
 
   let limitTemplate = aql``
-  if (typeof first !== 'undefined' && typeof last !== 'undefined') {
+  if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} tried to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
-        t`Passing both \`first\` and \`last\` to paginate the \`dkim\` connection is not supported.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`dkim\` connection.`,
       ),
     )
   } else if (first < 0 || last < 0) {
@@ -67,11 +67,11 @@ const dkimLoaderConnectionsByDomainId = (
     limitTemplate = aql`SORT dkimScan._key DESC LIMIT TO_NUMBER(${last})`
   } else {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
+      `User: ${userId} tried to have \`first\` and \`last\` arguments set for: dkimLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
-        t`You must provide a \`first\` or \`last\` value to properly paginate the \`dkim\` connection.`,
+        t`Passing both \`first\` and \`last\` to paginate the \`dkim\` connection is not supported.`,
       ),
     )
   }
