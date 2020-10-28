@@ -52,15 +52,15 @@ msgstr "No domain with the provided domain could be found."
 msgid "No organization with the provided slug could be found."
 msgstr "No organization with the provided slug could be found."
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:30
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:64
 msgid "Passing both `first` and `last` to paginate the `dkimResults` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `dkimResults` connection is not supported."
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:40
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:74
 msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:40
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:75
 msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
 
@@ -68,6 +68,10 @@ msgstr "Passing both `first` and `last` to paginate the `dmarc` connection is no
 #: src/loaders/domains/load-domain-connections-by-user-id.js:33
 msgid "Passing both `first` and `last` to paginate the `domains` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `domains` connection is not supported."
+
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:74
+msgid "Passing both `first` and `last` to paginate the `spf` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `spf` connection is not supported."
 
 #: src/mutations/user/reset-password.js:95
 msgid "Password is not strong enough. Please try again."
@@ -112,6 +116,10 @@ msgstr "Requesting {amount} records on the `dmarc` connection exceeds the `{argS
 #: src/loaders/domains/load-domain-connections-by-user-id.js:54
 msgid "Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
+
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:61
+msgid "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/mutations/user-affiliations/invite-user-to-org.js:184
 msgid "Successfully invited user to organization, and sent notification email."
@@ -220,7 +228,6 @@ msgstr "Unable to find ssl scan. Please try again."
 msgid "Unable to find user. Please try again."
 msgstr "Unable to find user. Please try again."
 
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:44
 #: src/loaders/web-scan/load-https-connections-by-domain-id.js:45
 #: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:45
 msgid "Unable to have both first, and last arguments set at the same time."
@@ -277,8 +284,8 @@ msgstr "Unable to load https scans. Please try again."
 msgid "Unable to load organizations. Please try again."
 msgstr "Unable to load organizations. Please try again."
 
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:66
-#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:76
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:130
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:140
 msgid "Unable to load spf scans. Please try again."
 msgstr "Unable to load spf scans. Please try again."
 
@@ -457,15 +464,15 @@ msgstr "We've sent you a text message with an authentication code to sign into P
 msgid "We've sent you an email with an authentication code to sign into Pulse."
 msgstr "We've sent you an email with an authentication code to sign into Pulse."
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:64
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:30
 msgid "You must provide a `first` or `last` value to properly paginate the `dkimResults` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dkimResults` connection."
 
-#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:74
+#: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 
-#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:75
+#: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 
@@ -473,6 +480,10 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `dma
 #: src/loaders/domains/load-domain-connections-by-user-id.js:67
 msgid "You must provide a `first` or `last` value to properly paginate the `domains` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `domains` connection."
+
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:40
+msgid "You must provide a `first` or `last` value to properly paginate the `spf` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `spf` connection."
 
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:40
 msgid "`{argSet}` on the `dkimResults` connection cannot be less than zero."
@@ -490,3 +501,7 @@ msgstr "`{argSet}` on the `dmarc` connection cannot be less than zero."
 #: src/loaders/domains/load-domain-connections-by-user-id.js:43
 msgid "`{argSet}` on the `domains` connection cannot be less than zero."
 msgstr "`{argSet}` on the `domains` connection cannot be less than zero."
+
+#: src/loaders/email-scan/load-spf-connections-by-domain-id.js:50
+msgid "`{argSet}` on the `spf` connection cannot be less than zero."
+msgstr "`{argSet}` on the `spf` connection cannot be less than zero."
