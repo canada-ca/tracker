@@ -52,6 +52,10 @@ msgstr "No domain with the provided domain could be found."
 msgid "No organization with the provided slug could be found."
 msgstr "No organization with the provided slug could be found."
 
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:30
+msgid "Passing both `first` and `last` to paginate the `dkimResults` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `dkimResults` connection is not supported."
+
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:40
 msgid "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `dkim` connection is not supported."
@@ -88,6 +92,10 @@ msgstr "Profile successfully updated."
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:56
 msgid "Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
+
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:51
+msgid "Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:61
 msgid "Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records."
@@ -204,7 +212,6 @@ msgstr "Unable to find ssl scan. Please try again."
 msgid "Unable to find user. Please try again."
 msgstr "Unable to find user. Please try again."
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:34
 #: src/loaders/email-scan/load-dmarc-connections-by-domain-id.js:44
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:44
 #: src/loaders/web-scan/load-https-connections-by-domain-id.js:45
@@ -223,8 +230,8 @@ msgstr "Unable to invite user. Please try again."
 msgid "Unable to invite yourself to an org. Please try again."
 msgstr "Unable to invite yourself to an org. Please try again."
 
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:54
-#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:64
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:118
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:128
 msgid "Unable to load dkim results. Please try again."
 msgstr "Unable to load dkim results. Please try again."
 
@@ -443,6 +450,10 @@ msgstr "We've sent you a text message with an authentication code to sign into P
 msgid "We've sent you an email with an authentication code to sign into Pulse."
 msgstr "We've sent you an email with an authentication code to sign into Pulse."
 
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:64
+msgid "You must provide a `first` or `last` value to properly paginate the `dkimResults` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `dkimResults` connection."
+
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:74
 msgid "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `dkim` connection."
@@ -451,6 +462,10 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `dki
 #: src/loaders/domains/load-domain-connections-by-user-id.js:67
 msgid "You must provide a `first` or `last` value to properly paginate the `domains` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `domains` connection."
+
+#: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:40
+msgid "`{argSet}` on the `dkimResults` connection cannot be less than zero."
+msgstr "`{argSet}` on the `dkimResults` connection cannot be less than zero."
 
 #: src/loaders/email-scan/load-dkim-connections-by-domain-id.js:50
 msgid "`{argSet}` on the `dkim` connection cannot be less than zero."
