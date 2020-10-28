@@ -124,10 +124,12 @@ export default function OrganizationDetails() {
                 mb="4"
               >
                 {({ id, url, lastRan }, index) => (
-                  <Box key={`${id}:${index}`}>
-                    <DomainCard url={url} lastRan={lastRan} />
-                    <Divider borderColor="gray.900" />
-                  </Box>
+                  <ErrorBoundary FallbackComponent={ErrorFallbackMessage}>
+                    <Box key={`${id}:${index}`}>
+                      <DomainCard url={url} lastRan={lastRan} />
+                      <Divider borderColor="gray.900" />
+                    </Box>
+                  </ErrorBoundary>
                 )}
               </ListOf>
               {domains.length > 0 && (
