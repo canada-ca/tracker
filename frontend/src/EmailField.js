@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  elementType,
-  func,
-  oneOfType,
-  shape,
-  string,
-} from 'prop-types'
+import { elementType, func, oneOfType, shape, string } from 'prop-types'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
@@ -44,6 +38,7 @@ const EmailField = WithPseudoBox(function EmailField({
           {...field}
           {...props}
           id="email"
+          type="email"
           ref={forwardedRef}
           placeholder={i18n._(t`Email`)}
         />

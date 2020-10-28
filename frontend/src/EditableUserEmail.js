@@ -52,7 +52,7 @@ function EditableUserEmail({ detailValue }) {
           status: 'error',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
       onCompleted() {
@@ -62,7 +62,7 @@ function EditableUserEmail({ detailValue }) {
           status: 'success',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
         onClose()
       },

@@ -64,7 +64,7 @@ export default function UserList({
         status: 'error',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
     onCompleted() {
@@ -74,7 +74,7 @@ export default function UserList({
         status: 'success',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
   })
@@ -94,7 +94,7 @@ export default function UserList({
           status: 'error',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
       onCompleted() {
@@ -104,7 +104,7 @@ export default function UserList({
           status: 'info',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
     },
@@ -133,7 +133,7 @@ export default function UserList({
         status: 'info',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     } else {
       toast({
@@ -142,7 +142,7 @@ export default function UserList({
         status: 'error',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     }
   }
@@ -166,7 +166,7 @@ export default function UserList({
       status: 'error',
       duration: 9000,
       isClosable: true,
-      position: 'bottom-left',
+      position: 'top-left',
     })
 
   return (

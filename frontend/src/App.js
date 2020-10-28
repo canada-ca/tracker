@@ -8,13 +8,14 @@ import { TopBanner } from './TopBanner'
 import { PhaseBanner } from './PhaseBanner'
 import { Footer } from './Footer'
 import { Navigation } from './Navigation'
-import { Flex, Link, CSSReset, useToast } from '@chakra-ui/core'
+import { Flex, Link, CSSReset, useToast, Box } from '@chakra-ui/core'
 import { SkipLink } from './SkipLink'
 import { TwoFactorNotificationBar } from './TwoFactorNotificationBar'
 import { useUserState } from './UserState'
 import { RouteIf } from './RouteIf'
 import { ErrorBoundary } from 'react-error-boundary'
 import { ErrorFallbackMessage } from './ErrorFallbackMessage'
+import { FloatingMenu } from './FloatingMenu'
 
 const PageNotFound = lazy(() => import('./PageNotFound'))
 const CreateUserPage = lazy(() => import('./CreateUserPage'))
@@ -50,6 +51,7 @@ export default function App() {
           </PhaseBanner>
           <TopBanner />
         </header>
+
         <Navigation>
           <Link to="/">
             <Trans>Home</Trans>
@@ -96,7 +98,7 @@ export default function App() {
                   status: 'success',
                   duration: 9000,
                   isClosable: true,
-                  position: 'bottom-left',
+                  position: 'top-left',
                 })
               }}
               ml={[null, 'auto']}
@@ -109,6 +111,7 @@ export default function App() {
             </Link>
           )}
         </Navigation>
+
         {isLoggedIn() && !currentUser.tfa && <TwoFactorNotificationBar />}
         <Main>
           <Suspense fallback={<div>Loading...</div>}>
@@ -241,6 +244,8 @@ export default function App() {
             <Trans>Terms & conditions</Trans>
           </Link>
         </Footer>
+        <FloatingMenu />
+        <Box h="40px" />
       </Flex>
     </>
   )

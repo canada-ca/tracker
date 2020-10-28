@@ -103,7 +103,7 @@ export function AdminDomains({ domainsData, orgName }) {
         status: 'error',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
     onCompleted() {
@@ -113,7 +113,7 @@ export function AdminDomains({ domainsData, orgName }) {
         status: 'info',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
       setDomainSearch('')
     },
@@ -135,7 +135,7 @@ export function AdminDomains({ domainsData, orgName }) {
           status: 'error',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
       onCompleted() {
@@ -146,7 +146,7 @@ export function AdminDomains({ domainsData, orgName }) {
           status: 'info',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
     },
@@ -166,7 +166,7 @@ export function AdminDomains({ domainsData, orgName }) {
         status: 'error',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
     onCompleted() {
@@ -176,7 +176,7 @@ export function AdminDomains({ domainsData, orgName }) {
         status: 'info',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
       updateOnClose()
     },
@@ -216,7 +216,7 @@ export function AdminDomains({ domainsData, orgName }) {
               status: 'error',
               duration: 9000,
               isClosable: true,
-              position: 'bottom-left',
+              position: 'top-left',
             })
           } else {
             createDomain({

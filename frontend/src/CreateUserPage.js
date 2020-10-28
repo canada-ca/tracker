@@ -58,7 +58,7 @@ export default function CreateUserPage() {
         status: 'error',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
     onCompleted({ signUp }) {
@@ -78,7 +78,7 @@ export default function CreateUserPage() {
         status: 'success',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
   })

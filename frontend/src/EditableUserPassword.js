@@ -50,7 +50,7 @@ function EditableUserPassword() {
           status: 'error',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
       },
       onCompleted() {
@@ -60,7 +60,7 @@ function EditableUserPassword() {
           status: 'success',
           duration: 9000,
           isClosable: true,
-          position: 'bottom-left',
+          position: 'top-left',
         })
         onClose()
       },

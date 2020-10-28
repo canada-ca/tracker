@@ -47,7 +47,7 @@ export default function OrganizationDetails() {
         status: 'failure',
         duration: 9000,
         isClosable: true,
-        position: 'bottom-left',
+        position: 'top-left',
       })
     },
   })

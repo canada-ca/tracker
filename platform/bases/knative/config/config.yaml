@@ -1,13 +1,3 @@
-# Namespace
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: scanners
-  labels:
-      istio-injection: enabled
-
----
-
 apiVersion: serving.knative.dev/v1 # Current version of Knative
 kind: Service
 metadata:
