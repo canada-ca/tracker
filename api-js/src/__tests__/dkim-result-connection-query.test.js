@@ -144,7 +144,7 @@ describe('given the dkimType object', () => {
                 dkim (first: 5) {
                   edges {
                     node {
-                      results {
+                      results (first: 5) {
                         edges {
                           node {
                             id
