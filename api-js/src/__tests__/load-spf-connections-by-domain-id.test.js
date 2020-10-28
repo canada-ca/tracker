@@ -90,7 +90,9 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         const spfScans = await connectionLoader({
           domainId: domain._id,
@@ -157,6 +159,7 @@ describe('when given the load spf connection function', () => {
         expectedSpfScans[1].domainId = domain._id
 
         const connectionArgs = {
+          first: 5,
           after: toGlobalId('spf', expectedSpfScans[0]._key),
         }
 
@@ -176,7 +179,7 @@ describe('when given the load spf connection function', () => {
           ],
           pageInfo: {
             hasNextPage: false,
-            hasPreviousPage: false,
+            hasPreviousPage: true,
             startCursor: toGlobalId('spf', expectedSpfScans[1]._key),
             endCursor: toGlobalId('spf', expectedSpfScans[1]._key),
           },
@@ -207,6 +210,7 @@ describe('when given the load spf connection function', () => {
         expectedSpfScans[1].domainId = domain._id
 
         const connectionArgs = {
+          first: 5,
           before: toGlobalId('spf', expectedSpfScans[1]._key),
         }
 
@@ -225,64 +229,10 @@ describe('when given the load spf connection function', () => {
             },
           ],
           pageInfo: {
-            hasNextPage: false,
+            hasNextPage: true,
             hasPreviousPage: false,
             startCursor: toGlobalId('spf', expectedSpfScans[0]._key),
             endCursor: toGlobalId('spf', expectedSpfScans[0]._key),
-          },
-        }
-
-        expect(spfScans).toEqual(expectedStructure)
-      })
-    })
-    describe('using no limit', () => {
-      it('returns multiple spf scans', async () => {
-        const connectionLoader = spfLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const connectionArgs = {}
-
-        const spfScans = await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-
-        const spfLoader = spfLoaderByKey(query)
-        const expectedSpfScans = await spfLoader.loadMany([
-          spfScan1._key,
-          spfScan2._key,
-        ])
-
-        expectedSpfScans[0].id = expectedSpfScans[0]._key
-        expectedSpfScans[1].id = expectedSpfScans[1]._key
-
-        expectedSpfScans[0].domainId = domain._id
-        expectedSpfScans[1].domainId = domain._id
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('spf', expectedSpfScans[0]._key),
-              node: {
-                ...expectedSpfScans[0],
-              },
-            },
-            {
-              cursor: toGlobalId('spf', expectedSpfScans[1]._key),
-              node: {
-                ...expectedSpfScans[1],
-              },
-            },
-          ],
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('spf', expectedSpfScans[0]._key),
-            endCursor: toGlobalId('spf', expectedSpfScans[1]._key),
           },
         }
 
@@ -422,6 +372,7 @@ describe('when given the load spf connection function', () => {
           expectedSpfScans[1].domainId = domain._id
 
           const connectionArgs = {
+            first: 5,
             startDate: '2020-10-03',
           }
 
@@ -447,7 +398,7 @@ describe('when given the load spf connection function', () => {
             ],
             pageInfo: {
               hasNextPage: false,
-              hasPreviousPage: false,
+              hasPreviousPage: true,
               startCursor: toGlobalId('spf', expectedSpfScans[0]._key),
               endCursor: toGlobalId('spf', expectedSpfScans[1]._key),
             },
@@ -478,6 +429,7 @@ describe('when given the load spf connection function', () => {
           expectedSpfScans[1].domainId = domain._id
 
           const connectionArgs = {
+            first: 5,
             endDate: '2020-10-03T13:50:00Z',
           }
 
@@ -502,7 +454,7 @@ describe('when given the load spf connection function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
+              hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId('spf', expectedSpfScans[0]._key),
               endCursor: toGlobalId('spf', expectedSpfScans[1]._key),
@@ -528,6 +480,7 @@ describe('when given the load spf connection function', () => {
           expectedSpfScans[0].domainId = domain._id
 
           const connectionArgs = {
+            first: 5,
             startDate: '2020-10-03T00:00:00Z',
             endDate: '2020-10-03T23:59:59Z',
           }
@@ -547,8 +500,8 @@ describe('when given the load spf connection function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false,
+              hasNextPage: true,
+              hasPreviousPage: true,
               startCursor: toGlobalId('spf', expectedSpfScans[0]._key),
               endCursor: toGlobalId('spf', expectedSpfScans[0]._key),
             },
@@ -568,7 +521,9 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         const spfScans = await connectionLoader({
           domainId: domain._id,
@@ -602,8 +557,36 @@ describe('when given the load spf connection function', () => {
       })
     })
     describe('given a unsuccessful load', () => {
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = spfLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'You must provide a `first` or `last` value to properly paginate the `spf` connection.',
+              ),
+            )
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
+          ])
+        })
+      })
       describe('first and last arguments are set', () => {
-        it('throws an error', async () => {
+        it('returns an error message', async () => {
           const connectionLoader = spfLoaderConnectionsByDomainId(
             query,
             user._key,
@@ -624,13 +607,137 @@ describe('when given the load spf connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Unable to have both first, and last arguments set at the same time.',
+                'Passing both `first` and `last` to paginate the `spf` connection is not supported.',
               ),
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} had first and last arguments set when trying to gather spf scans for domain: ${domain._id}`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
           ])
+        })
+      })
+      describe('limits are set below minimum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: -1,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`first` on the `spf` connection cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: spfLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: -5,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`last` on the `spf` connection cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: spfLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: 1000,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting 1000 records on the `spf` connection exceeds the `first` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: spfLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: 500,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting 500 records on the `spf` connection exceeds the `last` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 500 for: spfLoaderConnectionsByDomainId.`,
+            ])
+          })
         })
       })
     })
@@ -647,7 +754,9 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -668,7 +777,7 @@ describe('when given the load spf connection function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          all() {
+          next() {
             throw new Error('Cursor Error Occurred.')
           },
         }
@@ -681,7 +790,9 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -713,8 +824,36 @@ describe('when given the load spf connection function', () => {
       })
     })
     describe('given a unsuccessful load', () => {
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = spfLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
+          ])
+        })
+      })
       describe('first and last arguments are set', () => {
-        it('throws an error', async () => {
+        it('returns an error message', async () => {
           const connectionLoader = spfLoaderConnectionsByDomainId(
             query,
             user._key,
@@ -733,11 +872,139 @@ describe('when given the load spf connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} had first and last arguments set when trying to gather spf scans for domain: ${domain._id}`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
           ])
+        })
+      })
+      describe('limits are set below minimum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: -1,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: spfLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: -5,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: spfLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: 1000,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: spfLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = spfLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: 500,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 500 for: spfLoaderConnectionsByDomainId.`,
+            ])
+          })
         })
       })
     })
@@ -754,7 +1021,9 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -773,7 +1042,7 @@ describe('when given the load spf connection function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          all() {
+          next() {
             throw new Error('Cursor Error Occurred.')
           },
         }
@@ -786,7 +1055,9 @@ describe('when given the load spf connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({

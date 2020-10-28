@@ -21,31 +21,95 @@ const dkimResultsLoaderConnectionByDkimId = (
   }
 
   let limitTemplate = aql``
-  if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT dkimResult._key ASC LIMIT TO_NUMBER(${first + 1})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT dkimResult._key DESC LIMIT TO_NUMBER(${last + 1})`
-  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
+  if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} had first and last arguments set when trying to gather dkim results for dkimScan: ${dkimId}`,
+      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
     )
     throw new Error(
       i18n._(
-        t`Unable to have both first, and last arguments set at the same time.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`dkimResults\` connection.`,
       ),
     )
+  } else if (first < 0 || last < 0) {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`\`${argSet}\` on the \`dkimResults\` connection cannot be less than zero.`,
+      ),
+    )
+  } else if (first > 100 || last > 100) {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const amount = typeof first !== 'undefined' ? first : last
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: dkimResultsLoaderConnectionByDkimId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`Requesting ${amount} records on the \`dkimResults\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+      ),
+    )
+  } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+    limitTemplate = aql`SORT dkimResult._key ASC LIMIT TO_NUMBER(${first})`
+  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
+    limitTemplate = aql`SORT dkimResult._key DESC LIMIT TO_NUMBER(${last})`
+  } else {
+    console.warn(
+      `User: ${userId} tried to have \`first\` and \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`Passing both \`first\` and \`last\` to paginate the \`dkimResults\` connection is not supported.`,
+      ),
+    )
+  }
+
+  let sortString
+  if (typeof last !== 'undefined') {
+    sortString = aql`DESC`
+  } else {
+    sortString = aql`ASC`
   }
 
   let dkimResultsCursor
   try {
     dkimResultsCursor = await query`
-    LET dkimResultIds = (FOR v, e IN 1 ANY ${dkimId} dkimToDkimResults RETURN e._to)
-    FOR dkimResult IN dkimResults
-      FILTER dkimResult._id IN dkimResultIds
-      ${afterTemplate}
-      ${beforeTemplate}
-      ${limitTemplate}
-      RETURN dkimResult
+    LET dkimResultKeys = (FOR v, e IN 1 OUTBOUND ${dkimId} dkimToDkimResults RETURN v._key)
+
+    LET retrievedDkimResults = (
+      FOR dkimResult IN dkimResults
+        FILTER dkimResult._key IN dkimResultKeys
+        ${afterTemplate}
+        ${beforeTemplate}
+        ${limitTemplate}
+        RETURN dkimResult
+    )
+
+    LET hasNextPage = (LENGTH(
+      FOR dkimResult IN dkimResults
+        FILTER dkimResult._key IN dkimResultKeys
+        FILTER TO_NUMBER(dkimResult._key) > TO_NUMBER(LAST(retrievedDkimResults)._key)
+        SORT dkimResult._key ${sortString} LIMIT 1
+        RETURN dkimResult
+    ) > 0 ? true : false)
+    
+    LET hasPreviousPage = (LENGTH(
+      FOR dkimResult IN dkimResults
+        FILTER dkimResult._key IN dkimResultKeys
+        FILTER TO_NUMBER(dkimResult._key) < TO_NUMBER(FIRST(retrievedDkimResults)._key)
+        SORT dkimResult._key ${sortString} LIMIT 1
+        RETURN dkimResult
+    ) > 0 ? true : false)
+
+    RETURN { 
+      "dkimResults": retrievedDkimResults, 
+      "hasNextPage": hasNextPage, 
+      "hasPreviousPage": hasPreviousPage, 
+      "startKey": FIRST(retrievedDkimResults)._key, 
+      "endKey": LAST(retrievedDkimResults)._key 
+    }
     `
   } catch (err) {
     console.error(
@@ -54,9 +118,9 @@ const dkimResultsLoaderConnectionByDkimId = (
     throw new Error(i18n._(t`Unable to load dkim results. Please try again.`))
   }
 
-  let dkimResults
+  let dkimResultsInfo
   try {
-    dkimResults = await dkimResultsCursor.all()
+    dkimResultsInfo = await dkimResultsCursor.next()
   } catch (err) {
     console.error(
       `Cursor error occurred while user: ${userId} was trying to get dkim result information for ${dkimId}, error: ${err}`,
@@ -64,27 +128,7 @@ const dkimResultsLoaderConnectionByDkimId = (
     throw new Error(i18n._(t`Unable to load dkim results. Please try again.`))
   }
 
-  const hasNextPage = !!(
-    typeof first !== 'undefined' && dkimResults.length > first
-  )
-  const hasPreviousPage = !!(
-    typeof last !== 'undefined' && dkimResults.length > last
-  )
-
-  if (dkimResults.length > first || dkimResults.length > last) {
-    dkimResults.pop()
-  }
-
-  const edges = dkimResults.map((dkimResult) => {
-    dkimResult.id = dkimResult._key
-    dkimResult.dkimId = dkimId
-    return {
-      cursor: toGlobalId('dkimResult', dkimResult._key),
-      node: dkimResult,
-    }
-  })
-
-  if (edges.length === 0) {
+  if (dkimResultsInfo.dkimResults.length === 0) {
     return {
       edges: [],
       pageInfo: {
@@ -96,19 +140,22 @@ const dkimResultsLoaderConnectionByDkimId = (
     }
   }
 
-  const startCursor = toGlobalId('dkimResult', dkimResults[0]._key)
-  const endCursor = toGlobalId(
-    'dkimResult',
-    dkimResults[dkimResults.length - 1]._key,
-  )
+  const edges = dkimResultsInfo.dkimResults.map((dkimResult) => {
+    dkimResult.id = dkimResult._key
+    dkimResult.dkimId = dkimId
+    return {
+      cursor: toGlobalId('dkimResult', dkimResult._key),
+      node: dkimResult,
+    }
+  })
 
   return {
     edges,
     pageInfo: {
-      hasNextPage,
-      hasPreviousPage,
-      startCursor,
-      endCursor,
+      hasNextPage: dkimResultsInfo.hasNextPage,
+      hasPreviousPage: dkimResultsInfo.hasPreviousPage,
+      startCursor: toGlobalId('dkimResult', dkimResultsInfo.startKey),
+      endCursor: toGlobalId('dkimResult', dkimResultsInfo.endKey),
     },
   }
 }

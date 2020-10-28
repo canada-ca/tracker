@@ -31,33 +31,99 @@ const dmarcLoaderConnectionsByDomainId = (
   }
 
   let limitTemplate = aql``
-  if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT dmarcScan._key ASC LIMIT TO_NUMBER(${first + 1})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT dmarcScan._key DESC LIMIT TO_NUMBER(${last + 1})`
-  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
+  if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} had first and last arguments set when trying to gather dmarc scans for domain: ${domainId}`,
+      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
-        t`Unable to have both first, and last arguments set at the same time.`,
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`dmarc\` connection.`,
+      ),
+    )
+  } else if (first < 0 || last < 0) {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`\`${argSet}\` on the \`dmarc\` connection cannot be less than zero.`,
+      ),
+    )
+  } else if (first > 100 || last > 100) {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const amount = typeof first !== 'undefined' ? first : last
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: dmarcLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`Requesting ${amount} records on the \`dmarc\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+      ),
+    )
+  } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+    limitTemplate = aql`SORT dmarcScan._key ASC LIMIT TO_NUMBER(${first})`
+  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
+    limitTemplate = aql`SORT dmarcScan._key DESC LIMIT TO_NUMBER(${last})`
+  } else {
+    console.warn(
+      `User: ${userId} tried to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`Passing both \`first\` and \`last\` to paginate the \`dmarc\` connection is not supported.`,
       ),
     )
   }
 
-  let dmarcScansCursor
+  let sortString
+  if (typeof last !== 'undefined') {
+    sortString = aql`DESC`
+  } else {
+    sortString = aql`ASC`
+  }
+
+  let dmarcScanInfoCursor
   try {
-    dmarcScansCursor = await query`
-    LET dmarcIds = (FOR v, e IN 1 ANY ${domainId} domainsDMARC RETURN e._to)
-    FOR dmarcScan IN dmarc
-        FILTER dmarcScan._id IN dmarcIds
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${startDateTemplate}
-        ${endDateTemplate}
-        ${limitTemplate}
+    dmarcScanInfoCursor = await query`
+    LET dmarcKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsDMARC RETURN v._key)
+
+    LET retrievedDmarcScans = (
+      FOR dmarcScan IN dmarc
+      FILTER dmarcScan._key IN dmarcKeys
+      ${afterTemplate}
+      ${beforeTemplate}
+      ${startDateTemplate}
+      ${endDateTemplate}
+      ${limitTemplate}
+      RETURN dmarcScan
+    )
+
+    LET hasNextPage = (LENGTH(
+      FOR dmarcScan IN dmarc
+        FILTER dmarcScan._key IN dmarcKeys
+        FILTER TO_NUMBER(dmarcScan._key) > TO_NUMBER(LAST(retrievedDmarcScans)._key)
+        SORT dmarcScan._key ${sortString} LIMIT 1
         RETURN dmarcScan
+    ) > 0 ? true : false)
+
+    LET hasPreviousPage = (LENGTH(
+      FOR dmarcScan IN dmarc
+        FILTER dmarcScan._key IN dmarcKeys
+        FILTER TO_NUMBER(dmarcScan._key) < TO_NUMBER(FIRST(retrievedDmarcScans)._key)
+        SORT dmarcScan._key ${sortString} LIMIT 1
+        RETURN dmarcScan
+    ) > 0 ? true : false)
+
+    RETURN { 
+      "dmarcScans": retrievedDmarcScans, 
+      "hasNextPage": hasNextPage, 
+      "hasPreviousPage": hasPreviousPage, 
+      "startKey": FIRST(retrievedDmarcScans)._key, 
+      "endKey": LAST(retrievedDmarcScans)._key 
+    }
+
     `
   } catch (err) {
     console.error(
@@ -66,9 +132,9 @@ const dmarcLoaderConnectionsByDomainId = (
     throw new Error(i18n._(t`Unable to load dmarc scans. Please try again.`))
   }
 
-  let dmarcScans
+  let dmarcScanInfo
   try {
-    dmarcScans = await dmarcScansCursor.all()
+    dmarcScanInfo = await dmarcScanInfoCursor.next()
   } catch (err) {
     console.error(
       `Cursor error occurred while user: ${userId} was trying to get dmarc information for ${domainId}, error: ${err}`,
@@ -76,27 +142,7 @@ const dmarcLoaderConnectionsByDomainId = (
     throw new Error(i18n._(t`Unable to load dmarc scans. Please try again.`))
   }
 
-  const hasNextPage = !!(
-    typeof first !== 'undefined' && dmarcScans.length > first
-  )
-  const hasPreviousPage = !!(
-    typeof last !== 'undefined' && dmarcScans.length > last
-  )
-
-  if (dmarcScans.length > first || dmarcScans.length > last) {
-    dmarcScans.pop()
-  }
-
-  const edges = dmarcScans.map((dmarcScan) => {
-    dmarcScan.id = dmarcScan._key
-    dmarcScan.domainId = domainId
-    return {
-      cursor: toGlobalId('dmarc', dmarcScan._key),
-      node: dmarcScan,
-    }
-  })
-
-  if (edges.length === 0) {
+  if (dmarcScanInfo.dmarcScans.length === 0) {
     return {
       edges: [],
       pageInfo: {
@@ -108,16 +154,22 @@ const dmarcLoaderConnectionsByDomainId = (
     }
   }
 
-  const startCursor = toGlobalId('dmarc', dmarcScans[0]._key)
-  const endCursor = toGlobalId('dmarc', dmarcScans[dmarcScans.length - 1]._key)
+  const edges = dmarcScanInfo.dmarcScans.map((dmarcScan) => {
+    dmarcScan.id = dmarcScan._key
+    dmarcScan.domainId = domainId
+    return {
+      cursor: toGlobalId('dmarc', dmarcScan._key),
+      node: dmarcScan,
+    }
+  })
 
   return {
     edges,
     pageInfo: {
-      hasNextPage,
-      hasPreviousPage,
-      startCursor,
-      endCursor,
+      hasNextPage: dmarcScanInfo.hasNextPage,
+      hasPreviousPage: dmarcScanInfo.hasPreviousPage,
+      startCursor: toGlobalId('dmarc', dmarcScanInfo.startKey),
+      endCursor: toGlobalId('dmarc', dmarcScanInfo.endKey),
     },
   }
 }
