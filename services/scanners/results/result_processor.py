@@ -444,7 +444,6 @@ def process_dns(results):
     # Check P Policy Tag
     p_policy_tag = (
         results["dmarc"]
-        .get("dmarc", {})
         .get("tags", {})
         .get("p", {})
         .get("value", None)
@@ -466,7 +465,6 @@ def process_dns(results):
     # Check PCT Tag
     pct_tag = (
         results["dmarc"]
-        .get("dmarc", {})
         .get("tags", {})
         .get("pct", {})
         .get("value", None)
@@ -490,7 +488,6 @@ def process_dns(results):
     # Check RUA Tag
     rua_tag = (
         results["dmarc"]
-        .get("dmarc", {})
         .get("tags", {})
         .get("rua", {})
         .get("value", None)
@@ -510,7 +507,6 @@ def process_dns(results):
     # Check RUF Tag
     ruf_tag = (
         results["dmarc"]
-        .get("dmarc", {})
         .get("tags", {})
         .get("ruf", {})
         .get("value", None)
@@ -537,7 +533,6 @@ def process_dns(results):
     # Check SP tag
     sp_tag = (
         results["dmarc"]
-        .get("dmarc", {})
         .get("tags", {})
         .get("sp", {})
         .get("value", None)
