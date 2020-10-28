@@ -45,7 +45,6 @@ const {
   spfLoaderConnectionsByDomainId,
   orgLoaderByKey,
   orgLoaderBySlug,
-  orgLoaderByConnectionArgs,
   orgLoaderConnectionArgsByDomainId,
   orgLoaderConnectionsByUserId,
   userLoaderByUserName,
@@ -197,13 +196,6 @@ const Server = (context = {}) => {
           ),
           orgLoaderByKey: orgLoaderByKey(query, request.language, i18n),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language, i18n),
-          orgLoaderByConnectionArgs: orgLoaderByConnectionArgs(
-            query,
-            request.language,
-            userId,
-            cleanseInput,
-            i18n,
-          ),
           orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
             query,
             request.language,
