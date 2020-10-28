@@ -135,7 +135,7 @@ describe('given the dmarcType object', () => {
               id
               domain
               email {
-                dmarc {
+                dmarc (first: 5) {
                   edges {
                     node {
                       id

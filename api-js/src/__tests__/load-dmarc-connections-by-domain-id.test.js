@@ -93,7 +93,9 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         const dmarcScans = await connectionLoader({
           domainId: domain._id,
@@ -160,6 +162,7 @@ describe('when given the load dmarc connection function', () => {
         expectedDmarcScans[1].domainId = domain._id
 
         const connectionArgs = {
+          first: 5,
           after: toGlobalId('dmarc', expectedDmarcScans[0]._key),
         }
 
@@ -179,7 +182,7 @@ describe('when given the load dmarc connection function', () => {
           ],
           pageInfo: {
             hasNextPage: false,
-            hasPreviousPage: false,
+            hasPreviousPage: true,
             startCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
             endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
           },
@@ -210,6 +213,7 @@ describe('when given the load dmarc connection function', () => {
         expectedDmarcScans[1].domainId = domain._id
 
         const connectionArgs = {
+          first: 5,
           before: toGlobalId('dmarc', expectedDmarcScans[1]._key),
         }
 
@@ -228,64 +232,10 @@ describe('when given the load dmarc connection function', () => {
             },
           ],
           pageInfo: {
-            hasNextPage: false,
+            hasNextPage: true,
             hasPreviousPage: false,
             startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
             endCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
-          },
-        }
-
-        expect(dmarcScans).toEqual(expectedStructure)
-      })
-    })
-    describe('using no limit', () => {
-      it('returns multiple dmarc scans', async () => {
-        const connectionLoader = dmarcLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const connectionArgs = {}
-
-        const dmarcScans = await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-
-        const dkimLoader = dmarcLoaderByKey(query)
-        const expectedDmarcScans = await dkimLoader.loadMany([
-          dmarcScan1._key,
-          dmarcScan2._key,
-        ])
-
-        expectedDmarcScans[0].id = expectedDmarcScans[0]._key
-        expectedDmarcScans[1].id = expectedDmarcScans[1]._key
-
-        expectedDmarcScans[0].domainId = domain._id
-        expectedDmarcScans[1].domainId = domain._id
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
-              node: {
-                ...expectedDmarcScans[0],
-              },
-            },
-            {
-              cursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
-              node: {
-                ...expectedDmarcScans[1],
-              },
-            },
-          ],
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
-            endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
           },
         }
 
@@ -425,6 +375,7 @@ describe('when given the load dmarc connection function', () => {
           expectedDmarcScans[1].domainId = domain._id
 
           const connectionArgs = {
+            first: 5,
             startDate: '2020-10-03',
           }
 
@@ -450,7 +401,7 @@ describe('when given the load dmarc connection function', () => {
             ],
             pageInfo: {
               hasNextPage: false,
-              hasPreviousPage: false,
+              hasPreviousPage: true,
               startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
               endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
             },
@@ -481,6 +432,7 @@ describe('when given the load dmarc connection function', () => {
           expectedDmarcScans[1].domainId = domain._id
 
           const connectionArgs = {
+            first: 5,
             endDate: '2020-10-03T13:50:00Z',
           }
 
@@ -505,7 +457,7 @@ describe('when given the load dmarc connection function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
+              hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
               endCursor: toGlobalId('dmarc', expectedDmarcScans[1]._key),
@@ -533,6 +485,7 @@ describe('when given the load dmarc connection function', () => {
           expectedDmarcScans[0].domainId = domain._id
 
           const connectionArgs = {
+            first: 5,
             startDate: '2020-10-03T00:00:00Z',
             endDate: '2020-10-03T23:59:59Z',
           }
@@ -552,8 +505,8 @@ describe('when given the load dmarc connection function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false,
+              hasNextPage: true,
+              hasPreviousPage: true,
               startCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
               endCursor: toGlobalId('dmarc', expectedDmarcScans[0]._key),
             },
@@ -573,7 +526,9 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         const dmarcScans = await connectionLoader({
           domainId: domain._id,
@@ -607,8 +562,36 @@ describe('when given the load dmarc connection function', () => {
       })
     })
     describe('given a unsuccessful load', () => {
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.',
+              ),
+            )
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+          ])
+        })
+      })
       describe('first and last arguments are set', () => {
-        it('throws an error', async () => {
+        it('returns an error message', async () => {
           const connectionLoader = dmarcLoaderConnectionsByDomainId(
             query,
             user._key,
@@ -629,13 +612,137 @@ describe('when given the load dmarc connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Unable to have both first, and last arguments set at the same time.',
+                'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.',
               ),
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} had first and last arguments set when trying to gather dmarc scans for domain: ${domain._id}`,
+            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
           ])
+        })
+      })
+      describe('limits are set below minimum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: -1,
+            }
+
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`first` on the `dmarc` connection cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: -2,
+            }
+
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`last` on the `dmarc` connection cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting 1000 records on the `dmarc` connection exceeds the `first` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 200,
+            }
+
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting 200 records on the `dmarc` connection exceeds the `last` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 200 for: dmarcLoaderConnectionsByDomainId.`,
+            ])
+          })
         })
       })
     })
@@ -652,7 +759,9 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -673,7 +782,7 @@ describe('when given the load dmarc connection function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          all() {
+          next() {
             throw new Error('Cursor Error Occurred.')
           },
         }
@@ -686,7 +795,9 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -718,8 +829,36 @@ describe('when given the load dmarc connection function', () => {
       })
     })
     describe('given a unsuccessful load', () => {
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = dmarcLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+          ])
+        })
+      })
       describe('first and last arguments are set', () => {
-        it('throws an error', async () => {
+        it('returns an error message', async () => {
           const connectionLoader = dmarcLoaderConnectionsByDomainId(
             query,
             user._key,
@@ -738,11 +877,139 @@ describe('when given the load dmarc connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} had first and last arguments set when trying to gather dmarc scans for domain: ${domain._id}`,
+            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
           ])
+        })
+      })
+      describe('limits are set below minimum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: -1,
+            }
+
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: -2,
+            }
+
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: dmarcLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = dmarcLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 200,
+            }
+
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 200 for: dmarcLoaderConnectionsByDomainId.`,
+            ])
+          })
         })
       })
     })
@@ -759,7 +1026,9 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -778,7 +1047,7 @@ describe('when given the load dmarc connection function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          all() {
+          next() {
             throw new Error('Cursor Error Occurred.')
           },
         }
@@ -791,7 +1060,9 @@ describe('when given the load dmarc connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
