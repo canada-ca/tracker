@@ -453,11 +453,11 @@ describe('when given the load dkim results connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
-  
+
             try {
               await connectionLoader({
                 dkimId: dkimScan._id,
@@ -483,11 +483,11 @@ describe('when given the load dkim results connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -5,
             }
-  
+
             try {
               await connectionLoader({
                 dkimId: dkimScan._id,
@@ -515,11 +515,11 @@ describe('when given the load dkim results connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 1000,
             }
-  
+
             try {
               await connectionLoader({
                 dkimId: dkimScan._id,
@@ -545,11 +545,11 @@ describe('when given the load dkim results connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 500,
             }
-  
+
             try {
               await connectionLoader({
                 dkimId: dkimScan._id,
@@ -667,11 +667,7 @@ describe('when given the load dkim results connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
@@ -698,11 +694,7 @@ describe('when given the load dkim results connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: dkimResultsLoaderConnectionByDkimId.`,
@@ -718,22 +710,18 @@ describe('when given the load dkim results connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
-  
+
             try {
               await connectionLoader({
                 dkimId: dkimScan._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
@@ -748,22 +736,18 @@ describe('when given the load dkim results connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -5,
             }
-  
+
             try {
               await connectionLoader({
                 dkimId: dkimScan._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: dkimResultsLoaderConnectionByDkimId.`,
@@ -780,22 +764,18 @@ describe('when given the load dkim results connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 1000,
             }
-  
+
             try {
               await connectionLoader({
                 dkimId: dkimScan._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: dkimResultsLoaderConnectionByDkimId.`,
@@ -810,22 +790,18 @@ describe('when given the load dkim results connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 500,
             }
-  
+
             try {
               await connectionLoader({
                 dkimId: dkimScan._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: dkimResultsLoaderConnectionByDkimId.`,

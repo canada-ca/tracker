@@ -128,7 +128,6 @@ const dkimResultsLoaderConnectionByDkimId = (
     throw new Error(i18n._(t`Unable to load dkim results. Please try again.`))
   }
 
-
   if (dkimResultsInfo.dkimResults.length === 0) {
     return {
       edges: [],

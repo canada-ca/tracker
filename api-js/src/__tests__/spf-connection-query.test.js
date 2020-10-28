@@ -133,7 +133,7 @@ describe('given the spfType object', () => {
               id
               domain
               email {
-                spf (first: 5) {
+                spf(first: 5) {
                   edges {
                     node {
                       id

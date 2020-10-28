@@ -627,11 +627,11 @@ describe('when given the load dkim connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -5,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -644,7 +644,7 @@ describe('when given the load dkim connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: dkimLoaderConnectionsByDomainId.`,
             ])
@@ -658,11 +658,11 @@ describe('when given the load dkim connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -5,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -675,7 +675,7 @@ describe('when given the load dkim connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: dkimLoaderConnectionsByDomainId.`,
             ])
@@ -691,11 +691,11 @@ describe('when given the load dkim connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 500,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -708,7 +708,7 @@ describe('when given the load dkim connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 500 for: dkimLoaderConnectionsByDomainId.`,
             ])
@@ -722,11 +722,11 @@ describe('when given the load dkim connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 500,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -739,7 +739,7 @@ describe('when given the load dkim connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: dkimLoaderConnectionsByDomainId.`,
             ])
@@ -845,11 +845,7 @@ describe('when given the load dkim connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleWarnOutput).toEqual([
@@ -877,11 +873,7 @@ describe('when given the load dkim connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleWarnOutput).toEqual([
@@ -898,24 +890,20 @@ describe('when given the load dkim connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -5,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: dkimLoaderConnectionsByDomainId.`,
             ])
@@ -929,24 +917,20 @@ describe('when given the load dkim connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -5,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: dkimLoaderConnectionsByDomainId.`,
             ])
@@ -962,24 +946,20 @@ describe('when given the load dkim connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 500,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 500 for: dkimLoaderConnectionsByDomainId.`,
             ])
@@ -993,24 +973,20 @@ describe('when given the load dkim connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 500,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: dkimLoaderConnectionsByDomainId.`,
             ])

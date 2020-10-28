@@ -129,7 +129,7 @@ describe('given the dkimType object', () => {
               id
               domain
               email {
-                dkim (first: 5) {
+                dkim(first: 5) {
                   edges {
                     node {
                       id
