@@ -147,7 +147,9 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 5,
+          }
           const orgs = await connectionLoader({
             domainId: domain._id,
             ...connectionArgs,
@@ -202,6 +204,7 @@ describe('given the load organizations connection function', () => {
           expectedOrgs[1].id = expectedOrgs[1]._key
 
           const connectionArgs = {
+            first: 5,
             after: toGlobalId('organizations', expectedOrgs[0].id),
           }
           const orgs = await connectionLoader({
@@ -220,7 +223,7 @@ describe('given the load organizations connection function', () => {
             ],
             pageInfo: {
               hasNextPage: false,
-              hasPreviousPage: false,
+              hasPreviousPage: true,
               startCursor: toGlobalId('organizations', expectedOrgs[1]._key),
               endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
             },
@@ -246,6 +249,7 @@ describe('given the load organizations connection function', () => {
           expectedOrgs[1].id = expectedOrgs[1]._key
 
           const connectionArgs = {
+            first: 5,
             before: toGlobalId('organizations', expectedOrgs[1].id),
           }
           const orgs = await connectionLoader({
@@ -263,58 +267,10 @@ describe('given the load organizations connection function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
+              hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
               endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-            },
-          }
-
-          expect(orgs).toEqual(expectedStructure)
-        })
-      })
-      describe('using no limit', () => {
-        it('returns an organization', async () => {
-          const connectionLoader = orgLoaderConnectionArgsByDomainId(
-            query,
-            'en',
-            user._key,
-            cleanseInput,
-            i18n,
-          )
-
-          const connectionArgs = {}
-          const orgs = await connectionLoader({
-            domainId: domain._id,
-            ...connectionArgs,
-          })
-
-          const orgLoader = orgLoaderByKey(query, 'en')
-          const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-
-          expectedOrgs[0].id = expectedOrgs[0]._key
-          expectedOrgs[1].id = expectedOrgs[1]._key
-
-          const expectedStructure = {
-            edges: [
-              {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
-                node: {
-                  ...expectedOrgs[0],
-                },
-              },
-              {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
-                node: {
-                  ...expectedOrgs[1],
-                },
-              },
-            ],
-            pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
             },
           }
 
@@ -442,6 +398,32 @@ describe('given the load organizations connection function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
+      describe('limits are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
+            query,
+            'en',
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          try {
+            const connectionArgs = {}
+            await connectionLoader({ domainId: domain._id, ...connectionArgs })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'You must provide a `first` or `last` value to properly paginate the `organization` connection.',
+              ),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionArgsByDomainId.`,
+          ])
+        })
+      })
       describe('user has first and last arguments set at the same time', () => {
         it('returns an error message', async () => {
           const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -461,56 +443,138 @@ describe('given the load organizations connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Error, unable to have first, and last set at the same time.',
+                'Passing both `first` and `last` to paginate the `organization` connection is not supported.',
               ),
             )
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} tried to have first and last set in organizations connection query`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionArgsByDomainId.`,
           ])
+        })
+      })
+      describe('limits are set below minimum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            try {
+              const connectionArgs = {
+                first: -1,
+              }
+              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`first` on the `organization` connection cannot be less than zero.',
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            try {
+              const connectionArgs = {
+                last: -1,
+              }
+              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`last` on the `organization` connection cannot be less than zero.',
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            try {
+              const connectionArgs = {
+                first: 101,
+              }
+              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting `101` records on the `organization` connection exceeds the `first` limit of 100 records.',
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionArgsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            try {
+              const connectionArgs = {
+                last: 101,
+              }
+              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting `101` records on the `organization` connection exceeds the `last` limit of 100 records.',
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionArgsByDomainId.`,
+            ])
+          })
         })
       })
     })
     describe('given a database error', () => {
-      describe('when gathering affiliated organizations', () => {
-        it('returns an error message', async () => {
-          const query = jest
-            .fn()
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const connectionLoader = orgLoaderConnectionArgsByDomainId(
-            query,
-            'en',
-            user._key,
-            cleanseInput,
-            i18n,
-          )
-
-          try {
-            const connectionArgs = {}
-            await connectionLoader({ domainId: domain._id, ...connectionArgs })
-          } catch (err) {
-            expect(err).toEqual(
-              new Error('Unable to load organizations. Please try again.'),
-            )
-          }
-
-          expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
-          ])
-        })
-      })
       describe('when gathering organizations', () => {
         it('returns an error message', async () => {
-          const cursor = {
-            next() {
-              return ['org1']
-            },
-          }
           const query = jest
             .fn()
-            .mockReturnValueOnce(cursor)
             .mockRejectedValue(new Error('Database error occurred.'))
 
           const connectionLoader = orgLoaderConnectionArgsByDomainId(
@@ -522,7 +586,9 @@ describe('given the load organizations connection function', () => {
           )
 
           try {
-            const connectionArgs = {}
+            const connectionArgs = {
+              first: 5,
+            }
             await connectionLoader({ domainId: domain._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(
@@ -531,12 +597,12 @@ describe('given the load organizations connection function', () => {
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather orgs in loadOrganizationsConnections.`,
+            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
           ])
         })
       })
       describe('given a cursor error', () => {
-        describe('when gathering affiliated organizations', () => {
+        describe('when gathering organizations', () => {
           it('returns an error message', async () => {
             const cursor = {
               next() {
@@ -554,7 +620,9 @@ describe('given the load organizations connection function', () => {
             )
 
             try {
-              const connectionArgs = {}
+              const connectionArgs = {
+                first: 5,
+              }
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
@@ -566,48 +634,7 @@ describe('given the load organizations connection function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
-            ])
-          })
-        })
-        describe('when gathering organizations', () => {
-          it('returns an error message', async () => {
-            const cursor = {
-              next() {
-                return ['org1']
-              },
-            }
-            const query = jest
-              .fn()
-              .mockReturnValueOnce(cursor)
-              .mockReturnValue({
-                next() {
-                  throw new Error('Cursor error occurred.')
-                },
-              })
-
-            const connectionLoader = orgLoaderConnectionArgsByDomainId(
-              query,
-              'en',
-              user._key,
-              cleanseInput,
-              i18n,
-            )
-
-            try {
-              const connectionArgs = {}
-              await connectionLoader({
-                domainId: domain._id,
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(
-                new Error('Unable to load organizations. Please try again.'),
-              )
-            }
-
-            expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadOrganizationsConnections.`,
+              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
             ])
           })
         })
@@ -637,7 +664,9 @@ describe('given the load organizations connection function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 5,
+          }
           const orgs = await connectionLoader({
             domainId: domain._id,
             ...connectionArgs,
@@ -692,6 +721,7 @@ describe('given the load organizations connection function', () => {
           expectedOrgs[1].id = expectedOrgs[1]._key
 
           const connectionArgs = {
+            first: 5,
             after: toGlobalId('organizations', expectedOrgs[0].id),
           }
           const orgs = await connectionLoader({
@@ -710,7 +740,7 @@ describe('given the load organizations connection function', () => {
             ],
             pageInfo: {
               hasNextPage: false,
-              hasPreviousPage: false,
+              hasPreviousPage: true,
               startCursor: toGlobalId('organizations', expectedOrgs[1]._key),
               endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
             },
@@ -736,6 +766,7 @@ describe('given the load organizations connection function', () => {
           expectedOrgs[1].id = expectedOrgs[1]._key
 
           const connectionArgs = {
+            first: 5,
             before: toGlobalId('organizations', expectedOrgs[1].id),
           }
           const orgs = await connectionLoader({
@@ -753,58 +784,10 @@ describe('given the load organizations connection function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
+              hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
               endCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-            },
-          }
-
-          expect(orgs).toEqual(expectedStructure)
-        })
-      })
-      describe('using no limit', () => {
-        it('returns an organization', async () => {
-          const connectionLoader = orgLoaderConnectionArgsByDomainId(
-            query,
-            'fr',
-            user._key,
-            cleanseInput,
-            i18n,
-          )
-
-          const connectionArgs = {}
-          const orgs = await connectionLoader({
-            domainId: domain._id,
-            ...connectionArgs,
-          })
-
-          const orgLoader = orgLoaderByKey(query, 'fr')
-          const expectedOrgs = await orgLoader.loadMany([org._key, orgTwo._key])
-
-          expectedOrgs[0].id = expectedOrgs[0]._key
-          expectedOrgs[1].id = expectedOrgs[1]._key
-
-          const expectedStructure = {
-            edges: [
-              {
-                cursor: toGlobalId('organizations', expectedOrgs[0]._key),
-                node: {
-                  ...expectedOrgs[0],
-                },
-              },
-              {
-                cursor: toGlobalId('organizations', expectedOrgs[1]._key),
-                node: {
-                  ...expectedOrgs[1],
-                },
-              },
-            ],
-            pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false,
-              startCursor: toGlobalId('organizations', expectedOrgs[0]._key),
-              endCursor: toGlobalId('organizations', expectedOrgs[1]._key),
             },
           }
 
@@ -932,11 +915,37 @@ describe('given the load organizations connection function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
+      describe('limits are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = orgLoaderConnectionArgsByDomainId(
+            query,
+            'en',
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          try {
+            const connectionArgs = {}
+            await connectionLoader({ domainId: domain._id, ...connectionArgs })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionArgsByDomainId.`,
+          ])
+        })
+      })
       describe('user has first and last arguments set at the same time', () => {
         it('returns an error message', async () => {
           const connectionLoader = orgLoaderConnectionArgsByDomainId(
             query,
-            'fr',
+            'en',
             user._key,
             cleanseInput,
             i18n,
@@ -949,17 +958,137 @@ describe('given the load organizations connection function', () => {
             }
             await connectionLoader({ domainId: domain._id, ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} tried to have first and last set in organizations connection query`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionArgsByDomainId.`,
           ])
+        })
+      })
+      describe('limits are set below minimum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            try {
+              const connectionArgs = {
+                first: -1,
+              }
+              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            try {
+              const connectionArgs = {
+                last: -1,
+              }
+              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are set above maximum', () => {
+        describe('first is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            try {
+              const connectionArgs = {
+                first: 101,
+              }
+              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionArgsByDomainId.`,
+            ])
+          })
+        })
+        describe('last is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = orgLoaderConnectionArgsByDomainId(
+              query,
+              'en',
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            try {
+              const connectionArgs = {
+                last: 101,
+              }
+              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+  
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionArgsByDomainId.`,
+            ])
+          })
         })
       })
     })
     describe('given a database error', () => {
-      describe('when gathering affiliated organizations', () => {
+      describe('when gathering organizations', () => {
         it('returns an error message', async () => {
           const query = jest
             .fn()
@@ -974,51 +1103,21 @@ describe('given the load organizations connection function', () => {
           )
 
           try {
-            const connectionArgs = {}
+            const connectionArgs = {
+              first: 5,
+            }
             await connectionLoader({ domainId: domain._id, ...connectionArgs })
           } catch (err) {
             expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
-          ])
-        })
-      })
-      describe('when gathering organizations', () => {
-        it('returns an error message', async () => {
-          const cursor = {
-            next() {
-              return ['org1']
-            },
-          }
-          const query = jest
-            .fn()
-            .mockReturnValueOnce(cursor)
-            .mockRejectedValue(new Error('Database error occurred.'))
-
-          const connectionLoader = orgLoaderConnectionArgsByDomainId(
-            query,
-            'fr',
-            user._key,
-            cleanseInput,
-            i18n,
-          )
-
-          try {
-            const connectionArgs = {}
-            await connectionLoader({ domainId: domain._id, ...connectionArgs })
-          } catch (err) {
-            expect(err).toEqual(new Error('todo'))
-          }
-
-          expect(consoleOutput).toEqual([
-            `Database error occurred while user: ${user._key} was trying to gather orgs in loadOrganizationsConnections.`,
+            `Database error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
           ])
         })
       })
       describe('given a cursor error', () => {
-        describe('when gathering affiliated organizations', () => {
+        describe('when gathering organizations', () => {
           it('returns an error message', async () => {
             const cursor = {
               next() {
@@ -1036,7 +1135,9 @@ describe('given the load organizations connection function', () => {
             )
 
             try {
-              const connectionArgs = {}
+              const connectionArgs = {
+                first: 5,
+              }
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
@@ -1046,46 +1147,7 @@ describe('given the load organizations connection function', () => {
             }
 
             expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather affiliated orgs in loadOrganizationsConnections.`,
-            ])
-          })
-        })
-        describe('when gathering organizations', () => {
-          it('returns an error message', async () => {
-            const cursor = {
-              next() {
-                return ['org1']
-              },
-            }
-            const query = jest
-              .fn()
-              .mockReturnValueOnce(cursor)
-              .mockReturnValue({
-                next() {
-                  throw new Error('Cursor error occurred.')
-                },
-              })
-
-            const connectionLoader = orgLoaderConnectionArgsByDomainId(
-              query,
-              'fr',
-              user._key,
-              cleanseInput,
-              i18n,
-            )
-
-            try {
-              const connectionArgs = {}
-              await connectionLoader({
-                domainId: domain._id,
-                ...connectionArgs,
-              })
-            } catch (err) {
-              expect(err).toEqual(new Error('todo'))
-            }
-
-            expect(consoleOutput).toEqual([
-              `Cursor error occurred while user: ${user._key} was trying to gather orgs in loadOrganizationsConnections.`,
+              `Cursor error occurred while user: ${user._key} was trying to gather orgs in orgLoaderConnectionArgsByDomainId.`,
             ])
           })
         })
