@@ -12,40 +12,56 @@ export default function AdminPage() {
   const { currentUser } = useUserState()
   const [orgName, setOrgName] = useState()
   const { i18n } = useLingui()
-  const toast = useToast()
+  // const toast = useToast()
 
-  const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
-    context: {
-      headers: {
-        authorization: currentUser.jwt,
-      },
-    },
-    onError: error => {
-      const [_, message] = error.message.split(': ')
-      toast({
-        title: 'Error',
-        description: message,
-        status: 'failure',
-        duration: 9000,
-        isClosable: true,
-        position: 'bottom-left',
-      })
-    },
-  })
+  // const { loading, error, data } = useQuery(USER_AFFILIATIONS, {
+  //   context: {
+  //     headers: {
+  //       authorization: currentUser.jwt,
+  //     },
+  //   },
+  //   onError: error => {
+  //     const [_, message] = error.message.split(': ')
+  //     toast({
+  //       title: 'Error',
+  //       description: message,
+  //       status: 'failure',
+  //       duration: 9000,
+  //       isClosable: true,
+  //       position: 'bottom-left',
+  //     })
+  //   },
+  // })
 
-  if (loading) {
-    return <p>Loading user affilliations...</p>
-  }
+  // if (loading) {
+  //   return <p>Loading user affilliations...</p>
+  // }
 
-  if (error) {
-    return <p>{String(error)}</p>
-  }
+  // if (error) {
+  //   return <p>{String(error)}</p>
+  // }
+
+  // const adminAffiliations = {}
+  // if (data?.user[0]?.affiliations?.edges) {
+  //   const {
+  //     affiliations: { edges },
+  //   } = data.user[0]
+  //   for (let i = 0; i < edges.length; i++) {
+  //     const {
+  //       node: {
+  //         permission,
+  //         organization: { acronym },
+  //       },
+  //     } = edges[i]
+  //     if (permission === 'ADMIN' || permission === 'SUPER_ADMIN') {
+  //       adminAffiliations[acronym] = permission
+  //     }
+  //   }
+  // }
 
   const adminAffiliations = {}
-  if (data?.user[0]?.affiliations?.edges) {
-    const {
-      affiliations: { edges },
-    } = data.user[0]
+  if (currentUser.affiliations?.edges) {
+    const edges = currentUser.affiliations?.edges
     for (let i = 0; i < edges.length; i++) {
       const {
         node: {
@@ -91,7 +107,7 @@ export default function AdminPage() {
               w={['100%', '25%']}
               size="lg"
               variant="filled"
-              onChange={e => {
+              onChange={(e) => {
                 setOrgName(e.target.value)
               }}
             >
