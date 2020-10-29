@@ -24,6 +24,8 @@
       'Could not retrieve specified domain.',
     'Could not retrieve specified organization.':
       'Could not retrieve specified organization.',
+    'Error, unable to have first, and last set at the same time.':
+      'Error, unable to have first, and last set at the same time.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'If an account with this username is found, a password reset link will be found in your inbox.',
     'If an account with this username is found, an email verification link will be found in your inbox.':
@@ -42,8 +44,8 @@
       'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.',
     'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
       'Passing both `first` and `last` to paginate the `domains` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `organization` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `https` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `https` connection is not supported.',
     'Passing both `first` and `last` to paginate the `spf` connection is not supported.':
       'Passing both `first` and `last` to paginate the `spf` connection is not supported.',
     'Password is not strong enough. Please try again.':
@@ -60,17 +62,6 @@
         'Requesting `',
         a('amount'),
         '` records on the `domains` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting `',
-        a('amount'),
-        '` records on the `organization` connection exceeds the `',
         a('argSet'),
         '` limit of 100 records.',
       ]
@@ -115,6 +106,17 @@
         'Requesting ',
         a('amount'),
         ' records on the `domains` connection exceeds the `',
+        a('argSet'),
+        '` limit of 100 records.',
+      ]
+    },
+    'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.': function (
+      a,
+    ) {
+      return [
+        'Requesting ',
+        a('amount'),
+        ' records on the `https` connection exceeds the `',
         a('argSet'),
         '` limit of 100 records.',
       ]
@@ -246,8 +248,6 @@
       'Unable to verify account. Please request a new email.',
     'Unable to verify account. Please try again.':
       'Unable to verify account. Please try again.',
-    'Unable to verify if user is an admin, please try again.':
-      'Unable to verify if user is an admin, please try again.',
     'User role was updated successfully.':
       'User role was updated successfully.',
     'Username already in use.': 'Username already in use.',
@@ -263,8 +263,8 @@
       'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.',
     'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
       'You must provide a `first` or `last` value to properly paginate the `domains` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `organization` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `https` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `https` connection.',
     'You must provide a `first` or `last` value to properly paginate the `spf` connection.':
       'You must provide a `first` or `last` value to properly paginate the `spf` connection.',
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.': function (
@@ -303,13 +303,13 @@
         '` on the `domains` connection cannot be less than zero.',
       ]
     },
-    '`{argSet}` on the `organization` connection cannot be less than zero.': function (
+    '`{argSet}` on the `https` connection cannot be less than zero.': function (
       a,
     ) {
       return [
         '`',
         a('argSet'),
-        '` on the `organization` connection cannot be less than zero.',
+        '` on the `https` connection cannot be less than zero.',
       ]
     },
     '`{argSet}` on the `spf` connection cannot be less than zero.': function (

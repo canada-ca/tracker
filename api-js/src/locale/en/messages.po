@@ -63,10 +63,9 @@ msgstr "Passing both `first` and `last` to paginate the `dmarc` connection is no
 msgid "Passing both `first` and `last` to paginate the `domains` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `domains` connection is not supported."
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:68
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:68
-msgid "Passing both `first` and `last` to paginate the `organization` connection is not supported."
-msgstr "Passing both `first` and `last` to paginate the `organization` connection is not supported."
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:74
+msgid "Passing both `first` and `last` to paginate the `https` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `https` connection is not supported."
 
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:74
 msgid "Passing both `first` and `last` to paginate the `spf` connection is not supported."
@@ -120,6 +119,10 @@ msgstr "Requesting {amount} records on the `dmarc` connection exceeds the `{argS
 #: src/loaders/domains/load-domain-connections-by-user-id.js:54
 msgid "Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
+
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:61
+msgid "Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records."
 
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:61
 msgid "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records."
@@ -232,7 +235,6 @@ msgstr "Unable to find ssl scan. Please try again."
 msgid "Unable to find user. Please try again."
 msgstr "Unable to find user. Please try again."
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:45
 #: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:45
 msgid "Unable to have both first, and last arguments set at the same time."
 msgstr "Unable to have both first, and last arguments set at the same time."
@@ -270,8 +272,8 @@ msgstr "Unable to load dmarc scans. Please try again."
 msgid "Unable to load domains. Please try again."
 msgstr "Unable to load domains. Please try again."
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:67
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:77
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:130
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:140
 msgid "Unable to load https scans. Please try again."
 msgstr "Unable to load https scans. Please try again."
 
@@ -483,10 +485,9 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `dma
 msgid "You must provide a `first` or `last` value to properly paginate the `domains` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `domains` connection."
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:34
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:34
-msgid "You must provide a `first` or `last` value to properly paginate the `organization` connection."
-msgstr "You must provide a `first` or `last` value to properly paginate the `organization` connection."
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:40
+msgid "You must provide a `first` or `last` value to properly paginate the `https` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `https` connection."
 
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `spf` connection."
@@ -509,10 +510,9 @@ msgstr "`{argSet}` on the `dmarc` connection cannot be less than zero."
 msgid "`{argSet}` on the `domains` connection cannot be less than zero."
 msgstr "`{argSet}` on the `domains` connection cannot be less than zero."
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:44
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:44
-msgid "`{argSet}` on the `organization` connection cannot be less than zero."
-msgstr "`{argSet}` on the `organization` connection cannot be less than zero."
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:50
+msgid "`{argSet}` on the `https` connection cannot be less than zero."
+msgstr "`{argSet}` on the `https` connection cannot be less than zero."
 
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:50
 msgid "`{argSet}` on the `spf` connection cannot be less than zero."
