@@ -39,8 +39,9 @@ export default function TwoFactorAuthenticatePage() {
     onCompleted({ authenticate }) {
       login({
         jwt: authenticate.authResult.authToken,
-        tfa: authenticate.authResult.user.tfa,
+        tfa: authenticate.authResult.user.tfaValidated,
         userName: authenticate.authResult.user.userName,
+        affiliations: authenticate.authResult.user.affiliations,
       })
       // // redirect to the home page.
       history.push('/')
@@ -71,7 +72,7 @@ export default function TwoFactorAuthenticatePage() {
           twoFactorCode: '',
           authenticateToken: authenticateToken,
         }}
-        onSubmit={async values => {
+        onSubmit={async (values) => {
           authenticate({
             variables: {
               authenticationCode: parseInt(values.twoFactorCode),
