@@ -23,6 +23,19 @@ export const SIGN_UP = gql`
         authToken
         user {
           userName
+          tfaValidated
+          affiliations {
+            edges {
+              node {
+                permission
+                organization {
+                  acronym
+                  name
+                  slug
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -53,7 +66,19 @@ export const AUTHENTICATE = gql`
         authToken
         user {
           userName
-          tfa
+          tfaValidated
+          affiliations {
+            edges {
+              node {
+                permission
+                organization {
+                  acronym
+                  name
+                  slug
+                }
+              }
+            }
+          }
         }
       }
     }

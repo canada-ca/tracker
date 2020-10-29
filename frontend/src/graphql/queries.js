@@ -151,12 +151,11 @@ export const ORGANIZATIONS = gql`
 `
 
 export const ADMIN_PANEL = gql`
-  query Domains($number: Int, $cursor: String, $slug: Slug!) {
+  query Domains($number: Int, $cursor: String) {
     domains: findMyDomains(first: $number, after: $cursor) {
       edges {
         node {
-          url
-          slug
+          domain
           lastRan
         }
       }
@@ -165,23 +164,41 @@ export const ADMIN_PANEL = gql`
         hasNextPage
       }
     }
-    userList(orgSlug: $slug) {
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-      }
-      edges {
-        node {
-          id
-          userName
-          role
-          tfa
-          displayName
-        }
-      }
-    }
   }
 `
+
+// disabled since user list doesn't work yet (Oct-26)
+// export const ADMIN_PANEL = gql`
+//   query Domains($number: Int, $cursor: String, $slug: Slug!) {
+//     domains: findMyDomains(first: $number, after: $cursor) {
+//       edges {
+//         node {
+//           domain
+//           lastRan
+//         }
+//       }
+//       pageInfo {
+//         endCursor
+//         hasNextPage
+//       }
+//     }
+//     userList(orgSlug: $slug) {
+//       pageInfo {
+//         hasNextPage
+//         hasPreviousPage
+//       }
+//       edges {
+//         node {
+//           id
+//           userName
+//           role
+//           tfa
+//           displayName
+//         }
+//       }
+//     }
+//   }
+// `
 
 export const ORG_DETAILS_PAGE = gql`
   query OrgDetails($slug: Slug!) {
