@@ -137,7 +137,7 @@ describe('given the https gql object', () => {
               id
               domain
               web {
-                https {
+                https (first: 5) {
                   edges {
                     node {
                       id

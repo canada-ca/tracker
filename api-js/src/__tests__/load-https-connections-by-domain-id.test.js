@@ -105,7 +105,9 @@ describe('given the load https connection function', () => {
         expectedHttpsScans[1].id = expectedHttpsScans[1]._key
         expectedHttpsScans[1].domainId = domain._id
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         const httpsScans = await connectionLoader({
           domainId: domain._id,
@@ -160,6 +162,7 @@ describe('given the load https connection function', () => {
         expectedHttpsScans[1].domainId = domain._id
 
         const connectionArgs = {
+          first: 5,
           after: toGlobalId('https', expectedHttpsScans[0]._key),
         }
 
@@ -179,7 +182,7 @@ describe('given the load https connection function', () => {
           ],
           pageInfo: {
             hasNextPage: false,
-            hasPreviousPage: false,
+            hasPreviousPage: true,
             startCursor: toGlobalId('https', expectedHttpsScans[1]._key),
             endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
           },
@@ -210,6 +213,7 @@ describe('given the load https connection function', () => {
         expectedHttpsScans[1].domainId = domain._id
 
         const connectionArgs = {
+          first: 5,
           before: toGlobalId('https', expectedHttpsScans[1]._key),
         }
 
@@ -228,64 +232,10 @@ describe('given the load https connection function', () => {
             },
           ],
           pageInfo: {
-            hasNextPage: false,
+            hasNextPage: true,
             hasPreviousPage: false,
             startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
             endCursor: toGlobalId('https', expectedHttpsScans[0]._key),
-          },
-        }
-
-        expect(httpsScans).toEqual(expectedStructure)
-      })
-    })
-    describe('using no limit', () => {
-      it('returns multiple https scans', async () => {
-        const connectionLoader = httpsLoaderConnectionsByDomainId(
-          query,
-          user._key,
-          cleanseInput,
-          i18n,
-        )
-
-        const httpsLoader = httpsLoaderByKey(query, i18n)
-        const expectedHttpsScans = await httpsLoader.loadMany([
-          httpsScan1._key,
-          httpsScan2._key,
-        ])
-
-        expectedHttpsScans[0].id = expectedHttpsScans[0]._key
-        expectedHttpsScans[0].domainId = domain._id
-
-        expectedHttpsScans[1].id = expectedHttpsScans[1]._key
-        expectedHttpsScans[1].domainId = domain._id
-
-        const connectionArgs = {}
-
-        const httpsScans = await connectionLoader({
-          domainId: domain._id,
-          ...connectionArgs,
-        })
-
-        const expectedStructure = {
-          edges: [
-            {
-              cursor: toGlobalId('https', expectedHttpsScans[0]._key),
-              node: {
-                ...expectedHttpsScans[0],
-              },
-            },
-            {
-              cursor: toGlobalId('https', expectedHttpsScans[1]._key),
-              node: {
-                ...expectedHttpsScans[1],
-              },
-            },
-          ],
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
-            endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
           },
         }
 
@@ -425,6 +375,7 @@ describe('given the load https connection function', () => {
           expectedHttpsScans[1].domainId = domain._id
 
           const connectionArgs = {
+            first: 5,
             startDate: '2020-10-03',
           }
 
@@ -450,7 +401,7 @@ describe('given the load https connection function', () => {
             ],
             pageInfo: {
               hasNextPage: false,
-              hasPreviousPage: false,
+              hasPreviousPage: true,
               startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
               endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
             },
@@ -481,6 +432,7 @@ describe('given the load https connection function', () => {
           expectedHttpsScans[1].domainId = domain._id
 
           const connectionArgs = {
+            first: 5,
             endDate: '2020-10-03T13:50:00Z',
           }
 
@@ -505,7 +457,7 @@ describe('given the load https connection function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
+              hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
               endCursor: toGlobalId('https', expectedHttpsScans[1]._key),
@@ -533,6 +485,7 @@ describe('given the load https connection function', () => {
           expectedHttpsScans[0].domainId = domain._id
 
           const connectionArgs = {
+            first: 5,
             startDate: '2020-10-03T00:00:00Z',
             endDate: '2020-10-03T23:59:59Z',
           }
@@ -552,8 +505,8 @@ describe('given the load https connection function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false,
+              hasNextPage: true,
+              hasPreviousPage: true,
               startCursor: toGlobalId('https', expectedHttpsScans[0]._key),
               endCursor: toGlobalId('https', expectedHttpsScans[0]._key),
             },
@@ -574,7 +527,9 @@ describe('given the load https connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         const httpsScans = await connectionLoader({
           domainId: domain._id,
@@ -608,8 +563,36 @@ describe('given the load https connection function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
+      describe('both limits are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = httpsLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'You must provide a `first` or `last` value to properly paginate the `https` connection.',
+              ),
+            )
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
+          ])
+        })
+      })
       describe('first and last arguments are set', () => {
-        it('throws and error', async () => {
+        it('returns an error message', async () => {
           const connectionLoader = httpsLoaderConnectionsByDomainId(
             query,
             user._key,
@@ -630,13 +613,137 @@ describe('given the load https connection function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Unable to have both first, and last arguments set at the same time.',
+                'Passing both `first` and `last` to paginate the `https` connection is not supported.',
               ),
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} had first and last arguments set when trying to gather https scans for domain: ${domain._id}`,
+            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
           ])
+        })
+      })
+      describe('limits are below minimum', () => {
+        describe('first limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: -1,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`first` on the `https` connection cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: httpsLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: -5,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  '`last` on the `https` connection cannot be less than zero.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: httpsLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are above maximum', () => {
+        describe('first limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: 101,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting 101 records on the `https` connection exceeds the `first` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 101 for: httpsLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: 500,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting 500 records on the `https` connection exceeds the `last` limit of 100 records.',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 500 for: httpsLoaderConnectionsByDomainId.`,
+            ])
+          })
         })
       })
     })
@@ -653,7 +760,9 @@ describe('given the load https connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -674,7 +783,7 @@ describe('given the load https connection function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          all() {
+          next() {
             throw new Error('Cursor Error Occurred.')
           },
         }
@@ -687,7 +796,9 @@ describe('given the load https connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -719,8 +830,36 @@ describe('given the load https connection function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
+      describe('both limits are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = httpsLoaderConnectionsByDomainId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+
+          try {
+            await connectionLoader({
+              domainId: domain._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                'todo',
+              ),
+            )
+          }
+          expect(consoleWarnOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
+          ])
+        })
+      })
       describe('first and last arguments are set', () => {
-        it('throws and error', async () => {
+        it('returns an error message', async () => {
           const connectionLoader = httpsLoaderConnectionsByDomainId(
             query,
             user._key,
@@ -746,8 +885,132 @@ describe('given the load https connection function', () => {
             )
           }
           expect(consoleWarnOutput).toEqual([
-            `User: ${user._key} had first and last arguments set when trying to gather https scans for domain: ${domain._id}`,
+            `User: ${user._key} tried to have \`first\` and \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
           ])
+        })
+      })
+      describe('limits are below minimum', () => {
+        describe('first limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: -1,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: httpsLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: -5,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: httpsLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are above maximum', () => {
+        describe('first limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              first: 101,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 101 for: httpsLoaderConnectionsByDomainId.`,
+            ])
+          })
+        })
+        describe('last limit is set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = httpsLoaderConnectionsByDomainId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+  
+            const connectionArgs = {
+              last: 500,
+            }
+  
+            try {
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'todo',
+                ),
+              )
+            }
+            expect(consoleWarnOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 500 for: httpsLoaderConnectionsByDomainId.`,
+            ])
+          })
         })
       })
     })
@@ -764,7 +1027,9 @@ describe('given the load https connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -772,9 +1037,7 @@ describe('given the load https connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([
@@ -785,7 +1048,7 @@ describe('given the load https connection function', () => {
     describe('cursor error occurs', () => {
       it('throws an error', async () => {
         const cursor = {
-          all() {
+          next() {
             throw new Error('Cursor Error Occurred.')
           },
         }
@@ -798,7 +1061,9 @@ describe('given the load https connection function', () => {
           i18n,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 5,
+        }
 
         try {
           await connectionLoader({
@@ -806,9 +1071,7 @@ describe('given the load https connection function', () => {
             ...connectionArgs,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleErrorOutput).toEqual([
