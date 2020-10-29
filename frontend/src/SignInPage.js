@@ -66,7 +66,7 @@ export default function SignInPage() {
       <Formik
         validationSchema={validationSchema}
         initialValues={{ email: '', password: '' }}
-        onSubmit={async values => {
+        onSubmit={async (values) => {
           signIn({
             variables: { userName: values.email, password: values.password },
           })
