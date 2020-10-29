@@ -24,8 +24,6 @@
       'Could not retrieve specified domain.',
     'Could not retrieve specified organization.':
       'Could not retrieve specified organization.',
-    'Error, unable to have first, and last set at the same time.':
-      'Error, unable to have first, and last set at the same time.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'If an account with this username is found, a password reset link will be found in your inbox.',
     'If an account with this username is found, an email verification link will be found in your inbox.':
@@ -248,6 +246,8 @@
       'Unable to verify account. Please request a new email.',
     'Unable to verify account. Please try again.':
       'Unable to verify account. Please try again.',
+    'Unable to verify if user is an admin, please try again.':
+      'Unable to verify if user is an admin, please try again.',
     'User role was updated successfully.':
       'User role was updated successfully.',
     'Username already in use.': 'Username already in use.',

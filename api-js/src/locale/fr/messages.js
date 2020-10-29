@@ -9,7 +9,6 @@
     'Authentication error, please sign in again.': 'todo',
     'Could not retrieve specified domain.': 'todo',
     'Could not retrieve specified organization.': 'todo',
-    'Error, unable to have first, and last set at the same time.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
     'If an account with this username is found, an email verification link will be found in your inbox.':
@@ -115,6 +114,7 @@
     'Unable to update your own role. Please try again.': 'todo',
     'Unable to verify account. Please request a new email.': 'todo',
     'Unable to verify account. Please try again.': 'todo',
+    'Unable to verify if user is an admin, please try again.': 'todo',
     'User role was updated successfully.': 'todo',
     'Username already in use.': 'todo',
     "We've sent you a text message with an authentication code to sign into Pulse.":

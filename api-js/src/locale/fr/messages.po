@@ -446,6 +446,10 @@ msgstr "todo"
 msgid "Unable to verify account. Please try again."
 msgstr "todo"
 
+#: src/queries/user/is-user-admin.js:30
+msgid "Unable to verify if user is an admin, please try again."
+msgstr "todo"
+
 #: src/mutations/user-affiliations/update-user-role.js:218
 msgid "User role was updated successfully."
 msgstr "todo"
