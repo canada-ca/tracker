@@ -65,6 +65,7 @@ export default function CreateUserPage() {
         jwt: signUp.authResult.authToken,
         tfa: signUp.authResult.user.tfa,
         userName: signUp.authResult.user.userName,
+        affiliations: signUp.authResult.user.affiliations,
       })
       // redirect to the home page.
       history.push('/')
