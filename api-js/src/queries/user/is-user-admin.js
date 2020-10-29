@@ -26,13 +26,17 @@ const isUserAdmin = {
       RETURN e.permission
       `
     } catch (err) {
-      console.error(`Database error occurred when user: ${userId} was seeing if they were an admin, err: ${err}`)
-      throw new Error(i18n._(t`Unable to verify if user is an admin, please try again.`))
+      console.error(
+        `Database error occurred when user: ${userId} was seeing if they were an admin, err: ${err}`,
+      )
+      throw new Error(
+        i18n._(t`Unable to verify if user is an admin, please try again.`),
+      )
     }
 
     if (userAdmin.count > 0) {
       return true
-    } 
+    }
 
     return false
   },

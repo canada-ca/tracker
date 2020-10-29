@@ -463,12 +463,15 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             try {
               const connectionArgs = {
                 first: -1,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(
                 new Error(
@@ -476,7 +479,7 @@ describe('given the load organizations connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
             ])
@@ -491,12 +494,15 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             try {
               const connectionArgs = {
                 last: -1,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(
                 new Error(
@@ -504,7 +510,7 @@ describe('given the load organizations connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
             ])
@@ -521,12 +527,15 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             try {
               const connectionArgs = {
                 first: 101,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(
                 new Error(
@@ -534,7 +543,7 @@ describe('given the load organizations connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionArgsByDomainId.`,
             ])
@@ -549,12 +558,15 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             try {
               const connectionArgs = {
                 last: 101,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
               expect(err).toEqual(
                 new Error(
@@ -562,7 +574,7 @@ describe('given the load organizations connection function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionArgsByDomainId.`,
             ])
@@ -929,11 +941,7 @@ describe('given the load organizations connection function', () => {
             const connectionArgs = {}
             await connectionLoader({ domainId: domain._id, ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -958,11 +966,7 @@ describe('given the load organizations connection function', () => {
             }
             await connectionLoader({ domainId: domain._id, ...connectionArgs })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -980,20 +984,19 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             try {
               const connectionArgs = {
                 first: -1,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
             ])
@@ -1008,20 +1011,19 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             try {
               const connectionArgs = {
                 last: -1,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
             ])
@@ -1038,20 +1040,19 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             try {
               const connectionArgs = {
                 first: 101,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionArgsByDomainId.`,
             ])
@@ -1066,20 +1067,19 @@ describe('given the load organizations connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             try {
               const connectionArgs = {
                 last: 101,
               }
-              await connectionLoader({ domainId: domain._id, ...connectionArgs })
+              await connectionLoader({
+                domainId: domain._id,
+                ...connectionArgs,
+              })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionArgsByDomainId.`,
             ])

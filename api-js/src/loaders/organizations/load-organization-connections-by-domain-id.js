@@ -152,7 +152,7 @@ const orgLoaderConnectionArgsByDomainId = (
 
   const edges = organizationInfo.organizations.map((organization) => {
     organization.id = organization._key
-    return{
+    return {
       cursor: toGlobalId('organizations', organization._key),
       node: organization,
     }

@@ -446,7 +446,7 @@ describe('given the load organization connections by user id function', () => {
               'en',
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
@@ -461,7 +461,7 @@ describe('given the load organization connections by user id function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionsByUserId.`,
             ])
@@ -476,7 +476,7 @@ describe('given the load organization connections by user id function', () => {
               'en',
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -1,
             }
@@ -491,7 +491,7 @@ describe('given the load organization connections by user id function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionsByUserId.`,
             ])
@@ -508,7 +508,7 @@ describe('given the load organization connections by user id function', () => {
               'en',
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 101,
             }
@@ -523,7 +523,7 @@ describe('given the load organization connections by user id function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionsByUserId.`,
             ])
@@ -538,7 +538,7 @@ describe('given the load organization connections by user id function', () => {
               'en',
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 101,
             }
@@ -553,7 +553,7 @@ describe('given the load organization connections by user id function', () => {
                 ),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionsByUserId.`,
             ])
@@ -929,11 +929,7 @@ describe('given the load organization connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -960,11 +956,7 @@ describe('given the load organization connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleOutput).toEqual([
@@ -982,7 +974,7 @@ describe('given the load organization connections by user id function', () => {
               'en',
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
@@ -991,13 +983,9 @@ describe('given the load organization connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: orgLoaderConnectionsByUserId.`,
             ])
@@ -1012,7 +1000,7 @@ describe('given the load organization connections by user id function', () => {
               'en',
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -1,
             }
@@ -1021,13 +1009,9 @@ describe('given the load organization connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: orgLoaderConnectionsByUserId.`,
             ])
@@ -1044,7 +1028,7 @@ describe('given the load organization connections by user id function', () => {
               'en',
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 101,
             }
@@ -1053,13 +1037,9 @@ describe('given the load organization connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` to 101 for: orgLoaderConnectionsByUserId.`,
             ])
@@ -1074,7 +1054,7 @@ describe('given the load organization connections by user id function', () => {
               'en',
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 101,
             }
@@ -1083,13 +1063,9 @@ describe('given the load organization connections by user id function', () => {
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionsByUserId.`,
             ])
