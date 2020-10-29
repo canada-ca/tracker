@@ -20,7 +20,7 @@ export default function AdminPanel({ orgName, permission }) {
         authorization: currentUser.jwt,
       },
     },
-    onError: error => {
+    onError: (error) => {
       const [_, message] = error.message.split(': ')
       toast({
         title: 'Error',
@@ -50,12 +50,13 @@ export default function AdminPanel({ orgName, permission }) {
           orgName={orgName}
           refetchFunc={refetch}
         />
-        <UserList
+        {/* TODO: get user list working */}
+        {/* <UserList
           permission={permission}
           userListData={data.userList}
           orgName={orgName}
           orgSlug={slugify(orgName)}
-        />
+        /> */}
       </SimpleGrid>
     </Stack>
   )
