@@ -132,7 +132,7 @@ describe('given the ssl gql object', () => {
               id
               domain
               web {
-                ssl {
+                ssl (first: 5) {
                   edges {
                     node {
                       id
