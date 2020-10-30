@@ -120,7 +120,7 @@ const Server = (context = {}) => {
           checkDomainPermission: checkDomainPermission({i18n, userId, query}),
           checkPermission: checkPermission({i18n, userId, query}),
           tokenize,
-          userRequired,
+          userRequired: userRequired({i18n, userId, userLoaderByKey: userLoaderByKey(query)}),
           verifyToken,
         },
         validators: {
