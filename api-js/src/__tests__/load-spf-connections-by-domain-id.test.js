@@ -4,6 +4,7 @@ require('dotenv-safe').config({
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const { stringify } = require('jest-matcher-utils')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
@@ -625,11 +626,11 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -655,11 +656,11 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -5,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -687,11 +688,11 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 1000,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -717,11 +718,11 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 500,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -737,6 +738,78 @@ describe('when given the load spf connection function', () => {
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: spfLoaderConnectionsByDomainId.`,
             ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = spfLoaderConnectionsByDomainId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: spfLoaderConnectionsByDomainId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = spfLoaderConnectionsByDomainId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: spfLoaderConnectionsByDomainId.`,
+              ])
+            })
           })
         })
       })
@@ -841,11 +914,7 @@ describe('when given the load spf connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
@@ -872,11 +941,7 @@ describe('when given the load spf connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
@@ -892,22 +957,18 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: spfLoaderConnectionsByDomainId.`,
@@ -922,22 +983,18 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -5,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: spfLoaderConnectionsByDomainId.`,
@@ -954,22 +1011,18 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 1000,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: spfLoaderConnectionsByDomainId.`,
@@ -984,26 +1037,86 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 500,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: spfLoaderConnectionsByDomainId.`,
             ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = spfLoaderConnectionsByDomainId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: spfLoaderConnectionsByDomainId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = spfLoaderConnectionsByDomainId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: spfLoaderConnectionsByDomainId.`,
+              ])
+            })
           })
         })
       })

@@ -40,40 +40,52 @@ const dmarcLoaderConnectionsByDomainId = (
         t`You must provide a \`first\` or \`last\` value to properly paginate the \`dmarc\` connection.`,
       ),
     )
-  } else if (first < 0 || last < 0) {
-    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-
+  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
-    )
-    throw new Error(
-      i18n._(
-        t`\`${argSet}\` on the \`dmarc\` connection cannot be less than zero.`,
-      ),
-    )
-  } else if (first > 100 || last > 100) {
-    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-    const amount = typeof first !== 'undefined' ? first : last
-    console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: dmarcLoaderConnectionsByDomainId.`,
-    )
-    throw new Error(
-      i18n._(
-        t`Requesting ${amount} records on the \`dmarc\` connection exceeds the \`${argSet}\` limit of 100 records.`,
-      ),
-    )
-  } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT dmarcScan._key ASC LIMIT TO_NUMBER(${first})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT dmarcScan._key DESC LIMIT TO_NUMBER(${last})`
-  } else {
-    console.warn(
-      `User: ${userId} tried to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
+      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: dmarcLoaderConnectionsByDomainId.`,
     )
     throw new Error(
       i18n._(
         t`Passing both \`first\` and \`last\` to paginate the \`dmarc\` connection is not supported.`,
       ),
+    )
+  } else if (typeof first === 'number' || typeof last === 'number') {
+    /* istanbul ignore else */
+    if (first < 0 || last < 0) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set below zero for: dmarcLoaderConnectionsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`\`${argSet}\` on the \`dmarc\` connection cannot be less than zero.`,
+        ),
+      )
+    } else if (first > 100 || last > 100) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      const amount = typeof first !== 'undefined' ? first : last
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: dmarcLoaderConnectionsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`Requesting ${amount} records on the \`dmarc\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+        ),
+      )
+    } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+      limitTemplate = aql`SORT dmarcScan._key ASC LIMIT TO_NUMBER(${first})`
+    } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
+      limitTemplate = aql`SORT dmarcScan._key DESC LIMIT TO_NUMBER(${last})`
+    }
+  } else {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: dmarcLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
   }
 

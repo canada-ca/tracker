@@ -40,32 +40,7 @@ const spfLoaderConnectionsByDomainId = (
         t`You must provide a \`first\` or \`last\` value to properly paginate the \`spf\` connection.`,
       ),
     )
-  } else if (first < 0 || last < 0) {
-    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-    console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set below zero for: spfLoaderConnectionsByDomainId.`,
-    )
-    throw new Error(
-      i18n._(
-        t`\`${argSet}\` on the \`spf\` connection cannot be less than zero.`,
-      ),
-    )
-  } else if (first > 100 || last > 100) {
-    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-    const amount = typeof first !== 'undefined' ? first : last
-    console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: spfLoaderConnectionsByDomainId.`,
-    )
-    throw new Error(
-      i18n._(
-        t`Requesting ${amount} records on the \`spf\` connection exceeds the \`${argSet}\` limit of 100 records.`,
-      ),
-    )
-  } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT spfScan._key ASC LIMIT TO_NUMBER(${first})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT spfScan._key DESC LIMIT TO_NUMBER(${last})`
-  } else {
+  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
       `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
     )
@@ -73,6 +48,43 @@ const spfLoaderConnectionsByDomainId = (
       i18n._(
         t`Passing both \`first\` and \`last\` to paginate the \`spf\` connection is not supported.`,
       ),
+    )
+  } else if (typeof first === 'number' || typeof last === 'number') {
+    /* istanbul ignore else */
+    if (first < 0 || last < 0) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set below zero for: spfLoaderConnectionsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`\`${argSet}\` on the \`spf\` connection cannot be less than zero.`,
+        ),
+      )
+    } else if (first > 100 || last > 100) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      const amount = typeof first !== 'undefined' ? first : last
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: spfLoaderConnectionsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`Requesting ${amount} records on the \`spf\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+        ),
+      )
+    } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+      limitTemplate = aql`SORT spfScan._key ASC LIMIT TO_NUMBER(${first})`
+    } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
+      limitTemplate = aql`SORT spfScan._key DESC LIMIT TO_NUMBER(${last})`
+    }
+  } else {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: spfLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
   }
 

@@ -22,7 +22,7 @@
       'todo',
     'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.':
       'todo',
-    'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
+    'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `https` connection is not supported.':
       'todo',
@@ -38,7 +38,7 @@
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
     'Profile successfully updated.': 'todo',
-    'Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
+    'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -47,8 +47,6 @@
     'Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records.':
-      'todo',
-    'Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -133,7 +131,7 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.':
       'todo',
-    'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
+    'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `https` connection.':
       'todo',
@@ -148,7 +146,7 @@
       'todo',
     '`{argSet}` on the `dkim` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `dmarc` connection cannot be less than zero.': 'todo',
-    '`{argSet}` on the `domains` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `domain` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `https` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `organization` connection cannot be less than zero.':
       'todo',

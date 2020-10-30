@@ -2,6 +2,7 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const { stringify } = require('jest-matcher-utils')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
@@ -560,6 +561,80 @@ describe('given the load organization connections by user id function', () => {
           })
         })
       })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = orgLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                'en',
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = orgLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                'en',
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
+              ])
+            })
+          })
+        })
+      })
     })
     describe('given a database error', () => {
       describe('while querying domains', () => {
@@ -919,7 +994,7 @@ describe('given the load organization connections by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'en',
+            'fr',
             i18n,
           )
 
@@ -943,7 +1018,7 @@ describe('given the load organization connections by user id function', () => {
             query,
             user._key,
             cleanseInput,
-            'en',
+            'fr',
             i18n,
           )
 
@@ -971,7 +1046,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'en',
+              'fr',
               i18n,
             )
 
@@ -997,7 +1072,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'en',
+              'fr',
               i18n,
             )
 
@@ -1025,7 +1100,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'en',
+              'fr',
               i18n,
             )
 
@@ -1051,7 +1126,7 @@ describe('given the load organization connections by user id function', () => {
               query,
               user._key,
               cleanseInput,
-              'en',
+              'fr',
               i18n,
             )
 
@@ -1069,6 +1144,72 @@ describe('given the load organization connections by user id function', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` to 101 for: orgLoaderConnectionsByUserId.`,
             ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = orgLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                'fr',
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = orgLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                'fr',
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: orgLoaderConnectionsByUserId.`,
+              ])
+            })
           })
         })
       })
