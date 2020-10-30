@@ -48,6 +48,8 @@
       'todo',
     'Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
+    'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.':
@@ -137,12 +139,15 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `spf` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
+      'todo',
     '`{argSet}` must be of type `number` not `{typeSet}`.': 'todo',
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `dkim` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `dmarc` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `domain` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `https` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `organization` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `spf` connection cannot be less than zero.': 'todo',
