@@ -88,18 +88,15 @@ const domainType = new GraphQLObjectType({
         { _id, _key, domain },
         __,
         {
-          query,
           userId,
           loaders: { dmarcReportLoader, userLoaderByKey },
           auth: { checkDomainOwnership, userRequired, tokenize },
         },
         info,
       ) => {
-        const user = await userRequired(userId, userLoaderByKey)
+        await userRequired(userId, userLoaderByKey)
         const permitted = await checkDomainOwnership({
-          userId: user._id,
           domainId: _id,
-          query,
         })
 
         if (!permitted) {
@@ -124,18 +121,15 @@ const domainType = new GraphQLObjectType({
         { _id, _key, domain },
         __,
         {
-          query,
           userId,
           loaders: { dmarcReportLoader, userLoaderByKey },
           auth: { checkDomainOwnership, userRequired, tokenize },
         },
         info,
       ) => {
-        const user = await userRequired(userId, userLoaderByKey)
+        await userRequired(userId, userLoaderByKey)
         const permitted = await checkDomainOwnership({
-          userId: user._id,
           domainId: _id,
-          query,
         })
 
         if (!permitted) {

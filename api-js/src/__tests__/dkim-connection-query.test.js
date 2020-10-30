@@ -149,7 +149,7 @@ describe('given the dkimType object', () => {
           userId: user._key,
           query: query,
           auth: {
-            checkDomainPermission,
+            checkDomainPermission: checkDomainPermission({query, userId: user._key}),
             userRequired,
           },
           validators: {

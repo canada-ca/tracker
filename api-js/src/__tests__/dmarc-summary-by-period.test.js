@@ -187,7 +187,7 @@ describe('given findDomainByDomain query', () => {
             query: query,
             moment,
             auth: {
-              checkDomainPermission,
+              checkDomainPermission: checkDomainPermission({query, userId: user._key}),
               checkDomainOwnership: checkDomainOwnership({query, userId: user._key}),
               tokenize,
               userRequired,
@@ -262,7 +262,7 @@ describe('given findDomainByDomain query', () => {
             query: query,
             moment,
             auth: {
-              checkDomainPermission,
+              checkDomainPermission: checkDomainPermission({query, userId: user._key}),
               checkDomainOwnership: checkDomainOwnership({query, userId: user._key}),
               tokenize,
               userRequired,

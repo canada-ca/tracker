@@ -157,7 +157,7 @@ describe('given the spfType object', () => {
           userId: user._key,
           query: query,
           auth: {
-            checkDomainPermission,
+            checkDomainPermission: checkDomainPermission({query, userId: user._key}),
             userRequired,
           },
           validators: {

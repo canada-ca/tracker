@@ -233,7 +233,7 @@ describe('given findDomainByDomain query', () => {
           userId: user._key,
           query: query,
           auth: {
-            checkDomainPermission,
+            checkDomainPermission: checkDomainPermission({query, userId: user._key}),
             checkDomainOwnership: checkDomainOwnership({query, userId: user._key}),
             tokenize,
             userRequired,
