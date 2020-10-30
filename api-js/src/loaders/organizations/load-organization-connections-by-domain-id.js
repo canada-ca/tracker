@@ -34,32 +34,7 @@ const orgLoaderConnectionArgsByDomainId = (
         t`You must provide a \`first\` or \`last\` value to properly paginate the \`organization\` connection.`,
       ),
     )
-  } else if (first < 0 || last < 0) {
-    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-    console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
-    )
-    throw new Error(
-      i18n._(
-        t`\`${argSet}\` on the \`organization\` connection cannot be less than zero.`,
-      ),
-    )
-  } else if (first > 100 || last > 100) {
-    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-    const amount = typeof first !== 'undefined' ? first : last
-    console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: orgLoaderConnectionArgsByDomainId.`,
-    )
-    throw new Error(
-      i18n._(
-        t`Requesting \`${amount}\` records on the \`organization\` connection exceeds the \`${argSet}\` limit of 100 records.`,
-      ),
-    )
-  } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT org._key ASC LIMIT TO_NUMBER(${first})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT org._key DESC LIMIT TO_NUMBER(${last})`
-  } else {
+  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
       `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionArgsByDomainId.`,
     )
@@ -67,6 +42,43 @@ const orgLoaderConnectionArgsByDomainId = (
       i18n._(
         t`Passing both \`first\` and \`last\` to paginate the \`organization\` connection is not supported.`,
       ),
+    )
+  } else if (typeof first === 'number' || typeof last === 'number') {
+    /* istanbul ignore else */
+    if (first < 0 || last < 0) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionArgsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`\`${argSet}\` on the \`organization\` connection cannot be less than zero.`,
+        ),
+      )
+    } else if (first > 100 || last > 100) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      const amount = typeof first !== 'undefined' ? first : last
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: orgLoaderConnectionArgsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`Requesting \`${amount}\` records on the \`organization\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+        ),
+      )
+    } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+      limitTemplate = aql`SORT org._key ASC LIMIT TO_NUMBER(${first})`
+    } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
+      limitTemplate = aql`SORT org._key DESC LIMIT TO_NUMBER(${last})`
+    }
+  } else {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: orgLoaderConnectionArgsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
     )
   }
 
