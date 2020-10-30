@@ -40,6 +40,7 @@ const dkimResultsLoaderConnectionByDkimId = (
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
+    /* istanbul ignore else */
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
