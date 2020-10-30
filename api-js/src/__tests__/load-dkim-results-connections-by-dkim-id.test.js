@@ -904,11 +904,7 @@ describe('when given the load dkim results connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -939,11 +935,7 @@ describe('when given the load dkim results connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${

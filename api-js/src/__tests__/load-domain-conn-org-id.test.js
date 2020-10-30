@@ -735,11 +735,7 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `todo`,
-              ),
-            )
+            expect(err).toEqual(new Error(`todo`))
           }
 
           expect(consoleOutput).toEqual([
@@ -766,11 +762,7 @@ describe('given the load domain connection using org id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                `todo`,
-              ),
-            )
+            expect(err).toEqual(new Error(`todo`))
           }
 
           expect(consoleOutput).toEqual([
@@ -909,11 +901,7 @@ describe('given the load domain connection using org id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -945,11 +933,7 @@ describe('given the load domain connection using org id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${

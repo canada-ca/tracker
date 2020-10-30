@@ -127,7 +127,7 @@ describe('given the load domain connections by user id function', () => {
   afterAll(async () => {
     await drop()
   })
-  
+
   describe('given a successful load', () => {
     describe('given there are domain connections to be returned', () => {
       describe('using no cursor', () => {
@@ -350,7 +350,7 @@ describe('given the load domain connections by user id function', () => {
       })
     })
     describe('given there are no domain connections to be returned', () => {
-     it('returns no domain connections', async () => {
+      it('returns no domain connections', async () => {
         await truncate()
 
         const connectionLoader = domainLoaderConnectionsByUserId(
@@ -904,11 +904,7 @@ describe('given the load domain connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -939,11 +935,7 @@ describe('given the load domain connections by user id function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${

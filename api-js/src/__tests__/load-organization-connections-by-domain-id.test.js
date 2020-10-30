@@ -1184,11 +1184,7 @@ describe('given the load organizations connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${
@@ -1220,11 +1216,7 @@ describe('given the load organizations connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleOutput).toEqual([
                 `User: ${

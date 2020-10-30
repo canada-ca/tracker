@@ -626,11 +626,11 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -656,11 +656,11 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -5,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -688,11 +688,11 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 1000,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -718,11 +718,11 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 500,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -914,11 +914,7 @@ describe('when given the load spf connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
@@ -945,11 +941,7 @@ describe('when given the load spf connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
           expect(consoleWarnOutput).toEqual([
             `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: spfLoaderConnectionsByDomainId.`,
@@ -965,22 +957,18 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: -1,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: spfLoaderConnectionsByDomainId.`,
@@ -995,22 +983,18 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: -5,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: spfLoaderConnectionsByDomainId.`,
@@ -1027,22 +1011,18 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               first: 1000,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 1000 for: spfLoaderConnectionsByDomainId.`,
@@ -1057,22 +1037,18 @@ describe('when given the load spf connection function', () => {
               cleanseInput,
               i18n,
             )
-  
+
             const connectionArgs = {
               last: 500,
             }
-  
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: spfLoaderConnectionsByDomainId.`,
@@ -1102,11 +1078,7 @@ describe('when given the load spf connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
@@ -1137,11 +1109,7 @@ describe('when given the load spf connection function', () => {
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
                 `User: ${
