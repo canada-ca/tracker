@@ -76,6 +76,10 @@ msgstr "Passing both `first` and `last` to paginate the `organization` connectio
 msgid "Passing both `first` and `last` to paginate the `spf` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `spf` connection is not supported."
 
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:49
+msgid "Passing both `first` and `last` to paginate the `ssl` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `ssl` connection is not supported."
+
 #: src/mutations/user/reset-password.js:95
 msgid "Password is not strong enough. Please try again."
 msgstr "Password is not strong enough. Please try again."
@@ -133,7 +137,7 @@ msgstr "Requesting {amount} records on the `https` connection exceeds the `{argS
 msgid "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records."
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:61
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:72
 msgid "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 
@@ -244,10 +248,6 @@ msgstr "Unable to find ssl scan. Please try again."
 msgid "Unable to find user. Please try again."
 msgstr "Unable to find user. Please try again."
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:74
-msgid "Unable to have both first, and last arguments set at the same time."
-msgstr "Unable to have both first, and last arguments set at the same time."
-
 #: src/mutations/user-affiliations/invite-user-to-org.js:78
 #: src/mutations/user-affiliations/invite-user-to-org.js:91
 #: src/mutations/user-affiliations/invite-user-to-org.js:153
@@ -281,8 +281,8 @@ msgstr "Unable to load dmarc scans. Please try again."
 msgid "Unable to load domains. Please try again."
 msgstr "Unable to load domains. Please try again."
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:138
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:148
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:142
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:152
 msgid "Unable to load https scans. Please try again."
 msgstr "Unable to load https scans. Please try again."
 
@@ -298,8 +298,8 @@ msgstr "Unable to load organizations. Please try again."
 msgid "Unable to load spf scans. Please try again."
 msgstr "Unable to load spf scans. Please try again."
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:96
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:106
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:142
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:152
 msgid "Unable to load ssl scans. Please try again."
 msgstr "Unable to load ssl scans. Please try again."
 
@@ -511,7 +511,8 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `spf
 msgid "You must provide a `first` or `last` value to properly paginate the `ssl` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `ssl` connection."
 
-#: src/loaders/web-scan/load-https-connections-by-domain-id.js:84
+#: src/loaders/web-scan/load-https-connections-by-domain-id.js:87
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:87
 msgid "`{argSet}` must be of type `number` not `{typeSet}`."
 msgstr "`{argSet}` must be of type `number` not `{typeSet}`."
 
@@ -545,6 +546,6 @@ msgstr "`{argSet}` on the `organization` connection cannot be less than zero."
 msgid "`{argSet}` on the `spf` connection cannot be less than zero."
 msgstr "`{argSet}` on the `spf` connection cannot be less than zero."
 
-#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:50
+#: src/loaders/web-scan/load-ssl-connections-by-domain-id.js:61
 msgid "`{argSet}` on the `ssl` connection cannot be less than zero."
 msgstr "`{argSet}` on the `ssl` connection cannot be less than zero."
