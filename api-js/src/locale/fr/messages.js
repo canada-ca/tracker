@@ -52,6 +52,8 @@
       'todo',
     'Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
+    'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Successfully invited user to organization, and sent notification email.':
       'todo',
     'Successfully removed domain: {0} from {1}.': 'todo',
@@ -139,6 +141,9 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `spf` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
+      'todo',
+    '`{argSet}` must be of type `number` not `{typeSet}`.': 'todo',
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `dkim` connection cannot be less than zero.': 'todo',
@@ -148,5 +153,6 @@
     '`{argSet}` on the `organization` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `spf` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `ssl` connection cannot be less than zero.': 'todo',
   },
 }

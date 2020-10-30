@@ -40,32 +40,7 @@ const httpsLoaderConnectionsByDomainId = (
         t`You must provide a \`first\` or \`last\` value to properly paginate the \`https\` connection.`,
       ),
     )
-  } else if (first < 0 || last < 0) {
-    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-    console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set below zero for: httpsLoaderConnectionsByDomainId.`,
-    )
-    throw new Error(
-      i18n._(
-        t`\`${argSet}\` on the \`https\` connection cannot be less than zero.`,
-      ),
-    )
-  } else if (first > 100 || last > 100) {
-    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-    const amount = typeof first !== 'undefined' ? first : last
-    console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: httpsLoaderConnectionsByDomainId.`,
-    )
-    throw new Error(
-      i18n._(
-        t`Requesting ${amount} records on the \`https\` connection exceeds the \`${argSet}\` limit of 100 records.`,
-      ),
-    )
-  } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT httpsScan._key ASC LIMIT TO_NUMBER(${first})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT httpsScan._key DESC LIMIT TO_NUMBER(${last})`
-  } else {
+  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
       `User: ${userId} tried to have \`first\` and \`last\` arguments set for: httpsLoaderConnectionsByDomainId.`,
     )
@@ -74,6 +49,39 @@ const httpsLoaderConnectionsByDomainId = (
         t`Passing both \`first\` and \`last\` to paginate the \`https\` connection is not supported.`,
       ),
     )
+  } else if (typeof first === 'number' || typeof last === 'number') {
+    /* istanbul ignore else */
+    if (first < 0 || last < 0) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set below zero for: httpsLoaderConnectionsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`\`${argSet}\` on the \`https\` connection cannot be less than zero.`,
+        ),
+      )
+    } else if (first > 100 || last > 100) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      const amount = typeof first !== 'undefined' ? first : last
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set to ${amount} for: httpsLoaderConnectionsByDomainId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`Requesting ${amount} records on the \`https\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+        ),
+      )
+    } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+      limitTemplate = aql`SORT httpsScan._key ASC LIMIT TO_NUMBER(${first})`
+    } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
+      limitTemplate = aql`SORT httpsScan._key DESC LIMIT TO_NUMBER(${last})`
+    }
+  } else {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
+    console.warn(`User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: httpsLoaderConnectionsByDomainId.`)
+    throw new Error(i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`))
   }
 
   let sortString

@@ -4,6 +4,7 @@ require('dotenv-safe').config({
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const { stringify } = require('jest-matcher-utils')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
@@ -746,6 +747,76 @@ describe('given the load https connection function', () => {
           })
         })
       })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = httpsLoaderConnectionsByDomainId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+    
+              const connectionArgs = {
+                first: invalidInput,
+              }
+    
+              try {
+                await connectionLoader({
+                  domainId: domain._id,
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${user._key} attempted to have \`first\` set as a ${typeof invalidInput} for: httpsLoaderConnectionsByDomainId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = httpsLoaderConnectionsByDomainId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+    
+              const connectionArgs = {
+                last: invalidInput,
+              }
+    
+              try {
+                await connectionLoader({
+                  domainId: domain._id,
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${user._key} attempted to have \`last\` set as a ${typeof invalidInput} for: httpsLoaderConnectionsByDomainId.`,
+              ])
+            })
+          })
+        })
+      })
     })
     describe('database error occurs', () => {
       it('throws an error', async () => {
@@ -1010,6 +1081,76 @@ describe('given the load https connection function', () => {
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: httpsLoaderConnectionsByDomainId.`,
             ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = httpsLoaderConnectionsByDomainId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+    
+              const connectionArgs = {
+                first: invalidInput,
+              }
+    
+              try {
+                await connectionLoader({
+                  domainId: domain._id,
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `todo`,
+                  ),
+                )
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${user._key} attempted to have \`first\` set as a ${typeof invalidInput} for: httpsLoaderConnectionsByDomainId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = httpsLoaderConnectionsByDomainId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+    
+              const connectionArgs = {
+                last: invalidInput,
+              }
+    
+              try {
+                await connectionLoader({
+                  domainId: domain._id,
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `todo`,
+                  ),
+                )
+              }
+              expect(consoleWarnOutput).toEqual([
+                `User: ${user._key} attempted to have \`last\` set as a ${typeof invalidInput} for: httpsLoaderConnectionsByDomainId.`,
+              ])
+            })
           })
         })
       })

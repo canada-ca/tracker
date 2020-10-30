@@ -143,6 +143,17 @@
         '` limit of 100 records.',
       ]
     },
+    'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.': function (
+      a,
+    ) {
+      return [
+        'Requesting ',
+        a('amount'),
+        ' records on the `ssl` connection exceeds the `',
+        a('argSet'),
+        '` limit of 100 records.',
+      ]
+    },
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
     'Successfully removed domain: {0} from {1}.': function (a) {
@@ -282,6 +293,17 @@
       'You must provide a `first` or `last` value to properly paginate the `organization` connection.',
     'You must provide a `first` or `last` value to properly paginate the `spf` connection.':
       'You must provide a `first` or `last` value to properly paginate the `spf` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `ssl` connection.',
+    '`{argSet}` must be of type `number` not `{typeSet}`.': function (a) {
+      return [
+        '`',
+        a('argSet'),
+        '` must be of type `number` not `',
+        a('typeSet'),
+        '`.',
+      ]
+    },
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.': function (
       a,
     ) {
@@ -343,6 +365,15 @@
         '`',
         a('argSet'),
         '` on the `spf` connection cannot be less than zero.',
+      ]
+    },
+    '`{argSet}` on the `ssl` connection cannot be less than zero.': function (
+      a,
+    ) {
+      return [
+        '`',
+        a('argSet'),
+        '` on the `ssl` connection cannot be less than zero.',
       ]
     },
   },
