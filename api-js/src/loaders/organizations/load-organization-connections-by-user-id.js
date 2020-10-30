@@ -34,16 +34,6 @@ const orgLoaderConnectionsByUserId = (
         t`You must provide a \`first\` or \`last\` value to properly paginate the \`organization\` connection.`,
       ),
     )
-  } else if (first < 0 || last < 0) {
-    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
-    console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionsByUserId.`,
-    )
-    throw new Error(
-      i18n._(
-        t`\`${argSet}\` on the \`organization\` connection cannot be less than zero.`,
-      ),
-    )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
       `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
@@ -54,7 +44,18 @@ const orgLoaderConnectionsByUserId = (
       ),
     )
   } else if (typeof first === 'number' || typeof last === 'number') {
-    if (first > 100 || last > 100) {
+    /* istanbul ignore else */
+    if (first < 0 || last < 0) {
+      const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+      console.warn(
+        `User: ${userId} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionsByUserId.`,
+      )
+      throw new Error(
+        i18n._(
+          t`\`${argSet}\` on the \`organization\` connection cannot be less than zero.`,
+        ),
+      )
+    } else if (first > 100 || last > 100) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
