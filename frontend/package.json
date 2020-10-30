@@ -19,7 +19,6 @@
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
     "@lingui/react": "^3.0.0-13",
-    "babel-plugin-macros": "^2.8.0",
     "body-parser": "^1.19.0",
     "d3": "^6.2.0",
     "d3-scale": "^3.2.3",
@@ -40,7 +39,6 @@
     "react-router-dom": "^5.2.0",
     "react-swipe": "^6.0.4",
     "react-table": "^7.6.0",
-    "react-test-renderer": "^16.14.0",
     "recharts": "^2.0.0-beta.7",
     "yup": "^0.29.3"
   },
@@ -50,7 +48,6 @@
     "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.1",
-    "@babel/runtime": "^7.12.1",
     "@hot-loader/react-dom": "^16.14.0",
     "@lingui/cli": "^3.0.0-13",
     "@lingui/loader": "^3.0.0-13",
