@@ -24,9 +24,13 @@
       'todo',
     'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
       'todo',
+    'Passing both `first` and `last` to paginate the `https` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
       'todo',
     'Passing both `first` and `last` to paginate the `spf` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `ssl` connection is not supported.':
       'todo',
     'Password is not strong enough. Please try again.': 'todo',
     'Password is too short.': 'todo',
@@ -46,7 +50,11 @@
       'todo',
     'Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
+    'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Successfully invited user to organization, and sent notification email.':
       'todo',
@@ -71,8 +79,6 @@
     'Unable to find spf scan. Please try again.': 'todo',
     'Unable to find ssl scan. Please try again.': 'todo',
     'Unable to find user. Please try again.': 'todo',
-    'Unable to have both first, and last arguments set at the same time.':
-      'todo',
     'Unable to invite user. Please try again.': 'todo',
     'Unable to invite yourself to an org. Please try again.': 'todo',
     'Unable to load dkim results. Please try again.': 'todo',
@@ -129,17 +135,24 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `https` connection.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `spf` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
+      'todo',
+    '`{argSet}` must be of type `number` not `{typeSet}`.': 'todo',
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `dkim` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `dmarc` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `domains` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `https` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `organization` connection cannot be less than zero.':
       'todo',
     '`{argSet}` on the `spf` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `ssl` connection cannot be less than zero.': 'todo',
   },
 }
