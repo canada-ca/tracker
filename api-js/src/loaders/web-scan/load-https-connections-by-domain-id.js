@@ -80,8 +80,12 @@ const httpsLoaderConnectionsByDomainId = (
   } else {
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
-    console.warn(`User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: httpsLoaderConnectionsByDomainId.`)
-    throw new Error(i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`))
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: httpsLoaderConnectionsByDomainId.`,
+    )
+    throw new Error(
+      i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
+    )
   }
 
   let sortString
@@ -91,9 +95,9 @@ const httpsLoaderConnectionsByDomainId = (
     sortString = aql`ASC`
   }
 
-  let requestedDkimInfo
+  let requestedHttpsInfo
   try {
-    requestedDkimInfo = await query`
+    requestedHttpsInfo = await query`
     LET httpsKeys = (FOR v, e IN 1 OUTBOUND ${domainId} domainsHTTPS RETURN v._key)
 
     LET retrievedHttps = (
@@ -140,7 +144,7 @@ const httpsLoaderConnectionsByDomainId = (
 
   let httpsScanInfo
   try {
-    httpsScanInfo = await requestedDkimInfo.next()
+    httpsScanInfo = await requestedHttpsInfo.next()
   } catch (err) {
     console.error(
       `Cursor error occurred while user: ${userId} was trying to get https information for ${domainId}, error: ${err}`,

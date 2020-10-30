@@ -629,11 +629,11 @@ describe('given the load ssl connection function', () => {
               cleanseInput,
               i18n,
             )
-    
+
             const connectionArgs = {
               first: -1,
             }
-    
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -646,7 +646,7 @@ describe('given the load ssl connection function', () => {
                 ),
               )
             }
-    
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: sslLoaderConnectionsByDomainId.`,
             ])
@@ -660,11 +660,11 @@ describe('given the load ssl connection function', () => {
               cleanseInput,
               i18n,
             )
-    
+
             const connectionArgs = {
               last: -5,
             }
-    
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -677,7 +677,7 @@ describe('given the load ssl connection function', () => {
                 ),
               )
             }
-    
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: sslLoaderConnectionsByDomainId.`,
             ])
@@ -693,11 +693,11 @@ describe('given the load ssl connection function', () => {
               cleanseInput,
               i18n,
             )
-    
+
             const connectionArgs = {
               first: 101,
             }
-    
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -710,7 +710,7 @@ describe('given the load ssl connection function', () => {
                 ),
               )
             }
-    
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 101 for: sslLoaderConnectionsByDomainId.`,
             ])
@@ -724,11 +724,11 @@ describe('given the load ssl connection function', () => {
               cleanseInput,
               i18n,
             )
-    
+
             const connectionArgs = {
               last: 500,
             }
-    
+
             try {
               await connectionLoader({
                 domainId: domain._id,
@@ -741,7 +741,7 @@ describe('given the load ssl connection function', () => {
                 ),
               )
             }
-    
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: sslLoaderConnectionsByDomainId.`,
             ])
@@ -760,11 +760,11 @@ describe('given the load ssl connection function', () => {
                 cleanseInput,
                 i18n,
               )
-    
+
               const connectionArgs = {
                 first: invalidInput,
               }
-    
+
               try {
                 await connectionLoader({
                   domainId: domain._id,
@@ -778,7 +778,9 @@ describe('given the load ssl connection function', () => {
                 )
               }
               expect(consoleWarnOutput).toEqual([
-                `User: ${user._key} attempted to have \`first\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -794,11 +796,11 @@ describe('given the load ssl connection function', () => {
                 cleanseInput,
                 i18n,
               )
-    
+
               const connectionArgs = {
                 last: invalidInput,
               }
-    
+
               try {
                 await connectionLoader({
                   domainId: domain._id,
@@ -812,7 +814,9 @@ describe('given the load ssl connection function', () => {
                 )
               }
               expect(consoleWarnOutput).toEqual([
-                `User: ${user._key} attempted to have \`last\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -919,11 +923,7 @@ describe('given the load ssl connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleWarnOutput).toEqual([
@@ -951,11 +951,7 @@ describe('given the load ssl connection function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(
-              new Error(
-                'todo',
-              ),
-            )
+            expect(err).toEqual(new Error('todo'))
           }
 
           expect(consoleWarnOutput).toEqual([
@@ -972,24 +968,20 @@ describe('given the load ssl connection function', () => {
               cleanseInput,
               i18n,
             )
-    
+
             const connectionArgs = {
               first: -1,
             }
-    
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-    
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set below zero for: sslLoaderConnectionsByDomainId.`,
             ])
@@ -1003,24 +995,20 @@ describe('given the load ssl connection function', () => {
               cleanseInput,
               i18n,
             )
-    
+
             const connectionArgs = {
               last: -5,
             }
-    
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-    
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set below zero for: sslLoaderConnectionsByDomainId.`,
             ])
@@ -1036,24 +1024,20 @@ describe('given the load ssl connection function', () => {
               cleanseInput,
               i18n,
             )
-    
+
             const connectionArgs = {
               first: 101,
             }
-    
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-    
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`first\` set to 101 for: sslLoaderConnectionsByDomainId.`,
             ])
@@ -1067,24 +1051,20 @@ describe('given the load ssl connection function', () => {
               cleanseInput,
               i18n,
             )
-    
+
             const connectionArgs = {
               last: 500,
             }
-    
+
             try {
               await connectionLoader({
                 domainId: domain._id,
                 ...connectionArgs,
               })
             } catch (err) {
-              expect(err).toEqual(
-                new Error(
-                  'todo',
-                ),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-    
+
             expect(consoleWarnOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` set to 500 for: sslLoaderConnectionsByDomainId.`,
             ])
@@ -1103,25 +1083,23 @@ describe('given the load ssl connection function', () => {
                 cleanseInput,
                 i18n,
               )
-    
+
               const connectionArgs = {
                 first: invalidInput,
               }
-    
+
               try {
                 await connectionLoader({
                   domainId: domain._id,
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
-                `User: ${user._key} attempted to have \`first\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
               ])
             })
           })
@@ -1137,25 +1115,23 @@ describe('given the load ssl connection function', () => {
                 cleanseInput,
                 i18n,
               )
-    
+
               const connectionArgs = {
                 last: invalidInput,
               }
-    
+
               try {
                 await connectionLoader({
                   domainId: domain._id,
                   ...connectionArgs,
                 })
               } catch (err) {
-                expect(err).toEqual(
-                  new Error(
-                    `todo`,
-                  ),
-                )
+                expect(err).toEqual(new Error(`todo`))
               }
               expect(consoleWarnOutput).toEqual([
-                `User: ${user._key} attempted to have \`last\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: sslLoaderConnectionsByDomainId.`,
               ])
             })
           })
