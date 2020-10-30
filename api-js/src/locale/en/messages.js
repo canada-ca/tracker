@@ -40,10 +40,8 @@
       'Passing both `first` and `last` to paginate the `dkim` connection is not supported.',
     'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.':
       'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `domains` connection is not supported.',
-    'Passing both `first` and `last` to paginate the `https` connection is not supported.':
-      'Passing both `first` and `last` to paginate the `https` connection is not supported.',
+    'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `domain` connection is not supported.',
     'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
       'Passing both `first` and `last` to paginate the `organization` connection is not supported.',
     'Passing both `first` and `last` to paginate the `spf` connection is not supported.':
@@ -57,13 +55,13 @@
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
     'Profile successfully updated.': 'Profile successfully updated.',
-    'Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records.': function (
+    'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.': function (
       a,
     ) {
       return [
         'Requesting `',
         a('amount'),
-        '` records on the `domains` connection exceeds the `',
+        '` records on the `domain` connection exceeds the `',
         a('argSet'),
         '` limit of 100 records.',
       ]
@@ -108,28 +106,6 @@
         'Requesting ',
         a('amount'),
         ' records on the `dmarc` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting ',
-        a('amount'),
-        ' records on the `domains` connection exceeds the `',
-        a('argSet'),
-        '` limit of 100 records.',
-      ]
-    },
-    'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.': function (
-      a,
-    ) {
-      return [
-        'Requesting ',
-        a('amount'),
-        ' records on the `https` connection exceeds the `',
         a('argSet'),
         '` limit of 100 records.',
       ]
@@ -285,16 +261,12 @@
       'You must provide a `first` or `last` value to properly paginate the `dkim` connection.',
     'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.':
       'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `domains` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `https` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `https` connection.',
+    'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `domain` connection.',
     'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
       'You must provide a `first` or `last` value to properly paginate the `organization` connection.',
     'You must provide a `first` or `last` value to properly paginate the `spf` connection.':
       'You must provide a `first` or `last` value to properly paginate the `spf` connection.',
-    'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
-      'You must provide a `first` or `last` value to properly paginate the `ssl` connection.',
     '`{argSet}` must be of type `number` not `{typeSet}`.': function (a) {
       return [
         '`',
@@ -331,13 +303,13 @@
         '` on the `dmarc` connection cannot be less than zero.',
       ]
     },
-    '`{argSet}` on the `domains` connection cannot be less than zero.': function (
+    '`{argSet}` on the `domain` connection cannot be less than zero.': function (
       a,
     ) {
       return [
         '`',
         a('argSet'),
-        '` on the `domains` connection cannot be less than zero.',
+        '` on the `domain` connection cannot be less than zero.',
       ]
     },
     '`{argSet}` on the `https` connection cannot be less than zero.': function (
