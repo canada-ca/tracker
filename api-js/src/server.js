@@ -121,7 +121,7 @@ const Server = (context = {}) => {
           checkPermission: checkPermission({i18n, userId, query}),
           tokenize,
           userRequired: userRequired({i18n, userId, userLoaderByKey: userLoaderByKey(query)}),
-          verifyToken,
+          verifyToken: verifyToken({i18n}),
         },
         validators: {
           cleanseInput,
