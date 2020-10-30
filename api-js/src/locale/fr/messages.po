@@ -26,12 +26,6 @@ msgstr "todo"
 msgid "Could not retrieve specified organization."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:37
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:37
-#: src/loaders/organizations/load-organizations-connection-args.js:37
-msgid "Error, unable to have first, and last set at the same time."
-msgstr "todo"
-
 #: src/mutations/user/send-password-reset.js:72
 msgid "If an account with this username is found, a password reset link will be found in your inbox."
 msgstr "todo"
@@ -64,9 +58,14 @@ msgstr "todo"
 msgid "Passing both `first` and `last` to paginate the `dmarc` connection is not supported."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:35
-#: src/loaders/domains/load-domain-connections-by-user-id.js:33
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:69
+#: src/loaders/domains/load-domain-connections-by-user-id.js:67
 msgid "Passing both `first` and `last` to paginate the `domains` connection is not supported."
+msgstr "todo"
+
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:68
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:68
+msgid "Passing both `first` and `last` to paginate the `organization` connection is not supported."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:74
@@ -99,6 +98,11 @@ msgstr "todo"
 
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:56
 msgid "Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records."
+msgstr "todo"
+
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:55
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:55
+msgid "Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-dkim-results-connections-by-dkim-id.js:51
@@ -271,15 +275,9 @@ msgstr "todo"
 msgid "Unable to load https scans. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:56
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:66
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:84
-#: src/loaders/organizations/load-organization-connections-by-domain-id.js:94
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:67
-#: src/loaders/organizations/load-organizations-connection-args.js:54
-#: src/loaders/organizations/load-organizations-connection-args.js:64
-#: src/loaders/organizations/load-organizations-connection-args.js:82
-#: src/loaders/organizations/load-organizations-connection-args.js:92
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:128
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:138
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:133
 #: src/queries/organizations/find-my-organizations.js:24
 msgid "Unable to load organizations. Please try again."
 msgstr "todo"
@@ -298,7 +296,7 @@ msgstr "todo"
 msgid "Unable to query domains. Please try again."
 msgstr "todo"
 
-#: src/loaders/organizations/load-organization-connections-by-user-id.js:57
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:123
 msgid "Unable to query organizations. Please try again."
 msgstr "todo"
 
@@ -448,6 +446,10 @@ msgstr "todo"
 msgid "Unable to verify account. Please try again."
 msgstr "todo"
 
+#: src/queries/user/is-user-admin.js:30
+msgid "Unable to verify if user is an admin, please try again."
+msgstr "todo"
+
 #: src/mutations/user-affiliations/update-user-role.js:218
 msgid "User role was updated successfully."
 msgstr "todo"
@@ -476,9 +478,14 @@ msgstr "todo"
 msgid "You must provide a `first` or `last` value to properly paginate the `dmarc` connection."
 msgstr "todo"
 
-#: src/loaders/domains/load-domain-connections-by-organizations-id.js:69
-#: src/loaders/domains/load-domain-connections-by-user-id.js:67
+#: src/loaders/domains/load-domain-connections-by-organizations-id.js:35
+#: src/loaders/domains/load-domain-connections-by-user-id.js:33
 msgid "You must provide a `first` or `last` value to properly paginate the `domains` connection."
+msgstr "todo"
+
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:34
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:34
+msgid "You must provide a `first` or `last` value to properly paginate the `organization` connection."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:40
@@ -500,6 +507,11 @@ msgstr "todo"
 #: src/loaders/domains/load-domain-connections-by-organizations-id.js:45
 #: src/loaders/domains/load-domain-connections-by-user-id.js:43
 msgid "`{argSet}` on the `domains` connection cannot be less than zero."
+msgstr "todo"
+
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:44
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:44
+msgid "`{argSet}` on the `organization` connection cannot be less than zero."
 msgstr "todo"
 
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:50

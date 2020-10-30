@@ -25,68 +25,115 @@ const orgLoaderConnectionsByUserId = (
   }
 
   let limitTemplate = aql``
-  if (typeof first !== 'undefined' && typeof last === 'undefined') {
-    limitTemplate = aql`SORT org._key ASC LIMIT TO_NUMBER(${first + 1})`
-  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
-    limitTemplate = aql`SORT org._key DESC LIMIT TO_NUMBER(${last + 1})`
-  } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
+  if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} tried to have first and last set in organization connection query`,
+      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
     )
     throw new Error(
-      i18n._(t`Error, unable to have first, and last set at the same time.`),
+      i18n._(
+        t`You must provide a \`first\` or \`last\` value to properly paginate the \`organization\` connection.`,
+      ),
+    )
+  } else if (first < 0 || last < 0) {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` set below zero for: orgLoaderConnectionsByUserId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`\`${argSet}\` on the \`organization\` connection cannot be less than zero.`,
+      ),
+    )
+  } else if (first > 100 || last > 100) {
+    const argSet = typeof first !== 'undefined' ? 'first' : 'last'
+    const amount = typeof first !== 'undefined' ? first : last
+    console.warn(
+      `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: orgLoaderConnectionsByUserId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`Requesting \`${amount}\` records on the \`organization\` connection exceeds the \`${argSet}\` limit of 100 records.`,
+      ),
+    )
+  } else if (typeof first !== 'undefined' && typeof last === 'undefined') {
+    limitTemplate = aql`SORT org._key ASC LIMIT TO_NUMBER(${first})`
+  } else if (typeof first === 'undefined' && typeof last !== 'undefined') {
+    limitTemplate = aql`SORT org._key DESC LIMIT TO_NUMBER(${last})`
+  } else {
+    console.warn(
+      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: orgLoaderConnectionsByUserId.`,
+    )
+    throw new Error(
+      i18n._(
+        t`Passing both \`first\` and \`last\` to paginate the \`organization\` connection is not supported.`,
+      ),
     )
   }
 
-  let filteredOrgCursor
+  let sortString
+  if (typeof last !== 'undefined') {
+    sortString = aql`DESC`
+  } else {
+    sortString = aql`ASC`
+  }
+
+  let organizationInfoCursor
   try {
-    filteredOrgCursor = await query`
-    LET orgIds = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._from)
-    FOR org IN organizations
-        FILTER org._id IN orgIds
-        ${afterTemplate}
-        ${beforeTemplate}
-        ${limitTemplate}
-        LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
-        RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE(${language}, org.orgDetails))
+    organizationInfoCursor = await query`
+    LET orgKeys = (FOR v, e IN 1..1 INBOUND ${userDBId} affiliations RETURN v._key)
+
+    LET retrievedOrgs = (
+      FOR org IN organizations
+          FILTER org._key IN orgKeys
+          ${afterTemplate}
+          ${beforeTemplate}
+          ${limitTemplate}
+          LET domains = (FOR v, e IN 1..1 OUTBOUND org._id claims RETURN e._to)
+          RETURN MERGE({ _id: org._id, _key: org._key, _rev: org._rev, blueCheck: org.blueCheck, domainCount: COUNT(domains) }, TRANSLATE(${language}, org.orgDetails))
+    )
+
+    LET hasNextPage = (LENGTH(
+      FOR org IN organizations
+        FILTER org._key IN orgKeys
+        FILTER TO_NUMBER(org._key) > TO_NUMBER(LAST(retrievedOrgs)._key)
+        SORT org._key ${sortString} LIMIT 1
+        RETURN org
+    ) > 0 ? true : false)
+    
+    LET hasPreviousPage = (LENGTH(
+      FOR org IN organizations
+        FILTER org._key IN orgKeys
+        FILTER TO_NUMBER(org._key) < TO_NUMBER(FIRST(retrievedOrgs)._key)
+        SORT org._key ${sortString} LIMIT 1
+        RETURN org
+    ) > 0 ? true : false)
+    
+    RETURN { 
+      "organizations": retrievedOrgs,
+      "hasNextPage": hasNextPage, 
+      "hasPreviousPage": hasPreviousPage, 
+      "startKey": FIRST(retrievedOrgs)._key, 
+      "endKey": LAST(retrievedOrgs)._key 
+    }
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query organizations in loadOrganizationsByUser.`,
+      `Database error occurred while user: ${userId} was trying to query organizations in orgLoaderConnectionsByUserId.`,
     )
     throw new Error(i18n._(t`Unable to query organizations. Please try again.`))
   }
 
-  let filteredOrgs
+  let organizationInfo
   try {
-    filteredOrgs = await filteredOrgCursor.all()
+    organizationInfo = await organizationInfoCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather organizations in loadOrganizationsByUser.`,
+      `Cursor error occurred while user: ${userId} was trying to gather organizations in orgLoaderConnectionsByUserId.`,
     )
     throw new Error(i18n._(t`Unable to load organizations. Please try again.`))
   }
 
-  const hasNextPage = !!(
-    typeof first !== 'undefined' && filteredOrgs.length > first
-  )
-  const hasPreviousPage = !!(
-    typeof last !== 'undefined' && filteredOrgs.length > last
-  )
-
-  if (filteredOrgs.length > last || filteredOrgs.length > first) {
-    filteredOrgs.pop()
-  }
-
-  const edges = filteredOrgs.map((org) => {
-    org.id = org._key
-    return {
-      cursor: toGlobalId('organizations', org._key),
-      node: org,
-    }
-  })
-
-  if (edges.length === 0) {
+  if (organizationInfo.organizations.length === 0) {
     return {
       edges: [],
       pageInfo: {
@@ -98,19 +145,21 @@ const orgLoaderConnectionsByUserId = (
     }
   }
 
-  const startCursor = toGlobalId('organizations', filteredOrgs[0]._key)
-  const endCursor = toGlobalId(
-    'organizations',
-    filteredOrgs[filteredOrgs.length - 1]._key,
-  )
+  const edges = organizationInfo.organizations.map((org) => {
+    org.id = org._key
+    return {
+      cursor: toGlobalId('organizations', org._key),
+      node: org,
+    }
+  })
 
   return {
     edges,
     pageInfo: {
-      hasNextPage,
-      hasPreviousPage,
-      startCursor,
-      endCursor,
+      hasNextPage: organizationInfo.hasNextPage,
+      hasPreviousPage: organizationInfo.hasPreviousPage,
+      startCursor: toGlobalId('organizations', organizationInfo.startKey),
+      endCursor: toGlobalId('organizations', organizationInfo.endKey),
     },
   }
 }
