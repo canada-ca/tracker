@@ -87,6 +87,11 @@
     "webpack-config-utils": "^2.3.1",
     "webpack-dev-server": "^3.11.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/canada-ca/tracker.git"
+  },
+  "license": "MIT",
   "resolutions": {
     "chokidar": "^3.4.0"
   },
