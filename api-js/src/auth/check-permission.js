@@ -1,18 +1,20 @@
-const checkPermission = async (userId, orgId, query) => {
-  let cursor
+const { t } = require('@lingui/macro')
 
+const checkPermission = ({ i18n, userId, query }) => async ({ orgId }) => {
+  let cursor
+  const userIdString = `users/${userId}`
   // Check for super admin
   try {
     cursor = await query`
-      FOR v, e IN 1 INBOUND ${userId} affiliations
+      FOR v, e IN 1 INBOUND ${userIdString} affiliations
         FILTER e.permission == "super_admin"
         RETURN e.permission
     `
   } catch (err) {
     console.error(
-      `Database error when checking to see if user: ${userId} has super admin permission: ${err}`,
+      `Database error when checking to see if user: ${userIdString} has super admin permission: ${err}`,
     )
-    throw new Error('Authentication error. Please sign in again.')
+    throw new Error(i18n._(t`Authentication error. Please sign in again.`))
   }
 
   let permission
@@ -20,9 +22,9 @@ const checkPermission = async (userId, orgId, query) => {
     permission = await cursor.next()
   } catch (err) {
     console.error(
-      `Cursor error when checking to see if user ${userId} has super admin permission: ${err}`,
+      `Cursor error when checking to see if user ${userIdString} has super admin permission: ${err}`,
     )
-    throw new Error('Unable to check permission. Please try again.')
+    throw new Error(i18n._(t`Unable to check permission. Please try again.`))
   }
 
   if (permission === 'super_admin') {
@@ -31,22 +33,22 @@ const checkPermission = async (userId, orgId, query) => {
     // Check for other permission level
     try {
       cursor = await query`
-      FOR v, e IN 1 INBOUND ${userId} affiliations
+      FOR v, e IN 1 INBOUND ${userIdString} affiliations
         FILTER e._from == ${orgId}
         RETURN e.permission
     `
     } catch (err) {
       console.error(
-        `Database error occurred when checking ${userId}'s permission: ${err}`,
+        `Database error occurred when checking ${userIdString}'s permission: ${err}`,
       )
-      throw new Error('Authentication error. Please sign in again.')
+      throw new Error(i18n._(t`Authentication error. Please sign in again.`))
     }
 
     try {
       permission = await cursor.next()
     } catch (err) {
-      console.error(`Cursor error when checking ${userId}'s permission: ${err}`)
-      throw new Error('Unable to check permission. Please try again.')
+      console.error(`Cursor error when checking ${userIdString}'s permission: ${err}`)
+      throw new Error(i18n._(t`Unable to check permission. Please try again.`))
     }
     return permission
   }

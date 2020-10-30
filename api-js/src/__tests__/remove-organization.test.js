@@ -214,7 +214,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -258,7 +258,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -318,7 +318,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -362,7 +362,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -435,7 +435,7 @@ describe('removing an organization', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
               validators: { cleanseInput },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -479,7 +479,7 @@ describe('removing an organization', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
               validators: { cleanseInput },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -573,7 +573,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'fr'),
@@ -616,7 +616,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'fr'),
@@ -676,7 +676,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'fr'),
@@ -719,7 +719,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'fr'),
@@ -792,7 +792,7 @@ describe('removing an organization', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
               validators: { cleanseInput },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
@@ -835,7 +835,7 @@ describe('removing an organization', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
               validators: { cleanseInput },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
@@ -917,7 +917,7 @@ describe('removing an organization', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
               validators: { cleanseInput },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1026,7 +1026,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1081,7 +1081,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1174,7 +1174,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoader,
@@ -1237,7 +1237,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoader,
@@ -1292,7 +1292,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoader,
@@ -1355,7 +1355,7 @@ describe('removing an organization', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
               validators: { cleanseInput },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1460,7 +1460,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1511,7 +1511,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1600,7 +1600,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoader,
@@ -1659,7 +1659,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoader,
@@ -1710,7 +1710,7 @@ describe('removing an organization', () => {
                 collections,
                 transaction,
                 userId: user._key,
-                auth: { checkPermission, userRequired },
+                auth: { checkPermission: checkPermission({userId: user._key, query}), userRequired },
                 validators: { cleanseInput },
                 loaders: {
                   orgLoaderByKey: orgLoader,

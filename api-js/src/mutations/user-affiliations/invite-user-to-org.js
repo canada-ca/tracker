@@ -42,7 +42,6 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     {
       i18n,
       request,
-      query,
       collections,
       transaction,
       userId,
@@ -79,7 +78,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     }
 
     // Check to see requesting users permission to the org is
-    const permission = await checkPermission(user._id, org._id, query)
+    const permission = await checkPermission({ orgId: org._id})
 
     if (
       permission === 'user' ||

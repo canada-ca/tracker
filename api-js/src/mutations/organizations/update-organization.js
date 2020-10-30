@@ -103,7 +103,7 @@ const updateOrganization = new mutationWithClientMutationId({
     },
   ) => {
     // Cleanse Input
-    const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.id))
+    const { type: _orgType, id: orgKey } = fromGlobalId(cleanseInput(args.id))
     const acronymEN = cleanseInput(args.acronymEN)
     const acronymFR = cleanseInput(args.acronymFR)
     const nameEN = cleanseInput(args.nameEN)
@@ -124,11 +124,9 @@ const updateOrganization = new mutationWithClientMutationId({
     const slugFR = slugify(nameFR)
 
     // Get user
-    const user = await userRequired(userId, userLoaderByKey)
+    await userRequired(userId, userLoaderByKey)
 
     // Check to see if org exists
-    const n = orgId.lastIndexOf('/')
-    const orgKey = orgId.substring(n + 1)
     const currentOrg = await orgLoaderByKey.load(orgKey)
 
     if (typeof currentOrg === 'undefined') {
@@ -141,7 +139,7 @@ const updateOrganization = new mutationWithClientMutationId({
     }
 
     // Check to see if user has permission
-    const permission = await checkPermission(user._id, currentOrg._id, query)
+    const permission = await checkPermission({ orgId: currentOrg._id })
 
     if (permission !== 'admin' && permission !== 'super_admin') {
       console.error(
@@ -168,9 +166,9 @@ const updateOrganization = new mutationWithClientMutationId({
         i18n._(t`Unable to update organization. Please try again.`),
       )
     }
-
+    
     const compareOrg = await orgCursor.next()
-
+    
     const updatedOrgDetails = {
       orgDetails: {
         en: {

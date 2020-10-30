@@ -190,7 +190,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -243,7 +243,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -305,7 +305,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -358,7 +358,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -429,7 +429,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -532,7 +532,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -583,7 +583,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -632,7 +632,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -688,7 +688,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -770,7 +770,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -826,7 +826,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -891,7 +891,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -956,7 +956,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -1022,7 +1022,7 @@ describe('update a users role', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 loaders: {
@@ -1085,7 +1085,7 @@ describe('update a users role', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 loaders: {
@@ -1214,7 +1214,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -1332,7 +1332,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -1394,7 +1394,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -1520,7 +1520,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -1573,7 +1573,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -1635,7 +1635,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -1688,7 +1688,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -1759,7 +1759,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -1862,7 +1862,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -1913,7 +1913,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -1962,7 +1962,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -2018,7 +2018,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -2100,7 +2100,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -2156,7 +2156,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -2221,7 +2221,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -2286,7 +2286,7 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   loaders: {
@@ -2352,7 +2352,7 @@ describe('update a users role', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 loaders: {
@@ -2415,7 +2415,7 @@ describe('update a users role', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 loaders: {
@@ -2544,7 +2544,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -2662,7 +2662,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -2724,7 +2724,7 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {

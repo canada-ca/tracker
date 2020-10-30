@@ -19,6 +19,7 @@ const {
   userLoaderByKey,
   userLoaderByUserName,
 } = require('../loaders')
+const { toGlobalId } = require('graphql-relay')
 
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
@@ -118,7 +119,7 @@ describe('updating an organization', () => {
       })
     })
     describe('users permission level is super_admin', () => {
-      let user, org, b64OrgId
+      let user, org
       beforeEach(async () => {
         const userCursor = await query`
           FOR user IN users
@@ -140,8 +141,6 @@ describe('updating an organization', () => {
             permission: "super_admin"
           } INTO affiliations
         `
-
-        b64OrgId = Buffer.from(org._id).toString('base64')
       })
       describe('users language is english', () => {
         describe('updating the acronym', () => {
@@ -152,7 +151,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     acronymEN: "TEST"
                   }
                 ) {
@@ -175,7 +174,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -219,7 +218,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     nameEN: "Test"
                   }
                 ) {
@@ -242,7 +241,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -286,7 +285,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     zoneEN: "New Zone"
                   }
                 ) {
@@ -309,7 +308,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -353,7 +352,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     sectorEN: "New Sector"
                   }
                 ) {
@@ -376,7 +375,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -420,7 +419,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     countryEN: "A New Country"
                   }
                 ) {
@@ -443,7 +442,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -487,7 +486,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     provinceEN: "A New Province"
                   }
                 ) {
@@ -510,7 +509,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -554,7 +553,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     cityEN: "A New City"
                   }
                 ) {
@@ -577,7 +576,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -621,7 +620,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     acronymEN: "NEW_ACRONYM"
                     nameEN: "New Name"
                     zoneEN: "New Zone"
@@ -657,7 +656,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -703,7 +702,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     acronymFR: "TEST"
                   }
                 ) {
@@ -726,7 +725,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -770,7 +769,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     nameFR: "Test"
                   }
                 ) {
@@ -793,7 +792,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -837,7 +836,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     zoneFR: "Secret Zone"
                   }
                 ) {
@@ -860,7 +859,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -904,7 +903,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     sectorFR: "New Sector"
                   }
                 ) {
@@ -927,7 +926,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -971,7 +970,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     countryFR: "A New Country"
                   }
                 ) {
@@ -994,7 +993,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1038,7 +1037,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     provinceFR: "A New Province"
                   }
                 ) {
@@ -1061,7 +1060,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1105,7 +1104,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     cityFR: "A New City"
                   }
                 ) {
@@ -1128,7 +1127,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1172,7 +1171,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     acronymEN: "NEW_ACRONYM"
                     nameEN: "New Name"
                     zoneEN: "New Zone"
@@ -1208,7 +1207,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1247,7 +1246,7 @@ describe('updating an organization', () => {
       })
     })
     describe('users permission level is admin', () => {
-      let user, org, b64OrgId
+      let user, org
       beforeEach(async () => {
         const userCursor = await query`
           FOR user IN users
@@ -1269,8 +1268,6 @@ describe('updating an organization', () => {
             permission: "admin"
           } INTO affiliations
         `
-
-        b64OrgId = Buffer.from(org._id).toString('base64')
       })
       describe('users language is english', () => {
         describe('updating the acronym', () => {
@@ -1281,7 +1278,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     acronymEN: "TEST"
                   }
                 ) {
@@ -1304,7 +1301,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1348,7 +1345,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     nameEN: "Test"
                   }
                 ) {
@@ -1371,7 +1368,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1415,7 +1412,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     zoneEN: "New Zone"
                   }
                 ) {
@@ -1438,7 +1435,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1482,7 +1479,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     sectorEN: "New Sector"
                   }
                 ) {
@@ -1505,7 +1502,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1549,7 +1546,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     countryEN: "A New Country"
                   }
                 ) {
@@ -1572,7 +1569,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1616,7 +1613,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     provinceEN: "A New Province"
                   }
                 ) {
@@ -1639,7 +1636,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1683,7 +1680,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     cityEN: "A New City"
                   }
                 ) {
@@ -1706,7 +1703,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1750,7 +1747,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     acronymEN: "NEW_ACRONYM"
                     nameEN: "New Name"
                     zoneEN: "New Zone"
@@ -1786,7 +1783,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1832,7 +1829,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     acronymFR: "TEST"
                   }
                 ) {
@@ -1855,7 +1852,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1899,7 +1896,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     nameFR: "Test"
                   }
                 ) {
@@ -1922,7 +1919,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1966,7 +1963,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     zoneFR: "Secret Zone"
                   }
                 ) {
@@ -1989,7 +1986,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -2033,7 +2030,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     sectorFR: "New Sector"
                   }
                 ) {
@@ -2056,7 +2053,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -2100,7 +2097,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     countryFR: "A New Country"
                   }
                 ) {
@@ -2123,7 +2120,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -2167,7 +2164,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     provinceFR: "A New Province"
                   }
                 ) {
@@ -2190,7 +2187,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -2234,7 +2231,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     cityFR: "A New City"
                   }
                 ) {
@@ -2257,7 +2254,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -2301,7 +2298,7 @@ describe('updating an organization', () => {
               mutation {
                 updateOrganization (
                   input: {
-                    id: "${b64OrgId}"
+                    id: "${toGlobalId('organization', org._key)}"
                     acronymEN: "NEW_ACRONYM"
                     nameEN: "New Name"
                     zoneEN: "New Zone"
@@ -2337,7 +2334,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -2418,7 +2415,7 @@ describe('updating an organization', () => {
           })
         })
         describe('user does not have the proper permissions', () => {
-          let user, org, b64OrgId
+          let user, org
           beforeEach(async () => {
             const userCursor = await query`
                 FOR user IN users
@@ -2432,8 +2429,6 @@ describe('updating an organization', () => {
               `
             user = await userCursor.next()
             org = await orgCursor.next()
-
-            b64OrgId = Buffer.from(org._id).toString('base64')
           })
           describe('user has user level permission', () => {
             beforeEach(async () => {
@@ -2452,7 +2447,7 @@ describe('updating an organization', () => {
                 mutation {
                   updateOrganization (
                     input: {
-                      id: "${b64OrgId}"
+                      id: "${toGlobalId('organization', org._key)}"
                       cityEN: "A New City"
                     }
                   ) {
@@ -2470,7 +2465,7 @@ describe('updating an organization', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   validators: {
@@ -2504,7 +2499,7 @@ describe('updating an organization', () => {
                 mutation {
                   updateOrganization (
                     input: {
-                      id: "${b64OrgId}"
+                      id: "${toGlobalId('organization', org._key)}"
                       cityEN: "A New City"
                     }
                   ) {
@@ -2522,7 +2517,7 @@ describe('updating an organization', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   validators: {
@@ -2591,7 +2586,7 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "b3JnYW5pemF0aW9ucy8x", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', 1)}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -2607,7 +2602,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -2635,7 +2630,7 @@ describe('updating an organization', () => {
         })
       })
       describe('database error occurs', () => {
-        let user, org, b64OrgId
+        let user, org
         beforeEach(async () => {
           await collections.organizations.save({
             orgDetails: {
@@ -2674,7 +2669,6 @@ describe('updating an organization', () => {
           `
           user = await userCursor.next()
           org = await orgCursor.next()
-          b64OrgId = Buffer.from(org._id).toString('base64')
 
           await query`
             INSERT {
@@ -2703,7 +2697,7 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -2719,7 +2713,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({ i18n, userId: user._key, query: mockQuery}),
                   userRequired,
                 },
                 validators: {
@@ -2792,7 +2786,7 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -2808,7 +2802,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({ i18n, userId: user._key, query: mockQuery}),
                   userRequired,
                 },
                 validators: {
@@ -2880,7 +2874,7 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -2896,7 +2890,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -2964,7 +2958,7 @@ describe('updating an organization', () => {
           })
         })
         describe('user does not have the proper permissions', () => {
-          let user, org, b64OrgId
+          let user, org
           beforeEach(async () => {
             const userCursor = await query`
                 FOR user IN users
@@ -2978,8 +2972,6 @@ describe('updating an organization', () => {
               `
             user = await userCursor.next()
             org = await orgCursor.next()
-
-            b64OrgId = Buffer.from(org._id).toString('base64')
           })
           describe('user has user level permission', () => {
             beforeEach(async () => {
@@ -2998,7 +2990,7 @@ describe('updating an organization', () => {
                 mutation {
                   updateOrganization (
                     input: {
-                      id: "${b64OrgId}"
+                      id: "${toGlobalId('organization', org._key)}"
                       cityEN: "A New City"
                     }
                   ) {
@@ -3016,7 +3008,7 @@ describe('updating an organization', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   validators: {
@@ -3046,7 +3038,7 @@ describe('updating an organization', () => {
                 mutation {
                   updateOrganization (
                     input: {
-                      id: "${b64OrgId}"
+                      id: "${toGlobalId('organization', org._key)}"
                       cityEN: "A New City"
                     }
                   ) {
@@ -3064,7 +3056,7 @@ describe('updating an organization', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission,
+                    checkPermission: checkPermission({userId: user._key, query}),
                     userRequired,
                   },
                   validators: {
@@ -3129,7 +3121,7 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "b3JnYW5pemF0aW9ucy8x", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', 1)}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -3145,7 +3137,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -3169,7 +3161,7 @@ describe('updating an organization', () => {
         })
       })
       describe('database error occurs', () => {
-        let user, org, b64OrgId
+        let user, org
         beforeEach(async () => {
           await collections.organizations.save({
             orgDetails: {
@@ -3208,7 +3200,6 @@ describe('updating an organization', () => {
           `
           user = await userCursor.next()
           org = await orgCursor.next()
-          b64OrgId = Buffer.from(org._id).toString('base64')
 
           await query`
             INSERT {
@@ -3237,7 +3228,7 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -3253,7 +3244,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({ i18n, userId: user._key, query: mockQuery}),
                   userRequired,
                 },
                 validators: {
@@ -3322,7 +3313,7 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -3338,7 +3329,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({ i18n, userId: user._key, query: mockQuery}),
                   userRequired,
                 },
                 validators: {
@@ -3406,7 +3397,7 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${b64OrgId}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -3422,7 +3413,7 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {

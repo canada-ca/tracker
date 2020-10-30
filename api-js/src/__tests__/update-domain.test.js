@@ -173,7 +173,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -239,7 +239,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -306,7 +306,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -378,7 +378,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -444,7 +444,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -511,7 +511,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -583,7 +583,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -649,7 +649,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -716,7 +716,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -809,7 +809,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -883,7 +883,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -1019,7 +1019,7 @@ describe('updating a domain', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1085,7 +1085,7 @@ describe('updating a domain', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1190,7 +1190,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -1314,7 +1314,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -1434,7 +1434,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -1506,7 +1506,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -1587,7 +1587,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -1659,7 +1659,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -1793,7 +1793,7 @@ describe('updating a domain', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1857,7 +1857,7 @@ describe('updating a domain', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission,
+                  checkPermission: checkPermission({userId: user._key, query}),
                   userRequired,
                 },
                 validators: {
@@ -1960,7 +1960,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -2082,7 +2082,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -2200,7 +2200,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -2270,7 +2270,7 @@ describe('updating a domain', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {

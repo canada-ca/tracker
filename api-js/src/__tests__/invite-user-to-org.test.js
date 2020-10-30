@@ -191,7 +191,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -266,7 +266,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -341,7 +341,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -405,7 +405,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -478,7 +478,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -551,7 +551,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -647,7 +647,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -722,7 +722,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -787,7 +787,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -860,7 +860,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -946,7 +946,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -1010,7 +1010,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -1101,7 +1101,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -1192,7 +1192,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -1303,7 +1303,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -1365,7 +1365,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -1487,7 +1487,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -1561,7 +1561,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -1635,7 +1635,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -1699,7 +1699,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -1771,7 +1771,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -1843,7 +1843,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -1938,7 +1938,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -2012,7 +2012,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -2076,7 +2076,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -2148,7 +2148,7 @@ describe('invite user to org', () => {
                   collections,
                   transaction,
                   userId: user._key,
-                  auth: { checkPermission, tokenize, userRequired },
+                  auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                     userLoaderByKey: userLoaderByKey(query),
@@ -2233,7 +2233,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -2293,7 +2293,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -2382,7 +2382,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -2471,7 +2471,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -2580,7 +2580,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),
@@ -2640,7 +2640,7 @@ describe('invite user to org', () => {
               collections,
               transaction,
               userId: user._key,
-              auth: { checkPermission, tokenize, userRequired },
+              auth: { checkPermission: checkPermission({userId: user._key, query}), tokenize, userRequired },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'fr'),
                 userLoaderByKey: userLoaderByKey(query),

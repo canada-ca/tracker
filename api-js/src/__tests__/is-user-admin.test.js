@@ -110,7 +110,7 @@ describe('given the isUserAdmin query', () => {
             userId: user._key,
             query: query,
             auth: {
-              checkPermission,
+              checkPermission: checkPermission({userId: user._key, query}),
               userRequired,
             },
             loaders: {
@@ -150,7 +150,7 @@ describe('given the isUserAdmin query', () => {
             userId: user._key,
             query: query,
             auth: {
-              checkPermission,
+              checkPermission: checkPermission({userId: user._key, query}),
               userRequired,
             },
             loaders: {
@@ -190,7 +190,7 @@ describe('given the isUserAdmin query', () => {
             userId: user._key,
             query: query,
             auth: {
-              checkPermission,
+              checkPermission: checkPermission({userId: user._key, query}),
               userRequired,
             },
             loaders: {
@@ -240,7 +240,7 @@ describe('given the isUserAdmin query', () => {
               userId: user._key,
               query: mockedQuery,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {
@@ -294,7 +294,7 @@ describe('given the isUserAdmin query', () => {
               userId: user._key,
               query: mockedQuery,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               loaders: {

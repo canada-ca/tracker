@@ -177,7 +177,7 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -248,7 +248,7 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -298,7 +298,7 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -387,7 +387,7 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -468,7 +468,7 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {
@@ -518,7 +518,7 @@ describe('given findOrganizationBySlugQuery', () => {
               userKey: user._key,
               query: query,
               auth: {
-                checkPermission,
+                checkPermission: checkPermission({userId: user._key, query}),
                 userRequired,
               },
               validators: {

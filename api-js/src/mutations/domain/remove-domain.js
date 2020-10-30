@@ -45,7 +45,7 @@ const removeDomain = new mutationWithClientMutationId({
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get User
-    const user = await userRequired(userId, userLoaderByKey)
+    await userRequired(userId, userLoaderByKey)
 
     // Get domain from db
     const domain = await domainLoaderByKey.load(domainId)
@@ -70,7 +70,7 @@ const removeDomain = new mutationWithClientMutationId({
     }
 
     // Get permission
-    const permission = await checkPermission(user._id, org._id, query)
+    const permission = await checkPermission({ orgId: org._id})
 
     // Check to see if domain belongs to blue check org
     if (org.blueCheck && permission !== 'super_admin') {

@@ -118,7 +118,7 @@ const Server = (context = {}) => {
           bcrypt,
           checkDomainOwnership: checkDomainOwnership({i18n, userId, query}),
           checkDomainPermission: checkDomainPermission({i18n, userId, query}),
-          checkPermission,
+          checkPermission: checkPermission({i18n, userId, query}),
           tokenize,
           userRequired,
           verifyToken,
