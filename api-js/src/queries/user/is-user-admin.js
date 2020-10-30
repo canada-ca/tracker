@@ -12,10 +12,9 @@ const isUserAdmin = {
       query,
       userId,
       auth: { userRequired },
-      loaders: { userLoaderByKey },
     },
   ) => {
-    const user = await userRequired(userId, userLoaderByKey)
+    const user = await userRequired()
 
     let userAdmin
     try {

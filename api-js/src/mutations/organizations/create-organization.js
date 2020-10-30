@@ -95,7 +95,7 @@ const createOrganization = new mutationWithClientMutationId({
       query,
       userId,
       auth: { userRequired },
-      loaders: { orgLoaderBySlug, userLoaderByKey },
+      loaders: { orgLoaderBySlug },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -120,7 +120,7 @@ const createOrganization = new mutationWithClientMutationId({
     const slugFR = slugify(nameFR)
 
     // Get user
-    const user = await userRequired(userId, userLoaderByKey)
+    const user = await userRequired()
 
     // Check to see if org already exists
     const [orgEN, orgFR] = await orgLoaderBySlug.loadMany([slugEN, slugFR])

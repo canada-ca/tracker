@@ -19,9 +19,8 @@ const findOrganizationBySlug = {
     args,
     {
       i18n,
-      userKey,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderBySlug, userLoaderByKey },
+      loaders: { orgLoaderBySlug },
       validators: { cleanseInput },
     },
   ) => {
@@ -29,7 +28,7 @@ const findOrganizationBySlug = {
     const orgSlug = cleanseInput(args.orgSlug)
 
     // Get User
-    const user = await userRequired(userKey, userLoaderByKey)
+    const user = await userRequired()
 
     // Retrieve organization by slug
     const org = await orgLoaderBySlug.load(orgSlug)

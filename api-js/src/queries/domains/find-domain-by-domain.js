@@ -17,9 +17,8 @@ const findDomainByDomain = {
     args,
     {
       i18n,
-      userId: userKey,
       auth: { checkDomainPermission, userRequired },
-      loaders: { domainLoaderByDomain, userLoaderByKey },
+      loaders: { domainLoaderByDomain },
       validators: { cleanseInput },
     },
   ) => {
@@ -27,7 +26,7 @@ const findDomainByDomain = {
     const domainInput = cleanseInput(args.domain)
 
     // Get User
-    const user = await userRequired(userKey, userLoaderByKey)
+    const user = await userRequired()
 
     // Retrieve domain by domain
     const domain = await domainLoaderByDomain.load(domainInput)

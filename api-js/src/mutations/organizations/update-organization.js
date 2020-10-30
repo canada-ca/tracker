@@ -98,7 +98,7 @@ const updateOrganization = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, userRequired },
-      loaders: { orgLoaderByKey, userLoaderByKey },
+      loaders: { orgLoaderByKey },
       validators: { cleanseInput, slugify },
     },
   ) => {
@@ -124,7 +124,7 @@ const updateOrganization = new mutationWithClientMutationId({
     const slugFR = slugify(nameFR)
 
     // Get user
-    await userRequired(userId, userLoaderByKey)
+    await userRequired()
 
     // Check to see if org exists
     const currentOrg = await orgLoaderByKey.load(orgKey)

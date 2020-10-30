@@ -31,14 +31,14 @@ const removeOrganization = new mutationWithClientMutationId({
       userId,
       auth: { checkPermission, userRequired },
       validators: { cleanseInput },
-      loaders: { orgLoaderByKey, userLoaderByKey },
+      loaders: { orgLoaderByKey },
     },
   ) => {
     // Cleanse Input
     const { type: _orgType, id: orgId } = fromGlobalId(cleanseInput(args.orgId))
 
     // Get user
-    await userRequired(userId, userLoaderByKey)
+    await userRequired()
 
     // Get org from db
     const organization = await orgLoaderByKey.load(orgId)

@@ -46,7 +46,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, tokenize, userRequired },
-      loaders: { orgLoaderByKey, userLoaderByKey, userLoaderByUserName },
+      loaders: { orgLoaderByKey, userLoaderByUserName },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
       validators: { cleanseInput },
     },
@@ -57,7 +57,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     const preferredLang = cleanseInput(args.preferredLang)
 
     // Get requesting user
-    const user = await userRequired(userId, userLoaderByKey)
+    const user = await userRequired()
 
     // Make sure user is not inviting themselves
     if (user.userName === userName) {

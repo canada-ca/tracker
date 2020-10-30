@@ -41,7 +41,7 @@ const createDomain = new mutationWithClientMutationId({
       transaction,
       userId,
       auth: { checkPermission, userRequired },
-      loaders: { domainLoaderByDomain, orgLoaderByKey, userLoaderByKey },
+      loaders: { domainLoaderByDomain, orgLoaderByKey },
       validators: { cleanseInput },
     },
   ) => {
@@ -57,7 +57,7 @@ const createDomain = new mutationWithClientMutationId({
     }
 
     // Get User
-    await userRequired(userId, userLoaderByKey)
+    await userRequired()
 
     // Check to see if org exists
     const org = await orgLoaderByKey.load(orgId)
