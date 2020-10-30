@@ -9,7 +9,6 @@
     'Authentication error, please sign in again.': 'todo',
     'Could not retrieve specified domain.': 'todo',
     'Could not retrieve specified organization.': 'todo',
-    'Error, unable to have first, and last set at the same time.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
     'If an account with this username is found, an email verification link will be found in your inbox.':
@@ -27,6 +26,8 @@
       'todo',
     'Passing both `first` and `last` to paginate the `https` connection is not supported.':
       'todo',
+    'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
+      'todo',
     'Passing both `first` and `last` to paginate the `spf` connection is not supported.':
       'todo',
     'Password is not strong enough. Please try again.': 'todo',
@@ -36,6 +37,8 @@
     'Passwords do not match.': 'todo',
     'Profile successfully updated.': 'todo',
     'Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
@@ -115,6 +118,7 @@
     'Unable to update your own role. Please try again.': 'todo',
     'Unable to verify account. Please request a new email.': 'todo',
     'Unable to verify account. Please try again.': 'todo',
+    'Unable to verify if user is an admin, please try again.': 'todo',
     'User role was updated successfully.': 'todo',
     'Username already in use.': 'todo',
     "We've sent you a text message with an authentication code to sign into Pulse.":
@@ -131,6 +135,8 @@
       'todo',
     'You must provide a `first` or `last` value to properly paginate the `https` connection.':
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
+      'todo',
     'You must provide a `first` or `last` value to properly paginate the `spf` connection.':
       'todo',
     '`{argSet}` on the `dkimResults` connection cannot be less than zero.':
@@ -139,6 +145,8 @@
     '`{argSet}` on the `dmarc` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `domains` connection cannot be less than zero.': 'todo',
     '`{argSet}` on the `https` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `organization` connection cannot be less than zero.':
+      'todo',
     '`{argSet}` on the `spf` connection cannot be less than zero.': 'todo',
   },
 }

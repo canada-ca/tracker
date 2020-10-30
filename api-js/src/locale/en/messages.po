@@ -67,6 +67,11 @@ msgstr "Passing both `first` and `last` to paginate the `domains` connection is 
 msgid "Passing both `first` and `last` to paginate the `https` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `https` connection is not supported."
 
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:68
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:68
+msgid "Passing both `first` and `last` to paginate the `organization` connection is not supported."
+msgstr "Passing both `first` and `last` to paginate the `organization` connection is not supported."
+
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:74
 msgid "Passing both `first` and `last` to paginate the `spf` connection is not supported."
 msgstr "Passing both `first` and `last` to paginate the `spf` connection is not supported."
@@ -448,7 +453,7 @@ msgstr "Unable to verify account. Please request a new email."
 msgid "Unable to verify account. Please try again."
 msgstr "Unable to verify account. Please try again."
 
-#: src/queries/user/is-user-admin.js:30
+#: src/queries/user/is-user-admin.js:33
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "Unable to verify if user is an admin, please try again."
 
@@ -489,6 +494,11 @@ msgstr "You must provide a `first` or `last` value to properly paginate the `dom
 msgid "You must provide a `first` or `last` value to properly paginate the `https` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `https` connection."
 
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:34
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:34
+msgid "You must provide a `first` or `last` value to properly paginate the `organization` connection."
+msgstr "You must provide a `first` or `last` value to properly paginate the `organization` connection."
+
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:40
 msgid "You must provide a `first` or `last` value to properly paginate the `spf` connection."
 msgstr "You must provide a `first` or `last` value to properly paginate the `spf` connection."
@@ -513,6 +523,11 @@ msgstr "`{argSet}` on the `domains` connection cannot be less than zero."
 #: src/loaders/web-scan/load-https-connections-by-domain-id.js:50
 msgid "`{argSet}` on the `https` connection cannot be less than zero."
 msgstr "`{argSet}` on the `https` connection cannot be less than zero."
+
+#: src/loaders/organizations/load-organization-connections-by-domain-id.js:44
+#: src/loaders/organizations/load-organization-connections-by-user-id.js:44
+msgid "`{argSet}` on the `organization` connection cannot be less than zero."
+msgstr "`{argSet}` on the `organization` connection cannot be less than zero."
 
 #: src/loaders/email-scan/load-spf-connections-by-domain-id.js:50
 msgid "`{argSet}` on the `spf` connection cannot be less than zero."
