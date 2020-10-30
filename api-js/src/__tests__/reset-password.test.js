@@ -1150,9 +1150,7 @@ describe('reset users password', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

@@ -64,7 +64,9 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       console.warn(
         `User: ${userId} attempted to invite themselves to ${orgId}.`,
       )
-      throw new Error(i18n._(t`Unable to invite yourself to an org. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to invite yourself to an org. Please try again.`),
+      )
     }
 
     // Check to see if requested org exists
@@ -78,7 +80,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     }
 
     // Check to see requesting users permission to the org is
-    const permission = await checkPermission({ orgId: org._id})
+    const permission = await checkPermission({ orgId: org._id })
 
     if (
       permission === 'user' ||
@@ -121,8 +123,9 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       )
 
       return {
-        status:
-          i18n._(t`Successfully sent invitation to service, and organization email.`),
+        status: i18n._(
+          t`Successfully sent invitation to service, and organization email.`,
+        ),
       }
     }
     // If account is found add just add affiliation
@@ -179,8 +182,9 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       )
 
       return {
-        status:
-          i18n._(t`Successfully invited user to organization, and sent notification email.`),
+        status: i18n._(
+          t`Successfully invited user to organization, and sent notification email.`,
+        ),
       }
     }
   },

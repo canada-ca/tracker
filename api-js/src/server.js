@@ -116,12 +116,16 @@ const Server = (context = {}) => {
         moment,
         auth: {
           bcrypt,
-          checkDomainOwnership: checkDomainOwnership({i18n, userId, query}),
-          checkDomainPermission: checkDomainPermission({i18n, userId, query}),
-          checkPermission: checkPermission({i18n, userId, query}),
+          checkDomainOwnership: checkDomainOwnership({ i18n, userId, query }),
+          checkDomainPermission: checkDomainPermission({ i18n, userId, query }),
+          checkPermission: checkPermission({ i18n, userId, query }),
           tokenize,
-          userRequired: userRequired({i18n, userId, userLoaderByKey: userLoaderByKey(query)}),
-          verifyToken: verifyToken({i18n}),
+          userRequired: userRequired({
+            i18n,
+            userId,
+            userLoaderByKey: userLoaderByKey(query),
+          }),
+          verifyToken: verifyToken({ i18n }),
         },
         validators: {
           cleanseInput,

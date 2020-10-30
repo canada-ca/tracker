@@ -41,7 +41,7 @@ const findOrganizationBySlug = {
     }
 
     // Check user permission for organization access
-    const permission = await checkPermission({ orgId: org._id})
+    const permission = await checkPermission({ orgId: org._id })
 
     if (!['super_admin', 'admin', 'user'].includes(permission)) {
       console.warn(`User ${user._key} could not retrieve organization.`)

@@ -54,7 +54,7 @@ const removeOrganization = new mutationWithClientMutationId({
     }
 
     // Get users permission
-    const permission = await checkPermission({ orgId: organization._id})
+    const permission = await checkPermission({ orgId: organization._id })
 
     // Check to see if org is blue check, and the user is super admin
     if (organization.blueCheck && permission !== 'super_admin') {

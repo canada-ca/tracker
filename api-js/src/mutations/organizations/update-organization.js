@@ -166,9 +166,9 @@ const updateOrganization = new mutationWithClientMutationId({
         i18n._(t`Unable to update organization. Please try again.`),
       )
     }
-    
+
     const compareOrg = await orgCursor.next()
-    
+
     const updatedOrgDetails = {
       orgDetails: {
         en: {

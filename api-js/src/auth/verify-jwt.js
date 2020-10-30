@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken')
 
 const { AUTHENTICATED_KEY } = process.env
 
-const verifyToken = ({ i18n }) => ({ token, secret = String(AUTHENTICATED_KEY) }) => {
+const verifyToken = ({ i18n }) => ({
+  token,
+  secret = String(AUTHENTICATED_KEY),
+}) => {
   let decoded
   try {
     decoded = jwt.verify(token, secret)

@@ -1,6 +1,8 @@
 const { t } = require('@lingui/macro')
 
-const checkDomainOwnership = ({i18n, query, userId}) => async ({ domainId }) => {
+const checkDomainOwnership = ({ i18n, query, userId }) => async ({
+  domainId,
+}) => {
   let userAffiliatedOwnership, ownership
   const userIdString = `users/${userId}`
   // Get user affiliations and affiliated orgs owning provided domain
@@ -16,7 +18,9 @@ const checkDomainOwnership = ({i18n, query, userId}) => async ({ domainId }) => 
       `Database error when retrieving affiliated organization ownership for user: ${userIdString} and the domain: ${domainId}: ${err}`,
     )
     throw new Error(
-      i18n._(t`Error when retrieving dmarc report information. Please try again.`),
+      i18n._(
+        t`Error when retrieving dmarc report information. Please try again.`,
+      ),
     )
   }
 
@@ -27,7 +31,9 @@ const checkDomainOwnership = ({i18n, query, userId}) => async ({ domainId }) => 
       `Cursor error when retrieving affiliated organization ownership for user: ${userIdString} and the domain: ${domainId}: ${err}`,
     )
     throw new Error(
-      i18n._(t`Error when retrieving dmarc report information. Please try again.`),
+      i18n._(
+        t`Error when retrieving dmarc report information. Please try again.`,
+      ),
     )
   }
 

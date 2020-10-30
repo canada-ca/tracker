@@ -52,7 +52,10 @@ describe('given a userLoaderByKey dataloader', () => {
       `
       const expectedUser = await expectedCursor.next()
 
-      const testUserRequired = userRequired({userId: expectedUser._key, userLoaderByKey: userLoaderByKey(query)})
+      const testUserRequired = userRequired({
+        userId: expectedUser._key,
+        userLoaderByKey: userLoaderByKey(query),
+      })
       const user = await testUserRequired()
 
       expect(user).toEqual(expectedUser)
@@ -73,12 +76,18 @@ describe('given a userLoaderByKey dataloader', () => {
     describe('user id is undefined', () => {
       it('throws an error', async () => {
         try {
-          const testUserRequired = userRequired({ i18n, userId: undefined, userLoaderByKey: userLoaderByKey(query)})
+          const testUserRequired = userRequired({
+            i18n,
+            userId: undefined,
+            userLoaderByKey: userLoaderByKey(query),
+          })
           await testUserRequired()
         } catch (err) {
-          expect(err).toEqual(new Error('Authentication error. Please sign in.'))
+          expect(err).toEqual(
+            new Error('Authentication error. Please sign in.'),
+          )
         }
-  
+
         expect(consoleOutput).toEqual([
           `User attempted to access controlled content, but userId was undefined.`,
         ])
@@ -87,14 +96,20 @@ describe('given a userLoaderByKey dataloader', () => {
     describe('user cannot be found in database', () => {
       it('throws an error', async () => {
         await truncate()
-  
+
         try {
-          const testUserRequired = userRequired({ i18n, userId: '1', userLoaderByKey: userLoaderByKey(query)})
+          const testUserRequired = userRequired({
+            i18n,
+            userId: '1',
+            userLoaderByKey: userLoaderByKey(query),
+          })
           await testUserRequired()
         } catch (err) {
-          expect(err).toEqual(new Error('Authentication error. Please sign in.'))
+          expect(err).toEqual(
+            new Error('Authentication error. Please sign in.'),
+          )
         }
-  
+
         expect(consoleOutput).toEqual([
           `User: 1 attempted to access controlled content, but no user is associated with that id.`,
         ])
@@ -109,14 +124,20 @@ describe('given a userLoaderByKey dataloader', () => {
             },
           }
         }
-  
+
         try {
-          const testUserRequired = userRequired({ i18n, userId: '1', userLoaderByKey: testLoader()})
+          const testUserRequired = userRequired({
+            i18n,
+            userId: '1',
+            userLoaderByKey: testLoader(),
+          })
           await testUserRequired()
         } catch (err) {
-          expect(err).toEqual(new Error('Authentication error. Please sign in.'))
+          expect(err).toEqual(
+            new Error('Authentication error. Please sign in.'),
+          )
         }
-  
+
         expect(consoleOutput).toEqual([
           `Database error occurred when running userRequired: Error: Database error occurred.`,
         ])
@@ -138,12 +159,16 @@ describe('given a userLoaderByKey dataloader', () => {
     describe('user id is undefined', () => {
       it('throws an error', async () => {
         try {
-          const testUserRequired = userRequired({ i18n, userId: undefined, userLoaderByKey: userLoaderByKey(query)})
+          const testUserRequired = userRequired({
+            i18n,
+            userId: undefined,
+            userLoaderByKey: userLoaderByKey(query),
+          })
           await testUserRequired()
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleOutput).toEqual([
           `User attempted to access controlled content, but userId was undefined.`,
         ])
@@ -152,14 +177,18 @@ describe('given a userLoaderByKey dataloader', () => {
     describe('user cannot be found in database', () => {
       it('throws an error', async () => {
         await truncate()
-  
+
         try {
-          const testUserRequired = userRequired({ i18n, userId: '1', userLoaderByKey: userLoaderByKey(query)})
+          const testUserRequired = userRequired({
+            i18n,
+            userId: '1',
+            userLoaderByKey: userLoaderByKey(query),
+          })
           await testUserRequired()
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleOutput).toEqual([
           `User: 1 attempted to access controlled content, but no user is associated with that id.`,
         ])
@@ -174,14 +203,18 @@ describe('given a userLoaderByKey dataloader', () => {
             },
           }
         }
-  
+
         try {
-          const testUserRequired = userRequired({ i18n, userId: '1', userLoaderByKey: testLoader()})
+          const testUserRequired = userRequired({
+            i18n,
+            userId: '1',
+            userLoaderByKey: testLoader(),
+          })
           await testUserRequired()
         } catch (err) {
           expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleOutput).toEqual([
           `Database error occurred when running userRequired: Error: Database error occurred.`,
         ])

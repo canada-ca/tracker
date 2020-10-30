@@ -193,10 +193,19 @@ describe('given findDomainByDomain query', () => {
             userId: user._key,
             query: query,
             auth: {
-              checkDomainPermission: checkDomainPermission({query, userId: user._key}),
-              checkDomainOwnership: checkDomainOwnership({query, userId: user._key}),
+              checkDomainPermission: checkDomainPermission({
+                query,
+                userId: user._key,
+              }),
+              checkDomainOwnership: checkDomainOwnership({
+                query,
+                userId: user._key,
+              }),
               tokenize,
-              userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
+              userRequired: userRequired({
+                userId: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
             },
             validators: {
               cleanseInput,
@@ -267,10 +276,19 @@ describe('given findDomainByDomain query', () => {
             userId: user._key,
             query: query,
             auth: {
-              checkDomainPermission: checkDomainPermission({query, userId: user._key}),
-              checkDomainOwnership: checkDomainOwnership({query, userId: user._key}),
+              checkDomainPermission: checkDomainPermission({
+                query,
+                userId: user._key,
+              }),
+              checkDomainOwnership: checkDomainOwnership({
+                query,
+                userId: user._key,
+              }),
               tokenize,
-              userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
+              userRequired: userRequired({
+                userId: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
             },
             validators: {
               cleanseInput,

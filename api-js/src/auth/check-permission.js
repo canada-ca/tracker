@@ -47,7 +47,9 @@ const checkPermission = ({ i18n, userId, query }) => async ({ orgId }) => {
     try {
       permission = await cursor.next()
     } catch (err) {
-      console.error(`Cursor error when checking ${userIdString}'s permission: ${err}`)
+      console.error(
+        `Cursor error when checking ${userIdString}'s permission: ${err}`,
+      )
       throw new Error(i18n._(t`Unable to check permission. Please try again.`))
     }
     return permission

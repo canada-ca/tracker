@@ -70,7 +70,7 @@ const createDomain = new mutationWithClientMutationId({
     }
 
     // Check to see if user belongs to org
-    const permission = await checkPermission({ orgId: org._id})
+    const permission = await checkPermission({ orgId: org._id })
 
     if (
       permission !== 'user' &&

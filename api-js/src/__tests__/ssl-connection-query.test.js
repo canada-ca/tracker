@@ -153,8 +153,14 @@ describe('given the ssl gql object', () => {
           userId: user._key,
           query: query,
           auth: {
-            checkDomainPermission: checkDomainPermission({query, userId: user._key}),
-            userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
+            checkDomainPermission: checkDomainPermission({
+              query,
+              userId: user._key,
+            }),
+            userRequired: userRequired({
+              userId: user._key,
+              userLoaderByKey: userLoaderByKey(query),
+            }),
           },
           validators: {
             cleanseInput,

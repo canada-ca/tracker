@@ -4,16 +4,7 @@ const { t } = require('@lingui/macro')
 const isUserAdmin = {
   type: GraphQLBoolean,
   description: 'Query used to check if the user has an admin role.',
-  resolve: async (
-    _,
-    __,
-    {
-      i18n,
-      query,
-      userId,
-      auth: { userRequired },
-    },
-  ) => {
+  resolve: async (_, __, { i18n, query, userId, auth: { userRequired } }) => {
     const user = await userRequired()
 
     let userAdmin

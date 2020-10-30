@@ -85,7 +85,7 @@ const updateDomain = new mutationWithClientMutationId({
     }
 
     // Check permission
-    const permission = await checkPermission({ orgId: org._id})
+    const permission = await checkPermission({ orgId: org._id })
 
     if (
       permission !== 'user' &&

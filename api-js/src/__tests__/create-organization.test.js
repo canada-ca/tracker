@@ -149,7 +149,10 @@ describe('create an organization', () => {
             transaction,
             userId: user._key,
             auth: {
-              userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
+              userRequired: userRequired({
+                userId: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
             },
             loaders: {
               orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
@@ -251,7 +254,10 @@ describe('create an organization', () => {
             transaction,
             userId: user._key,
             auth: {
-              userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
+              userRequired: userRequired({
+                userId: user._key,
+                userLoaderByKey: userLoaderByKey(query),
+              }),
             },
             loaders: {
               orgLoaderBySlug: orgLoaderBySlug(query, 'fr'),
@@ -394,7 +400,10 @@ describe('create an organization', () => {
               transaction,
               userId: user._key,
               auth: {
-                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
@@ -483,7 +492,10 @@ describe('create an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoader}),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoader,
+                  }),
                 },
                 loaders: {
                   orgLoaderBySlug: orgLoader,
@@ -576,7 +588,10 @@ describe('create an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoader}),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoader,
+                  }),
                 },
                 loaders: {
                   orgLoaderBySlug: orgLoader,
@@ -673,7 +688,10 @@ describe('create an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 loaders: {
                   orgLoaderBySlug: orgLoader,
@@ -794,7 +812,10 @@ describe('create an organization', () => {
               transaction,
               userId: user._key,
               auth: {
-                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderBySlug: orgLoaderBySlug(query, 'en'),
@@ -879,7 +900,10 @@ describe('create an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoader}),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoader,
+                  }),
                 },
                 loaders: {
                   orgLoaderBySlug: orgLoader,
@@ -968,7 +992,10 @@ describe('create an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoader}),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoader,
+                  }),
                 },
                 loaders: {
                   orgLoaderBySlug: orgLoader,
@@ -1061,7 +1088,10 @@ describe('create an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 loaders: {
                   orgLoaderBySlug: orgLoader,

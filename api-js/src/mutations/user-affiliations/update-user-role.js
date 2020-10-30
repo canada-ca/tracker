@@ -86,7 +86,7 @@ const updateUserRole = new mutationWithClientMutationId({
     }
 
     // Check requesting users permission
-    const permission = await checkPermission({ orgId: org._id})
+    const permission = await checkPermission({ orgId: org._id })
 
     if (permission === 'user' || typeof permission === 'undefined') {
       console.warn(

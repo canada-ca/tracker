@@ -32,7 +32,7 @@ describe('given a encoded token', () => {
         algorithm: 'HS256',
       })
 
-      const testVerify = verifyToken({i18n})
+      const testVerify = verifyToken({ i18n })
       const decoded = testVerify({ token })
       expect(decoded.userId).toEqual(1)
     })
@@ -57,10 +57,10 @@ describe('given a encoded token', () => {
         const token = jwt.sign({ parameters }, 'superSecretKey', {
           algorithm: 'HS256',
         })
-  
+
         const testVerify = verifyToken({ i18n })
         expect(() => {
-          testVerify({token})
+          testVerify({ token })
         }).toThrow(Error('Invalid token, please request a new one.'))
         expect(consoleOutput).toEqual([
           `JWT was attempted to be verified but secret was incorrect.`,
@@ -88,10 +88,10 @@ describe('given a encoded token', () => {
         const token = jwt.sign({ parameters }, 'superSecretKey', {
           algorithm: 'HS256',
         })
-  
+
         const testVerify = verifyToken({ i18n })
         expect(() => {
-          testVerify({token})
+          testVerify({ token })
         }).toThrow(Error('todo'))
         expect(consoleOutput).toEqual([
           `JWT was attempted to be verified but secret was incorrect.`,
@@ -99,5 +99,4 @@ describe('given a encoded token', () => {
       })
     })
   })
-
 })

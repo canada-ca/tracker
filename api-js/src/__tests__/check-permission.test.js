@@ -89,7 +89,10 @@ describe('given the check permission function', () => {
         `
       })
       it('will return the users permission level', async () => {
-        const testCheckPermission = checkPermission({userId: user._key, query})
+        const testCheckPermission = checkPermission({
+          userId: user._key,
+          query,
+        })
         const permission = await testCheckPermission({ orgId: org._id })
         expect(permission).toEqual('super_admin')
       })
@@ -119,7 +122,10 @@ describe('given the check permission function', () => {
         `
       })
       it('will return the users permission level', async () => {
-        const testCheckPermission = checkPermission({userId: user._key, query})
+        const testCheckPermission = checkPermission({
+          userId: user._key,
+          query,
+        })
         const permission = await testCheckPermission({ orgId: org._id })
         expect(permission).toEqual('admin')
       })
@@ -149,7 +155,10 @@ describe('given the check permission function', () => {
         `
       })
       it('will return the users permission level', async () => {
-        const testCheckPermission = checkPermission({userId: user._key, query})
+        const testCheckPermission = checkPermission({
+          userId: user._key,
+          query,
+        })
         const permission = await testCheckPermission({ orgId: org._id })
         expect(permission).toEqual('user')
       })
@@ -173,7 +182,10 @@ describe('given the check permission function', () => {
         org = await orgCursor.next()
       })
       it('will return the users permission level', async () => {
-        const testCheckPermission = checkPermission({userId: user._key, query})
+        const testCheckPermission = checkPermission({
+          userId: user._key,
+          query,
+        })
         const permission = await testCheckPermission({ orgId: org._id })
         expect(permission).toEqual(undefined)
       })
@@ -196,16 +208,20 @@ describe('given the check permission function', () => {
             query = jest
               .fn()
               .mockRejectedValue(new Error('Database error occurred.'))
-  
+
             try {
-              const testCheckPermission = checkPermission({i18n, userId: '1', query})
+              const testCheckPermission = checkPermission({
+                i18n,
+                userId: '1',
+                query,
+              })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
               expect(err).toEqual(
                 new Error('Authentication error. Please sign in again.'),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `Database error when checking to see if user: users/1 has super admin permission: Error: Database error occurred.`,
             ])
@@ -221,16 +237,20 @@ describe('given the check permission function', () => {
                 },
               })
               .mockRejectedValue(new Error('Database error occurred.'))
-  
+
             try {
-              const testCheckPermission = checkPermission({i18n, userId: '1', query})
+              const testCheckPermission = checkPermission({
+                i18n,
+                userId: '1',
+                query,
+              })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
               expect(err).toEqual(
                 new Error('Authentication error. Please sign in again.'),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `Database error occurred when checking users/1's permission: Error: Database error occurred.`,
             ])
@@ -246,16 +266,20 @@ describe('given the check permission function', () => {
               },
             }
             query = jest.fn().mockReturnValue(cursor)
-  
+
             try {
-              const testCheckPermission = checkPermission({i18n, userId: '1', query})
+              const testCheckPermission = checkPermission({
+                i18n,
+                userId: '1',
+                query,
+              })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
               expect(err).toEqual(
                 new Error('Unable to check permission. Please try again.'),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `Cursor error when checking to see if user users/1 has super admin permission: Error: Cursor error occurred.`,
             ])
@@ -276,16 +300,20 @@ describe('given the check permission function', () => {
                 },
               })
               .mockReturnValue(cursor)
-  
+
             try {
-              const testCheckPermission = checkPermission({i18n, userId: '1', query})
+              const testCheckPermission = checkPermission({
+                i18n,
+                userId: '1',
+                query,
+              })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
               expect(err).toEqual(
                 new Error('Unable to check permission. Please try again.'),
               )
             }
-  
+
             expect(consoleOutput).toEqual([
               `Cursor error when checking users/1's permission: Error: Cursor error occurred.`,
             ])
@@ -311,16 +339,18 @@ describe('given the check permission function', () => {
             query = jest
               .fn()
               .mockRejectedValue(new Error('Database error occurred.'))
-  
+
             try {
-              const testCheckPermission = checkPermission({i18n, userId: '1', query})
+              const testCheckPermission = checkPermission({
+                i18n,
+                userId: '1',
+                query,
+              })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('todo'),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `Database error when checking to see if user: users/1 has super admin permission: Error: Database error occurred.`,
             ])
@@ -336,16 +366,18 @@ describe('given the check permission function', () => {
                 },
               })
               .mockRejectedValue(new Error('Database error occurred.'))
-  
+
             try {
-              const testCheckPermission = checkPermission({i18n, userId: '1', query})
+              const testCheckPermission = checkPermission({
+                i18n,
+                userId: '1',
+                query,
+              })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('todo'),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `Database error occurred when checking users/1's permission: Error: Database error occurred.`,
             ])
@@ -361,16 +393,18 @@ describe('given the check permission function', () => {
               },
             }
             query = jest.fn().mockReturnValue(cursor)
-  
+
             try {
-              const testCheckPermission = checkPermission({i18n, userId: '1', query})
+              const testCheckPermission = checkPermission({
+                i18n,
+                userId: '1',
+                query,
+              })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('todo'),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `Cursor error when checking to see if user users/1 has super admin permission: Error: Cursor error occurred.`,
             ])
@@ -391,16 +425,18 @@ describe('given the check permission function', () => {
                 },
               })
               .mockReturnValue(cursor)
-  
+
             try {
-              const testCheckPermission = checkPermission({i18n, userId: '1', query})
+              const testCheckPermission = checkPermission({
+                i18n,
+                userId: '1',
+                query,
+              })
               await testCheckPermission({ orgId: 'organizations/1' })
             } catch (err) {
-              expect(err).toEqual(
-                new Error('todo'),
-              )
+              expect(err).toEqual(new Error('todo'))
             }
-  
+
             expect(consoleOutput).toEqual([
               `Cursor error when checking users/1's permission: Error: Cursor error occurred.`,
             ])

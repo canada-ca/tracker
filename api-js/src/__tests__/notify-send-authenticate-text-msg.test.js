@@ -78,7 +78,7 @@ describe('given the sendAuthTextMsg function', () => {
           phoneNumber: '+12345678901',
           tfaCode: 123456,
         }
-  
+
         try {
           const mockedSendAuthTextMsg = sendAuthTextMsg(i18n)
           await mockedSendAuthTextMsg({ user, notifyClient })
@@ -87,7 +87,7 @@ describe('given the sendAuthTextMsg function', () => {
             new Error('Unable to authenticate. Please try again.'),
           )
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending authentication code via text for ${user._key}: Error: Notification error occurred.`,
         ])
@@ -118,16 +118,14 @@ describe('given the sendAuthTextMsg function', () => {
           phoneNumber: '+12345678901',
           tfaCode: 123456,
         }
-  
+
         try {
           const mockedSendAuthTextMsg = sendAuthTextMsg(i18n)
           await mockedSendAuthTextMsg({ user, notifyClient })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending authentication code via text for ${user._key}: Error: Notification error occurred.`,
         ])
