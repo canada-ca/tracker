@@ -178,7 +178,7 @@ describe('given findOrganizationBySlugQuery', () => {
               query: query,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -249,7 +249,7 @@ describe('given findOrganizationBySlugQuery', () => {
               query: query,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -299,7 +299,7 @@ describe('given findOrganizationBySlugQuery', () => {
               query: query,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -388,7 +388,7 @@ describe('given findOrganizationBySlugQuery', () => {
               query: query,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -469,7 +469,7 @@ describe('given findOrganizationBySlugQuery', () => {
               query: query,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -519,7 +519,7 @@ describe('given findOrganizationBySlugQuery', () => {
               query: query,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,

@@ -111,7 +111,7 @@ describe('given the isUserAdmin query', () => {
             query: query,
             auth: {
               checkPermission: checkPermission({userId: user._key, query}),
-              userRequired,
+              userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
             },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
@@ -151,7 +151,7 @@ describe('given the isUserAdmin query', () => {
             query: query,
             auth: {
               checkPermission: checkPermission({userId: user._key, query}),
-              userRequired,
+              userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
             },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
@@ -191,7 +191,7 @@ describe('given the isUserAdmin query', () => {
             query: query,
             auth: {
               checkPermission: checkPermission({userId: user._key, query}),
-              userRequired,
+              userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
             },
             loaders: {
               userLoaderByKey: userLoaderByKey(query),
@@ -241,7 +241,7 @@ describe('given the isUserAdmin query', () => {
               query: mockedQuery,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),
@@ -295,7 +295,7 @@ describe('given the isUserAdmin query', () => {
               query: mockedQuery,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               loaders: {
                 userLoaderByKey: userLoaderByKey(query),

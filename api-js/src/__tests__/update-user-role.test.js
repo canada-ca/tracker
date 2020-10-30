@@ -190,8 +190,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -243,8 +249,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -305,8 +317,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -358,8 +376,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -429,8 +453,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -532,8 +562,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -583,8 +616,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -632,8 +668,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -688,8 +727,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -770,8 +812,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -826,8 +871,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -891,8 +939,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -956,8 +1010,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1022,8 +1082,14 @@ describe('update a users role', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1085,8 +1151,14 @@ describe('update a users role', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1214,8 +1286,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderId,
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoader,
@@ -1332,8 +1407,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoader,
@@ -1394,8 +1472,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoader,
@@ -1520,8 +1601,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1573,8 +1660,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1635,8 +1728,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1688,8 +1787,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1759,8 +1864,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1862,8 +1973,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1876,11 +1990,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1913,8 +2023,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1927,9 +2040,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -1962,8 +2073,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -1976,9 +2090,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2018,8 +2130,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -2032,9 +2147,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2100,8 +2213,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -2114,9 +2230,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2156,8 +2270,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -2170,11 +2287,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              'todo',
-            ),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2221,8 +2334,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -2235,11 +2354,7 @@ describe('update a users role', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'todo',
-                ),
-              ]
+              const error = [new GraphQLError('todo')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -2286,8 +2401,14 @@ describe('update a users role', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   loaders: {
                     orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -2300,11 +2421,7 @@ describe('update a users role', () => {
                 },
               )
 
-              const error = [
-                new GraphQLError(
-                  'todo',
-                ),
-              ]
+              const error = [new GraphQLError('todo')]
 
               expect(response.errors).toEqual(error)
               expect(consoleOutput).toEqual([
@@ -2352,8 +2469,14 @@ describe('update a users role', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -2366,11 +2489,7 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'todo',
-              ),
-            ]
+            const error = [new GraphQLError('todo')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2415,8 +2534,14 @@ describe('update a users role', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 loaders: {
                   orgLoaderByKey: orgLoaderByKey(query, 'en'),
@@ -2429,11 +2554,7 @@ describe('update a users role', () => {
               },
             )
 
-            const error = [
-              new GraphQLError(
-                'todo',
-              ),
-            ]
+            const error = [new GraphQLError('todo')]
 
             expect(response.errors).toEqual(error)
             expect(consoleOutput).toEqual([
@@ -2544,8 +2665,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderId,
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoader,
@@ -2558,9 +2682,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2662,8 +2784,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoader,
@@ -2676,9 +2801,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -2724,8 +2847,11 @@ describe('update a users role', () => {
               transaction,
               userId: user._key,
               auth: {
-                checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                checkPermission: checkPermission({ userId: user._key, query }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               loaders: {
                 orgLoaderByKey: orgLoader,
@@ -2738,9 +2864,7 @@ describe('update a users role', () => {
             },
           )
 
-          const error = [
-            new GraphQLError('todo'),
-          ]
+          const error = [new GraphQLError('todo')]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

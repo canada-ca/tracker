@@ -236,7 +236,7 @@ describe('given findDomainByDomain query', () => {
             checkDomainPermission: checkDomainPermission({query, userId: user._key}),
             checkDomainOwnership: checkDomainOwnership({query, userId: user._key}),
             tokenize,
-            userRequired,
+            userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
           },
           validators: {
             cleanseInput,

@@ -162,7 +162,7 @@ describe('given the dmarcType object', () => {
           query: query,
           auth: {
             checkDomainPermission: checkDomainPermission({query, userId: user._key}),
-            userRequired,
+            userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
           },
           validators: {
             cleanseInput,

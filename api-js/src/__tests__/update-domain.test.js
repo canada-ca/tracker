@@ -174,7 +174,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -240,7 +240,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -307,7 +307,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -379,7 +379,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -445,7 +445,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -512,7 +512,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -584,7 +584,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -650,7 +650,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -717,7 +717,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -810,7 +810,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -884,7 +884,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -1020,7 +1020,7 @@ describe('updating a domain', () => {
                 userId: user._key,
                 auth: {
                   checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
                 },
                 validators: {
                   cleanseInput,
@@ -1086,7 +1086,7 @@ describe('updating a domain', () => {
                 userId: user._key,
                 auth: {
                   checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
                 },
                 validators: {
                   cleanseInput,
@@ -1191,7 +1191,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -1315,7 +1315,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoader}),
               },
               validators: {
                 cleanseInput,
@@ -1435,7 +1435,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -1507,7 +1507,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -1588,7 +1588,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -1660,7 +1660,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -1794,7 +1794,7 @@ describe('updating a domain', () => {
                 userId: user._key,
                 auth: {
                   checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
                 },
                 validators: {
                   cleanseInput,
@@ -1858,7 +1858,7 @@ describe('updating a domain', () => {
                 userId: user._key,
                 auth: {
                   checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
                 },
                 validators: {
                   cleanseInput,
@@ -1961,7 +1961,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -2083,7 +2083,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoader}),
               },
               validators: {
                 cleanseInput,
@@ -2201,7 +2201,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,
@@ -2271,7 +2271,7 @@ describe('updating a domain', () => {
               userId: user._key,
               auth: {
                 checkPermission: checkPermission({userId: user._key, query}),
-                userRequired,
+                userRequired: userRequired({ userId: user._key, userLoaderByKey: userLoaderByKey(query)}),
               },
               validators: {
                 cleanseInput,

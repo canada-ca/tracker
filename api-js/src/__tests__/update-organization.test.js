@@ -174,8 +174,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -241,8 +247,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -308,8 +320,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -375,8 +393,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -442,8 +466,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -509,8 +539,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -576,8 +612,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -656,8 +698,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -725,8 +773,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -792,8 +846,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -859,8 +919,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -926,8 +992,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -993,8 +1065,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1060,8 +1138,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1127,8 +1211,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1207,8 +1297,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1301,8 +1397,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1368,8 +1470,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1435,8 +1543,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1502,8 +1616,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1569,8 +1689,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1636,8 +1762,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1703,8 +1835,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1783,8 +1921,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1852,8 +1996,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1919,8 +2069,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -1986,8 +2142,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -2053,8 +2215,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -2120,8 +2288,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -2187,8 +2361,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -2254,8 +2434,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -2334,8 +2520,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -2465,8 +2657,14 @@ describe('updating an organization', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -2517,8 +2715,14 @@ describe('updating an organization', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -2586,7 +2790,10 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId('organization', 1)}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId(
+                      'organization',
+                      1,
+                    )}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -2602,8 +2809,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -2697,7 +2910,10 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId(
+                      'organization',
+                      org._key,
+                    )}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -2713,8 +2929,15 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({ i18n, userId: user._key, query: mockQuery}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    i18n,
+                    userId: user._key,
+                    query: mockQuery,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -2786,7 +3009,10 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId(
+                      'organization',
+                      org._key,
+                    )}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -2802,8 +3028,15 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({ i18n, userId: user._key, query: mockQuery}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    i18n,
+                    userId: user._key,
+                    query: mockQuery,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -2874,7 +3107,10 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId(
+                      'organization',
+                      org._key,
+                    )}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -2890,8 +3126,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -3008,8 +3250,14 @@ describe('updating an organization', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -3056,8 +3304,14 @@ describe('updating an organization', () => {
                   transaction,
                   userId: user._key,
                   auth: {
-                    checkPermission: checkPermission({userId: user._key, query}),
-                    userRequired,
+                    checkPermission: checkPermission({
+                      userId: user._key,
+                      query,
+                    }),
+                    userRequired: userRequired({
+                      userId: user._key,
+                      userLoaderByKey: userLoaderByKey(query),
+                    }),
                   },
                   validators: {
                     cleanseInput,
@@ -3121,7 +3375,10 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId('organization', 1)}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId(
+                      'organization',
+                      1,
+                    )}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -3137,8 +3394,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -3228,7 +3491,10 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId(
+                      'organization',
+                      org._key,
+                    )}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -3244,8 +3510,15 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({ i18n, userId: user._key, query: mockQuery}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    i18n,
+                    userId: user._key,
+                    query: mockQuery,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -3313,7 +3586,10 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId(
+                      'organization',
+                      org._key,
+                    )}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -3329,8 +3605,15 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({ i18n, userId: user._key, query: mockQuery}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    i18n,
+                    userId: user._key,
+                    query: mockQuery,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
@@ -3397,7 +3680,10 @@ describe('updating an organization', () => {
               `
                 mutation {
                   updateOrganization(
-                    input: { id: "${toGlobalId('organization', org._key)}", cityEN: "A New City" }
+                    input: { id: "${toGlobalId(
+                      'organization',
+                      org._key,
+                    )}", cityEN: "A New City" }
                   ) {
                     organization {
                       city
@@ -3413,8 +3699,14 @@ describe('updating an organization', () => {
                 transaction,
                 userId: user._key,
                 auth: {
-                  checkPermission: checkPermission({userId: user._key, query}),
-                  userRequired,
+                  checkPermission: checkPermission({
+                    userId: user._key,
+                    query,
+                  }),
+                  userRequired: userRequired({
+                    userId: user._key,
+                    userLoaderByKey: userLoaderByKey(query),
+                  }),
                 },
                 validators: {
                   cleanseInput,
