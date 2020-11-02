@@ -9,6 +9,16 @@ import { UserStateProvider } from '../UserState'
 import { GENERATE_OTP_URL } from '../graphql/queries'
 import { setupI18n } from '@lingui/core'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const email = 'foo@example.com'
 
 describe('<QRcodePage />', () => {
@@ -39,7 +49,7 @@ describe('<QRcodePage />', () => {
           <MockedProvider mocks={mocks}>
             <MemoryRouter initialEntries={['/']}>
               <ThemeProvider theme={theme}>
-                <I18nProvider i18n={setupI18n()}>
+                <I18nProvider i18n={i18n}>
                   <QRcodePage />
                 </I18nProvider>
               </ThemeProvider>

@@ -1,6 +1,5 @@
 import React from 'react'
 import { func, oneOfType, shape, string, elementType } from 'prop-types'
-import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
@@ -24,7 +23,6 @@ const PasswordField = WithPseudoBox(function PasswordField({
 }) {
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
-  const { i18n } = useLingui()
   const handleClick = () => setShow(!show)
 
   const labelText = label === undefined ? <Trans>Password:</Trans> : label
@@ -42,7 +40,7 @@ const PasswordField = WithPseudoBox(function PasswordField({
         <Input
           pr="4.5rem"
           type={show ? 'text' : 'password'}
-          placeholder={i18n._(t`Password`)}
+          placeholder={t`Password`}
           id={name}
           ref={forwardedRef}
           {...field}
@@ -60,7 +58,7 @@ const PasswordField = WithPseudoBox(function PasswordField({
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
-  )
+  );
 })
 
 PasswordField.propTypes = {

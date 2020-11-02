@@ -1,5 +1,4 @@
 import React from 'react'
-import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
@@ -24,8 +23,6 @@ function PasswordConfirmation({
   confirmPasswordLabel,
   ...props
 }) {
-  const { i18n } = useLingui()
-
   const [icon, setIcon] = React.useState('lock')
   const [confirmIcon, setConfirmIcon] = React.useState('lock')
 
@@ -101,7 +98,7 @@ function PasswordConfirmation({
             <Input
               {...passwordField}
               id="password"
-              placeholder={i18n._(t`Password`)}
+              placeholder={t`Password`}
               type={passwordShow ? 'text' : 'password'}
             />
             <InputRightElement width="width.4">
@@ -146,7 +143,7 @@ function PasswordConfirmation({
             <Input
               {...confirmPasswordField}
               id="confirmPassword"
-              placeholder={i18n._(t`Confirm password`)}
+              placeholder={t`Confirm password`}
               type={confirmShow ? 'text' : 'password'}
             />
             <InputRightElement width="width.4">

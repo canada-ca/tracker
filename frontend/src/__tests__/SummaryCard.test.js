@@ -5,6 +5,16 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import SummaryCard from '../SummaryCard'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const { data } = {
   data: {
     webSummary: {
@@ -33,7 +43,7 @@ const { data } = {
 describe('<SummaryCard />', () => {
   it('renders three bars with the numbers from the test data', async () => {
     const { getAllByText } = render(
-      <I18nProvider i18n={setupI18n()}>
+      <I18nProvider i18n={i18n}>
         <ThemeProvider theme={theme}>
           <SummaryCard
             title="title"

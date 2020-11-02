@@ -7,13 +7,23 @@ import { MockedProvider } from '@apollo/client/testing'
 import { UserCard } from '../UserCard'
 import { setupI18n } from '@lingui/core'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<UserCard />', () => {
   it('badge is green when TwoFactor value is true', async () => {
     const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <UserCard
                 userName="testuser@testemail.gc.ca"
                 displayName="Test User"
@@ -36,7 +46,7 @@ describe('<UserCard />', () => {
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <UserCard
                 userName="testuser@testemail.gc.ca"
                 displayName="Test User"

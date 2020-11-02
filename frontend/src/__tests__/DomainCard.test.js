@@ -7,13 +7,23 @@ import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 import { DomainCard } from '../DomainCard'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<OrganizationsCard />', () => {
   it('successfully renders card with domain name and date of last scan', async () => {
     const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <DomainCard
                 url="tbs-sct.gc.ca"
                 lastRan="2020-09-10T00:34:26.429Z"
@@ -35,7 +45,7 @@ describe('<OrganizationsCard />', () => {
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <DomainCard url="tbs-sct.gc.ca" lastRan={null} />
             </I18nProvider>
           </ThemeProvider>

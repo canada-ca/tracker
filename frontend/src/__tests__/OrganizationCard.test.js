@@ -7,13 +7,23 @@ import { MockedProvider } from '@apollo/client/testing'
 import { setupI18n } from '@lingui/core'
 import { OrganizationCard } from '../OrganizationCard'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<OrganizationsCard />', () => {
   it('successfully renders card with org name and number of services', async () => {
     const { getByText } = render(
       <MockedProvider>
         <MemoryRouter initialEntries={['/']}>
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <OrganizationCard
                 slug="tbs-sct-gc-ca"
                 name="Treasury Board Secretariat"

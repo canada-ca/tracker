@@ -8,6 +8,16 @@ import { MockedProvider } from '@apollo/client/testing'
 import { USER_AFFILIATIONS } from '../graphql/queries'
 import AdminPage from '../AdminPage'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<AdminPage />', () => {
   const mocks = [
     {
@@ -43,7 +53,7 @@ describe('<AdminPage />', () => {
       <UserStateProvider
         initialState={{ userName: 'me', jwt: 'longstring', tfa: null }}
       >
-        <I18nProvider i18n={setupI18n()}>
+        <I18nProvider i18n={i18n}>
           <ThemeProvider theme={theme}>
             <MockedProvider mocks={mocks} addTypename={false}>
               <AdminPage />
