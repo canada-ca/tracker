@@ -55,6 +55,7 @@ const {
   sslLoaderByKey,
   sslLoaderConnectionsByDomainId,
   affiliationLoaderByUserId,
+  affiliationLoaderByOrgId,
   affiliationLoaderByKey,
 } = require('./loaders')
 
@@ -215,18 +216,19 @@ const Server = (context = {}) => {
           ),
           userLoaderByUserName: userLoaderByUserName(query),
           userLoaderByKey: userLoaderByKey(query),
-          affiliationLoaderByKey: affiliationLoaderByKey(
-            query,
-            i18n,
-          ),
+          affiliationLoaderByKey: affiliationLoaderByKey(query, i18n),
           affiliationLoaderByUserId: affiliationLoaderByUserId(
             query,
             userId,
             cleanseInput,
             i18n,
           ),
-          userLoaderByUserName: userLoaderByUserName(query, i18n),
-          userLoaderByKey: userLoaderByKey(query, i18n),
+          affiliationLoaderByOrgId: affiliationLoaderByOrgId(
+            query,
+            userId,
+            cleanseInput,
+            i18n,
+          ),
         },
       }
     },

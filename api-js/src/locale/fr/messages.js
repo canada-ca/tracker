@@ -17,12 +17,20 @@
     'New passwords do not match. Please try again.': 'todo',
     'No domain with the provided domain could be found.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
+    'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `dkim` connection is not supported.':
+      'todo',
     'Password is not strong enough. Please try again.': 'todo',
     'Password is too short.': 'todo',
     'Password was successfully reset.': 'todo',
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
     'Profile successfully updated.': 'todo',
+    'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
     'Successfully invited user to organization, and sent notification email.':
       'todo',
     'Successfully removed domain: {0} from {1}.': 'todo',
@@ -44,8 +52,8 @@
     'Unable to find https scan. Please try again.': 'todo',
     'Unable to find organization. Please try again.': 'todo',
     'Unable to find spf scan. Please try again.': 'todo',
-    'Unable to find user affiliation(s). Please try again.': 'todo',
     'Unable to find ssl scan. Please try again.': 'todo',
+    'Unable to find user affiliation(s). Please try again.': 'todo',
     'Unable to find user. Please try again.': 'todo',
     'Unable to have both first, and last arguments set at the same time.':
       'todo',
@@ -59,8 +67,8 @@
     'Unable to load https scans. Please try again.': 'todo',
     'Unable to load organizations. Please try again.': 'todo',
     'Unable to load spf scans. Please try again.': 'todo',
-    'Unable to query affiliations. Please try again.': 'todo',
     'Unable to load ssl scans. Please try again.': 'todo',
+    'Unable to query affiliations. Please try again.': 'todo',
     'Unable to query domains. Please try again.': 'todo',
     'Unable to query organizations. Please try again.': 'todo',
     'Unable to remove domain. Please try again.': 'todo',
@@ -98,5 +106,12 @@
       'todo',
     "We've sent you an email with an authentication code to sign into Pulse.":
       'todo',
+    'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `dkim` connection.':
+      'todo',
+    '`{argSet}` must be of type `number` not `{typeSet}`.': 'todo',
+    '`{argSet}` on the `affiliations` cannot be less than zero.': 'todo',
+    '`{argSet}` on the `dkim` connection cannot be less than zero.': 'todo',
   },
 }

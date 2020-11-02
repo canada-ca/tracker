@@ -2,16 +2,17 @@ const { aql } = require('arangojs')
 const { fromGlobalId, toGlobalId } = require('graphql-relay')
 const { t } = require('@lingui/macro')
 
-const affiliationLoaderByUserId = (
-  query,
-  userId,
-  cleanseInput,
-  i18n,
-) => async ({ uId, after, before, first, last }) => {
+const affiliationLoaderByOrgId = (query, userId, cleanseInput, i18n) => async ({
+  orgId,
+  after,
+  before,
+  first,
+  last,
+}) => {
   let afterTemplate = aql``
   let beforeTemplate = aql``
 
-  const userDBId = `users/${uId}`
+  const orgDBId = `organizations/${orgId}`
 
   let afterId
   if (typeof after !== 'undefined') {
@@ -28,7 +29,7 @@ const affiliationLoaderByUserId = (
   let limitTemplate = aql``
   if (typeof first === 'undefined' && typeof last === 'undefined') {
     console.warn(
-      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: affiliationLoaderByUserId.`,
+      `User: ${userId} did not have either \`first\` or \`last\` arguments set for: affiliationLoaderByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -37,7 +38,7 @@ const affiliationLoaderByUserId = (
     )
   } else if (typeof first !== 'undefined' && typeof last !== 'undefined') {
     console.warn(
-      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: affiliationLoaderByUserId.`,
+      `User: ${userId} attempted to have \`first\` and \`last\` arguments set for: affiliationLoaderByOrgId.`,
     )
     throw new Error(
       i18n._(
@@ -49,7 +50,7 @@ const affiliationLoaderByUserId = (
     if (first < 0 || last < 0) {
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` set below zero for: affiliationLoaderByUserId.`,
+        `User: ${userId} attempted to have \`${argSet}\` set below zero for: affiliationLoaderByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -60,7 +61,7 @@ const affiliationLoaderByUserId = (
       const argSet = typeof first !== 'undefined' ? 'first' : 'last'
       const amount = typeof first !== 'undefined' ? first : last
       console.warn(
-        `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: affiliationLoaderByUserId.`,
+        `User: ${userId} attempted to have \`${argSet}\` to ${amount} for: affiliationLoaderByOrgId.`,
       )
       throw new Error(
         i18n._(
@@ -76,7 +77,7 @@ const affiliationLoaderByUserId = (
     const argSet = typeof first !== 'undefined' ? 'first' : 'last'
     const typeSet = typeof first !== 'undefined' ? typeof first : typeof last
     console.warn(
-      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: affiliationLoaderByUserId.`,
+      `User: ${userId} attempted to have \`${argSet}\` set as a ${typeSet} for: affiliationLoaderByOrgId.`,
     )
     throw new Error(
       i18n._(t`\`${argSet}\` must be of type \`number\` not \`${typeSet}\`.`),
@@ -93,7 +94,7 @@ const affiliationLoaderByUserId = (
   let filteredAffiliationCursor
   try {
     filteredAffiliationCursor = await query`
-    LET affiliationKeys = (FOR v, e IN 1..1 ANY ${userDBId} affiliations RETURN e._key)
+    LET affiliationKeys = (FOR v, e IN 1..1 ANY ${orgDBId} affiliations RETURN e._key)
 
     LET retrievedAffiliations = (
       FOR affiliation IN affiliations
@@ -128,7 +129,7 @@ const affiliationLoaderByUserId = (
     `
   } catch (err) {
     console.error(
-      `Database error occurred while user: ${userId} was trying to query affiliations in affiliationLoaderByUserId.`,
+      `Database error occurred while user: ${userId} was trying to query affiliations in affiliationLoaderByOrgId.`,
     )
     throw new Error(i18n._(t`Unable to query affiliations. Please try again.`))
   }
@@ -138,7 +139,7 @@ const affiliationLoaderByUserId = (
     filteredAffiliations = await filteredAffiliationCursor.next()
   } catch (err) {
     console.error(
-      `Cursor error occurred while user: ${userId} was trying to gather affiliations in affiliationLoaderByUserId.`,
+      `Cursor error occurred while user: ${userId} was trying to gather affiliations in affiliationLoaderByOrgId.`,
     )
     throw new Error(i18n._(t`Unable to load affiliations. Please try again.`))
   }
@@ -175,5 +176,5 @@ const affiliationLoaderByUserId = (
 }
 
 module.exports = {
-  affiliationLoaderByUserId,
+  affiliationLoaderByOrgId,
 }

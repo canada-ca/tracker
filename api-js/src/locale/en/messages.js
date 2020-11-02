@@ -36,6 +36,10 @@
       'No domain with the provided domain could be found.',
     'No organization with the provided slug could be found.':
       'No organization with the provided slug could be found.',
+    'Passing both `first` and `last` to paginate the `affiliation` is not supported.':
+      'Passing both `first` and `last` to paginate the `affiliation` is not supported.',
+    'Passing both `first` and `last` to paginate the `dkim` connection is not supported.':
+      'Passing both `first` and `last` to paginate the `dkim` connection is not supported.',
     'Password is not strong enough. Please try again.':
       'Password is not strong enough. Please try again.',
     'Password is too short.': 'Password is too short.',
@@ -43,6 +47,28 @@
     'Password was successfully updated.': 'Password was successfully updated.',
     'Passwords do not match.': 'Passwords do not match.',
     'Profile successfully updated.': 'Profile successfully updated.',
+    'Requesting `{amount}` records on the `affiliations` exceeds the `{argSet}` limit of 100 records.': function (
+      a,
+    ) {
+      return [
+        'Requesting `',
+        a('amount'),
+        '` records on the `affiliations` exceeds the `',
+        a('argSet'),
+        '` limit of 100 records.',
+      ]
+    },
+    'Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records.': function (
+      a,
+    ) {
+      return [
+        'Requesting ',
+        a('amount'),
+        ' records on the `dkim` connection exceeds the `',
+        a('argSet'),
+        '` limit of 100 records.',
+      ]
+    },
     'Successfully invited user to organization, and sent notification email.':
       'Successfully invited user to organization, and sent notification email.',
     'Successfully removed domain: {0} from {1}.': function (a) {
@@ -80,10 +106,10 @@
       'Unable to find organization. Please try again.',
     'Unable to find spf scan. Please try again.':
       'Unable to find spf scan. Please try again.',
-    'Unable to find user affiliation(s). Please try again.':
-      'Unable to find user affiliation(s). Please try again.',
     'Unable to find ssl scan. Please try again.':
       'Unable to find ssl scan. Please try again.',
+    'Unable to find user affiliation(s). Please try again.':
+      'Unable to find user affiliation(s). Please try again.',
     'Unable to find user. Please try again.':
       'Unable to find user. Please try again.',
     'Unable to have both first, and last arguments set at the same time.':
@@ -108,10 +134,10 @@
       'Unable to load organizations. Please try again.',
     'Unable to load spf scans. Please try again.':
       'Unable to load spf scans. Please try again.',
-    'Unable to query affiliations. Please try again.':
-      'Unable to query affiliations. Please try again.',
     'Unable to load ssl scans. Please try again.':
       'Unable to load ssl scans. Please try again.',
+    'Unable to query affiliations. Please try again.':
+      'Unable to query affiliations. Please try again.',
     'Unable to query domains. Please try again.':
       'Unable to query domains. Please try again.',
     'Unable to query organizations. Please try again.':
@@ -172,5 +198,34 @@
       "We've sent you a text message with an authentication code to sign into Pulse.",
     "We've sent you an email with an authentication code to sign into Pulse.":
       "We've sent you an email with an authentication code to sign into Pulse.",
+    'You must provide a `first` or `last` value to properly paginate the `affiliation`.':
+      'You must provide a `first` or `last` value to properly paginate the `affiliation`.',
+    'You must provide a `first` or `last` value to properly paginate the `dkim` connection.':
+      'You must provide a `first` or `last` value to properly paginate the `dkim` connection.',
+    '`{argSet}` must be of type `number` not `{typeSet}`.': function (a) {
+      return [
+        '`',
+        a('argSet'),
+        '` must be of type `number` not `',
+        a('typeSet'),
+        '`.',
+      ]
+    },
+    '`{argSet}` on the `affiliations` cannot be less than zero.': function (a) {
+      return [
+        '`',
+        a('argSet'),
+        '` on the `affiliations` cannot be less than zero.',
+      ]
+    },
+    '`{argSet}` on the `dkim` connection cannot be less than zero.': function (
+      a,
+    ) {
+      return [
+        '`',
+        a('argSet'),
+        '` on the `dkim` connection cannot be less than zero.',
+      ]
+    },
   },
 }
