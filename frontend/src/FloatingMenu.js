@@ -21,9 +21,9 @@ import {
 import { TrackerButton } from './TrackerButton'
 import { Trans, t } from '@lingui/macro'
 import wordmark from './images/canada-wordmark.svg'
-import personIcon from '/src/images/person-icon.svg'
-import reportIcon from '/src/images/report-icon.svg'
-import buildingIcon from '/src/images/building-icon.svg'
+import personIcon from './images/person-icon.svg'
+import reportIcon from './images/report-icon.svg'
+import buildingIcon from './images/building-icon.svg'
 import { useLingui } from '@lingui/react'
 import { useUserState } from './UserState'
 
