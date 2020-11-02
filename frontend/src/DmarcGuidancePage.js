@@ -21,8 +21,8 @@ export default function DmarcGuidancePage() {
     variables: {
       urlSlug: domainSlug,
     },
-    onComplete: stuff => console.log(`completed! recieved: ${stuff}`),
-    onError: e => console.log(`error! recieved: ${e}`),
+    onComplete: (stuff) => console.log(`completed! recieved: ${stuff}`),
+    onError: (e) => console.log(`error! recieved: ${e}`),
   })
 
   if (loading) return <p>Loading</p>
@@ -33,7 +33,7 @@ export default function DmarcGuidancePage() {
   const emailScan = data.findDomainBySlug.email.edges[0].node
 
   return (
-    <Stack spacing="25px" mb="6">
+    <Stack spacing="25px" mb="6" px="4" mx="auto" overflow="hidden">
       <Stack isInline align="center">
         <IconButton
           icon="arrow-left"

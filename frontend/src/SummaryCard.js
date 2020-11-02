@@ -1,8 +1,8 @@
 import React from 'react'
 import { Text, Box } from '@chakra-ui/core'
 import { objectOf, number, string, shape, arrayOf } from 'prop-types'
-
 import { Doughnut, Segment } from './Doughnut'
+
 function SummaryCard({ title, categoryDisplay, description, data }) {
   return (
     <Box

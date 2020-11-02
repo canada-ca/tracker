@@ -39,14 +39,20 @@ function ScanCard({ scanType, scanData }) {
     })
 
   return (
-    <Box bg="gray.200" py="2.5">
-      <Stack px="1">
-        <Heading as="h1" size="lg">
-          {cardTitle}
-        </Heading>
-        <Text>{cardDescription}</Text>
-        <Stack spacing="30px">{categoryList}</Stack>
-      </Stack>
+    <Box bg="white" rounded="lg" overflow="hidden" boxShadow="medium">
+      <Box bg="primary" color="gray.50">
+        <Stack px="3">
+          <Heading as="h1" size="lg">
+            {cardTitle}
+          </Heading>
+          <Text>{cardDescription}</Text>
+        </Stack>
+      </Box>
+      <Box>
+        <Stack spacing="30px" px="2" mt="1">
+          {categoryList}
+        </Stack>
+      </Box>
     </Box>
   )
 }
