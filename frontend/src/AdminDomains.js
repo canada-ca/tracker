@@ -77,7 +77,7 @@ export function AdminDomains({ domainsData, orgName }) {
   // Update domains list if domainsData changes (domain added, removed, updated)
   useEffect(() => {
     setDomainList(domains)
-  }, [domainsData])
+  }, [domainsData]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Set current page to last page when current page > total number of pages
   // (avoids "Page 17 of 16" for example)
@@ -86,7 +86,7 @@ export function AdminDomains({ domainsData, orgName }) {
     if (currentPage > totalDomainPages) {
       paginate(totalDomainPages)
     }
-  }, [domainList])
+  }, [domainList]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const [createDomain] = useMutation(CREATE_DOMAIN, {
     refetchQueries: ['Domains'],
