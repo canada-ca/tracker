@@ -22,8 +22,6 @@ import {
 } from '@chakra-ui/core'
 import { Link as RouteLink } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
-
 import WithPseudoBox from './withPseudoBox'
 import { slugify } from './slugify'
 import ReactTableGlobalFilter from './ReactTableGlobalFilter'
@@ -125,7 +123,6 @@ function DmarcReportTable({ ...props }) {
     appendLink,
   } = props
   const [show, setShow] = React.useState(true)
-  const { i18n } = useLingui()
 
   const handleShow = () => setShow(!show)
 
@@ -376,7 +373,7 @@ function DmarcReportTable({ ...props }) {
         </Box>
       </Collapse>
     </Box>
-  );
+  )
 }
 
 DmarcReportTable.propTypes = {

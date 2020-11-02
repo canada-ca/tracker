@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import {
   Stack,
   Text,
@@ -53,7 +52,6 @@ export function AdminDomains({ domainsData, orgName }) {
   const [domainSearch, setDomainSearch] = useState('')
   const [editingDomainUrl, setEditingDomainUrl] = useState()
   const toast = useToast()
-  const { i18n } = useLingui()
   const {
     isOpen: updateIsOpen,
     onOpen: updateOnOpen,
@@ -435,7 +433,7 @@ export function AdminDomains({ domainsData, orgName }) {
         )}
       </SlideIn>
     </Stack>
-  );
+  )
 }
 
 AdminDomains.propTypes = {

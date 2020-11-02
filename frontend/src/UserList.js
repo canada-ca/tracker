@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useLingui } from '@lingui/react'
 import {
   FormLabel,
   Stack,
@@ -39,7 +38,6 @@ export default function UserList({
   const [currentPage, setCurrentPage] = useState(1)
   const [usersPerPage] = useState(4)
   const toast = useToast()
-  const { i18n } = useLingui()
   const { currentUser } = useUserState()
   const [addedUserName, setAddedUserName] = useState()
 

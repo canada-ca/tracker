@@ -3,7 +3,6 @@ import { number } from 'prop-types'
 import { Trans, t } from '@lingui/macro'
 import { Layout } from './Layout'
 import { ListOf } from './ListOf'
-import { useLingui } from '@lingui/react'
 import {
   Button,
   Heading,
@@ -25,7 +24,6 @@ import { usePaginatedCollection } from './usePaginatedCollection'
 
 export default function Organisations({ orgsPerPage = 10 }) {
   const { currentUser } = useUserState()
-  const { i18n } = useLingui()
   const {
     loading,
     error,

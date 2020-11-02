@@ -23,7 +23,6 @@ import { t, Trans } from '@lingui/macro'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useMutation } from '@apollo/client'
 import { useUserState } from './UserState'
-import { useLingui } from '@lingui/react'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import EmailField from './EmailField'
@@ -33,7 +32,6 @@ function EditableUserEmail({ detailValue }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { currentUser } = useUserState()
   const toast = useToast()
-  const { i18n } = useLingui()
   const initialFocusRef = useRef()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(

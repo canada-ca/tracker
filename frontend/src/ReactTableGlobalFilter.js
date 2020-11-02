@@ -11,14 +11,12 @@ import {
   Text,
 } from '@chakra-ui/core'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 
 const ReactTableGlobalFilter = ({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
 }) => {
-  const { i18n } = useLingui()
   const count = preGlobalFilteredRows.length
   const [value, setValue] = React.useState(globalFilter)
   const onChange = useAsyncDebounce((value) => {
@@ -45,7 +43,7 @@ const ReactTableGlobalFilter = ({
         />
       </InputGroup>
     </Stack>
-  );
+  )
 }
 
 ReactTableGlobalFilter.propTypes = {

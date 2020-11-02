@@ -10,14 +10,12 @@ import {
   Divider,
   Tooltip,
 } from '@chakra-ui/core'
-import { useLingui } from '@lingui/react'
 import { useHistory } from 'react-router-dom'
 import { string } from 'prop-types'
 import { slugify } from './slugify'
 
 export function DomainCard({ url, lastRan, ...rest }) {
   const history = useHistory()
-  const { i18n } = useLingui()
   const webProtocols = [
     'HTTPS',
     'HSTS',

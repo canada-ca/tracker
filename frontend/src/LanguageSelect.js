@@ -7,13 +7,11 @@ import {
   FormErrorMessage,
   FormLabel,
 } from '@chakra-ui/core'
-import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import WithPseudoBox from './withPseudoBox'
 
 function LanguageSelect({ name, ...props }) {
   const [field, meta] = useField(name)
-  const { i18n } = useLingui()
 
   return (
     <FormControl isInvalid={meta.error && meta.touched}>
@@ -29,7 +27,7 @@ function LanguageSelect({ name, ...props }) {
       </Select>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
-  );
+  )
 }
 
 LanguageSelect.propTypes = {

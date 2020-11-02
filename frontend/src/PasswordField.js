@@ -1,6 +1,5 @@
 import React from 'react'
 import { func, oneOfType, shape, string, elementType } from 'prop-types'
-import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
@@ -24,7 +23,6 @@ const PasswordField = WithPseudoBox(function PasswordField({
 }) {
   const [field, meta] = useField(name)
   const [show, setShow] = React.useState(false)
-  const { i18n } = useLingui()
   const handleClick = () => setShow(!show)
 
   const labelText = label === undefined ? <Trans>Password:</Trans> : label

@@ -4,11 +4,8 @@ import { object, string } from 'prop-types'
 import ScanCategoryDetails from './ScanCategoryDetails'
 import WithPseudoBox from './withPseudoBox'
 import { t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 
 function ScanCard({ scanType, scanData }) {
-  const { i18n } = useLingui()
-
   const cardTitle =
     scanType === 'web'
       ? t`Web Scan Results`

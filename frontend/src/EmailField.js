@@ -1,6 +1,5 @@
 import React from 'react'
 import { elementType, func, oneOfType, shape, string } from 'prop-types'
-import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
@@ -21,7 +20,6 @@ const EmailField = WithPseudoBox(function EmailField({
   ...props
 }) {
   const [field, meta] = useField(name)
-  const { i18n } = useLingui()
 
   const labelText = label === undefined ? <Trans>Email:</Trans> : label
 
@@ -46,7 +44,7 @@ const EmailField = WithPseudoBox(function EmailField({
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
-  );
+  )
 })
 
 EmailField.propTypes = {

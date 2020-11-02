@@ -5,11 +5,8 @@ import { Text, Image, Stack } from '@chakra-ui/core'
 import { SummaryGroup } from './SummaryGroup'
 import trackerLogo from './images/tracker_v-03.png'
 import { WelcomeMessage } from './WelcomeMessage'
-import { useLingui } from '@lingui/react'
 
 export function LandingPage() {
-  const { i18n } = useLingui()
-
   return (
     <Layout>
       <Stack align="center">
@@ -27,5 +24,5 @@ export function LandingPage() {
         </Trans>
       </Text>
     </Layout>
-  );
+  )
 }

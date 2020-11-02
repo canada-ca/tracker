@@ -10,13 +10,11 @@ import { Box, Heading, IconButton, Select, Stack, Text } from '@chakra-ui/core'
 import DmarcReportTable from './DmarcReportTable'
 import { t, Trans } from '@lingui/macro'
 import { number } from 'prop-types'
-import { useLingui } from '@lingui/react'
 import { useParams, useHistory } from 'react-router-dom'
 import { months } from './months'
 
 export default function DmarcReportPage({ summaryListResponsiveWidth }) {
   const { currentUser } = useUserState()
-  const { i18n } = useLingui()
   const { domainSlug, period, year } = useParams()
   const history = useHistory()
 
@@ -81,8 +79,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
       const value = `${months[months.length + i].toUpperCase()}, ${
         currentDate.getFullYear() - 1
       }`
-      const translatedValue = `${months[months.length + i]
-        .toUpperCase()}, ${currentDate.getFullYear() - 1}`
+      const translatedValue = `${months[months.length + i].toUpperCase()}, ${
+        currentDate.getFullYear() - 1
+      }`
 
       options.push(
         <option key={value} value={value}>
@@ -93,8 +92,9 @@ export default function DmarcReportPage({ summaryListResponsiveWidth }) {
     // handle current year
     else {
       const value = `${months[i].toUpperCase()}, ${currentDate.getFullYear()}`
-      const translatedValue = `${months[i]
-        .toUpperCase()}, ${currentDate.getFullYear()}`
+      const translatedValue = `${months[
+        i
+      ].toUpperCase()}, ${currentDate.getFullYear()}`
 
       options.push(
         <option key={value} value={value}>

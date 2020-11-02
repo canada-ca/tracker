@@ -1,6 +1,5 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { Stack, Button, Box, useToast, Heading } from '@chakra-ui/core'
 import EmailField from './EmailField'
 import { object, string } from 'yup'
@@ -11,7 +10,6 @@ import { SEND_PASSWORD_RESET_LINK } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
 
 export default function ForgotPasswordPage() {
-  const { i18n } = useLingui()
   const toast = useToast()
   const history = useHistory()
   const validationSchema = object().shape({

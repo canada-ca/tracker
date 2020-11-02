@@ -1,6 +1,5 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { useToast, SimpleGrid } from '@chakra-ui/core'
 import SummaryCard from './SummaryCard'
 import { string } from 'prop-types'
@@ -11,7 +10,6 @@ import { WEB_AND_EMAIL_SUMMARIES } from './graphql/queries'
 const { colors } = theme
 
 export function SummaryGroup() {
-  const { i18n } = useLingui()
   const toast = useToast()
 
   const { loading, error, data } = useQuery(WEB_AND_EMAIL_SUMMARIES, {

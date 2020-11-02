@@ -1,6 +1,5 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import PasswordField from './PasswordField'
 import { object, string } from 'yup'
 import {
@@ -25,7 +24,6 @@ export default function SignInPage() {
   const { login } = useUserState()
   const history = useHistory()
   const toast = useToast()
-  const { i18n } = useLingui()
 
   const validationSchema = object().shape({
     password: string().required(

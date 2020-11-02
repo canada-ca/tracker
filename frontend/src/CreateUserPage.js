@@ -10,7 +10,6 @@ import EmailField from './EmailField'
 import PasswordConfirmation from './PasswordConfirmation'
 import LanguageSelect from './LanguageSelect'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import DisplayNameField from './DisplayNameField'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
@@ -19,7 +18,6 @@ export default function CreateUserPage() {
   const { login } = useUserState()
   const history = useHistory()
   const toast = useToast()
-  const { i18n } = useLingui()
   const userOrgToken = useParams().userOrgToken || ''
 
   const validationSchema = object().shape({

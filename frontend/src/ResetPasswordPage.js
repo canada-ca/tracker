@@ -1,6 +1,5 @@
 import React from 'react'
 import { Trans, t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { Heading, Box, useToast } from '@chakra-ui/core'
 import PasswordConfirmation from './PasswordConfirmation'
 import { object, string, ref } from 'yup'
@@ -11,7 +10,6 @@ import { UPDATE_PASSWORD } from './graphql/mutations'
 import { TrackerButton } from './TrackerButton'
 
 export default function ResetPasswordPage() {
-  const { i18n } = useLingui()
   const history = useHistory()
   const toast = useToast()
   const { resetToken } = useParams()

@@ -1,5 +1,4 @@
 import React from 'react'
-import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import {
   FormControl,
@@ -24,8 +23,6 @@ function PasswordConfirmation({
   confirmPasswordLabel,
   ...props
 }) {
-  const { i18n } = useLingui()
-
   const [icon, setIcon] = React.useState('lock')
   const [confirmIcon, setConfirmIcon] = React.useState('lock')
 
@@ -164,7 +161,7 @@ function PasswordConfirmation({
         </FormControl>
       </Box>
     </Stack>
-  );
+  )
 }
 
 PasswordConfirmation.propTypes = {

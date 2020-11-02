@@ -7,7 +7,6 @@ import { Formik, Field } from 'formik'
 import { useMutation } from '@apollo/client'
 import { UPDATE_USER_PROFILE } from './graphql/mutations'
 import { useUserState } from './UserState'
-import { useLingui } from '@lingui/react'
 import { object, string as yupString } from 'yup'
 import { fieldRequirements } from './fieldRequirements'
 import { TrackerButton } from './TrackerButton'
@@ -15,7 +14,6 @@ import { TrackerButton } from './TrackerButton'
 function EditableUserLanguage({ currentLang }) {
   const { currentUser } = useUserState()
   const toast = useToast()
-  const { i18n } = useLingui()
 
   const [updateUserProfile, { error: _updateUserProfileError }] = useMutation(
     UPDATE_USER_PROFILE,
