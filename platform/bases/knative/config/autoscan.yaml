@@ -15,7 +15,7 @@ spec:
         spec:
           containers:
           - name: autoscan
-            image: gcr.io/track-compliance/services/autoscan:master
+            image: gcr.io/track-compliance/services/autoscan
             env:
               - name: DB_USER
                 valueFrom:

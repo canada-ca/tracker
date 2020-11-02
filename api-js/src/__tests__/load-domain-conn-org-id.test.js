@@ -2,6 +2,7 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const { stringify } = require('jest-matcher-utils')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { setupI18n } = require('@lingui/core')
 
@@ -393,7 +394,7 @@ describe('given the load domain connection using org id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                `You must provide a \`first\` or \`last\` value to properly paginate the \`domains\` connection.`,
+                `You must provide a \`first\` or \`last\` value to properly paginate the \`domain\` connection.`,
               ),
             )
           }
@@ -424,7 +425,7 @@ describe('given the load domain connection using org id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                `Passing both \`first\` and \`last\` to paginate the \`domains\` connection is not supported.`,
+                `Passing both \`first\` and \`last\` to paginate the \`domain\` connection is not supported.`,
               ),
             )
           }
@@ -455,7 +456,7 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `\`first\` on the \`domains\` connection cannot be less than zero.`,
+                  `\`first\` on the \`domain\` connection cannot be less than zero.`,
                 ),
               )
             }
@@ -485,7 +486,7 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `\`last\` on the \`domains\` connection cannot be less than zero.`,
+                  `\`last\` on the \`domain\` connection cannot be less than zero.`,
                 ),
               )
             }
@@ -517,7 +518,7 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `Requesting \`1000\` records on the \`domains\` connection exceeds the \`first\` limit of 100 records.`,
+                  `Requesting \`1000\` records on the \`domain\` connection exceeds the \`first\` limit of 100 records.`,
                 ),
               )
             }
@@ -547,7 +548,7 @@ describe('given the load domain connection using org id function', () => {
             } catch (err) {
               expect(err).toEqual(
                 new Error(
-                  `Requesting \`1000\` records on the \`domains\` connection exceeds the \`last\` limit of 100 records.`,
+                  `Requesting \`1000\` records on the \`domain\` connection exceeds the \`last\` limit of 100 records.`,
                 ),
               )
             }
@@ -555,6 +556,80 @@ describe('given the load domain connection using org id function', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` to 1000 for: domainLoaderConnectionsByOrgId.`,
             ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = domainLoaderConnectionsByOrgId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  domainId: domain._id,
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByOrgId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = domainLoaderConnectionsByOrgId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  domainId: domain._id,
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByOrgId.`,
+              ])
+            })
           })
         })
       })
@@ -644,6 +719,57 @@ describe('given the load domain connection using org id function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
+      describe('limits are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(new Error(`todo`))
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+          ])
+        })
+      })
+      describe('both limits are set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByOrgId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {
+            first: 1,
+            last: 1,
+          }
+          try {
+            await connectionLoader({
+              orgId: org._id,
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(new Error(`todo`))
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByOrgId.`,
+          ])
+        })
+      })
       describe('limits are set below minimum', () => {
         describe('first limit is set', () => {
           it('returns an error message', async () => {
@@ -749,6 +875,72 @@ describe('given the load domain connection using org id function', () => {
             expect(consoleOutput).toEqual([
               `User: ${user._key} attempted to have \`last\` to 1000 for: domainLoaderConnectionsByOrgId.`,
             ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = domainLoaderConnectionsByOrgId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  domainId: domain._id,
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByOrgId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = domainLoaderConnectionsByOrgId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  domainId: domain._id,
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByOrgId.`,
+              ])
+            })
           })
         })
       })

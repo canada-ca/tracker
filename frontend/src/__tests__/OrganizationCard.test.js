@@ -17,6 +17,7 @@ describe('<OrganizationsCard />', () => {
               <OrganizationCard
                 slug="tbs-sct-gc-ca"
                 name="Treasury Board Secretariat"
+                acronym="TBS"
                 domainCount={7}
               />
             </I18nProvider>

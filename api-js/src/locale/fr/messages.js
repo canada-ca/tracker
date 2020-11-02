@@ -7,17 +7,34 @@
   },
   messages: {
     'Authentication error, please sign in again.': 'todo',
+    'Authentication error. Please sign in again.': 'todo',
+    'Authentication error. Please sign in.': 'todo',
     'Could not retrieve specified domain.': 'todo',
     'Could not retrieve specified organization.': 'todo',
-    'Error, unable to have first, and last set at the same time.': 'todo',
+    'Error when retrieving dmarc report information. Please try again.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'todo',
+    'Invalid token, please request a new one.': 'todo',
     'New passwords do not match. Please try again.': 'todo',
     'No domain with the provided domain could be found.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
-    'Passing both `first` and `last` to paginate the `domains` connection is not supported.':
+    'Passing both `first` and `last` to paginate the `dkimResults` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `dkim` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `dmarc` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `domain` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `https` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `organization` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `spf` connection is not supported.':
+      'todo',
+    'Passing both `first` and `last` to paginate the `ssl` connection is not supported.':
       'todo',
     'Password is not strong enough. Please try again.': 'todo',
     'Password is too short.': 'todo',
@@ -25,9 +42,21 @@
     'Password was successfully updated.': 'todo',
     'Passwords do not match.': 'todo',
     'Profile successfully updated.': 'todo',
-    'Requesting `{amount}` records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
+    'Requesting `{amount}` records on the `domain` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
-    'Requesting {amount} records on the `domains` connection exceeds the `{argSet}` limit of 100 records.':
+    'Requesting `{amount}` records on the `organization` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `dkimResults` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `dkim` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `dmarc` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `https` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `spf` connection exceeds the `{argSet}` limit of 100 records.':
+      'todo',
+    'Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records.':
       'todo',
     'Successfully invited user to organization, and sent notification email.':
       'todo',
@@ -41,6 +70,7 @@
     'Two factor code has been successfully sent, you will receive a text message shortly.':
       'todo',
     'Unable to authenticate. Please try again.': 'todo',
+    'Unable to check permission. Please try again.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
     'Unable to find dkim result. Please try again.': 'todo',
@@ -52,8 +82,6 @@
     'Unable to find spf scan. Please try again.': 'todo',
     'Unable to find ssl scan. Please try again.': 'todo',
     'Unable to find user. Please try again.': 'todo',
-    'Unable to have both first, and last arguments set at the same time.':
-      'todo',
     'Unable to invite user. Please try again.': 'todo',
     'Unable to invite yourself to an org. Please try again.': 'todo',
     'Unable to load dkim results. Please try again.': 'todo',
@@ -95,16 +123,39 @@
     'Unable to update your own role. Please try again.': 'todo',
     'Unable to verify account. Please request a new email.': 'todo',
     'Unable to verify account. Please try again.': 'todo',
+    'Unable to verify if user is an admin, please try again.': 'todo',
     'User role was updated successfully.': 'todo',
     'Username already in use.': 'todo',
     "We've sent you a text message with an authentication code to sign into Pulse.":
       'todo',
     "We've sent you an email with an authentication code to sign into Pulse.":
       'todo',
-    "You must provide a `first` or 'last` value to properly paginate the `domains` connection.":
+    'You must provide a `first` or `last` value to properly paginate the `dkimResults` connection.':
       'todo',
-    'You must provide a `first` or `last` value to properly paginate the `domains` connection.':
+    'You must provide a `first` or `last` value to properly paginate the `dkim` connection.':
       'todo',
-    '`{argSet}` on the `domains` connection cannot be less than zero.': 'todo',
+    'You must provide a `first` or `last` value to properly paginate the `dmarc` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `domain` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `https` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `organization` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `spf` connection.':
+      'todo',
+    'You must provide a `first` or `last` value to properly paginate the `ssl` connection.':
+      'todo',
+    '`{argSet}` must be of type `number` not `{typeSet}`.': 'todo',
+    '`{argSet}` on the `dkimResults` connection cannot be less than zero.':
+      'todo',
+    '`{argSet}` on the `dkim` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `dmarc` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `domain` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `https` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `organization` connection cannot be less than zero.':
+      'todo',
+    '`{argSet}` on the `spf` connection cannot be less than zero.': 'todo',
+    '`{argSet}` on the `ssl` connection cannot be less than zero.': 'todo',
   },
 }

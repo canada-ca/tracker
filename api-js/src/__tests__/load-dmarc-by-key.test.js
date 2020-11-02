@@ -95,9 +95,11 @@ describe('given the dmarcLoaderByKey function', () => {
     })
     describe('given a database error', () => {
       it('raises an error', async () => {
-        query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
         const loader = dmarcLoaderByKey(query, i18n)
-  
+
         try {
           await loader.load('1')
         } catch (err) {
@@ -105,7 +107,7 @@ describe('given the dmarcLoaderByKey function', () => {
             new Error('Unable to find dmarc scan. Please try again.'),
           )
         }
-  
+
         expect(consoleErrorOutput).toEqual([
           `Database error occurred when running dmarcLoaderByKey: Error: Database error occurred.`,
         ])
@@ -120,7 +122,7 @@ describe('given the dmarcLoaderByKey function', () => {
         }
         query = jest.fn().mockReturnValue(cursor)
         const loader = dmarcLoaderByKey(query, i18n)
-  
+
         try {
           await loader.load('1')
         } catch (err) {
@@ -128,7 +130,7 @@ describe('given the dmarcLoaderByKey function', () => {
             new Error('Unable to find dmarc scan. Please try again.'),
           )
         }
-  
+
         expect(consoleErrorOutput).toEqual([
           `Cursor error occurred when running dmarcLoaderByKey: Error: Cursor error occurred.`,
         ])
@@ -149,17 +151,17 @@ describe('given the dmarcLoaderByKey function', () => {
     })
     describe('given a database error', () => {
       it('raises an error', async () => {
-        query = jest.fn().mockRejectedValue(new Error('Database error occurred.'))
+        query = jest
+          .fn()
+          .mockRejectedValue(new Error('Database error occurred.'))
         const loader = dmarcLoaderByKey(query, i18n)
-  
+
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleErrorOutput).toEqual([
           `Database error occurred when running dmarcLoaderByKey: Error: Database error occurred.`,
         ])
@@ -174,15 +176,13 @@ describe('given the dmarcLoaderByKey function', () => {
         }
         query = jest.fn().mockReturnValue(cursor)
         const loader = dmarcLoaderByKey(query, i18n)
-  
+
         try {
           await loader.load('1')
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleErrorOutput).toEqual([
           `Cursor error occurred when running dmarcLoaderByKey: Error: Cursor error occurred.`,
         ])

@@ -1,7 +1,7 @@
 import React from 'react'
 import { ThemeProvider, theme } from '@chakra-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import { render, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import {
   PAGINATED_DOMAINS,
@@ -11,9 +11,13 @@ import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 import { UserStateProvider } from '../UserState'
 import { createCache } from '../client'
-import DomainsPage from '../DomainsPage'
+import { ScanDomain } from '../ScanDomain'
 
-describe('<DomainsPage />', () => {
+const fillIn = (element, { with: value }) =>
+  fireEvent.change(element, { target: { value } })
+const clickOn = (element) => fireEvent.click(element)
+
+describe('<ScanDomain />', () => {
   const mocks = [
     {
       request: {
@@ -105,9 +109,12 @@ describe('<DomainsPage />', () => {
     },
   ]
 
-  describe('given a list of domains', () => {
-    it('displays a list of domains', async () => {
-      const { queryByText } = render(
+  describe('given a domain in input', () => {
+    it('successfully submits a domain for scanning', async () => {
+      const scanFn = jest.fn()
+      const values = { domain: 'cse-cst.gc.ca' }
+
+      const { getByRole } = render(
         <UserStateProvider
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
@@ -115,7 +122,7 @@ describe('<DomainsPage />', () => {
             <I18nProvider i18n={setupI18n()}>
               <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                 <MockedProvider mocks={mocks} cache={createCache()}>
-                  <DomainsPage domainsPerPage={2} />
+                  <ScanDomain submitScan={scanFn} />
                 </MockedProvider>
               </MemoryRouter>
             </I18nProvider>
@@ -123,9 +130,19 @@ describe('<DomainsPage />', () => {
         </UserStateProvider>,
       )
 
-      await waitFor(() =>
-        expect(queryByText(/tbs-sct.gc.ca/i)).toBeInTheDocument(),
-      )
+      const domain = getByRole('textbox')
+      const submit = getByRole('button')
+
+      fillIn(domain, {
+        with: values.domain,
+      })
+
+      clickOn(submit)
+
+      /* add in when mutation is hooked up */
+      await waitFor(() => {
+        expect(scanFn.mock.calls[0][0]).toEqual(values)
+      })
     })
   })
 })

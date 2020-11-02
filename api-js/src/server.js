@@ -5,15 +5,24 @@ const { GraphQLSchema } = require('graphql')
 const { createServer } = require('http')
 const { ApolloServer } = require('apollo-server-express')
 const { setupI18n } = require('@lingui/core')
-
-const { createQuerySchema } = require('./queries')
-const { createMutationSchema } = require('./mutations')
-
 const fetch = require('isomorphic-fetch')
 const bcrypt = require('bcrypt')
 const moment = require('moment')
-const authFunctions = require('./auth')
+
+const { createQuerySchema } = require('./queries')
+const { createMutationSchema } = require('./mutations')
+const englishMessages = require('./locale/en/messages')
+const frenchMessages = require('./locale/fr/messages')
+
 const { cleanseInput, slugify } = require('./validators')
+const {
+  checkDomainOwnership,
+  checkDomainPermission,
+  checkPermission,
+  tokenize,
+  userRequired,
+  verifyToken,
+} = require('./auth')
 const {
   sendAuthEmail,
   sendAuthTextMsg,
@@ -23,9 +32,6 @@ const {
   sendTfaTextMsg,
   sendVerificationEmail,
 } = require('./notify')
-
-// const englishMessages = require('./locale/en/messages')
-// const frenchMessages = require('./locale/fr/messages')
 
 const {
   generateDetailTableFields,
@@ -45,7 +51,6 @@ const {
   spfLoaderConnectionsByDomainId,
   orgLoaderByKey,
   orgLoaderBySlug,
-  orgLoaderByConnectionArgs,
   orgLoaderConnectionArgsByDomainId,
   orgLoaderConnectionsByUserId,
   userLoaderByUserName,
@@ -83,7 +88,6 @@ const Server = (context = {}) => {
 
     context: ({ req: request, res: response }) => {
       const { query, collections, transaction } = context
-      const { verifyToken } = authFunctions
       // Get user id from token
       let userId
       const token = request.headers.authorization || ''
@@ -96,8 +100,8 @@ const Server = (context = {}) => {
         locales: ['en', 'fr'],
         missing: 'Traduction manquante',
         catalogs: {
-          // en: englishMessages,
-          // fr: frenchMessages,
+          en: englishMessages,
+          fr: frenchMessages,
         },
       })
 
@@ -112,7 +116,16 @@ const Server = (context = {}) => {
         moment,
         auth: {
           bcrypt,
-          ...authFunctions,
+          checkDomainOwnership: checkDomainOwnership({ i18n, userId, query }),
+          checkDomainPermission: checkDomainPermission({ i18n, userId, query }),
+          checkPermission: checkPermission({ i18n, userId, query }),
+          tokenize,
+          userRequired: userRequired({
+            i18n,
+            userId,
+            userLoaderByKey: userLoaderByKey(query),
+          }),
+          verifyToken: verifyToken({ i18n }),
         },
         validators: {
           cleanseInput,
@@ -197,13 +210,6 @@ const Server = (context = {}) => {
           ),
           orgLoaderByKey: orgLoaderByKey(query, request.language, i18n),
           orgLoaderBySlug: orgLoaderBySlug(query, request.language, i18n),
-          orgLoaderByConnectionArgs: orgLoaderByConnectionArgs(
-            query,
-            request.language,
-            userId,
-            cleanseInput,
-            i18n,
-          ),
           orgLoaderConnectionArgsByDomainId: orgLoaderConnectionArgsByDomainId(
             query,
             request.language,

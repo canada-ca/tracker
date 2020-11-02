@@ -83,7 +83,7 @@ describe('given the sendTfaTextMsg function', () => {
           phoneNumber: '+12345678901',
           tfaCode: 123456,
         }
-  
+
         try {
           const mockedSendTfaTextMsg = sendTfaTextMsg(i18n)
           await mockedSendTfaTextMsg({
@@ -99,7 +99,7 @@ describe('given the sendTfaTextMsg function', () => {
             ),
           )
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending two factor authentication message for ${user._key}: Error: Notification error occurred.`,
         ])
@@ -130,7 +130,7 @@ describe('given the sendTfaTextMsg function', () => {
           phoneNumber: '+12345678901',
           tfaCode: 123456,
         }
-  
+
         try {
           const mockedSendTfaTextMsg = sendTfaTextMsg(i18n)
           await mockedSendTfaTextMsg({
@@ -140,13 +140,9 @@ describe('given the sendTfaTextMsg function', () => {
             notifyClient,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error(
-              'todo',
-            ),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending two factor authentication message for ${user._key}: Error: Notification error occurred.`,
         ])

@@ -20,7 +20,7 @@ spec:
       timeoutSeconds: 900
       containers:
         - name: scan-queue
-          image: gcr.io/track-compliance/services/scan-queue:master
+          image: gcr.io/track-compliance/services/scan-queue
 
 ---
 
@@ -46,4 +46,4 @@ spec:
       timeoutSeconds: 900
       containers:
         - name: result-queue
-          image: gcr.io/track-compliance/services/result-queue:master
+          image: gcr.io/track-compliance/services/result-queue

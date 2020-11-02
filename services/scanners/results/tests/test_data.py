@@ -193,7 +193,7 @@ dns_result_data = {
 }
 
 expected_dns_tags = {
-    "dmarc": ["dmarc12", "dmarc13", "dmarc15"],
+    "dmarc": ["dmarc4", "dmarc7", "dmarc10", "dmarc11", "dmarc15", "dmarc17"],
     "dkim": ["dkim9", "dkim12"],
     "spf": ["spf8", "spf11", "spf11", "spf11"],
 }

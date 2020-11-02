@@ -126,5 +126,5 @@ export function DomainCard({ url, lastRan, ...rest }) {
 
 DomainCard.propTypes = {
   url: string.isRequired,
-  lastRan: string.isRequired,
+  lastRan: string,
 }

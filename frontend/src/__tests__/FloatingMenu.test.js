@@ -8,10 +8,6 @@ import { UserStateProvider } from '../UserState'
 import { MemoryRouter, Route } from 'react-router-dom'
 import { fireEvent } from '@testing-library/dom'
 
-// This defines the window.scrollBy work-around used for firefox on android
-Object.defineProperty(window, 'scrollBy', {
-  value: jest.fn().mockImplementation(() => ({})),
-})
 
 describe('<FloatingMenu>', () => {
   it('renders', async () => {
