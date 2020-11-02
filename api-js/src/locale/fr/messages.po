@@ -18,12 +18,29 @@ msgstr ""
 msgid "Authentication error, please sign in again."
 msgstr "todo"
 
-#: src/queries/domains/find-domain-by-domain.js:48
+#: src/auth/check-domain-permission.js:20
+#: src/auth/check-permission.js:17
+#: src/auth/check-permission.js:44
+msgid "Authentication error. Please sign in again."
+msgstr "todo"
+
+#: src/auth/user-required.js:8
+#: src/auth/user-required.js:19
+#: src/auth/user-required.js:26
+msgid "Authentication error. Please sign in."
+msgstr "todo"
+
+#: src/queries/domains/find-domain-by-domain.js:46
 msgid "Could not retrieve specified domain."
 msgstr "todo"
 
-#: src/queries/organizations/find-organization-by-slug.js:50
+#: src/queries/organizations/find-organization-by-slug.js:48
 msgid "Could not retrieve specified organization."
+msgstr "todo"
+
+#: src/auth/check-domain-ownership.js:19
+#: src/auth/check-domain-ownership.js:30
+msgid "Error when retrieving dmarc report information. Please try again."
 msgstr "todo"
 
 #: src/mutations/user/send-password-reset.js:72
@@ -34,15 +51,19 @@ msgstr "todo"
 msgid "If an account with this username is found, an email verification link will be found in your inbox."
 msgstr "todo"
 
+#: src/auth/verify-jwt.js:12
+msgid "Invalid token, please request a new one."
+msgstr "todo"
+
 #: src/mutations/user/reset-password.js:86
 msgid "New passwords do not match. Please try again."
 msgstr "todo"
 
-#: src/queries/domains/find-domain-by-domain.js:39
+#: src/queries/domains/find-domain-by-domain.js:37
 msgid "No domain with the provided domain could be found."
 msgstr "todo"
 
-#: src/queries/organizations/find-organization-by-slug.js:41
+#: src/queries/organizations/find-organization-by-slug.js:39
 msgid "No organization with the provided slug could be found."
 msgstr "todo"
 
@@ -139,7 +160,7 @@ msgstr "todo"
 msgid "Requesting {amount} records on the `ssl` connection exceeds the `{argSet}` limit of 100 records."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:184
+#: src/mutations/user-affiliations/invite-user-to-org.js:183
 msgid "Successfully invited user to organization, and sent notification email."
 msgstr "todo"
 
@@ -151,7 +172,7 @@ msgstr "todo"
 msgid "Successfully removed organization: {0}."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:126
+#: src/mutations/user-affiliations/invite-user-to-org.js:125
 msgid "Successfully sent invitation to service, and organization email."
 msgstr "todo"
 
@@ -178,6 +199,11 @@ msgstr "todo"
 #: src/notify/notify-send-authenticate-email.js:20
 #: src/notify/notify-send-authenticate-text-msg.js:21
 msgid "Unable to authenticate. Please try again."
+msgstr "todo"
+
+#: src/auth/check-permission.js:27
+#: src/auth/check-permission.js:51
+msgid "Unable to check permission. Please try again."
 msgstr "todo"
 
 #: src/mutations/domain/create-domain.js:69
@@ -210,6 +236,7 @@ msgstr "todo"
 msgid "Unable to find dmarc scan. Please try again."
 msgstr "todo"
 
+#: src/auth/check-domain-permission.js:29
 #: src/loaders/domains/load-domain-by-domain.js:18
 #: src/loaders/domains/load-domain-by-domain.js:28
 #: src/loaders/domains/load-domain-by-key.js:18
@@ -246,14 +273,14 @@ msgstr "todo"
 msgid "Unable to find user. Please try again."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:78
-#: src/mutations/user-affiliations/invite-user-to-org.js:91
-#: src/mutations/user-affiliations/invite-user-to-org.js:153
-#: src/mutations/user-affiliations/invite-user-to-org.js:175
+#: src/mutations/user-affiliations/invite-user-to-org.js:77
+#: src/mutations/user-affiliations/invite-user-to-org.js:90
+#: src/mutations/user-affiliations/invite-user-to-org.js:152
+#: src/mutations/user-affiliations/invite-user-to-org.js:174
 msgid "Unable to invite user. Please try again."
 msgstr "todo"
 
-#: src/mutations/user-affiliations/invite-user-to-org.js:68
+#: src/mutations/user-affiliations/invite-user-to-org.js:67
 msgid "Unable to invite yourself to an org. Please try again."
 msgstr "todo"
 
@@ -394,11 +421,11 @@ msgstr "todo"
 msgid "Unable to update domain. Please try again."
 msgstr "todo"
 
-#: src/mutations/organizations/update-organization.js:139
-#: src/mutations/organizations/update-organization.js:151
-#: src/mutations/organizations/update-organization.js:168
-#: src/mutations/organizations/update-organization.js:224
-#: src/mutations/organizations/update-organization.js:235
+#: src/mutations/organizations/update-organization.js:137
+#: src/mutations/organizations/update-organization.js:149
+#: src/mutations/organizations/update-organization.js:166
+#: src/mutations/organizations/update-organization.js:222
+#: src/mutations/organizations/update-organization.js:233
 msgid "Unable to update organization. Please try again."
 msgstr "todo"
 
@@ -455,7 +482,7 @@ msgstr "todo"
 msgid "Unable to verify account. Please try again."
 msgstr "todo"
 
-#: src/queries/user/is-user-admin.js:33
+#: src/queries/user/is-user-admin.js:32
 msgid "Unable to verify if user is an admin, please try again."
 msgstr "todo"
 

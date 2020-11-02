@@ -142,9 +142,7 @@ describe('given the sendOrgInviteEmail function', () => {
             notifyClient,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
 
         expect(consoleOutput).toEqual([

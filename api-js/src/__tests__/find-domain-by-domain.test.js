@@ -182,8 +182,14 @@ describe('given findDomainByDomain query', () => {
               userId: user._key,
               query: query,
               auth: {
-                checkDomainPermission,
-                userRequired,
+                checkDomainPermission: checkDomainPermission({
+                  query,
+                  userId: user._key,
+                }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -243,8 +249,14 @@ describe('given findDomainByDomain query', () => {
               userId: user._key,
               query: query,
               auth: {
-                checkDomainPermission,
-                userRequired,
+                checkDomainPermission: checkDomainPermission({
+                  query,
+                  userId: user._key,
+                }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -331,8 +343,14 @@ describe('given findDomainByDomain query', () => {
               userId: user._key,
               query: query,
               auth: {
-                checkDomainPermission,
-                userRequired,
+                checkDomainPermission: checkDomainPermission({
+                  query,
+                  userId: user._key,
+                }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -414,8 +432,14 @@ describe('given findDomainByDomain query', () => {
               userId: user._key,
               query: query,
               auth: {
-                checkDomainPermission,
-                userRequired,
+                checkDomainPermission: checkDomainPermission({
+                  query,
+                  userId: user._key,
+                }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -475,8 +499,14 @@ describe('given findDomainByDomain query', () => {
               userId: user._key,
               query: query,
               auth: {
-                checkDomainPermission,
-                userRequired,
+                checkDomainPermission: checkDomainPermission({
+                  query,
+                  userId: user._key,
+                }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -488,11 +518,7 @@ describe('given findDomainByDomain query', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(
-              `todo`,
-            ),
-          ]
+          const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([
@@ -563,8 +589,14 @@ describe('given findDomainByDomain query', () => {
               userId: user._key,
               query: query,
               auth: {
-                checkDomainPermission,
-                userRequired,
+                checkDomainPermission: checkDomainPermission({
+                  query,
+                  userId: user._key,
+                }),
+                userRequired: userRequired({
+                  userId: user._key,
+                  userLoaderByKey: userLoaderByKey(query),
+                }),
               },
               validators: {
                 cleanseInput,
@@ -576,9 +608,7 @@ describe('given findDomainByDomain query', () => {
             },
           )
 
-          const error = [
-            new GraphQLError(`todo`),
-          ]
+          const error = [new GraphQLError(`todo`)]
 
           expect(response.errors).toEqual(error)
           expect(consoleOutput).toEqual([

@@ -83,7 +83,7 @@ describe('given the sendVerificationEmail function', () => {
           userName: 'test.email@email.ca',
           displayName: 'Test Account',
         }
-  
+
         try {
           const mockedSendVerificationEmail = sendVerificationEmail(i18n)
           await mockedSendVerificationEmail({
@@ -97,7 +97,7 @@ describe('given the sendVerificationEmail function', () => {
             new Error('Unable to send verification email. Please try again.'),
           )
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
         ])
@@ -128,7 +128,7 @@ describe('given the sendVerificationEmail function', () => {
           userName: 'test.email@email.ca',
           displayName: 'Test Account',
         }
-  
+
         try {
           const mockedSendVerificationEmail = sendVerificationEmail(i18n)
           await mockedSendVerificationEmail({
@@ -138,11 +138,9 @@ describe('given the sendVerificationEmail function', () => {
             notifyClient,
           })
         } catch (err) {
-          expect(err).toEqual(
-            new Error('todo'),
-          )
+          expect(err).toEqual(new Error('todo'))
         }
-  
+
         expect(consoleOutput).toEqual([
           `Error ocurred when sending verification email for ${user._key}: Error: Notification error occurred.`,
         ])

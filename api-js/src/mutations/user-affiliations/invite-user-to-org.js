@@ -42,12 +42,11 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     {
       i18n,
       request,
-      query,
       collections,
       transaction,
       userId,
       auth: { checkPermission, tokenize, userRequired },
-      loaders: { orgLoaderByKey, userLoaderByKey, userLoaderByUserName },
+      loaders: { orgLoaderByKey, userLoaderByUserName },
       notify: { sendOrgInviteCreateAccount, sendOrgInviteEmail },
       validators: { cleanseInput },
     },
@@ -58,14 +57,16 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     const preferredLang = cleanseInput(args.preferredLang)
 
     // Get requesting user
-    const user = await userRequired(userId, userLoaderByKey)
+    const user = await userRequired()
 
     // Make sure user is not inviting themselves
     if (user.userName === userName) {
       console.warn(
         `User: ${userId} attempted to invite themselves to ${orgId}.`,
       )
-      throw new Error(i18n._(t`Unable to invite yourself to an org. Please try again.`))
+      throw new Error(
+        i18n._(t`Unable to invite yourself to an org. Please try again.`),
+      )
     }
 
     // Check to see if requested org exists
@@ -79,7 +80,7 @@ const inviteUserToOrg = new mutationWithClientMutationId({
     }
 
     // Check to see requesting users permission to the org is
-    const permission = await checkPermission(user._id, org._id, query)
+    const permission = await checkPermission({ orgId: org._id })
 
     if (
       permission === 'user' ||
@@ -122,8 +123,9 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       )
 
       return {
-        status:
-          i18n._(t`Successfully sent invitation to service, and organization email.`),
+        status: i18n._(
+          t`Successfully sent invitation to service, and organization email.`,
+        ),
       }
     }
     // If account is found add just add affiliation
@@ -180,8 +182,9 @@ const inviteUserToOrg = new mutationWithClientMutationId({
       )
 
       return {
-        status:
-          i18n._(t`Successfully invited user to organization, and sent notification email.`),
+        status: i18n._(
+          t`Successfully invited user to organization, and sent notification email.`,
+        ),
       }
     }
   },

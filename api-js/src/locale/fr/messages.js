@@ -7,12 +7,16 @@
   },
   messages: {
     'Authentication error, please sign in again.': 'todo',
+    'Authentication error. Please sign in again.': 'todo',
+    'Authentication error. Please sign in.': 'todo',
     'Could not retrieve specified domain.': 'todo',
     'Could not retrieve specified organization.': 'todo',
+    'Error when retrieving dmarc report information. Please try again.': 'todo',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'todo',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'todo',
+    'Invalid token, please request a new one.': 'todo',
     'New passwords do not match. Please try again.': 'todo',
     'No domain with the provided domain could be found.': 'todo',
     'No organization with the provided slug could be found.': 'todo',
@@ -66,6 +70,7 @@
     'Two factor code has been successfully sent, you will receive a text message shortly.':
       'todo',
     'Unable to authenticate. Please try again.': 'todo',
+    'Unable to check permission. Please try again.': 'todo',
     'Unable to create domain. Please try again.': 'todo',
     'Unable to create organization. Please try again.': 'todo',
     'Unable to find dkim result. Please try again.': 'todo',

@@ -20,14 +20,22 @@
   messages: {
     'Authentication error, please sign in again.':
       'Authentication error, please sign in again.',
+    'Authentication error. Please sign in again.':
+      'Authentication error. Please sign in again.',
+    'Authentication error. Please sign in.':
+      'Authentication error. Please sign in.',
     'Could not retrieve specified domain.':
       'Could not retrieve specified domain.',
     'Could not retrieve specified organization.':
       'Could not retrieve specified organization.',
+    'Error when retrieving dmarc report information. Please try again.':
+      'Error when retrieving dmarc report information. Please try again.',
     'If an account with this username is found, a password reset link will be found in your inbox.':
       'If an account with this username is found, a password reset link will be found in your inbox.',
     'If an account with this username is found, an email verification link will be found in your inbox.':
       'If an account with this username is found, an email verification link will be found in your inbox.',
+    'Invalid token, please request a new one.':
+      'Invalid token, please request a new one.',
     'New passwords do not match. Please try again.':
       'New passwords do not match. Please try again.',
     'No domain with the provided domain could be found.':
@@ -164,6 +172,8 @@
       'Two factor code has been successfully sent, you will receive a text message shortly.',
     'Unable to authenticate. Please try again.':
       'Unable to authenticate. Please try again.',
+    'Unable to check permission. Please try again.':
+      'Unable to check permission. Please try again.',
     'Unable to create domain. Please try again.':
       'Unable to create domain. Please try again.',
     'Unable to create organization. Please try again.':

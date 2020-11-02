@@ -104,7 +104,7 @@ describe('user send password reset email', () => {
             userId: user._key,
             query,
             auth: {
-              verifyToken,
+              verifyToken: verifyToken({}),
             },
             validators: {
               cleanseInput,
@@ -160,7 +160,7 @@ describe('user send password reset email', () => {
               userId: undefined,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -202,7 +202,7 @@ describe('user send password reset email', () => {
               userId: 1,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -261,7 +261,7 @@ describe('user send password reset email', () => {
               userId: user._key,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -322,7 +322,7 @@ describe('user send password reset email', () => {
               userId: user._key,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -383,7 +383,7 @@ describe('user send password reset email', () => {
               userId: user._key,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -450,7 +450,7 @@ describe('user send password reset email', () => {
               userId: user._key,
               query: mockedQuery,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -521,7 +521,7 @@ describe('user send password reset email', () => {
             userId: user._key,
             query,
             auth: {
-              verifyToken,
+              verifyToken: verifyToken({}),
             },
             validators: {
               cleanseInput,
@@ -577,7 +577,7 @@ describe('user send password reset email', () => {
               userId: undefined,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -617,7 +617,7 @@ describe('user send password reset email', () => {
               userId: 1,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -674,7 +674,7 @@ describe('user send password reset email', () => {
               userId: user._key,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -731,7 +731,7 @@ describe('user send password reset email', () => {
               userId: user._key,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -788,7 +788,7 @@ describe('user send password reset email', () => {
               userId: user._key,
               query,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
@@ -851,7 +851,7 @@ describe('user send password reset email', () => {
               userId: user._key,
               query: mockedQuery,
               auth: {
-                verifyToken,
+                verifyToken: verifyToken({}),
               },
               validators: {
                 cleanseInput,
