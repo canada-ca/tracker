@@ -2,6 +2,7 @@ const dotenv = require('dotenv-safe')
 dotenv.config()
 const { DB_PASS: rootPass, DB_URL: url } = process.env
 
+const { stringify } = require('jest-matcher-utils')
 const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const { toGlobalId } = require('graphql-relay')
 const { setupI18n } = require('@lingui/core')
@@ -16,7 +17,16 @@ const {
 } = require('../loaders')
 
 describe('given the load domain connections by user id function', () => {
-  let query, drop, truncate, migrate, collections, org, i18n
+  let query,
+    drop,
+    truncate,
+    migrate,
+    collections,
+    org,
+    i18n,
+    user,
+    domainOne,
+    domainTwo
 
   let consoleOutput = []
   const mockedError = (output) => consoleOutput.push(output)
@@ -63,75 +73,74 @@ describe('given the load domain connections by user id function', () => {
         },
       },
     })
+    const userCursor = await query`
+    FOR user IN users
+      FILTER user.userName == "test.account@istio.actually.exists"
+      RETURN user
+  `
+    user = await userCursor.next()
+    await collections.affiliations.save({
+      _from: org._id,
+      _to: user._id,
+      permission: 'user',
+    })
+    domainOne = await collections.domains.save({
+      domain: 'test1.gc.ca',
+      lastRan: null,
+      selectors: ['selector1._domainkey', 'selector2._domainkey'],
+    })
+    domainTwo = await collections.domains.save({
+      domain: 'test2.gc.ca',
+      lastRan: null,
+      selectors: ['selector1._domainkey', 'selector2._domainkey'],
+    })
+    await collections.claims.save({
+      _to: domainOne._id,
+      _from: org._id,
+    })
+    await collections.claims.save({
+      _to: domainTwo._id,
+      _from: org._id,
+    })
     consoleOutput = []
   })
-
+  afterEach(async () => {
+    await query`
+      LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
+      LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
+      RETURN true
+    `
+    await query`
+      FOR affiliation IN affiliations
+        REMOVE affiliation IN affiliations
+    `
+    await query`
+      LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
+      LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
+      RETURN true
+    `
+    await query`
+      FOR claim IN claims
+        REMOVE claim IN claims
+    `
+  })
   afterAll(async () => {
     await drop()
   })
+
   describe('given a successful load', () => {
     describe('given there are domain connections to be returned', () => {
-      let user, domainOne, domainTwo
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
-        })
-        domainOne = await collections.domains.save({
-          domain: 'test1.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        domainTwo = await collections.domains.save({
-          domain: 'test2.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        await collections.claims.save({
-          _to: domainOne._id,
-          _from: org._id,
-        })
-        await collections.claims.save({
-          _to: domainTwo._id,
-          _from: org._id,
-        })
-      })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-        await query`
-          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-          RETURN true
-        `
-        await query`
-          FOR claim IN claims
-            REMOVE claim IN claims
-        `
-      })
-      describe('using no cursor and no limit', () => {
-        it('returns an organization', async () => {
+      describe('using no cursor', () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
             cleanseInput,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 10,
+          }
           const domains = await connectionLoader({ ...connectionArgs })
 
           const domainLoader = domainLoaderByKey(query)
@@ -170,7 +179,7 @@ describe('given the load domain connections by user id function', () => {
         })
       })
       describe('using after cursor', () => {
-        it('returns an organization', async () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -187,6 +196,7 @@ describe('given the load domain connections by user id function', () => {
           expectedDomains[1].id = expectedDomains[1]._key
 
           const connectionArgs = {
+            first: 10,
             after: toGlobalId('domains', expectedDomains[0].id),
           }
           const domains = await connectionLoader({ ...connectionArgs })
@@ -202,7 +212,7 @@ describe('given the load domain connections by user id function', () => {
             ],
             pageInfo: {
               hasNextPage: false,
-              hasPreviousPage: false,
+              hasPreviousPage: true,
               startCursor: toGlobalId('domains', expectedDomains[1]._key),
               endCursor: toGlobalId('domains', expectedDomains[1]._key),
             },
@@ -212,7 +222,7 @@ describe('given the load domain connections by user id function', () => {
         })
       })
       describe('using before cursor', () => {
-        it('returns an organization', async () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -229,6 +239,7 @@ describe('given the load domain connections by user id function', () => {
           expectedDomains[1].id = expectedDomains[1]._key
 
           const connectionArgs = {
+            first: 10,
             before: toGlobalId('domains', expectedDomains[1].id),
           }
           const domains = await connectionLoader({ ...connectionArgs })
@@ -243,7 +254,7 @@ describe('given the load domain connections by user id function', () => {
               },
             ],
             pageInfo: {
-              hasNextPage: false,
+              hasNextPage: true,
               hasPreviousPage: false,
               startCursor: toGlobalId('domains', expectedDomains[0]._key),
               endCursor: toGlobalId('domains', expectedDomains[0]._key),
@@ -254,7 +265,7 @@ describe('given the load domain connections by user id function', () => {
         })
       })
       describe('using first limit', () => {
-        it('returns an organization', async () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -296,7 +307,7 @@ describe('given the load domain connections by user id function', () => {
         })
       })
       describe('using last limit', () => {
-        it('returns an organization', async () => {
+        it('returns a domain', async () => {
           const connectionLoader = domainLoaderConnectionsByUserId(
             query,
             user._key,
@@ -339,39 +350,18 @@ describe('given the load domain connections by user id function', () => {
       })
     })
     describe('given there are no domain connections to be returned', () => {
-      let user
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
-        })
-      })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-      })
       it('returns no domain connections', async () => {
+        await truncate()
+
         const connectionLoader = domainLoaderConnectionsByUserId(
           query,
           user._key,
           cleanseInput,
         )
 
-        const connectionArgs = {}
+        const connectionArgs = {
+          first: 10,
+        }
         const domains = await connectionLoader({ ...connectionArgs })
 
         const expectedStructure = {
@@ -401,57 +391,32 @@ describe('given the load domain connections by user id function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
-      let user, domainOne, domainTwo
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(
+              new Error(
+                `You must provide a \`first\` or \`last\` value to properly paginate the \`domain\` connection.`,
+              ),
+            )
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+          ])
         })
-        domainOne = await collections.domains.save({
-          domain: 'test1.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        domainTwo = await collections.domains.save({
-          domain: 'test2.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        await collections.claims.save({
-          _to: domainOne._id,
-          _from: org._id,
-        })
-        await collections.claims.save({
-          _to: domainTwo._id,
-          _from: org._id,
-        })
-      })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-        await query`
-          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-          RETURN true
-        `
-        await query`
-          FOR claim IN claims
-            REMOVE claim IN claims
-        `
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
@@ -473,71 +438,211 @@ describe('given the load domain connections by user id function', () => {
           } catch (err) {
             expect(err).toEqual(
               new Error(
-                'Error, unable to have first, and last set at the same time.',
+                `Passing both \`first\` and \`last\` to paginate the \`domain\` connection is not supported.`,
               ),
             )
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} tried to have first and last set in domain connection query`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
           ])
+        })
+      })
+      describe('first or last argument exceeds maximum', () => {
+        describe('first argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting `1000` records on the `domain` connection exceeds the `first` limit of 100 records.',
+                ),
+              )
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+        describe('last argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 1000,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  'Requesting `1000` records on the `domain` connection exceeds the `last` limit of 100 records.',
+                ),
+              )
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 1000 for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+      })
+      describe('first or last argument exceeds minimum', () => {
+        describe('first argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: -1,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `\`first\` on the \`domain\` connection cannot be less than zero.`,
+                ),
+              )
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+        describe('last argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: -1,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(
+                new Error(
+                  `\`last\` on the \`domain\` connection cannot be less than zero.`,
+                ),
+              )
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = domainLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`first\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByUserId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = domainLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(
+                  new Error(
+                    `\`last\` must be of type \`number\` not \`${typeof invalidInput}\`.`,
+                  ),
+                )
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByUserId.`,
+              ])
+            })
+          })
         })
       })
     })
     describe('given a database error', () => {
-      let user, domainOne, domainTwo
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
-        })
-        domainOne = await collections.domains.save({
-          domain: 'test1.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        domainTwo = await collections.domains.save({
-          domain: 'test2.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        await collections.claims.save({
-          _to: domainOne._id,
-          _from: org._id,
-        })
-        await collections.claims.save({
-          _to: domainTwo._id,
-          _from: org._id,
-        })
-      })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-        await query`
-          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-          RETURN true
-        `
-        await query`
-          FOR claim IN claims
-            REMOVE claim IN claims
-        `
-      })
-      describe('while querying domains', () => {
+      describe('while querying for domain information', () => {
         it('returns an error message', async () => {
           const query = jest
             .fn()
@@ -552,7 +657,9 @@ describe('given the load domain connections by user id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 50,
+          }
           try {
             await connectionLoader({
               ...connectionArgs,
@@ -570,58 +677,6 @@ describe('given the load domain connections by user id function', () => {
       })
     })
     describe('given a cursor error', () => {
-      let user, domainOne, domainTwo
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
-        })
-        domainOne = await collections.domains.save({
-          domain: 'test1.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        domainTwo = await collections.domains.save({
-          domain: 'test2.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        await collections.claims.save({
-          _to: domainOne._id,
-          _from: org._id,
-        })
-        await collections.claims.save({
-          _to: domainTwo._id,
-          _from: org._id,
-        })
-      })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-        await query`
-          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-          RETURN true
-        `
-        await query`
-          FOR claim IN claims
-            REMOVE claim IN claims
-        `
-      })
       describe('while gathering domains', () => {
         it('returns an error message', async () => {
           const cursor = {
@@ -641,7 +696,9 @@ describe('given the load domain connections by user id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 50,
+          }
           try {
             await connectionLoader({
               ...connectionArgs,
@@ -672,57 +729,28 @@ describe('given the load domain connections by user id function', () => {
       })
     })
     describe('given an unsuccessful load', () => {
-      let user, domainOne, domainTwo
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
+      describe('first and last arguments are not set', () => {
+        it('returns an error message', async () => {
+          const connectionLoader = domainLoaderConnectionsByUserId(
+            query,
+            user._key,
+            cleanseInput,
+            i18n,
+          )
+
+          const connectionArgs = {}
+          try {
+            await connectionLoader({
+              ...connectionArgs,
+            })
+          } catch (err) {
+            expect(err).toEqual(new Error(`todo`))
+          }
+
+          expect(consoleOutput).toEqual([
+            `User: ${user._key} did not have either \`first\` or \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
+          ])
         })
-        domainOne = await collections.domains.save({
-          domain: 'test1.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        domainTwo = await collections.domains.save({
-          domain: 'test2.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        await collections.claims.save({
-          _to: domainOne._id,
-          _from: org._id,
-        })
-        await collections.claims.save({
-          _to: domainTwo._id,
-          _from: org._id,
-        })
-      })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-        await query`
-          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-          RETURN true
-        `
-        await query`
-          FOR claim IN claims
-            REMOVE claim IN claims
-        `
       })
       describe('first and last arguments are set', () => {
         it('returns an error message', async () => {
@@ -742,68 +770,184 @@ describe('given the load domain connections by user id function', () => {
               ...connectionArgs,
             })
           } catch (err) {
-            expect(err).toEqual(new Error('todo'))
+            expect(err).toEqual(new Error(`todo`))
           }
 
           expect(consoleOutput).toEqual([
-            `User: ${user._key} tried to have first and last set in domain connection query`,
+            `User: ${user._key} attempted to have \`first\` and \`last\` arguments set for: domainLoaderConnectionsByUserId.`,
           ])
+        })
+      })
+      describe('first or last argument exceeds maximum', () => {
+        describe('first argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: 1000,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error(`todo`))
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set to 1000 for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+        describe('last argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: 1000,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error(`todo`))
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set to 1000 for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+      })
+      describe('first or last argument exceeds minimum', () => {
+        describe('first argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              first: -1,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error(`todo`))
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`first\` set below zero for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+        describe('last argument set', () => {
+          it('returns an error message', async () => {
+            const connectionLoader = domainLoaderConnectionsByUserId(
+              query,
+              user._key,
+              cleanseInput,
+              i18n,
+            )
+
+            const connectionArgs = {
+              last: -1,
+            }
+            try {
+              await connectionLoader({
+                ...connectionArgs,
+              })
+            } catch (err) {
+              expect(err).toEqual(new Error(`todo`))
+            }
+
+            expect(consoleOutput).toEqual([
+              `User: ${user._key} attempted to have \`last\` set below zero for: domainLoaderConnectionsByUserId.`,
+            ])
+          })
+        })
+      })
+      describe('limits are not set to numbers', () => {
+        describe('first limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when first set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = domainLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                first: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`first\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByUserId.`,
+              ])
+            })
+          })
+        })
+        describe('last limit is set', () => {
+          ;['123', {}, [], null, true].forEach((invalidInput) => {
+            it(`returns an error when last set to ${stringify(
+              invalidInput,
+            )}`, async () => {
+              const connectionLoader = domainLoaderConnectionsByUserId(
+                query,
+                user._key,
+                cleanseInput,
+                i18n,
+              )
+
+              const connectionArgs = {
+                last: invalidInput,
+              }
+
+              try {
+                await connectionLoader({
+                  ...connectionArgs,
+                })
+              } catch (err) {
+                expect(err).toEqual(new Error(`todo`))
+              }
+              expect(consoleOutput).toEqual([
+                `User: ${
+                  user._key
+                } attempted to have \`last\` set as a ${typeof invalidInput} for: domainLoaderConnectionsByUserId.`,
+              ])
+            })
+          })
         })
       })
     })
     describe('given a database error', () => {
-      let user, domainOne, domainTwo
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
-        })
-        domainOne = await collections.domains.save({
-          domain: 'test1.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        domainTwo = await collections.domains.save({
-          domain: 'test2.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        await collections.claims.save({
-          _to: domainOne._id,
-          _from: org._id,
-        })
-        await collections.claims.save({
-          _to: domainTwo._id,
-          _from: org._id,
-        })
-      })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-        await query`
-          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-          RETURN true
-        `
-        await query`
-          FOR claim IN claims
-            REMOVE claim IN claims
-        `
-      })
       describe('while querying domains', () => {
         it('returns an error message', async () => {
           const query = jest
@@ -819,7 +963,9 @@ describe('given the load domain connections by user id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 50,
+          }
           try {
             await connectionLoader({
               ...connectionArgs,
@@ -835,58 +981,6 @@ describe('given the load domain connections by user id function', () => {
       })
     })
     describe('given a cursor error', () => {
-      let user, domainOne, domainTwo
-      beforeEach(async () => {
-        const userCursor = await query`
-          FOR user IN users
-            FILTER user.userName == "test.account@istio.actually.exists"
-            RETURN user
-        `
-        user = await userCursor.next()
-        await collections.affiliations.save({
-          _from: org._id,
-          _to: user._id,
-          permission: 'user',
-        })
-        domainOne = await collections.domains.save({
-          domain: 'test1.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        domainTwo = await collections.domains.save({
-          domain: 'test2.gc.ca',
-          lastRan: null,
-          selectors: ['selector1._domainkey', 'selector2._domainkey'],
-        })
-        await collections.claims.save({
-          _to: domainOne._id,
-          _from: org._id,
-        })
-        await collections.claims.save({
-          _to: domainTwo._id,
-          _from: org._id,
-        })
-      })
-      afterEach(async () => {
-        await query`
-          LET userEdges = (FOR v, e IN 1..1 ANY ${org._id} affiliations RETURN { edgeKey: e._key, userId: e._to })
-          LET removeUserEdges = (FOR userEdge IN userEdges REMOVE userEdge.edgeKey IN affiliations)
-          RETURN true
-        `
-        await query`
-          FOR affiliation IN affiliations
-            REMOVE affiliation IN affiliations
-        `
-        await query`
-          LET domainEdges = (FOR v, e IN 1..1 ANY ${org._id} claims RETURN { edgeKey: e._key, userId: e._to })
-          LET removeDomainEdges = (FOR domainEdge IN domainEdges REMOVE domainEdge.edgeKey IN claims)
-          RETURN true
-        `
-        await query`
-          FOR claim IN claims
-            REMOVE claim IN claims
-        `
-      })
       describe('while gathering domains', () => {
         it('returns an error message', async () => {
           const cursor = {
@@ -906,7 +1000,9 @@ describe('given the load domain connections by user id function', () => {
             i18n,
           )
 
-          const connectionArgs = {}
+          const connectionArgs = {
+            first: 50,
+          }
           try {
             await connectionLoader({
               ...connectionArgs,
