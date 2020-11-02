@@ -49,45 +49,45 @@ export function SummaryGroup() {
       p={['2', '8']}
     >
       <SummaryCard
-        title={i18n._(t`Web Configuration`)}
-        description={i18n._(t`Web encryption settings summary`)}
+        title={t`Web Configuration`}
+        description={t`Web encryption settings summary`}
         categoryDisplay={{
           'full-fail': {
-            name: i18n._(t`Non-compliant TLS`),
+            name: t`Non-compliant TLS`,
             color: colors.weak,
           },
           'partial-pass': {
-            name: i18n._(t`Partially TLS`),
+            name: t`Partially TLS`,
             color: colors.moderate,
           },
           'full-pass': {
-            name: i18n._(t`Policy compliant TLS`),
+            name: t`Policy compliant TLS`,
             color: colors.strong,
           },
         }}
         data={data.webSummary}
       />
       <SummaryCard
-        title={i18n._(t`Email Configuration`)}
-        description={i18n._(t`Email security settings summary`)}
+        title={t`Email Configuration`}
+        description={t`Email security settings summary`}
         categoryDisplay={{
           'full-pass': {
-            name: i18n._(t`Dmarc pass`),
+            name: t`Dmarc pass`,
             color: colors.strong,
           },
           'partial-pass': {
-            name: i18n._(t`Dmarc partial`),
+            name: t`Dmarc partial`,
             color: colors.moderate,
           },
           'full-fail': {
-            name: i18n._(t`Dmarc fail`),
+            name: t`Dmarc fail`,
             color: colors.weak,
           },
         }}
         data={data.emailSummary}
       />
     </SimpleGrid>
-  )
+  );
 }
 
 SummaryGroup.propTypes = {

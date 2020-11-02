@@ -16,8 +16,8 @@ export default function ForgotPasswordPage() {
   const history = useHistory()
   const validationSchema = object().shape({
     email: string()
-      .required(i18n._(t`Email cannot be empty`))
-      .email(i18n._(t`Invalid email`)),
+      .required(t`Email cannot be empty`)
+      .email(t`Invalid email`),
   })
 
   const [sendPasswordResetLink, { loading, error }] = useMutation(
@@ -26,7 +26,7 @@ export default function ForgotPasswordPage() {
       onError(error) {
         toast({
           title: error.message,
-          description: i18n._(t`Unable to send password reset link to email.`),
+          description: t`Unable to send password reset link to email.`,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -37,10 +37,8 @@ export default function ForgotPasswordPage() {
         history.push('/')
         // Display a welcome message
         toast({
-          title: i18n._(t`Email Sent`),
-          description: i18n._(
-            t`An email was sent with a link to reset your password`,
-          ),
+          title: t`Email Sent`,
+          description: t`An email was sent with a link to reset your password`,
           status: 'success',
           duration: 9000,
           isClosable: true,

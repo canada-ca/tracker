@@ -24,25 +24,25 @@ export default function CreateUserPage() {
 
   const validationSchema = object().shape({
     email: string()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
+      .required(fieldRequirements.email.required.message)
+      .email(fieldRequirements.email.email.message),
     displayName: string().required(
-      i18n._(fieldRequirements.displayName.required.message),
+      fieldRequirements.displayName.required.message,
     ),
     password: string()
-      .required(i18n._(fieldRequirements.password.required.message))
+      .required(fieldRequirements.password.required.message)
       .min(
         fieldRequirements.password.min.minLength,
-        i18n._(fieldRequirements.password.min.message),
+        fieldRequirements.password.min.message,
       ),
     confirmPassword: string()
-      .required(i18n._(fieldRequirements.confirmPassword.required.message))
+      .required(fieldRequirements.confirmPassword.required.message)
       .oneOf(
         fieldRequirements.confirmPassword.oneOf.types,
-        i18n._(fieldRequirements.confirmPassword.oneOf.message),
+        fieldRequirements.confirmPassword.oneOf.message,
       ),
     lang: string()
-      .required(i18n._(fieldRequirements.lang.required.message))
+      .required(fieldRequirements.lang.required.message)
       .oneOf(fieldRequirements.lang.oneOf.types),
   })
 
@@ -50,10 +50,8 @@ export default function CreateUserPage() {
     onError() {
       console.log(error)
       toast({
-        title: i18n._(t`An error occurred.`),
-        description: i18n._(
-          t`Unable to create your account, please try again.`,
-        ),
+        title: t`An error occurred.`,
+        description: t`Unable to create your account, please try again.`,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -70,10 +68,8 @@ export default function CreateUserPage() {
       history.push('/')
       // Display a welcome message
       toast({
-        title: i18n._(t`Account created.`),
-        description: i18n._(
-          t`Welcome, you are successfully signed in to your new account!`,
-        ),
+        title: t`Account created.`,
+        description: t`Welcome, you are successfully signed in to your new account!`,
         status: 'success',
         duration: 9000,
         isClosable: true,

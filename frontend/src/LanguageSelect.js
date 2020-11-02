@@ -22,14 +22,14 @@ function LanguageSelect({ name, ...props }) {
       </FormLabel>
       <Select {...field} {...props} id="lang">
         <option hidden value="">
-          {i18n._(t`Select Preferred Language`)}
+          {t`Select Preferred Language`}
         </option>
         <option value="ENGLISH">English</option>
         <option value="FRENCH">Français</option>
       </Select>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
-  )
+  );
 }
 
 LanguageSelect.propTypes = {

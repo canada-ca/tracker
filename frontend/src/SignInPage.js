@@ -29,20 +29,18 @@ export default function SignInPage() {
 
   const validationSchema = object().shape({
     password: string().required(
-      i18n._(fieldRequirements.password.required.message),
+      fieldRequirements.password.required.message,
     ),
     email: string()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
+      .required(fieldRequirements.email.required.message)
+      .email(fieldRequirements.email.email.message),
   })
 
   const [authenticate, { loading, error }] = useMutation(AUTHENTICATE, {
     onError() {
       toast({
-        title: i18n._(t`An error occurred.`),
-        description: i18n._(
-          t`Unable to sign in to your account, please try again.`,
-        ),
+        title: t`An error occurred.`,
+        description: t`Unable to sign in to your account, please try again.`,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -59,8 +57,8 @@ export default function SignInPage() {
       history.push('/')
       // Display a welcome message
       toast({
-        title: i18n._(t`Sign In.`),
-        description: i18n._(t`Welcome, you are successfully signed in!`),
+        title: t`Sign In.`,
+        description: t`Welcome, you are successfully signed in!`,
         status: 'success',
         duration: 9000,
         isClosable: true,

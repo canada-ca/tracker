@@ -7,6 +7,16 @@ import { Formik } from 'formik'
 import { I18nProvider } from '@lingui/react'
 import { setupI18n } from '@lingui/core'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<PasswordConfirmation />', () => {
   it('renders within a <Formik> wrapper', async () => {
     const validationSchema = object().shape({
@@ -15,7 +25,7 @@ describe('<PasswordConfirmation />', () => {
     })
 
     const { container } = render(
-      <I18nProvider i18n={setupI18n()}>
+      <I18nProvider i18n={i18n}>
         <ThemeProvider theme={theme}>
           <Formik
             // return a sadness error for the password field
@@ -42,7 +52,7 @@ describe('<PasswordConfirmation />', () => {
       })
 
       const { getByRole } = render(
-        <I18nProvider i18n={setupI18n()}>
+        <I18nProvider i18n={i18n}>
           <ThemeProvider theme={theme}>
             <Formik
               // return a sadness error for the password field

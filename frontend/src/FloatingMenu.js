@@ -121,11 +121,11 @@ export const FloatingMenu = () => {
 
               <DrawerBody px="24px" py="16px">
                 <Stack spacing="16px">
-                  <FloatingMenuLink to="/" text={i18n._(t`Home`)} />
+                  <FloatingMenuLink to="/" text={t`Home`} />
 
                   <FloatingMenuLink
                     to="/admin"
-                    text={i18n._(t`Admin Portal`)}
+                    text={t`Admin Portal`}
                   />
 
                   <Divider
@@ -139,14 +139,12 @@ export const FloatingMenu = () => {
                   {isLoggedIn() ? (
                     <FloatingMenuLink
                       to="/"
-                      text={i18n._(t`Sign Out`)}
+                      text={t`Sign Out`}
                       onClick={() => {
                         logout()
                         toast({
-                          title: i18n._(t`Sign Out.`),
-                          description: i18n._(
-                            t`You have successfully been signed out.`,
-                          ),
+                          title: t`Sign Out.`,
+                          description: t`You have successfully been signed out.`,
                           status: 'success',
                           duration: 9000,
                           isClosable: true,
@@ -155,7 +153,7 @@ export const FloatingMenu = () => {
                       }}
                     />
                   ) : (
-                    <FloatingMenuLink to="/sign-in" text={i18n._(t`Sign In`)} />
+                    <FloatingMenuLink to="/sign-in" text={t`Sign In`} />
                   )}
 
                   <Divider
@@ -172,7 +170,7 @@ export const FloatingMenu = () => {
                         ? 'https://www.canada.ca/en/transparency/privacy.html'
                         : 'https://www.canada.ca/fr/transparence/confidentialite.html'
                     }
-                    text={i18n._(t`Privacy`)}
+                    text={t`Privacy`}
                     isExternal
                   />
 
@@ -182,7 +180,7 @@ export const FloatingMenu = () => {
                         ? 'https://www.canada.ca/en/transparency/terms.html'
                         : 'https://www.canada.ca/fr/transparence/avis.html'
                     }
-                    text={i18n._(t`Terms & conditions`)}
+                    text={t`Terms & conditions`}
                     isExternal
                   />
                 </Stack>
@@ -226,7 +224,7 @@ export const FloatingMenu = () => {
         </Drawer>
       </Stack>
     </Box>
-  )
+  );
 }
 
 FloatingMenu.propTypes = {}

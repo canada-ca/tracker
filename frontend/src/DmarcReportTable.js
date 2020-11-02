@@ -367,7 +367,7 @@ function DmarcReportTable({ ...props }) {
               >
                 {[5, 10, 20].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
-                    {i18n._(t`Show ${pageSize}`)}
+                    {t`Show ${pageSize}`}
                   </option>
                 ))}
               </Select>
@@ -376,7 +376,7 @@ function DmarcReportTable({ ...props }) {
         </Box>
       </Collapse>
     </Box>
-  )
+  );
 }
 
 DmarcReportTable.propTypes = {

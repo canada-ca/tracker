@@ -18,18 +18,18 @@ export default function ResetPasswordPage() {
 
   const validationSchema = object().shape({
     password: string()
-      .required(i18n._(t`Password cannot be empty`))
-      .min(12, i18n._(t`Password must be at least 12 characters long`)),
+      .required(t`Password cannot be empty`)
+      .min(12, t`Password must be at least 12 characters long`),
     confirmPassword: string()
-      .required(i18n._(t`Password confirmation cannot be empty`))
-      .oneOf([ref('password')], i18n._(t`Passwords must match`)),
+      .required(t`Password confirmation cannot be empty`)
+      .oneOf([ref('password')], t`Passwords must match`),
   })
 
   const [updatePassword, { loading, error }] = useMutation(UPDATE_PASSWORD, {
     onError(error) {
       toast({
         title: error.message,
-        description: i18n._(t`Unable to update password`),
+        description: t`Unable to update password`,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -39,8 +39,8 @@ export default function ResetPasswordPage() {
     onCompleted() {
       history.push('/sign-in')
       toast({
-        title: i18n._(t`Password Updated`),
-        description: i18n._(t`You may now sign in with your new password`),
+        title: t`Password Updated`,
+        description: t`You may now sign in with your new password`,
         status: 'success',
         duration: 9000,
         isClosable: true,

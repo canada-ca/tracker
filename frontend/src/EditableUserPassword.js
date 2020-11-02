@@ -46,7 +46,7 @@ function EditableUserPassword() {
       },
       onError: ({ message }) => {
         toast({
-          title: i18n._(t`An error occurred while updating your password.`),
+          title: t`An error occurred while updating your password.`,
           description: message,
           status: 'error',
           duration: 9000,
@@ -70,19 +70,19 @@ function EditableUserPassword() {
 
   const validationSchema = object().shape({
     password: yupString()
-      .required(i18n._(fieldRequirements.password.required.message))
+      .required(fieldRequirements.password.required.message)
       .min(
         fieldRequirements.password.min.minLength,
-        i18n._(fieldRequirements.password.min.message),
+        fieldRequirements.password.min.message,
       ),
     confirmPassword: yupString()
-      .required(i18n._(fieldRequirements.confirmPassword.required.message))
+      .required(fieldRequirements.confirmPassword.required.message)
       .oneOf(
         fieldRequirements.confirmPassword.oneOf.types,
-        i18n._(fieldRequirements.confirmPassword.oneOf.message),
+        fieldRequirements.confirmPassword.oneOf.message,
       ),
     currentPassword: yupString().required(
-      i18n._(t`Please enter your current password.`),
+      t`Please enter your current password.`,
     ),
   })
 

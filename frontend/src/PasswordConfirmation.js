@@ -101,7 +101,7 @@ function PasswordConfirmation({
             <Input
               {...passwordField}
               id="password"
-              placeholder={i18n._(t`Password`)}
+              placeholder={t`Password`}
               type={passwordShow ? 'text' : 'password'}
             />
             <InputRightElement width="width.4">
@@ -146,7 +146,7 @@ function PasswordConfirmation({
             <Input
               {...confirmPasswordField}
               id="confirmPassword"
-              placeholder={i18n._(t`Confirm password`)}
+              placeholder={t`Confirm password`}
               type={confirmShow ? 'text' : 'password'}
             />
             <InputRightElement width="width.4">
@@ -164,7 +164,7 @@ function PasswordConfirmation({
         </FormControl>
       </Box>
     </Stack>
-  )
+  );
 }
 
 PasswordConfirmation.propTypes = {

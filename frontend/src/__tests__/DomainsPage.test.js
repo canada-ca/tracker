@@ -13,6 +13,16 @@ import { UserStateProvider } from '../UserState'
 import { createCache } from '../client'
 import DomainsPage from '../DomainsPage'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<DomainsPage />', () => {
   const mocks = [
     {
@@ -112,7 +122,7 @@ describe('<DomainsPage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/domains']} initialIndex={0}>
                 <MockedProvider mocks={mocks} cache={createCache()}>
                   <DomainsPage domainsPerPage={2} />

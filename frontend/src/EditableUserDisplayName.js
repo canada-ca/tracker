@@ -46,7 +46,7 @@ function EditableUserDisplayName({ detailValue }) {
       },
       onError: ({ message }) => {
         toast({
-          title: i18n._(t`An error occurred while updating your display name.`),
+          title: t`An error occurred while updating your display name.`,
           description: message,
           status: 'error',
           duration: 9000,
@@ -70,7 +70,7 @@ function EditableUserDisplayName({ detailValue }) {
 
   const validationSchema = object().shape({
     displayName: yupString().required(
-      i18n._(fieldRequirements.displayName.required.message),
+      fieldRequirements.displayName.required.message,
     ),
   })
 

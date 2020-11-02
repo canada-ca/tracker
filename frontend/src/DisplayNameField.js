@@ -45,13 +45,13 @@ const DisplayNameField = WithPseudoBox(function DisplayNameField({
           {...props}
           ref={forwardedRef}
           id="displayName"
-          placeholder={i18n._(t`Display Name`)}
+          placeholder={t`Display Name`}
         />
       </InputGroup>
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
-  )
+  );
 })
 
 DisplayNameField.propTypes = {

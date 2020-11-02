@@ -40,13 +40,13 @@ const EmailField = WithPseudoBox(function EmailField({
           id="email"
           type="email"
           ref={forwardedRef}
-          placeholder={i18n._(t`Email`)}
+          placeholder={t`Email`}
         />
       </InputGroup>
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
-  )
+  );
 })
 
 EmailField.propTypes = {

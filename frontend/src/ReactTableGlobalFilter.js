@@ -41,11 +41,11 @@ const ReactTableGlobalFilter = ({
             setValue(e.target.value)
             onChange(e.target.value)
           }}
-          placeholder={i18n._(t`${count} records...`)}
+          placeholder={t`${count} records...`}
         />
       </InputGroup>
     </Stack>
-  )
+  );
 }
 
 ReactTableGlobalFilter.propTypes = {

@@ -46,9 +46,7 @@ function EditableUserEmail({ detailValue }) {
       },
       onError: ({ message }) => {
         toast({
-          title: i18n._(
-            t`An error occurred while updating your email address.`,
-          ),
+          title: t`An error occurred while updating your email address.`,
           description: message,
           status: 'error',
           duration: 9000,
@@ -72,8 +70,8 @@ function EditableUserEmail({ detailValue }) {
 
   const validationSchema = object().shape({
     email: yupString()
-      .required(i18n._(fieldRequirements.email.required.message))
-      .email(i18n._(fieldRequirements.email.email.message)),
+      .required(fieldRequirements.email.required.message)
+      .email(fieldRequirements.email.email.message),
   })
 
   return (

@@ -10,6 +10,16 @@ import { UserStateProvider } from '../UserState'
 import DmarcByDomainPage from '../DmarcByDomainPage'
 import { rawDmarcReportSummaryTableData } from '../fixtures/dmarcReportSummaryTable'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 const mocks = [
   {
     request: {
@@ -40,7 +50,7 @@ describe('<DmarcByDomainPage />', () => {
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <MockedProvider mocks={mocks} addTypename={false}>
                 <DmarcByDomainPage />
@@ -59,7 +69,7 @@ describe('<DmarcByDomainPage />', () => {
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <MockedProvider mocks={mocks} addTypename={false}>
                 <DmarcByDomainPage />
@@ -78,7 +88,7 @@ describe('<DmarcByDomainPage />', () => {
         initialState={{ userName: null, jwt: null, tfa: null }}
       >
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <MemoryRouter initialEntries={['/']} initialIndex={0}>
               <MockedProvider mocks={mocks} addTypename={false}>
                 <DmarcByDomainPage />

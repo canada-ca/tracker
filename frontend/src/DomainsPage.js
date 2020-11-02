@@ -87,7 +87,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
               <InputLeftElement>
                 <Icon name="search" color="gray.300" />
               </InputLeftElement>
-              <Input type="text" placeholder={i18n._(t`Search for a domain`)} />
+              <Input type="text" placeholder={t`Search for a domain`} />
             </InputGroup>
             <ListOf
               elements={nodes}
@@ -128,7 +128,7 @@ export default function DomainsPage({ domainsPerPage = 10 }) {
         </TabPanels>
       </Tabs>
     </Layout>
-  )
+  );
 }
 
 DomainsPage.propTypes = { domainsPerPage: number }

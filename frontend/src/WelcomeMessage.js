@@ -29,12 +29,12 @@ export function WelcomeMessage() {
         </Stack>
         <Image
           src={trackerLogo}
-          alt={i18n._('Tracker Logo')}
+          alt={'Tracker Logo'}
           size={['0%', '0%', '80%', '80%', '87%']}
           alignSelf="center"
           mx="10"
         />
       </SimpleGrid>
     </Box>
-  )
+  );
 }

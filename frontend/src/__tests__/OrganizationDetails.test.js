@@ -15,6 +15,16 @@ import { setupI18n } from '@lingui/core'
 import OrganizationDetails from '../OrganizationDetails'
 import matchMediaPolyfill from 'mq-polyfill'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 matchMediaPolyfill(window)
 
 window
@@ -134,7 +144,7 @@ describe('<OrganizationDetails />', () => {
 
       const { getByText } = render(
         <ThemeProvider theme={theme}>
-          <I18nProvider i18n={setupI18n()}>
+          <I18nProvider i18n={i18n}>
             <UserStateProvider
               initialState={{
                 userName: 'user@example.com',

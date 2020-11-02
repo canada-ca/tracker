@@ -63,7 +63,7 @@ export default function AdminPage() {
 
   const options = [
     <option hidden key="default">
-      {i18n._(t`Select an organization`)}
+      {t`Select an organization`}
     </option>,
   ]
 

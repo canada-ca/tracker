@@ -42,7 +42,7 @@ const PasswordField = WithPseudoBox(function PasswordField({
         <Input
           pr="4.5rem"
           type={show ? 'text' : 'password'}
-          placeholder={i18n._(t`Password`)}
+          placeholder={t`Password`}
           id={name}
           ref={forwardedRef}
           {...field}
@@ -60,7 +60,7 @@ const PasswordField = WithPseudoBox(function PasswordField({
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
-  )
+  );
 })
 
 PasswordField.propTypes = {

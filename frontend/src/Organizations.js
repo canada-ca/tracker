@@ -66,7 +66,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
         </InputLeftElement>
         <Input
           type="text"
-          placeholder={i18n._(t`Search for an organization`)}
+          placeholder={t`Search for an organization`}
         />
       </InputGroup>
       <ListOf
@@ -101,7 +101,7 @@ export default function Organisations({ orgsPerPage = 10 }) {
       </Stack>
       <Trans>*All data represented is mocked for demonstration purposes</Trans>
     </Layout>
-  )
+  );
 }
 
 Organisations.propTypes = { orgsPerPage: number }

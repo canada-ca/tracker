@@ -32,7 +32,7 @@ export function ScanDomain({ submitScan = scan }) {
                   mr="4"
                   type="text"
                   onChange={handleChange}
-                  placeholder={i18n._(t`Enter a domain`)}
+                  placeholder={t`Enter a domain`}
                   value={values.domain}
                   name="domain"
                   id="domain"
@@ -49,9 +49,9 @@ export function ScanDomain({ submitScan = scan }) {
                 </TrackerButton>
               </Stack>
             </form>
-          )
+          );
         }}
       </Formik>
     </Box>
-  )
+  );
 }

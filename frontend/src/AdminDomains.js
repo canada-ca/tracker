@@ -99,7 +99,7 @@ export function AdminDomains({ domainsData, orgName }) {
     },
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -109,8 +109,8 @@ export function AdminDomains({ domainsData, orgName }) {
     },
     onCompleted() {
       toast({
-        title: i18n._(t`Domain added`),
-        description: i18n._(t`Domain was added to ${orgName}`),
+        title: t`Domain added`,
+        description: t`Domain was added to ${orgName}`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -131,7 +131,7 @@ export function AdminDomains({ domainsData, orgName }) {
       refetchQueries: ['Domains'],
       onError(error) {
         toast({
-          title: i18n._(t`An error occurred.`),
+          title: t`An error occurred.`,
           description: error.message,
           status: 'error',
           duration: 9000,
@@ -142,8 +142,8 @@ export function AdminDomains({ domainsData, orgName }) {
       onCompleted() {
         removeOnClose()
         toast({
-          title: i18n._(t`Domain removed`),
-          description: i18n._(t`Domain removed from ${orgName}`),
+          title: t`Domain removed`,
+          description: t`Domain removed from ${orgName}`,
           status: 'info',
           duration: 9000,
           isClosable: true,
@@ -162,7 +162,7 @@ export function AdminDomains({ domainsData, orgName }) {
     },
     onError(error) {
       toast({
-        title: i18n._(t`An error occurred.`),
+        title: t`An error occurred.`,
         description: error.message,
         status: 'error',
         duration: 9000,
@@ -172,8 +172,8 @@ export function AdminDomains({ domainsData, orgName }) {
     },
     onCompleted() {
       toast({
-        title: i18n._(t`Domain updated`),
-        description: i18n._(t`Domain from ${orgName} successfully updated`),
+        title: t`Domain updated`,
+        description: t`Domain from ${orgName} successfully updated`,
         status: 'info',
         duration: 9000,
         isClosable: true,
@@ -185,7 +185,7 @@ export function AdminDomains({ domainsData, orgName }) {
 
   const updatedDomainValidationSchema = yupObject().shape({
     newDomainUrl: yupString().required(
-      i18n._(fieldRequirements.domainUrl.required.message),
+      fieldRequirements.domainUrl.required.message,
     ),
   })
 
@@ -200,7 +200,7 @@ export function AdminDomains({ domainsData, orgName }) {
         </InputLeftElement>
         <Input
           type="text"
-          placeholder={i18n._(t`Search for a domain`)}
+          placeholder={t`Search for a domain`}
           value={domainSearch}
           onChange={(e) => {
             setDomainSearch(e.target.value)
@@ -212,8 +212,8 @@ export function AdminDomains({ domainsData, orgName }) {
         onClick={() => {
           if (!domainSearch) {
             toast({
-              title: i18n._(t`An error occurred.`),
-              description: i18n._(t`New domain name cannot be empty`),
+              title: t`An error occurred.`,
+              description: t`New domain name cannot be empty`,
               status: 'error',
               duration: 9000,
               isClosable: true,
@@ -348,7 +348,7 @@ export function AdminDomains({ domainsData, orgName }) {
                               <Input
                                 {...field}
                                 id="newDomainUrl"
-                                placeholder={i18n._(t`New Domain Url`)}
+                                placeholder={t`New Domain Url`}
                                 ref={initialFocusRef}
                               />
                               <FormErrorMessage>
@@ -435,7 +435,7 @@ export function AdminDomains({ domainsData, orgName }) {
         )}
       </SlideIn>
     </Stack>
-  )
+  );
 }
 
 AdminDomains.propTypes = {

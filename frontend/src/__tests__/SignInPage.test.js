@@ -10,6 +10,16 @@ import { MockedProvider } from '@apollo/client/testing'
 import { UserStateProvider } from '../UserState'
 import { setupI18n } from '@lingui/core'
 
+const i18n = setupI18n({
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  localeData: {
+    en: {},
+  },
+})
+
 describe('<SignInPage />', () => {
   describe('when the email field is empty', () => {
     it('displays an error message', async () => {
@@ -18,7 +28,7 @@ describe('<SignInPage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <MockedProvider>
                   <SignInPage />
@@ -48,7 +58,7 @@ describe('<SignInPage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <MemoryRouter initialEntries={['/']} initialIndex={0}>
                 <MockedProvider>
                   <SignInPage />
@@ -116,7 +126,7 @@ describe('<SignInPage />', () => {
           initialState={{ userName: null, jwt: null, tfa: null }}
         >
           <ThemeProvider theme={theme}>
-            <I18nProvider i18n={setupI18n()}>
+            <I18nProvider i18n={i18n}>
               <Router history={history}>
                 <MockedProvider mocks={mocks} addTypename={false}>
                   <SignInPage />

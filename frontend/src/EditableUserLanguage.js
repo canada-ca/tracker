@@ -27,7 +27,7 @@ function EditableUserLanguage({ currentLang }) {
       },
       onError: ({ message }) => {
         toast({
-          title: i18n._(t`An error occurred while updating your language.`),
+          title: t`An error occurred while updating your language.`,
           description: message,
           status: 'error',
           duration: 9000,
@@ -50,7 +50,7 @@ function EditableUserLanguage({ currentLang }) {
 
   const validationSchema = object().shape({
     lang: yupString()
-      .required(i18n._(fieldRequirements.lang.required.message))
+      .required(fieldRequirements.lang.required.message)
       .oneOf(fieldRequirements.lang.oneOf.types),
   })
 

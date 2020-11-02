@@ -15,7 +15,7 @@ export function LandingPage() {
       <Stack align="center">
         <Image
           src={trackerLogo}
-          alt={i18n._('Tracker Logo')}
+          alt={'Tracker Logo'}
           size={['100%', '100%', '0%', '0%', '0%']}
         />
         <WelcomeMessage />
@@ -27,5 +27,5 @@ export function LandingPage() {
         </Trans>
       </Text>
     </Layout>
-  )
+  );
 }
