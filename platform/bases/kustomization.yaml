@@ -10,7 +10,7 @@ images:
 - name: gcr.io/track-compliance/dns
   newTag: master-0000000
 - name: gcr.io/track-compliance/frontend
-  newTag: master-21d1d51
+  newTag: master-bda2762
 - name: gcr.io/track-compliance/https
   newTag: master-0000000
 - name: gcr.io/track-compliance/result-queue
